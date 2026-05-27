@@ -1,0 +1,28 @@
+{
+  "name": "yangmung",
+  "private": true,
+  "version": "0.1.0",
+  "description": "성인용 발달식 일본어 학습 — 여행 미션 + 가나 자동화 + Recovery + SRS",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "lint:content": "tsx src/content/validate.ts",
+    "test:content": "tsx src/content/validate.test.ts"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.19",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5"
+  }
+}
