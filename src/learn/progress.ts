@@ -126,24 +126,88 @@ export function classifyCard(_c: QuizCard, p: CardProgress | undefined, currentS
   return 'due'; // 진척 있고 미숙 → 재출제 대상
 }
 
-// 세션 카드 구성: [due (약점 앞)] + [new] + [tip은 항상 끝]
-// 의도: 사용자가 들어오면 약점부터 만남 → 같은 단어를 다시 보게 됨
+// 세션 구성: 타입별 quota (K↔B↔C 왕복 + 끝에 Tip)
+// 의도: K가 앞을 다 잡아먹지 않게, 한 세션 안에 가나·표현·미션이 모두 등장
+export const SESSION_QUOTAS = { K: 6, B: 3, C: 5, tip: 1 } as const;
+
+type Bucket = 'K' | 'B' | 'C';
+function bucketOf(c: QuizCard): Bucket | null {
+  const t = c.reviewTarget?.type;
+  if (t === 'kana') return 'K';
+  if (t === 'phrase') return 'B';
+  if (t === 'mission') return 'C';
+  return null;
+}
+
+function interleave<T>(...arrs: T[][]): T[] {
+  const out: T[] = [];
+  const max = Math.max(0, ...arrs.map((a) => a.length));
+  for (let i = 0; i < max; i++) for (const a of arrs) if (i < a.length) out.push(a[i]);
+  return out;
+}
+
 export function selectSessionCards(
   allCards: Card[],
   progress: ProgressMap,
   currentSessionId: number,
 ): Card[] {
-  const due: QuizCard[] = [];
-  const fresh: QuizCard[] = [];
+  const buckets: Record<Bucket, { due: QuizCard[]; fresh: QuizCard[] }> = {
+    K: { due: [], fresh: [] }, B: { due: [], fresh: [] }, C: { due: [], fresh: [] },
+  };
   const tips: Card[] = [];
   for (const c of allCards) {
     if (c.kind === 'tip') { tips.push(c); continue; }
     const status = classifyCard(c, progress[c.id], currentSessionId);
-    if (status === 'cooldown') continue;     // 잠시 제외
-    if (status === 'due') due.push(c);
-    else fresh.push(c);
+    if (status === 'cooldown') continue;
+    const b = bucketOf(c);
+    if (!b) continue;
+    if (status === 'due') buckets[b].due.push(c);
+    else buckets[b].fresh.push(c);
   }
-  return [...due, ...fresh, ...tips];
+  const pick = (b: Bucket, n: number): QuizCard[] =>
+    [...buckets[b].due, ...buckets[b].fresh].slice(0, n);
+  const k = pick('K', SESSION_QUOTAS.K);
+  const bb = pick('B', SESSION_QUOTAS.B);
+  const cc = pick('C', SESSION_QUOTAS.C);
+  const tipsSel = tips.slice(0, SESSION_QUOTAS.tip);
+  return [...interleave(k, bb, cc), ...tipsSel];
+}
+
+// 홈에서 "시작 버튼이 정확히 몇 카드 시작인지" 표시용
+export function plannedSessionSize(
+  allCards: Card[],
+  progress: ProgressMap,
+  currentSessionId: number,
+): number {
+  return selectSessionCards(allCards, progress, currentSessionId).length;
+}
+
+export interface SessionBreakdown { K: number; B: number; C: number; tip: number }
+export function plannedSessionBreakdown(
+  allCards: Card[],
+  progress: ProgressMap,
+  currentSessionId: number,
+): SessionBreakdown {
+  const out: SessionBreakdown = { K: 0, B: 0, C: 0, tip: 0 };
+  for (const c of selectSessionCards(allCards, progress, currentSessionId)) {
+    if (c.kind === 'tip') { out.tip++; continue; }
+    const b = bucketOf(c);
+    if (b === 'K') out.K++; else if (b === 'B') out.B++; else if (b === 'C') out.C++;
+  }
+  return out;
+}
+
+// K1 완료감: 각 글자의 'read' 카드가 2회 연속 첫시도 정답이면 "안정"으로 간주
+export function k1Mastery(
+  progress: ProgressMap,
+  k1KanaIds: string[],
+): { mastered: number; total: number } {
+  let mastered = 0;
+  for (const id of k1KanaIds) {
+    const p = progress[`kana:${id}:read`];
+    if (p && p.consecutiveCorrect >= 2) mastered++;
+  }
+  return { mastered, total: k1KanaIds.length };
 }
 
 // 홈 카운트 (오늘 복습/신규)

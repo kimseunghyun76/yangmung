@@ -32,7 +32,7 @@ console.log('=== 정상 데이터셋 ===');
 console.log('\n=== 위반 검출 ===');
 expectFail('V2 kana에 한자', (d) => { d.phrases[5].kana = '大丈夫'; }, 'V2');
 expectFail('V2 displayKana에 한자', (d) => { d.phrases[6].displayKana = '大丈夫だ'; }, 'V2');
-expectFail('V10 ー를 sei로', (d) => { d.kana[7].kind = 'sei'; }, 'V10');
+expectFail('V10 ー를 sei로', (d) => { d.kana.find((k) => k.id === 'k_long')!.kind = 'sei'; }, 'V10');
 expectFail('V6 kana Unit에 BLevel', (d) => { d.units[0].stage = 'B1'; }, 'V6');
 expectFail('V8 step 선택지 1개', (d) => { c1(d).steps[0].choices = [c1(d).steps[0].choices[0]]; }, 'V8');
 expectFail('V12 N5 source 위반', (d) => { (d.n5[0] as { source: string }).source = 'official'; }, 'V12');

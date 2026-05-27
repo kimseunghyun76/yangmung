@@ -3,12 +3,20 @@
 import { CONTENT } from '../content';
 import type { CLevel, ReviewTarget } from '../content/types';
 
+export interface ChoicePhrase {
+  kana: string;
+  kanji?: string;
+  korean: string;
+  tip?: string;
+}
+
 export interface Choice {
   label: string;
   correct: boolean;
   ja?: string;
   recovery?: boolean;
   feedback?: string;
+  phrase?: ChoicePhrase;  // 있으면 결과 화면에 일본어·뜻·팁 표시
 }
 
 export interface QuizCard {
@@ -38,6 +46,9 @@ export type Card = QuizCard | TipCard;
 const ttsText = (p?: { kanji?: string; displayKana?: string; kana: string }) =>
   p ? (p.kanji ?? p.displayKana ?? p.kana) : undefined;
 
+const phraseInfo = (p?: { kana: string; kanji?: string; korean: string; tip?: string }): ChoicePhrase | undefined =>
+  p ? { kana: p.kana, kanji: p.kanji, korean: p.korean, tip: p.tip } : undefined;
+
 function shuffle<T>(a: T[]): T[] {
   const r = [...a];
   for (let i = r.length - 1; i > 0; i--) {
@@ -48,22 +59,67 @@ function shuffle<T>(a: T[]): T[] {
 }
 
 export function buildCards(): Card[] {
-  const { kana, phrases, grammar, missions } = CONTENT;
+  const { kana, phrases, grammar, missions, units } = CONTENT;
   const byKana = (id: string) => kana.find((k) => k.id === id)!;
+  const byKanaChar = (ch: string) => kana.find((k) => k.char === ch);
   const byPhrase = (id: string) => phrases.find((p) => p.id === id)!;
   const cards: Card[] = [];
 
-  // K1 가나 드릴 (글자→소리)
-  for (const id of ['k_hira_a', 'k_hira_shi']) {
+  // K1 가나 — Unit 기반 자동 생성, 3종 카드 (글자→소리 / 소리→글자 / 비슷한 글자 구분)
+  // 순서: 전체 글자 read → 전체 글자 listen → 전체 글자 confuse
+  // (첫 세션이 자연스럽게 あいうえお 위주가 되도록 — 한 글자에 3종이 몰리지 않게)
+  const k1 = units.find((u) => u.id === 'u_k1_seion');
+  const k1Ids = k1?.kanaIds ?? [];
+
+  // (A) 글자 → 소리
+  for (const id of k1Ids) {
     const k = byKana(id);
-    const distract = shuffle(kana.filter((x) => x.id !== id)).slice(0, 2).map((x) => x.koreanSound);
+    const pool = kana.filter((x) => x.id !== id && x.koreanSound !== k.koreanSound);
+    const distract = shuffle(pool).slice(0, 2);
     cards.push({
-      kind: 'quiz', id: `kana:${id}`, tag: 'K1 가나',
+      kind: 'quiz', id: `kana:${id}:read`, tag: 'K1 가나 · 읽기',
       banner: k.char, bannerJa: k.char, sub: '이 글자의 소리는?',
       reviewTarget: { type: 'kana', id },
       choices: shuffle([
-        { label: k.koreanSound, correct: true, ja: k.char },
-        ...distract.map((d) => ({ label: d, correct: false })),
+        { label: k.koreanSound, correct: true, ja: k.char, phrase: { kana: k.char, korean: k.koreanSound } },
+        ...distract.map((d) => ({ label: d.koreanSound, correct: false, ja: d.char, phrase: { kana: d.char, korean: d.koreanSound } })),
+      ]),
+    });
+  }
+
+  // (B) 소리 → 글자
+  for (const id of k1Ids) {
+    const k = byKana(id);
+    const pool = kana.filter((x) => x.id !== id && x.char !== k.char && x.script === k.script);
+    const distract = shuffle(pool).slice(0, 2);
+    cards.push({
+      kind: 'quiz', id: `kana:${id}:listen`, tag: 'K1 가나 · 듣기',
+      banner: '🎧', bannerJa: k.char, sub: '🔊 듣고 글자를 고르세요',
+      listen: true,
+      reviewTarget: { type: 'kana', id },
+      choices: shuffle([
+        { label: k.char, correct: true, ja: k.char, phrase: { kana: k.char, korean: k.koreanSound } },
+        ...distract.map((d) => ({ label: d.char, correct: false, ja: d.char, phrase: { kana: d.char, korean: d.koreanSound } })),
+      ]),
+    });
+  }
+
+  // (C) 비슷한 글자 구분 — confusables 있을 때만
+  for (const id of k1Ids) {
+    const k = byKana(id);
+    if (!k.confusables || k.confusables.length === 0) continue;
+    const distract = k.confusables.slice(0, 2).map((ch) => {
+      const found = byKanaChar(ch);
+      return { label: ch, correct: false, ja: ch, phrase: { kana: ch, korean: found?.koreanSound ?? '?' } };
+    });
+    cards.push({
+      kind: 'quiz', id: `kana:${id}:confuse`, tag: 'K1 가나 · 구분',
+      banner: '🎧', bannerJa: k.char, sub: '🔊 듣고 비슷한 글자 중 고르세요',
+      listen: true,
+      reviewTarget: { type: 'kana', id },
+      choices: shuffle([
+        { label: k.char, correct: true, ja: k.char, phrase: { kana: k.char, korean: k.koreanSound } },
+        ...distract,
       ]),
     });
   }
@@ -78,8 +134,8 @@ export function buildCards(): Card[] {
       listen: true,
       reviewTarget: { type: 'phrase', id },
       choices: shuffle([
-        { label: p.korean, correct: true, ja: ttsText(p) },
-        ...distractPhrases.map((d) => ({ label: d.korean, correct: false, ja: ttsText(d) })),
+        { label: p.korean, correct: true, ja: ttsText(p), phrase: phraseInfo(p) },
+        ...distractPhrases.map((d) => ({ label: d.korean, correct: false, ja: ttsText(d), phrase: phraseInfo(d) })),
       ]),
     });
   }
@@ -102,6 +158,7 @@ export function buildCards(): Card[] {
           ja: c.phraseId ? ttsText(byPhrase(c.phraseId)) : undefined,
           recovery: !!c.recoveryType,
           feedback: c.feedback,
+          phrase: c.phraseId ? phraseInfo(byPhrase(c.phraseId)) : undefined,
         })),
       });
     });
