@@ -70,4 +70,22 @@ export const phrases: Phrase[] = [
   { id: 'p_norikae', kana: 'のりかえ', kanji: '乗り換え', korean: '환승', register: 'both' },
   { id: 'p_kaisatsu', kana: 'かいさつ', kanji: '改札', korean: '개찰구', register: 'both' },
   { id: 'p_kippu', kana: 'きっぷ', kanji: '切符', korean: '표 / 티켓', register: 'both' },
+
+  // ── C1 편의점 보강: 젓가락/그대로/스이카/따로 ──
+  { id: 'p_hashi_irimasu_ka', kana: 'はしはいりますか', kanji: '箸は要りますか', displayKana: 'はしは、いりますか？', korean: '젓가락 필요하세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  { id: 'p_hashi_kudasai', kana: 'はしをください', kanji: '箸をください', korean: '젓가락 주세요', register: 'productive' },
+  { id: 'p_sono_mama_de', kana: 'そのままで', korean: '그대로 주세요', register: 'productive', tip: '"별다른 처리 없이 그대로"의 의미. 데우기·봉투 거절 모두 통용' },
+  { id: 'p_betsubetsu_de', kana: 'べつべつで', kanji: '別々で', korean: '따로따로요', register: 'productive', tip: '계산을 나눠 낼 때 — 동행자가 있을 때 자주 씀' },
+  { id: 'p_suica_de', kana: 'スイカで', korean: '스이카로요', register: 'productive', tip: 'Suica는 일본 교통카드. 편의점·식당 결제도 가능' },
+  { id: 'p_mou_daijoubu_desu', kana: 'もうだいじょうぶです', kanji: 'もう大丈夫です', korean: '이제 괜찮습니다', register: 'productive', tip: '추가 권유를 부드럽게 거절할 때' },
+
+  // ── C2 식당 보강: 개수/이거랑/매워요?/먹을게요 ──
+  { id: 'p_hitotsu_kudasai', kana: 'ひとつください', kanji: '一つください', korean: '하나 주세요', register: 'productive' },
+  { id: 'p_futatsu_kudasai', kana: 'ふたつください', kanji: '二つください', korean: '두 개 주세요', register: 'productive' },
+  { id: 'p_kore_to_kore', kana: 'これとこれ', korean: '이거랑 이거', register: 'productive', tip: '메뉴를 가리키며 — 가장 안전한 주문법' },
+  { id: 'p_karai_desu_ka', kana: 'からいですか', kanji: '辛いですか', displayKana: 'からいですか？', korean: '매워요?', register: 'productive', grammarRefs: ['g_masuka'] },
+  { id: 'p_tabemasu', kana: 'たべます', kanji: '食べます', korean: '먹을게요', register: 'productive' },
+
+  // ── 응답 다양성 보강 ──
+  { id: 'p_wakarimashita_arigatou', kana: 'わかりましたありがとうございます', kanji: '分かりました、ありがとうございます', displayKana: 'わかりました、ありがとうございます', korean: '알겠습니다, 감사합니다', register: 'productive', tip: '이해+감사를 한 번에 — 안내를 받은 뒤 자연스러운 마무리' },
 ];

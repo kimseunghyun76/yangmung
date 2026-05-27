@@ -67,8 +67,19 @@ export const missions: Mission[] = [
         choices: [
           { text: '없어요', phraseId: 'p_arimasen', correct: true },
           { text: '있어요', phraseId: 'p_arimasu', correct: true },
-          { text: '영수증 주세요', phraseId: 'p_reshiito_kudasai', correct: false },
+          { text: '영수증 주세요', phraseId: 'p_reshiito_kudasai', correct: false, feedback: '지금은 포인트카드 질문 — 영수증 요청은 흐름이 어긋나요' },
           { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
+        ],
+      },
+      {
+        situationKo: '점원이 젓가락이 필요한지 묻는다',
+        speaker: '점원',
+        promptPhraseId: 'p_hashi_irimasu_ka',
+        choices: [
+          { text: '젓가락 주세요', phraseId: 'p_hashi_kudasai', correct: true },
+          { text: '필요 없어요', phraseId: 'p_irimasen', correct: true },
+          { text: '그대로 주세요', phraseId: 'p_sono_mama_de', correct: true, feedback: '데우지 말고 그대로 — 젓가락도 그대로(=불필요)로 통할 수 있어요' },
+          { text: '스이카로요', phraseId: 'p_suica_de', correct: false, feedback: '결제 방법과 헷갈리지 마세요 — 지금은 젓가락 질문' },
         ],
       },
     ],
@@ -101,6 +112,16 @@ export const missions: Mission[] = [
           { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
           { text: '(메뉴 사진 가리키기)', actionText: '메뉴 사진을 가리킨다', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
           { text: '필요 없어요', phraseId: 'p_irimasen', correct: true },
+        ],
+      },
+      {
+        situationKo: '메뉴를 보고 개수를 정한다',
+        speaker: '나',
+        choices: [
+          { text: '하나 주세요', phraseId: 'p_hitotsu_kudasai', correct: true },
+          { text: '두 개 주세요', phraseId: 'p_futatsu_kudasai', correct: true },
+          { text: '이거랑 이거', phraseId: 'p_kore_to_kore', correct: true, feedback: '메뉴를 가리키며 — 발음에 자신이 없을 때 가장 안전한 주문법' },
+          { text: '매워요?', phraseId: 'p_karai_desu_ka', correct: false, feedback: '확인 질문은 자연스럽지만 "주문 개수 정하기" 단계는 아니에요' },
         ],
       },
     ],
