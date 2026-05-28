@@ -29,7 +29,7 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, canCont
       <h1>세션 {sessionId} 완료 🎉</h1>
       <p style={{ fontSize: 22, margin: '4px 0 0' }}>{'⭐'.repeat(stars)}{'☆'.repeat(3 - stars)}</p>
       <p style={{ color: '#666', fontSize: 14, margin: '6px 0 0' }}>
-        첫 시도 {score}/{quizSeen} · 약점 {sr.weakNow}개 다음에 다시 나와요
+        첫 시도 {score}/{quizSeen}{sr.weakNow > 0 ? ` · 약점 ${sr.weakNow}개 다음에 다시 나와요` : ''}
       </p>
 
       {/* 주역: 다음 행동 */}

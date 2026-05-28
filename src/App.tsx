@@ -75,18 +75,26 @@ export function App() {
     setPicked(null);
     setI((n) => n + 1);
   }
+  // 카드 1장 결과 기록 (퀴즈·순서 카드 공용)
+  function recordCardResult(cardId: string, correct: boolean, recovery: boolean) {
+    setQuizSeen((n) => n + 1);
+    if (correct && !recovery) setScore((sc) => sc + 1);
+    const result: SessionLogEntry['result'] = recovery ? 'recovery' : correct ? 'correct' : 'wrong';
+    setSessionLog((log) => [...log, { id: cardId, result }]);
+    const updated = recordAttempt(progress, cardId, { correct, usedRecovery: recovery, sessionId });
+    setProgress(updated);
+    saveProgress(updated);
+  }
   function choose(idx: number, c: Choice) {
     if (!card || picked !== null) return;
     setPicked(idx);
     if (c.ja) speak(c.ja);
     if (card.kind !== 'quiz') return;
-    setQuizSeen((n) => n + 1);
-    if (c.correct && !c.recovery) setScore((sc) => sc + 1);
-    const result = c.recovery ? 'recovery' : c.correct ? 'correct' : 'wrong';
-    setSessionLog((log) => [...log, { id: card.id, result }]);
-    const updated = recordAttempt(progress, card.id, { correct: c.correct, usedRecovery: !!c.recovery, sessionId });
-    setProgress(updated);
-    saveProgress(updated);
+    recordCardResult(card.id, c.correct, !!c.recovery);
+  }
+  function orderResult(correct: boolean) {
+    if (!card || card.kind !== 'order') return;
+    recordCardResult(card.id, correct, false);
   }
   function resetAll() {
     clearProgress();
@@ -130,8 +138,9 @@ export function App() {
       index={i}
       total={sessionCards.length}
       picked={picked}
-      cardStatus={card.kind === 'quiz' ? classifyCard(card, progress[card.id], sessionId) : null}
+      cardStatus={card.kind === 'tip' ? null : classifyCard(card, progress[card.id], sessionId)}
       onChoose={choose}
+      onOrderResult={orderResult}
       onNext={next}
     />
   );

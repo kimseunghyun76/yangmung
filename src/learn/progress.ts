@@ -1,7 +1,7 @@
 // 학습 진척 + 세션 + 약점 재출제 — LocalStorage 기반.
 // 친구 5차 권고 단순화: SM-2 X, "틀린 것/복구 사용 = 다음 세션 앞쪽, 2회 연속 정답 = 잠시 제외"
 
-import type { Card, QuizCard } from './cards';
+import type { Card, OrderCard, QuizCard } from './cards';
 
 // ── 진척 데이터 ─────────────────────────────────────
 export interface CardProgress {
@@ -122,7 +122,7 @@ const MASTERED_COOLDOWN_SESSIONS = 2;
 
 export type CardStatus = 'due' | 'new' | 'cooldown';
 
-export function classifyCard(_c: QuizCard, p: CardProgress | undefined, currentSessionId: number): CardStatus {
+export function classifyCard(_c: Card, p: CardProgress | undefined, currentSessionId: number): CardStatus {
   if (!p) return 'new';
   if (p.consecutiveCorrect >= 2 && currentSessionId - p.lastSessionId <= MASTERED_COOLDOWN_SESSIONS) {
     return 'cooldown';
@@ -139,7 +139,8 @@ export const SESSION_QUOTAS = { K: 6, B: 3, C: 5, tip: 1 } as const;
 export const SESSION_MIN_FRESH = { K: 2, B: 1, C: 2 } as const;
 
 type Bucket = 'K' | 'B' | 'C';
-function bucketOf(c: QuizCard): Bucket | null {
+type ReviewableCard = QuizCard | OrderCard; // reviewTarget을 가진 카드(=SRS 대상)
+function bucketOf(c: ReviewableCard): Bucket | null {
   const t = c.reviewTarget?.type;
   if (t === 'kana') return 'K';
   if (t === 'phrase') return 'B';
@@ -171,12 +172,12 @@ function interleave<T>(...arrs: T[][]): T[] {
   return out;
 }
 
-interface Pool { due: QuizCard[]; fresh: QuizCard[] }
-const pushByStatus = (pool: Pool, c: QuizCard, status: CardStatus) =>
+interface Pool { due: ReviewableCard[]; fresh: ReviewableCard[] }
+const pushByStatus = (pool: Pool, c: ReviewableCard, status: CardStatus) =>
   (status === 'due' ? pool.due : pool.fresh).push(c);
 
 // due 우선으로 채우되, fresh를 최소 minFresh장 보장 → 새 콘텐츠가 계속 밀리지 않음.
-function pickPool(pool: Pool, quota: number, minFresh: number): QuizCard[] {
+function pickPool(pool: Pool, quota: number, minFresh: number): ReviewableCard[] {
   const guaranteedFresh = Math.min(minFresh, pool.fresh.length, quota);
   const dueTake = Math.min(pool.due.length, quota - guaranteedFresh);
   const freshTake = Math.min(pool.fresh.length, quota - dueTake);
@@ -185,8 +186,8 @@ function pickPool(pool: Pool, quota: number, minFresh: number): QuizCard[] {
 
 // 미션 카드는 "한 장면"에 집중: 진행 순서(C0→C1→…)대로 한 미션을 통째로 채우고
 // quota가 남을 때만 다음 미션으로 넘어감. → "편의점 한 판" 같은 몰입감.
-function pickScene(byMission: Map<string, Pool>, quota: number): QuizCard[] {
-  const out: QuizCard[] = [];
+function pickScene(byMission: Map<string, Pool>, quota: number): ReviewableCard[] {
+  const out: ReviewableCard[] = [];
   for (const pool of byMission.values()) {           // Map = 등장(=진행) 순서 유지
     if (out.length >= quota) break;
     for (const c of [...pool.due, ...pool.fresh]) {   // 장면 안에서는 약점 먼저, 그 다음 신규
@@ -284,10 +285,11 @@ export function planSession(
   return { size: cards.length, breakdown, missions: missionsFromCards(cards, progress, currentSessionId) };
 }
 
-// 장면(미션) 단독 연습 덱 — 해당 미션의 카드를 스텝 순서대로. (수동 선택이라 cooldown 무시)
+// 장면(미션) 단독 연습 덱 — 해당 미션의 카드(스텝 + 순서 맞추기)를 순서대로. (수동 선택이라 cooldown 무시)
 export function selectMissionCards(allCards: Card[], missionId: string): Card[] {
   return allCards.filter(
-    (c) => c.kind === 'quiz' && c.reviewTarget?.type === 'mission' && String(c.reviewTarget.id) === missionId,
+    (c) => (c.kind === 'quiz' || c.kind === 'order')
+      && c.reviewTarget?.type === 'mission' && String(c.reviewTarget.id) === missionId,
   );
 }
 

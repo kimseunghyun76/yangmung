@@ -3,6 +3,7 @@ import type { Card, Choice } from '../learn/cards';
 import type { CardStatus } from '../learn/progress';
 import { speak, ttsSupported } from '../tts';
 import { BTN, PRIMARY, WRAP } from '../ui/styles';
+import { OrderCardView } from './OrderCard';
 
 interface Props {
   card: Card;
@@ -11,12 +12,13 @@ interface Props {
   picked: number | null;
   cardStatus: CardStatus | null;
   onChoose: (idx: number, c: Choice) => void;
+  onOrderResult: (correct: boolean) => void;
   onNext: () => void;
 }
 
 const badgeStyle: React.CSSProperties = { display: 'inline-block', padding: '3px 9px', borderRadius: 999, fontSize: 12, fontWeight: 600, marginLeft: 8 };
 
-export function Session({ card, index, total, picked, cardStatus, onChoose, onNext }: Props) {
+export function Session({ card, index, total, picked, cardStatus, onChoose, onOrderResult, onNext }: Props) {
   const badge =
     cardStatus === 'due' ? <span style={{ ...badgeStyle, background: '#a78bfa', color: '#fff' }}>🔁 복습</span> :
     cardStatus === 'new' ? <span style={{ ...badgeStyle, background: '#60a5fa', color: '#fff' }}>🆕 신규</span> :
@@ -28,7 +30,7 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onNe
         <span>{card.tag}{badge}</span>
         <span>{index + 1} / {total}</span>
       </div>
-      {card.kind === 'quiz' && card.scenario && (
+      {card.kind !== 'tip' && card.scenario && (
         <div style={{ color: '#a78bfa', fontSize: 14, marginTop: 2, fontWeight: 500 }}>📍 {card.scenario}</div>
       )}
 
@@ -38,6 +40,8 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onNe
           <p style={{ fontSize: 17, lineHeight: 1.6, background: '#f5f5fb', padding: 16, borderRadius: 10 }}>{card.tipKo}</p>
           <button style={{ ...PRIMARY, marginTop: 16 }} onClick={onNext}>다음</button>
         </>
+      ) : card.kind === 'order' ? (
+        <OrderCardView key={card.id} card={card} onComplete={onOrderResult} onNext={onNext} />
       ) : (
         <>
           <div style={{ fontSize: card.listen || card.tag.startsWith('K') ? 72 : 28, textAlign: 'center', margin: '20px 0 6px' }}>{card.banner}</div>
