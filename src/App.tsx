@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { buildCards, type Card, type Choice } from './learn/cards';
 import {
   classifyCard, clearProgress, loadProgress, loadSession, nextSessionId,
-  recordAttempt, saveProgress, saveSession, selectSessionCards,
+  plannedSessionSize, recordAttempt, saveProgress, saveSession, selectSessionCards,
   type SessionLogEntry,
 } from './learn/progress';
 import { speak } from './tts';
@@ -90,10 +90,12 @@ export function App() {
     return <Home allCards={allCards} progress={progress} session={session} onStart={startSession} onReset={resetAll} />;
   }
   if (view === 'done') {
+    const canContinue = plannedSessionSize(allCards, progress, nextSessionId(session)) > 0;
     return (
       <Done
         sessionId={sessionId} score={score} quizSeen={quizSeen} sessionLog={sessionLog}
-        progress={progress} onRetryWeak={retryWeakSession} onHome={() => setView('home')}
+        progress={progress} canContinue={canContinue}
+        onRetryWeak={retryWeakSession} onContinue={startSession} onHome={() => setView('home')}
       />
     );
   }
