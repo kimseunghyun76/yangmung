@@ -16,6 +16,10 @@ export interface CardProgress {
 
 export type ProgressMap = Record<string, CardProgress>;
 
+// 세션 중 카드별 결과 로그 (Done 화면 통계 + 약점 재출제용)
+export type AttemptResult = 'correct' | 'wrong' | 'recovery';
+export interface SessionLogEntry { id: string; result: AttemptResult }
+
 const PROGRESS_KEY = 'yangmung:progress:v1';
 const SESSION_KEY = 'yangmung:session:v1';
 
