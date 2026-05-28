@@ -201,17 +201,24 @@ export function plannedSessionBreakdown(
   return out;
 }
 
-// K1 완료감: 각 글자의 'read' 카드가 2회 연속 첫시도 정답이면 "안정"으로 간주
-export function k1Mastery(
+// 가나 완료감(읽기 기준): 각 글자의 'read' 카드가 2회 연속 첫시도 정답이면 "안정"으로 간주.
+// K1·K2 등 어떤 단계든 kanaIds만 넘기면 재사용 가능.
+export function kanaReadMastery(
   progress: ProgressMap,
-  k1KanaIds: string[],
+  kanaIds: string[],
 ): { mastered: number; total: number } {
   let mastered = 0;
-  for (const id of k1KanaIds) {
+  for (const id of kanaIds) {
     const p = progress[`kana:${id}:read`];
     if (p && p.consecutiveCorrect >= 2) mastered++;
   }
-  return { mastered, total: k1KanaIds.length };
+  return { mastered, total: kanaIds.length };
+}
+
+// 글자별 읽기 안정 여부 (홈 칩 표시용)
+export function isKanaReadStable(progress: ProgressMap, kanaId: string): boolean {
+  const p = progress[`kana:${kanaId}:read`];
+  return !!p && p.consecutiveCorrect >= 2;
 }
 
 // 홈 카운트 (오늘 복습/신규)

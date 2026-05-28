@@ -1,7 +1,7 @@
 // 학습 카드 생성기 — Unit/Mission 데이터에서 Card[] 생성.
 // 친구 4차 권고: App.tsx 하드코딩 분리, SRS 도입 전제 조건.
 import { CONTENT } from '../content';
-import type { CLevel, ReviewTarget } from '../content/types';
+import type { CLevel, KanaItem, ReviewTarget } from '../content/types';
 
 export interface ChoicePhrase {
   kana: string;
@@ -58,6 +58,70 @@ function shuffle<T>(a: T[]): T[] {
   return r;
 }
 
+// 한 드릴 Unit(예: K1, K2)의 가나 카드 3종 생성 — read 전체 → listen 전체 → confuse 전체.
+interface KanaLookup {
+  byKana: (id: string) => KanaItem;
+  byKanaChar: (ch: string) => KanaItem | undefined;
+  kana: KanaItem[];
+}
+function buildKanaCards(stage: string, kanaIds: string[], lk: KanaLookup): QuizCard[] {
+  const out: QuizCard[] = [];
+  const mk = (k: KanaItem) => ({ kana: k.char, korean: k.koreanSound });
+
+  // (A) 글자 → 소리
+  for (const id of kanaIds) {
+    const k = lk.byKana(id);
+    const distract = shuffle(lk.kana.filter((x) => x.id !== id && x.koreanSound !== k.koreanSound)).slice(0, 2);
+    out.push({
+      kind: 'quiz', id: `kana:${id}:read`, tag: `${stage} 가나 · 읽기`,
+      banner: k.char, bannerJa: k.char, sub: '이 글자의 소리는?',
+      reviewTarget: { type: 'kana', id },
+      choices: shuffle([
+        { label: k.koreanSound, correct: true, ja: k.char, phrase: mk(k) },
+        ...distract.map((d) => ({ label: d.koreanSound, correct: false, ja: d.char, phrase: mk(d) })),
+      ]),
+    });
+  }
+
+  // (B) 소리 → 글자
+  for (const id of kanaIds) {
+    const k = lk.byKana(id);
+    const distract = shuffle(lk.kana.filter((x) => x.id !== id && x.char !== k.char && x.script === k.script)).slice(0, 2);
+    out.push({
+      kind: 'quiz', id: `kana:${id}:listen`, tag: `${stage} 가나 · 듣기`,
+      banner: '🎧', bannerJa: k.char, sub: '🔊 듣고 글자를 고르세요',
+      listen: true,
+      reviewTarget: { type: 'kana', id },
+      choices: shuffle([
+        { label: k.char, correct: true, ja: k.char, phrase: mk(k) },
+        ...distract.map((d) => ({ label: d.char, correct: false, ja: d.char, phrase: mk(d) })),
+      ]),
+    });
+  }
+
+  // (C) 비슷한 글자 구분 — confusables 있을 때만
+  for (const id of kanaIds) {
+    const k = lk.byKana(id);
+    if (!k.confusables || k.confusables.length === 0) continue;
+    const distract = k.confusables.slice(0, 2).map((ch) => {
+      const found = lk.byKanaChar(ch);
+      return { label: ch, correct: false, ja: ch, phrase: { kana: ch, korean: found?.koreanSound ?? '?' } };
+    });
+    out.push({
+      kind: 'quiz', id: `kana:${id}:confuse`, tag: `${stage} 가나 · 구분`,
+      banner: '🎧', bannerJa: k.char, sub: '🔊 듣고 비슷한 글자 중 고르세요',
+      listen: true,
+      reviewTarget: { type: 'kana', id },
+      choices: shuffle([
+        { label: k.char, correct: true, ja: k.char, phrase: mk(k) },
+        ...distract,
+      ]),
+    });
+  }
+
+  return out;
+}
+
 export function buildCards(): Card[] {
   const { kana, phrases, grammar, missions, units } = CONTENT;
   const byKana = (id: string) => kana.find((k) => k.id === id)!;
@@ -65,63 +129,12 @@ export function buildCards(): Card[] {
   const byPhrase = (id: string) => phrases.find((p) => p.id === id)!;
   const cards: Card[] = [];
 
-  // K1 가나 — Unit 기반 자동 생성, 3종 카드 (글자→소리 / 소리→글자 / 비슷한 글자 구분)
-  // 순서: 전체 글자 read → 전체 글자 listen → 전체 글자 confuse
-  // (첫 세션이 자연스럽게 あいうえお 위주가 되도록 — 한 글자에 3종이 몰리지 않게)
-  const k1 = units.find((u) => u.id === 'u_k1_seion');
-  const k1Ids = k1?.kanaIds ?? [];
-
-  // (A) 글자 → 소리
-  for (const id of k1Ids) {
-    const k = byKana(id);
-    const pool = kana.filter((x) => x.id !== id && x.koreanSound !== k.koreanSound);
-    const distract = shuffle(pool).slice(0, 2);
-    cards.push({
-      kind: 'quiz', id: `kana:${id}:read`, tag: 'K1 가나 · 읽기',
-      banner: k.char, bannerJa: k.char, sub: '이 글자의 소리는?',
-      reviewTarget: { type: 'kana', id },
-      choices: shuffle([
-        { label: k.koreanSound, correct: true, ja: k.char, phrase: { kana: k.char, korean: k.koreanSound } },
-        ...distract.map((d) => ({ label: d.koreanSound, correct: false, ja: d.char, phrase: { kana: d.char, korean: d.koreanSound } })),
-      ]),
-    });
-  }
-
-  // (B) 소리 → 글자
-  for (const id of k1Ids) {
-    const k = byKana(id);
-    const pool = kana.filter((x) => x.id !== id && x.char !== k.char && x.script === k.script);
-    const distract = shuffle(pool).slice(0, 2);
-    cards.push({
-      kind: 'quiz', id: `kana:${id}:listen`, tag: 'K1 가나 · 듣기',
-      banner: '🎧', bannerJa: k.char, sub: '🔊 듣고 글자를 고르세요',
-      listen: true,
-      reviewTarget: { type: 'kana', id },
-      choices: shuffle([
-        { label: k.char, correct: true, ja: k.char, phrase: { kana: k.char, korean: k.koreanSound } },
-        ...distract.map((d) => ({ label: d.char, correct: false, ja: d.char, phrase: { kana: d.char, korean: d.koreanSound } })),
-      ]),
-    });
-  }
-
-  // (C) 비슷한 글자 구분 — confusables 있을 때만
-  for (const id of k1Ids) {
-    const k = byKana(id);
-    if (!k.confusables || k.confusables.length === 0) continue;
-    const distract = k.confusables.slice(0, 2).map((ch) => {
-      const found = byKanaChar(ch);
-      return { label: ch, correct: false, ja: ch, phrase: { kana: ch, korean: found?.koreanSound ?? '?' } };
-    });
-    cards.push({
-      kind: 'quiz', id: `kana:${id}:confuse`, tag: 'K1 가나 · 구분',
-      banner: '🎧', bannerJa: k.char, sub: '🔊 듣고 비슷한 글자 중 고르세요',
-      listen: true,
-      reviewTarget: { type: 'kana', id },
-      choices: shuffle([
-        { label: k.char, correct: true, ja: k.char, phrase: { kana: k.char, korean: k.koreanSound } },
-        ...distract,
-      ]),
-    });
+  // 가나 드릴 — Unit 기반 자동 생성, 글자당 3종 (읽기 / 듣기 / 구분)
+  // 단계(K1, K2, …) 드릴 Unit을 순서대로 처리. 각 Unit 안에서는
+  // read 전체 → listen 전체 → confuse 전체 순 (한 글자에 3종이 몰리지 않게).
+  const drillUnits = units.filter((u) => u.track === 'kana' && u.mode === 'drill');
+  for (const unit of drillUnits) {
+    cards.push(...buildKanaCards(unit.stage, unit.kanaIds ?? [], { byKana, byKanaChar, kana }));
   }
 
   // B0 듣기: 🔊 → 한국어 의미 (사용자 1차 약점 처방)
