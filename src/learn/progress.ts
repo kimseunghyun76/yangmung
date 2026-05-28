@@ -1,7 +1,7 @@
 // 학습 진척 + 세션 + 약점 재출제 — LocalStorage 기반.
 // 친구 5차 권고 단순화: SM-2 X, "틀린 것/복구 사용 = 다음 세션 앞쪽, 2회 연속 정답 = 잠시 제외"
 
-import type { Card, OrderCard, QuizCard } from './cards';
+import type { Card, OrderCard, QuizCard, SpeakCard } from './cards';
 
 // ── 진척 데이터 ─────────────────────────────────────
 export interface CardProgress {
@@ -139,7 +139,7 @@ export const SESSION_QUOTAS = { K: 6, B: 3, C: 5, tip: 1 } as const;
 export const SESSION_MIN_FRESH = { K: 2, B: 1, C: 2 } as const;
 
 type Bucket = 'K' | 'B' | 'C';
-type ReviewableCard = QuizCard | OrderCard; // reviewTarget을 가진 카드(=SRS 대상)
+type ReviewableCard = QuizCard | OrderCard | SpeakCard; // reviewTarget을 가진 카드(=SRS 대상)
 function bucketOf(c: ReviewableCard): Bucket | null {
   const t = c.reviewTarget?.type;
   if (t === 'kana') return 'K';
@@ -288,7 +288,7 @@ export function planSession(
 // 장면(미션) 단독 연습 덱 — 해당 미션의 카드(스텝 + 순서 맞추기)를 순서대로. (수동 선택이라 cooldown 무시)
 export function selectMissionCards(allCards: Card[], missionId: string): Card[] {
   return allCards.filter(
-    (c) => (c.kind === 'quiz' || c.kind === 'order')
+    (c) => (c.kind === 'quiz' || c.kind === 'order' || c.kind === 'speak')
       && c.reviewTarget?.type === 'mission' && String(c.reviewTarget.id) === missionId,
   );
 }

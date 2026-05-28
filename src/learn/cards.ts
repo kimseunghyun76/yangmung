@@ -54,7 +54,20 @@ export interface OrderCard {
   reviewTarget?: ReviewTarget;
 }
 
-export type Card = QuizCard | TipCard | OrderCard;
+// 따라 말하기 카드 — 음성 인식 없이 "입으로 꺼내기" 연습(채점 X, practiced만 기록).
+export interface SpeakCard {
+  kind: 'speak';
+  id: string;
+  tag: string;
+  scenario?: string;
+  ja: string;        // 자연 표기 (TTS·표시)
+  kana: string;      // 읽기
+  korean: string;
+  tip?: string;
+  reviewTarget?: ReviewTarget;
+}
+
+export type Card = QuizCard | TipCard | OrderCard | SpeakCard;
 
 // TTS는 자연 표기 우선 (문장부호 prosody)
 const ttsText = (p?: { kanji?: string; displayKana?: string; kana: string }) =>
@@ -200,6 +213,17 @@ export function buildCards(): Card[] {
         prompt: '일어나는 순서대로 탭하세요',
         items: shuffle(ordered),
         correctOrder: ordered.map((o) => o.id),
+        reviewTarget: { type: 'mission', id: m.id as CLevel },
+      });
+    }
+
+    // 장면 끝: 따라 말하기 카드 (핵심 문장을 입으로 꺼내보기)
+    for (const pid of m.speakPhraseIds ?? []) {
+      const p = byPhrase(pid);
+      cards.push({
+        kind: 'speak', id: `speak:${m.id}:${pid}`, tag: `${m.id} 말하기`,
+        scenario: m.scenario,
+        ja: ttsText(p) ?? p.kana, kana: p.kana, korean: p.korean, tip: p.tip,
         reviewTarget: { type: 'mission', id: m.id as CLevel },
       });
     }

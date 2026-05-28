@@ -7,6 +7,7 @@ export const c2: Mission = {
   scenario: '식당에서 주문 (한 조각)',
   place: '식당',
   sequence: ['인원수', '주문', '음료', '개수', '계산'],
+  speakPhraseIds: ['p_hitori_desu', 'p_kore_kudasai', 'p_okaikei'],
   canDo: '사용자는 식당에서 인원수를 답하고, 메뉴를 가리키거나 추천을 묻고, 음료와 개수를 요청하고, 식사 후 계산을 마무리할 수 있다',
   unlockAfter: ['C1'],
   steps: [

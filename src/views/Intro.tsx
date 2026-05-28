@@ -7,7 +7,7 @@ export function Intro({ cards, goal, onStart }: { cards: Card[]; goal: string; o
   let k = 0, b = 0, c = 0;
   for (const card of cards) {
     if (card.kind === 'tip') continue;
-    if (card.kind === 'order') { c++; continue; }
+    if (card.kind === 'order' || card.kind === 'speak') { c++; continue; }
     const t = card.reviewTarget?.type;
     if (t === 'kana') k++;
     else if (t === 'phrase') b++;
