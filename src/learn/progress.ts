@@ -148,7 +148,8 @@ function bucketOf(c: QuizCard): Bucket | null {
 }
 
 // C3(전철)은 C1·C2를 충분히 경험한 뒤에만 열림 — 새 장면이 너무 일찍 나오지 않게.
-export const C3_UNLOCK = { c1: 4, c2: 3 } as const;
+// 식당(C2)을 "한 번 본 수준"이 아니라 마무리(계산)까지 반복하도록 조건을 늦춤.
+export const C3_UNLOCK = { c1: 5, c2: 4 } as const;
 export function missionExperiencedCount(progress: ProgressMap, missionId: string): number {
   const prefix = `mission:${missionId}:`;
   let n = 0;
