@@ -6,19 +6,25 @@ import { PRIMARY, WRAP } from '../ui/styles';
 export function Intro({ cards, goal, onStart }: { cards: Card[]; goal: string; onStart: () => void }) {
   let k = 0, b = 0, c = 0;
   for (const card of cards) {
-    if (card.kind !== 'quiz') continue;
+    if (card.kind === 'tip') continue;
+    if (card.kind === 'order') { c++; continue; }
     const t = card.reviewTarget?.type;
     if (t === 'kana') k++;
     else if (t === 'phrase') b++;
     else if (t === 'mission') c++;
   }
+  const sceneOnly = k === 0 && b === 0 && c > 0; // 장면 단독 연습
+  const lead =
+    sceneOnly ? ' — 실제 상황만 짧게 연습합니다.'
+    : k > 0 && c > 0 ? ' — 가나로 몸 풀고 실제 상황까지 한 번에 가봅니다.'
+    : '.';
 
   return (
     <main style={WRAP}>
       <p style={{ color: '#888', fontSize: 13, margin: 0 }}>오늘 한 판 🎒</p>
       <h1 style={{ margin: '6px 0 0', lineHeight: 1.35 }}>{goal}</h1>
       <p style={{ color: '#555', fontSize: 15, lineHeight: 1.6, marginTop: 14 }}>
-        짧게 {cards.length}장이에요{c > 0 ? ' — 가나로 몸 풀고 실제 상황까지 한 번에 가봅니다.' : '.'}
+        짧게 {cards.length}장이에요{lead}
         {' '}막히면 <strong>「다시 말해 주세요」</strong>로 넘어갈 수 있으니 부담 없이 시작하세요.
       </p>
       <p style={{ color: '#888', fontSize: 13, marginTop: 6 }}>

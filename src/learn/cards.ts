@@ -40,7 +40,21 @@ export interface TipCard {
   tipKo: string;
 }
 
-export type Card = QuizCard | TipCard;
+// 순서 맞추기 카드 — 장면의 사건 순서를 탭으로 채움.
+export interface OrderItem { id: string; label: string }
+export interface OrderCard {
+  kind: 'order';
+  id: string;
+  tag: string;
+  scenario?: string;
+  title: string;
+  prompt: string;
+  items: OrderItem[];        // 섞인 표시 순서
+  correctOrder: string[];    // 정답 순서(item id 배열)
+  reviewTarget?: ReviewTarget;
+}
+
+export type Card = QuizCard | TipCard | OrderCard;
 
 // TTS는 자연 표기 우선 (문장부호 prosody)
 const ttsText = (p?: { kanji?: string; displayKana?: string; kana: string }) =>
@@ -175,6 +189,20 @@ export function buildCards(): Card[] {
         })),
       });
     });
+
+    // 장면 마무리: 순서 맞추기 카드 (sequence가 있으면 — 스텝 카드 뒤에 capstone으로)
+    if (m.sequence && m.sequence.length >= 2) {
+      const ordered = m.sequence.map((label, i) => ({ id: String(i), label }));
+      cards.push({
+        kind: 'order', id: `order:${m.id}`, tag: `${m.id} 순서`,
+        scenario: m.scenario,
+        title: `${m.place ?? m.scenario} 순서 맞추기`,
+        prompt: '일어나는 순서대로 탭하세요',
+        items: shuffle(ordered),
+        correctOrder: ordered.map((o) => o.id),
+        reviewTarget: { type: 'mission', id: m.id as CLevel },
+      });
+    }
   }
 
   // 정확성 팁 (디브리프)

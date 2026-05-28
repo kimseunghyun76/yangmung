@@ -64,6 +64,7 @@ export interface Mission {
   id: CLevel;
   scenario: string;
   place?: string;        // 짧은 장소 라벨 (편의점·식당·전철) — 목표 카피·잠금 힌트용
+  sequence?: string[];   // 장면의 일어나는 순서(짧은 라벨) — "순서 맞추기" 카드 생성용
   canDo: string;
   unlockAfter: string[];
   steps: MissionStep[];
