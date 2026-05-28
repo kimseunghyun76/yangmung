@@ -88,4 +88,13 @@ export const phrases: Phrase[] = [
 
   // ── 응답 다양성 보강 ──
   { id: 'p_wakarimashita_arigatou', kana: 'わかりましたありがとうございます', kanji: '分かりました、ありがとうございます', displayKana: 'わかりました、ありがとうございます', korean: '알겠습니다, 감사합니다', register: 'productive', tip: '이해+감사를 한 번에 — 안내를 받은 뒤 자연스러운 마무리' },
+
+  // ── C1 편의점 실사용 보강: 데우기 ──
+  { id: 'p_atatamemasu_ka', kana: 'あたためますか', kanji: '温めますか', displayKana: 'あたためますか？', korean: '데워드릴까요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+
+  // ── C2 식당 실사용 보강: 자리 안내 + 계산 마무리 ──
+  { id: 'p_nanmeisama', kana: 'なんめいさまですか', kanji: '何名様ですか', displayKana: 'なんめいさまですか？', korean: '몇 분이세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  { id: 'p_hitori_desu', kana: 'ひとりです', kanji: '一人です', korean: '한 명이요', register: 'productive' },
+  { id: 'p_futari_desu', kana: 'ふたりです', kanji: '二人です', korean: '두 명이요', register: 'productive' },
+  { id: 'p_gochisousama', kana: 'ごちそうさまでした', korean: '잘 먹었습니다', register: 'productive', tip: '식사 후 인사 — 계산할 때 자연스럽게 곁들이면 좋아요' },
 ];

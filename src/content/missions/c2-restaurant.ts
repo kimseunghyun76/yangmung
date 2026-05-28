@@ -8,6 +8,17 @@ export const c2: Mission = {
   unlockAfter: ['C1'],
   steps: [
     {
+      situationKo: '식당 입구 — 점원이 인원수를 묻는다',
+      speaker: '점원',
+      promptPhraseId: 'p_nanmeisama',
+      choices: [
+        { text: '한 명이요', phraseId: 'p_hitori_desu', correct: true },
+        { text: '두 명이요', phraseId: 'p_futari_desu', correct: true },
+        { text: '저기요 (주의 끌기)', phraseId: 'p_sumimasen', correct: false, feedback: '인원수 질문에는 「ひとりです / ふたりです」처럼 숫자로 답해요' },
+        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
+      ],
+    },
+    {
       situationKo: '점원이 자리에 와서 주문을 받는다',
       speaker: '점원',
       promptPhraseId: 'p_gochuumon',
@@ -39,6 +50,16 @@ export const c2: Mission = {
         { text: '두 개 주세요', phraseId: 'p_futatsu_kudasai', correct: true },
         { text: '이거랑 이거', phraseId: 'p_kore_to_kore', correct: true, feedback: '메뉴를 가리키며 — 발음에 자신이 없을 때 가장 안전한 주문법' },
         { text: '매워요?', phraseId: 'p_karai_desu_ka', correct: false, feedback: '확인 질문은 자연스럽지만 "주문 개수 정하기" 단계는 아니에요' },
+      ],
+    },
+    {
+      situationKo: '식사를 마치고 계산하려 한다',
+      speaker: '나',
+      choices: [
+        { text: '계산 부탁드립니다', phraseId: 'p_okaikei', correct: true },
+        { text: '따로따로요 (각자 계산)', phraseId: 'p_betsubetsu_de', correct: true, feedback: '동행자와 나눠 낼 때 — 계산대에서 미리 말하면 매끄러워요' },
+        { text: '잘 먹었습니다', phraseId: 'p_gochisousama', correct: true, feedback: '계산하며 곁들이면 인상이 좋아지는 마무리 인사' },
+        { text: '메뉴 좀 보여 주세요', phraseId: 'p_menu_misete', correct: false, feedback: '식사를 마친 단계라 메뉴 요청은 흐름에 안 맞아요' },
       ],
     },
   ],

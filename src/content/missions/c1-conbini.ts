@@ -62,5 +62,16 @@ export const c1: Mission = {
         { text: '스이카로요', phraseId: 'p_suica_de', correct: false, feedback: '결제 방법과 헷갈리지 마세요 — 지금은 젓가락 질문' },
       ],
     },
+    {
+      situationKo: '점원이 도시락을 데울지 묻는다',
+      speaker: '점원',
+      promptPhraseId: 'p_atatamemasu_ka',
+      choices: [
+        { text: '데워 주세요', phraseId: 'p_atatamete', correct: true },
+        { text: '그대로 주세요 (괜찮아요)', phraseId: 'p_sono_mama_de', correct: true, feedback: '데우지 않을 때 가장 자연스러운 한마디' },
+        { text: '네', phraseId: 'p_hai', correct: true, feedback: 'はい만으로도 "데워 달라"는 뜻이 전달돼요' },
+        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
+      ],
+    },
   ],
 };
