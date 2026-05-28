@@ -134,6 +134,10 @@ export function classifyCard(_c: QuizCard, p: CardProgress | undefined, currentS
 // 의도: K가 앞을 다 잡아먹지 않게, 한 세션 안에 가나·표현·미션이 모두 등장
 export const SESSION_QUOTAS = { K: 6, B: 3, C: 5, tip: 1 } as const;
 
+// 각 버킷에서 보장하는 최소 fresh(신규) 수 — due 복습이 quota를 다 채워서
+// 새 미션·새 글자가 무한정 밀리는 걸 방지 (fresh가 그만큼 없으면 있는 만큼만).
+export const SESSION_MIN_FRESH = { K: 2, B: 1, C: 2 } as const;
+
 type Bucket = 'K' | 'B' | 'C';
 function bucketOf(c: QuizCard): Bucket | null {
   const t = c.reviewTarget?.type;
@@ -168,11 +172,17 @@ export function selectSessionCards(
     if (status === 'due') buckets[b].due.push(c);
     else buckets[b].fresh.push(c);
   }
-  const pick = (b: Bucket, n: number): QuizCard[] =>
-    [...buckets[b].due, ...buckets[b].fresh].slice(0, n);
-  const k = pick('K', SESSION_QUOTAS.K);
-  const bb = pick('B', SESSION_QUOTAS.B);
-  const cc = pick('C', SESSION_QUOTAS.C);
+  // due 우선으로 채우되, fresh를 최소 minFresh장 보장 → 새 콘텐츠가 계속 밀리지 않음.
+  const pick = (b: Bucket, quota: number, minFresh: number): QuizCard[] => {
+    const { due, fresh } = buckets[b];
+    const guaranteedFresh = Math.min(minFresh, fresh.length, quota);
+    const dueTake = Math.min(due.length, quota - guaranteedFresh);
+    const freshTake = Math.min(fresh.length, quota - dueTake); // 남는 슬롯은 fresh로 (≥ guaranteedFresh)
+    return [...due.slice(0, dueTake), ...fresh.slice(0, freshTake)]; // 순서: 약점(due) 먼저, 그 다음 신규
+  };
+  const k = pick('K', SESSION_QUOTAS.K, SESSION_MIN_FRESH.K);
+  const bb = pick('B', SESSION_QUOTAS.B, SESSION_MIN_FRESH.B);
+  const cc = pick('C', SESSION_QUOTAS.C, SESSION_MIN_FRESH.C);
   const tipsSel = tips.slice(0, SESSION_QUOTAS.tip);
   return [...interleave(k, bb, cc), ...tipsSel];
 }
