@@ -40,7 +40,7 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onNe
         </>
       ) : (
         <>
-          <div style={{ fontSize: card.listen || card.tag.startsWith('K1') ? 72 : 28, textAlign: 'center', margin: '20px 0 6px' }}>{card.banner}</div>
+          <div style={{ fontSize: card.listen || card.tag.startsWith('K') ? 72 : 28, textAlign: 'center', margin: '20px 0 6px' }}>{card.banner}</div>
           {card.bannerJa && (
             <div style={{ textAlign: 'center', marginBottom: 8 }}>
               <button

@@ -16,9 +16,15 @@ export const kana: KanaItem[] = [
   { id: 'k_hira_ke', char: 'け', script: 'hiragana', kind: 'sei', romaji: 'ke', koreanSound: '케', level: 'K1', group: 'か행', confusables: ['は'] },
   { id: 'k_hira_ko', char: 'こ', script: 'hiragana', kind: 'sei', romaji: 'ko', koreanSound: '코', level: 'K1', group: 'か행', confusables: ['に'] },
 
-  // ── K2+ 인벤토리 (현재 미션·향후 확장용) ──
+  // ── K2 さ행 ──
+  { id: 'k_hira_sa', char: 'さ', script: 'hiragana', kind: 'sei', romaji: 'sa', koreanSound: '사', level: 'K2', group: 'さ행', confusables: ['き', 'ち'] },
   { id: 'k_hira_shi', char: 'し', script: 'hiragana', kind: 'sei', romaji: 'shi', koreanSound: '시', level: 'K2', group: 'さ행', confusables: ['つ'] },
-  { id: 'k_hira_tsu', char: 'つ', script: 'hiragana', kind: 'sei', romaji: 'tsu', koreanSound: '츠', level: 'K2', group: 'た행', confusables: ['し', 'う'] },
+  { id: 'k_hira_su', char: 'す', script: 'hiragana', kind: 'sei', romaji: 'su', koreanSound: '스', level: 'K2', group: 'さ행', confusables: ['む'] },
+  { id: 'k_hira_se', char: 'せ', script: 'hiragana', kind: 'sei', romaji: 'se', koreanSound: '세', level: 'K2', group: 'さ행', confusables: ['ね'] },
+  { id: 'k_hira_so', char: 'そ', script: 'hiragana', kind: 'sei', romaji: 'so', koreanSound: '소', level: 'K2', group: 'さ행', confusables: ['ろ'] },
+
+  // ── K3+ 인벤토리 (현재 미션·향후 확장용) ──
+  { id: 'k_hira_tsu', char: 'つ', script: 'hiragana', kind: 'sei', romaji: 'tsu', koreanSound: '츠', level: 'K3', group: 'た행', confusables: ['し', 'う'] },
   { id: 'k_hira_kya', char: 'きゃ', script: 'hiragana', kind: 'yoon', romaji: 'kya', koreanSound: '캬', level: 'K5', group: 'か행 拗音', components: ['き', 'ゃ'] },
   { id: 'k_kata_shi', char: 'シ', script: 'katakana', kind: 'sei', romaji: 'shi', koreanSound: '시', level: 'K6', group: 'サ행', confusables: ['ツ', 'ソ', 'ン'] },
   { id: 'k_kata_tsu', char: 'ツ', script: 'katakana', kind: 'sei', romaji: 'tsu', koreanSound: '츠', level: 'K6', group: 'タ행', confusables: ['シ'] },

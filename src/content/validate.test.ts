@@ -38,9 +38,10 @@ expectFail('V8 step 선택지 1개', (d) => { c1(d).steps[0].choices = [c1(d).st
 expectFail('V12 N5 source 위반', (d) => { (d.n5[0] as { source: string }).source = 'official'; }, 'V12');
 expectFail('V5 중복 id', (d) => { d.phrases.push({ ...d.phrases[0] }); }, 'V5');
 expectFail('V5 id에 한자', (d) => { d.n5.push({ id: 'n5_k_人', type: 'kanji', value: '人', source: 'unofficial' }); }, 'V5');
-expectFail('V3 깨진 참조', (d) => { d.units[1].newPhraseIds!.push('p_nonexist'); }, 'V3');
-expectFail('V4 중복 도입', (d) => { d.units[2].newPhraseIds!.push('p_hai'); }, 'V4');
-expectFail('V18 유령 복습', (d) => { d.units[2].reviewPhraseIds = ['p_un_ghost']; }, 'V18');
+const langUnit = (d: ContentBundle) => d.units.find((u) => u.track === 'lang')!;
+expectFail('V3 깨진 참조', (d) => { langUnit(d).newPhraseIds!.push('p_nonexist'); }, 'V3');
+expectFail('V4 중복 도입', (d) => { langUnit(d).newPhraseIds!.push('p_hai'); }, 'V4');
+expectFail('V18 유령 복습', (d) => { langUnit(d).reviewPhraseIds = ['p_un_ghost']; }, 'V18');
 expectFail('V19 productive 사전 미도입', (d) => {
   d.phrases.push({ id: 'p_test_orphan', kana: 'てすと', korean: '테스트', register: 'productive' });
   c1(d).steps[0].choices.push({ text: '테스트(미도입)', phraseId: 'p_test_orphan', correct: false });

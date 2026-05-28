@@ -7,6 +7,11 @@ export const units: Unit[] = [
     kanaIds: ['k_hira_a', 'k_hira_i', 'k_hira_u', 'k_hira_e', 'k_hira_o', 'k_hira_ka', 'k_hira_ki', 'k_hira_ku', 'k_hira_ke', 'k_hira_ko'],
   },
   {
+    id: 'u_k2_seion', track: 'kana', stage: 'K2', mode: 'drill',
+    canDo: '사용자는 K2 히라가나 청음(さしすせそ)을 평균 0.8초 내 95% 정확도로 읽고 듣고 구분할 수 있다',
+    kanaIds: ['k_hira_sa', 'k_hira_shi', 'k_hira_su', 'k_hira_se', 'k_hira_so'],
+  },
+  {
     id: 'u_b0_reaction', track: 'lang', stage: 'B0', mode: 'reaction',
     ageMotif: '0–1세',
     canDo: '사용자는 일상 대화에서 상대의 짧은 물음을 듣고, 긍정·부정·보류·감사를 한 마디로 답할 수 있다',
