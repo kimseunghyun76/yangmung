@@ -4,6 +4,7 @@ import type { Mission } from '../types';
 export const c0: Mission = {
   id: 'C0',
   scenario: '가게에 들어가며 인사 (튜토리얼)',
+  place: '가게',
   canDo: '사용자는 가게에서 인사를 듣고 인사로 답하고, 못 알아들으면 다시 말해 달라고 할 수 있다',
   unlockAfter: ['u_b0_reaction'],
   meta: { recoveryExemptReason: '튜토리얼 미니미션이라 복구 1종만 도입한다' },

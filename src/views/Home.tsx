@@ -2,7 +2,7 @@
 import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
 import {
-  isKanaReadStable, kanaReadMastery, nextSessionId, planSession,
+  isKanaReadStable, isMissionUnlocked, kanaReadMastery, nextSessionId, planSession,
   sessionCounts, summarize, type ProgressMap, type SessionState,
 } from '../learn/progress';
 import { ttsSupported } from '../tts';
@@ -27,7 +27,8 @@ export function Home({ allCards, progress, session, onStart, onReset }: Props) {
   const planned = plan.size;
   const kanaUnits = revealedKanaUnits(progress);
   const s = summarize(progress);
-  const goal = sessionGoalText(plan.missionScenario, plan.breakdown.K > 0);
+  const goal = sessionGoalText(plan.missions, plan.breakdown.K > 0);
+  const lockedScenes = CONTENT.missions.filter((m) => !isMissionUnlocked(m.id, progress));
 
   return (
     <main style={WRAP}>
@@ -68,9 +69,20 @@ export function Home({ allCards, progress, session, onStart, onReset }: Props) {
         </div>
       )}
 
+      {lockedScenes.length > 0 && (
+        <div style={{ marginTop: 16 }}>
+          <p style={{ margin: '0 0 6px', fontSize: 12, color: '#aaa' }}>다음 장면</p>
+          {lockedScenes.map((m) => (
+            <p key={m.id} style={{ margin: '4px 0', fontSize: 13, color: '#999' }}>
+              🔒 {m.place ?? m.scenario} — {lockHint(m.id)}
+            </p>
+          ))}
+        </div>
+      )}
+
       {s.seen > 0 && (
         <button
-          style={{ ...BTN, marginTop: 12, color: '#888', textAlign: 'center', width: '100%', fontSize: 13 }}
+          style={{ ...BTN, marginTop: 16, color: '#888', textAlign: 'center', width: '100%', fontSize: 13 }}
           onClick={() => { if (confirm('진척을 모두 지울까요?')) onReset(); }}
         >
           처음부터 다시
@@ -80,6 +92,12 @@ export function Home({ allCards, progress, session, onStart, onReset }: Props) {
       {!ttsSupported() && <p style={{ color: '#b45309', fontSize: 13, marginTop: 16 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
     </main>
   );
+}
+
+// 잠긴 장면 오픈 조건 안내 (현재 C3만 잠김).
+function lockHint(missionId: string): string {
+  if (missionId === 'C3') return '편의점·식당을 더 익히면 열려요';
+  return '조금 더 익히면 열려요';
 }
 
 // 노출할 가나 드릴 Unit: K1은 항상, 다음 단계는 앞 단계가 충분히 안정됐거나 이미 시작했을 때만.

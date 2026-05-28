@@ -4,16 +4,21 @@ import { PRIMARY, WRAP } from '../ui/styles';
 import { sessionGoalText } from './goal';
 
 export function Intro({ cards, onStart }: { cards: Card[]; onStart: () => void }) {
-  let scenario: string | undefined;
+  const missions: { id: string; scenario: string }[] = [];
+  const seen = new Set<string>();
   let k = 0, b = 0, c = 0;
   for (const card of cards) {
     if (card.kind !== 'quiz') continue;
     const t = card.reviewTarget?.type;
     if (t === 'kana') k++;
     else if (t === 'phrase') b++;
-    else if (t === 'mission') { c++; if (!scenario && card.scenario) scenario = card.scenario; }
+    else if (t === 'mission') {
+      c++;
+      const id = String(card.reviewTarget!.id);
+      if (!seen.has(id)) { seen.add(id); missions.push({ id, scenario: card.scenario ?? '' }); }
+    }
   }
-  const goal = sessionGoalText(scenario, k > 0);
+  const goal = sessionGoalText(missions, k > 0);
 
   return (
     <main style={WRAP}>
