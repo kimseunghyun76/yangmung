@@ -1,6 +1,7 @@
 import type { Mission } from '../types';
 
-// C2 — 식당 주문 (주문 받기·음료·개수)
+// C2 — 식당 한 사이클. 스텝은 입장 동선 순서:
+// 인원수 → 주문 받기 → 개수 정하기 → 음료 → 계산 마무리.
 export const c2: Mission = {
   id: 'C2',
   scenario: '식당에서 주문 (한 조각)',
@@ -8,7 +9,7 @@ export const c2: Mission = {
   unlockAfter: ['C1'],
   steps: [
     {
-      situationKo: '식당 입구 — 점원이 인원수를 묻는다',
+      situationKo: '식당에 들어서자 점원이 인원수를 묻는다',
       speaker: '점원',
       promptPhraseId: 'p_nanmeisama',
       choices: [
@@ -19,7 +20,7 @@ export const c2: Mission = {
       ],
     },
     {
-      situationKo: '점원이 자리에 와서 주문을 받는다',
+      situationKo: '자리에 앉자 점원이 주문을 받으러 온다',
       speaker: '점원',
       promptPhraseId: 'p_gochuumon',
       choices: [
@@ -31,7 +32,17 @@ export const c2: Mission = {
       ],
     },
     {
-      situationKo: '점원이 음료를 묻는다',
+      situationKo: '메뉴를 정하고 몇 개 시킬지 말한다',
+      speaker: '나',
+      choices: [
+        { text: '하나 주세요', phraseId: 'p_hitotsu_kudasai', correct: true },
+        { text: '두 개 주세요', phraseId: 'p_futatsu_kudasai', correct: true },
+        { text: '이거랑 이거', phraseId: 'p_kore_to_kore', correct: true, feedback: '메뉴를 가리키며 — 발음에 자신이 없을 때 가장 안전한 주문법' },
+        { text: '매워요?', phraseId: 'p_karai_desu_ka', correct: false, feedback: '확인 질문은 자연스럽지만 "주문 개수 정하기" 단계는 아니에요' },
+      ],
+    },
+    {
+      situationKo: '주문을 받은 점원이 음료를 묻는다',
       speaker: '점원',
       promptPhraseId: 'p_nomimono',
       choices: [
@@ -43,17 +54,7 @@ export const c2: Mission = {
       ],
     },
     {
-      situationKo: '메뉴를 보고 개수를 정한다',
-      speaker: '나',
-      choices: [
-        { text: '하나 주세요', phraseId: 'p_hitotsu_kudasai', correct: true },
-        { text: '두 개 주세요', phraseId: 'p_futatsu_kudasai', correct: true },
-        { text: '이거랑 이거', phraseId: 'p_kore_to_kore', correct: true, feedback: '메뉴를 가리키며 — 발음에 자신이 없을 때 가장 안전한 주문법' },
-        { text: '매워요?', phraseId: 'p_karai_desu_ka', correct: false, feedback: '확인 질문은 자연스럽지만 "주문 개수 정하기" 단계는 아니에요' },
-      ],
-    },
-    {
-      situationKo: '식사를 마치고 계산하려 한다',
+      situationKo: '식사를 마치고 계산대로 향한다',
       speaker: '나',
       choices: [
         { text: '계산 부탁드립니다', phraseId: 'p_okaikei', correct: true },
