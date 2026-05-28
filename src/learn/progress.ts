@@ -248,6 +248,25 @@ export interface SessionPlan {
   breakdown: SessionBreakdown;
   missions: SessionMission[]; // 등장 순서대로 distinct
 }
+// 카드 목록에서 등장 미션 목록(복습 여부 포함) 추출 — 자동 세션·장면 세션·인트로 공용.
+export function missionsFromCards(
+  cards: Card[],
+  progress: ProgressMap,
+  currentSessionId: number,
+): SessionMission[] {
+  const missions: SessionMission[] = [];
+  const seen = new Set<string>();
+  const freshMissions = new Set<string>();
+  for (const c of cards) {
+    if (c.kind !== 'quiz' || c.reviewTarget?.type !== 'mission') continue;
+    const id = String(c.reviewTarget.id);
+    if (!seen.has(id)) { seen.add(id); missions.push({ id, scenario: c.scenario ?? '', isReview: true }); }
+    if (classifyCard(c, progress[c.id], currentSessionId) === 'new') freshMissions.add(id);
+  }
+  for (const m of missions) m.isReview = !freshMissions.has(m.id);
+  return missions;
+}
+
 export function planSession(
   allCards: Card[],
   progress: ProgressMap,
@@ -255,24 +274,37 @@ export function planSession(
 ): SessionPlan {
   const cards = selectSessionCards(allCards, progress, currentSessionId);
   const breakdown: SessionBreakdown = { K: 0, B: 0, C: 0, tip: 0 };
-  const missions: SessionMission[] = [];
-  const seen = new Set<string>();
-  const freshMissions = new Set<string>(); // 신규 카드가 있는 미션
   for (const c of cards) {
     if (c.kind === 'tip') { breakdown.tip++; continue; }
     const b = bucketOf(c);
     if (b === 'K') breakdown.K++;
     else if (b === 'B') breakdown.B++;
-    else if (b === 'C') {
-      breakdown.C++;
-      const id = c.reviewTarget?.type === 'mission' ? String(c.reviewTarget.id) : undefined;
-      if (!id) continue;
-      if (!seen.has(id)) { seen.add(id); missions.push({ id, scenario: c.scenario ?? '', isReview: true }); }
-      if (classifyCard(c, progress[c.id], currentSessionId) === 'new') freshMissions.add(id);
-    }
+    else if (b === 'C') breakdown.C++;
   }
-  for (const m of missions) m.isReview = !freshMissions.has(m.id);
-  return { size: cards.length, breakdown, missions };
+  return { size: cards.length, breakdown, missions: missionsFromCards(cards, progress, currentSessionId) };
+}
+
+// 장면(미션) 단독 연습 덱 — 해당 미션의 카드를 스텝 순서대로. (수동 선택이라 cooldown 무시)
+export function selectMissionCards(allCards: Card[], missionId: string): Card[] {
+  return allCards.filter(
+    (c) => c.kind === 'quiz' && c.reviewTarget?.type === 'mission' && String(c.reviewTarget.id) === missionId,
+  );
+}
+
+// 미션(장면) 진척 — 익숙(2연속 정답) 카드 수 / 전체 카드 수.
+export function missionProgress(
+  allCards: Card[],
+  progress: ProgressMap,
+  missionId: string,
+): { mastered: number; total: number; started: boolean } {
+  let mastered = 0, total = 0, started = false;
+  for (const c of allCards) {
+    if (c.kind !== 'quiz' || c.reviewTarget?.type !== 'mission' || String(c.reviewTarget.id) !== missionId) continue;
+    total++;
+    const p = progress[c.id];
+    if (p) { started = true; if (p.consecutiveCorrect >= 2) mastered++; }
+  }
+  return { mastered, total, started };
 }
 
 // 가나 완료감(읽기 기준): 각 글자의 'read' 카드가 2회 연속 첫시도 정답이면 "안정"으로 간주.

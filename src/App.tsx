@@ -2,8 +2,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { buildCards, type Card, type Choice } from './learn/cards';
 import {
-  classifyCard, clearProgress, loadProgress, loadSession, nextSessionId,
-  planSession, plannedSessionSize, recordAttempt, saveProgress, saveSession, selectSessionCards,
+  classifyCard, clearProgress, loadProgress, loadSession, missionsFromCards, nextSessionId,
+  plannedSessionSize, recordAttempt, saveProgress, saveSession, selectMissionCards, selectSessionCards,
   type SessionLogEntry,
 } from './learn/progress';
 import { sessionGoalText } from './views/goal';
@@ -13,8 +13,9 @@ import { Home } from './views/Home';
 import { Intro } from './views/Intro';
 import { Session } from './views/Session';
 import { Done } from './views/Done';
+import { Map } from './views/Map';
 
-type View = 'home' | 'intro' | 'session' | 'done';
+type View = 'home' | 'map' | 'intro' | 'session' | 'done';
 
 export function App() {
   const allCards = useMemo<Card[]>(buildCards, []);
@@ -59,6 +60,11 @@ export function App() {
     if (cards.length === 0) return;
     beginSession(id, cards, true);
   }
+  function startSceneSession(missionId: string) {
+    const cards = selectMissionCards(allCards, missionId);
+    if (cards.length === 0) return;
+    beginSession(nextSessionId(session), cards, true);
+  }
   function retryWeakSession() {
     const weakIds = new Set(sessionLog.filter((r) => r.result !== 'correct').map((r) => r.id));
     const weak = sessionCards.filter((c) => c.kind === 'quiz' && weakIds.has(c.id));
@@ -90,11 +96,21 @@ export function App() {
 
   // ── 라우팅 ───────────────────────────────────────
   if (view === 'home') {
-    return <Home allCards={allCards} progress={progress} session={session} onStart={startSession} onReset={resetAll} />;
+    return (
+      <Home
+        allCards={allCards} progress={progress} session={session}
+        onStart={startSession} onReset={resetAll}
+        onOpenMap={() => setView('map')} onPracticeScene={startSceneSession}
+      />
+    );
+  }
+  if (view === 'map') {
+    return <Map allCards={allCards} progress={progress} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
   }
   if (view === 'intro') {
-    const plan = planSession(allCards, progress, sessionId);
-    const goal = sessionGoalText(plan.missions, plan.breakdown.K > 0);
+    const missions = missionsFromCards(sessionCards, progress, sessionId);
+    const hasKana = sessionCards.some((c) => c.kind === 'quiz' && c.reviewTarget?.type === 'kana');
+    const goal = sessionGoalText(missions, hasKana);
     return <Intro cards={sessionCards} goal={goal} onStart={() => setView('session')} />;
   }
   if (view === 'done') {
