@@ -2,7 +2,7 @@
 import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
 import {
-  isKanaReadStable, isMissionUnlocked, kanaReadMastery, nextSessionId, planSession,
+  isKanaReadStable, isMissionUnlocked, kanaReadMastery, missionProgress, nextSessionId, planSession,
   sessionCounts, summarize, type ProgressMap, type SessionState,
 } from '../learn/progress';
 import { ttsSupported } from '../tts';
@@ -18,9 +18,11 @@ interface Props {
   session: SessionState;
   onStart: () => void;
   onReset: () => void;
+  onOpenMap: () => void;
+  onPracticeScene: (missionId: string) => void;
 }
 
-export function Home({ allCards, progress, session, onStart, onReset }: Props) {
+export function Home({ allCards, progress, session, onStart, onReset, onOpenMap, onPracticeScene }: Props) {
   const upcomingId = nextSessionId(session);
   const counts = sessionCounts(allCards, progress, upcomingId);
   const plan = planSession(allCards, progress, upcomingId);
@@ -28,7 +30,7 @@ export function Home({ allCards, progress, session, onStart, onReset }: Props) {
   const kanaUnits = revealedKanaUnits(progress);
   const s = summarize(progress);
   const goal = sessionGoalText(plan.missions, plan.breakdown.K > 0);
-  const lockedScenes = CONTENT.missions.filter((m) => !isMissionUnlocked(m.id, progress));
+  const scenes = CONTENT.missions.filter((m) => m.id !== 'C0'); // 튜토리얼 제외
 
   return (
     <main style={WRAP}>
@@ -69,16 +71,37 @@ export function Home({ allCards, progress, session, onStart, onReset }: Props) {
         </div>
       )}
 
-      {lockedScenes.length > 0 && (
-        <div style={{ marginTop: 16 }}>
-          <p style={{ margin: '0 0 6px', fontSize: 12, color: '#aaa' }}>다음 장면</p>
-          {lockedScenes.map((m) => (
-            <p key={m.id} style={{ margin: '4px 0', fontSize: 13, color: '#999' }}>
-              🔒 {m.place ?? m.scenario} — {lockHint(m.id)}
-            </p>
-          ))}
-        </div>
-      )}
+      <div style={{ marginTop: 18 }}>
+        <p style={{ margin: '0 0 6px', fontSize: 13, color: '#666', fontWeight: 600 }}>🎬 장면별 연습</p>
+        {scenes.map((m) => {
+          const unlocked = isMissionUnlocked(m.id, progress);
+          if (!unlocked) {
+            return (
+              <p key={m.id} style={{ margin: '6px 0', fontSize: 13, color: '#aaa' }}>
+                🔒 {m.place ?? m.scenario} — {lockHint(m.id)}
+              </p>
+            );
+          }
+          const p = missionProgress(allCards, progress, m.id);
+          const done = p.total > 0 && p.mastered === p.total;
+          return (
+            <button
+              key={m.id}
+              style={{ ...BTN, width: '100%', marginTop: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+              onClick={() => onPracticeScene(m.id)}
+            >
+              <span>🎬 {m.place ?? m.scenario} 연습</span>
+              <span style={{ fontSize: 13, color: done ? '#16a34a' : '#888' }}>{done ? '✅ ' : ''}{p.mastered}/{p.total}</span>
+            </button>
+          );
+        })}
+        <button
+          style={{ ...BTN, width: '100%', marginTop: 8, textAlign: 'center', color: '#4f46e5' }}
+          onClick={onOpenMap}
+        >
+          🗺 학습 지도 보기
+        </button>
+      </div>
 
       {s.seen > 0 && (
         <button
