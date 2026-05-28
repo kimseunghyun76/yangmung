@@ -147,10 +147,52 @@ function bucketOf(c: QuizCard): Bucket | null {
   return null;
 }
 
+// C3(전철)은 C1·C2를 충분히 경험한 뒤에만 열림 — 새 장면이 너무 일찍 나오지 않게.
+export const C3_UNLOCK = { c1: 4, c2: 3 } as const;
+export function missionExperiencedCount(progress: ProgressMap, missionId: string): number {
+  const prefix = `mission:${missionId}:`;
+  let n = 0;
+  for (const k in progress) if (k.startsWith(prefix)) n++;
+  return n;
+}
+export function isMissionUnlocked(missionId: string, progress: ProgressMap): boolean {
+  if (missionId === 'C3') {
+    return missionExperiencedCount(progress, 'C1') >= C3_UNLOCK.c1
+      && missionExperiencedCount(progress, 'C2') >= C3_UNLOCK.c2;
+  }
+  return true; // C0·C1·C2는 항상 열림 (진행 순서로 자연스레 노출)
+}
+
 function interleave<T>(...arrs: T[][]): T[] {
   const out: T[] = [];
   const max = Math.max(0, ...arrs.map((a) => a.length));
   for (let i = 0; i < max; i++) for (const a of arrs) if (i < a.length) out.push(a[i]);
+  return out;
+}
+
+interface Pool { due: QuizCard[]; fresh: QuizCard[] }
+const pushByStatus = (pool: Pool, c: QuizCard, status: CardStatus) =>
+  (status === 'due' ? pool.due : pool.fresh).push(c);
+
+// due 우선으로 채우되, fresh를 최소 minFresh장 보장 → 새 콘텐츠가 계속 밀리지 않음.
+function pickPool(pool: Pool, quota: number, minFresh: number): QuizCard[] {
+  const guaranteedFresh = Math.min(minFresh, pool.fresh.length, quota);
+  const dueTake = Math.min(pool.due.length, quota - guaranteedFresh);
+  const freshTake = Math.min(pool.fresh.length, quota - dueTake);
+  return [...pool.due.slice(0, dueTake), ...pool.fresh.slice(0, freshTake)];
+}
+
+// 미션 카드는 "한 장면"에 집중: 진행 순서(C0→C1→…)대로 한 미션을 통째로 채우고
+// quota가 남을 때만 다음 미션으로 넘어감. → "편의점 한 판" 같은 몰입감.
+function pickScene(byMission: Map<string, Pool>, quota: number): QuizCard[] {
+  const out: QuizCard[] = [];
+  for (const pool of byMission.values()) {           // Map = 등장(=진행) 순서 유지
+    if (out.length >= quota) break;
+    for (const c of [...pool.due, ...pool.fresh]) {   // 장면 안에서는 약점 먼저, 그 다음 신규
+      if (out.length >= quota) break;
+      out.push(c);
+    }
+  }
   return out;
 }
 
@@ -159,32 +201,30 @@ export function selectSessionCards(
   progress: ProgressMap,
   currentSessionId: number,
 ): Card[] {
-  const buckets: Record<Bucket, { due: QuizCard[]; fresh: QuizCard[] }> = {
-    K: { due: [], fresh: [] }, B: { due: [], fresh: [] }, C: { due: [], fresh: [] },
-  };
+  const k: Pool = { due: [], fresh: [] };
+  const b: Pool = { due: [], fresh: [] };
+  const cByMission = new Map<string, Pool>(); // 미션별 그룹 (등장 순서 = 진행 순서)
   const tips: Card[] = [];
   for (const c of allCards) {
     if (c.kind === 'tip') { tips.push(c); continue; }
     const status = classifyCard(c, progress[c.id], currentSessionId);
     if (status === 'cooldown') continue;
-    const b = bucketOf(c);
-    if (!b) continue;
-    if (status === 'due') buckets[b].due.push(c);
-    else buckets[b].fresh.push(c);
+    const t = c.reviewTarget?.type;
+    if (t === 'kana') pushByStatus(k, c, status);
+    else if (t === 'phrase') pushByStatus(b, c, status);
+    else if (t === 'mission') {
+      const mid = String(c.reviewTarget!.id);
+      if (!isMissionUnlocked(mid, progress)) continue; // 잠긴 장면(C3 등)은 제외
+      if (!cByMission.has(mid)) cByMission.set(mid, { due: [], fresh: [] });
+      pushByStatus(cByMission.get(mid)!, c, status);
+    }
   }
-  // due 우선으로 채우되, fresh를 최소 minFresh장 보장 → 새 콘텐츠가 계속 밀리지 않음.
-  const pick = (b: Bucket, quota: number, minFresh: number): QuizCard[] => {
-    const { due, fresh } = buckets[b];
-    const guaranteedFresh = Math.min(minFresh, fresh.length, quota);
-    const dueTake = Math.min(due.length, quota - guaranteedFresh);
-    const freshTake = Math.min(fresh.length, quota - dueTake); // 남는 슬롯은 fresh로 (≥ guaranteedFresh)
-    return [...due.slice(0, dueTake), ...fresh.slice(0, freshTake)]; // 순서: 약점(due) 먼저, 그 다음 신규
-  };
-  const k = pick('K', SESSION_QUOTAS.K, SESSION_MIN_FRESH.K);
-  const bb = pick('B', SESSION_QUOTAS.B, SESSION_MIN_FRESH.B);
-  const cc = pick('C', SESSION_QUOTAS.C, SESSION_MIN_FRESH.C);
+  const kSel = pickPool(k, SESSION_QUOTAS.K, SESSION_MIN_FRESH.K);
+  const bSel = pickPool(b, SESSION_QUOTAS.B, SESSION_MIN_FRESH.B);
+  const scene = pickScene(cByMission, SESSION_QUOTAS.C);
   const tipsSel = tips.slice(0, SESSION_QUOTAS.tip);
-  return [...interleave(k, bb, cc), ...tipsSel];
+  // 흐름: 가나·표현으로 몸풀기(K↔B 왕복) → 미션 한 장면 통째로 → 팁
+  return [...interleave(kSel, bSel), ...scene, ...tipsSel];
 }
 
 // 홈에서 "시작 버튼이 정확히 몇 카드 시작인지" 표시용 (Done의 "한 세션 더" 가능 여부 판단에도 사용)
