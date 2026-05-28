@@ -1,12 +1,15 @@
-// 홈 화면 — 진척 요약 · K1 안정도 · 다음 세션 구성 · 시작 버튼.
+// 홈 화면 — "오늘 한 판" 목표가 주인공. 가나 안정도/세션 구성은 보조.
 import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
 import {
-  isKanaReadStable, kanaReadMastery, nextSessionId, plannedSessionBreakdown,
-  plannedSessionSize, sessionCounts, summarize, type ProgressMap, type SessionState,
+  isKanaReadStable, kanaReadMastery, nextSessionId, planSession,
+  sessionCounts, summarize, type ProgressMap, type SessionState,
 } from '../learn/progress';
 import { ttsSupported } from '../tts';
 import { BTN, PRIMARY, WRAP } from '../ui/styles';
+
+// 앞 단계 가나가 N자 안정되기 전에는 다음 단계(K2 등) 패널을 접어 둠 — 첫 화면이 드릴처럼 안 보이게.
+const REVEAL_NEXT_KANA_AT = 3;
 
 interface Props {
   allCards: Card[];
@@ -19,15 +22,42 @@ interface Props {
 export function Home({ allCards, progress, session, onStart, onReset }: Props) {
   const upcomingId = nextSessionId(session);
   const counts = sessionCounts(allCards, progress, upcomingId);
-  const planned = plannedSessionSize(allCards, progress, upcomingId);
-  const breakdown = plannedSessionBreakdown(allCards, progress, upcomingId);
-  const kanaUnits = CONTENT.units.filter((u) => u.track === 'kana' && u.mode === 'drill');
+  const plan = planSession(allCards, progress, upcomingId);
+  const planned = plan.size;
+  const kanaUnits = revealedKanaUnits(progress);
   const s = summarize(progress);
+  const goal = sessionGoal(plan.missionScenario, plan.breakdown);
 
   return (
     <main style={WRAP}>
       <h1 style={{ marginBottom: 4 }}>yangmung</h1>
-      <p style={{ color: '#888', marginTop: 0, fontSize: 13 }}>다음 세션 #{upcomingId}</p>
+      <p style={{ color: '#888', marginTop: 0, fontSize: 13 }}>일본 여행, 오늘 한 판 · 세션 #{upcomingId}</p>
+
+      {/* 주인공: 오늘의 목표 + 시작 */}
+      <div style={{ background: '#4f46e5', color: '#fff', padding: 20, borderRadius: 14, marginTop: 14 }}>
+        <p style={{ margin: 0, fontSize: 13, opacity: 0.85 }}>🎯 오늘 목표</p>
+        <p style={{ margin: '6px 0 0', fontSize: 20, fontWeight: 700, lineHeight: 1.35 }}>{goal}</p>
+        <button
+          style={{ ...PRIMARY, background: '#fff', color: '#4f46e5', marginTop: 16, width: '100%', fontWeight: 700, fontSize: 17 }}
+          onClick={onStart}
+          disabled={planned === 0}
+        >
+          {planned === 0 ? '오늘 학습할 카드가 없어요' : `시작 (${planned}카드)`}
+        </button>
+        <p style={{ margin: '10px 0 0', fontSize: 12, opacity: 0.85 }}>
+          가나 {plan.breakdown.K} · 표현 {plan.breakdown.B} · 미션 {plan.breakdown.C} · 팁 {plan.breakdown.tip}
+        </p>
+      </div>
+
+      {planned > 0 && counts.due + counts.fresh > planned && (
+        <p style={{ fontSize: 12, color: '#888', marginTop: 8, textAlign: 'center' }}>
+          오늘 풀 수 있는 카드는 {counts.due + counts.fresh}개지만 한 번에 {planned}개씩 짧게 진행해요.
+        </p>
+      )}
+
+      {kanaUnits.map((u) => (
+        <KanaPanel key={u.id} stage={u.stage} kanaIds={u.kanaIds ?? []} progress={progress} />
+      ))}
 
       {s.seen > 0 && (
         <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
@@ -35,31 +65,6 @@ export function Home({ allCards, progress, session, onStart, onReset }: Props) {
           <Stat label="익숙" value={s.mastered} color="#16a34a" bg="#dcfce7" />
           <Stat label="약점" value={s.weak} color="#dc2626" bg="#fee2e2" />
         </div>
-      )}
-
-      {kanaUnits.map((u) => (
-        <KanaPanel key={u.id} stage={u.stage} kanaIds={u.kanaIds ?? []} progress={progress} />
-      ))}
-
-      <div style={{ background: '#f5f5fb', padding: 16, borderRadius: 12, marginTop: 12 }}>
-        <p style={{ margin: 0, fontSize: 13, color: '#666' }}>📋 다음 세션 구성</p>
-        <p style={{ margin: '6px 0 0', fontSize: 15 }}>
-          가나 <strong>{breakdown.K}</strong> · 표현 <strong>{breakdown.B}</strong> · 미션 <strong>{breakdown.C}</strong> · 팁 <strong>{breakdown.tip}</strong>
-        </p>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, fontSize: 13, color: '#666' }}>
-          <span>🔁 오늘 복습 {counts.due}개</span>
-          <span>🆕 새 학습 {counts.fresh}개</span>
-          <span>💤 제외 {counts.cooldown}개</span>
-        </div>
-      </div>
-
-      <button style={{ ...PRIMARY, marginTop: 16, width: '100%' }} onClick={onStart} disabled={planned === 0}>
-        {planned === 0 ? '오늘 학습할 카드가 없어요' : `시작 (${planned}카드)`}
-      </button>
-      {planned > 0 && counts.due + counts.fresh > planned && (
-        <p style={{ fontSize: 12, color: '#888', marginTop: 6, textAlign: 'center' }}>
-          오늘 풀 수 있는 카드는 {counts.due + counts.fresh}개지만 한 번에 {planned}개씩 짧게 진행해요.
-        </p>
       )}
 
       {s.seen > 0 && (
@@ -74,6 +79,30 @@ export function Home({ allCards, progress, session, onStart, onReset }: Props) {
       {!ttsSupported() && <p style={{ color: '#b45309', fontSize: 13, marginTop: 16 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
     </main>
   );
+}
+
+// 세션 목표 카피 — 미션이 있으면 그 장면을, 없으면 가나 중심으로.
+// 시나리오의 보조 괄호( (튜토리얼) 등 )는 목표 문장에서 떼어내 깔끔하게.
+function sessionGoal(scenario: string | undefined, breakdown: { K: number; C: number }): string {
+  if (scenario) return `${scenario.replace(/\s*\(.*?\)\s*$/, '')}까지 해보기`;
+  if (breakdown.K > 0) return '히라가나부터 차근차근 시작하기';
+  return '오늘 한 판 가볍게';
+}
+
+// 노출할 가나 드릴 Unit: K1은 항상, 다음 단계는 앞 단계가 충분히 안정됐거나 이미 시작했을 때만.
+function revealedKanaUnits(progress: ProgressMap) {
+  const units = CONTENT.units.filter((u) => u.track === 'kana' && u.mode === 'drill');
+  const out: typeof units = [];
+  for (let idx = 0; idx < units.length; idx++) {
+    const u = units[idx];
+    if (idx === 0) { out.push(u); continue; }
+    const prevMastered = kanaReadMastery(progress, units[idx - 1].kanaIds ?? []).mastered;
+    const selfStarted = (u.kanaIds ?? []).some((id) =>
+      progress[`kana:${id}:read`] || progress[`kana:${id}:listen`] || progress[`kana:${id}:confuse`]);
+    if (prevMastered >= REVEAL_NEXT_KANA_AT || selfStarted) out.push(u);
+    else break; // 이번 단계가 잠겼으면 이후 단계도 모두 잠금
+  }
+  return out;
 }
 
 // 단계별 가나 안정도 패널 (읽기 기준) — K1·K2 등 드릴 Unit마다 1개.
