@@ -36,7 +36,7 @@ export const units: Unit[] = [
   {
     id: 'u_b1_restaurant_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 식당에서 주문하고, 추천을 묻고, 음료를 요청하거나 거절할 수 있다',
-    newPhraseIds: ['p_kore_kudasai', 'p_osusume_wa', 'p_menu_misete', 'p_chotto_matte', 'p_mizu_kudasai', 'p_okaikei', 'p_irimasen', 'p_oishii', 'p_hoshii_desu', 'p_hitotsu_kudasai', 'p_futatsu_kudasai', 'p_kore_to_kore', 'p_karai_desu_ka', 'p_tabemasu'],
+    newPhraseIds: ['p_kore_kudasai', 'p_osusume_wa', 'p_menu_misete', 'p_chotto_matte', 'p_mizu_kudasai', 'p_okaikei', 'p_irimasen', 'p_oishii', 'p_hoshii_desu', 'p_hitotsu_kudasai', 'p_futatsu_kudasai', 'p_kore_to_kore', 'p_karai_desu_ka', 'p_tabemasu', 'p_hitori_desu', 'p_futari_desu', 'p_gochisousama'],
   },
   {
     id: 'u_b1_station_core', track: 'lang', stage: 'B1', mode: 'action',
