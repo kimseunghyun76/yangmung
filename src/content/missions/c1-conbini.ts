@@ -7,6 +7,7 @@ export const c1: Mission = {
   scenario: '편의점 계산대',
   place: '편의점',
   sequence: ['봉투', '데우기', '젓가락', '포인트카드', '합계', '결제'],
+  speakPhraseIds: ['p_card_de', 'p_suica_de', 'p_atatamete'],
   canDo: '사용자는 편의점 계산대에서 봉투·결제 방법·포인트카드·젓가락·데우기 여부를 듣고, 필요/불필요와 결제 수단을 짧게 답할 수 있다',
   unlockAfter: ['u_b0_reaction', 'u_b4_recovery'],
   steps: [

@@ -96,6 +96,13 @@ export function App() {
     if (!card || card.kind !== 'order') return;
     recordCardResult(card.id, correct, false);
   }
+  // 따라 말하기: 채점 없이 practiced만 기록 (SRS 쿨다운만 진행, 점수·약점 집계 제외)
+  function speakPracticed() {
+    if (!card || card.kind !== 'speak') return;
+    const updated = recordAttempt(progress, card.id, { correct: true, usedRecovery: false, sessionId });
+    setProgress(updated);
+    saveProgress(updated);
+  }
   function resetAll() {
     clearProgress();
     setProgress({});
@@ -141,6 +148,7 @@ export function App() {
       cardStatus={card.kind === 'tip' ? null : classifyCard(card, progress[card.id], sessionId)}
       onChoose={choose}
       onOrderResult={orderResult}
+      onSpeakPracticed={speakPracticed}
       onNext={next}
     />
   );

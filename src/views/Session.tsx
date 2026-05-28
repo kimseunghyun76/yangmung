@@ -4,6 +4,7 @@ import type { CardStatus } from '../learn/progress';
 import { speak, ttsSupported } from '../tts';
 import { BTN, PRIMARY, WRAP } from '../ui/styles';
 import { OrderCardView } from './OrderCard';
+import { SpeakCardView } from './SpeakCard';
 
 interface Props {
   card: Card;
@@ -13,12 +14,13 @@ interface Props {
   cardStatus: CardStatus | null;
   onChoose: (idx: number, c: Choice) => void;
   onOrderResult: (correct: boolean) => void;
+  onSpeakPracticed: () => void;
   onNext: () => void;
 }
 
 const badgeStyle: React.CSSProperties = { display: 'inline-block', padding: '3px 9px', borderRadius: 999, fontSize: 12, fontWeight: 600, marginLeft: 8 };
 
-export function Session({ card, index, total, picked, cardStatus, onChoose, onOrderResult, onNext }: Props) {
+export function Session({ card, index, total, picked, cardStatus, onChoose, onOrderResult, onSpeakPracticed, onNext }: Props) {
   const badge =
     cardStatus === 'due' ? <span style={{ ...badgeStyle, background: '#a78bfa', color: '#fff' }}>🔁 복습</span> :
     cardStatus === 'new' ? <span style={{ ...badgeStyle, background: '#60a5fa', color: '#fff' }}>🆕 신규</span> :
@@ -42,6 +44,8 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onOr
         </>
       ) : card.kind === 'order' ? (
         <OrderCardView key={card.id} card={card} onComplete={onOrderResult} onNext={onNext} />
+      ) : card.kind === 'speak' ? (
+        <SpeakCardView key={card.id} card={card} onPracticed={onSpeakPracticed} onNext={onNext} />
       ) : (
         <>
           <div style={{ fontSize: card.listen || card.tag.startsWith('K') ? 72 : 28, textAlign: 'center', margin: '20px 0 6px' }}>{card.banner}</div>
