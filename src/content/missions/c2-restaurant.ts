@@ -1,7 +1,7 @@
 import type { Mission } from '../types';
 
 // C2 — 식당 한 사이클. 스텝은 입장 동선 순서:
-// 인원수 → 주문 받기 → 개수 정하기 → 음료 → 계산 마무리.
+// 인원수 → 주문 받기 → 음료(일본 식당은 음료를 먼저) → 개수 → 계산 마무리.
 export const c2: Mission = {
   id: 'C2',
   scenario: '식당에서 주문 (한 조각)',
@@ -33,17 +33,7 @@ export const c2: Mission = {
       ],
     },
     {
-      situationKo: '메뉴를 정하고 몇 개 시킬지 말한다',
-      speaker: '나',
-      choices: [
-        { text: '하나 주세요', phraseId: 'p_hitotsu_kudasai', correct: true },
-        { text: '두 개 주세요', phraseId: 'p_futatsu_kudasai', correct: true },
-        { text: '이거랑 이거', phraseId: 'p_kore_to_kore', correct: true, feedback: '메뉴를 가리키며 — 발음에 자신이 없을 때 가장 안전한 주문법' },
-        { text: '매워요?', phraseId: 'p_karai_desu_ka', correct: false, feedback: '확인 질문은 자연스럽지만 "주문 개수 정하기" 단계는 아니에요' },
-      ],
-    },
-    {
-      situationKo: '주문을 받은 점원이 음료를 묻는다',
+      situationKo: '주문을 받은 점원이 먼저 음료를 묻는다',
       speaker: '점원',
       promptPhraseId: 'p_nomimono',
       choices: [
@@ -52,6 +42,16 @@ export const c2: Mission = {
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
         { text: '(메뉴 사진 가리키기)', actionText: '메뉴 사진을 가리킨다', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
         { text: '필요 없어요', phraseId: 'p_irimasen', correct: true },
+      ],
+    },
+    {
+      situationKo: '이어서 몇 개 시킬지 말한다',
+      speaker: '나',
+      choices: [
+        { text: '하나 주세요', phraseId: 'p_hitotsu_kudasai', correct: true },
+        { text: '두 개 주세요', phraseId: 'p_futatsu_kudasai', correct: true },
+        { text: '이거랑 이거', phraseId: 'p_kore_to_kore', correct: true, feedback: '메뉴를 가리키며 — 발음에 자신이 없을 때 가장 안전한 주문법' },
+        { text: '매워요?', phraseId: 'p_karai_desu_ka', correct: false, feedback: '확인 질문은 자연스럽지만 "주문 개수 정하기" 단계는 아니에요' },
       ],
     },
     {

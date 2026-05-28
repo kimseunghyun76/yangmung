@@ -3,9 +3,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { buildCards, type Card, type Choice } from './learn/cards';
 import {
   classifyCard, clearProgress, loadProgress, loadSession, nextSessionId,
-  plannedSessionSize, recordAttempt, saveProgress, saveSession, selectSessionCards,
+  planSession, plannedSessionSize, recordAttempt, saveProgress, saveSession, selectSessionCards,
   type SessionLogEntry,
 } from './learn/progress';
+import { sessionGoalText } from './views/goal';
 import { speak } from './tts';
 import { WRAP } from './ui/styles';
 import { Home } from './views/Home';
@@ -92,7 +93,9 @@ export function App() {
     return <Home allCards={allCards} progress={progress} session={session} onStart={startSession} onReset={resetAll} />;
   }
   if (view === 'intro') {
-    return <Intro cards={sessionCards} onStart={() => setView('session')} />;
+    const plan = planSession(allCards, progress, sessionId);
+    const goal = sessionGoalText(plan.missions, plan.breakdown.K > 0);
+    return <Intro cards={sessionCards} goal={goal} onStart={() => setView('session')} />;
   }
   if (view === 'done') {
     const canContinue = plannedSessionSize(allCards, progress, nextSessionId(session)) > 0;
