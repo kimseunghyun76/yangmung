@@ -238,7 +238,8 @@ export function plannedSessionSize(
 }
 
 export interface SessionBreakdown { K: number; B: number; C: number; tip: number }
-export interface SessionMission { id: string; scenario: string }
+// isReview: 이번 세션에 이 미션의 신규(new) 카드가 없고 전부 복습(due)일 때 true → "복습하기" 카피.
+export interface SessionMission { id: string; scenario: string; isReview: boolean }
 
 // 세션 계획 한 번에: 장수 + 트랙 구성 + 이번 세션에 등장하는 미션 목록(목표 카피용).
 // 홈에서 selectSessionCards를 여러 번 부르지 않도록 단일 진입점으로 묶음.
@@ -256,6 +257,7 @@ export function planSession(
   const breakdown: SessionBreakdown = { K: 0, B: 0, C: 0, tip: 0 };
   const missions: SessionMission[] = [];
   const seen = new Set<string>();
+  const freshMissions = new Set<string>(); // 신규 카드가 있는 미션
   for (const c of cards) {
     if (c.kind === 'tip') { breakdown.tip++; continue; }
     const b = bucketOf(c);
@@ -264,9 +266,12 @@ export function planSession(
     else if (b === 'C') {
       breakdown.C++;
       const id = c.reviewTarget?.type === 'mission' ? String(c.reviewTarget.id) : undefined;
-      if (id && !seen.has(id)) { seen.add(id); missions.push({ id, scenario: c.scenario ?? '' }); }
+      if (!id) continue;
+      if (!seen.has(id)) { seen.add(id); missions.push({ id, scenario: c.scenario ?? '', isReview: true }); }
+      if (classifyCard(c, progress[c.id], currentSessionId) === 'new') freshMissions.add(id);
     }
   }
+  for (const m of missions) m.isReview = !freshMissions.has(m.id);
   return { size: cards.length, breakdown, missions };
 }
 

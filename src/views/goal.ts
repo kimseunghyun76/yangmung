@@ -32,7 +32,13 @@ export function sessionGoalText(missions: SessionMission[], hasKana: boolean): s
     if (missions.length > 0) return `${stripParen(missions[0].scenario)}까지 해보기`;
     return hasKana ? '히라가나부터 차근차근 시작하기' : '오늘 한 판 가볍게';
   }
-  if (scenes.length === 1) return `${stripParen(scenes[0].scenario)}까지 해보기`;
+  if (scenes.length === 1) {
+    const s = scenes[0];
+    // 신규 없이 전부 복습이면 "복습하기" — 같은 장면 재방문이 후퇴처럼 안 느껴지게.
+    if (s.isReview) return `${PLACE[s.id] ?? stripParen(s.scenario)} 복습하기`;
+    return `${stripParen(s.scenario)}까지 해보기`;
+  }
   const places = scenes.map((m) => PLACE[m.id] ?? stripParen(m.scenario));
-  return `${joinPlaces(places)} 표현 익히기`;
+  const allReview = scenes.every((m) => m.isReview);
+  return `${joinPlaces(places)} ${allReview ? '복습하기' : '표현 익히기'}`;
 }

@@ -1,24 +1,17 @@
 // 세션 시작 전 "오늘 한 판" 인트로 — 목표와 첫 행동을 정렬.
+// goal은 App에서 planSession 기반으로 계산해 전달(복습 뉘앙스 포함).
 import type { Card } from '../learn/cards';
 import { PRIMARY, WRAP } from '../ui/styles';
-import { sessionGoalText } from './goal';
 
-export function Intro({ cards, onStart }: { cards: Card[]; onStart: () => void }) {
-  const missions: { id: string; scenario: string }[] = [];
-  const seen = new Set<string>();
+export function Intro({ cards, goal, onStart }: { cards: Card[]; goal: string; onStart: () => void }) {
   let k = 0, b = 0, c = 0;
   for (const card of cards) {
     if (card.kind !== 'quiz') continue;
     const t = card.reviewTarget?.type;
     if (t === 'kana') k++;
     else if (t === 'phrase') b++;
-    else if (t === 'mission') {
-      c++;
-      const id = String(card.reviewTarget!.id);
-      if (!seen.has(id)) { seen.add(id); missions.push({ id, scenario: card.scenario ?? '' }); }
-    }
+    else if (t === 'mission') c++;
   }
-  const goal = sessionGoalText(missions, k > 0);
 
   return (
     <main style={WRAP}>
