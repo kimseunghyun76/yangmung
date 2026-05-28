@@ -4,6 +4,7 @@ import type { Mission } from '../types';
 export const c3: Mission = {
   id: 'C3',
   scenario: '전철 한 조각 (행선지 묻기 + 환승 듣기)',
+  place: '전철',
   canDo: '사용자는 역무원에게 행선지를 묻고, 환승 안내를 듣고 다음 행동을 정할 수 있다',
   unlockAfter: ['C2'],
   steps: [

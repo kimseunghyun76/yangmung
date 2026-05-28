@@ -237,13 +237,14 @@ export function plannedSessionSize(
 }
 
 export interface SessionBreakdown { K: number; B: number; C: number; tip: number }
+export interface SessionMission { id: string; scenario: string }
 
-// 세션 계획 한 번에: 장수 + 트랙 구성 + 대표 미션 시나리오(여행 목표 카피용).
+// 세션 계획 한 번에: 장수 + 트랙 구성 + 이번 세션에 등장하는 미션 목록(목표 카피용).
 // 홈에서 selectSessionCards를 여러 번 부르지 않도록 단일 진입점으로 묶음.
 export interface SessionPlan {
   size: number;
   breakdown: SessionBreakdown;
-  missionScenario?: string;
+  missions: SessionMission[]; // 등장 순서대로 distinct
 }
 export function planSession(
   allCards: Card[],
@@ -252,7 +253,8 @@ export function planSession(
 ): SessionPlan {
   const cards = selectSessionCards(allCards, progress, currentSessionId);
   const breakdown: SessionBreakdown = { K: 0, B: 0, C: 0, tip: 0 };
-  let missionScenario: string | undefined;
+  const missions: SessionMission[] = [];
+  const seen = new Set<string>();
   for (const c of cards) {
     if (c.kind === 'tip') { breakdown.tip++; continue; }
     const b = bucketOf(c);
@@ -260,10 +262,11 @@ export function planSession(
     else if (b === 'B') breakdown.B++;
     else if (b === 'C') {
       breakdown.C++;
-      if (!missionScenario && c.scenario) missionScenario = c.scenario;
+      const id = c.reviewTarget?.type === 'mission' ? String(c.reviewTarget.id) : undefined;
+      if (id && !seen.has(id)) { seen.add(id); missions.push({ id, scenario: c.scenario ?? '' }); }
     }
   }
-  return { size: cards.length, breakdown, missionScenario };
+  return { size: cards.length, breakdown, missions };
 }
 
 // 가나 완료감(읽기 기준): 각 글자의 'read' 카드가 2회 연속 첫시도 정답이면 "안정"으로 간주.
