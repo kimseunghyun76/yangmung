@@ -9,10 +9,11 @@ import {
 import { speak } from './tts';
 import { WRAP } from './ui/styles';
 import { Home } from './views/Home';
+import { Intro } from './views/Intro';
 import { Session } from './views/Session';
 import { Done } from './views/Done';
 
-type View = 'home' | 'session' | 'done';
+type View = 'home' | 'intro' | 'session' | 'done';
 
 export function App() {
   const allCards = useMemo<Card[]>(buildCards, []);
@@ -44,23 +45,24 @@ export function App() {
   }, [view, sessionCards.length, i, sessionId]);
 
   // ── 액션 ─────────────────────────────────────────
-  function beginSession(id: number, cards: Card[]) {
+  // showIntro: 새 "한 판"이면 인트로부터(목표↔첫 카드 정렬), 약점 재출제는 바로 세션.
+  function beginSession(id: number, cards: Card[], showIntro: boolean) {
     setSessionId(id);
     setSessionCards(cards);
     setI(0); setPicked(null); setScore(0); setQuizSeen(0); setSessionLog([]);
-    setView('session');
+    setView(showIntro ? 'intro' : 'session');
   }
   function startSession() {
     const id = nextSessionId(session);
     const cards = selectSessionCards(allCards, progress, id);
     if (cards.length === 0) return;
-    beginSession(id, cards);
+    beginSession(id, cards, true);
   }
   function retryWeakSession() {
     const weakIds = new Set(sessionLog.filter((r) => r.result !== 'correct').map((r) => r.id));
     const weak = sessionCards.filter((c) => c.kind === 'quiz' && weakIds.has(c.id));
     if (weak.length === 0) return;
-    beginSession(nextSessionId(session), weak);
+    beginSession(nextSessionId(session), weak, false);
   }
   function next() {
     setPicked(null);
@@ -88,6 +90,9 @@ export function App() {
   // ── 라우팅 ───────────────────────────────────────
   if (view === 'home') {
     return <Home allCards={allCards} progress={progress} session={session} onStart={startSession} onReset={resetAll} />;
+  }
+  if (view === 'intro') {
+    return <Intro cards={sessionCards} onStart={() => setView('session')} />;
   }
   if (view === 'done') {
     const canContinue = plannedSessionSize(allCards, progress, nextSessionId(session)) > 0;

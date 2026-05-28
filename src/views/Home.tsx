@@ -7,6 +7,7 @@ import {
 } from '../learn/progress';
 import { ttsSupported } from '../tts';
 import { BTN, PRIMARY, WRAP } from '../ui/styles';
+import { sessionGoalText } from './goal';
 
 // 앞 단계 가나가 N자 안정되기 전에는 다음 단계(K2 등) 패널을 접어 둠 — 첫 화면이 드릴처럼 안 보이게.
 const REVEAL_NEXT_KANA_AT = 3;
@@ -26,7 +27,7 @@ export function Home({ allCards, progress, session, onStart, onReset }: Props) {
   const planned = plan.size;
   const kanaUnits = revealedKanaUnits(progress);
   const s = summarize(progress);
-  const goal = sessionGoal(plan.missionScenario, plan.breakdown);
+  const goal = sessionGoalText(plan.missionScenario, plan.breakdown.K > 0);
 
   return (
     <main style={WRAP}>
@@ -79,14 +80,6 @@ export function Home({ allCards, progress, session, onStart, onReset }: Props) {
       {!ttsSupported() && <p style={{ color: '#b45309', fontSize: 13, marginTop: 16 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
     </main>
   );
-}
-
-// 세션 목표 카피 — 미션이 있으면 그 장면을, 없으면 가나 중심으로.
-// 시나리오의 보조 괄호( (튜토리얼) 등 )는 목표 문장에서 떼어내 깔끔하게.
-function sessionGoal(scenario: string | undefined, breakdown: { K: number; C: number }): string {
-  if (scenario) return `${scenario.replace(/\s*\(.*?\)\s*$/, '')}까지 해보기`;
-  if (breakdown.K > 0) return '히라가나부터 차근차근 시작하기';
-  return '오늘 한 판 가볍게';
 }
 
 // 노출할 가나 드릴 Unit: K1은 항상, 다음 단계는 앞 단계가 충분히 안정됐거나 이미 시작했을 때만.
