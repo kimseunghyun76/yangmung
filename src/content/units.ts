@@ -34,13 +34,13 @@ export const units: Unit[] = [
   },
   {
     id: 'u_b1_shop_core', track: 'lang', stage: 'B1', mode: 'action',
-    canDo: '사용자는 편의점 계산대에서 봉투·결제·포인트카드·영수증 요청에 적절히 응답할 수 있다',
+    canDo: '사용자는 편의점 계산대에서 봉투·결제·포인트카드·영수증·젓가락·데우기 요청에 적절히 응답할 수 있다',
     newPhraseIds: ['p_fukuro_iranai', 'p_genkin_de', 'p_card_de', 'p_kore_de', 'p_arimasu', 'p_arimasen', 'p_reshiito_kudasai', 'p_wakarimasen', 'p_atatamete', 'p_hashi_kudasai', 'p_sono_mama_de', 'p_betsubetsu_de', 'p_suica_de', 'p_mou_daijoubu_desu'],
     reviewPhraseIds: ['p_hai', 'p_iie'],
   },
   {
     id: 'u_b1_restaurant_core', track: 'lang', stage: 'B1', mode: 'action',
-    canDo: '사용자는 식당에서 주문하고, 추천을 묻고, 음료를 요청하거나 거절할 수 있다',
+    canDo: '사용자는 식당에서 인원수를 답하고, 주문·추천·음료·개수를 요청하거나 거절하고, 식사 후 계산을 마무리할 수 있다',
     newPhraseIds: ['p_kore_kudasai', 'p_osusume_wa', 'p_menu_misete', 'p_chotto_matte', 'p_mizu_kudasai', 'p_okaikei', 'p_irimasen', 'p_oishii', 'p_hoshii_desu', 'p_hitotsu_kudasai', 'p_futatsu_kudasai', 'p_kore_to_kore', 'p_karai_desu_ka', 'p_tabemasu', 'p_hitori_desu', 'p_futari_desu', 'p_gochisousama'],
   },
   {
