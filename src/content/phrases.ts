@@ -86,6 +86,13 @@ export const phrases: Phrase[] = [
   { id: 'p_karai_desu_ka', kana: 'からいですか', kanji: '辛いですか', displayKana: 'からいですか？', korean: '매워요?', register: 'productive', grammarRefs: ['g_masuka'] },
   { id: 'p_tabemasu', kana: 'たべます', kanji: '食べます', korean: '먹을게요', register: 'productive' },
 
+  // ── C3 전철 정식화: 표·IC충전·개찰구·플랫폼·내릴 역 ──
+  { id: 'p_kippu_kudasai', kana: 'きっぷをください', kanji: '切符をください', korean: '표 주세요', register: 'productive' },
+  { id: 'p_chaaji_onegai', kana: 'チャージおねがいします', kanji: 'チャージお願いします', displayKana: 'チャージ、おねがいします', korean: '충전 부탁해요', register: 'productive', tip: 'IC카드(Suica) 잔액 충전 — 「チャージ」 한 단어면 통해요' },
+  { id: 'p_kaisatsu_doko', kana: 'かいさつはどこですか', kanji: '改札はどこですか', displayKana: 'かいさつは、どこですか？', korean: '개찰구 어디예요?', register: 'productive', grammarRefs: ['g_masuka'] },
+  { id: 'p_nanbansen', kana: 'なんばんせんですか', kanji: '何番線ですか', displayKana: 'なんばんせんですか？', korean: '몇 번 선이에요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '플랫폼 번호 묻기 — 「番線(ばんせん)」이 승강장 번호' },
+  { id: 'p_tsugi_wa_shibuya', kana: 'つぎはしぶやですか', kanji: '次は渋谷ですか', displayKana: 'つぎは、しぶやですか？', korean: '다음은 시부야예요?', register: 'productive', grammarRefs: ['g_masuka'] },
+
   // ── 응답 다양성 보강 ──
   { id: 'p_wakarimashita_arigatou', kana: 'わかりましたありがとうございます', kanji: '分かりました、ありがとうございます', displayKana: 'わかりました、ありがとうございます', korean: '알겠습니다, 감사합니다', register: 'productive', tip: '이해+감사를 한 번에 — 안내를 받은 뒤 자연스러운 마무리' },
 
