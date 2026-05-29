@@ -134,6 +134,7 @@ export function App() {
       <Done
         sessionId={sessionId} score={score} quizSeen={quizSeen} sessionLog={sessionLog}
         progress={progress} canContinue={canContinue}
+        speakCount={sessionCards.filter((c) => c.kind === 'speak').length}
         onRetryWeak={retryWeakSession} onContinue={startSession} onHome={() => setView('home')}
       />
     );
