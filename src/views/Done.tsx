@@ -10,13 +10,14 @@ interface Props {
   quizSeen: number;
   sessionLog: SessionLogEntry[];
   progress: ProgressMap;
+  speakCount: number;
   canContinue: boolean;
   onRetryWeak: () => void;
   onContinue: () => void;
   onHome: () => void;
 }
 
-export function Done({ sessionId, score, quizSeen, sessionLog, progress, canContinue, onRetryWeak, onContinue, onHome }: Props) {
+export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, onRetryWeak, onContinue, onHome }: Props) {
   const stars = quizSeen ? Math.max(1, Math.round((score / quizSeen) * 3)) : 0;
   const s = summarize(progress);
   const sr = sessionResult(progress, sessionId);
@@ -29,7 +30,7 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, canCont
       <h1>세션 {sessionId} 완료 🎉</h1>
       <p style={{ fontSize: 22, margin: '4px 0 0' }}>{'⭐'.repeat(stars)}{'☆'.repeat(3 - stars)}</p>
       <p style={{ color: '#666', fontSize: 14, margin: '6px 0 0' }}>
-        첫 시도 {score}/{quizSeen}{sr.weakNow > 0 ? ` · 약점 ${sr.weakNow}개 다음에 다시 나와요` : ''}
+        첫 시도 {score}/{quizSeen}{speakCount > 0 ? ` · 말하기 ${speakCount}문장` : ''}{sr.weakNow > 0 ? ` · 약점 ${sr.weakNow}개 다음에 다시 나와요` : ''}
       </p>
 
       {/* 주역: 다음 행동 */}
@@ -57,6 +58,7 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, canCont
             <div style={{ color: '#16a34a' }}>첫 시도 정답</div><Num value={score} color="#16a34a" />
             <div style={{ color: '#b45309' }}>🛟 복구 사용</div><Num value={recoveryUsed} color="#b45309" />
             <div style={{ color: '#dc2626' }}>✗ 오답</div><Num value={wrongCount} color="#dc2626" />
+            {speakCount > 0 && (<><div>🗣 말한 문장</div><Num value={speakCount} /></>)}
             <div style={{ color: '#16a34a' }}>✅ 새로 익숙</div><Num value={sr.masteredNow} color="#16a34a" />
           </div>
           <p style={{ margin: '10px 0 0', fontSize: 12, color: '#888' }}>복구는 별점에 안 들어가요 — 보조 바퀴.</p>
