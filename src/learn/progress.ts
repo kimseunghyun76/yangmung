@@ -306,7 +306,10 @@ export function selectSessionCards(
   const kSel = pickPool(k, SESSION_QUOTAS.K, SESSION_MIN_FRESH.K);
   const bSel = pickPool(b, SESSION_QUOTAS.B, SESSION_MIN_FRESH.B);
   const scene = pickScene(cByMission, SESSION_QUOTAS.C);
-  const tipsSel = tips.slice(0, SESSION_QUOTAS.tip);
+  // 팁: 안 본 것/오래된 것부터 1개씩 회전 (매번 같은 팁 X)
+  const tipsSel = [...tips]
+    .sort((a, b2) => (progress[a.id]?.lastSeenAt ?? '') < (progress[b2.id]?.lastSeenAt ?? '') ? -1 : 1)
+    .slice(0, SESSION_QUOTAS.tip);
   // 흐름: 가나·표현으로 몸풀기(K↔B 왕복) → 미션 한 장면 통째로 → 팁
   return [...interleave(kSel, bSel), ...scene, ...tipsSel];
 }
