@@ -28,13 +28,20 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext }: Prop
         <p style={{ margin: '8px 0 0', fontSize: 11, color: '#9a8fd8' }}>보라색 로마자는 아직 익숙하지 않은 글자예요 — 익히면 사라져요</p>
       </div>
 
-      <div style={{ textAlign: 'center', marginTop: 12 }}>
+      <div style={{ textAlign: 'center', marginTop: 12, display: 'flex', gap: 8, justifyContent: 'center' }}>
         <button
           style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: '#fff' }}
           onClick={() => speak(card.ja)}
           disabled={!ttsSupported()}
         >
           🔊 듣기
+        </button>
+        <button
+          style={{ ...BTN, padding: '10px 18px', fontSize: 14, background: '#fff' }}
+          onClick={() => speak(card.ja, { rate: 0.6 })}
+          disabled={!ttsSupported()}
+        >
+          🐢 천천히
         </button>
       </div>
 

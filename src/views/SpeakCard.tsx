@@ -29,11 +29,15 @@ export function SpeakCardView({ card, isKanaFamiliar, onPracticed, onNext }: Pro
       </div>
       <p style={{ textAlign: 'center', color: '#555', marginTop: 4 }}>{card.korean}</p>
 
-      <div style={{ textAlign: 'center', marginTop: 14 }}>
+      <div style={{ textAlign: 'center', marginTop: 14, display: 'flex', gap: 8, justifyContent: 'center' }}>
         <button
           style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: '#eef2ff' }}
           onClick={() => speak(card.ja)} disabled={!ttsSupported()}
         >🔊 듣기</button>
+        <button
+          style={{ ...BTN, padding: '10px 18px', fontSize: 14 }}
+          onClick={() => speak(card.ja, { rate: 0.6 })} disabled={!ttsSupported()}
+        >🐢 천천히</button>
       </div>
 
       <p style={{ textAlign: 'center', color: '#777', fontSize: 14, marginTop: 16 }}>

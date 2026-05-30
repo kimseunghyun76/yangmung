@@ -55,11 +55,15 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
         <>
           <div style={{ fontSize: card.listen || card.tag.startsWith('K') ? 72 : 28, textAlign: 'center', margin: '20px 0 6px' }}>{card.banner}</div>
           {card.bannerJa && (
-            <div style={{ textAlign: 'center', marginBottom: 8 }}>
+            <div style={{ textAlign: 'center', marginBottom: 8, display: 'flex', gap: 8, justifyContent: 'center' }}>
               <button
                 style={{ ...BTN, padding: card.listen ? '10px 22px' : '6px 12px', fontSize: card.listen ? 18 : undefined, background: card.listen ? '#eef2ff' : undefined }}
                 onClick={() => speak(card.bannerJa!)} disabled={!ttsSupported()}
               >🔊 듣기</button>
+              <button
+                style={{ ...BTN, padding: card.listen ? '10px 18px' : '6px 12px', fontSize: 14 }}
+                onClick={() => speak(card.bannerJa!, { rate: 0.6 })} disabled={!ttsSupported()}
+              >🐢 천천히</button>
             </div>
           )}
           {card.promptPhrase ? (
