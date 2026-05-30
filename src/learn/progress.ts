@@ -184,6 +184,36 @@ function bucketOf(c: ReviewableCard): Bucket | null {
   return null;
 }
 
+// 한 "학습 대상"의 여러 카드 형태를 묶는 개념 키 — 복습 시 형태를 변주하기 위함.
+// kana:<id>:read|listen|confuse → 한 글자, listen:/dictation: → 한 표현. 그 외(미션 장면)는 카드별 고유.
+function conceptKey(c: ReviewableCard): string {
+  const id = c.id;
+  if (id.startsWith('kana:')) { const p = id.split(':'); return `kana:${p[1]}`; }
+  if (id.startsWith('listen:')) return `phrase:${id.slice(7)}`;
+  if (id.startsWith('dictation:')) return `phrase:${id.slice(10)}`;
+  return id; // 미션 스텝·소개·말하기·흐름은 묶지 않음
+}
+
+// 처음 만날 때 형태 우선순위(읽기 → 듣기 → 구분/받아쓰기). 같은 "안 본" 형태 중 가장 부드러운 것부터.
+function formRank(id: string): number {
+  if (id.endsWith(':read')) return 0;
+  if (id.startsWith('listen:') || id.endsWith(':listen')) return 1;
+  if (id.startsWith('dictation:')) return 2;
+  if (id.endsWith(':confuse')) return 3;
+  return 1;
+}
+
+// 개념의 여러 형태 중 "가장 안 본" 대표 1장 — 안 본 것(lastSeenAt 없음) 우선, 그다음 오래된 것.
+// → 복습이 매번 같은 카드가 아니라 읽기↔듣기↔받아쓰기로 회전.
+function pickFreshestVariant(variants: ReviewableCard[], progress: ProgressMap): ReviewableCard {
+  return [...variants].sort((a, b) => {
+    const ta = progress[a.id]?.lastSeenAt ?? '';
+    const tb = progress[b.id]?.lastSeenAt ?? '';
+    if (ta !== tb) return ta < tb ? -1 : 1;       // 덜 최근에 본 것 먼저
+    return formRank(a.id) - formRank(b.id);         // 동률이면 부드러운 형태 먼저
+  })[0];
+}
+
 // C3(전철)은 C1·C2를 충분히 경험한 뒤에만 열림 — 새 장면이 너무 일찍 나오지 않게.
 // 식당(C2)을 "한 번 본 수준"이 아니라 마무리(계산)까지 반복하도록 조건을 늦춤.
 export const C3_UNLOCK = { c1: 5, c2: 4 } as const;
@@ -247,19 +277,30 @@ export function selectSessionCards(
   const b: Pool = { due: [], fresh: [] };
   const cByMission = new Map<string, Pool>(); // 미션별 그룹 (등장 순서 = 진행 순서)
   const tips: Card[] = [];
+
+  // 1) cooldown 아닌 형태들을 개념별로 묶음 (등장 순서 유지)
+  const byConcept = new Map<string, ReviewableCard[]>();
   for (const c of allCards) {
     if (c.kind === 'tip') { tips.push(c); continue; }
     if (c.kind === 'order') continue; // 흐름 정보 카드는 자동 SRS 세션에서 제외
-    const status = classifyCard(c, progress[c.id], currentSessionId);
-    if (status === 'cooldown') continue;
-    const t = c.reviewTarget?.type;
-    if (t === 'kana') pushByStatus(k, c, status);
-    else if (t === 'phrase') pushByStatus(b, c, status);
+    if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
+    const key = conceptKey(c);
+    const arr = byConcept.get(key);
+    if (arr) arr.push(c); else byConcept.set(key, [c]);
+  }
+
+  // 2) 개념마다 "가장 안 본" 형태 1장만 대표로 → 복습이 형태 변주로 신선해짐
+  for (const variants of byConcept.values()) {
+    const rep = pickFreshestVariant(variants, progress);
+    const status: CardStatus = progress[rep.id] ? 'due' : 'new';
+    const t = rep.reviewTarget?.type;
+    if (t === 'kana') pushByStatus(k, rep, status);
+    else if (t === 'phrase') pushByStatus(b, rep, status);
     else if (t === 'mission') {
-      const mid = String(c.reviewTarget!.id);
+      const mid = String(rep.reviewTarget!.id);
       if (!isMissionUnlocked(mid, progress)) continue; // 잠긴 장면(C3 등)은 제외
       if (!cByMission.has(mid)) cByMission.set(mid, { due: [], fresh: [] });
-      pushByStatus(cByMission.get(mid)!, c, status);
+      pushByStatus(cByMission.get(mid)!, rep, status);
     }
   }
   const kSel = pickPool(k, SESSION_QUOTAS.K, SESSION_MIN_FRESH.K);
