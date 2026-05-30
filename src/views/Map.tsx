@@ -57,7 +57,7 @@ export function Map({ allCards, progress, onPracticeScene, onBack }: Props) {
             </button>
           );
         })}
-        <p style={{ fontSize: 12, color: '#aaa', marginTop: 8 }}>잠긴 장면은 앞 장면을 더 익히면 열려요.</p>
+        <p style={{ fontSize: 12, color: '#aaa', marginTop: 8 }}>잠긴 장면은 앞 장면을 더 익히면 열려요. 다음 장면은 호텔 체크인까지 이어집니다.</p>
       </Section>
 
       <Section title="복구 도구 (막혔을 때)">

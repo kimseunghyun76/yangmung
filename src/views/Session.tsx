@@ -3,6 +3,7 @@ import type { Card, Choice } from '../learn/cards';
 import type { CardStatus } from '../learn/progress';
 import { speak, ttsSupported } from '../tts';
 import { BTN, PRIMARY, WRAP } from '../ui/styles';
+import { IntroduceCardView } from './IntroduceCard';
 import { OrderCardView } from './OrderCard';
 import { SpeakCardView } from './SpeakCard';
 
@@ -13,14 +14,14 @@ interface Props {
   picked: number | null;
   cardStatus: CardStatus | null;
   onChoose: (idx: number, c: Choice) => void;
-  onOrderResult: (correct: boolean) => void;
+  onIntroduceSeen: () => void;
   onSpeakPracticed: () => void;
   onNext: () => void;
 }
 
 const badgeStyle: React.CSSProperties = { display: 'inline-block', padding: '3px 9px', borderRadius: 999, fontSize: 12, fontWeight: 600, marginLeft: 8 };
 
-export function Session({ card, index, total, picked, cardStatus, onChoose, onOrderResult, onSpeakPracticed, onNext }: Props) {
+export function Session({ card, index, total, picked, cardStatus, onChoose, onIntroduceSeen, onSpeakPracticed, onNext }: Props) {
   const badge =
     cardStatus === 'due' ? <span style={{ ...badgeStyle, background: '#a78bfa', color: '#fff' }}>🔁 복습</span> :
     cardStatus === 'new' ? <span style={{ ...badgeStyle, background: '#60a5fa', color: '#fff' }}>🆕 신규</span> :
@@ -42,8 +43,10 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onOr
           <p style={{ fontSize: 17, lineHeight: 1.6, background: '#f5f5fb', padding: 16, borderRadius: 10 }}>{card.tipKo}</p>
           <button style={{ ...PRIMARY, marginTop: 16 }} onClick={onNext}>다음</button>
         </>
+      ) : card.kind === 'introduce' ? (
+        <IntroduceCardView key={card.id} card={card} onSeen={onIntroduceSeen} onNext={onNext} />
       ) : card.kind === 'order' ? (
-        <OrderCardView key={card.id} card={card} onComplete={onOrderResult} onNext={onNext} />
+        <OrderCardView key={card.id} card={card} onNext={onNext} />
       ) : card.kind === 'speak' ? (
         <SpeakCardView key={card.id} card={card} onPracticed={onSpeakPracticed} onNext={onNext} />
       ) : (

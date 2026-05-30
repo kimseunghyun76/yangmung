@@ -17,6 +17,11 @@ export const units: Unit[] = [
     kanaIds: ['k_hira_ta', 'k_hira_chi', 'k_hira_tsu', 'k_hira_te', 'k_hira_to'],
   },
   {
+    id: 'u_k4_seion', track: 'kana', stage: 'K4', mode: 'drill',
+    canDo: '사용자는 K4 히라가나 청음(なにぬねの)을 평균 0.8초 내 95% 정확도로 읽고 듣고 구분할 수 있다',
+    kanaIds: ['k_hira_na', 'k_hira_ni', 'k_hira_nu', 'k_hira_ne', 'k_hira_no'],
+  },
+  {
     id: 'u_b0_reaction', track: 'lang', stage: 'B0', mode: 'reaction',
     ageMotif: '0–1세',
     canDo: '사용자는 일상 대화에서 상대의 짧은 물음을 듣고, 긍정·부정·보류·감사를 한 마디로 답할 수 있다',
@@ -52,6 +57,11 @@ export const units: Unit[] = [
     id: 'u_b1_station_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 역에서 행선지·환승·표·개찰구를 묻고 안내를 듣고 다음 행동을 정할 수 있다',
     newPhraseIds: ['p_shinjuku_doko', 'p_michi_oshiete', 'p_dochira_desu_ka', 'p_ikura_desu_ka', 'p_doko_desu_ka', 'p_eki', 'p_norikae', 'p_kaisatsu', 'p_kippu', 'p_kippu_kudasai', 'p_chaaji_onegai', 'p_kaisatsu_doko', 'p_nanbansen', 'p_tsugi_wa_shibuya'],
+  },
+  {
+    id: 'u_b1_hotel_core', track: 'lang', stage: 'B1', mode: 'action',
+    canDo: '사용자는 호텔 프런트에서 체크인을 요청하고, 예약·여권·방 위치·조식·와이파이를 확인할 수 있다',
+    newPhraseIds: ['p_checkin_onegai', 'p_yoyaku_shiteimasu', 'p_heya_doko', 'p_wifi_arimasu_ka', 'p_choushoku_wa'],
   },
   {
     id: 'u_b4_recovery_plus', track: 'lang', stage: 'B4', mode: 'recovery',

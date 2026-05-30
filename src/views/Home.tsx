@@ -19,10 +19,11 @@ interface Props {
   onStart: () => void;
   onReset: () => void;
   onOpenMap: () => void;
+  onOpenReview: () => void;
   onPracticeScene: (missionId: string) => void;
 }
 
-export function Home({ allCards, progress, session, onStart, onReset, onOpenMap, onPracticeScene }: Props) {
+export function Home({ allCards, progress, session, onStart, onReset, onOpenMap, onOpenReview, onPracticeScene }: Props) {
   const upcomingId = nextSessionId(session);
   const counts = sessionCounts(allCards, progress, upcomingId);
   const plan = planSession(allCards, progress, upcomingId);
@@ -101,6 +102,12 @@ export function Home({ allCards, progress, session, onStart, onReset, onOpenMap,
         >
           🗺 학습 지도 보기
         </button>
+        <button
+          style={{ ...BTN, width: '100%', marginTop: 8, textAlign: 'center', color: '#4f46e5' }}
+          onClick={onOpenReview}
+        >
+          📚 복습장 보기
+        </button>
       </div>
 
       {s.seen > 0 && (
@@ -120,6 +127,7 @@ export function Home({ allCards, progress, session, onStart, onReset, onOpenMap,
 // 잠긴 장면 오픈 조건 안내 (현재 C3만 잠김).
 function lockHint(missionId: string): string {
   if (missionId === 'C3') return '편의점·식당을 더 익히면 열려요';
+  if (missionId === 'C4') return '전철을 더 익히면 열려요';
   return '조금 더 익히면 열려요';
 }
 
