@@ -9,11 +9,13 @@ import { ttsSupported } from '../tts';
 import { BTN, PRIMARY, WRAP } from '../ui/styles';
 import { sessionGoalText } from './goal';
 import { sceneVisualByPlace } from './scene';
+import { NavBar, type NavBarProps } from './NavBar';
 
 // 앞 단계 가나가 N자 안정되기 전에는 다음 단계(K2 등) 패널을 접어 둠 — 첫 화면이 드릴처럼 안 보이게.
 const REVEAL_NEXT_KANA_AT = 3;
 
 interface Props {
+  nav: NavBarProps;
   allCards: Card[];
   progress: ProgressMap;
   session: SessionState;
@@ -24,7 +26,7 @@ interface Props {
   onPracticeScene: (missionId: string) => void;
 }
 
-export function Home({ allCards, progress, session, onStart, onReset, onOpenMap, onOpenReview, onPracticeScene }: Props) {
+export function Home({ nav, allCards, progress, session, onStart, onReset, onOpenMap, onOpenReview, onPracticeScene }: Props) {
   const upcomingId = nextSessionId(session);
   const counts = sessionCounts(allCards, progress, upcomingId);
   const plan = planSession(allCards, progress, upcomingId);
@@ -36,6 +38,7 @@ export function Home({ allCards, progress, session, onStart, onReset, onOpenMap,
 
   return (
     <main style={WRAP}>
+      <NavBar {...nav} />
       <h1 style={{ marginBottom: 4 }}>yangmung</h1>
       <p style={{ color: '#888', marginTop: 0, fontSize: 13 }}>일본 여행, 오늘 한 판 · 세션 #{upcomingId}</p>
 
