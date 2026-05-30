@@ -42,6 +42,7 @@ export function App() {
     let text = '';
     if (c.kind === 'introduce' || c.kind === 'speak') text = c.kana;
     else if (c.kind === 'quiz' && c.reviewTarget?.type === 'kana') text = c.bannerJa ?? '';
+    else if (c.kind === 'quiz' && c.promptPhrase) text = c.promptPhrase.kana; // 미션 프롬프트(점원 발화)
     const chars = text ? extractKanaChars(text) : [];
     if (chars.length === 0) return;
     setSeenKana((prev) => { const nx = markKanaSeen(prev, chars); saveSeenKana(nx); return nx; });

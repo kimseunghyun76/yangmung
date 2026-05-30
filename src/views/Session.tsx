@@ -6,6 +6,7 @@ import { BTN, PRIMARY, WRAP } from '../ui/styles';
 import { IntroduceCardView } from './IntroduceCard';
 import { OrderCardView } from './OrderCard';
 import { SpeakCardView } from './SpeakCard';
+import { ReadingAid } from './ReadingAid';
 
 interface Props {
   card: Card;
@@ -61,7 +62,19 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
               >🔊 듣기</button>
             </div>
           )}
-          <p style={{ color: '#555' }}>{card.sub}</p>
+          {card.promptPhrase ? (
+            <div style={{ marginBottom: 4 }}>
+              {card.sub && <p style={{ color: '#888', fontSize: 13, margin: '0 0 4px' }}>{card.sub}</p>}
+              <div style={{ textAlign: 'center', color: '#333' }}>
+                <span style={{ fontSize: 22, verticalAlign: 'bottom' }}>「</span>
+                <ReadingAid text={card.promptPhrase.kana} isFamiliar={isKanaFamiliar} fontSize={24} />
+                <span style={{ fontSize: 22, verticalAlign: 'bottom' }}>」</span>
+              </div>
+              <p style={{ textAlign: 'center', color: '#888', fontSize: 14, margin: '4px 0 0' }}>{card.promptPhrase.korean}</p>
+            </div>
+          ) : (
+            <p style={{ color: '#555' }}>{card.sub}</p>
+          )}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 8 }}>
             {card.choices.map((c, idx) => {
               const isPicked = picked === idx;

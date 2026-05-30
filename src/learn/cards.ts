@@ -234,7 +234,8 @@ export function buildCards(): Card[] {
         scenario: m.scenario,
         banner: step.situationKo,
         bannerJa: ttsText(prompt),
-        sub: prompt ? `${step.speaker ?? ''} 「${prompt.kana}」(${prompt.korean})` : (step.speaker ?? ''),
+        // prompt이 있으면 kana는 promptPhrase로 분리(발음 보조 렌더). sub엔 화자만.
+        sub: step.speaker ?? '',
         promptPhrase: phraseInfo(prompt),
         reviewTarget: { type: 'mission', id: m.id as CLevel },
         choices: step.choices.map((c) => ({
