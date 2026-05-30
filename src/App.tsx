@@ -89,6 +89,12 @@ export function App() {
     beginSession(nextSessionId(session), weak, false);
   }
   function next() {
+    // 팁 카드는 점수 없이 "본 적 있음"만 기록 → 다음 세션엔 다른 팁이 회전해 나옴
+    if (card?.kind === 'tip') {
+      const updated = recordAttempt(progress, card.id, { correct: true, usedRecovery: false, sessionId });
+      setProgress(updated);
+      saveProgress(updated);
+    }
     setPicked(null);
     setI((n) => n + 1);
   }
