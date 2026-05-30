@@ -177,9 +177,17 @@ export function classifyCard(_c: Card, p: CardProgress | undefined, currentSessi
 // 의도: K가 앞을 다 잡아먹지 않게, 한 세션 안에 가나·표현·미션이 모두 등장
 export const SESSION_QUOTAS = { K: 6, B: 3, C: 5, tip: 1 } as const;
 
+// 세션 구성 설정 — 학습 모드별로 quota·최소 fresh를 바꾸기 위한 주입 지점.
+export interface SessionConfig {
+  quotas: { K: number; B: number; C: number; tip: number };
+  minFresh: { K: number; B: number; C: number };
+}
+
 // 각 버킷에서 보장하는 최소 fresh(신규) 수 — due 복습이 quota를 다 채워서
 // 새 미션·새 글자가 무한정 밀리는 걸 방지 (fresh가 그만큼 없으면 있는 만큼만).
 export const SESSION_MIN_FRESH = { K: 2, B: 1, C: 2 } as const;
+
+export const DEFAULT_SESSION_CONFIG: SessionConfig = { quotas: SESSION_QUOTAS, minFresh: SESSION_MIN_FRESH };
 
 type Bucket = 'K' | 'B' | 'C';
 type ReviewableCard = QuizCard | IntroduceCard | SpeakCard | DictationCard; // reviewTarget을 가진 카드(=SRS 대상)
@@ -279,6 +287,7 @@ export function selectSessionCards(
   allCards: Card[],
   progress: ProgressMap,
   currentSessionId: number,
+  config: SessionConfig = DEFAULT_SESSION_CONFIG,
 ): Card[] {
   const k: Pool = { due: [], fresh: [] };
   const b: Pool = { due: [], fresh: [] };
@@ -310,13 +319,13 @@ export function selectSessionCards(
       pushByStatus(cByMission.get(mid)!, rep, status);
     }
   }
-  const kSel = pickPool(k, SESSION_QUOTAS.K, SESSION_MIN_FRESH.K);
-  const bSel = pickPool(b, SESSION_QUOTAS.B, SESSION_MIN_FRESH.B);
-  const scene = pickScene(cByMission, SESSION_QUOTAS.C);
+  const kSel = pickPool(k, config.quotas.K, config.minFresh.K);
+  const bSel = pickPool(b, config.quotas.B, config.minFresh.B);
+  const scene = pickScene(cByMission, config.quotas.C);
   // 팁: 안 본 것/오래된 것부터 1개씩 회전 (매번 같은 팁 X)
   const tipsSel = [...tips]
     .sort((a, b2) => (progress[a.id]?.lastSeenAt ?? '') < (progress[b2.id]?.lastSeenAt ?? '') ? -1 : 1)
-    .slice(0, SESSION_QUOTAS.tip);
+    .slice(0, config.quotas.tip);
   // 흐름: 가나·표현으로 몸풀기(K↔B 왕복) → 미션 한 장면 통째로 → 팁
   return [...interleave(kSel, bSel), ...scene, ...tipsSel];
 }
@@ -326,8 +335,9 @@ export function plannedSessionSize(
   allCards: Card[],
   progress: ProgressMap,
   currentSessionId: number,
+  config: SessionConfig = DEFAULT_SESSION_CONFIG,
 ): number {
-  return selectSessionCards(allCards, progress, currentSessionId).length;
+  return selectSessionCards(allCards, progress, currentSessionId, config).length;
 }
 
 export interface SessionBreakdown { K: number; B: number; C: number; tip: number }
@@ -364,8 +374,9 @@ export function planSession(
   allCards: Card[],
   progress: ProgressMap,
   currentSessionId: number,
+  config: SessionConfig = DEFAULT_SESSION_CONFIG,
 ): SessionPlan {
-  const cards = selectSessionCards(allCards, progress, currentSessionId);
+  const cards = selectSessionCards(allCards, progress, currentSessionId, config);
   const breakdown: SessionBreakdown = { K: 0, B: 0, C: 0, tip: 0 };
   for (const c of cards) {
     if (c.kind === 'tip') { breakdown.tip++; continue; }

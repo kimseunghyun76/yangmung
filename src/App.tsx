@@ -8,7 +8,7 @@ import {
   type SeenKana, type SessionLogEntry,
 } from './learn/progress';
 import { extractKanaChars } from './learn/kanaReading';
-import { loadSettings, saveSettings, type Settings } from './learn/settings';
+import { loadSettings, MODE_PRESETS, saveSettings, type Settings } from './learn/settings';
 import { sessionGoalText } from './views/goal';
 import { speak } from './tts';
 import { WRAP } from './ui/styles';
@@ -48,6 +48,12 @@ export function App() {
     : isKanaFamiliar(ch, seenKana);
 
   function updateSettings(s: Settings) { setSettings(s); saveSettings(s); }
+  // 모드 선택 = 프리셋 적용(보조·속도) + 세션 구성 변경. readingAid/속도는 이후 개별 미세조정 가능.
+  function selectMode(mode: Settings['mode']) {
+    const p = MODE_PRESETS[mode];
+    updateSettings({ ...settings, mode, readingAid: p.readingAid, slowListening: p.slowListening });
+  }
+  const sessionConfig = { quotas: MODE_PRESETS[settings.mode].quotas, minFresh: MODE_PRESETS[settings.mode].minFresh };
 
   // 카드에서 "본 가나"로 적립할 가나 문자 — 깔끔한 가나 필드가 있는 카드만.
   function creditKana(c: Card) {
@@ -64,8 +70,8 @@ export function App() {
   // 듣기 카드 자동 재생 (설정에서 끌 수 있음)
   useEffect(() => {
     if (view !== 'session' || !card || !settings.autoPlay) return;
-    if (card.kind === 'quiz' && card.listen && card.bannerJa) speak(card.bannerJa);
-  }, [i, view, card, settings.autoPlay]);
+    if (card.kind === 'quiz' && card.listen && card.bannerJa) speak(card.bannerJa, { rate: settings.slowListening ? 0.6 : 0.95 });
+  }, [i, view, card, settings.autoPlay, settings.slowListening]);
 
   // 세션 중 카드 소진되면 done으로 (render 중 setState 금지)
   useEffect(() => {
@@ -85,7 +91,7 @@ export function App() {
   }
   function startSession() {
     const id = nextSessionId(session);
-    const cards = selectSessionCards(allCards, progress, id);
+    const cards = selectSessionCards(allCards, progress, id, sessionConfig);
     if (cards.length === 0) return;
     beginSession(id, cards, true);
   }
@@ -178,7 +184,7 @@ export function App() {
       return <Intro cards={sessionCards} goal={sessionGoalText(missions, hasKana)} onStart={() => setView('session')} />;
     }
     if (view === 'done') {
-      const canContinue = plannedSessionSize(allCards, progress, nextSessionId(session)) > 0;
+      const canContinue = plannedSessionSize(allCards, progress, nextSessionId(session), sessionConfig) > 0;
       return (
         <Done
           sessionId={sessionId} score={score} quizSeen={quizSeen} sessionLog={sessionLog}
@@ -209,7 +215,8 @@ export function App() {
     return (
       <Home
         nav={{ ...nav, current: 'home' }}
-        allCards={allCards} progress={progress} session={session}
+        allCards={allCards} progress={progress} session={session} sessionConfig={sessionConfig}
+        modeLabel={MODE_PRESETS[settings.mode].label}
         onStart={startSession} onReset={resetAll}
         onOpenMap={() => setView('map')} onOpenReview={() => setView('review')} onPracticeScene={startSceneSession}
       />
@@ -221,7 +228,7 @@ export function App() {
       {renderView()}
       {showGuide && <Guide onClose={() => setShowGuide(false)} />}
       {showSettings && (
-        <SettingsModal settings={settings} onChange={updateSettings} onReset={resetAll} onClose={() => setShowSettings(false)} />
+        <SettingsModal settings={settings} onChange={updateSettings} onSelectMode={selectMode} onReset={resetAll} onClose={() => setShowSettings(false)} />
       )}
     </>
   );
