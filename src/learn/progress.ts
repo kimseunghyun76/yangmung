@@ -1,7 +1,7 @@
 // 학습 진척 + 세션 + 약점 재출제 — LocalStorage 기반.
 // 친구 5차 권고 단순화: SM-2 X, "틀린 것/복구 사용 = 다음 세션 앞쪽, 2회 연속 정답 = 잠시 제외"
 
-import type { Card, OrderCard, QuizCard, SpeakCard } from './cards';
+import type { Card, IntroduceCard, QuizCard, SpeakCard } from './cards';
 
 // ── 진척 데이터 ─────────────────────────────────────
 export interface CardProgress {
@@ -139,7 +139,7 @@ export const SESSION_QUOTAS = { K: 6, B: 3, C: 5, tip: 1 } as const;
 export const SESSION_MIN_FRESH = { K: 2, B: 1, C: 2 } as const;
 
 type Bucket = 'K' | 'B' | 'C';
-type ReviewableCard = QuizCard | OrderCard | SpeakCard; // reviewTarget을 가진 카드(=SRS 대상)
+type ReviewableCard = QuizCard | IntroduceCard | SpeakCard; // reviewTarget을 가진 카드(=SRS 대상)
 function bucketOf(c: ReviewableCard): Bucket | null {
   const t = c.reviewTarget?.type;
   if (t === 'kana') return 'K';
@@ -151,6 +151,7 @@ function bucketOf(c: ReviewableCard): Bucket | null {
 // C3(전철)은 C1·C2를 충분히 경험한 뒤에만 열림 — 새 장면이 너무 일찍 나오지 않게.
 // 식당(C2)을 "한 번 본 수준"이 아니라 마무리(계산)까지 반복하도록 조건을 늦춤.
 export const C3_UNLOCK = { c1: 5, c2: 4 } as const;
+export const C4_UNLOCK = { c3: 4 } as const;
 export function missionExperiencedCount(progress: ProgressMap, missionId: string): number {
   const prefix = `mission:${missionId}:`;
   let n = 0;
@@ -161,6 +162,9 @@ export function isMissionUnlocked(missionId: string, progress: ProgressMap): boo
   if (missionId === 'C3') {
     return missionExperiencedCount(progress, 'C1') >= C3_UNLOCK.c1
       && missionExperiencedCount(progress, 'C2') >= C3_UNLOCK.c2;
+  }
+  if (missionId === 'C4') {
+    return missionExperiencedCount(progress, 'C3') >= C4_UNLOCK.c3;
   }
   return true; // C0·C1·C2는 항상 열림 (진행 순서로 자연스레 노출)
 }
@@ -209,6 +213,7 @@ export function selectSessionCards(
   const tips: Card[] = [];
   for (const c of allCards) {
     if (c.kind === 'tip') { tips.push(c); continue; }
+    if (c.kind === 'order') continue; // 흐름 정보 카드는 자동 SRS 세션에서 제외
     const status = classifyCard(c, progress[c.id], currentSessionId);
     if (status === 'cooldown') continue;
     const t = c.reviewTarget?.type;
@@ -259,7 +264,7 @@ export function missionsFromCards(
   const seen = new Set<string>();
   const freshMissions = new Set<string>();
   for (const c of cards) {
-    if (c.kind !== 'quiz' || c.reviewTarget?.type !== 'mission') continue;
+    if ((c.kind === 'tip' || c.kind === 'order') || c.reviewTarget?.type !== 'mission') continue;
     const id = String(c.reviewTarget.id);
     if (!seen.has(id)) { seen.add(id); missions.push({ id, scenario: c.scenario ?? '', isReview: true }); }
     if (classifyCard(c, progress[c.id], currentSessionId) === 'new') freshMissions.add(id);
@@ -277,6 +282,7 @@ export function planSession(
   const breakdown: SessionBreakdown = { K: 0, B: 0, C: 0, tip: 0 };
   for (const c of cards) {
     if (c.kind === 'tip') { breakdown.tip++; continue; }
+    if (c.kind === 'order') { breakdown.C++; continue; }
     const b = bucketOf(c);
     if (b === 'K') breakdown.K++;
     else if (b === 'B') breakdown.B++;
@@ -288,7 +294,7 @@ export function planSession(
 // 장면(미션) 단독 연습 덱 — 해당 미션의 카드(스텝 + 순서 맞추기)를 순서대로. (수동 선택이라 cooldown 무시)
 export function selectMissionCards(allCards: Card[], missionId: string): Card[] {
   return allCards.filter(
-    (c) => (c.kind === 'quiz' || c.kind === 'order' || c.kind === 'speak')
+    (c) => (c.kind === 'introduce' || c.kind === 'quiz' || c.kind === 'order' || c.kind === 'speak')
       && c.reviewTarget?.type === 'mission' && String(c.reviewTarget.id) === missionId,
   );
 }

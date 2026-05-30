@@ -40,7 +40,22 @@ export interface TipCard {
   tipKo: string;
 }
 
-// 순서 맞추기 카드 — 장면의 사건 순서를 탭으로 채움.
+// 새 표현 소개 카드 — 퀴즈 전에 의미·소리·쪼개보기를 먼저 제공.
+export interface IntroduceCard {
+  kind: 'introduce';
+  id: string;
+  tag: string;
+  scenario?: string;
+  phraseId: string;
+  ja: string;
+  kana: string;
+  korean: string;
+  tip?: string;
+  note: string;
+  reviewTarget?: ReviewTarget;
+}
+
+// 장면 흐름 카드 — 정답 채점이 아니라 "흔한 흐름"을 보여주는 정보 카드.
 export interface OrderItem { id: string; label: string }
 export interface OrderCard {
   kind: 'order';
@@ -49,8 +64,7 @@ export interface OrderCard {
   scenario?: string;
   title: string;
   prompt: string;
-  items: OrderItem[];        // 섞인 표시 순서
-  correctOrder: string[];    // 정답 순서(item id 배열)
+  items: OrderItem[];
   reviewTarget?: ReviewTarget;
 }
 
@@ -67,7 +81,7 @@ export interface SpeakCard {
   reviewTarget?: ReviewTarget;
 }
 
-export type Card = QuizCard | TipCard | OrderCard | SpeakCard;
+export type Card = QuizCard | TipCard | IntroduceCard | OrderCard | SpeakCard;
 
 // TTS는 자연 표기 우선 (문장부호 prosody)
 const ttsText = (p?: { kanji?: string; displayKana?: string; kana: string }) =>
@@ -75,6 +89,9 @@ const ttsText = (p?: { kanji?: string; displayKana?: string; kana: string }) =>
 
 const phraseInfo = (p?: { kana: string; kanji?: string; korean: string; tip?: string }): ChoicePhrase | undefined =>
   p ? { kana: p.kana, kanji: p.kanji, korean: p.korean, tip: p.tip } : undefined;
+
+const phraseDisplay = (p: { kanji?: string; displayKana?: string; kana: string }) =>
+  p.kanji ?? p.displayKana ?? p.kana;
 
 function shuffle<T>(a: T[]): T[] {
   const r = [...a];
@@ -180,10 +197,30 @@ export function buildCards(): Card[] {
     });
   }
 
-  // 미션 (C0~C3)
-  for (const id of ['C0', 'C1', 'C2', 'C3'] as const) {
+  // 미션 (C0~C4)
+  for (const id of ['C0', 'C1', 'C2', 'C3', 'C4'] as const) {
     const m = missions.find((mm) => mm.id === id);
     if (!m) continue;
+    const introduced = new Set<string>();
+    const addIntroduce = (phraseId: string, note: string) => {
+      if (introduced.has(phraseId)) return;
+      introduced.add(phraseId);
+      const p = byPhrase(phraseId);
+      cards.push({
+        kind: 'introduce',
+        id: `intro:${m.id}:${phraseId}`,
+        tag: `${m.id} 표현 소개`,
+        scenario: m.scenario,
+        phraseId,
+        ja: phraseDisplay(p),
+        kana: p.displayKana ?? p.kana,
+        korean: p.korean,
+        tip: p.tip,
+        note,
+        reviewTarget: { type: 'mission', id: m.id as CLevel },
+      });
+    };
+
     m.steps.forEach((step, idx) => {
       const prompt = step.promptPhraseId ? byPhrase(step.promptPhraseId) : undefined;
       cards.push({
@@ -203,16 +240,19 @@ export function buildCards(): Card[] {
       });
     });
 
+    for (const pid of m.speakPhraseIds ?? []) {
+      addIntroduce(pid, '장면 끝에서 직접 말해볼 핵심 표현입니다. 먼저 의미와 소리를 익혀둡니다.');
+    }
+
     // 장면 마무리: 순서 맞추기 카드 (sequence가 있으면 — 스텝 카드 뒤에 capstone으로)
     if (m.sequence && m.sequence.length >= 2) {
       const ordered = m.sequence.map((label, i) => ({ id: String(i), label }));
       cards.push({
-        kind: 'order', id: `order:${m.id}`, tag: `${m.id} 순서`,
+        kind: 'order', id: `flow:${m.id}`, tag: `${m.id} 흐름`,
         scenario: m.scenario,
-        title: `${m.place ?? m.scenario} 순서 맞추기`,
-        prompt: '일어나는 순서대로 탭하세요',
-        items: shuffle(ordered),
-        correctOrder: ordered.map((o) => o.id),
+        title: `${m.place ?? m.scenario}에서 흔한 흐름`,
+        prompt: '정답을 맞히는 문제가 아니라, 여행 중 자주 만나는 흐름을 한 번 정리합니다.',
+        items: ordered,
         reviewTarget: { type: 'mission', id: m.id as CLevel },
       });
     }

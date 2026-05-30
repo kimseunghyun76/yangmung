@@ -104,4 +104,14 @@ export const phrases: Phrase[] = [
   { id: 'p_hitori_desu', kana: 'ひとりです', kanji: '一人です', korean: '한 명이요', register: 'productive' },
   { id: 'p_futari_desu', kana: 'ふたりです', kanji: '二人です', korean: '두 명이요', register: 'productive' },
   { id: 'p_gochisousama', kana: 'ごちそうさまでした', korean: '잘 먹었습니다', register: 'productive', tip: '식사 후 인사 — 계산할 때 자연스럽게 곁들이면 좋아요' },
+
+  // ── C4 호텔 체크인 ──
+  { id: 'p_checkin_onegai', kana: 'チェックインおねがいします', kanji: 'チェックインお願いします', displayKana: 'チェックイン、おねがいします', korean: '체크인 부탁드립니다', register: 'productive' },
+  { id: 'p_yoyaku_shiteimasu', kana: 'よやくしています', kanji: '予約しています', korean: '예약했습니다', register: 'productive' },
+  { id: 'p_onamae_wa', kana: 'おなまえは', kanji: 'お名前は', displayKana: 'おなまえは？', korean: '성함은요?', register: 'receptive' },
+  { id: 'p_passport_onegai', kana: 'パスポートおねがいします', kanji: 'パスポートお願いします', displayKana: 'パスポート、おねがいします', korean: '여권 부탁드립니다', register: 'receptive' },
+  { id: 'p_kagi_desu', kana: 'かぎです', kanji: '鍵です', korean: '키입니다', register: 'receptive' },
+  { id: 'p_heya_doko', kana: 'へやはどこですか', kanji: '部屋はどこですか', displayKana: 'へやは、どこですか？', korean: '방은 어디예요?', register: 'productive', grammarRefs: ['g_masuka'] },
+  { id: 'p_wifi_arimasu_ka', kana: 'ワイファイはありますか', kanji: 'Wi-Fiはありますか', displayKana: 'ワイファイは、ありますか？', korean: '와이파이는 있나요?', register: 'productive', grammarRefs: ['g_masuka'] },
+  { id: 'p_choushoku_wa', kana: 'ちょうしょくは', kanji: '朝食は', displayKana: 'ちょうしょくは？', korean: '조식은요?', register: 'productive' },
 ];

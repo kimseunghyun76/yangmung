@@ -14,8 +14,9 @@ import { Intro } from './views/Intro';
 import { Session } from './views/Session';
 import { Done } from './views/Done';
 import { Map } from './views/Map';
+import { Review } from './views/Review';
 
-type View = 'home' | 'map' | 'intro' | 'session' | 'done';
+type View = 'home' | 'map' | 'review' | 'intro' | 'session' | 'done';
 
 export function App() {
   const allCards = useMemo<Card[]>(buildCards, []);
@@ -92,9 +93,12 @@ export function App() {
     if (card.kind !== 'quiz') return;
     recordCardResult(card.id, c.correct, !!c.recovery);
   }
-  function orderResult(correct: boolean) {
-    if (!card || card.kind !== 'order') return;
-    recordCardResult(card.id, correct, false);
+  // 소개 카드: 퀴즈 전 학습 노출. 점수에는 넣지 않고, 한 번 본 카드로만 기록.
+  function introduceSeen() {
+    if (!card || card.kind !== 'introduce') return;
+    const updated = recordAttempt(progress, card.id, { correct: true, usedRecovery: false, sessionId });
+    setProgress(updated);
+    saveProgress(updated);
   }
   // 따라 말하기: 채점 없이 practiced만 기록 (SRS 쿨다운만 진행, 점수·약점 집계 제외)
   function speakPracticed() {
@@ -115,12 +119,15 @@ export function App() {
       <Home
         allCards={allCards} progress={progress} session={session}
         onStart={startSession} onReset={resetAll}
-        onOpenMap={() => setView('map')} onPracticeScene={startSceneSession}
+        onOpenMap={() => setView('map')} onOpenReview={() => setView('review')} onPracticeScene={startSceneSession}
       />
     );
   }
   if (view === 'map') {
     return <Map allCards={allCards} progress={progress} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
+  }
+  if (view === 'review') {
+    return <Review allCards={allCards} progress={progress} onBack={() => setView('home')} />;
   }
   if (view === 'intro') {
     const missions = missionsFromCards(sessionCards, progress, sessionId);
@@ -146,9 +153,9 @@ export function App() {
       index={i}
       total={sessionCards.length}
       picked={picked}
-      cardStatus={card.kind === 'tip' ? null : classifyCard(card, progress[card.id], sessionId)}
+      cardStatus={card.kind === 'tip' || card.kind === 'order' ? null : classifyCard(card, progress[card.id], sessionId)}
       onChoose={choose}
-      onOrderResult={orderResult}
+      onIntroduceSeen={introduceSeen}
       onSpeakPracticed={speakPracticed}
       onNext={next}
     />

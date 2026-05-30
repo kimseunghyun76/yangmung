@@ -4,5 +4,6 @@ import { c0 } from './c0-tutorial';
 import { c1 } from './c1-conbini';
 import { c2 } from './c2-restaurant';
 import { c3 } from './c3-train';
+import { c4 } from './c4-hotel';
 
-export const missions: Mission[] = [c0, c1, c2, c3];
+export const missions: Mission[] = [c0, c1, c2, c3, c4];
