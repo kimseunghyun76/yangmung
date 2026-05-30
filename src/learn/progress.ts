@@ -154,15 +154,22 @@ export function summarize(map: ProgressMap): { seen: number; mastered: number; w
 
 // ── 카드 분류 & 선별 (SRS 본질) ───────────────────────
 // MASTERED_COOLDOWN_SESSIONS: 2회 연속 정답 후 N 세션 동안 제외
-const MASTERED_COOLDOWN_SESSIONS = 2;
+// 점진적 cooldown: 연속 정답이 쌓일수록 더 오래 쉼 → 잘 아는 건 자주 안 나오고,
+// 약한 건 빨리 돌아옴. "이미 아는 게 무한 반복"되는 느낌을 줄이는 핵심 장치.
+export function cooldownSessions(consecutiveCorrect: number): number {
+  if (consecutiveCorrect >= 5) return 16;
+  if (consecutiveCorrect === 4) return 8;
+  if (consecutiveCorrect === 3) return 4;
+  if (consecutiveCorrect >= 2) return 2;
+  return 0; // 미숙 → 쉬지 않음(곧 재출제)
+}
 
 export type CardStatus = 'due' | 'new' | 'cooldown';
 
 export function classifyCard(_c: Card, p: CardProgress | undefined, currentSessionId: number): CardStatus {
   if (!p) return 'new';
-  if (p.consecutiveCorrect >= 2 && currentSessionId - p.lastSessionId <= MASTERED_COOLDOWN_SESSIONS) {
-    return 'cooldown';
-  }
+  const cd = cooldownSessions(p.consecutiveCorrect);
+  if (cd > 0 && currentSessionId - p.lastSessionId <= cd) return 'cooldown';
   return 'due'; // 진척 있고 미숙 → 재출제 대상
 }
 
