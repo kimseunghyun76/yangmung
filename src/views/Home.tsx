@@ -8,6 +8,7 @@ import {
 import { ttsSupported } from '../tts';
 import { BTN, PRIMARY, WRAP } from '../ui/styles';
 import { sessionGoalText } from './goal';
+import { sceneVisualByPlace } from './scene';
 
 // 앞 단계 가나가 N자 안정되기 전에는 다음 단계(K2 등) 패널을 접어 둠 — 첫 화면이 드릴처럼 안 보이게.
 const REVEAL_NEXT_KANA_AT = 3;
@@ -76,10 +77,11 @@ export function Home({ allCards, progress, session, onStart, onReset, onOpenMap,
         <p style={{ margin: '0 0 6px', fontSize: 13, color: '#666', fontWeight: 600 }}>🎬 장면별 연습</p>
         {scenes.map((m) => {
           const unlocked = isMissionUnlocked(m.id, progress);
+          const sv = sceneVisualByPlace(m.place);
           if (!unlocked) {
             return (
               <p key={m.id} style={{ margin: '6px 0', fontSize: 13, color: '#aaa' }}>
-                🔒 {m.place ?? m.scenario} — {lockHint(m.id)}
+                🔒 {sv.emoji} {m.place ?? m.scenario} — {lockHint(m.id)}
               </p>
             );
           }
@@ -91,7 +93,7 @@ export function Home({ allCards, progress, session, onStart, onReset, onOpenMap,
               style={{ ...BTN, width: '100%', marginTop: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
               onClick={() => onPracticeScene(m.id)}
             >
-              <span>🎬 {m.place ?? m.scenario} 연습</span>
+              <span>{sv.emoji} {m.place ?? m.scenario} 연습</span>
               <span style={{ fontSize: 13, color: done ? '#16a34a' : '#888' }}>{done ? '✅ ' : ''}{p.mastered}/{p.total}</span>
             </button>
           );
