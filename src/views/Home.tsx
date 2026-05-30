@@ -3,7 +3,7 @@ import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
 import {
   isKanaReadStable, isMissionUnlocked, kanaReadMastery, missionProgress, nextSessionId, planSession,
-  sessionCounts, summarize, type ProgressMap, type SessionState,
+  sessionCounts, summarize, type ProgressMap, type SessionConfig, type SessionState,
 } from '../learn/progress';
 import { ttsSupported } from '../tts';
 import { BTN, PRIMARY, WRAP } from '../ui/styles';
@@ -19,6 +19,8 @@ interface Props {
   allCards: Card[];
   progress: ProgressMap;
   session: SessionState;
+  sessionConfig: SessionConfig;
+  modeLabel: string;
   onStart: () => void;
   onReset: () => void;
   onOpenMap: () => void;
@@ -26,10 +28,10 @@ interface Props {
   onPracticeScene: (missionId: string) => void;
 }
 
-export function Home({ nav, allCards, progress, session, onStart, onReset, onOpenMap, onOpenReview, onPracticeScene }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, modeLabel, onStart, onReset, onOpenMap, onOpenReview, onPracticeScene }: Props) {
   const upcomingId = nextSessionId(session);
   const counts = sessionCounts(allCards, progress, upcomingId);
-  const plan = planSession(allCards, progress, upcomingId);
+  const plan = planSession(allCards, progress, upcomingId, sessionConfig);
   const planned = plan.size;
   const kanaUnits = revealedKanaUnits(progress);
   const s = summarize(progress);
@@ -54,7 +56,7 @@ export function Home({ nav, allCards, progress, session, onStart, onReset, onOpe
           {planned === 0 ? '오늘 학습할 카드가 없어요' : `시작 (${planned}카드)`}
         </button>
         <p style={{ margin: '10px 0 0', fontSize: 12, opacity: 0.85 }}>
-          가나 {plan.breakdown.K} · 표현 {plan.breakdown.B} · 미션 {plan.breakdown.C} · 팁 {plan.breakdown.tip}
+          🎚 {modeLabel} · 가나 {plan.breakdown.K} · 표현 {plan.breakdown.B} · 미션 {plan.breakdown.C} · 팁 {plan.breakdown.tip}
         </p>
       </div>
 
