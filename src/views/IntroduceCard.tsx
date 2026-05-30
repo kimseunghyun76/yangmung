@@ -2,14 +2,16 @@
 import type { IntroduceCard } from '../learn/cards';
 import { speak, ttsSupported } from '../tts';
 import { BTN, PRIMARY } from '../ui/styles';
+import { ReadingAid } from './ReadingAid';
 
 interface Props {
   card: IntroduceCard;
+  isKanaFamiliar: (char: string) => boolean;
   onSeen: () => void;
   onNext: () => void;
 }
 
-export function IntroduceCardView({ card, onSeen, onNext }: Props) {
+export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext }: Props) {
   function next() {
     onSeen();
     onNext();
@@ -20,10 +22,10 @@ export function IntroduceCardView({ card, onSeen, onNext }: Props) {
       <h2 style={{ marginTop: 14, marginBottom: 6 }}>👀 새 표현</h2>
       <p style={{ color: '#555', marginTop: 0, lineHeight: 1.5 }}>{card.note}</p>
 
-      <div style={{ background: '#eef2ff', padding: 16, borderRadius: 10, marginTop: 14 }}>
-        <div style={{ fontSize: 28, fontWeight: 700, textAlign: 'center' }}>{card.ja}</div>
-        <p style={{ margin: '8px 0 0', textAlign: 'center', color: '#555', fontSize: 18 }}>{card.kana}</p>
-        <p style={{ margin: '6px 0 0', textAlign: 'center', color: '#444' }}>{card.korean}</p>
+      <div style={{ background: '#eef2ff', padding: 16, borderRadius: 10, marginTop: 14, textAlign: 'center' }}>
+        <ReadingAid text={card.kana} isFamiliar={isKanaFamiliar} fontSize={30} />
+        <p style={{ margin: '8px 0 0', color: '#444' }}>{card.korean}</p>
+        <p style={{ margin: '8px 0 0', fontSize: 11, color: '#9a8fd8' }}>보라색 로마자는 아직 익숙하지 않은 글자예요 — 익히면 사라져요</p>
       </div>
 
       <div style={{ textAlign: 'center', marginTop: 12 }}>

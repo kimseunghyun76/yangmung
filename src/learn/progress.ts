@@ -22,6 +22,7 @@ export interface SessionLogEntry { id: string; result: AttemptResult }
 
 const PROGRESS_KEY = 'yangmung:progress:v1';
 const SESSION_KEY = 'yangmung:session:v1';
+const SEENKANA_KEY = 'yangmung:seenkana:v1';
 
 export function loadProgress(): ProgressMap {
   if (typeof window === 'undefined') return {};
@@ -41,7 +42,42 @@ export function clearProgress(): void {
   try {
     window.localStorage.removeItem(PROGRESS_KEY);
     window.localStorage.removeItem(SESSION_KEY);
+    window.localStorage.removeItem(SEENKANA_KEY);
   } catch {}
+}
+
+// ── 본 가나 카운트 (발음 보조 점진 제거용) ───────────────
+// char → 마주친 횟수. 일정 횟수 이상이면 "익숙"으로 보고 로마자 보조를 뗌.
+export type SeenKana = Record<string, number>;
+export const KANA_FAMILIAR_AT = 3;
+
+export function loadSeenKana(): SeenKana {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = window.localStorage.getItem(SEENKANA_KEY);
+    return raw ? (JSON.parse(raw) as SeenKana) : {};
+  } catch { return {}; }
+}
+
+export function saveSeenKana(s: SeenKana): void {
+  if (typeof window === 'undefined') return;
+  try { window.localStorage.setItem(SEENKANA_KEY, JSON.stringify(s)); } catch {}
+}
+
+export function markKanaSeen(seen: SeenKana, chars: string[]): SeenKana {
+  if (chars.length === 0) return seen;
+  const next = { ...seen };
+  for (const c of chars) next[c] = (next[c] ?? 0) + 1;
+  return next;
+}
+
+export function countSeenKana(seen: SeenKana): number {
+  return Object.keys(seen).length;
+}
+
+// 가나 글자가 "익숙"한가 — 충분히 자주 마주쳤으면. (드릴 카드도 등장 시 seen 적립됨)
+export function isKanaFamiliar(char: string, seen: SeenKana): boolean {
+  return (seen[char] ?? 0) >= KANA_FAMILIAR_AT;
 }
 
 // ── 세션 ────────────────────────────────────────────

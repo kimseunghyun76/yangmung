@@ -16,12 +16,13 @@ interface Props {
   onChoose: (idx: number, c: Choice) => void;
   onIntroduceSeen: () => void;
   onSpeakPracticed: () => void;
+  isKanaFamiliar: (char: string) => boolean;
   onNext: () => void;
 }
 
 const badgeStyle: React.CSSProperties = { display: 'inline-block', padding: '3px 9px', borderRadius: 999, fontSize: 12, fontWeight: 600, marginLeft: 8 };
 
-export function Session({ card, index, total, picked, cardStatus, onChoose, onIntroduceSeen, onSpeakPracticed, onNext }: Props) {
+export function Session({ card, index, total, picked, cardStatus, onChoose, onIntroduceSeen, onSpeakPracticed, isKanaFamiliar, onNext }: Props) {
   const badge =
     cardStatus === 'due' ? <span style={{ ...badgeStyle, background: '#a78bfa', color: '#fff' }}>🔁 복습</span> :
     cardStatus === 'new' ? <span style={{ ...badgeStyle, background: '#60a5fa', color: '#fff' }}>🆕 신규</span> :
@@ -44,11 +45,11 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
           <button style={{ ...PRIMARY, marginTop: 16 }} onClick={onNext}>다음</button>
         </>
       ) : card.kind === 'introduce' ? (
-        <IntroduceCardView key={card.id} card={card} onSeen={onIntroduceSeen} onNext={onNext} />
+        <IntroduceCardView key={card.id} card={card} isKanaFamiliar={isKanaFamiliar} onSeen={onIntroduceSeen} onNext={onNext} />
       ) : card.kind === 'order' ? (
         <OrderCardView key={card.id} card={card} onNext={onNext} />
       ) : card.kind === 'speak' ? (
-        <SpeakCardView key={card.id} card={card} onPracticed={onSpeakPracticed} onNext={onNext} />
+        <SpeakCardView key={card.id} card={card} isKanaFamiliar={isKanaFamiliar} onPracticed={onSpeakPracticed} onNext={onNext} />
       ) : (
         <>
           <div style={{ fontSize: card.listen || card.tag.startsWith('K') ? 72 : 28, textAlign: 'center', margin: '20px 0 6px' }}>{card.banner}</div>

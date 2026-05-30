@@ -4,6 +4,7 @@ import { CONTENT } from '../content';
 import type { CLevel, KanaItem, ReviewTarget } from '../content/types';
 
 export interface ChoicePhrase {
+  id?: string;
   kana: string;
   kanji?: string;
   korean: string;
@@ -27,6 +28,7 @@ export interface QuizCard {
   banner: string;
   bannerJa?: string;
   sub: string;
+  promptPhrase?: ChoicePhrase;
   choices: Choice[];
   listen?: boolean;
   reviewTarget?: ReviewTarget; // SRS 대상 (없으면 추적 X)
@@ -87,8 +89,8 @@ export type Card = QuizCard | TipCard | IntroduceCard | OrderCard | SpeakCard;
 const ttsText = (p?: { kanji?: string; displayKana?: string; kana: string }) =>
   p ? (p.kanji ?? p.displayKana ?? p.kana) : undefined;
 
-const phraseInfo = (p?: { kana: string; kanji?: string; korean: string; tip?: string }): ChoicePhrase | undefined =>
-  p ? { kana: p.kana, kanji: p.kanji, korean: p.korean, tip: p.tip } : undefined;
+const phraseInfo = (p?: { id?: string; kana: string; kanji?: string; korean: string; tip?: string }): ChoicePhrase | undefined =>
+  p ? { id: p.id, kana: p.kana, kanji: p.kanji, korean: p.korean, tip: p.tip } : undefined;
 
 const phraseDisplay = (p: { kanji?: string; displayKana?: string; kana: string }) =>
   p.kanji ?? p.displayKana ?? p.kana;
@@ -221,6 +223,10 @@ export function buildCards(): Card[] {
       });
     };
 
+    for (const pid of m.speakPhraseIds ?? []) {
+      addIntroduce(pid, '장면 끝에서 직접 말해볼 핵심 표현입니다. 먼저 의미와 소리를 익혀둡니다.');
+    }
+
     m.steps.forEach((step, idx) => {
       const prompt = step.promptPhraseId ? byPhrase(step.promptPhraseId) : undefined;
       cards.push({
@@ -229,6 +235,7 @@ export function buildCards(): Card[] {
         banner: step.situationKo,
         bannerJa: ttsText(prompt),
         sub: prompt ? `${step.speaker ?? ''} 「${prompt.kana}」(${prompt.korean})` : (step.speaker ?? ''),
+        promptPhrase: phraseInfo(prompt),
         reviewTarget: { type: 'mission', id: m.id as CLevel },
         choices: step.choices.map((c) => ({
           label: c.text, correct: c.correct,
@@ -239,10 +246,6 @@ export function buildCards(): Card[] {
         })),
       });
     });
-
-    for (const pid of m.speakPhraseIds ?? []) {
-      addIntroduce(pid, '장면 끝에서 직접 말해볼 핵심 표현입니다. 먼저 의미와 소리를 익혀둡니다.');
-    }
 
     // 장면 마무리: 순서 맞추기 카드 (sequence가 있으면 — 스텝 카드 뒤에 capstone으로)
     if (m.sequence && m.sequence.length >= 2) {
