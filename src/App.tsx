@@ -8,6 +8,7 @@ import {
   type SeenKana, type SessionLogEntry,
 } from './learn/progress';
 import { extractKanaChars } from './learn/kanaReading';
+import { loadSettings, saveSettings, type Settings } from './learn/settings';
 import { sessionGoalText } from './views/goal';
 import { speak } from './tts';
 import { WRAP } from './ui/styles';
@@ -17,6 +18,8 @@ import { Session } from './views/Session';
 import { Done } from './views/Done';
 import { Map } from './views/Map';
 import { Review } from './views/Review';
+import { Guide } from './views/Guide';
+import { SettingsModal } from './views/SettingsModal';
 
 type View = 'home' | 'map' | 'review' | 'intro' | 'session' | 'done';
 
@@ -33,9 +36,18 @@ export function App() {
   const [quizSeen, setQuizSeen] = useState(0);
   const [sessionLog, setSessionLog] = useState<SessionLogEntry[]>([]);
   const [seenKana, setSeenKana] = useState<SeenKana>(() => loadSeenKana());
+  const [settings, setSettings] = useState<Settings>(() => loadSettings());
+  const [showGuide, setShowGuide] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const card: Card | undefined = view === 'session' ? sessionCards[i] : undefined;
-  const kanaFamiliar = (ch: string) => isKanaFamiliar(ch, seenKana);
+  // 발음 보조: 설정에 따라 항상 보임(always)·안 보임(off)·자동(익히면 사라짐).
+  const kanaFamiliar = (ch: string) =>
+    settings.readingAid === 'off' ? true
+    : settings.readingAid === 'always' ? false
+    : isKanaFamiliar(ch, seenKana);
+
+  function updateSettings(s: Settings) { setSettings(s); saveSettings(s); }
 
   // 카드에서 "본 가나"로 적립할 가나 문자 — 깔끔한 가나 필드가 있는 카드만.
   function creditKana(c: Card) {
@@ -49,11 +61,11 @@ export function App() {
     setSeenKana((prev) => { const nx = markKanaSeen(prev, chars); saveSeenKana(nx); return nx; });
   }
 
-  // 듣기 카드 자동 재생
+  // 듣기 카드 자동 재생 (설정에서 끌 수 있음)
   useEffect(() => {
-    if (view !== 'session' || !card) return;
+    if (view !== 'session' || !card || !settings.autoPlay) return;
     if (card.kind === 'quiz' && card.listen && card.bannerJa) speak(card.bannerJa);
-  }, [i, view, card]);
+  }, [i, view, card, settings.autoPlay]);
 
   // 세션 중 카드 소진되면 done으로 (render 중 setState 금지)
   useEffect(() => {
@@ -146,52 +158,71 @@ export function App() {
   }
 
   // ── 라우팅 ───────────────────────────────────────
-  if (view === 'home') {
+  // 허브 화면(홈·지도·복습)엔 상단 네비게이션 — 자유 이동 + 가이드/설정.
+  const nav = {
+    onNavigate: (v: 'home' | 'map' | 'review') => setView(v),
+    onOpenGuide: () => setShowGuide(true),
+    onOpenSettings: () => setShowSettings(true),
+  };
+
+  function renderView() {
+    if (view === 'map') {
+      return <Map nav={{ ...nav, current: 'map' }} allCards={allCards} progress={progress} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
+    }
+    if (view === 'review') {
+      return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} onBack={() => setView('home')} />;
+    }
+    if (view === 'intro') {
+      const missions = missionsFromCards(sessionCards, progress, sessionId);
+      const hasKana = sessionCards.some((c) => c.kind === 'quiz' && c.reviewTarget?.type === 'kana');
+      return <Intro cards={sessionCards} goal={sessionGoalText(missions, hasKana)} onStart={() => setView('session')} />;
+    }
+    if (view === 'done') {
+      const canContinue = plannedSessionSize(allCards, progress, nextSessionId(session)) > 0;
+      return (
+        <Done
+          sessionId={sessionId} score={score} quizSeen={quizSeen} sessionLog={sessionLog}
+          progress={progress} canContinue={canContinue}
+          speakCount={sessionCards.filter((c) => c.kind === 'speak').length}
+          onRetryWeak={retryWeakSession} onContinue={startSession} onHome={() => setView('home')}
+        />
+      );
+    }
+    if (view === 'session') {
+      if (!card) return <main style={WRAP}><p>로딩…</p></main>;
+      return (
+        <Session
+          card={card}
+          index={i}
+          total={sessionCards.length}
+          picked={picked}
+          cardStatus={card.kind === 'tip' || card.kind === 'order' ? null : classifyCard(card, progress[card.id], sessionId)}
+          onChoose={choose}
+          onIntroduceSeen={introduceSeen}
+          onSpeakPracticed={speakPracticed}
+          onDictationResult={dictationResult}
+          isKanaFamiliar={kanaFamiliar}
+          onNext={next}
+        />
+      );
+    }
     return (
       <Home
+        nav={{ ...nav, current: 'home' }}
         allCards={allCards} progress={progress} session={session}
         onStart={startSession} onReset={resetAll}
         onOpenMap={() => setView('map')} onOpenReview={() => setView('review')} onPracticeScene={startSceneSession}
       />
     );
   }
-  if (view === 'map') {
-    return <Map allCards={allCards} progress={progress} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
-  }
-  if (view === 'review') {
-    return <Review allCards={allCards} progress={progress} seenKana={seenKana} onBack={() => setView('home')} />;
-  }
-  if (view === 'intro') {
-    const missions = missionsFromCards(sessionCards, progress, sessionId);
-    const hasKana = sessionCards.some((c) => c.kind === 'quiz' && c.reviewTarget?.type === 'kana');
-    const goal = sessionGoalText(missions, hasKana);
-    return <Intro cards={sessionCards} goal={goal} onStart={() => setView('session')} />;
-  }
-  if (view === 'done') {
-    const canContinue = plannedSessionSize(allCards, progress, nextSessionId(session)) > 0;
-    return (
-      <Done
-        sessionId={sessionId} score={score} quizSeen={quizSeen} sessionLog={sessionLog}
-        progress={progress} canContinue={canContinue}
-        speakCount={sessionCards.filter((c) => c.kind === 'speak').length}
-        onRetryWeak={retryWeakSession} onContinue={startSession} onHome={() => setView('home')}
-      />
-    );
-  }
-  if (!card) return <main style={WRAP}><p>로딩…</p></main>;
+
   return (
-    <Session
-      card={card}
-      index={i}
-      total={sessionCards.length}
-      picked={picked}
-      cardStatus={card.kind === 'tip' || card.kind === 'order' ? null : classifyCard(card, progress[card.id], sessionId)}
-      onChoose={choose}
-      onIntroduceSeen={introduceSeen}
-      onSpeakPracticed={speakPracticed}
-      onDictationResult={dictationResult}
-      isKanaFamiliar={kanaFamiliar}
-      onNext={next}
-    />
+    <>
+      {renderView()}
+      {showGuide && <Guide onClose={() => setShowGuide(false)} />}
+      {showSettings && (
+        <SettingsModal settings={settings} onChange={updateSettings} onReset={resetAll} onClose={() => setShowSettings(false)} />
+      )}
+    </>
   );
 }

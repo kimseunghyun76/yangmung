@@ -6,6 +6,7 @@ import {
 } from '../learn/progress';
 import { BTN, PRIMARY, WRAP } from '../ui/styles';
 import { sceneVisualByPlace } from './scene';
+import { NavBar, type NavBarProps } from './NavBar';
 
 const RECOVERY = [
   { ja: 'もう一度お願いします', ko: '다시 말해 주세요' },
@@ -15,18 +16,20 @@ const RECOVERY = [
 ];
 
 interface Props {
+  nav: NavBarProps;
   allCards: Card[];
   progress: ProgressMap;
   onPracticeScene: (missionId: string) => void;
   onBack: () => void;
 }
 
-export function Map({ allCards, progress, onPracticeScene, onBack }: Props) {
+export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props) {
   const kanaUnits = CONTENT.units.filter((u) => u.track === 'kana' && u.mode === 'drill');
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0'); // 튜토리얼 제외
 
   return (
     <main style={WRAP}>
+      <NavBar {...nav} />
       <h1 style={{ marginBottom: 4 }}>🗺 학습 지도</h1>
       <p style={{ color: '#888', marginTop: 0, fontSize: 13 }}>내가 어디까지 왔는지 한눈에</p>
 
