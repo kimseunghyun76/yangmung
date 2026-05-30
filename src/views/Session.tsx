@@ -53,7 +53,7 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
         <SpeakCardView key={card.id} card={card} isKanaFamiliar={isKanaFamiliar} onPracticed={onSpeakPracticed} onNext={onNext} />
       ) : (
         <>
-          <div style={{ fontSize: card.listen || card.tag.startsWith('K') ? 72 : 28, textAlign: 'center', margin: '20px 0 6px' }}>{card.banner}</div>
+          <div className={card.listen ? 'ym-listening' : undefined} style={{ fontSize: card.listen || card.tag.startsWith('K') ? 72 : 28, textAlign: 'center', margin: '20px 0 6px' }}>{card.banner}</div>
           {card.bannerJa && (
             <div style={{ textAlign: 'center', marginBottom: 8, display: 'flex', gap: 8, justifyContent: 'center' }}>
               <button
@@ -84,8 +84,10 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
               const isPicked = picked === idx;
               const reveal = picked !== null;
               const bg = !reveal ? '#fff' : c.correct ? '#dcfce7' : isPicked ? '#fee2e2' : '#fff';
+              // 정답 펄스 / 오답(내가 고른 것) 흔들림
+              const anim = !reveal ? '' : c.correct ? 'ym-correct' : isPicked ? 'ym-wrong' : '';
               return (
-                <button key={idx} style={{ ...BTN, background: bg }} onClick={() => onChoose(idx, c)} disabled={reveal}>
+                <button key={idx} className={anim} style={{ ...BTN, background: bg }} onClick={() => onChoose(idx, c)} disabled={reveal}>
                   {c.label}{reveal && c.recovery ? ' 🛟' : ''}{reveal && c.correct ? ' ✓' : ''}
                 </button>
               );
@@ -108,7 +110,7 @@ function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 
   const ja = c.phrase ? (c.phrase.kanji ?? c.phrase.kana) : undefined;
 
   return (
-    <div style={{ marginTop: 14 }}>
+    <div className="ym-reveal" style={{ marginTop: 14 }}>
       {isCorrect && (
         <div style={{ background: '#dcfce7', padding: 12, borderRadius: 8, marginBottom: 8 }}>
           <p style={{ margin: 0, color: '#16a34a', fontWeight: 600 }}>✓ 정답 — 이 상황에서 자연스러워요</p>
