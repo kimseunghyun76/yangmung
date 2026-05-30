@@ -2,10 +2,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { buildCards, type Card, type Choice } from './learn/cards';
 import {
-  classifyCard, clearProgress, loadProgress, loadSession, missionsFromCards, nextSessionId,
-  plannedSessionSize, recordAttempt, saveProgress, saveSession, selectMissionCards, selectSessionCards,
-  type SessionLogEntry,
+  classifyCard, clearProgress, isKanaFamiliar, loadProgress, loadSeenKana, loadSession,
+  markKanaSeen, missionsFromCards, nextSessionId, plannedSessionSize, recordAttempt,
+  saveProgress, saveSeenKana, saveSession, selectMissionCards, selectSessionCards,
+  type SeenKana, type SessionLogEntry,
 } from './learn/progress';
+import { extractKanaChars } from './learn/kanaReading';
 import { sessionGoalText } from './views/goal';
 import { speak } from './tts';
 import { WRAP } from './ui/styles';
@@ -30,8 +32,20 @@ export function App() {
   const [score, setScore] = useState(0);
   const [quizSeen, setQuizSeen] = useState(0);
   const [sessionLog, setSessionLog] = useState<SessionLogEntry[]>([]);
+  const [seenKana, setSeenKana] = useState<SeenKana>(() => loadSeenKana());
 
   const card: Card | undefined = view === 'session' ? sessionCards[i] : undefined;
+  const kanaFamiliar = (ch: string) => isKanaFamiliar(ch, seenKana);
+
+  // 카드에서 "본 가나"로 적립할 가나 문자 — 깔끔한 가나 필드가 있는 카드만.
+  function creditKana(c: Card) {
+    let text = '';
+    if (c.kind === 'introduce' || c.kind === 'speak') text = c.kana;
+    else if (c.kind === 'quiz' && c.reviewTarget?.type === 'kana') text = c.bannerJa ?? '';
+    const chars = text ? extractKanaChars(text) : [];
+    if (chars.length === 0) return;
+    setSeenKana((prev) => { const nx = markKanaSeen(prev, chars); saveSeenKana(nx); return nx; });
+  }
 
   // 듣기 카드 자동 재생
   useEffect(() => {
@@ -91,11 +105,13 @@ export function App() {
     setPicked(idx);
     if (c.ja) speak(c.ja);
     if (card.kind !== 'quiz') return;
+    creditKana(card);
     recordCardResult(card.id, c.correct, !!c.recovery);
   }
   // 소개 카드: 퀴즈 전 학습 노출. 점수에는 넣지 않고, 한 번 본 카드로만 기록.
   function introduceSeen() {
     if (!card || card.kind !== 'introduce') return;
+    creditKana(card);
     const updated = recordAttempt(progress, card.id, { correct: true, usedRecovery: false, sessionId });
     setProgress(updated);
     saveProgress(updated);
@@ -103,6 +119,7 @@ export function App() {
   // 따라 말하기: 채점 없이 practiced만 기록 (SRS 쿨다운만 진행, 점수·약점 집계 제외)
   function speakPracticed() {
     if (!card || card.kind !== 'speak') return;
+    creditKana(card);
     const updated = recordAttempt(progress, card.id, { correct: true, usedRecovery: false, sessionId });
     setProgress(updated);
     saveProgress(updated);
@@ -111,6 +128,7 @@ export function App() {
     clearProgress();
     setProgress({});
     setSession({ lastCompletedSessionId: 0 });
+    setSeenKana({});
   }
 
   // ── 라우팅 ───────────────────────────────────────
@@ -127,7 +145,7 @@ export function App() {
     return <Map allCards={allCards} progress={progress} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
   }
   if (view === 'review') {
-    return <Review allCards={allCards} progress={progress} onBack={() => setView('home')} />;
+    return <Review allCards={allCards} progress={progress} seenKana={seenKana} onBack={() => setView('home')} />;
   }
   if (view === 'intro') {
     const missions = missionsFromCards(sessionCards, progress, sessionId);
@@ -157,6 +175,7 @@ export function App() {
       onChoose={choose}
       onIntroduceSeen={introduceSeen}
       onSpeakPracticed={speakPracticed}
+      isKanaFamiliar={kanaFamiliar}
       onNext={next}
     />
   );

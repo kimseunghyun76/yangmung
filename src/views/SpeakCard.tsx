@@ -3,14 +3,16 @@ import { useState } from 'react';
 import type { SpeakCard } from '../learn/cards';
 import { speak, ttsSupported } from '../tts';
 import { BTN, PRIMARY } from '../ui/styles';
+import { ReadingAid } from './ReadingAid';
 
 interface Props {
   card: SpeakCard;
+  isKanaFamiliar: (char: string) => boolean;
   onPracticed: () => void;
   onNext: () => void;
 }
 
-export function SpeakCardView({ card, onPracticed, onNext }: Props) {
+export function SpeakCardView({ card, isKanaFamiliar, onPracticed, onNext }: Props) {
   const [spoke, setSpoke] = useState(false);
 
   function markSpoke() {
@@ -22,8 +24,9 @@ export function SpeakCardView({ card, onPracticed, onNext }: Props) {
   return (
     <div>
       <h2 style={{ marginTop: 14 }}>🗣 따라 말하기</h2>
-      <div style={{ fontSize: 30, textAlign: 'center', margin: '18px 0 4px', fontWeight: 600 }}>{card.ja}</div>
-      <p style={{ textAlign: 'center', color: '#888', margin: 0 }}>{card.kana}</p>
+      <div style={{ textAlign: 'center', margin: '18px 0 4px' }}>
+        <ReadingAid text={card.kana} isFamiliar={isKanaFamiliar} fontSize={30} />
+      </div>
       <p style={{ textAlign: 'center', color: '#555', marginTop: 4 }}>{card.korean}</p>
 
       <div style={{ textAlign: 'center', marginTop: 14 }}>

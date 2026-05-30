@@ -2,17 +2,18 @@
 import { CONTENT } from '../content';
 import type { KanaItem, Phrase } from '../content';
 import type { Card } from '../learn/cards';
-import { isKanaReadStable, type ProgressMap } from '../learn/progress';
+import { countSeenKana, isKanaReadStable, type ProgressMap, type SeenKana } from '../learn/progress';
 import { speak, ttsSupported } from '../tts';
 import { BTN, PRIMARY, WRAP } from '../ui/styles';
 
 interface Props {
   allCards: Card[];
   progress: ProgressMap;
+  seenKana: SeenKana;
   onBack: () => void;
 }
 
-export function Review({ allCards, progress, onBack }: Props) {
+export function Review({ allCards, progress, seenKana, onBack }: Props) {
   const phraseSeen = collectSeenPhraseIds(allCards, progress);
   const hira = CONTENT.kana.filter((k) => k.script === 'hiragana');
   const kata = CONTENT.kana.filter((k) => k.script === 'katakana' || k.script === 'common');
@@ -24,6 +25,7 @@ export function Review({ allCards, progress, onBack }: Props) {
     <main style={WRAP}>
       <h1 style={{ marginBottom: 4 }}>📚 복습장</h1>
       <p style={{ color: '#888', marginTop: 0, fontSize: 13 }}>배운 글자와 표현을 퀴즈 없이 다시 보는 곳</p>
+      <p style={{ color: '#4f46e5', marginTop: 6, fontSize: 14, fontWeight: 600 }}>👀 지금까지 본 가나 {countSeenKana(seenKana)}자</p>
 
       <Section title="히라가나">
         <KanaGrid items={hira} progress={progress} />
@@ -62,6 +64,12 @@ function collectSeenPhraseIds(allCards: Card[], progress: ProgressMap): Set<stri
     if (c.kind === 'quiz' && c.id.startsWith('listen:')) {
       const phraseId = c.id.slice('listen:'.length);
       if (phraseId) out.add(phraseId);
+    }
+    if (c.kind === 'quiz') {
+      if (c.promptPhrase?.id) out.add(c.promptPhrase.id);
+      for (const choice of c.choices) {
+        if (choice.phrase?.id) out.add(choice.phrase.id);
+      }
     }
   }
   return out;

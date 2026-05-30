@@ -7,6 +7,8 @@ export const c3: Mission = {
   place: '전철',
   canDo: '사용자는 역을 찾고, 표를 사거나 IC카드를 충전하고, 개찰구·플랫폼을 묻고, 환승 안내를 듣고 내릴 역을 확인할 수 있다',
   unlockAfter: ['C2'],
+  sequence: ['역 찾기', '표·IC카드', '개찰구 확인', '플랫폼 확인', '환승 안내', '내릴 역 확인'],
+  speakPhraseIds: ['p_shinjuku_doko', 'p_kippu_kudasai', 'p_nanbansen', 'p_tsugi_wa_shibuya'],
   steps: [
     {
       situationKo: '길을 잃었다 — 역무원에게 신주쿠역 가는 길을 묻기',
