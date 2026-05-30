@@ -9,6 +9,7 @@ export function Intro({ cards, goal, onStart }: { cards: Card[]; goal: string; o
   let firstMissionId: string | undefined;
   for (const card of cards) {
     if (card.kind === 'tip') continue;
+    if (card.kind === 'dictation') { b++; continue; }
     if (card.kind === 'order' || card.kind === 'speak') {
       c++;
       if (!firstMissionId && card.reviewTarget?.type === 'mission') firstMissionId = String(card.reviewTarget.id);

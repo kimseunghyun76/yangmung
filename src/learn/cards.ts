@@ -2,6 +2,11 @@
 // 친구 4차 권고: App.tsx 하드코딩 분리, SRS 도입 전제 조건.
 import { CONTENT } from '../content';
 import type { CLevel, KanaItem, ReviewTarget } from '../content/types';
+import { toReadingUnits } from './kanaReading';
+
+// 받아쓰기 대상 — 짧고 순수 가나인 표현 (초보자 듣기+쓰기 입문)
+const DICTATION_IDS = ['p_hai', 'p_iie', 'p_kore', 'p_arigatou', 'p_sumimasen'];
+const DICTATION_DISTRACTORS = ['つ', 'ん', 'を', 'ぬ', 'ふ', 'ね', 'ろ', 'む'];
 
 export interface ChoicePhrase {
   id?: string;
@@ -83,7 +88,20 @@ export interface SpeakCard {
   reviewTarget?: ReviewTarget;
 }
 
-export type Card = QuizCard | TipCard | IntroduceCard | OrderCard | SpeakCard;
+// 받아쓰기 카드 — 듣고 가나 타일을 순서대로 골라 문장 완성 (듣기+쓰기 입문).
+export interface DictationCard {
+  kind: 'dictation';
+  id: string;
+  tag: string;
+  scenario?: string;
+  ja: string;            // TTS용
+  answer: string[];      // 정답 가나 단위 순서
+  korean: string;
+  tiles: string[];       // 섞인 타일(정답 + 방해)
+  reviewTarget?: ReviewTarget;
+}
+
+export type Card = QuizCard | TipCard | IntroduceCard | OrderCard | SpeakCard | DictationCard;
 
 // TTS는 자연 표기 우선 (문장부호 prosody)
 const ttsText = (p?: { kanji?: string; displayKana?: string; kana: string }) =>
@@ -271,6 +289,20 @@ export function buildCards(): Card[] {
         reviewTarget: { type: 'mission', id: m.id as CLevel },
       });
     }
+  }
+
+  // 받아쓰기 카드 (듣고 가나 타일로 문장 완성)
+  for (const id of DICTATION_IDS) {
+    const p = phrases.find((x) => x.id === id);
+    if (!p) continue;
+    const answer = toReadingUnits(p.kana).map((u) => u.text).filter((t) => t.trim());
+    const distractors = shuffle(DICTATION_DISTRACTORS.filter((d) => !answer.includes(d))).slice(0, 3);
+    cards.push({
+      kind: 'dictation', id: `dictation:${id}`, tag: '받아쓰기',
+      ja: ttsText(p) ?? p.kana, answer, korean: p.korean,
+      tiles: shuffle([...answer, ...distractors]),
+      reviewTarget: { type: 'phrase', id },
+    });
   }
 
   // 정확성 팁 (디브리프)
