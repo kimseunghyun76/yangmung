@@ -5,6 +5,7 @@ import {
   isMissionUnlocked, kanaReadMastery, missionProgress, type ProgressMap,
 } from '../learn/progress';
 import { BTN, PRIMARY, WRAP } from '../ui/styles';
+import { sceneVisualByPlace } from './scene';
 
 const RECOVERY = [
   { ja: 'もう一度お願いします', ko: '다시 말해 주세요' },
@@ -52,7 +53,7 @@ export function Map({ allCards, progress, onPracticeScene, onBack }: Props) {
                 opacity: unlocked ? 1 : 0.55, cursor: unlocked ? 'pointer' : 'default',
               }}
             >
-              <span><strong>{m.place ?? m.scenario}</strong> <span style={{ color: '#999', fontSize: 13 }}>{m.scenario}</span></span>
+              <span><strong>{sceneVisualByPlace(m.place).emoji} {m.place ?? m.scenario}</strong> <span style={{ color: '#999', fontSize: 13 }}>{m.scenario}</span></span>
               <span style={{ fontSize: 13, color: done ? '#16a34a' : '#666' }}>{status}</span>
             </button>
           );
