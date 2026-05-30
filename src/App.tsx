@@ -41,6 +41,7 @@ export function App() {
   function creditKana(c: Card) {
     let text = '';
     if (c.kind === 'introduce' || c.kind === 'speak') text = c.kana;
+    else if (c.kind === 'dictation') text = c.answer.join('');
     else if (c.kind === 'quiz' && c.reviewTarget?.type === 'kana') text = c.bannerJa ?? '';
     else if (c.kind === 'quiz' && c.promptPhrase) text = c.promptPhrase.kana; // 미션 프롬프트(점원 발화)
     const chars = text ? extractKanaChars(text) : [];
@@ -117,6 +118,12 @@ export function App() {
     setProgress(updated);
     saveProgress(updated);
   }
+  // 받아쓰기: 채점 카드 (퀴즈처럼 점수·약점 집계)
+  function dictationResult(correct: boolean) {
+    if (!card || card.kind !== 'dictation') return;
+    creditKana(card);
+    recordCardResult(card.id, correct, false);
+  }
   // 따라 말하기: 채점 없이 practiced만 기록 (SRS 쿨다운만 진행, 점수·약점 집계 제외)
   function speakPracticed() {
     if (!card || card.kind !== 'speak') return;
@@ -176,6 +183,7 @@ export function App() {
       onChoose={choose}
       onIntroduceSeen={introduceSeen}
       onSpeakPracticed={speakPracticed}
+      onDictationResult={dictationResult}
       isKanaFamiliar={kanaFamiliar}
       onNext={next}
     />
