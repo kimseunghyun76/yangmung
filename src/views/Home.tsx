@@ -2,17 +2,14 @@
 import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
 import {
-  isKanaReadStable, isMissionUnlocked, kanaReadMastery, missionProgress, nextSessionId, planSession,
+  isMissionUnlocked, kanaReadMastery, missionProgress, nextSessionId, planSession,
   sessionCounts, summarize, type ProgressMap, type SessionConfig, type SessionState,
 } from '../learn/progress';
 import { ttsSupported } from '../tts';
-import { BTN, PRIMARY, WRAP } from '../ui/styles';
+import { BTN, CARD, PRIMARY, WRAP } from '../ui/styles';
 import { sessionGoalText } from './goal';
 import { sceneVisualByPlace } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
-
-// 앞 단계 가나가 N자 안정되기 전에는 다음 단계(K2 등) 패널을 접어 둠 — 첫 화면이 드릴처럼 안 보이게.
-const REVEAL_NEXT_KANA_AT = 3;
 
 interface Props {
   nav: NavBarProps;
@@ -31,7 +28,8 @@ export function Home({ nav, allCards, progress, session, sessionConfig, modeLabe
   const counts = sessionCounts(allCards, progress, upcomingId);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
   const planned = plan.size;
-  const kanaUnits = revealedKanaUnits(progress);
+  const hiraIds = CONTENT.kana.filter((k) => k.script === 'hiragana').map((k) => k.id);
+  const kataIds = CONTENT.kana.filter((k) => k.script === 'katakana').map((k) => k.id);
   const s = summarize(progress);
   const goal = sessionGoalText(plan.missions, plan.breakdown.K > 0);
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0'); // 튜토리얼 제외
@@ -64,9 +62,11 @@ export function Home({ nav, allCards, progress, session, sessionConfig, modeLabe
         </p>
       )}
 
-      {kanaUnits.map((u) => (
-        <KanaPanel key={u.id} stage={u.stage} kanaIds={u.kanaIds ?? []} progress={progress} />
-      ))}
+      <div style={{ ...CARD, marginTop: 14 }}>
+        <p style={{ margin: 0, fontSize: 13, color: '#666', fontWeight: 600 }}>📚 가나 안정도 (읽기 기준)</p>
+        <KanaTrackBar label="히라가나" kanaIds={hiraIds} progress={progress} />
+        <KanaTrackBar label="가타카나" kanaIds={kataIds} progress={progress} />
+      </div>
 
       {s.seen > 0 && (
         <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
@@ -134,53 +134,17 @@ function lockHint(missionId: string): string {
   return '조금 더 익히면 열려요';
 }
 
-// 노출할 가나 드릴 Unit: K1은 항상, 다음 단계는 앞 단계가 충분히 안정됐거나 이미 시작했을 때만.
-function revealedKanaUnits(progress: ProgressMap) {
-  const units = CONTENT.units.filter((u) => u.track === 'kana' && u.mode === 'drill');
-  const out: typeof units = [];
-  for (let idx = 0; idx < units.length; idx++) {
-    const u = units[idx];
-    if (idx === 0) { out.push(u); continue; }
-    const prevMastered = kanaReadMastery(progress, units[idx - 1].kanaIds ?? []).mastered;
-    const selfStarted = (u.kanaIds ?? []).some((id) =>
-      progress[`kana:${id}:read`] || progress[`kana:${id}:listen`] || progress[`kana:${id}:confuse`]);
-    if (prevMastered >= REVEAL_NEXT_KANA_AT || selfStarted) out.push(u);
-    else break; // 이번 단계가 잠겼으면 이후 단계도 모두 잠금
-  }
-  return out;
-}
-
-// 단계별 가나 안정도 패널 (읽기 기준) — K1·K2 등 드릴 Unit마다 1개.
-function KanaPanel({ stage, kanaIds, progress }: { stage: string; kanaIds: string[]; progress: ProgressMap }) {
+// 가나 트랙 요약 바 — 히라가나/가타카나 각각 안정도(읽기 기준) 한 줄.
+function KanaTrackBar({ label, kanaIds, progress }: { label: string; kanaIds: string[]; progress: ProgressMap }) {
   const m = kanaReadMastery(progress, kanaIds);
-  const chars = kanaIds.map((id) => CONTENT.kana.find((kk) => kk.id === id)?.char ?? '?');
+  const pct = Math.round((m.mastered / Math.max(1, m.total)) * 100);
   return (
-    <div style={{ background: '#eef2ff', padding: 14, borderRadius: 10, marginTop: 12 }}>
-      <p style={{ margin: 0, fontSize: 13, color: '#666' }}>📚 {stage} 히라가나 안정도 (읽기 기준)</p>
-      <p style={{ margin: '4px 0 0', fontSize: 18 }}>
-        <strong style={{ color: '#4f46e5' }}>{m.mastered}</strong>
-        <span style={{ color: '#666' }}> / {m.total}자</span>
-      </p>
-      <div style={{ height: 6, background: '#d4d4e0', borderRadius: 3, marginTop: 8, overflow: 'hidden' }}>
-        <div style={{ width: `${(m.mastered / Math.max(1, m.total)) * 100}%`, height: '100%', background: '#4f46e5', transition: 'width 0.3s' }} />
+    <div style={{ marginTop: 10 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#555' }}>
+        <span>{label}</span><span><strong style={{ color: '#4f46e5' }}>{m.mastered}</strong> / {m.total}자</span>
       </div>
-      <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: 6, fontSize: 18 }}>
-        {kanaIds.map((id, idx) => {
-          const ok = isKanaReadStable(progress, id);
-          return (
-            <span
-              key={id}
-              style={{
-                minWidth: 28, textAlign: 'center', padding: '2px 6px', borderRadius: 6,
-                background: ok ? '#4f46e5' : '#fff', color: ok ? '#fff' : '#999',
-                border: '1px solid #c7c7d8',
-              }}
-              title={ok ? '읽기 안정' : '아직'}
-            >
-              {chars[idx]}
-            </span>
-          );
-        })}
+      <div style={{ height: 6, background: '#eceef4', borderRadius: 3, marginTop: 5, overflow: 'hidden' }}>
+        <div style={{ width: `${pct}%`, height: '100%', background: '#4f46e5', transition: 'width 0.3s' }} />
       </div>
     </div>
   );
