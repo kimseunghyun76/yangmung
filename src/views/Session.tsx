@@ -8,6 +8,7 @@ import { OrderCardView } from './OrderCard';
 import { SpeakCardView } from './SpeakCard';
 import { DictationCardView } from './DictationCard';
 import { ReadingAid } from './ReadingAid';
+import { sceneVisualByMission } from './scene';
 
 interface Props {
   card: Card;
@@ -31,14 +32,20 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
     cardStatus === 'new' ? <span style={{ ...badgeStyle, background: '#60a5fa', color: '#fff' }}>🆕 신규</span> :
     null;
 
+  // 장면 색 테마 — 미션 카드면 장소 색/이모지로 (세션이 장면마다 다르게 보이게)
+  const sv = card.kind !== 'tip' && card.reviewTarget?.type === 'mission'
+    ? sceneVisualByMission(String(card.reviewTarget.id)) : null;
+
   return (
-    <main style={WRAP}>
+    <main style={{ ...WRAP, background: sv ? sv.bg : undefined, minHeight: '100vh', transition: 'background 0.3s' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#888', fontSize: 13 }}>
         <span>{card.tag}{badge}</span>
         <span>{index + 1} / {total}</span>
       </div>
       {card.kind !== 'tip' && card.scenario && (
-        <div style={{ color: '#a78bfa', fontSize: 14, marginTop: 2, fontWeight: 500 }}>📍 {card.scenario}</div>
+        <div style={{ display: 'inline-block', marginTop: 4, padding: '4px 12px', borderRadius: 999, fontSize: 13, fontWeight: 600, color: '#fff', background: sv ? sv.accent : '#a78bfa' }}>
+          {sv ? sv.emoji : '📍'} {card.scenario}
+        </div>
       )}
 
       {card.kind === 'tip' ? (
