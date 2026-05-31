@@ -93,6 +93,14 @@ export const phrases: Phrase[] = [
   { id: 'p_nanbansen', kana: 'なんばんせんですか', kanji: '何番線ですか', displayKana: 'なんばんせんですか？', korean: '몇 번 선이에요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '플랫폼 번호 묻기 — 「番線(ばんせん)」이 승강장 번호' },
   { id: 'p_tsugi_wa_shibuya', kana: 'つぎはしぶやですか', kanji: '次は渋谷ですか', displayKana: 'つぎは、しぶやですか？', korean: '다음은 시부야예요?', register: 'productive', grammarRefs: ['g_masuka'] },
 
+  // ── 금액·숫자 듣기 (계산대에서 귀로 알아듣기) ──
+  { id: 'p_num_hyakuen', kana: 'ひゃくえん', kanji: '百円', korean: '100엔', register: 'receptive' },
+  { id: 'p_num_gohyakuen', kana: 'ごひゃくえん', kanji: '五百円', korean: '500엔', register: 'receptive' },
+  { id: 'p_num_senen', kana: 'せんえん', kanji: '千円', korean: '1000엔', register: 'receptive' },
+  { id: 'p_num_nisenen', kana: 'にせんえん', kanji: '二千円', korean: '2000엔', register: 'receptive' },
+  { id: 'p_num_gosenen', kana: 'ごせんえん', kanji: '五千円', korean: '5000엔', register: 'receptive' },
+  { id: 'p_num_ichimanen', kana: 'いちまんえん', kanji: '一万円', korean: '10000엔', register: 'receptive' },
+
   // ── 응답 다양성 보강 ──
   { id: 'p_wakarimashita_arigatou', kana: 'わかりましたありがとうございます', kanji: '分かりました、ありがとうございます', displayKana: 'わかりました、ありがとうございます', korean: '알겠습니다, 감사합니다', register: 'productive', tip: '이해+감사를 한 번에 — 안내를 받은 뒤 자연스러운 마무리' },
 
