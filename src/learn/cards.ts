@@ -5,7 +5,12 @@ import type { CLevel, KanaItem, ReviewTarget } from '../content/types';
 import { toReadingUnits } from './kanaReading';
 
 // 받아쓰기 대상 — 짧고 순수 가나인 표현 (초보자 듣기+쓰기 입문)
-const DICTATION_IDS = ['p_hai', 'p_iie', 'p_kore', 'p_arigatou', 'p_sumimasen'];
+const DICTATION_IDS = [
+  'p_hai', 'p_iie', 'p_kore', 'p_arigatou', 'p_sumimasen',
+  // 여행 실전 짧은 표현
+  'p_konnichiwa', 'p_oishii', 'p_genkin_de', 'p_card_de', 'p_mizu_kudasai',
+  'p_kore_kudasai', 'p_daijoubu', 'p_wakarimashita', 'p_eki', 'p_kippu',
+];
 const DICTATION_DISTRACTORS = ['つ', 'ん', 'を', 'ぬ', 'ふ', 'ね', 'ろ', 'む'];
 
 export interface ChoicePhrase {
