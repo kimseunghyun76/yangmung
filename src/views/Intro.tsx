@@ -4,7 +4,7 @@ import type { Card } from '../learn/cards';
 import { PRIMARY, WRAP } from '../ui/styles';
 import { sceneVisualByMission } from './scene';
 
-export function Intro({ cards, goal, onStart }: { cards: Card[]; goal: string; onStart: () => void }) {
+export function Intro({ cards, goal, onStart, onBack }: { cards: Card[]; goal: string; onStart: () => void; onBack: () => void }) {
   let k = 0, b = 0, c = 0;
   let firstMissionId: string | undefined;
   for (const card of cards) {
@@ -29,6 +29,7 @@ export function Intro({ cards, goal, onStart }: { cards: Card[]; goal: string; o
 
   return (
     <main style={WRAP}>
+      <button onClick={onBack} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 14, color: '#888', padding: '4px 0', marginBottom: 8 }}>← 홈으로</button>
       <div style={{ background: sv.bg, borderRadius: 16, padding: sv.hero ? 0 : '28px 16px', textAlign: 'center', marginBottom: 16, overflow: 'hidden' }}>
         {sv.hero
           ? <img src={sv.hero} alt="" style={{ width: '100%', display: 'block', maxHeight: 180, objectFit: 'cover' }} />
