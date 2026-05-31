@@ -80,6 +80,16 @@ export interface OrderCard {
   reviewTarget?: ReviewTarget;
 }
 
+// 발견 카드 — 익숙해진 가나로만 된 표현이 "이제 읽힌다"는 성취 순간 (동적 생성, 채점 X).
+export interface DiscoverCard {
+  kind: 'discover';
+  id: string;
+  tag: string;
+  ja: string;
+  kana: string;
+  korean: string;
+}
+
 // 따라 말하기 카드 — 음성 인식 없이 "입으로 꺼내기" 연습(채점 X, practiced만 기록).
 export interface SpeakCard {
   kind: 'speak';
@@ -106,7 +116,7 @@ export interface DictationCard {
   reviewTarget?: ReviewTarget;
 }
 
-export type Card = QuizCard | TipCard | IntroduceCard | OrderCard | SpeakCard | DictationCard;
+export type Card = QuizCard | TipCard | IntroduceCard | OrderCard | SpeakCard | DictationCard | DiscoverCard;
 
 // TTS는 자연 표기 우선 (문장부호 prosody)
 const ttsText = (p?: { kanji?: string; displayKana?: string; kana: string }) =>

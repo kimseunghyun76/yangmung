@@ -8,7 +8,7 @@ export function Intro({ cards, goal, onStart, onBack }: { cards: Card[]; goal: s
   let k = 0, b = 0, c = 0;
   let firstMissionId: string | undefined;
   for (const card of cards) {
-    if (card.kind === 'tip') continue;
+    if (card.kind === 'tip' || card.kind === 'discover') continue;
     if (card.kind === 'dictation') { b++; continue; }
     if (card.kind === 'order' || card.kind === 'speak') {
       c++;
