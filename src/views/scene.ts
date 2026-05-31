@@ -1,7 +1,7 @@
-// 장면 시각 컨셉 — 장소별 이모지·배경색. 실사 이미지 전 단계의 가벼운 "상황 기억" 장치.
+// 장면 시각 컨셉 — 장소별 이모지·배경색(+ 향후 이미지/영상 슬롯). "상황 기억" 장치.
 import { CONTENT } from '../content';
 
-export interface SceneVisual { emoji: string; bg: string; accent: string }
+export interface SceneVisual { emoji: string; bg: string; accent: string; thumb?: string; hero?: string; success?: string; loop?: string }
 
 const BY_PLACE: Record<string, SceneVisual> = {
   편의점: { emoji: '🏪', bg: '#eef6ff', accent: '#2563eb' },
@@ -17,9 +17,21 @@ export function sceneVisualByPlace(place?: string): SceneVisual {
   return (place && BY_PLACE[place]) || DEFAULT;
 }
 
+// 미션의 visual 슬롯이 있으면 우선 적용(이미지/영상 갈아끼우기 지점), 없으면 장소 기본값.
 export function sceneVisualByMission(missionId?: string): SceneVisual {
   const m = CONTENT.missions.find((x) => x.id === missionId);
-  return sceneVisualByPlace(m?.place);
+  const base = sceneVisualByPlace(m?.place);
+  const v = m?.visual;
+  if (!v) return base;
+  return {
+    emoji: v.emoji ?? base.emoji,
+    bg: v.bg ?? base.bg,
+    accent: base.accent,
+    thumb: v.thumb,
+    hero: v.hero,
+    success: v.success,
+    loop: v.loop,
+  };
 }
 
 // 장면(장소)별로 그 미션이 쓰는 표현 id 모음 — 복습장 "장면별 필터"·여행 치트시트용.

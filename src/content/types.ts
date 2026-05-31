@@ -60,10 +60,22 @@ export interface Unit {
   reviewPhraseIds?: string[];// Track B (나선형 복습)
 }
 
+// 장면 비주얼 — 단계적 도입: 지금은 emoji만 채우고, 나중에 thumb(목록)·hero(입장)·
+// success(완료) 이미지나 짧은 영상(loop)을 갈아끼울 수 있게 슬롯만 미리 설계.
+export interface MissionVisual {
+  emoji?: string;
+  bg?: string;       // 배경 틴트
+  thumb?: string;    // 홈/지도 썸네일 (이미지 URL)
+  hero?: string;     // 장면 입장 대표 이미지
+  success?: string;  // 완료 비주얼
+  loop?: string;     // 2~4초 장면 루프 영상 (최후 도입)
+}
+
 export interface Mission {
   id: CLevel;
   scenario: string;
   place?: string;        // 짧은 장소 라벨 (편의점·식당·전철) — 목표 카피·잠금 힌트용
+  visual?: MissionVisual; // 장면 비주얼 슬롯 — 지금은 이모지, 나중에 image/video로 갈아끼움
   sequence?: string[];   // 장면의 일어나는 순서(짧은 라벨) — "순서 맞추기" 카드 생성용
   speakPhraseIds?: string[]; // 장면 끝 "따라 말하기" 카드로 꺼낼 핵심 문장
   canDo: string;

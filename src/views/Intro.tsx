@@ -29,8 +29,10 @@ export function Intro({ cards, goal, onStart }: { cards: Card[]; goal: string; o
 
   return (
     <main style={WRAP}>
-      <div style={{ background: sv.bg, borderRadius: 16, padding: '28px 16px', textAlign: 'center', marginBottom: 16 }}>
-        <div style={{ fontSize: 64, lineHeight: 1 }}>{sv.emoji}</div>
+      <div style={{ background: sv.bg, borderRadius: 16, padding: sv.hero ? 0 : '28px 16px', textAlign: 'center', marginBottom: 16, overflow: 'hidden' }}>
+        {sv.hero
+          ? <img src={sv.hero} alt="" style={{ width: '100%', display: 'block', maxHeight: 180, objectFit: 'cover' }} />
+          : <div style={{ fontSize: 64, lineHeight: 1 }}>{sv.emoji}</div>}
       </div>
       <p style={{ color: '#888', fontSize: 13, margin: 0 }}>오늘 한 판 🎒</p>
       <h1 style={{ margin: '6px 0 0', lineHeight: 1.35 }}>{goal}</h1>
