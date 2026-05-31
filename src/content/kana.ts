@@ -22,6 +22,15 @@ const KATA_LEVEL: Record<string, KLevel> = {
   K1: 'K11', K2: 'K12', K3: 'K13', K4: 'K14', K5: 'K15', K6: 'K16', K7: 'K17', K8: 'K18', K9: 'K19',
 };
 
+// 탁음·반탁음 — 청음 다음 단계. (kind: daku/handaku) 히라 K21~K25, 가타 K26~K30.
+const DAKU_ROWS: { groupKo: string; level: KLevel; kataLevel: KLevel; kind: 'daku' | 'handaku'; hira: string[]; kata: string[]; romaji: string[]; korean: string[] }[] = [
+  { groupKo: 'が행(탁음)', level: 'K21', kataLevel: 'K26', kind: 'daku', hira: ['が','ぎ','ぐ','げ','ご'], kata: ['ガ','ギ','グ','ゲ','ゴ'], romaji: ['ga','gi','gu','ge','go'], korean: ['가','기','구','게','고'] },
+  { groupKo: 'ざ행(탁음)', level: 'K22', kataLevel: 'K27', kind: 'daku', hira: ['ざ','じ','ず','ぜ','ぞ'], kata: ['ザ','ジ','ズ','ゼ','ゾ'], romaji: ['za','ji','zu','ze','zo'], korean: ['자','지','즈','제','조'] },
+  { groupKo: 'だ행(탁음)', level: 'K23', kataLevel: 'K28', kind: 'daku', hira: ['だ','ぢ','づ','で','ど'], kata: ['ダ','ヂ','ヅ','デ','ド'], romaji: ['da','dji','dzu','de','do'], korean: ['다','지','즈','데','도'] },
+  { groupKo: 'ば행(탁음)', level: 'K24', kataLevel: 'K29', kind: 'daku', hira: ['ば','び','ぶ','べ','ぼ'], kata: ['バ','ビ','ブ','ベ','ボ'], romaji: ['ba','bi','bu','be','bo'], korean: ['바','비','부','베','보'] },
+  { groupKo: 'ぱ행(반탁음)', level: 'K25', kataLevel: 'K30', kind: 'handaku', hira: ['ぱ','ぴ','ぷ','ぺ','ぽ'], kata: ['パ','ピ','プ','ペ','ポ'], romaji: ['pa','pi','pu','pe','po'], korean: ['파','피','푸','페','포'] },
+];
+
 // 헷갈리기 쉬운 글자쌍 (char → 비슷한 char들)
 const CONFUSABLES: Record<string, string[]> = {
   あ: ['お'], お: ['あ'], き: ['さ'], さ: ['き', 'ち'], ち: ['さ', 'ら'], ら: ['ち'],
@@ -45,6 +54,23 @@ function build(): KanaItem[] {
       out.push({
         id: `k_kata_${row.romaji[i]}`, char: ch, script: 'katakana', kind: 'sei',
         romaji: row.romaji[i], koreanSound: row.korean[i], level: KATA_LEVEL[row.level], group: `${row.groupKo}(カ)`,
+        confusables: CONFUSABLES[ch],
+      });
+    });
+  }
+  // 탁음·반탁음
+  for (const row of DAKU_ROWS) {
+    row.hira.forEach((ch, i) => {
+      out.push({
+        id: `k_hira_${row.romaji[i]}`, char: ch, script: 'hiragana', kind: row.kind,
+        romaji: row.romaji[i], koreanSound: row.korean[i], level: row.level, group: row.groupKo,
+        confusables: CONFUSABLES[ch],
+      });
+    });
+    row.kata.forEach((ch, i) => {
+      out.push({
+        id: `k_kata_${row.romaji[i]}`, char: ch, script: 'katakana', kind: row.kind,
+        romaji: row.romaji[i], koreanSound: row.korean[i], level: row.kataLevel, group: `${row.groupKo}(カ)`,
         confusables: CONFUSABLES[ch],
       });
     });
