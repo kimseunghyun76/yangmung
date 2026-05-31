@@ -6,7 +6,7 @@ export const c2: Mission = {
   id: 'C2',
   scenario: '식당에서 주문 (한 조각)',
   place: '식당',
-  sequence: ['인원수', '주문', '음료', '개수', '계산'],
+  sequence: ['인원수', '주문', '음료', '개수', '알레르기 알리기', '계산'],
   speakPhraseIds: ['p_hitori_desu', 'p_kore_kudasai', 'p_okaikei'],
   canDo: '사용자는 식당에서 인원수를 답하고, 메뉴를 가리키거나 추천을 묻고, 음료와 개수를 요청하고, 식사 후 계산을 마무리할 수 있다',
   unlockAfter: ['C1'],
@@ -54,6 +54,16 @@ export const c2: Mission = {
         { text: '두 개 주세요', phraseId: 'p_futatsu_kudasai', correct: true },
         { text: '이거랑 이거', phraseId: 'p_kore_to_kore', correct: true, feedback: '메뉴를 가리키며 — 발음에 자신이 없을 때 가장 안전한 주문법' },
         { text: '매워요?', phraseId: 'p_karai_desu_ka', correct: false, feedback: '확인 질문은 자연스럽지만 "주문 개수 정하기" 단계는 아니에요' },
+      ],
+    },
+    {
+      situationKo: '먹을 수 없는 재료가 있다 — 빼 달라고 부탁',
+      speaker: '나',
+      choices: [
+        { text: '알레르기가 있어요', phraseId: 'p_arerugi', correct: true, feedback: '안전 직결 — 주문할 때 먼저 알리는 게 좋아요' },
+        { text: '이거 빼 주세요', phraseId: 'p_kore_nuite', correct: true },
+        { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
+        { text: '계산 부탁합니다', phraseId: 'p_okaikei', correct: false, feedback: '아직 식사 전 — 계산은 마지막에' },
       ],
     },
     {
