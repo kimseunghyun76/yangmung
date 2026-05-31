@@ -23,12 +23,10 @@ interface Props {
   modeLabel: string;
   onStart: () => void;
   onReset: () => void;
-  onOpenMap: () => void;
-  onOpenReview: () => void;
   onPracticeScene: (missionId: string) => void;
 }
 
-export function Home({ nav, allCards, progress, session, sessionConfig, modeLabel, onStart, onReset, onOpenMap, onOpenReview, onPracticeScene }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, modeLabel, onStart, onReset, onPracticeScene }: Props) {
   const upcomingId = nextSessionId(session);
   const counts = sessionCounts(allCards, progress, upcomingId);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
@@ -113,18 +111,6 @@ export function Home({ nav, allCards, progress, session, sessionConfig, modeLabe
             </button>
           );
         })}
-        <button
-          style={{ ...BTN, width: '100%', marginTop: 8, textAlign: 'center', color: '#4f46e5' }}
-          onClick={onOpenMap}
-        >
-          🗺 학습 지도 보기
-        </button>
-        <button
-          style={{ ...BTN, width: '100%', marginTop: 8, textAlign: 'center', color: '#4f46e5' }}
-          onClick={onOpenReview}
-        >
-          📚 복습장 보기
-        </button>
       </div>
 
       {s.seen > 0 && (
