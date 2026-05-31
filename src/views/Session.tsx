@@ -7,6 +7,7 @@ import { IntroduceCardView } from './IntroduceCard';
 import { OrderCardView } from './OrderCard';
 import { SpeakCardView } from './SpeakCard';
 import { DictationCardView } from './DictationCard';
+import { DiscoverCardView } from './DiscoverCard';
 import { ReadingAid } from './ReadingAid';
 import { sceneVisualByMission } from './scene';
 
@@ -34,7 +35,7 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
     null;
 
   // 장면 색 테마 — 미션 카드면 장소 색/이모지로 (세션이 장면마다 다르게 보이게)
-  const sv = card.kind !== 'tip' && card.reviewTarget?.type === 'mission'
+  const sv = card.kind !== 'tip' && card.kind !== 'discover' && card.reviewTarget?.type === 'mission'
     ? sceneVisualByMission(String(card.reviewTarget.id)) : null;
 
   return (
@@ -47,7 +48,7 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
         <span>{card.tag}{badge}</span>
         <span>{index + 1} / {total}</span>
       </div>
-      {card.kind !== 'tip' && card.scenario && (
+      {card.kind !== 'tip' && card.kind !== 'discover' && card.scenario && (
         <div style={{ display: 'inline-block', marginTop: 4, padding: '4px 12px', borderRadius: 999, fontSize: 13, fontWeight: 600, color: '#fff', background: sv ? sv.accent : '#a78bfa' }}>
           {sv ? sv.emoji : '📍'} {card.scenario}
         </div>
@@ -67,6 +68,8 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
         <SpeakCardView key={card.id} card={card} isKanaFamiliar={isKanaFamiliar} onPracticed={onSpeakPracticed} onNext={onNext} />
       ) : card.kind === 'dictation' ? (
         <DictationCardView key={card.id} card={card} onResult={onDictationResult} onNext={onNext} />
+      ) : card.kind === 'discover' ? (
+        <DiscoverCardView key={card.id} card={card} onNext={onNext} />
       ) : (
         <>
           <div className={card.listen ? 'ym-listening' : undefined} style={{ fontSize: card.listen || card.tag.startsWith('K') ? 72 : 28, textAlign: 'center', margin: '20px 0 6px' }}>{card.banner}</div>

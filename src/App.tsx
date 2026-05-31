@@ -1,10 +1,11 @@
 // 상태·라우팅 허브 — 화면 렌더링은 src/views/* 에 위임.
 import { useEffect, useMemo, useState } from 'react';
-import { buildCards, type Card, type Choice } from './learn/cards';
+import { buildCards, type Card, type Choice, type DiscoverCard } from './learn/cards';
+import { CONTENT } from './content';
 import {
-  classifyCard, clearProgress, isKanaFamiliar, loadProgress, loadSeenKana, loadSession,
+  classifyCard, clearProgress, isKanaFamiliar, loadDiscovered, loadProgress, loadSeenKana, loadSession,
   markKanaSeen, missionsFromCards, nextSessionId, plannedSessionSize, recordAttempt,
-  saveProgress, saveSeenKana, saveSession, selectMissionCards, selectSessionCards,
+  saveDiscovered, saveProgress, saveSeenKana, saveSession, selectMissionCards, selectSessionCards,
   type SeenKana, type SessionLogEntry,
 } from './learn/progress';
 import { extractKanaChars } from './learn/kanaReading';
@@ -36,6 +37,7 @@ export function App() {
   const [quizSeen, setQuizSeen] = useState(0);
   const [sessionLog, setSessionLog] = useState<SessionLogEntry[]>([]);
   const [seenKana, setSeenKana] = useState<SeenKana>(() => loadSeenKana());
+  const [discovered, setDiscovered] = useState<string[]>(() => loadDiscovered());
   const [settings, setSettings] = useState<Settings>(() => loadSettings());
   const [showGuide, setShowGuide] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -89,10 +91,31 @@ export function App() {
     setI(0); setPicked(null); setScore(0); setQuizSeen(0); setSessionLog([]);
     setView(showIntro ? 'intro' : 'session');
   }
+  // 발견 카드: 배운 가나로만 된(2자 이상) 아직 축하 안 한 표현 1개 → 세션 끝 보상으로
+  function pickDiscovery(): DiscoverCard | null {
+    for (const p of CONTENT.phrases) {
+      if (discovered.includes(p.id)) continue;
+      const chars = extractKanaChars(p.kana);
+      if (chars.length < 2) continue;
+      if (chars.every((ch) => isKanaFamiliar(ch, seenKana))) {
+        return { kind: 'discover', id: `discover:${p.id}`, tag: '✨ 발견', ja: p.kanji ?? p.displayKana ?? p.kana, kana: p.kana, korean: p.korean };
+      }
+    }
+    return null;
+  }
   function startSession() {
     const id = nextSessionId(session);
     const cards = selectSessionCards(allCards, progress, id, sessionConfig);
     if (cards.length === 0) return;
+    // 발견 카드가 있으면 세션 끝(팁 앞)에 보상으로 삽입 + 축하 기록
+    const disc = pickDiscovery();
+    if (disc) {
+      const tipIdx = cards.findIndex((c) => c.kind === 'tip');
+      const at = tipIdx >= 0 ? tipIdx : cards.length;
+      cards.splice(at, 0, disc);
+      const pid = disc.id.slice('discover:'.length);
+      const nx = [...discovered, pid]; setDiscovered(nx); saveDiscovered(nx);
+    }
     beginSession(id, cards, true);
   }
   function startSceneSession(missionId: string) {
@@ -161,6 +184,7 @@ export function App() {
     setProgress({});
     setSession({ lastCompletedSessionId: 0 });
     setSeenKana({});
+    setDiscovered([]);
   }
 
   // ── 라우팅 ───────────────────────────────────────
@@ -202,7 +226,7 @@ export function App() {
           index={i}
           total={sessionCards.length}
           picked={picked}
-          cardStatus={card.kind === 'tip' || card.kind === 'order' ? null : classifyCard(card, progress[card.id], sessionId)}
+          cardStatus={card.kind === 'tip' || card.kind === 'order' || card.kind === 'discover' ? null : classifyCard(card, progress[card.id], sessionId)}
           onChoose={choose}
           onIntroduceSeen={introduceSeen}
           onSpeakPracticed={speakPracticed}

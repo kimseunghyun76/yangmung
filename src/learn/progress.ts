@@ -23,6 +23,17 @@ export interface SessionLogEntry { id: string; result: AttemptResult }
 const PROGRESS_KEY = 'yangmung:progress:v1';
 const SESSION_KEY = 'yangmung:session:v1';
 const SEENKANA_KEY = 'yangmung:seenkana:v1';
+const DISCOVERED_KEY = 'yangmung:discovered:v1';
+
+// 발견(이제 읽을 수 있는 표현)으로 이미 축하한 id 모음
+export function loadDiscovered(): string[] {
+  if (typeof window === 'undefined') return [];
+  try { const raw = window.localStorage.getItem(DISCOVERED_KEY); return raw ? JSON.parse(raw) as string[] : []; } catch { return []; }
+}
+export function saveDiscovered(ids: string[]): void {
+  if (typeof window === 'undefined') return;
+  try { window.localStorage.setItem(DISCOVERED_KEY, JSON.stringify(ids)); } catch {}
+}
 
 export function loadProgress(): ProgressMap {
   if (typeof window === 'undefined') return {};
@@ -43,6 +54,7 @@ export function clearProgress(): void {
     window.localStorage.removeItem(PROGRESS_KEY);
     window.localStorage.removeItem(SESSION_KEY);
     window.localStorage.removeItem(SEENKANA_KEY);
+    window.localStorage.removeItem(DISCOVERED_KEY);
   } catch {}
 }
 
@@ -298,7 +310,7 @@ export function selectSessionCards(
   const byConcept = new Map<string, ReviewableCard[]>();
   for (const c of allCards) {
     if (c.kind === 'tip') { tips.push(c); continue; }
-    if (c.kind === 'order') continue; // 흐름 정보 카드는 자동 SRS 세션에서 제외
+    if (c.kind === 'order' || c.kind === 'discover') continue; // 흐름/발견 카드는 SRS 대상 아님
     if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
     const key = conceptKey(c);
     const arr = byConcept.get(key);
@@ -361,7 +373,7 @@ export function missionsFromCards(
   const seen = new Set<string>();
   const freshMissions = new Set<string>();
   for (const c of cards) {
-    if ((c.kind === 'tip' || c.kind === 'order') || c.reviewTarget?.type !== 'mission') continue;
+    if (c.kind === 'tip' || c.kind === 'order' || c.kind === 'discover' || c.reviewTarget?.type !== 'mission') continue;
     const id = String(c.reviewTarget.id);
     if (!seen.has(id)) { seen.add(id); missions.push({ id, scenario: c.scenario ?? '', isReview: true }); }
     if (classifyCard(c, progress[c.id], currentSessionId) === 'new') freshMissions.add(id);
@@ -381,6 +393,7 @@ export function planSession(
   for (const c of cards) {
     if (c.kind === 'tip') { breakdown.tip++; continue; }
     if (c.kind === 'order') { breakdown.C++; continue; }
+    if (c.kind === 'discover') continue;
     const b = bucketOf(c);
     if (b === 'K') breakdown.K++;
     else if (b === 'B') breakdown.B++;
