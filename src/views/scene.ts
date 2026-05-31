@@ -12,6 +12,11 @@ const BY_PLACE: Record<string, SceneVisual> = {
   약국: { emoji: '💊', bg: '#fef2f2', accent: '#e11d48' },
   쇼핑: { emoji: '🛍️', bg: '#fdf4ff', accent: '#c026d3' },
   택시: { emoji: '🚕', bg: '#fefce8', accent: '#ca8a04' },
+  공항: { emoji: '✈️', bg: '#eff6ff', accent: '#2563eb' },
+  환전: { emoji: '💴', bg: '#f7fee7', accent: '#65a30d' },
+  코인로커: { emoji: '🔐', bg: '#f1f5f9', accent: '#475569' },
+  택배: { emoji: '📦', bg: '#fff7ed', accent: '#c2410c' },
+  라멘: { emoji: '🍥', bg: '#fff1f2', accent: '#e11d48' },
   가게: { emoji: '🛍️', bg: '#fdf2f8', accent: '#db2777' },
 };
 

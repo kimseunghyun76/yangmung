@@ -93,6 +93,33 @@ export const phrases: Phrase[] = [
   { id: 'p_nanbansen', kana: 'なんばんせんですか', kanji: '何番線ですか', displayKana: 'なんばんせんですか？', korean: '몇 번 선이에요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '플랫폼 번호 묻기 — 「番線(ばんせん)」이 승강장 번호' },
   { id: 'p_tsugi_wa_shibuya', kana: 'つぎはしぶやですか', kanji: '次は渋谷ですか', displayKana: 'つぎは、しぶやですか？', korean: '다음은 시부야예요?', register: 'productive', grammarRefs: ['g_masuka'] },
 
+  // ── C9 공항 입국심사 ──
+  { id: 'p_mokuteki_wa', kana: 'もくてきは', displayKana: 'もくてきは？', korean: '방문 목적은?', register: 'receptive' },
+  { id: 'p_kankou_desu', kana: 'かんこうです', kanji: '観光です', korean: '관광이에요', register: 'productive' },
+  { id: 'p_shigoto_desu', kana: 'しごとです', kanji: '仕事です', korean: '일/출장이에요', register: 'productive' },
+  { id: 'p_taizai_wa', kana: 'たいざいは', displayKana: 'たいざいは？', korean: '얼마나 머무세요?', register: 'receptive' },
+  { id: 'p_isshuukan', kana: 'いっしゅうかんです', kanji: '一週間です', korean: '일주일이요', register: 'productive' },
+  { id: 'p_mikka', kana: 'みっかです', kanji: '三日です', korean: '3일이요', register: 'productive' },
+  { id: 'p_doko_tomaru', kana: 'どこにとまりますか', kanji: 'どこに泊まりますか', displayKana: 'どこに、とまりますか？', korean: '어디 묵으세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  { id: 'p_hoteru_desu', kana: 'ホテルです', korean: '호텔이에요', register: 'productive' },
+
+  // ── C10 환전 ──
+  { id: 'p_ryougae', kana: 'りょうがえおねがいします', kanji: '両替お願いします', displayKana: 'りょうがえ、おねがいします', korean: '환전해 주세요', register: 'productive' },
+  { id: 'p_komakaku', kana: 'こまかくしてください', kanji: '細かくしてください', korean: '잔돈으로 해 주세요', register: 'productive', tip: '큰 지폐를 동전·작은 지폐로 바꿀 때' },
+
+  // ── C11 코인로커 ──
+  { id: 'p_koinrokkaa', kana: 'コインロッカーはどこですか', displayKana: 'コインロッカーは、どこですか？', korean: '코인로커 어디예요?', register: 'productive', grammarRefs: ['g_masuka'] },
+  { id: 'p_tsukaikata', kana: 'つかいかたをおしえてください', kanji: '使い方を教えてください', korean: '사용법 알려 주세요', register: 'productive' },
+
+  // ── C12 편의점 택배(택큐빈) ──
+  { id: 'p_okuritai', kana: 'これをおくりたいです', kanji: 'これを送りたいです', displayKana: 'これを、おくりたいです', korean: '이거 보내고 싶어요', register: 'productive' },
+  { id: 'p_takkyubin', kana: 'たっきゅうびんおねがいします', kanji: '宅急便お願いします', displayKana: 'たっきゅうびん、おねがいします', korean: '택배 부탁해요', register: 'productive' },
+
+  // ── C13 라멘 식권기 ──
+  { id: 'p_kenbaiki', kana: 'けんばいきはどこですか', kanji: '券売機はどこですか', displayKana: 'けんばいきは、どこですか？', korean: '식권기 어디예요?', register: 'productive', grammarRefs: ['g_masuka'] },
+  { id: 'p_oomori', kana: 'おおもりできますか', kanji: '大盛りできますか', displayKana: 'おおもり、できますか？', korean: '곱빼기 되나요?', register: 'productive', grammarRefs: ['g_masuka'] },
+  { id: 'p_kaedama', kana: 'かえだまおねがいします', kanji: '替え玉お願いします', displayKana: 'かえだま、おねがいします', korean: '면 추가요', register: 'productive', tip: 'かえだま=라멘 면 사리 추가. 도쿄·하카타 라멘집 필수' },
+
   // ── C6 약국 (증상·약) ──
   { id: 'p_dou_shimashita', kana: 'どうしましたか', displayKana: 'どうしましたか？', korean: '어디가 안 좋으세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_atama_itai', kana: 'あたまがいたいです', kanji: '頭が痛いです', displayKana: 'あたまが、いたいです', korean: '머리가 아파요', register: 'productive' },

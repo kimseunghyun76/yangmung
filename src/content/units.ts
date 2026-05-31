@@ -84,6 +84,31 @@ export const units: Unit[] = [
     newPhraseIds: ['p_takushi_onegai', 'p_made_onegai', 'p_koko_de_tomete', 'p_ryoushuusho'],
   },
   {
+    id: 'u_b1_airport_core', track: 'lang', stage: 'B1', mode: 'action',
+    canDo: '사용자는 입국심사에서 목적·체류기간·숙소를 답할 수 있다',
+    newPhraseIds: ['p_kankou_desu', 'p_shigoto_desu', 'p_isshuukan', 'p_mikka', 'p_hoteru_desu'],
+  },
+  {
+    id: 'u_b1_exchange_core', track: 'lang', stage: 'B1', mode: 'action',
+    canDo: '사용자는 환전을 요청하고 잔돈으로 바꿔 달라고 할 수 있다',
+    newPhraseIds: ['p_ryougae', 'p_komakaku'],
+  },
+  {
+    id: 'u_b1_locker_core', track: 'lang', stage: 'B1', mode: 'action',
+    canDo: '사용자는 코인로커 위치와 사용법을 물을 수 있다',
+    newPhraseIds: ['p_koinrokkaa', 'p_tsukaikata'],
+  },
+  {
+    id: 'u_b1_delivery_core', track: 'lang', stage: 'B1', mode: 'action',
+    canDo: '사용자는 편의점에서 물건을 부치겠다고 말하고 요금을 물을 수 있다',
+    newPhraseIds: ['p_okuritai', 'p_takkyubin'],
+  },
+  {
+    id: 'u_b1_ramen_core', track: 'lang', stage: 'B1', mode: 'action',
+    canDo: '사용자는 라멘집 식권기·면 추가·곱빼기를 묻고 요청할 수 있다',
+    newPhraseIds: ['p_kenbaiki', 'p_oomori', 'p_kaedama'],
+  },
+  {
     id: 'u_b4_recovery_plus', track: 'lang', stage: 'B4', mode: 'recovery',
     canDo: '사용자는 정중하게 감사·이해·괜찮음·우회(쉬운 일본어·영어) 요청을 표현할 수 있다',
     newPhraseIds: ['p_yasashii_nihongo', 'p_arigatou_gozaimasu', 'p_daijoubu_desu', 'p_wakarimashita', 'p_eigo_de', 'p_wakarimashita_arigatou'],
