@@ -1,26 +1,30 @@
-import type { Unit } from './types';
+import type { KLevel, Unit } from './types';
+import { kana } from './kana';
+
+// 가나 드릴 유닛 — kana 데이터에서 단계(level)별로 자동 생성 (히라가나 K1~K9 행, 가타카나 K11~K19 행).
+function kanaDrillUnits(): Unit[] {
+  const byLevel = new Map<string, typeof kana>();
+  for (const k of kana) {
+    if (k.script === 'common') continue; // 장음(ー)은 드릴 제외
+    const arr = byLevel.get(k.level) ?? [];
+    arr.push(k); byLevel.set(k.level, arr);
+  }
+  const levelNum = (l: string) => parseInt(l.slice(1), 10);
+  return [...byLevel.entries()]
+    .sort((a, b) => levelNum(a[0]) - levelNum(b[0]))
+    .map(([level, items]) => {
+      const script = items[0].script === 'hiragana' ? '히라가나' : '가타카나';
+      const chars = items.map((k) => k.char).join('');
+      return {
+        id: `u_kana_${level}`, track: 'kana' as const, stage: level as KLevel, mode: 'drill' as const,
+        canDo: `사용자는 ${level} ${script} 청음(${chars})을 평균 0.8초 내 95% 정확도로 읽고 듣고 구분할 수 있다`,
+        kanaIds: items.map((k) => k.id),
+      };
+    });
+}
 
 export const units: Unit[] = [
-  {
-    id: 'u_k1_seion', track: 'kana', stage: 'K1', mode: 'drill',
-    canDo: '사용자는 K1 히라가나 청음(あいうえお·かきくけこ)을 평균 0.8초 내 95% 정확도로 읽고 듣고 구분할 수 있다',
-    kanaIds: ['k_hira_a', 'k_hira_i', 'k_hira_u', 'k_hira_e', 'k_hira_o', 'k_hira_ka', 'k_hira_ki', 'k_hira_ku', 'k_hira_ke', 'k_hira_ko'],
-  },
-  {
-    id: 'u_k2_seion', track: 'kana', stage: 'K2', mode: 'drill',
-    canDo: '사용자는 K2 히라가나 청음(さしすせそ)을 평균 0.8초 내 95% 정확도로 읽고 듣고 구분할 수 있다',
-    kanaIds: ['k_hira_sa', 'k_hira_shi', 'k_hira_su', 'k_hira_se', 'k_hira_so'],
-  },
-  {
-    id: 'u_k3_seion', track: 'kana', stage: 'K3', mode: 'drill',
-    canDo: '사용자는 K3 히라가나 청음(たちつてと)을 평균 0.8초 내 95% 정확도로 읽고 듣고 구분할 수 있다',
-    kanaIds: ['k_hira_ta', 'k_hira_chi', 'k_hira_tsu', 'k_hira_te', 'k_hira_to'],
-  },
-  {
-    id: 'u_k4_seion', track: 'kana', stage: 'K4', mode: 'drill',
-    canDo: '사용자는 K4 히라가나 청음(なにぬねの)을 평균 0.8초 내 95% 정확도로 읽고 듣고 구분할 수 있다',
-    kanaIds: ['k_hira_na', 'k_hira_ni', 'k_hira_nu', 'k_hira_ne', 'k_hira_no'],
-  },
+  ...kanaDrillUnits(),
   {
     id: 'u_b0_reaction', track: 'lang', stage: 'B0', mode: 'reaction',
     ageMotif: '0–1세',

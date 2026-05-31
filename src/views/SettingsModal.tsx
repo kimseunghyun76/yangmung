@@ -16,7 +16,7 @@ const AID_OPTIONS: { v: ReadingAidMode; label: string }[] = [
   { v: 'always', label: '항상 보기' },
   { v: 'off', label: '끄기' },
 ];
-const MODE_ORDER: LearnMode[] = ['beginner', 'default', 'express', 'review'];
+const MODE_ORDER: LearnMode[] = ['beginner', 'default', 'express', 'review', 'kana'];
 
 export function SettingsModal({ settings, onChange, onSelectMode, onReset, onClose }: Props) {
   const seg = (active: boolean): React.CSSProperties => ({

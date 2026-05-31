@@ -1,6 +1,6 @@
 // 사용자 설정 — LocalStorage. 학습 모드(난이도 프로필) + 세부 토글.
 export type ReadingAidMode = 'auto' | 'always' | 'off';
-export type LearnMode = 'beginner' | 'default' | 'express' | 'review';
+export type LearnMode = 'beginner' | 'default' | 'express' | 'review' | 'kana';
 
 export interface Settings {
   mode: LearnMode;
@@ -40,4 +40,5 @@ export const MODE_PRESETS: Record<LearnMode, ModePreset> = {
   default: { label: '기본', desc: '모르는 가나만 보조 · 일반 속도', readingAid: 'auto', slowListening: false, quotas: { K: 6, B: 3, C: 5, tip: 1 }, minFresh: { K: 2, B: 1, C: 2 } },
   express: { label: '여행 급행', desc: '보조 최소 · 장면 미션 우선', readingAid: 'off', slowListening: false, quotas: { K: 2, B: 2, C: 9, tip: 1 }, minFresh: { K: 1, B: 1, C: 3 } },
   review: { label: '복습', desc: '틀린 것 · 오래 안 본 것 우선', readingAid: 'auto', slowListening: false, quotas: { K: 5, B: 4, C: 5, tip: 1 }, minFresh: { K: 0, B: 0, C: 0 } },
+  kana: { label: '가나만', desc: '히라가나·가타카나만 집중 (미션 X)', readingAid: 'auto', slowListening: false, quotas: { K: 12, B: 0, C: 0, tip: 0 }, minFresh: { K: 4, B: 0, C: 0 } },
 };

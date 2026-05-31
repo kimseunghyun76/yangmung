@@ -1,7 +1,8 @@
 // yangmung 콘텐츠 타입 — CONTENT_SCHEMA.md(SSOT) §1~8 그대로.
 
 export type KLevel =
-  | 'K1' | 'K2' | 'K3' | 'K4' | 'K5' | 'K6' | 'K7' | 'K8' | 'K9' | 'K10' | 'K11';
+  | 'K1' | 'K2' | 'K3' | 'K4' | 'K5' | 'K6' | 'K7' | 'K8' | 'K9' | 'K10'
+  | 'K11' | 'K12' | 'K13' | 'K14' | 'K15' | 'K16' | 'K17' | 'K18' | 'K19' | 'K20';
 export type BLevel = 'B0' | 'B1' | 'B2' | 'B3' | 'B4' | 'B5';
 export type CLevel = 'C0' | 'C1' | 'C2' | 'C3' | 'C4' | 'C5' | 'C6' | 'C7' | 'C8' | 'C9' | 'C10' | 'C11' | 'C12' | 'C13'; // C0 = 튜토리얼 미니미션
 
