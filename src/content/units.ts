@@ -64,6 +64,11 @@ export const units: Unit[] = [
     newPhraseIds: ['p_checkin_onegai', 'p_yoyaku_shiteimasu', 'p_heya_doko', 'p_wifi_arimasu_ka', 'p_choushoku_wa'],
   },
   {
+    id: 'u_b1_street_core', track: 'lang', stage: 'B1', mode: 'action',
+    canDo: '사용자는 길에서 화장실·사진을 부탁하고 도움을 청할 수 있다',
+    newPhraseIds: ['p_toire_doko', 'p_shashin_ii', 'p_shashin_onegai', 'p_tasukete'],
+  },
+  {
     id: 'u_b4_recovery_plus', track: 'lang', stage: 'B4', mode: 'recovery',
     canDo: '사용자는 정중하게 감사·이해·괜찮음·우회(쉬운 일본어·영어) 요청을 표현할 수 있다',
     newPhraseIds: ['p_yasashii_nihongo', 'p_arigatou_gozaimasu', 'p_daijoubu_desu', 'p_wakarimashita', 'p_eigo_de', 'p_wakarimashita_arigatou'],
