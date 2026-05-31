@@ -207,7 +207,7 @@ export function buildCards(): Card[] {
     // 점원·역무원이 말하는 것 → 귀로 알아듣고 반응
     'p_irasshai', 'p_fukuro', 'p_atatamemasu_ka', 'p_hashi_irimasu_ka', 'p_shiharai_houhou',
     'p_pointo_arimasu_ka', 'p_gochuumon', 'p_nomimono', 'p_nanmeisama', 'p_norikae_kudasai',
-    'p_onamae_wa', 'p_passport_onegai',
+    'p_onamae_wa', 'p_passport_onegai', 'p_dou_shimashita', 'p_doko_made',
   ];
   for (const id of LISTEN_IDS) {
     const p = phrases.find((x) => x.id === id);

@@ -69,6 +69,21 @@ export const units: Unit[] = [
     newPhraseIds: ['p_toire_doko', 'p_shashin_ii', 'p_shashin_onegai', 'p_tasukete'],
   },
   {
+    id: 'u_b1_pharmacy_core', track: 'lang', stage: 'B1', mode: 'action',
+    canDo: '사용자는 약국에서 증상을 말하고 약을 요청하고 약에 대해 물을 수 있다',
+    newPhraseIds: ['p_atama_itai', 'p_onaka_itai', 'p_kaze_desu', 'p_kusuri_kudasai', 'p_kono_kusuri'],
+  },
+  {
+    id: 'u_b1_shopping_core', track: 'lang', stage: 'B1', mode: 'action',
+    canDo: '사용자는 쇼핑에서 가격·착용을 묻고 면세·카드 결제를 요청하며 여권을 제시할 수 있다',
+    newPhraseIds: ['p_kore_ikura', 'p_shichaku', 'p_menzei_dekimasu_ka', 'p_kore_kudasai_shop', 'p_card_tsukaemasu_ka', 'p_pasupooto_arimasu'],
+  },
+  {
+    id: 'u_b1_taxi_core', track: 'lang', stage: 'B1', mode: 'action',
+    canDo: '사용자는 택시에서 행선지를 말하고 세워 달라고 하며 영수증을 받을 수 있다',
+    newPhraseIds: ['p_takushi_onegai', 'p_made_onegai', 'p_koko_de_tomete', 'p_ryoushuusho'],
+  },
+  {
     id: 'u_b4_recovery_plus', track: 'lang', stage: 'B4', mode: 'recovery',
     canDo: '사용자는 정중하게 감사·이해·괜찮음·우회(쉬운 일본어·영어) 요청을 표현할 수 있다',
     newPhraseIds: ['p_yasashii_nihongo', 'p_arigatou_gozaimasu', 'p_daijoubu_desu', 'p_wakarimashita', 'p_eigo_de', 'p_wakarimashita_arigatou'],

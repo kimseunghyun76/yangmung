@@ -93,6 +93,29 @@ export const phrases: Phrase[] = [
   { id: 'p_nanbansen', kana: 'なんばんせんですか', kanji: '何番線ですか', displayKana: 'なんばんせんですか？', korean: '몇 번 선이에요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '플랫폼 번호 묻기 — 「番線(ばんせん)」이 승강장 번호' },
   { id: 'p_tsugi_wa_shibuya', kana: 'つぎはしぶやですか', kanji: '次は渋谷ですか', displayKana: 'つぎは、しぶやですか？', korean: '다음은 시부야예요?', register: 'productive', grammarRefs: ['g_masuka'] },
 
+  // ── C6 약국 (증상·약) ──
+  { id: 'p_dou_shimashita', kana: 'どうしましたか', displayKana: 'どうしましたか？', korean: '어디가 안 좋으세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  { id: 'p_atama_itai', kana: 'あたまがいたいです', kanji: '頭が痛いです', displayKana: 'あたまが、いたいです', korean: '머리가 아파요', register: 'productive' },
+  { id: 'p_onaka_itai', kana: 'おなかがいたいです', kanji: 'お腹が痛いです', displayKana: 'おなかが、いたいです', korean: '배가 아파요', register: 'productive' },
+  { id: 'p_kaze_desu', kana: 'かぜです', kanji: '風邪です', korean: '감기예요', register: 'productive' },
+  { id: 'p_kusuri_kudasai', kana: 'くすりをください', kanji: '薬をください', korean: '약 주세요', register: 'productive' },
+  { id: 'p_kono_kusuri', kana: 'このくすりはなんですか', kanji: 'この薬は何ですか', displayKana: 'このくすりは、なんですか？', korean: '이 약은 뭐예요?', register: 'productive', grammarRefs: ['g_masuka'] },
+
+  // ── C7 쇼핑·면세 ──
+  { id: 'p_kore_ikura', kana: 'これはいくらですか', kanji: 'これはいくらですか', displayKana: 'これは、いくらですか？', korean: '이거 얼마예요?', register: 'productive', grammarRefs: ['g_masuka'] },
+  { id: 'p_shichaku', kana: 'しちゃくしてもいいですか', kanji: '試着してもいいですか', displayKana: 'しちゃく、してもいいですか？', korean: '입어 봐도 돼요?', register: 'productive' },
+  { id: 'p_menzei_dekimasu_ka', kana: 'めんぜいできますか', kanji: '免税できますか', displayKana: 'めんぜい、できますか？', korean: '면세 되나요?', register: 'productive', grammarRefs: ['g_masuka'] },
+  { id: 'p_kore_kudasai_shop', kana: 'これにします', kanji: 'これにします', korean: '이걸로 할게요', register: 'productive' },
+  { id: 'p_card_tsukaemasu_ka', kana: 'カードはつかえますか', kanji: 'カードは使えますか', displayKana: 'カードは、つかえますか？', korean: '카드 돼요?', register: 'productive', grammarRefs: ['g_masuka'] },
+  { id: 'p_pasupooto_arimasu', kana: 'パスポートはこちらです', displayKana: 'パスポートは、こちらです', korean: '여권 여기 있어요', register: 'productive' },
+
+  // ── C8 택시 ──
+  { id: 'p_takushi_onegai', kana: 'タクシーおねがいします', kanji: 'タクシーお願いします', displayKana: 'タクシー、おねがいします', korean: '택시 불러주세요', register: 'productive' },
+  { id: 'p_made_onegai', kana: 'までおねがいします', kanji: 'までお願いします', korean: '~까지 가주세요', register: 'productive', tip: '행선지 뒤에 붙여요: 「しぶやまでおねがいします」' },
+  { id: 'p_koko_de_tomete', kana: 'ここでとめてください', kanji: 'ここで止めてください', displayKana: 'ここで、とめてください', korean: '여기서 세워 주세요', register: 'productive' },
+  { id: 'p_doko_made', kana: 'どこまでですか', displayKana: 'どこまでですか？', korean: '어디까지 가세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  { id: 'p_ryoushuusho', kana: 'りょうしゅうしょをください', kanji: '領収書をください', korean: '영수증 주세요', register: 'productive' },
+
   // ── 식당 안전·실용 (알레르기·빼달라기) ──
   { id: 'p_arerugi', kana: 'アレルギーがあります', displayKana: 'アレルギーが、あります', korean: '알레르기가 있어요', register: 'productive', tip: '주문 전에 먼저 알리면 점원이 재료를 챙겨줘요' },
   { id: 'p_kore_nuite', kana: 'これをぬいてください', kanji: 'これを抜いてください', korean: '이거 빼 주세요', register: 'productive' },

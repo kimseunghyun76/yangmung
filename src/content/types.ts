@@ -3,7 +3,7 @@
 export type KLevel =
   | 'K1' | 'K2' | 'K3' | 'K4' | 'K5' | 'K6' | 'K7' | 'K8' | 'K9' | 'K10' | 'K11';
 export type BLevel = 'B0' | 'B1' | 'B2' | 'B3' | 'B4' | 'B5';
-export type CLevel = 'C0' | 'C1' | 'C2' | 'C3' | 'C4' | 'C5' | 'C6' | 'C7'; // C0 = 튜토리얼 미니미션
+export type CLevel = 'C0' | 'C1' | 'C2' | 'C3' | 'C4' | 'C5' | 'C6' | 'C7' | 'C8'; // C0 = 튜토리얼 미니미션
 
 export type EvalMode =
   | 'drill' | 'match' | 'cloze' | 'reaction' | 'action' | 'recovery' | 'branch';
