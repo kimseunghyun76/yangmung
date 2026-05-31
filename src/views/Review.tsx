@@ -5,7 +5,7 @@ import type { KanaItem, Phrase } from '../content';
 import type { Card } from '../learn/cards';
 import { countSeenKana, isKanaReadStable, type ProgressMap, type SeenKana } from '../learn/progress';
 import { speak, ttsSupported } from '../tts';
-import { BTN, PRIMARY, WRAP } from '../ui/styles';
+import { BTN, CARD, COLORS, PRIMARY, WRAP } from '../ui/styles';
 import { NavBar, type NavBarProps } from './NavBar';
 import { phraseIdsByPlace } from './scene';
 
@@ -193,8 +193,8 @@ function PhraseList({ phrases, phraseSeen }: { phrases: Phrase[]; phraseSeen: Se
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginTop: 18 }}>
-      <p style={{ margin: '0 0 6px', fontSize: 13, color: '#666', fontWeight: 600 }}>{title}</p>
+    <div style={{ ...CARD, marginTop: 14 }}>
+      <p style={{ margin: '0 0 6px', fontSize: 13, color: COLORS.inkSoft, fontWeight: 700 }}>{title}</p>
       {children}
     </div>
   );
