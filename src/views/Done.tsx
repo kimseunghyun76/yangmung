@@ -27,9 +27,18 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
 
   return (
     <main style={WRAP}>
-      <h1>세션 {sessionId} 완료 🎉</h1>
-      <p style={{ fontSize: 22, margin: '4px 0 0' }}>{'⭐'.repeat(stars)}{'☆'.repeat(3 - stars)}</p>
-      <p style={{ color: '#666', fontSize: 14, margin: '6px 0 0' }}>
+      {/* 완료 축하 — 색종이 + 별 버스트 */}
+      <div style={{ position: 'relative', textAlign: 'center', padding: '12px 0 4px' }}>
+        <div className="ym-confetti" aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+          {['🎉', '✨', '🎊', '⭐', '🌸', '🎉', '✨', '🎊'].map((e, i) => (
+            <span key={i} style={{ left: `${8 + i * 11}%`, animationDelay: `${i * 0.08}s` }}>{e}</span>
+          ))}
+        </div>
+        <div className="ym-burst" style={{ fontSize: 52, lineHeight: 1 }}>{stars >= 3 ? '🏆' : '🎉'}</div>
+      </div>
+      <h1 style={{ textAlign: 'center', marginTop: 6 }}>세션 {sessionId} 완료</h1>
+      <p style={{ fontSize: 26, margin: '4px 0 0', textAlign: 'center' }}>{'⭐'.repeat(stars)}{'☆'.repeat(3 - stars)}</p>
+      <p style={{ color: '#666', fontSize: 14, margin: '6px 0 0', textAlign: 'center' }}>
         첫 시도 {score}/{quizSeen}{speakCount > 0 ? ` · 말하기 ${speakCount}문장` : ''}{sr.weakNow > 0 ? ` · 약점 ${sr.weakNow}개 다음에 다시 나와요` : ''}
       </p>
 
