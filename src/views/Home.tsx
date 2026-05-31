@@ -92,14 +92,24 @@ export function Home({ nav, allCards, progress, session, sessionConfig, modeLabe
           }
           const p = missionProgress(allCards, progress, m.id);
           const done = p.total > 0 && p.mastered === p.total;
+          const pct = p.total ? Math.round((p.mastered / p.total) * 100) : 0;
           return (
             <button
               key={m.id}
-              style={{ ...BTN, width: '100%', marginTop: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+              style={{ ...BTN, width: '100%', marginTop: 8, padding: 0, display: 'flex', alignItems: 'stretch', overflow: 'hidden' }}
               onClick={() => onPracticeScene(m.id)}
             >
-              <span>{sv.emoji} {m.place ?? m.scenario} 연습</span>
-              <span style={{ fontSize: 13, color: done ? '#16a34a' : '#888' }}>{done ? '✅ ' : ''}{p.mastered}/{p.total}</span>
+              {/* 장면 색 이모지 배지 */}
+              <span style={{ width: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, background: sv.bg, alignSelf: 'stretch' }}>{sv.emoji}</span>
+              <span style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '10px 14px', gap: 5 }}>
+                <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontWeight: 600 }}>{m.place ?? m.scenario} 연습</span>
+                  <span style={{ fontSize: 12, color: done ? '#16a34a' : '#9aa0ad' }}>{done ? '✅ 완료' : `${p.mastered}/${p.total}`}</span>
+                </span>
+                <span style={{ height: 4, background: '#eceef4', borderRadius: 2, overflow: 'hidden' }}>
+                  <span style={{ display: 'block', width: `${pct}%`, height: '100%', background: sv.accent }} />
+                </span>
+              </span>
             </button>
           );
         })}
