@@ -93,6 +93,10 @@ export const phrases: Phrase[] = [
   { id: 'p_nanbansen', kana: 'なんばんせんですか', kanji: '何番線ですか', displayKana: 'なんばんせんですか？', korean: '몇 번 선이에요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '플랫폼 번호 묻기 — 「番線(ばんせん)」이 승강장 번호' },
   { id: 'p_tsugi_wa_shibuya', kana: 'つぎはしぶやですか', kanji: '次は渋谷ですか', displayKana: 'つぎは、しぶやですか？', korean: '다음은 시부야예요?', register: 'productive', grammarRefs: ['g_masuka'] },
 
+  // ── 식당 안전·실용 (알레르기·빼달라기) ──
+  { id: 'p_arerugi', kana: 'アレルギーがあります', displayKana: 'アレルギーが、あります', korean: '알레르기가 있어요', register: 'productive', tip: '주문 전에 먼저 알리면 점원이 재료를 챙겨줘요' },
+  { id: 'p_kore_nuite', kana: 'これをぬいてください', kanji: 'これを抜いてください', korean: '이거 빼 주세요', register: 'productive' },
+
   // ── C5 거리·긴급 한마디 (여행 실전 — 화장실·사진·도움) ──
   { id: 'p_toire_doko', kana: 'トイレはどこですか', displayKana: 'トイレは、どこですか？', korean: '화장실 어디예요?', register: 'productive', grammarRefs: ['g_masuka'] },
   { id: 'p_shashin_ii', kana: 'しゃしんとってもいいですか', kanji: '写真撮ってもいいですか', displayKana: 'しゃしん、とってもいいですか？', korean: '사진 찍어도 돼요?', register: 'productive' },
