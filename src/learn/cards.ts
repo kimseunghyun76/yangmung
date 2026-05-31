@@ -208,6 +208,7 @@ export function buildCards(): Card[] {
     'p_irasshai', 'p_fukuro', 'p_atatamemasu_ka', 'p_hashi_irimasu_ka', 'p_shiharai_houhou',
     'p_pointo_arimasu_ka', 'p_gochuumon', 'p_nomimono', 'p_nanmeisama', 'p_norikae_kudasai',
     'p_onamae_wa', 'p_passport_onegai', 'p_dou_shimashita', 'p_doko_made',
+    'p_price', 'p_mokuteki_wa', 'p_taizai_wa', 'p_doko_tomaru', 'p_kagi_desu',
   ];
   for (const id of LISTEN_IDS) {
     const p = phrases.find((x) => x.id === id);
