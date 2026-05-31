@@ -201,12 +201,22 @@ export function buildCards(): Card[] {
     cards.push(...buildKanaCards(unit.stage, unit.kanaIds ?? [], { byKana, byKanaChar, kana }));
   }
 
-  // B0 듣기: 🔊 → 한국어 의미 (사용자 1차 약점 처방)
-  for (const id of ['p_arigatou', 'p_hai']) {
-    const p = byPhrase(id);
-    const distractPhrases = shuffle(phrases.filter((x) => x.id !== id && x.register !== 'receptive')).slice(0, 2);
+  // 듣기 — 🔊 듣고 의미 고르기. 여행에서 실제로 듣게 될 점원·역무원 대사(receptive) 중심.
+  const LISTEN_IDS = [
+    'p_arigatou', 'p_hai',
+    // 점원·역무원이 말하는 것 → 귀로 알아듣고 반응
+    'p_irasshai', 'p_fukuro', 'p_atatamemasu_ka', 'p_hashi_irimasu_ka', 'p_shiharai_houhou',
+    'p_pointo_arimasu_ka', 'p_gochuumon', 'p_nomimono', 'p_nanmeisama', 'p_norikae_kudasai',
+    'p_onamae_wa', 'p_passport_onegai',
+  ];
+  for (const id of LISTEN_IDS) {
+    const p = phrases.find((x) => x.id === id);
+    if (!p) continue;
+    // 헷갈리게 — 같은 점원 대사끼리 묶어 의미를 진짜 들어야 구분되게 (없으면 일반 표현)
+    const pool = phrases.filter((x) => x.id !== id && x.korean !== p.korean && LISTEN_IDS.includes(x.id));
+    const distractPhrases = shuffle(pool.length >= 2 ? pool : phrases.filter((x) => x.id !== id && x.korean !== p.korean)).slice(0, 2);
     cards.push({
-      kind: 'quiz', id: `listen:${id}`, tag: 'B0 듣기',
+      kind: 'quiz', id: `listen:${id}`, tag: '🎧 듣기',
       banner: '🎧', bannerJa: ttsText(p), sub: '🔊 듣고 의미를 고르세요',
       listen: true,
       reviewTarget: { type: 'phrase', id },
