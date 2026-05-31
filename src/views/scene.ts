@@ -8,6 +8,7 @@ const BY_PLACE: Record<string, SceneVisual> = {
   식당: { emoji: '🍜', bg: '#fff4ec', accent: '#ea580c' },
   전철: { emoji: '🚃', bg: '#eefcf3', accent: '#16a34a' },
   호텔: { emoji: '🏨', bg: '#f3f0ff', accent: '#7c3aed' },
+  거리: { emoji: '🧭', bg: '#f0fdfa', accent: '#0d9488' },
   가게: { emoji: '🛍️', bg: '#fdf2f8', accent: '#db2777' },
 };
 

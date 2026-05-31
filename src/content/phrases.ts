@@ -93,6 +93,12 @@ export const phrases: Phrase[] = [
   { id: 'p_nanbansen', kana: 'なんばんせんですか', kanji: '何番線ですか', displayKana: 'なんばんせんですか？', korean: '몇 번 선이에요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '플랫폼 번호 묻기 — 「番線(ばんせん)」이 승강장 번호' },
   { id: 'p_tsugi_wa_shibuya', kana: 'つぎはしぶやですか', kanji: '次は渋谷ですか', displayKana: 'つぎは、しぶやですか？', korean: '다음은 시부야예요?', register: 'productive', grammarRefs: ['g_masuka'] },
 
+  // ── C5 거리·긴급 한마디 (여행 실전 — 화장실·사진·도움) ──
+  { id: 'p_toire_doko', kana: 'トイレはどこですか', displayKana: 'トイレは、どこですか？', korean: '화장실 어디예요?', register: 'productive', grammarRefs: ['g_masuka'] },
+  { id: 'p_shashin_ii', kana: 'しゃしんとってもいいですか', kanji: '写真撮ってもいいですか', displayKana: 'しゃしん、とってもいいですか？', korean: '사진 찍어도 돼요?', register: 'productive' },
+  { id: 'p_shashin_onegai', kana: 'しゃしんおねがいします', kanji: '写真お願いします', displayKana: 'しゃしん、おねがいします', korean: '사진 부탁드려요', register: 'productive' },
+  { id: 'p_tasukete', kana: 'たすけてください', kanji: '助けてください', korean: '도와주세요', register: 'productive', tip: '급할 땐 たすけて만 외쳐도 통합니다' },
+
   // ── 금액·숫자 듣기 (계산대에서 귀로 알아듣기) ──
   { id: 'p_num_hyakuen', kana: 'ひゃくえん', kanji: '百円', korean: '100엔', register: 'receptive' },
   { id: 'p_num_gohyakuen', kana: 'ごひゃくえん', kanji: '五百円', korean: '500엔', register: 'receptive' },
