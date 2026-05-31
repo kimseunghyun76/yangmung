@@ -21,3 +21,19 @@ export function sceneVisualByMission(missionId?: string): SceneVisual {
   const m = CONTENT.missions.find((x) => x.id === missionId);
   return sceneVisualByPlace(m?.place);
 }
+
+// 장면(장소)별로 그 미션이 쓰는 표현 id 모음 — 복습장 "장면별 필터"·여행 치트시트용.
+export function phraseIdsByPlace(): { place: string; phraseIds: string[] }[] {
+  const out: { place: string; phraseIds: string[] }[] = [];
+  for (const m of CONTENT.missions) {
+    if (!m.place || m.id === 'C0') continue; // 튜토리얼 제외
+    const ids = new Set<string>();
+    for (const step of m.steps) {
+      if (step.promptPhraseId) ids.add(step.promptPhraseId);
+      for (const c of step.choices) if (c.phraseId) ids.add(c.phraseId);
+    }
+    for (const pid of m.speakPhraseIds ?? []) ids.add(pid);
+    out.push({ place: m.place, phraseIds: [...ids] });
+  }
+  return out;
+}
