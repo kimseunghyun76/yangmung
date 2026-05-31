@@ -218,8 +218,7 @@ export function App() {
         nav={{ ...nav, current: 'home' }}
         allCards={allCards} progress={progress} session={session} sessionConfig={sessionConfig}
         modeLabel={MODE_PRESETS[settings.mode].label}
-        onStart={startSession} onReset={resetAll}
-        onOpenMap={() => setView('map')} onOpenReview={() => setView('review')} onPracticeScene={startSceneSession}
+        onStart={startSession} onReset={resetAll} onPracticeScene={startSceneSession}
       />
     );
   }
