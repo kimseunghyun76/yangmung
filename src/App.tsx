@@ -181,7 +181,7 @@ export function App() {
     if (view === 'intro') {
       const missions = missionsFromCards(sessionCards, progress, sessionId);
       const hasKana = sessionCards.some((c) => c.kind === 'quiz' && c.reviewTarget?.type === 'kana');
-      return <Intro cards={sessionCards} goal={sessionGoalText(missions, hasKana)} onStart={() => setView('session')} />;
+      return <Intro cards={sessionCards} goal={sessionGoalText(missions, hasKana)} onStart={() => setView('session')} onBack={() => setView('home')} />;
     }
     if (view === 'done') {
       const canContinue = plannedSessionSize(allCards, progress, nextSessionId(session), sessionConfig) > 0;
@@ -209,6 +209,7 @@ export function App() {
           onDictationResult={dictationResult}
           isKanaFamiliar={kanaFamiliar}
           onNext={next}
+          onExit={() => setView('home')}
         />
       );
     }

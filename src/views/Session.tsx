@@ -22,11 +22,12 @@ interface Props {
   onDictationResult: (correct: boolean) => void;
   isKanaFamiliar: (char: string) => boolean;
   onNext: () => void;
+  onExit: () => void;
 }
 
 const badgeStyle: React.CSSProperties = { display: 'inline-block', padding: '3px 9px', borderRadius: 999, fontSize: 12, fontWeight: 600, marginLeft: 8 };
 
-export function Session({ card, index, total, picked, cardStatus, onChoose, onIntroduceSeen, onSpeakPracticed, onDictationResult, isKanaFamiliar, onNext }: Props) {
+export function Session({ card, index, total, picked, cardStatus, onChoose, onIntroduceSeen, onSpeakPracticed, onDictationResult, isKanaFamiliar, onNext, onExit }: Props) {
   const badge =
     cardStatus === 'due' ? <span style={{ ...badgeStyle, background: '#a78bfa', color: '#fff' }}>🔁 복습</span> :
     cardStatus === 'new' ? <span style={{ ...badgeStyle, background: '#60a5fa', color: '#fff' }}>🆕 신규</span> :
@@ -38,6 +39,10 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
 
   return (
     <main style={{ ...WRAP, background: sv ? sv.bg : undefined, minHeight: '100vh', transition: 'background 0.3s' }}>
+      <button
+        onClick={() => { if (index === 0 || confirm('세션을 끝내고 홈으로 갈까요? (지금까지 푼 카드는 저장돼요)')) onExit(); }}
+        style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 14, color: '#888', padding: '4px 0', marginBottom: 4 }}
+      >← 나가기</button>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#888', fontSize: 13 }}>
         <span>{card.tag}{badge}</span>
         <span>{index + 1} / {total}</span>
