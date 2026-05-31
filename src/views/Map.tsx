@@ -4,7 +4,7 @@ import type { Card } from '../learn/cards';
 import {
   isMissionUnlocked, kanaReadMastery, missionProgress, type ProgressMap,
 } from '../learn/progress';
-import { BTN, PRIMARY, WRAP } from '../ui/styles';
+import { BTN, CARD, COLORS, PRIMARY, WRAP } from '../ui/styles';
 import { sceneVisualByPlace } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
 
@@ -24,20 +24,19 @@ interface Props {
 }
 
 export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props) {
-  const kanaUnits = CONTENT.units.filter((u) => u.track === 'kana' && u.mode === 'drill');
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0'); // 튜토리얼 제외
+  const hiraIds = CONTENT.kana.filter((k) => k.script === 'hiragana').map((k) => k.id);
+  const kataIds = CONTENT.kana.filter((k) => k.script === 'katakana').map((k) => k.id);
 
   return (
     <main style={WRAP}>
       <NavBar {...nav} />
       <h1 style={{ marginBottom: 4 }}>🗺 학습 지도</h1>
-      <p style={{ color: '#888', marginTop: 0, fontSize: 13 }}>내가 어디까지 왔는지 한눈에</p>
+      <p style={{ color: COLORS.inkSoft, marginTop: 0, fontSize: 13 }}>내가 어디까지 왔는지 한눈에</p>
 
-      <Section title="가나 (히라가나)">
-        {kanaUnits.map((u) => {
-          const m = kanaReadMastery(progress, u.kanaIds ?? []);
-          return <Bar key={u.id} label={`${u.stage} ${(u.kanaIds ?? []).map((id) => CONTENT.kana.find((k) => k.id === id)?.char).join('')}`} value={m.mastered} total={m.total} />;
-        })}
+      <Section title="가나 (읽기 기준)">
+        {(() => { const m = kanaReadMastery(progress, hiraIds); return <Bar label="히라가나" value={m.mastered} total={m.total} />; })()}
+        {(() => { const m = kanaReadMastery(progress, kataIds); return <Bar label="가타카나" value={m.mastered} total={m.total} />; })()}
       </Section>
 
       <Section title="여행 장면">
@@ -61,7 +60,7 @@ export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props)
             </button>
           );
         })}
-        <p style={{ fontSize: 12, color: '#aaa', marginTop: 8 }}>잠긴 장면은 앞 장면을 더 익히면 열려요. 다음 장면은 호텔 체크인까지 이어집니다.</p>
+        <p style={{ fontSize: 12, color: COLORS.inkFaint, marginTop: 8 }}>잠긴 장면은 앞 장면을 더 익히면 열려요.</p>
       </Section>
 
       <Section title="복구 도구 (막혔을 때)">
@@ -81,8 +80,8 @@ export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props)
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginTop: 18 }}>
-      <p style={{ margin: '0 0 6px', fontSize: 13, color: '#666', fontWeight: 600 }}>{title}</p>
+    <div style={{ ...CARD, marginTop: 14 }}>
+      <p style={{ margin: '0 0 4px', fontSize: 13, color: COLORS.inkSoft, fontWeight: 700 }}>{title}</p>
       {children}
     </div>
   );
@@ -91,11 +90,11 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function Bar({ label, value, total }: { label: string; value: number; total: number }) {
   return (
     <div style={{ marginTop: 8 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#555' }}>
-        <span>{label}</span><span>{value}/{total}</span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: COLORS.inkSoft }}>
+        <span>{label}</span><span><strong style={{ color: COLORS.indigo }}>{value}</strong>/{total}</span>
       </div>
-      <div style={{ height: 6, background: '#e4e4ee', borderRadius: 3, marginTop: 4, overflow: 'hidden' }}>
-        <div style={{ width: `${(value / Math.max(1, total)) * 100}%`, height: '100%', background: '#4f46e5' }} />
+      <div style={{ height: 6, background: '#eceef4', borderRadius: 3, marginTop: 4, overflow: 'hidden' }}>
+        <div style={{ width: `${(value / Math.max(1, total)) * 100}%`, height: '100%', background: COLORS.indigo }} />
       </div>
     </div>
   );
