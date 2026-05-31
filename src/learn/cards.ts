@@ -227,10 +227,26 @@ export function buildCards(): Card[] {
     });
   }
 
-  // 미션 (C0~C4)
-  for (const id of ['C0', 'C1', 'C2', 'C3', 'C4'] as const) {
-    const m = missions.find((mm) => mm.id === id);
-    if (!m) continue;
+  // 금액·숫자 듣기 — 🔊 듣고 금액 고르기 (계산대 실전). 오답도 금액이라 진짜 들어야 함.
+  const PRICE_IDS = ['p_num_hyakuen', 'p_num_gohyakuen', 'p_num_senen', 'p_num_nisenen', 'p_num_gosenen', 'p_num_ichimanen'];
+  for (const id of PRICE_IDS) {
+    const p = phrases.find((x) => x.id === id);
+    if (!p) continue;
+    const distract = shuffle(phrases.filter((x) => PRICE_IDS.includes(x.id) && x.id !== id)).slice(0, 3);
+    cards.push({
+      kind: 'quiz', id: `listen:${id}`, tag: '🎧 금액 듣기',
+      banner: '🎧', bannerJa: ttsText(p), sub: '🔊 듣고 금액을 고르세요',
+      listen: true,
+      reviewTarget: { type: 'phrase', id },
+      choices: shuffle([
+        { label: p.korean, correct: true, ja: ttsText(p), phrase: phraseInfo(p) },
+        ...distract.map((d) => ({ label: d.korean, correct: false, ja: ttsText(d), phrase: phraseInfo(d) })),
+      ]),
+    });
+  }
+
+  // 미션 — 콘텐츠에 정의된 순서대로 전부 (새 장면 추가 시 자동 포함)
+  for (const m of missions) {
     const introduced = new Set<string>();
     const addIntroduce = (phraseId: string, note: string) => {
       if (introduced.has(phraseId)) return;
