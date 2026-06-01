@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="환전 scene thumbnail">
+  <rect width="96" height="96" rx="20" fill="#f6f6f4" stroke="#16171c" stroke-width="4"/>
+  <circle cx="74" cy="22" r="8" fill="#b23b32"/>
+  <circle fill="#ffffff" stroke="#16171c" stroke-width="1.44" cx="48" cy="50" r="21.24"/><path stroke="#16171c" stroke-width="1.44" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M37.56 40.28l10.44 12.24 10.44-12.24M48 52.52v14.04M38.28 53.96h19.439999999999998M38.28 61.16h19.439999999999998"/><circle fill="#b23b32" cx="64.56" cy="34.88" r="3.2399999999999998"/>
+</svg>

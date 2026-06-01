@@ -1,6 +1,7 @@
 // 장면 흐름 카드 — 정답 채점 없이 흔한 흐름을 확인하는 정보 카드.
 import type { OrderCard } from '../learn/cards';
 import { PRIMARY } from '../ui/styles';
+import { Icon } from '../ui/Icon';
 
 interface Props {
   card: OrderCard;
@@ -10,7 +11,7 @@ interface Props {
 export function OrderCardView({ card, onNext }: Props) {
   return (
     <div>
-      <h2 style={{ marginTop: 14, marginBottom: 4 }}>🧭 {card.title}</h2>
+      <h2 style={{ marginTop: 14, marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="flow" size={22} /> {card.title}</h2>
       <p style={{ color: 'var(--ink-soft)', marginTop: 0 }}>{card.prompt}</p>
 
       <ol style={{ paddingLeft: 0, listStyle: 'none', margin: '12px 0' }}>

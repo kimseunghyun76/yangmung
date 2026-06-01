@@ -3,6 +3,7 @@ import type { IntroduceCard } from '../learn/cards';
 import { speak, ttsSupported } from '../tts';
 import { BTN, PRIMARY } from '../ui/styles';
 import { ReadingAid } from './ReadingAid';
+import { Icon } from '../ui/Icon';
 
 interface Props {
   card: IntroduceCard;
@@ -19,7 +20,7 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext }: Prop
 
   return (
     <div>
-      <h2 style={{ marginTop: 14, marginBottom: 6 }}>👀 새 표현</h2>
+      <h2 style={{ marginTop: 14, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="discover" size={22} /> 새 표현</h2>
       <p style={{ color: 'var(--ink-soft)', marginTop: 0, lineHeight: 1.5 }}>{card.note}</p>
 
       <div style={{ background: 'var(--accent-soft)', padding: 16, borderRadius: 10, marginTop: 14, textAlign: 'center' }}>
@@ -34,20 +35,20 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext }: Prop
           onClick={() => speak(card.ja)}
           disabled={!ttsSupported()}
         >
-          🔊 듣기
+          <Icon name="listen" size={17} /> 듣기
         </button>
         <button
           style={{ ...BTN, padding: '10px 18px', fontSize: 14, background: 'var(--surface)' }}
           onClick={() => speak(card.ja, { rate: 0.6 })}
           disabled={!ttsSupported()}
         >
-          🐢 천천히
+          천천히
         </button>
       </div>
 
       {card.tip && (
         <p style={{ background: 'var(--surface-2)', padding: 12, borderRadius: 8, color: 'var(--ink-soft)', fontSize: 14, lineHeight: 1.5 }}>
-          💡 {card.tip}
+          <Icon name="tip" size={15} style={{ marginRight: 6 }} />{card.tip}
         </p>
       )}
 

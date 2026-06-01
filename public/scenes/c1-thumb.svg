@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="편의점 scene thumbnail">
+  <rect width="96" height="96" rx="20" fill="#f6f6f4" stroke="#16171c" stroke-width="4"/>
+  <circle cx="74" cy="22" r="8" fill="#b23b32"/>
+  <path stroke="#16171c" stroke-width="1.44" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M21 42.8h54l-4.32-12.959999999999999h-45.36z"/><path stroke="#16171c" stroke-width="1.44" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M25.68 42.8v22.68h44.64v-22.68"/><path stroke="#16171c" stroke-width="1.44" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M40.08 65.48v-14.04h15.84v14.04"/><circle fill="#b23b32" cx="64.92" cy="53.6" r="3.2399999999999998"/>
+</svg>

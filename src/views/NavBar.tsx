@@ -1,5 +1,6 @@
 // 상단 네비게이션 — 에디토리얼: 텍스트 탭 + 朱 언더라인, 모노 컨트롤.
 import { COLORS } from '../ui/styles';
+import { Icon } from '../ui/Icon';
 type NavView = 'home' | 'map' | 'review';
 
 export interface NavBarProps {
@@ -37,9 +38,9 @@ export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings, theme
         </button>
       ))}
       <span style={{ flex: 1 }} />
-      <button style={ctrl} onClick={onToggleTheme} title="주간/야간">{theme === 'dark' ? '☀' : '☾'}</button>
-      <button style={ctrl} onClick={onOpenGuide} title="가이드">?</button>
-      <button style={ctrl} onClick={onOpenSettings} title="설정">⚙</button>
+      <button style={ctrl} onClick={onToggleTheme} title="주간/야간"><Icon name={theme === 'dark' ? 'theme-day' : 'theme-night'} size={19} /></button>
+      <button style={ctrl} onClick={onOpenGuide} title="가이드"><Icon name="nav-guide" size={19} /></button>
+      <button style={ctrl} onClick={onOpenSettings} title="설정"><Icon name="nav-settings" size={19} /></button>
     </nav>
   );
 }

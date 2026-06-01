@@ -9,6 +9,7 @@ import { BTN, CARD, CHIP, PRIMARY, RADIUS, WRAP } from '../ui/styles';
 import { NavBar, type NavBarProps } from './NavBar';
 import { PageHead } from './ui';
 import { phraseIdsByPlace } from './scene';
+import { Icon } from '../ui/Icon';
 
 interface Props {
   nav: NavBarProps;
@@ -182,9 +183,9 @@ function PhraseList({ phrases, phraseSeen }: { phrases: Phrase[]; phraseSeen: Se
                 <p style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>{p.kanji ?? p.displayKana ?? p.kana}</p>
                 <p style={{ margin: '3px 0 0', color: 'var(--ink-soft)', fontSize: 13 }}>{p.displayKana ?? p.kana} · {p.korean}</p>
               </div>
-              <button style={{ ...BTN, width: 44, flex: '0 0 44px' }} onClick={() => speak(p.kanji ?? p.displayKana ?? p.kana)} disabled={!ttsSupported()}>🔊</button>
+              <button style={{ ...BTN, width: 44, flex: '0 0 44px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => speak(p.kanji ?? p.displayKana ?? p.kana)} disabled={!ttsSupported()}><Icon name="listen" size={17} /></button>
             </div>
-            {p.tip && <p style={{ margin: '8px 0 0', color: 'var(--ink-soft)', fontSize: 13 }}>💡 {p.tip}</p>}
+            {p.tip && <p style={{ margin: '8px 0 0', color: 'var(--ink-soft)', fontSize: 13 }}><Icon name="tip" size={15} style={{ marginRight: 6 }} />{p.tip}</p>}
             <p style={{ margin: '8px 0 0', color: seen ? 'var(--ok)' : 'var(--ink-faint)', fontSize: 12 }}>{seen ? '✓ 본 적 있음' : '예정 표현'}</p>
           </div>
         );

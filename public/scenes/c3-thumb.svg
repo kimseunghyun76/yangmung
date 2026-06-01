@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="전철 scene thumbnail">
+  <rect width="96" height="96" rx="20" fill="#f6f6f4" stroke="#16171c" stroke-width="4"/>
+  <circle cx="74" cy="22" r="8" fill="#b23b32"/>
+  <rect fill="#ffffff" stroke="#16171c" stroke-width="1.44" x="26.76" y="28.76" width="42.48" height="37.8" rx="5.04"/><path stroke="#16171c" stroke-width="1.44" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M34.68 40.28h26.64v12.959999999999999h-26.64zM35.04 73.75999999999999l7.56-7.199999999999999M60.96 73.75999999999999l-7.56-7.199999999999999"/><circle fill="#b23b32" cx="37.92" cy="59.72" r="3.06"/><circle fill="#b23b32" cx="58.08" cy="59.72" r="3.06"/>
+</svg>

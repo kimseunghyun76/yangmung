@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" role="img" aria-label="공항 scene illustration">
+  <rect width="1200" height="480" rx="0" fill="transparent"/>
+  <path d="M70 372C218 294 306 320 436 338c174 24 258-126 424-112 102 8 178 72 270 38" fill="none" stroke="#b23b32" stroke-width="20" stroke-linecap="round" opacity=".16"/>
+  <rect x="72" y="70" width="1056" height="340" rx="56" fill="#f6f6f4" stroke="#16171c" stroke-width="10"/>
+  <circle cx="980" cy="126" r="44" fill="#b23b32" opacity=".92"/>
+  <path stroke="#16171c" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M450 262l300-110-58 126 80 72-50 28-84-54-78 30z"/><path stroke="#16171c" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M590 208l-22 118"/><circle fill="#b23b32" cx="718" cy="170" r="18"/>
+  <path d="M184 374h832" stroke="#16171c" stroke-width="10" stroke-linecap="round" opacity=".16"/>
+</svg>
