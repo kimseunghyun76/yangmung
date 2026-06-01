@@ -14,12 +14,20 @@ export interface Settings {
 const KEY = 'yangmung:settings:v1';
 const DEFAULTS: Settings = { mode: 'default', readingAid: 'auto', slowListening: false, fastForward: true, theme: 'light' };
 
+// 첫 실행이면 시스템 외형(라이트/다크)을 따른다 (Apple HIG: 시스템 appearance 존중).
+function systemTheme(): Theme {
+  try {
+    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  } catch { return 'light'; }
+}
+
 export function loadSettings(): Settings {
   if (typeof window === 'undefined') return { ...DEFAULTS };
   try {
     const raw = window.localStorage.getItem(KEY);
-    return raw ? { ...DEFAULTS, ...(JSON.parse(raw) as Partial<Settings>) } : { ...DEFAULTS };
-  } catch { return { ...DEFAULTS }; }
+    if (!raw) return { ...DEFAULTS, theme: systemTheme() }; // 첫 실행 = 시스템 외형
+    return { ...DEFAULTS, ...(JSON.parse(raw) as Partial<Settings>) };
+  } catch { return { ...DEFAULTS, theme: systemTheme() }; }
 }
 
 export function saveSettings(s: Settings): void {
