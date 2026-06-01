@@ -5,6 +5,8 @@ import {
   isMissionUnlocked, kanaReadMastery, missionProgress, nextSessionId, planSession,
   sessionCounts, summarize, type ProgressMap, type SessionConfig, type SessionState,
 } from '../learn/progress';
+import type { Diagnosis } from '../learn/adaptive';
+import { LEVEL_LABEL } from '../learn/adaptive';
 import { ttsSupported } from '../tts';
 import { PRIMARY, SERIF, WRAP } from '../ui/styles';
 import { sessionGoalText } from './goal';
@@ -17,6 +19,7 @@ interface Props {
   progress: ProgressMap;
   session: SessionState;
   sessionConfig: SessionConfig;
+  diagnosis: Diagnosis;
   modeLabel: string;
   onStart: () => void;
   onReset: () => void;
@@ -28,7 +31,7 @@ interface Props {
 
 const Rule = ({ m = 28 }: { m?: number }) => <hr className="ym-rule" style={{ margin: `${m}px 0` }} />;
 
-export function Home({ nav, allCards, progress, session, sessionConfig, modeLabel, onStart, onReset, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, diagnosis, modeLabel, onStart, onReset, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation }: Props) {
   const upcomingId = nextSessionId(session);
   const counts = sessionCounts(allCards, progress, upcomingId);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
@@ -63,6 +66,8 @@ export function Home({ nav, allCards, progress, session, sessionConfig, modeLabe
           오늘 풀 수 있는 카드 {counts.due + counts.fresh}개 중 {planned}개씩 짧게 진행해요.
         </p>
       )}
+
+      <DiagnosisPanel d={diagnosis} />
 
       <Rule />
 
@@ -135,6 +140,36 @@ export function Home({ nav, allCards, progress, session, sessionConfig, modeLabe
 
       {!ttsSupported() && <p style={{ color: 'var(--warn)', fontSize: 13, marginTop: 16 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
     </main>
+  );
+}
+
+// 학습 진단 — 적응형 엔진이 "판단"한 내용을 보여주는 튜터 패널.
+function DiagnosisPanel({ d }: { d: Diagnosis }) {
+  const dot = d.level === 'struggling' ? 'var(--warn)' : d.level === 'cruising' ? 'var(--ok)' : 'var(--accent)';
+  return (
+    <div style={{ marginTop: 26 }}>
+      <p className="ym-kicker">
+        학습 진단{d.level ? <> <span style={{ color: dot }}>·</span> {LEVEL_LABEL[d.level]}</> : null}
+      </p>
+      <p style={{ margin: '10px 0 0', fontSize: 17, fontWeight: 650, letterSpacing: '-0.01em' }}>{d.focus}</p>
+      <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.55 }}>{d.message}</p>
+      {d.level !== null && d.recentAccuracy !== null && (
+        <p style={{ margin: '8px 0 0', fontSize: 12, color: 'var(--ink-faint)', fontVariantNumeric: 'tabular-nums' }}>
+          직전 세션 정답률 {Math.round(d.recentAccuracy * 100)}%
+        </p>
+      )}
+      {(d.weakKana.length > 0 || d.weakScenes.length > 0) && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 12, alignItems: 'center' }}>
+          <span style={{ fontSize: 12, color: 'var(--ink-faint)' }}>약점</span>
+          {d.weakKana.map((w) => (
+            <span key={w.key} style={{ minWidth: 26, height: 26, padding: '0 6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--line)', borderRadius: 6, fontSize: 15, color: 'var(--accent)' }}>{w.label}</span>
+          ))}
+          {d.weakScenes.map((w) => (
+            <span key={w.key} style={{ padding: '3px 9px', border: '1px solid var(--line)', borderRadius: 999, fontSize: 12, color: 'var(--ink-soft)' }}>{w.label}</span>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 

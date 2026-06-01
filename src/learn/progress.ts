@@ -203,6 +203,18 @@ export function cooldownSessions(consecutiveCorrect: number): number {
   return 0; // 미숙 → 쉬지 않음(곧 재출제)
 }
 
+// 연속 정답(이산)보다 부드러운 0..1 숙련도 — 적응형 약점 진단·약점 우선 정렬의 기반.
+// 첫시도 정답률 + 연속 정답 스트릭을 섞고, 복구 사용/최근 오답에 페널티.
+export function itemMastery(p?: CardProgress): number {
+  if (!p || p.attempts === 0) return 0;
+  const acc = p.correct / p.attempts;                         // 첫시도 정답률
+  const cc = Math.min(Math.max(p.consecutiveCorrect, 0), 4) / 4; // 스트릭(최대 4에서 포화)
+  let m = 0.45 * acc + 0.55 * cc;
+  if (p.usedRecoveryEver) m -= 0.08;
+  if (p.lastResult === 'wrong') m -= 0.1;
+  return Math.max(0, Math.min(1, m));
+}
+
 export type CardStatus = 'due' | 'new' | 'cooldown';
 
 export function classifyCard(_c: Card, p: CardProgress | undefined, currentSessionId: number): CardStatus {
@@ -301,20 +313,25 @@ const pushByStatus = (pool: Pool, c: ReviewableCard, status: CardStatus) =>
   (status === 'due' ? pool.due : pool.fresh).push(c);
 
 // due 우선으로 채우되, fresh를 최소 minFresh장 보장 → 새 콘텐츠가 계속 밀리지 않음.
-function pickPool(pool: Pool, quota: number, minFresh: number): ReviewableCard[] {
+// 적응형: due는 숙련도 낮은(약점) 카드부터 — 한정된 quota를 약점에 먼저 쓴다.
+function sortWeakFirst(cards: ReviewableCard[], progress: ProgressMap): ReviewableCard[] {
+  return [...cards].sort((a, b) => itemMastery(progress[a.id]) - itemMastery(progress[b.id]));
+}
+function pickPool(pool: Pool, quota: number, minFresh: number, progress: ProgressMap): ReviewableCard[] {
+  const due = sortWeakFirst(pool.due, progress);
   const guaranteedFresh = Math.min(minFresh, pool.fresh.length, quota);
-  const dueTake = Math.min(pool.due.length, quota - guaranteedFresh);
+  const dueTake = Math.min(due.length, quota - guaranteedFresh);
   const freshTake = Math.min(pool.fresh.length, quota - dueTake);
-  return [...pool.due.slice(0, dueTake), ...pool.fresh.slice(0, freshTake)];
+  return [...due.slice(0, dueTake), ...pool.fresh.slice(0, freshTake)];
 }
 
 // 미션 카드는 "한 장면"에 집중: 진행 순서(C0→C1→…)대로 한 미션을 통째로 채우고
 // quota가 남을 때만 다음 미션으로 넘어감. → "편의점 한 판" 같은 몰입감.
-function pickScene(byMission: Map<string, Pool>, quota: number): ReviewableCard[] {
+function pickScene(byMission: Map<string, Pool>, quota: number, progress: ProgressMap): ReviewableCard[] {
   const out: ReviewableCard[] = [];
   for (const pool of byMission.values()) {           // Map = 등장(=진행) 순서 유지
     if (out.length >= quota) break;
-    for (const c of [...pool.due, ...pool.fresh]) {   // 장면 안에서는 약점 먼저, 그 다음 신규
+    for (const c of [...sortWeakFirst(pool.due, progress), ...pool.fresh]) { // 장면 안에서는 약점 먼저, 그 다음 신규
       if (out.length >= quota) break;
       out.push(c);
     }
@@ -359,9 +376,9 @@ export function selectSessionCards(
       pushByStatus(cByMission.get(mid)!, rep, status);
     }
   }
-  const kSel = pickPool(k, config.quotas.K, config.minFresh.K);
-  const bSel = pickPool(b, config.quotas.B, config.minFresh.B);
-  const scene = pickScene(cByMission, config.quotas.C);
+  const kSel = pickPool(k, config.quotas.K, config.minFresh.K, progress);
+  const bSel = pickPool(b, config.quotas.B, config.minFresh.B, progress);
+  const scene = pickScene(cByMission, config.quotas.C, progress);
   // 팁: 안 본 것/오래된 것부터 1개씩 회전 (매번 같은 팁 X)
   const tipsSel = [...tips]
     .sort((a, b2) => (progress[a.id]?.lastSeenAt ?? '') < (progress[b2.id]?.lastSeenAt ?? '') ? -1 : 1)
