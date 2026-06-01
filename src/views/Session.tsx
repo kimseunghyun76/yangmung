@@ -31,8 +31,8 @@ const badgeStyle: React.CSSProperties = { display: 'inline-block', padding: '3px
 
 export function Session({ card, index, total, picked, cardStatus, onChoose, onIntroduceSeen, onSpeakPracticed, onDictationResult, isKanaFamiliar, onNext, onExit, onKnown }: Props) {
   const badge =
-    cardStatus === 'due' ? <span style={{ ...badgeStyle, background: '#a78bfa', color: '#fff' }}>🔁 복습</span> :
-    cardStatus === 'new' ? <span style={{ ...badgeStyle, background: '#60a5fa', color: '#fff' }}>🆕 신규</span> :
+    cardStatus === 'due' ? <span style={{ ...badgeStyle, background: 'var(--accent-soft)', color: 'var(--accent)' }}>🔁 복습</span> :
+    cardStatus === 'new' ? <span style={{ ...badgeStyle, background: 'var(--surface-2)', color: 'var(--ink-soft)' }}>🆕 신규</span> :
     null;
 
   // 장면 색 테마 — 미션 카드면 장소 색/이모지로 (세션이 장면마다 다르게 보이게)
@@ -40,7 +40,7 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
     ? sceneVisualByMission(String(card.reviewTarget.id)) : null;
 
   return (
-    <main style={{ ...WRAP, background: sv ? sv.bg : undefined, minHeight: '100vh', transition: 'background 0.3s' }}>
+    <main style={{ ...WRAP, minHeight: '100vh' }}>
       <button
         onClick={() => { if (index === 0 || confirm('세션을 끝내고 홈으로 갈까요? (지금까지 푼 카드는 저장돼요)')) onExit(); }}
         style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--ink-faint)', padding: '4px 0', marginBottom: 4 }}
@@ -50,7 +50,7 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
         <span>{index + 1} / {total}</span>
       </div>
       {card.kind !== 'tip' && card.kind !== 'discover' && card.scenario && (
-        <div style={{ display: 'inline-block', marginTop: 4, padding: '4px 12px', borderRadius: 999, fontSize: 13, fontWeight: 600, color: '#fff', background: sv ? sv.accent : '#a78bfa' }}>
+        <div style={{ display: 'inline-block', marginTop: 4, padding: '4px 12px', borderRadius: 999, fontSize: 13, fontWeight: 600, color: '#fff', background: sv ? sv.accent : 'var(--accent)' }}>
           {sv ? sv.emoji : '📍'} {card.scenario}
         </div>
       )}
@@ -153,7 +153,7 @@ function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 
         </div>
       )}
       {isRecovery && (
-        <div style={{ background: 'var(--warn-soft)', padding: 12, borderRadius: 8, marginBottom: 8, border: '1px solid #fde68a' }}>
+        <div style={{ background: 'var(--warn-soft)', padding: 12, borderRadius: 8, marginBottom: 8, border: '1px solid var(--warn)' }}>
           <p style={{ margin: 0, color: 'var(--warn)', fontWeight: 600 }}>🛟 복구 전략 사용 — 실패가 아니에요</p>
           <p style={{ margin: '4px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>별점은 낮아지지만 미션은 계속 이어집니다.</p>
           {ja && <PhraseLine ja={ja} korean={c.phrase!.korean} />}

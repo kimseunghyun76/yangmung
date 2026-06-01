@@ -30,7 +30,7 @@ export function Intro({ cards, goal, onStart, onBack }: { cards: Card[]; goal: s
   return (
     <main style={WRAP}>
       <button onClick={onBack} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--ink-faint)', padding: '4px 0', marginBottom: 8 }}>← 홈으로</button>
-      <div style={{ background: sv.bg, borderRadius: 16, padding: sv.hero ? 0 : '28px 16px', textAlign: 'center', marginBottom: 16, overflow: 'hidden' }}>
+      <div style={{ background: sv.hero ? undefined : 'var(--surface-2)', borderTop: sv.hero ? undefined : `3px solid ${sv.accent}`, borderRadius: 16, padding: sv.hero ? 0 : '28px 16px', textAlign: 'center', marginBottom: 16, overflow: 'hidden' }}>
         {sv.hero
           ? <img src={sv.hero} alt="" style={{ width: '100%', display: 'block', maxHeight: 180, objectFit: 'cover' }} />
           : <div style={{ fontSize: 64, lineHeight: 1 }}>{sv.emoji}</div>}

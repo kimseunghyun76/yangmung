@@ -25,7 +25,7 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext }: Prop
       <div style={{ background: 'var(--accent-soft)', padding: 16, borderRadius: 10, marginTop: 14, textAlign: 'center' }}>
         <ReadingAid text={card.kana} isFamiliar={isKanaFamiliar} fontSize={30} />
         <p style={{ margin: '8px 0 0', color: 'var(--ink-soft)' }}>{card.korean}</p>
-        <p style={{ margin: '8px 0 0', fontSize: 11, color: '#b06a60' }}>빨간 로마자는 아직 익숙하지 않은 글자예요 — 익히면 사라져요</p>
+        <p style={{ margin: '8px 0 0', fontSize: 11, color: 'var(--ink-faint)' }}>빨간 로마자는 아직 익숙하지 않은 글자예요 — 익히면 사라져요</p>
       </div>
 
       <div style={{ textAlign: 'center', marginTop: 12, display: 'flex', gap: 8, justifyContent: 'center' }}>

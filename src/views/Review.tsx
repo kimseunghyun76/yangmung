@@ -137,7 +137,7 @@ function KanaGrid({ items, progress }: { items: KanaItem[]; progress: ProgressMa
     <>
       {Object.entries(groups).map(([label, ks]) => (
         <div key={label} style={{ marginTop: 10 }}>
-          <p style={{ margin: '0 0 6px', color: '#777', fontSize: 12, fontWeight: 600 }}>{label}</p>
+          <p style={{ margin: '0 0 6px', color: 'var(--ink-soft)', fontSize: 12, fontWeight: 600 }}>{label}</p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(56px, 1fr))', gap: 8 }}>
             {ks.map((k) => {
               const stable = isKanaReadStable(progress, k.id);
