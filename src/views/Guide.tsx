@@ -16,7 +16,7 @@ export function Guide({ onClose }: { onClose: () => void }) {
       {SECTIONS.map((s) => (
         <div key={s.h} style={{ marginBottom: 14 }}>
           <p style={{ margin: 0, fontWeight: 700, fontSize: 15 }}>{s.h}</p>
-          <p style={{ margin: '4px 0 0', color: '#555', fontSize: 14, lineHeight: 1.55 }}>{s.body}</p>
+          <p style={{ margin: '4px 0 0', color: 'var(--ink-soft)', fontSize: 14, lineHeight: 1.55 }}>{s.body}</p>
         </div>
       ))}
     </Modal>

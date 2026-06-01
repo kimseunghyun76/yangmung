@@ -37,8 +37,8 @@ export function Review({ nav, allCards, progress, seenKana, onBack }: Props) {
     <main style={WRAP}>
       <NavBar {...nav} />
       <h1 style={{ marginBottom: 4 }}>📚 복습장</h1>
-      <p style={{ color: '#888', marginTop: 0, fontSize: 13 }}>배운 글자와 표현을 퀴즈 없이 다시 보는 곳 · 여행 중 빠른 참조</p>
-      <p style={{ color: '#c8453a', marginTop: 6, fontSize: 14, fontWeight: 600 }}>👀 지금까지 본 가나 {countSeenKana(seenKana)}자</p>
+      <p style={{ color: 'var(--ink-faint)', marginTop: 0, fontSize: 13 }}>배운 글자와 표현을 퀴즈 없이 다시 보는 곳 · 여행 중 빠른 참조</p>
+      <p style={{ color: 'var(--accent)', marginTop: 6, fontSize: 14, fontWeight: 600 }}>👀 지금까지 본 가나 {countSeenKana(seenKana)}자</p>
 
       {/* 필터 칩 */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 12 }}>
@@ -46,7 +46,7 @@ export function Review({ nav, allCards, progress, seenKana, onBack }: Props) {
           <button
             key={c}
             onClick={() => setFilter(c)}
-            style={{ ...BTN, padding: '5px 12px', fontSize: 13, background: filter === c ? '#c8453a' : '#fff', color: filter === c ? '#fff' : '#444' }}
+            style={{ ...BTN, padding: '5px 12px', fontSize: 13, background: filter === c ? 'var(--accent)' : 'var(--surface)', color: filter === c ? 'var(--surface)' : 'var(--ink-soft)' }}
           >
             {c}
           </button>
@@ -59,7 +59,7 @@ export function Review({ nav, allCards, progress, seenKana, onBack }: Props) {
           <Section title="가타카나·특수 표기"><KanaGrid items={kata} progress={progress} /></Section>
           <Section title={`만난 표현 ${learned.length}개`}>
             {learned.length === 0
-              ? <p style={{ color: '#888', fontSize: 14, margin: '6px 0 0' }}>아직 복습할 표현이 없어요. 첫 세션을 진행하면 여기에 쌓입니다.</p>
+              ? <p style={{ color: 'var(--ink-faint)', fontSize: 14, margin: '6px 0 0' }}>아직 복습할 표현이 없어요. 첫 세션을 진행하면 여기에 쌓입니다.</p>
               : <PhraseList phrases={learned} phraseSeen={phraseSeen} />}
           </Section>
           <Section title="곧 만날 표현">
@@ -71,7 +71,7 @@ export function Review({ nav, allCards, progress, seenKana, onBack }: Props) {
           {(() => {
             const recent = learned.filter((p) => lastSeen[p.id]).sort((a, b) => (lastSeen[b.id] ?? '') < (lastSeen[a.id] ?? '') ? -1 : 1).slice(0, 20);
             return recent.length === 0
-              ? <p style={{ color: '#888', fontSize: 14, margin: '6px 0 0' }}>아직 본 표현이 없어요.</p>
+              ? <p style={{ color: 'var(--ink-faint)', fontSize: 14, margin: '6px 0 0' }}>아직 본 표현이 없어요.</p>
               : <PhraseList phrases={recent} phraseSeen={phraseSeen} />;
           })()}
         </Section>
@@ -148,15 +148,15 @@ function KanaGrid({ items, progress }: { items: KanaItem[]; progress: ProgressMa
                   style={{
                     ...BTN,
                     padding: '8px 4px',
-                    background: stable ? '#dcfce7' : seen ? '#f6e4df' : '#fff',
-                    borderColor: stable ? '#86efac' : seen ? '#c7d2fe' : '#e5e7eb',
+                    background: stable ? 'var(--ok-soft)' : seen ? 'var(--accent-soft)' : 'var(--surface)',
+                    borderColor: stable ? '#86efac' : seen ? '#c7d2fe' : 'var(--line)',
                   }}
                   onClick={() => speak(k.char)}
                   disabled={!ttsSupported()}
                   title={stable ? '읽기 안정' : seen ? '본 적 있음' : '아직'}
                 >
                   <div style={{ fontSize: 26, lineHeight: 1.1 }}>{k.char}</div>
-                  <div style={{ color: '#666', fontSize: 11 }}>{k.romaji} · {k.koreanSound}</div>
+                  <div style={{ color: 'var(--ink-soft)', fontSize: 11 }}>{k.romaji} · {k.koreanSound}</div>
                 </button>
               );
             })}
@@ -168,22 +168,22 @@ function KanaGrid({ items, progress }: { items: KanaItem[]; progress: ProgressMa
 }
 
 function PhraseList({ phrases, phraseSeen }: { phrases: Phrase[]; phraseSeen: Set<string> }) {
-  if (phrases.length === 0) return <p style={{ color: '#888', fontSize: 14, margin: '6px 0 0' }}>표현이 없어요.</p>;
+  if (phrases.length === 0) return <p style={{ color: 'var(--ink-faint)', fontSize: 14, margin: '6px 0 0' }}>표현이 없어요.</p>;
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>
       {phrases.map((p) => {
         const seen = phraseSeen.has(p.id);
         return (
-          <div key={p.id} style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 10, padding: 12 }}>
+          <div key={p.id} style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 10, padding: 12 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'center' }}>
               <div>
                 <p style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>{p.kanji ?? p.displayKana ?? p.kana}</p>
-                <p style={{ margin: '3px 0 0', color: '#666', fontSize: 13 }}>{p.displayKana ?? p.kana} · {p.korean}</p>
+                <p style={{ margin: '3px 0 0', color: 'var(--ink-soft)', fontSize: 13 }}>{p.displayKana ?? p.kana} · {p.korean}</p>
               </div>
               <button style={{ ...BTN, width: 44, flex: '0 0 44px' }} onClick={() => speak(p.kanji ?? p.displayKana ?? p.kana)} disabled={!ttsSupported()}>🔊</button>
             </div>
-            {p.tip && <p style={{ margin: '8px 0 0', color: '#555', fontSize: 13 }}>💡 {p.tip}</p>}
-            <p style={{ margin: '8px 0 0', color: seen ? '#16a34a' : '#999', fontSize: 12 }}>{seen ? '✓ 본 적 있음' : '예정 표현'}</p>
+            {p.tip && <p style={{ margin: '8px 0 0', color: 'var(--ink-soft)', fontSize: 13 }}>💡 {p.tip}</p>}
+            <p style={{ margin: '8px 0 0', color: seen ? 'var(--ok)' : 'var(--ink-faint)', fontSize: 12 }}>{seen ? '✓ 본 적 있음' : '예정 표현'}</p>
           </div>
         );
       })}

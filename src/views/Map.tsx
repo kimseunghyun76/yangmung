@@ -55,8 +55,8 @@ export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props)
                 opacity: unlocked ? 1 : 0.55, cursor: unlocked ? 'pointer' : 'default',
               }}
             >
-              <span><strong>{sceneVisualByPlace(m.place).emoji} {m.place ?? m.scenario}</strong> <span style={{ color: '#999', fontSize: 13 }}>{m.scenario}</span></span>
-              <span style={{ fontSize: 13, color: done ? '#16a34a' : '#666' }}>{status}</span>
+              <span><strong>{sceneVisualByPlace(m.place).emoji} {m.place ?? m.scenario}</strong> <span style={{ color: 'var(--ink-faint)', fontSize: 13 }}>{m.scenario}</span></span>
+              <span style={{ fontSize: 13, color: done ? 'var(--ok)' : 'var(--ink-soft)' }}>{status}</span>
             </button>
           );
         })}
@@ -66,11 +66,11 @@ export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props)
       <Section title="복구 도구 (막혔을 때)">
         {RECOVERY.map((r) => (
           <div key={r.ja} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, padding: '4px 0' }}>
-            <span style={{ color: '#444' }}>🛟 {r.ja}</span>
-            <span style={{ color: '#888' }}>{r.ko}</span>
+            <span style={{ color: 'var(--ink-soft)' }}>🛟 {r.ja}</span>
+            <span style={{ color: 'var(--ink-faint)' }}>{r.ko}</span>
           </div>
         ))}
-        <p style={{ fontSize: 12, color: '#aaa', marginTop: 6 }}>틀려도 미션은 이어집니다 — 막히면 이 표현으로 넘어가세요.</p>
+        <p style={{ fontSize: 12, color: 'var(--ink-faint)', marginTop: 6 }}>틀려도 미션은 이어집니다 — 막히면 이 표현으로 넘어가세요.</p>
       </Section>
 
       <button style={{ ...PRIMARY, marginTop: 20, width: '100%' }} onClick={onBack}>홈으로</button>
@@ -93,7 +93,7 @@ function Bar({ label, value, total }: { label: string; value: number; total: num
       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: COLORS.inkSoft }}>
         <span>{label}</span><span><strong style={{ color: COLORS.indigo }}>{value}</strong>/{total}</span>
       </div>
-      <div style={{ height: 6, background: '#eceef4', borderRadius: 3, marginTop: 4, overflow: 'hidden' }}>
+      <div style={{ height: 6, background: 'var(--surface-2)', borderRadius: 3, marginTop: 4, overflow: 'hidden' }}>
         <div style={{ width: `${(value / Math.max(1, total)) * 100}%`, height: '100%', background: COLORS.indigo }} />
       </div>
     </div>

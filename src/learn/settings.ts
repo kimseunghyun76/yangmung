@@ -2,15 +2,17 @@
 export type ReadingAidMode = 'auto' | 'always' | 'off';
 export type LearnMode = 'beginner' | 'default' | 'express' | 'review' | 'kana';
 
+export type Theme = 'light' | 'dark';
 export interface Settings {
   mode: LearnMode;
   readingAid: ReadingAidMode; // auto=익히면 사라짐, always=항상, off=끔
   slowListening: boolean;     // 듣기 자동 재생을 느리게
   fastForward: boolean;       // 정답이면 자동으로 다음 카드 (빠른 진행)
+  theme: Theme;               // 주간/야간
 }
 
 const KEY = 'yangmung:settings:v1';
-const DEFAULTS: Settings = { mode: 'default', readingAid: 'auto', slowListening: false, fastForward: true };
+const DEFAULTS: Settings = { mode: 'default', readingAid: 'auto', slowListening: false, fastForward: true, theme: 'light' };
 
 export function loadSettings(): Settings {
   if (typeof window === 'undefined') return { ...DEFAULTS };

@@ -29,19 +29,19 @@ export function Intro({ cards, goal, onStart, onBack }: { cards: Card[]; goal: s
 
   return (
     <main style={WRAP}>
-      <button onClick={onBack} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 14, color: '#888', padding: '4px 0', marginBottom: 8 }}>← 홈으로</button>
+      <button onClick={onBack} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--ink-faint)', padding: '4px 0', marginBottom: 8 }}>← 홈으로</button>
       <div style={{ background: sv.bg, borderRadius: 16, padding: sv.hero ? 0 : '28px 16px', textAlign: 'center', marginBottom: 16, overflow: 'hidden' }}>
         {sv.hero
           ? <img src={sv.hero} alt="" style={{ width: '100%', display: 'block', maxHeight: 180, objectFit: 'cover' }} />
           : <div style={{ fontSize: 64, lineHeight: 1 }}>{sv.emoji}</div>}
       </div>
-      <p style={{ color: '#888', fontSize: 13, margin: 0 }}>오늘 한 판 🎒</p>
+      <p style={{ color: 'var(--ink-faint)', fontSize: 13, margin: 0 }}>오늘 한 판 🎒</p>
       <h1 style={{ margin: '6px 0 0', lineHeight: 1.35 }}>{goal}</h1>
-      <p style={{ color: '#555', fontSize: 15, lineHeight: 1.6, marginTop: 14 }}>
+      <p style={{ color: 'var(--ink-soft)', fontSize: 15, lineHeight: 1.6, marginTop: 14 }}>
         짧게 {cards.length}장이에요{lead}
         {' '}막히면 <strong>「다시 말해 주세요」</strong>로 넘어갈 수 있으니 부담 없이 시작하세요.
       </p>
-      <p style={{ color: '#888', fontSize: 13, marginTop: 6 }}>
+      <p style={{ color: 'var(--ink-faint)', fontSize: 13, marginTop: 6 }}>
         가나 {k} · 표현 {b} · 미션 {c}
       </p>
       <button style={{ ...PRIMARY, marginTop: 20, width: '100%', fontSize: 17, fontWeight: 700 }} onClick={onStart}>
