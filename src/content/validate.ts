@@ -18,7 +18,7 @@ const ID_RE = /^[A-Za-z0-9_]+$/;
 const GRAMMAR_HINT = /(ます|てください|〜|を\(|は\(|조사)/;
 const K_METRIC = /(\d|%|초|정확도)/;
 // 친구 4차 권고: 정규식 prefix 대신 정확한 literal Set (K99·B_BAD 차단)
-const K_LEVELS = new Set(Array.from({ length: 30 }, (_, i) => `K${i + 1}`));
+const K_LEVELS = new Set(Array.from({ length: 32 }, (_, i) => `K${i + 1}`));
 const B_LEVELS = new Set(['B0','B1','B2','B3','B4','B5']);
 
 export function validateContent(d: ContentBundle): Issue[] {
