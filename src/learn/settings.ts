@@ -5,13 +5,12 @@ export type LearnMode = 'beginner' | 'default' | 'express' | 'review' | 'kana';
 export interface Settings {
   mode: LearnMode;
   readingAid: ReadingAidMode; // auto=익히면 사라짐, always=항상, off=끔
-  autoPlay: boolean;          // 듣기 카드 진입 시 자동 재생
-  slowListening: boolean;     // 자동 재생을 느리게
+  slowListening: boolean;     // 듣기 자동 재생을 느리게
   fastForward: boolean;       // 정답이면 자동으로 다음 카드 (빠른 진행)
 }
 
 const KEY = 'yangmung:settings:v1';
-const DEFAULTS: Settings = { mode: 'default', readingAid: 'auto', autoPlay: true, slowListening: false, fastForward: true };
+const DEFAULTS: Settings = { mode: 'default', readingAid: 'auto', slowListening: false, fastForward: true };
 
 export function loadSettings(): Settings {
   if (typeof window === 'undefined') return { ...DEFAULTS };

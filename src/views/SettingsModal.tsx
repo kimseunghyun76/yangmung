@@ -54,12 +54,12 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 18 }}>
-        <span style={{ fontWeight: 700, fontSize: 14 }}>🔊 자동 음성 재생</span>
+        <span style={{ fontWeight: 700, fontSize: 14 }}>🐢 듣기 느리게 재생</span>
         <button
-          style={{ ...BTN, padding: '6px 14px', background: settings.autoPlay ? '#4f46e5' : '#fff', color: settings.autoPlay ? '#fff' : '#444' }}
-          onClick={() => onChange({ ...settings, autoPlay: !settings.autoPlay })}
+          style={{ ...BTN, padding: '6px 14px', background: settings.slowListening ? '#4f46e5' : '#fff', color: settings.slowListening ? '#fff' : '#444' }}
+          onClick={() => onChange({ ...settings, slowListening: !settings.slowListening })}
         >
-          {settings.autoPlay ? '켜짐' : '꺼짐'}
+          {settings.slowListening ? '켜짐' : '꺼짐'}
         </button>
       </div>
 
