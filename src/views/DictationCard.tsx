@@ -43,7 +43,7 @@ export function DictationCardView({ card, onResult, onNext }: Props) {
       </div>
 
       {/* 만든 문장 */}
-      <div style={{ minHeight: 52, margin: '16px 0 8px', padding: 10, border: '2px dashed #d0d0d8', borderRadius: 10, textAlign: 'center', fontSize: 28, letterSpacing: 2 }}>
+      <div style={{ minHeight: 52, margin: '16px 0 8px', padding: 10, border: '2px dashed var(--line)', borderRadius: 10, textAlign: 'center', fontSize: 28, letterSpacing: 2 }}>
         {builtText.length ? builtText.join('') : <span style={{ color: 'var(--ink-faint)', fontSize: 15, letterSpacing: 0 }}>여기에 글자가 쌓여요</span>}
       </div>
 

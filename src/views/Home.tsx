@@ -109,7 +109,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, modeLabe
               onClick={() => onPracticeScene(m.id)}
             >
               {/* 장면 색 이모지 배지 */}
-              <span style={{ width: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, background: sv.bg, alignSelf: 'stretch' }}>{sv.emoji}</span>
+              <span style={{ width: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, background: 'var(--surface-2)', alignSelf: 'stretch' }}>{sv.emoji}</span>
               <span style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '10px 14px', gap: 5 }}>
                 <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontWeight: 600 }}>{m.place ?? m.scenario} 연습</span>

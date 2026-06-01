@@ -40,7 +40,7 @@ export function SpeakCardView({ card, isKanaFamiliar, onPracticed, onNext }: Pro
         >🐢 천천히</button>
       </div>
 
-      <p style={{ textAlign: 'center', color: '#777', fontSize: 14, marginTop: 16 }}>
+      <p style={{ textAlign: 'center', color: 'var(--ink-soft)', fontSize: 14, marginTop: 16 }}>
         🗣 소리 내어 따라 말해보세요{ttsSupported() ? ' (듣고 → 따라서)' : ''}
       </p>
 
