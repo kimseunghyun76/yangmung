@@ -73,7 +73,14 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
         <DiscoverCardView key={card.id} card={card} onNext={onNext} />
       ) : (
         <>
-          <div className={card.listen ? 'ym-listening' : undefined} style={{ fontSize: card.listen || card.tag.startsWith('K') ? 72 : 28, textAlign: 'center', margin: '20px 0 6px' }}>{card.banner}</div>
+          {card.listen ? (
+            <div style={{ textAlign: 'center', margin: '20px 0 6px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+              <div style={{ fontSize: 48 }}>{card.banner}</div>
+              <span className="ym-wave" aria-hidden><i /><i /><i /><i /><i /></span>
+            </div>
+          ) : (
+            <div style={{ fontSize: card.tag.startsWith('K') ? 72 : 28, textAlign: 'center', margin: '20px 0 6px' }}>{card.banner}</div>
+          )}
           {card.bannerJa && (
             <div style={{ textAlign: 'center', marginBottom: 8, display: 'flex', gap: 8, justifyContent: 'center' }}>
               <button
