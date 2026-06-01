@@ -77,7 +77,7 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
           {card.bannerJa && (
             <div style={{ textAlign: 'center', marginBottom: 8, display: 'flex', gap: 8, justifyContent: 'center' }}>
               <button
-                style={{ ...BTN, padding: card.listen ? '10px 22px' : '6px 12px', fontSize: card.listen ? 18 : undefined, background: card.listen ? '#eef2ff' : undefined }}
+                style={{ ...BTN, padding: card.listen ? '10px 22px' : '6px 12px', fontSize: card.listen ? 18 : undefined, background: card.listen ? '#f6e4df' : undefined }}
                 onClick={() => speak(card.bannerJa!)} disabled={!ttsSupported()}
               >🔊 듣기</button>
               <button

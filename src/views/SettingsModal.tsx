@@ -22,7 +22,7 @@ const MODE_ORDER: LearnMode[] = ['beginner', 'default', 'express', 'review', 'ka
 export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnown, onReset, onClose }: Props) {
   const seg = (active: boolean): React.CSSProperties => ({
     ...BTN, flex: 1, textAlign: 'center', fontSize: 13, padding: '8px 6px',
-    background: active ? '#4f46e5' : '#fff', color: active ? '#fff' : '#444',
+    background: active ? '#c8453a' : '#fff', color: active ? '#fff' : '#444',
   });
   return (
     <Modal title="⚙️ 설정" onClose={onClose}>
@@ -35,9 +35,9 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
             <button
               key={m}
               onClick={() => onSelectMode(m)}
-              style={{ ...BTN, textAlign: 'left', padding: '10px 12px', background: active ? '#eef2ff' : '#fff', borderColor: active ? '#4f46e5' : '#d0d0d8' }}
+              style={{ ...BTN, textAlign: 'left', padding: '10px 12px', background: active ? '#f6e4df' : '#fff', borderColor: active ? '#c8453a' : '#d0d0d8' }}
             >
-              <div style={{ fontWeight: 700, fontSize: 14, color: active ? '#4f46e5' : '#333' }}>{active ? '✓ ' : ''}{p.label}</div>
+              <div style={{ fontWeight: 700, fontSize: 14, color: active ? '#c8453a' : '#333' }}>{active ? '✓ ' : ''}{p.label}</div>
               <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>{p.desc}</div>
             </button>
           );
@@ -56,7 +56,7 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 18 }}>
         <span style={{ fontWeight: 700, fontSize: 14 }}>🐢 듣기 느리게 재생</span>
         <button
-          style={{ ...BTN, padding: '6px 14px', background: settings.slowListening ? '#4f46e5' : '#fff', color: settings.slowListening ? '#fff' : '#444' }}
+          style={{ ...BTN, padding: '6px 14px', background: settings.slowListening ? '#c8453a' : '#fff', color: settings.slowListening ? '#fff' : '#444' }}
           onClick={() => onChange({ ...settings, slowListening: !settings.slowListening })}
         >
           {settings.slowListening ? '켜짐' : '꺼짐'}
@@ -66,7 +66,7 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 14 }}>
         <span style={{ fontWeight: 700, fontSize: 14 }}>⏭️ 정답이면 자동으로 다음</span>
         <button
-          style={{ ...BTN, padding: '6px 14px', background: settings.fastForward ? '#4f46e5' : '#fff', color: settings.fastForward ? '#fff' : '#444' }}
+          style={{ ...BTN, padding: '6px 14px', background: settings.fastForward ? '#c8453a' : '#fff', color: settings.fastForward ? '#fff' : '#444' }}
           onClick={() => onChange({ ...settings, fastForward: !settings.fastForward })}
         >
           {settings.fastForward ? '켜짐' : '꺼짐'}

@@ -20,7 +20,7 @@ const BY_PLACE: Record<string, SceneVisual> = {
   가게: { emoji: '🛍️', bg: '#fdf2f8', accent: '#db2777' },
 };
 
-const DEFAULT: SceneVisual = { emoji: '🎒', bg: '#eef2ff', accent: '#4f46e5' };
+const DEFAULT: SceneVisual = { emoji: '🎒', bg: '#f6e4df', accent: '#c8453a' };
 
 export function sceneVisualByPlace(place?: string): SceneVisual {
   return (place && BY_PLACE[place]) || DEFAULT;

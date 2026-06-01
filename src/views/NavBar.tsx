@@ -18,7 +18,7 @@ const items: { key: NavView; label: string; icon: string }[] = [
 export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings }: Props) {
   const btn = (active: boolean): React.CSSProperties => ({
     border: 'none', background: 'none', cursor: 'pointer', fontSize: 13,
-    padding: '6px 8px', borderRadius: 8, color: active ? '#4f46e5' : '#888',
+    padding: '6px 8px', borderRadius: 8, color: active ? '#c8453a' : '#888',
     fontWeight: active ? 700 : 500,
   });
   return (

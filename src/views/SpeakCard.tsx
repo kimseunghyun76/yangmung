@@ -31,7 +31,7 @@ export function SpeakCardView({ card, isKanaFamiliar, onPracticed, onNext }: Pro
 
       <div style={{ textAlign: 'center', marginTop: 14, display: 'flex', gap: 8, justifyContent: 'center' }}>
         <button
-          style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: '#eef2ff' }}
+          style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: '#f6e4df' }}
           onClick={() => speak(card.ja)} disabled={!ttsSupported()}
         >🔊 듣기</button>
         <button

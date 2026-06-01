@@ -5,24 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>yangmung</title>
     <style>
-      /* ── 앱 기반 스타일 (디자인 캔버스) ── */
+      /* ── 앱 기반 스타일 (뉴트로·일본 감성 캔버스) ── */
       :root {
-        --bg: #f4f5fb;
-        --ink: #1f2430;
-        --ink-soft: #5b6170;
-        --indigo: #4f46e5;
+        --bg: #f3ebda;          /* 크림 와시지 */
+        --ink: #2a2a30;          /* 먹빛 */
+        --ink-soft: #6b6258;
+        --aka: #c8453a;          /* 朱 주홍 */
+        --ai: #1f3f5f;           /* 藍 남색 */
       }
       * { box-sizing: border-box; }
       html, body { margin: 0; padding: 0; }
       body {
-        background: var(--bg);
+        background:
+          radial-gradient(circle at 1px 1px, rgba(42,42,48,0.05) 1px, transparent 0) 0 0 / 16px 16px,
+          var(--bg);
         color: var(--ink);
         font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Apple SD Gothic Neo', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
-      h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
-      h2 { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+      h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.01em; }
+      h2 { font-size: 19px; font-weight: 800; letter-spacing: -0.01em; }
       button { font-family: inherit; transition: transform 0.08s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease; }
       button:not(:disabled):active { transform: translateY(1px) scale(0.995); }
 

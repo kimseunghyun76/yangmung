@@ -61,7 +61,7 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
       {/* 보조: 이번 세션 통계 */}
       <details style={{ marginTop: 20 }}>
         <summary style={{ cursor: 'pointer', fontSize: 13, color: '#888' }}>이번 세션 자세히</summary>
-        <div style={{ marginTop: 10, padding: 14, background: '#eef2ff', borderRadius: 10 }}>
+        <div style={{ marginTop: 10, padding: 14, background: '#f6e4df', borderRadius: 10 }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, fontSize: 14 }}>
             <div>카드 수</div><Num value={quizSeen} />
             <div style={{ color: '#16a34a' }}>첫 시도 정답</div><Num value={score} color="#16a34a" />
