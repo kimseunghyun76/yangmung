@@ -75,11 +75,16 @@ export function App() {
     return text ? extractKanaChars(text) : [];
   }
 
-  // 듣기 카드 자동 재생 (설정에서 끌 수 있음)
+  // 듣기 카드 자동 재생 — 소리가 곧 문제이므로 항상 재생(설정 무관). 추측 방지.
+  // 약간 지연(보이스 로딩 안정) + 한 번 더 들으려면 🔊 버튼.
   useEffect(() => {
-    if (view !== 'session' || !card || !settings.autoPlay) return;
-    if (card.kind === 'quiz' && card.listen && card.bannerJa) speak(card.bannerJa, { rate: settings.slowListening ? 0.6 : 0.95 });
-  }, [i, view, card, settings.autoPlay, settings.slowListening]);
+    if (view !== 'session' || !card) return;
+    if (card.kind === 'quiz' && card.listen && card.bannerJa) {
+      const ja = card.bannerJa;
+      const t = window.setTimeout(() => speak(ja, { rate: settings.slowListening ? 0.6 : 0.95 }), 120);
+      return () => clearTimeout(t);
+    }
+  }, [i, view, card, settings.slowListening]);
 
   // 카드가 바뀌면 표시 시각 리셋 + 이전 자동넘김 타이머 정리
   useEffect(() => {
