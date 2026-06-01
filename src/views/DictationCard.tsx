@@ -40,7 +40,7 @@ export function DictationCardView({ card, onResult, onNext }: Props) {
       <p style={{ color: '#555', margin: '4px 0 0' }}>🔊 듣고, 가나를 순서대로 골라 문장을 만들어요</p>
 
       <div style={{ textAlign: 'center', marginTop: 12, display: 'flex', gap: 8, justifyContent: 'center' }}>
-        <button style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: '#eef2ff' }} onClick={() => speak(card.ja)} disabled={!ttsSupported()}>🔊 듣기</button>
+        <button style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: '#f6e4df' }} onClick={() => speak(card.ja)} disabled={!ttsSupported()}>🔊 듣기</button>
         <button style={{ ...BTN, padding: '10px 18px', fontSize: 14 }} onClick={() => speak(card.ja, { rate: 0.6 })} disabled={!ttsSupported()}>🐢 천천히</button>
       </div>
 

@@ -18,7 +18,7 @@ export function ReadingAid({ text, isFamiliar, fontSize = 28 }: Props) {
         const showAid = u.romaji !== '' && u.romaji !== 'ー' && u.chars.some((c) => !isFamiliar(c));
         return (
           <span key={i} style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1 }}>
-            <span style={{ fontSize: rubySize, color: '#a78bfa', height: rubySize + 2, fontWeight: 600 }}>
+            <span style={{ fontSize: rubySize, color: '#c8453a', height: rubySize + 2, fontWeight: 700 }}>
               {showAid ? u.romaji : ' '}
             </span>
             <span style={{ fontSize }}>{u.text}</span>

@@ -38,7 +38,7 @@ export function Review({ nav, allCards, progress, seenKana, onBack }: Props) {
       <NavBar {...nav} />
       <h1 style={{ marginBottom: 4 }}>📚 복습장</h1>
       <p style={{ color: '#888', marginTop: 0, fontSize: 13 }}>배운 글자와 표현을 퀴즈 없이 다시 보는 곳 · 여행 중 빠른 참조</p>
-      <p style={{ color: '#4f46e5', marginTop: 6, fontSize: 14, fontWeight: 600 }}>👀 지금까지 본 가나 {countSeenKana(seenKana)}자</p>
+      <p style={{ color: '#c8453a', marginTop: 6, fontSize: 14, fontWeight: 600 }}>👀 지금까지 본 가나 {countSeenKana(seenKana)}자</p>
 
       {/* 필터 칩 */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 12 }}>
@@ -46,7 +46,7 @@ export function Review({ nav, allCards, progress, seenKana, onBack }: Props) {
           <button
             key={c}
             onClick={() => setFilter(c)}
-            style={{ ...BTN, padding: '5px 12px', fontSize: 13, background: filter === c ? '#4f46e5' : '#fff', color: filter === c ? '#fff' : '#444' }}
+            style={{ ...BTN, padding: '5px 12px', fontSize: 13, background: filter === c ? '#c8453a' : '#fff', color: filter === c ? '#fff' : '#444' }}
           >
             {c}
           </button>
@@ -148,7 +148,7 @@ function KanaGrid({ items, progress }: { items: KanaItem[]; progress: ProgressMa
                   style={{
                     ...BTN,
                     padding: '8px 4px',
-                    background: stable ? '#dcfce7' : seen ? '#eef2ff' : '#fff',
+                    background: stable ? '#dcfce7' : seen ? '#f6e4df' : '#fff',
                     borderColor: stable ? '#86efac' : seen ? '#c7d2fe' : '#e5e7eb',
                   }}
                   onClick={() => speak(k.char)}

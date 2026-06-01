@@ -17,7 +17,7 @@ export function OrderCardView({ card, onNext }: Props) {
         {card.items.map((it, i) => {
           return (
             <li key={it.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 10, background: '#f7f7fb', marginBottom: 6, border: '1px solid #e4e4ee' }}>
-              <span style={{ width: 22, height: 22, borderRadius: 999, background: '#4f46e5', color: '#fff', fontSize: 13, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{i + 1}</span>
+              <span style={{ width: 22, height: 22, borderRadius: 999, background: '#c8453a', color: '#fff', fontSize: 13, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{i + 1}</span>
               <span style={{ fontSize: 16 }}>{it.label}</span>
             </li>
           );

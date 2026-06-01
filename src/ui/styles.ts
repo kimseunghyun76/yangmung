@@ -1,26 +1,30 @@
 // 공용 스타일 + 디자인 토큰 — 색·간격·라운드·그림자를 한곳에서 (일관된 폴리시).
 import type { CSSProperties } from 'react';
 
+// 뉴트로·일본 감성 팔레트 — 크림 와시지 + 朱(주홍)·藍(남색)·먹빛.
+// indigo/indigoSoft 이름은 기존 코드 호환을 위해 유지하되 값은 주홍(앱 메인 포인트)으로.
 export const COLORS = {
-  ink: '#1f2430',
-  inkSoft: '#5b6170',
-  inkFaint: '#9aa0ad',
-  indigo: '#4f46e5',
-  indigoSoft: '#eef0fe',
-  surface: '#ffffff',
-  line: '#e7e8ef',
-  green: '#16a34a',
-  greenSoft: '#dcfce7',
-  red: '#dc2626',
-  redSoft: '#fee2e2',
-  amber: '#b45309',
-  amberSoft: '#fff7e6',
+  ink: '#2a2a30',       // 먹빛
+  inkSoft: '#6b6258',
+  inkFaint: '#a99f8c',
+  indigo: '#c8453a',    // 朱 (메인 포인트) — 이름은 호환용
+  indigoSoft: '#f6e4df',
+  navy: '#1f3f5f',      // 藍 (보조 강조·히어로)
+  navySoft: '#e6ecf2',
+  surface: '#fffdf6',   // 따뜻한 종이 흰색
+  line: '#e7dcc4',      // 와시 테두리
+  green: '#3f7d4e',
+  greenSoft: '#e4efe0',
+  red: '#c8453a',
+  redSoft: '#f6e4df',
+  amber: '#a86a1d',
+  amberSoft: '#f7ecd6',
 } as const;
 
 export const RADIUS = { sm: 8, md: 12, lg: 16, pill: 999 } as const;
 export const SHADOW = {
-  card: '0 1px 2px rgba(31,36,48,0.04), 0 4px 16px rgba(31,36,48,0.06)',
-  raised: '0 2px 4px rgba(79,70,229,0.15), 0 8px 24px rgba(79,70,229,0.22)',
+  card: '0 1px 2px rgba(80,60,30,0.05), 0 4px 14px rgba(80,60,30,0.08)',
+  raised: '0 2px 5px rgba(200,69,58,0.20), 0 8px 22px rgba(200,69,58,0.22)',
 } as const;
 
 // 기본 버튼 — 카드형, 부드러운 테두리 + 미세 그림자

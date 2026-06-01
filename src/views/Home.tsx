@@ -42,12 +42,12 @@ export function Home({ nav, allCards, progress, session, sessionConfig, modeLabe
       <h1 style={{ marginBottom: 4 }}>yangmung</h1>
       <p style={{ color: '#888', marginTop: 0, fontSize: 13 }}>일본 여행, 오늘 한 판 · 세션 #{upcomingId}</p>
 
-      {/* 주인공: 오늘의 목표 + 시작 */}
-      <div style={{ background: '#4f46e5', color: '#fff', padding: 20, borderRadius: 14, marginTop: 14 }}>
+      {/* 주인공: 오늘의 목표 + 시작 (藍 남색 + 朱 포인트) */}
+      <div style={{ background: 'linear-gradient(135deg, #244a6e 0%, #1f3f5f 100%)', color: '#fff', padding: 20, borderRadius: 16, marginTop: 14, borderTop: '3px solid #c8453a' }}>
         <p style={{ margin: 0, fontSize: 13, opacity: 0.85 }}>🎯 오늘 목표</p>
-        <p style={{ margin: '6px 0 0', fontSize: 20, fontWeight: 700, lineHeight: 1.35 }}>{goal}</p>
+        <p style={{ margin: '6px 0 0', fontSize: 20, fontWeight: 800, lineHeight: 1.35 }}>{goal}</p>
         <button
-          style={{ ...PRIMARY, background: '#fff', color: '#4f46e5', marginTop: 16, width: '100%', fontWeight: 700, fontSize: 17 }}
+          style={{ ...PRIMARY, background: '#fff', color: '#c8453a', marginTop: 16, width: '100%', fontWeight: 800, fontSize: 17 }}
           onClick={onStart}
           disabled={planned === 0}
         >
@@ -148,16 +148,16 @@ function KanaTrackBar({ label, kanaIds, progress }: { label: string; kanaIds: st
   return (
     <div style={{ marginTop: 10 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#555' }}>
-        <span>{label}</span><span><strong style={{ color: '#4f46e5' }}>{m.mastered}</strong> / {m.total}자</span>
+        <span>{label}</span><span><strong style={{ color: '#c8453a' }}>{m.mastered}</strong> / {m.total}자</span>
       </div>
       <div style={{ height: 6, background: '#eceef4', borderRadius: 3, marginTop: 5, overflow: 'hidden' }}>
-        <div style={{ width: `${pct}%`, height: '100%', background: '#4f46e5', transition: 'width 0.3s' }} />
+        <div style={{ width: `${pct}%`, height: '100%', background: '#c8453a', transition: 'width 0.3s' }} />
       </div>
     </div>
   );
 }
 
-function Stat({ label, value, color, bg = '#eef2ff' }: { label: string; value: number; color?: string; bg?: string }) {
+function Stat({ label, value, color, bg = '#f6e4df' }: { label: string; value: number; color?: string; bg?: string }) {
   return (
     <div style={{ flex: 1, background: bg, padding: 10, borderRadius: 10, textAlign: 'center' }}>
       <div style={{ fontSize: 11, color: '#666' }}>{label}</div>
