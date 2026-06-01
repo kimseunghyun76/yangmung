@@ -350,7 +350,7 @@ export function buildCards(): Card[] {
   // 정확성 팁 (디브리프) — 전체 풀 생성, 세션 선별에서 안 본 것 1개씩 회전
   for (const g of grammar) {
     if (!g.tipKo) continue;
-    cards.push({ kind: 'tip', id: `tip:${g.id}`, tag: '정확성 팁', label: g.label, tipKo: g.tipKo });
+    cards.push({ kind: 'tip', id: `tip:${g.id}`, tag: g.category ?? '💡 팁', label: g.label, tipKo: g.tipKo });
   }
 
   return cards;

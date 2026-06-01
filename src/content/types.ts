@@ -109,6 +109,7 @@ export interface GrammarPoint {
   id: string;
   label: string;
   tipKo?: string;   // 10초 마이크로 정확도 팁 (한국어 대조, just-in-time 노출)
+  category?: string; // 팁 분류 배지 (문법·문화·발음·여행)
   n5Refs?: string[];
 }
 
