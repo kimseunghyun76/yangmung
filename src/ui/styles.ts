@@ -83,7 +83,7 @@ export const CHIP: CSSProperties = {
   display: 'inline-flex',
   alignItems: 'center',
   gap: 6,
-  padding: '6px 12px',
+  padding: '8px 12px',
   borderRadius: RADIUS.pill,
   border: `1.5px solid ${BORDER}`,
   background: COLORS.surface,
@@ -91,7 +91,7 @@ export const CHIP: CSSProperties = {
   fontSize: 13,
   fontWeight: 600,
   cursor: 'pointer',
-  minHeight: 36,
+  minHeight: 44,
 };
 
 // iOS Safe Area 대응 (노치·홈 인디케이터). HIG: 콘텐츠가 안전 영역 안에 들어오게.
