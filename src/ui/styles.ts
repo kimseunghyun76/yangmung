@@ -63,4 +63,12 @@ export const CARD: CSSProperties = {
   padding: 16,
 };
 
-export const WRAP: CSSProperties = { padding: 20, maxWidth: 560, margin: '0 auto' };
+// iOS Safe Area 대응 (노치·홈 인디케이터). HIG: 콘텐츠가 안전 영역 안에 들어오게.
+export const WRAP: CSSProperties = {
+  maxWidth: 560,
+  margin: '0 auto',
+  paddingTop: 'max(20px, env(safe-area-inset-top))',
+  paddingBottom: 'max(24px, env(safe-area-inset-bottom))',
+  paddingLeft: 'max(20px, env(safe-area-inset-left))',
+  paddingRight: 'max(20px, env(safe-area-inset-right))',
+};
