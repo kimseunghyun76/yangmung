@@ -4,7 +4,7 @@ export interface Sign {
   ja: string;       // 실제 표기 (한자·가타카나 포함)
   kana: string;     // 읽기
   korean: string;   // 뜻
-  category: '표지' | '메뉴' | '안내' | '교통';
+  category: '표지' | '메뉴' | '안내' | '교통' | '결제' | '주의';
 }
 
 export const signs: Sign[] = [
@@ -57,4 +57,34 @@ export const signs: Sign[] = [
   { id: 'minamiguchi', ja: '南口', kana: 'みなみぐち', korean: '남쪽 출구', category: '교통' },
   { id: 'higashiguchi', ja: '東口', kana: 'ひがしぐち', korean: '동쪽 출구', category: '교통' },
   { id: 'nishiguchi', ja: '西口', kana: 'にしぐち', korean: '서쪽 출구', category: '교통' },
+
+  // ── 결제·자판기·시설 ──
+  { id: 'genkin_sign', ja: '現金', kana: 'げんきん', korean: '현금', category: '결제' },
+  { id: 'card_taiou', ja: 'カード対応', kana: 'カードたいおう', korean: '카드 가능', category: '결제' },
+  { id: 'koutsuukei', ja: '交通系IC', kana: 'こうつうけいアイシー', korean: '교통카드(Suica 등)', category: '결제' },
+  { id: 'tsurisen', ja: 'つり銭', kana: 'つりせん', korean: '거스름돈', category: '결제' },
+  { id: 'ryougae_sign', ja: '両替', kana: 'りょうがえ', korean: '환전/잔돈 교환', category: '결제' },
+  { id: 'baiten', ja: '売店', kana: 'ばいてん', korean: '매점', category: '결제' },
+  { id: 'eigyoujikan', ja: '営業時間', kana: 'えいぎょうじかん', korean: '영업시간', category: '결제' },
+  { id: 'teikyuubi', ja: '定休日', kana: 'ていきゅうび', korean: '정기 휴일', category: '결제' },
+  { id: 'manshitsu', ja: '満室', kana: 'まんしつ', korean: '만실(방 없음)', category: '결제' },
+  { id: 'kuushitsu', ja: '空室', kana: 'くうしつ', korean: '빈방 있음', category: '결제' },
+
+  // ── 주의·경고 ──
+  { id: 'chuui', ja: '注意', kana: 'ちゅうい', korean: '주의', category: '주의' },
+  { id: 'kiken', ja: '危険', kana: 'きけん', korean: '위험', category: '주의' },
+  { id: 'ashimoto', ja: '足元注意', kana: 'あしもとちゅうい', korean: '발밑 주의', category: '주의' },
+  { id: 'koujichu', ja: '工事中', kana: 'こうじちゅう', korean: '공사 중', category: '주의' },
+  { id: 'satsuei_kinshi', ja: '撮影禁止', kana: 'さつえいきんし', korean: '촬영 금지', category: '주의' },
+  { id: 'shizukani', ja: 'お静かに', kana: 'おしずかに', korean: '조용히', category: '주의' },
+  { id: 'ichiji_teishi', ja: '一時停止', kana: 'いちじていし', korean: '일단 정지', category: '주의' },
+  { id: 'tachiiri_kinshi2', ja: '関係者以外立入禁止', kana: 'かんけいしゃいがいたちいりきんし', korean: '관계자 외 출입 금지', category: '주의' },
+
+  // ── 메뉴 추가 ──
+  { id: 'tanpin', ja: '単品', kana: 'たんぴん', korean: '단품', category: '메뉴' },
+  { id: 'set_menu', ja: 'セット', kana: 'セット', korean: '세트', category: '메뉴' },
+  { id: 'karakuchi', ja: '辛口', kana: 'からくち', korean: '매운맛', category: '메뉴' },
+  { id: 'amakuchi', ja: '甘口', kana: 'あまくち', korean: '순한맛', category: '메뉴' },
+  { id: 'tsumetai', ja: '冷たい', kana: 'つめたい', korean: '차가운', category: '메뉴' },
+  { id: 'atatakai', ja: '温かい', kana: 'あたたかい', korean: '따뜻한', category: '메뉴' },
 ];
