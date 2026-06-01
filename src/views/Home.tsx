@@ -1,4 +1,4 @@
-// 홈 화면 — "오늘 한 판" 목표가 주인공. 가나 안정도/세션 구성은 보조.
+// 홈 — 에디토리얼 미니멀. 큰 타이포 + 헤어라인 + 朱 1색, 그림자 없음.
 import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
 import {
@@ -6,7 +6,7 @@ import {
   sessionCounts, summarize, type ProgressMap, type SessionConfig, type SessionState,
 } from '../learn/progress';
 import { ttsSupported } from '../tts';
-import { BTN, CARD, PRIMARY, WRAP } from '../ui/styles';
+import { PRIMARY, SERIF, WRAP } from '../ui/styles';
 import { sessionGoalText } from './goal';
 import { sceneVisualByPlace } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
@@ -26,6 +26,8 @@ interface Props {
   onPracticeDictation: () => void;
 }
 
+const Rule = ({ m = 28 }: { m?: number }) => <hr className="ym-rule" style={{ margin: `${m}px 0` }} />;
+
 export function Home({ nav, allCards, progress, session, sessionConfig, modeLabel, onStart, onReset, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation }: Props) {
   const upcomingId = nextSessionId(session);
   const counts = sessionCounts(allCards, progress, upcomingId);
@@ -40,85 +42,83 @@ export function Home({ nav, allCards, progress, session, sessionConfig, modeLabe
   return (
     <main style={WRAP}>
       <NavBar {...nav} />
-      <h1 style={{ marginBottom: 4 }}>yangmung</h1>
-      <p style={{ color: 'var(--ink-faint)', marginTop: 0, fontSize: 13 }}>일본 여행, 오늘 한 판 · 세션 #{upcomingId}</p>
 
-      {/* 주인공: 오늘의 목표 + 시작 — 차콜 럭셔리 패널 + 朱 액센트 */}
-      <div style={{ background: 'var(--hero)', color: '#f3f2ef', padding: 22, borderRadius: 18, marginTop: 14, borderTop: '2px solid var(--accent)', boxShadow: 'var(--shadow-raised)' }}>
-        <p style={{ margin: 0, fontSize: 11, letterSpacing: '0.1em', color: 'var(--accent)', fontWeight: 700 }}>오늘 목표</p>
-        <p style={{ margin: '8px 0 0', fontSize: 21, fontWeight: 750, lineHeight: 1.35, letterSpacing: '-0.01em' }}>{goal}</p>
-        <button
-          style={{ ...PRIMARY, marginTop: 18, width: '100%', fontSize: 16 }}
-          onClick={onStart}
-          disabled={planned === 0}
-        >
-          {planned === 0 ? '오늘 학습할 카드가 없어요' : `시작 · ${planned}카드`}
-        </button>
-        <p style={{ margin: '12px 0 0', fontSize: 12, opacity: 0.7 }}>
-          {modeLabel} · 가나 {plan.breakdown.K} · 표현 {plan.breakdown.B} · 미션 {plan.breakdown.C} · 팁 {plan.breakdown.tip}
-        </p>
-      </div>
+      {/* 워드마크 — 라틴 세리프(에디토리얼 시그니처) */}
+      <h1 style={{ fontFamily: SERIF, fontSize: 34, fontWeight: 600, letterSpacing: '-0.02em', margin: 0 }}>yangmung</h1>
+      <p style={{ color: 'var(--ink-faint)', marginTop: 6, marginBottom: 0, fontSize: 13, letterSpacing: '0.01em' }}>일본 여행, 오늘 한 판 · 세션 #{upcomingId}</p>
 
+      <Rule m={26} />
+
+      {/* 오늘 목표 — 큰 헤드라인 + 잉크 바 시작 */}
+      <p className="ym-kicker">오늘 목표</p>
+      <h2 style={{ fontSize: 27, fontWeight: 700, lineHeight: 1.25, letterSpacing: '-0.025em', margin: '10px 0 0' }}>{goal}</h2>
+      <p style={{ margin: '12px 0 0', fontSize: 13, color: 'var(--ink-faint)' }}>
+        {modeLabel} · 가나 {plan.breakdown.K} · 표현 {plan.breakdown.B} · 미션 {plan.breakdown.C} · 팁 {plan.breakdown.tip}
+      </p>
+      <button style={{ ...PRIMARY, marginTop: 18, width: '100%', fontSize: 16 }} onClick={onStart} disabled={planned === 0}>
+        {planned === 0 ? '오늘 학습할 카드가 없어요' : `시작 · ${planned}카드`}
+      </button>
       {planned > 0 && counts.due + counts.fresh > planned && (
-        <p style={{ fontSize: 12, color: 'var(--ink-faint)', marginTop: 8, textAlign: 'center' }}>
-          오늘 풀 수 있는 카드는 {counts.due + counts.fresh}개지만 한 번에 {planned}개씩 짧게 진행해요.
+        <p style={{ fontSize: 12, color: 'var(--ink-faint)', marginTop: 10, textAlign: 'center' }}>
+          오늘 풀 수 있는 카드 {counts.due + counts.fresh}개 중 {planned}개씩 짧게 진행해요.
         </p>
       )}
 
-      <div style={{ ...CARD, marginTop: 14 }}>
-        <p style={{ margin: 0, fontSize: 13, color: 'var(--ink-soft)', fontWeight: 600 }}>📚 가나 안정도 (읽기 기준)</p>
-        <KanaTrackBar label="히라가나" kanaIds={hiraIds} progress={progress} />
-        <KanaTrackBar label="가타카나" kanaIds={kataIds} progress={progress} />
-        <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-          <button style={{ ...BTN, flex: 1, textAlign: 'center', fontSize: 14 }} onClick={() => onPracticeKana('hiragana')}>🔤 히라가나 연습</button>
-          <button style={{ ...BTN, flex: 1, textAlign: 'center', fontSize: 14 }} onClick={() => onPracticeKana('katakana')}>🔤 가타카나 연습</button>
-        </div>
-        <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-          <button style={{ ...BTN, flex: 1, textAlign: 'center', fontSize: 14 }} onClick={onPracticeSigns}>🏯 간판·메뉴 읽기</button>
-          <button style={{ ...BTN, flex: 1, textAlign: 'center', fontSize: 14 }} onClick={onPracticeDictation}>✏️ 받아쓰기</button>
-        </div>
+      <Rule />
+
+      {/* 가나 안정도 — 헤어라인 행 */}
+      <p className="ym-kicker">가나 안정도 · 읽기 기준</p>
+      <div style={{ marginTop: 14 }}>
+        <KanaRow label="히라가나" kanaIds={hiraIds} progress={progress} />
+        <KanaRow label="가타카나" kanaIds={kataIds} progress={progress} />
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, marginTop: 16, borderTop: '1px solid var(--line)' }}>
+        <Quiet label="히라가나 연습" onClick={() => onPracticeKana('hiragana')} r />
+        <Quiet label="가타카나 연습" onClick={() => onPracticeKana('katakana')} />
+        <Quiet label="간판·메뉴 읽기" onClick={onPracticeSigns} r />
+        <Quiet label="받아쓰기" onClick={onPracticeDictation} />
       </div>
 
       {s.seen > 0 && (
-        <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-          <Stat label="본 카드" value={s.seen} />
-          <Stat label="익숙" value={s.mastered} color="var(--ok)" bg="var(--ok-soft)" />
-          <Stat label="약점" value={s.weak} color="var(--accent)" bg="var(--accent-soft)" />
-        </div>
+        <p style={{ marginTop: 16, fontSize: 13, color: 'var(--ink-soft)' }}>
+          본 카드 <strong style={{ color: 'var(--ink)' }}>{s.seen}</strong>
+          <span style={{ color: 'var(--ink-faint)' }}> · </span>익숙 <strong style={{ color: 'var(--ok)' }}>{s.mastered}</strong>
+          <span style={{ color: 'var(--ink-faint)' }}> · </span>약점 <strong style={{ color: 'var(--accent)' }}>{s.weak}</strong>
+        </p>
       )}
 
-      <div style={{ marginTop: 18 }}>
-        <p style={{ margin: '0 0 6px', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 600 }}>🎬 장면별 연습</p>
+      <Rule />
+
+      {/* 장면별 연습 — 헤어라인 리스트 */}
+      <p className="ym-kicker">장면별 연습</p>
+      <div style={{ marginTop: 12, borderTop: '1px solid var(--line)' }}>
         {scenes.map((m) => {
           const unlocked = isMissionUnlocked(m.id, progress);
           const sv = sceneVisualByPlace(m.place);
+          const name = m.place ?? m.scenario;
           if (!unlocked) {
             return (
-              <p key={m.id} style={{ margin: '6px 0', fontSize: 13, color: 'var(--ink-faint)' }}>
-                🔒 {sv.emoji} {m.place ?? m.scenario} — {lockHint(m.id)}
-              </p>
+              <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 2px', borderBottom: '1px solid var(--line)', color: 'var(--ink-faint)' }}>
+                <span style={{ fontSize: 16, opacity: 0.5 }}>{sv.emoji}</span>
+                <span style={{ flex: 1, fontSize: 15 }}>{name}</span>
+                <span style={{ fontSize: 12 }}>🔒 {lockHint(m.id)}</span>
+              </div>
             );
           }
           const p = missionProgress(allCards, progress, m.id);
           const done = p.total > 0 && p.mastered === p.total;
-          const pct = p.total ? Math.round((p.mastered / p.total) * 100) : 0;
           return (
             <button
               key={m.id}
-              style={{ ...BTN, width: '100%', marginTop: 8, padding: 0, display: 'flex', alignItems: 'stretch', overflow: 'hidden' }}
               onClick={() => onPracticeScene(m.id)}
+              style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%', padding: '14px 2px', border: 'none', borderBottom: '1px solid var(--line)', background: 'none', cursor: 'pointer', textAlign: 'left', color: 'var(--ink)', borderLeft: `2px solid ${done ? 'var(--ok)' : sv.accent}`, paddingLeft: 12 }}
             >
-              {/* 장면 색 이모지 배지 */}
-              <span style={{ width: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, background: 'var(--surface-2)', alignSelf: 'stretch' }}>{sv.emoji}</span>
-              <span style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '10px 14px', gap: 5 }}>
-                <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontWeight: 600 }}>{m.place ?? m.scenario} 연습</span>
-                  <span style={{ fontSize: 12, color: done ? 'var(--ok)' : 'var(--ink-faint)' }}>{done ? '✅ 완료' : `${p.mastered}/${p.total}`}</span>
-                </span>
-                <span style={{ height: 4, background: 'var(--surface-2)', borderRadius: 2, overflow: 'hidden' }}>
-                  <span style={{ display: 'block', width: `${pct}%`, height: '100%', background: sv.accent }} />
-                </span>
+              <span style={{ fontSize: 18 }}>{sv.emoji}</span>
+              <span style={{ flex: 1, fontSize: 16, fontWeight: 550 }}>{name}</span>
+              <span style={{ fontSize: 13, color: done ? 'var(--ok)' : 'var(--ink-faint)', fontVariantNumeric: 'tabular-nums' }}>
+                {done ? '완료' : `${p.mastered}/${p.total}`}
               </span>
+              <span style={{ fontSize: 15, color: 'var(--ink-faint)' }}>›</span>
             </button>
           );
         })}
@@ -126,7 +126,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, modeLabe
 
       {s.seen > 0 && (
         <button
-          style={{ ...BTN, marginTop: 16, color: 'var(--ink-faint)', textAlign: 'center', width: '100%', fontSize: 13 }}
+          style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'var(--ink-faint)', fontSize: 13, marginTop: 22, width: '100%', textAlign: 'center', textDecoration: 'underline', textUnderlineOffset: 3 }}
           onClick={() => { if (confirm('진척을 모두 지울까요?')) onReset(); }}
         >
           처음부터 다시
@@ -138,34 +138,45 @@ export function Home({ nav, allCards, progress, session, sessionConfig, modeLabe
   );
 }
 
-// 잠긴 장면 오픈 조건 안내 (현재 C3만 잠김).
 function lockHint(missionId: string): string {
-  if (missionId === 'C3') return '편의점·식당을 더 익히면 열려요';
-  if (missionId === 'C4') return '전철을 더 익히면 열려요';
-  return '조금 더 익히면 열려요';
+  if (missionId === 'C3') return '편의점·식당 더 익히기';
+  if (missionId === 'C4') return '전철 더 익히기';
+  return '조금 더 익히기';
 }
 
-// 가나 트랙 요약 바 — 히라가나/가타카나 각각 안정도(읽기 기준) 한 줄.
-function KanaTrackBar({ label, kanaIds, progress }: { label: string; kanaIds: string[]; progress: ProgressMap }) {
+// 가나 트랙 — 한 줄 + 얇은 진척선 (카드 박스 없음)
+function KanaRow({ label, kanaIds, progress }: { label: string; kanaIds: string[]; progress: ProgressMap }) {
   const m = kanaReadMastery(progress, kanaIds);
   const pct = Math.round((m.mastered / Math.max(1, m.total)) * 100);
   return (
-    <div style={{ marginTop: 10 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--ink-soft)' }}>
-        <span>{label}</span><span><strong style={{ color: 'var(--accent)' }}>{m.mastered}</strong> / {m.total}자</span>
+    <div style={{ padding: '10px 0', borderTop: '1px solid var(--line)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: 15 }}>
+        <span style={{ fontWeight: 550 }}>{label}</span>
+        <span style={{ color: 'var(--ink-faint)', fontVariantNumeric: 'tabular-nums' }}>
+          <strong style={{ color: 'var(--ink)' }}>{m.mastered}</strong> / {m.total}
+        </span>
       </div>
-      <div style={{ height: 6, background: 'var(--surface-2)', borderRadius: 3, marginTop: 5, overflow: 'hidden' }}>
+      <div style={{ height: 2, background: 'var(--line)', marginTop: 8, overflow: 'hidden' }}>
         <div style={{ width: `${pct}%`, height: '100%', background: 'var(--accent)', transition: 'width 0.3s' }} />
       </div>
     </div>
   );
 }
 
-function Stat({ label, value, color, bg = 'var(--accent-soft)' }: { label: string; value: number; color?: string; bg?: string }) {
+// 조용한 연습 진입 — 그리드 셀, 헤어라인으로만 구분
+function Quiet({ label, onClick, r }: { label: string; onClick: () => void; r?: boolean }) {
   return (
-    <div style={{ flex: 1, background: bg, padding: 10, borderRadius: 10, textAlign: 'center' }}>
-      <div style={{ fontSize: 11, color: 'var(--ink-soft)' }}>{label}</div>
-      <div style={{ fontSize: 20, fontWeight: 600, color }}>{value}</div>
-    </div>
+    <button
+      onClick={onClick}
+      style={{
+        border: 'none', background: 'none', cursor: 'pointer', textAlign: 'left',
+        padding: '14px 4px', fontSize: 15, fontWeight: 500, color: 'var(--ink)',
+        borderBottom: '1px solid var(--line)',
+        borderRight: r ? '1px solid var(--line)' : 'none',
+        paddingLeft: r ? 4 : 14,
+      }}
+    >
+      {label} <span style={{ color: 'var(--ink-faint)' }}>›</span>
+    </button>
   );
 }
