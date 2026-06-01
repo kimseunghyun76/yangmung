@@ -23,9 +23,10 @@ interface Props {
   onPracticeScene: (missionId: string) => void;
   onPracticeKana: (script: 'hiragana' | 'katakana') => void;
   onPracticeSigns: () => void;
+  onPracticeDictation: () => void;
 }
 
-export function Home({ nav, allCards, progress, session, sessionConfig, modeLabel, onStart, onReset, onPracticeScene, onPracticeKana, onPracticeSigns }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, modeLabel, onStart, onReset, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation }: Props) {
   const upcomingId = nextSessionId(session);
   const counts = sessionCounts(allCards, progress, upcomingId);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
@@ -72,7 +73,10 @@ export function Home({ nav, allCards, progress, session, sessionConfig, modeLabe
           <button style={{ ...BTN, flex: 1, textAlign: 'center', fontSize: 14 }} onClick={() => onPracticeKana('hiragana')}>🔤 히라가나 연습</button>
           <button style={{ ...BTN, flex: 1, textAlign: 'center', fontSize: 14 }} onClick={() => onPracticeKana('katakana')}>🔤 가타카나 연습</button>
         </div>
-        <button style={{ ...BTN, width: '100%', textAlign: 'center', fontSize: 14, marginTop: 8 }} onClick={onPracticeSigns}>🏯 간판·메뉴·안내 읽기</button>
+        <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+          <button style={{ ...BTN, flex: 1, textAlign: 'center', fontSize: 14 }} onClick={onPracticeSigns}>🏯 간판·메뉴 읽기</button>
+          <button style={{ ...BTN, flex: 1, textAlign: 'center', fontSize: 14 }} onClick={onPracticeDictation}>✏️ 받아쓰기</button>
+        </div>
       </div>
 
       {s.seen > 0 && (
