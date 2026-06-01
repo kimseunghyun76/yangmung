@@ -5,7 +5,7 @@ import { CONTENT } from './content';
 import {
   classifyCard, clearProgress, isKanaFamiliar, loadDiscovered, loadProgress, loadSeenKana, loadSession,
   markKanaKnown, markKanaSeen, missionsFromCards, nextSessionId, plannedSessionSize, recordAttempt, recordKnown,
-  saveDiscovered, saveProgress, saveSeenKana, saveSession, selectMissionCards, selectScriptKanaCards, selectSessionCards, selectSignCards,
+  saveDiscovered, saveProgress, saveSeenKana, saveSession, selectDictationCards, selectMissionCards, selectScriptKanaCards, selectSessionCards, selectSignCards,
   type SeenKana, type SessionLogEntry,
 } from './learn/progress';
 import { extractKanaChars } from './learn/kanaReading';
@@ -150,6 +150,12 @@ export function App() {
   // 거리 읽기 — 간판·메뉴·안내·교통 표기 읽기 연습
   function startSignSession() {
     const cards = selectSignCards(allCards, progress, nextSessionId(session));
+    if (cards.length === 0) return;
+    beginSession(nextSessionId(session), cards, true);
+  }
+  // 받아쓰기 전용 — 듣고 가나 타일로 쓰기
+  function startDictationSession() {
+    const cards = selectDictationCards(allCards, progress, nextSessionId(session));
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true);
   }
@@ -303,7 +309,7 @@ export function App() {
         nav={{ ...nav, current: 'home' }}
         allCards={allCards} progress={progress} session={session} sessionConfig={sessionConfig}
         modeLabel={MODE_PRESETS[settings.mode].label}
-        onStart={startSession} onReset={resetAll} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession}
+        onStart={startSession} onReset={resetAll} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession}
       />
     );
   }
