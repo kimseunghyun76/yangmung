@@ -75,15 +75,16 @@ export function App() {
     return text ? extractKanaChars(text) : [];
   }
 
-  // 듣기 카드 자동 재생 — 소리가 곧 문제이므로 항상 재생(설정 무관). 추측 방지.
-  // 약간 지연(보이스 로딩 안정) + 한 번 더 들으려면 🔊 버튼.
+  // 카드 진입 시 자동 재생 — 소리가 먼저 나와야 하는 카드들(설정 무관). 추측 방지.
+  // 듣기·미션 프롬프트(점원 발화)·새 표현·따라 말하기·받아쓰기·발견. (가나 읽기·간판은 제외 — 보고 푸는 문제)
   useEffect(() => {
     if (view !== 'session' || !card) return;
-    if (card.kind === 'quiz' && card.listen && card.bannerJa) {
-      const ja = card.bannerJa;
-      const t = window.setTimeout(() => speak(ja, { rate: settings.slowListening ? 0.6 : 0.95 }), 120);
-      return () => clearTimeout(t);
-    }
+    let ja = '';
+    if (card.kind === 'quiz' && (card.listen || card.promptPhrase)) ja = card.bannerJa ?? '';
+    else if (card.kind === 'introduce' || card.kind === 'speak' || card.kind === 'discover' || card.kind === 'dictation') ja = card.ja;
+    if (!ja) return;
+    const t = window.setTimeout(() => speak(ja, { rate: settings.slowListening ? 0.6 : 0.95 }), 120);
+    return () => clearTimeout(t);
   }, [i, view, card, settings.slowListening]);
 
   // 카드가 바뀌면 표시 시각 리셋 + 이전 자동넘김 타이머 정리

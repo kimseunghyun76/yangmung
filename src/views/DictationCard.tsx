@@ -1,5 +1,6 @@
 // 받아쓰기 카드 — 듣고 가나 타일을 순서대로 골라 문장 완성. 듣기+쓰기 입문.
-import { useEffect, useState } from 'react';
+// (진입 자동재생은 App에서 일원화)
+import { useState } from 'react';
 import type { DictationCard } from '../learn/cards';
 import { speak, ttsSupported } from '../tts';
 import { BTN, PRIMARY } from '../ui/styles';
@@ -13,9 +14,6 @@ interface Props {
 export function DictationCardView({ card, onResult, onNext }: Props) {
   const [built, setBuilt] = useState<number[]>([]); // 고른 타일 인덱스 순서
   const [checked, setChecked] = useState<null | boolean>(null);
-
-  // 진입 시 한 번 자동 재생
-  useEffect(() => { if (card.ja) speak(card.ja); }, [card.id]);
 
   const usable = card.tiles.map((_, i) => !built.includes(i));
   const builtText = built.map((i) => card.tiles[i]);
