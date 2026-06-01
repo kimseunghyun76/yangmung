@@ -63,6 +63,16 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
         </button>
       </div>
 
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 14 }}>
+        <span style={{ fontWeight: 700, fontSize: 14 }}>⏭️ 정답이면 자동으로 다음</span>
+        <button
+          style={{ ...BTN, padding: '6px 14px', background: settings.fastForward ? '#4f46e5' : '#fff', color: settings.fastForward ? '#fff' : '#444' }}
+          onClick={() => onChange({ ...settings, fastForward: !settings.fastForward })}
+        >
+          {settings.fastForward ? '켜짐' : '꺼짐'}
+        </button>
+      </div>
+
       <button
         style={{ ...BTN, width: '100%', marginTop: 18, textAlign: 'center' }}
         onClick={() => { if (confirm('히라가나·가타카나를 모두 안다고 표시할까요? (가나 드릴을 건너뛰고 발음 보조도 꺼집니다)')) { onMarkKanaKnown(); onClose(); } }}

@@ -21,9 +21,10 @@ interface Props {
   onStart: () => void;
   onReset: () => void;
   onPracticeScene: (missionId: string) => void;
+  onPracticeKana: (script: 'hiragana' | 'katakana') => void;
 }
 
-export function Home({ nav, allCards, progress, session, sessionConfig, modeLabel, onStart, onReset, onPracticeScene }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, modeLabel, onStart, onReset, onPracticeScene, onPracticeKana }: Props) {
   const upcomingId = nextSessionId(session);
   const counts = sessionCounts(allCards, progress, upcomingId);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
@@ -66,6 +67,10 @@ export function Home({ nav, allCards, progress, session, sessionConfig, modeLabe
         <p style={{ margin: 0, fontSize: 13, color: '#666', fontWeight: 600 }}>📚 가나 안정도 (읽기 기준)</p>
         <KanaTrackBar label="히라가나" kanaIds={hiraIds} progress={progress} />
         <KanaTrackBar label="가타카나" kanaIds={kataIds} progress={progress} />
+        <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+          <button style={{ ...BTN, flex: 1, textAlign: 'center', fontSize: 14 }} onClick={() => onPracticeKana('hiragana')}>🔤 히라가나 연습</button>
+          <button style={{ ...BTN, flex: 1, textAlign: 'center', fontSize: 14 }} onClick={() => onPracticeKana('katakana')}>🔤 가타카나 연습</button>
+        </div>
       </div>
 
       {s.seen > 0 && (
