@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint:content": "tsx src/content/validate.ts",
-    "test:content": "tsx src/content/validate.test.ts"
+    "test:content": "tsx src/content/validate.test.ts",
+    "test:adaptive": "tsx src/learn/adaptive.test.ts"
   },
   "dependencies": {
     "react": "^18.3.1",

@@ -8,6 +8,7 @@ import {
   saveDiscovered, saveProgress, saveSeenKana, saveSession, selectDictationCards, selectMissionCards, selectScriptKanaCards, selectSessionCards, selectSignCards,
   type SeenKana, type SessionLogEntry,
 } from './learn/progress';
+import { adaptSessionConfig, diagnose } from './learn/adaptive';
 import { extractKanaChars } from './learn/kanaReading';
 import { loadSettings, MODE_PRESETS, saveSettings, type Settings } from './learn/settings';
 import { sessionGoalText } from './views/goal';
@@ -59,7 +60,14 @@ export function App() {
     const p = MODE_PRESETS[mode];
     updateSettings({ ...settings, mode, readingAid: p.readingAid, slowListening: p.slowListening });
   }
-  const sessionConfig = { quotas: MODE_PRESETS[settings.mode].quotas, minFresh: MODE_PRESETS[settings.mode].minFresh };
+  // 적응형: 진척을 진단해 약점·난이도를 판단하고, 세션 신규/복습 비율을 동적으로 조정.
+  // (복습 모드는 사용자가 명시적으로 고른 것이라 적응 조정 제외 — 의도 존중)
+  const baseConfig = { quotas: MODE_PRESETS[settings.mode].quotas, minFresh: MODE_PRESETS[settings.mode].minFresh };
+  const diag = useMemo(
+    () => diagnose(allCards, progress, session.lastCompletedSessionId),
+    [allCards, progress, session.lastCompletedSessionId],
+  );
+  const sessionConfig = settings.mode === 'review' ? baseConfig : adaptSessionConfig(baseConfig, diag).config;
 
   // 카드에서 "본 가나"로 적립할 가나 문자 — 깔끔한 가나 필드가 있는 카드만.
   function creditKana(c: Card) {
@@ -315,6 +323,7 @@ export function App() {
       <Home
         nav={{ ...nav, current: 'home' }}
         allCards={allCards} progress={progress} session={session} sessionConfig={sessionConfig}
+        diagnosis={diag}
         modeLabel={MODE_PRESETS[settings.mode].label}
         onStart={startSession} onReset={resetAll} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession}
       />
