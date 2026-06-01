@@ -129,13 +129,15 @@ const DEFAULT_PROGRESS: CardProgress = {
 export function recordAttempt(
   map: ProgressMap,
   cardId: string,
-  opts: { correct: boolean; usedRecovery: boolean; sessionId: number },
+  opts: { correct: boolean; usedRecovery: boolean; sessionId: number; fast?: boolean },
 ): ProgressMap {
   // 호환성: 옛 데이터(필드 누락)도 안전. spread로 defaults 채움 + 숫자 필드 NaN/null 방어.
   const raw = map[cardId] ?? {};
   const prev: CardProgress = { ...DEFAULT_PROGRESS, ...raw };
   const prevCC = Number.isFinite(prev.consecutiveCorrect) ? prev.consecutiveCorrect : 0;
   const firstTryCorrect = opts.correct && !opts.usedRecovery;
+  // 빠른 첫시도 정답 = 확실히 안다 → 즉시 익힘(cc 2). 느린 정답은 한 칸씩.
+  const nextCC = firstTryCorrect ? (opts.fast ? Math.max(2, prevCC + 1) : prevCC + 1) : 0;
   return {
     ...map,
     [cardId]: {
@@ -143,7 +145,7 @@ export function recordAttempt(
       correct: prev.correct + (firstTryCorrect ? 1 : 0),
       lastSeenAt: new Date().toISOString(),
       usedRecoveryEver: prev.usedRecoveryEver || opts.usedRecovery,
-      consecutiveCorrect: firstTryCorrect ? prevCC + 1 : 0,
+      consecutiveCorrect: nextCC,
       lastResult: opts.usedRecovery ? 'recovery' : (opts.correct ? 'correct' : 'wrong'),
       lastSessionId: opts.sessionId,
     },
@@ -433,6 +435,27 @@ export function selectMissionCards(allCards: Card[], missionId: string): Card[] 
     (c) => (c.kind === 'introduce' || c.kind === 'quiz' || c.kind === 'order' || c.kind === 'speak')
       && c.reviewTarget?.type === 'mission' && String(c.reviewTarget.id) === missionId,
   );
+}
+
+// 가나 전용 덱 — 한 스크립트(히라/가타)만, 개념별 가장 안 본 형태 1장씩, 약점 먼저. (직접 진입 링크용)
+export function selectScriptKanaCards(
+  allCards: Card[], progress: ProgressMap, currentSessionId: number, kanaIds: Set<string>, limit = 12,
+): Card[] {
+  const byConcept = new Map<string, ReviewableCard[]>();
+  for (const c of allCards) {
+    if (c.kind !== 'quiz' || c.reviewTarget?.type !== 'kana') continue;
+    if (!kanaIds.has(String(c.reviewTarget.id))) continue;
+    if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
+    const key = String(c.reviewTarget.id);
+    const arr = byConcept.get(key);
+    if (arr) arr.push(c); else byConcept.set(key, [c]);
+  }
+  const due: ReviewableCard[] = [], fresh: ReviewableCard[] = [];
+  for (const variants of byConcept.values()) {
+    const rep = pickFreshestVariant(variants, progress);
+    (progress[rep.id] ? due : fresh).push(rep);
+  }
+  return [...due, ...fresh].slice(0, limit);
 }
 
 // 미션(장면) 진척 — 익숙(2연속 정답) 카드 수 / 전체 카드 수.

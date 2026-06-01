@@ -1,11 +1,11 @@
 // 상태·라우팅 허브 — 화면 렌더링은 src/views/* 에 위임.
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { buildCards, type Card, type Choice, type DiscoverCard } from './learn/cards';
 import { CONTENT } from './content';
 import {
   classifyCard, clearProgress, isKanaFamiliar, loadDiscovered, loadProgress, loadSeenKana, loadSession,
   markKanaKnown, markKanaSeen, missionsFromCards, nextSessionId, plannedSessionSize, recordAttempt, recordKnown,
-  saveDiscovered, saveProgress, saveSeenKana, saveSession, selectMissionCards, selectSessionCards,
+  saveDiscovered, saveProgress, saveSeenKana, saveSession, selectMissionCards, selectScriptKanaCards, selectSessionCards,
   type SeenKana, type SessionLogEntry,
 } from './learn/progress';
 import { extractKanaChars } from './learn/kanaReading';
@@ -41,6 +41,9 @@ export function App() {
   const [settings, setSettings] = useState<Settings>(() => loadSettings());
   const [showGuide, setShowGuide] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const cardStartRef = useRef<number>(Date.now());     // 현재 카드 표시 시각 (빠른 정답 판정)
+  const advanceTimerRef = useRef<number | null>(null);  // 정답 자동 넘김 타이머
+  const FAST_MS = 4000;
 
   const card: Card | undefined = view === 'session' ? sessionCards[i] : undefined;
   // 발음 보조: 설정에 따라 항상 보임(always)·안 보임(off)·자동(익히면 사라짐).
@@ -77,6 +80,12 @@ export function App() {
     if (view !== 'session' || !card || !settings.autoPlay) return;
     if (card.kind === 'quiz' && card.listen && card.bannerJa) speak(card.bannerJa, { rate: settings.slowListening ? 0.6 : 0.95 });
   }, [i, view, card, settings.autoPlay, settings.slowListening]);
+
+  // 카드가 바뀌면 표시 시각 리셋 + 이전 자동넘김 타이머 정리
+  useEffect(() => {
+    cardStartRef.current = Date.now();
+    return () => { if (advanceTimerRef.current) { clearTimeout(advanceTimerRef.current); advanceTimerRef.current = null; } };
+  }, [i, view]);
 
   // 세션 중 카드 소진되면 done으로 (render 중 setState 금지)
   useEffect(() => {
@@ -126,6 +135,13 @@ export function App() {
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true);
   }
+  // 히라가나/가타카나 직접 연습 — 현재 모드와 무관하게 그 스크립트 가나만
+  function startKanaSession(script: 'hiragana' | 'katakana') {
+    const ids = new Set(CONTENT.kana.filter((k) => k.script === script).map((k) => k.id));
+    const cards = selectScriptKanaCards(allCards, progress, nextSessionId(session), ids);
+    if (cards.length === 0) return;
+    beginSession(nextSessionId(session), cards, true);
+  }
   function retryWeakSession() {
     const weakIds = new Set(sessionLog.filter((r) => r.result !== 'correct').map((r) => r.id));
     const weak = sessionCards.filter((c) => c.kind === 'quiz' && weakIds.has(c.id));
@@ -157,6 +173,7 @@ export function App() {
     setSeenKana((prev) => { const nx = markKanaKnown(prev, chars); saveSeenKana(nx); return nx; });
   }
   function next() {
+    if (advanceTimerRef.current) { clearTimeout(advanceTimerRef.current); advanceTimerRef.current = null; }
     // 팁 카드는 점수 없이 "본 적 있음"만 기록 → 다음 세션엔 다른 팁이 회전해 나옴
     if (card?.kind === 'tip') {
       const updated = recordAttempt(progress, card.id, { correct: true, usedRecovery: false, sessionId });
@@ -167,22 +184,27 @@ export function App() {
     setI((n) => n + 1);
   }
   // 카드 1장 결과 기록 (퀴즈·순서 카드 공용)
-  function recordCardResult(cardId: string, correct: boolean, recovery: boolean) {
+  function recordCardResult(cardId: string, correct: boolean, recovery: boolean, fast: boolean) {
     setQuizSeen((n) => n + 1);
     if (correct && !recovery) setScore((sc) => sc + 1);
     const result: SessionLogEntry['result'] = recovery ? 'recovery' : correct ? 'correct' : 'wrong';
     setSessionLog((log) => [...log, { id: cardId, result }]);
-    const updated = recordAttempt(progress, cardId, { correct, usedRecovery: recovery, sessionId });
+    const updated = recordAttempt(progress, cardId, { correct, usedRecovery: recovery, sessionId, fast });
     setProgress(updated);
     saveProgress(updated);
   }
   function choose(idx: number, c: Choice) {
     if (!card || picked !== null) return;
+    const fast = Date.now() - cardStartRef.current < FAST_MS;
     setPicked(idx);
     if (c.ja) speak(c.ja);
     if (card.kind !== 'quiz') return;
     creditKana(card);
-    recordCardResult(card.id, c.correct, !!c.recovery);
+    recordCardResult(card.id, c.correct, !!c.recovery, fast);
+    // 정답(복구·오답 아님)이면 자동으로 다음 카드 — 반복 진행 시간 단축
+    if (c.correct && !c.recovery && settings.fastForward) {
+      advanceTimerRef.current = window.setTimeout(() => { advanceTimerRef.current = null; next(); }, 850);
+    }
   }
   // 소개 카드: 퀴즈 전 학습 노출. 점수에는 넣지 않고, 한 번 본 카드로만 기록.
   function introduceSeen() {
@@ -196,7 +218,7 @@ export function App() {
   function dictationResult(correct: boolean) {
     if (!card || card.kind !== 'dictation') return;
     creditKana(card);
-    recordCardResult(card.id, correct, false);
+    recordCardResult(card.id, correct, false, false); // 받아쓰기는 조립 시간이 들어 fast 미적용
   }
   // 따라 말하기: 채점 없이 practiced만 기록 (SRS 쿨다운만 진행, 점수·약점 집계 제외)
   function speakPracticed() {
@@ -270,7 +292,7 @@ export function App() {
         nav={{ ...nav, current: 'home' }}
         allCards={allCards} progress={progress} session={session} sessionConfig={sessionConfig}
         modeLabel={MODE_PRESETS[settings.mode].label}
-        onStart={startSession} onReset={resetAll} onPracticeScene={startSceneSession}
+        onStart={startSession} onReset={resetAll} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession}
       />
     );
   }
