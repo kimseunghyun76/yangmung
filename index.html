@@ -7,40 +7,46 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <title>yangmung</title>
     <style>
-      /* ── 디자인 토큰 (주간/야간) — 에디토리얼 미니멀: 페이퍼·잉크·朱 1색 ── */
+      /* ── 디자인 토큰 (주간/야간) — 볼드 모던: 화이트+잉크+朱, 굵은 테두리·하드 섀도 ── */
       :root {
-        --bg: #f6f4ef;           /* 따뜻한 페이퍼 */
-        --surface: #fffefb;       /* 카드(거의 같은 톤, 그림자 대신 여백/헤어라인) */
-        --surface-2: #ece9e2;
-        --ink: #1a1916;           /* 따뜻한 잉크블랙 */
-        --ink-soft: #6b6760;
-        --ink-faint: #a8a399;
-        --line: #e4dfd5;          /* 따뜻한 헤어라인 */
-        --accent: #b23b32;        /* 朱 (단일 액센트) */
-        --accent-soft: #f1e6e3;
-        --accent-ink: #fffefb;
-        --ok: #3a7d52; --ok-soft: #e7efe7;
-        --warn: #9c7320; --warn-soft: #f3ecda;
-        --shadow-card: none;                              /* 에디토리얼: 그림자 거의 없음 */
-        --shadow-raised: 0 1px 0 rgba(26,25,22,0.04);
-        --hero: #1a1916;
+        --bg: #f4f3ed;
+        --surface: #ffffff;
+        --surface-2: #edeae1;
+        --ink: #15140f;           /* 잉크(고대비) */
+        --ink-soft: #57544c;
+        --ink-faint: #948f84;
+        --line: #e0dcd0;          /* 약한 구분선 */
+        --border: #15140f;        /* 청키 테두리 = 잉크 */
+        --accent: #b9382e;        /* 朱 (볼드) */
+        --accent-soft: #fbe8e5;
+        --accent-ink: #ffffff;
+        --ok: #2f7d4f; --ok-soft: #e3f0e6;
+        --warn: #9a6a16; --warn-soft: #f4ecd6;
+        --shadow-pop: 4px 4px 0 var(--ink);      /* 하드 오프셋 섀도 (청키 팝) */
+        --shadow-pop-sm: 3px 3px 0 var(--ink);
+        --shadow-card: none;
+        --shadow-raised: 4px 4px 0 var(--ink);
+        --hero: #15140f;
       }
       [data-theme="dark"] {
-        --bg: #0e0d0c;
-        --surface: #161513;
-        --surface-2: #201e1b;
-        --ink: #f2efe9;
-        --ink-soft: #a8a399;
-        --ink-faint: #6f6a62;
-        --line: #2a2723;
+        --bg: #100f0b;
+        --surface: #1b1913;
+        --surface-2: #262318;
+        --ink: #f3efe6;
+        --ink-soft: #aaa698;
+        --ink-faint: #6f6b5e;
+        --line: #2c2920;
+        --border: #4f4b3f;        /* 다크에선 보이는 중간 테두리 */
         --accent: #e2655a;
-        --accent-soft: #2a1b18;
-        --accent-ink: #0e0d0c;
+        --accent-soft: #2c1c19;
+        --accent-ink: #15140f;
         --ok: #4cae79; --ok-soft: #18241c;
         --warn: #d2a14a; --warn-soft: #271f12;
+        --shadow-pop: 4px 4px 0 rgba(0,0,0,0.55);
+        --shadow-pop-sm: 3px 3px 0 rgba(0,0,0,0.55);
         --shadow-card: none;
-        --shadow-raised: 0 1px 0 rgba(0,0,0,0.4);
-        --hero: #201e1b;
+        --shadow-raised: 4px 4px 0 rgba(0,0,0,0.55);
+        --hero: #262318;
       }
       * { box-sizing: border-box; }
       html, body { margin: 0; padding: 0; }
@@ -50,7 +56,7 @@
         /* SF(애플) 우선 시스템 폰트 스택 */
         font-family: -apple-system, BlinkMacSystemFont, ui-sans-serif, system-ui, 'Segoe UI', Roboto, 'Apple SD Gothic Neo', sans-serif;
         font-size: 17px;               /* iOS 본문 기본 */
-        line-height: 1.55;
+        line-height: 1.5;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         -webkit-tap-highlight-color: transparent;   /* iOS 회색 탭 플래시 제거 */
@@ -59,13 +65,19 @@
       }
       /* iOS 터치 타깃 최소 44pt 권장 (HIG) */
       button { min-height: 44px; }
-      /* 에디토리얼: 강한 웨이트 대비 + 타이트한 자간 */
-      h1 { font-size: 30px; font-weight: 760; letter-spacing: -0.03em; line-height: 1.15; }
-      h2 { font-size: 19px; font-weight: 680; letter-spacing: -0.02em; }
-      /* 에디토리얼 키커(섹션 라벨) */
-      .ym-kicker { font-size: 11px; font-weight: 680; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); }
-      /* 얇은 헤어라인 구분선 */
+      /* 볼드 모던: 크고 무거운 타이포, 타이트 자간 */
+      h1 { font-size: 32px; font-weight: 820; letter-spacing: -0.035em; line-height: 1.08; }
+      h2 { font-size: 20px; font-weight: 780; letter-spacing: -0.02em; }
+      /* 섹션 라벨(키커) — 굵고 또렷하게 */
+      .ym-kicker { font-size: 12px; font-weight: 800; letter-spacing: 0.02em; color: var(--ink); display: inline-flex; align-items: center; gap: 7px; }
+      .ym-kicker::before { content: ''; width: 12px; height: 12px; background: var(--accent); border-radius: 3px; display: inline-block; }
+      /* 구분선 */
       .ym-rule { height: 1px; background: var(--line); border: 0; margin: 0; }
+      /* 하드섀도 버튼/블록 — 누르면 섀도 안으로 들어가는 청키 인터랙션 */
+      .ym-pop { box-shadow: var(--shadow-pop); transition: transform 0.06s ease, box-shadow 0.06s ease; }
+      .ym-pop:not(:disabled):active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); }
+      .ym-pop-sm { box-shadow: var(--shadow-pop-sm); transition: transform 0.06s ease, box-shadow 0.06s ease; }
+      .ym-pop-sm:not(:disabled):active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); }
       button { font-family: inherit; transition: transform 0.08s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease; }
       button:not(:disabled):active { transform: translateY(1px) scale(0.995); }
 

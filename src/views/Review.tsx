@@ -5,8 +5,9 @@ import type { KanaItem, Phrase } from '../content';
 import type { Card } from '../learn/cards';
 import { countSeenKana, isKanaReadStable, type ProgressMap, type SeenKana } from '../learn/progress';
 import { speak, ttsSupported } from '../tts';
-import { BTN, CARD, COLORS, PRIMARY, WRAP } from '../ui/styles';
+import { BTN, CARD, CHIP, PRIMARY, RADIUS, WRAP } from '../ui/styles';
 import { NavBar, type NavBarProps } from './NavBar';
+import { PageHead } from './ui';
 import { phraseIdsByPlace } from './scene';
 
 interface Props {
@@ -36,21 +37,22 @@ export function Review({ nav, allCards, progress, seenKana, onBack }: Props) {
   return (
     <main style={WRAP}>
       <NavBar {...nav} />
-      <h1 style={{ marginBottom: 4 }}>📚 복습장</h1>
-      <p style={{ color: 'var(--ink-faint)', marginTop: 0, fontSize: 13 }}>배운 글자와 표현을 퀴즈 없이 다시 보는 곳 · 여행 중 빠른 참조</p>
-      <p style={{ color: 'var(--accent)', marginTop: 6, fontSize: 14, fontWeight: 600 }}>👀 지금까지 본 가나 {countSeenKana(seenKana)}자</p>
+      <PageHead title="복습장" sub={<>배운 글자·표현을 퀴즈 없이 다시 보는 곳 · 지금까지 본 가나 <strong style={{ color: 'var(--accent)' }}>{countSeenKana(seenKana)}자</strong></>} />
 
       {/* 필터 칩 */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 12 }}>
-        {chips.map((c) => (
-          <button
-            key={c}
-            onClick={() => setFilter(c)}
-            style={{ ...BTN, padding: '5px 12px', fontSize: 13, background: filter === c ? 'var(--accent)' : 'var(--surface)', color: filter === c ? 'var(--surface)' : 'var(--ink-soft)' }}
-          >
-            {c}
-          </button>
-        ))}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 2 }}>
+        {chips.map((c) => {
+          const on = filter === c;
+          return (
+            <button
+              key={c}
+              onClick={() => setFilter(c)}
+              style={{ ...CHIP, background: on ? 'var(--accent)' : 'var(--surface)', color: on ? 'var(--accent-ink)' : 'var(--ink)', borderColor: on ? 'var(--ink)' : 'var(--border)' }}
+            >
+              {c}
+            </button>
+          );
+        })}
       </div>
 
       {filter === '전체' ? (
@@ -149,7 +151,7 @@ function KanaGrid({ items, progress }: { items: KanaItem[]; progress: ProgressMa
                     ...BTN,
                     padding: '8px 4px',
                     background: stable ? 'var(--ok-soft)' : seen ? 'var(--accent-soft)' : 'var(--surface)',
-                    borderColor: stable ? '#86efac' : seen ? '#c7d2fe' : 'var(--line)',
+                    borderColor: stable ? 'var(--ok)' : seen ? 'var(--accent)' : 'var(--border)',
                   }}
                   onClick={() => speak(k.char)}
                   disabled={!ttsSupported()}
@@ -174,7 +176,7 @@ function PhraseList({ phrases, phraseSeen }: { phrases: Phrase[]; phraseSeen: Se
       {phrases.map((p) => {
         const seen = phraseSeen.has(p.id);
         return (
-          <div key={p.id} style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 10, padding: 12 }}>
+          <div key={p.id} style={{ background: 'var(--surface)', border: '1.5px solid var(--border)', borderRadius: RADIUS.md, padding: 12 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'center' }}>
               <div>
                 <p style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>{p.kanji ?? p.displayKana ?? p.kana}</p>
@@ -193,8 +195,8 @@ function PhraseList({ phrases, phraseSeen }: { phrases: Phrase[]; phraseSeen: Se
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ ...CARD, marginTop: 14 }}>
-      <p style={{ margin: '0 0 6px', fontSize: 13, color: COLORS.inkSoft, fontWeight: 700 }}>{title}</p>
+    <div style={{ ...CARD, marginTop: 16 }}>
+      <p className="ym-kicker" style={{ margin: '0 0 6px' }}>{title}</p>
       {children}
     </div>
   );

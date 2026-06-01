@@ -44,7 +44,7 @@ export function Intro({ cards, goal, onStart, onBack }: { cards: Card[]; goal: s
       <p style={{ color: 'var(--ink-faint)', fontSize: 13, marginTop: 6 }}>
         가나 {k} · 표현 {b} · 미션 {c}
       </p>
-      <button style={{ ...PRIMARY, marginTop: 20, width: '100%', fontSize: 17, fontWeight: 700 }} onClick={onStart}>
+      <button className="ym-pop-sm" style={{ ...PRIMARY, marginTop: 20, width: '100%', fontSize: 17 }} onClick={onStart}>
         시작
       </button>
     </main>

@@ -1,17 +1,18 @@
-// 홈 — 에디토리얼 미니멀. 큰 타이포 + 헤어라인 + 朱 1색, 그림자 없음.
+// 홈 — 볼드 모던. 솔리드 블록 + 굵은 테두리 + 큰 타이포.
 import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
+import type { Diagnosis } from '../learn/adaptive';
+import { LEVEL_LABEL } from '../learn/adaptive';
 import {
   isMissionUnlocked, kanaReadMastery, missionProgress, nextSessionId, planSession,
   sessionCounts, summarize, type ProgressMap, type SessionConfig, type SessionState,
 } from '../learn/progress';
-import type { Diagnosis } from '../learn/adaptive';
-import { LEVEL_LABEL } from '../learn/adaptive';
 import { ttsSupported } from '../tts';
-import { PRIMARY, SERIF, WRAP } from '../ui/styles';
+import { BTN, PRIMARY, RADIUS, WRAP } from '../ui/styles';
 import { sessionGoalText } from './goal';
 import { sceneVisualByPlace } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
+import { Block, Kicker, Rule } from './ui';
 
 interface Props {
   nav: NavBarProps;
@@ -29,8 +30,6 @@ interface Props {
   onPracticeDictation: () => void;
 }
 
-const Rule = ({ m = 28 }: { m?: number }) => <hr className="ym-rule" style={{ margin: `${m}px 0` }} />;
-
 export function Home({ nav, allCards, progress, session, sessionConfig, diagnosis, modeLabel, onStart, onReset, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation }: Props) {
   const upcomingId = nextSessionId(session);
   const counts = sessionCounts(allCards, progress, upcomingId);
@@ -40,73 +39,74 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
   const kataIds = CONTENT.kana.filter((k) => k.script === 'katakana').map((k) => k.id);
   const s = summarize(progress);
   const goal = sessionGoalText(plan.missions, plan.breakdown.K > 0);
-  const scenes = CONTENT.missions.filter((m) => m.id !== 'C0'); // 튜토리얼 제외
+  const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
 
   return (
     <main style={WRAP}>
       <NavBar {...nav} />
 
-      {/* 워드마크 — 라틴 세리프(에디토리얼 시그니처) */}
-      <h1 style={{ fontFamily: SERIF, fontSize: 34, fontWeight: 600, letterSpacing: '-0.02em', margin: 0 }}>yangmung</h1>
-      <p style={{ color: 'var(--ink-faint)', marginTop: 6, marginBottom: 0, fontSize: 13, letterSpacing: '0.01em' }}>일본 여행, 오늘 한 판 · 세션 #{upcomingId}</p>
+      {/* 워드마크 */}
+      <h1 style={{ margin: 0, fontSize: 36 }}>yangmung</h1>
+      <p style={{ color: 'var(--ink-faint)', marginTop: 8, marginBottom: 0, fontSize: 13, fontWeight: 600 }}>일본 여행, 오늘 한 판 · 세션 #{upcomingId}</p>
 
-      <Rule m={26} />
-
-      {/* 오늘 목표 — 큰 헤드라인 + 잉크 바 시작 */}
-      <p className="ym-kicker">오늘 목표</p>
-      <h2 style={{ fontSize: 27, fontWeight: 700, lineHeight: 1.25, letterSpacing: '-0.025em', margin: '10px 0 0' }}>{goal}</h2>
-      <p style={{ margin: '12px 0 0', fontSize: 13, color: 'var(--ink-faint)' }}>
-        {modeLabel} · 가나 {plan.breakdown.K} · 표현 {plan.breakdown.B} · 미션 {plan.breakdown.C} · 팁 {plan.breakdown.tip}
-      </p>
-      <button style={{ ...PRIMARY, marginTop: 18, width: '100%', fontSize: 16 }} onClick={onStart} disabled={planned === 0}>
-        {planned === 0 ? '오늘 학습할 카드가 없어요' : `시작 · ${planned}카드`}
-      </button>
+      {/* 오늘 목표 — 잉크 솔리드 블록 + 朱 시작 버튼 */}
+      <Block tone="ink" pop style={{ marginTop: 18 }}>
+        <p style={{ margin: 0, fontSize: 11, fontWeight: 800, letterSpacing: '0.12em', color: 'var(--accent)' }}>오늘 목표</p>
+        <p style={{ margin: '10px 0 0', fontSize: 25, fontWeight: 800, lineHeight: 1.22, letterSpacing: '-0.02em' }}>{goal}</p>
+        <p style={{ margin: '12px 0 0', fontSize: 12, opacity: 0.7, fontWeight: 600 }}>
+          {modeLabel} · 가나 {plan.breakdown.K} · 표현 {plan.breakdown.B} · 미션 {plan.breakdown.C} · 팁 {plan.breakdown.tip}
+        </p>
+        <button className="ym-pop-sm" style={{ ...PRIMARY, marginTop: 16, width: '100%', fontSize: 16 }} onClick={onStart} disabled={planned === 0}>
+          {planned === 0 ? '오늘 학습할 카드가 없어요' : `시작 · ${planned}카드`}
+        </button>
+      </Block>
       {planned > 0 && counts.due + counts.fresh > planned && (
-        <p style={{ fontSize: 12, color: 'var(--ink-faint)', marginTop: 10, textAlign: 'center' }}>
+        <p style={{ fontSize: 12, color: 'var(--ink-faint)', marginTop: 10, textAlign: 'center', fontWeight: 600 }}>
           오늘 풀 수 있는 카드 {counts.due + counts.fresh}개 중 {planned}개씩 짧게 진행해요.
         </p>
       )}
 
-      <DiagnosisPanel d={diagnosis} />
+      {/* 학습 진단 */}
+      <DiagnosisBlock d={diagnosis} />
 
       <Rule />
 
-      {/* 가나 안정도 — 헤어라인 행 */}
-      <p className="ym-kicker">가나 안정도 · 읽기 기준</p>
+      {/* 가나 안정도 */}
+      <Kicker>가나 안정도 · 읽기 기준</Kicker>
       <div style={{ marginTop: 14 }}>
         <KanaRow label="히라가나" kanaIds={hiraIds} progress={progress} />
         <KanaRow label="가타카나" kanaIds={kataIds} progress={progress} />
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, marginTop: 16, borderTop: '1px solid var(--line)' }}>
-        <Quiet label="히라가나 연습" onClick={() => onPracticeKana('hiragana')} r />
-        <Quiet label="가타카나 연습" onClick={() => onPracticeKana('katakana')} />
-        <Quiet label="간판·메뉴 읽기" onClick={onPracticeSigns} r />
-        <Quiet label="받아쓰기" onClick={onPracticeDictation} />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 14 }}>
+        <button style={{ ...BTN, textAlign: 'center', fontSize: 14 }} onClick={() => onPracticeKana('hiragana')}>히라가나 연습</button>
+        <button style={{ ...BTN, textAlign: 'center', fontSize: 14 }} onClick={() => onPracticeKana('katakana')}>가타카나 연습</button>
+        <button style={{ ...BTN, textAlign: 'center', fontSize: 14 }} onClick={onPracticeSigns}>간판·메뉴 읽기</button>
+        <button style={{ ...BTN, textAlign: 'center', fontSize: 14 }} onClick={onPracticeDictation}>받아쓰기</button>
       </div>
 
       {s.seen > 0 && (
-        <p style={{ marginTop: 16, fontSize: 13, color: 'var(--ink-soft)' }}>
-          본 카드 <strong style={{ color: 'var(--ink)' }}>{s.seen}</strong>
-          <span style={{ color: 'var(--ink-faint)' }}> · </span>익숙 <strong style={{ color: 'var(--ok)' }}>{s.mastered}</strong>
-          <span style={{ color: 'var(--ink-faint)' }}> · </span>약점 <strong style={{ color: 'var(--accent)' }}>{s.weak}</strong>
-        </p>
+        <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
+          <Stat label="본 카드" value={s.seen} />
+          <Stat label="익숙" value={s.mastered} tone="ok" />
+          <Stat label="약점" value={s.weak} tone="accent" />
+        </div>
       )}
 
       <Rule />
 
-      {/* 장면별 연습 — 헤어라인 리스트 */}
-      <p className="ym-kicker">장면별 연습</p>
-      <div style={{ marginTop: 12, borderTop: '1px solid var(--line)' }}>
+      {/* 장면별 연습 */}
+      <Kicker>장면별 연습</Kicker>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 14 }}>
         {scenes.map((m) => {
           const unlocked = isMissionUnlocked(m.id, progress);
           const sv = sceneVisualByPlace(m.place);
           const name = m.place ?? m.scenario;
           if (!unlocked) {
             return (
-              <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 2px', borderBottom: '1px solid var(--line)', color: 'var(--ink-faint)' }}>
-                <span style={{ fontSize: 16, opacity: 0.5 }}>{sv.emoji}</span>
-                <span style={{ flex: 1, fontSize: 15 }}>{name}</span>
-                <span style={{ fontSize: 12 }}>🔒 {lockHint(m.id)}</span>
+              <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: RADIUS.md, border: '1.5px dashed var(--line)', color: 'var(--ink-faint)' }}>
+                <span style={{ fontSize: 18, opacity: 0.5 }}>{sv.emoji}</span>
+                <span style={{ flex: 1, fontSize: 15, fontWeight: 600 }}>{name}</span>
+                <span style={{ fontSize: 12, fontWeight: 600 }}>🔒 {lockHint(m.id)}</span>
               </div>
             );
           }
@@ -115,15 +115,17 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
           return (
             <button
               key={m.id}
+              className="ym-pop-sm"
               onClick={() => onPracticeScene(m.id)}
-              style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%', padding: '14px 2px', border: 'none', borderBottom: '1px solid var(--line)', background: 'none', cursor: 'pointer', textAlign: 'left', color: 'var(--ink)', borderLeft: `2px solid ${done ? 'var(--ok)' : sv.accent}`, paddingLeft: 12 }}
+              style={{ ...BTN, display: 'flex', alignItems: 'center', gap: 12, padding: 0, overflow: 'hidden' }}
             >
-              <span style={{ fontSize: 18 }}>{sv.emoji}</span>
-              <span style={{ flex: 1, fontSize: 16, fontWeight: 550 }}>{name}</span>
-              <span style={{ fontSize: 13, color: done ? 'var(--ok)' : 'var(--ink-faint)', fontVariantNumeric: 'tabular-nums' }}>
+              <span style={{ alignSelf: 'stretch', width: 8, background: done ? 'var(--ok)' : sv.accent }} />
+              <span style={{ fontSize: 20, paddingLeft: 4 }}>{sv.emoji}</span>
+              <span style={{ flex: 1, fontSize: 16, fontWeight: 700, textAlign: 'left' }}>{name}</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: done ? 'var(--ok)' : 'var(--ink-faint)', fontVariantNumeric: 'tabular-nums' }}>
                 {done ? '완료' : `${p.mastered}/${p.total}`}
               </span>
-              <span style={{ fontSize: 15, color: 'var(--ink-faint)' }}>›</span>
+              <span style={{ fontSize: 16, color: 'var(--ink-faint)', paddingRight: 14 }}>›</span>
             </button>
           );
         })}
@@ -131,41 +133,42 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
 
       {s.seen > 0 && (
         <button
-          style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'var(--ink-faint)', fontSize: 13, marginTop: 22, width: '100%', textAlign: 'center', textDecoration: 'underline', textUnderlineOffset: 3 }}
+          style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'var(--ink-faint)', fontSize: 13, fontWeight: 600, marginTop: 22, width: '100%', textAlign: 'center', textDecoration: 'underline', textUnderlineOffset: 3 }}
           onClick={() => { if (confirm('진척을 모두 지울까요?')) onReset(); }}
         >
           처음부터 다시
         </button>
       )}
 
-      {!ttsSupported() && <p style={{ color: 'var(--warn)', fontSize: 13, marginTop: 16 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
+      {!ttsSupported() && <p style={{ color: 'var(--warn)', fontSize: 13, marginTop: 16, fontWeight: 600 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
     </main>
   );
 }
 
-// 학습 진단 — 적응형 엔진이 "판단"한 내용을 보여주는 튜터 패널.
-function DiagnosisPanel({ d }: { d: Diagnosis }) {
-  const dot = d.level === 'struggling' ? 'var(--warn)' : d.level === 'cruising' ? 'var(--ok)' : 'var(--accent)';
+// 학습 진단 — 적응형 엔진의 판단을 보여주는 블록.
+function DiagnosisBlock({ d }: { d: Diagnosis }) {
+  const tone = d.level === 'struggling' ? 'var(--warn)' : d.level === 'cruising' ? 'var(--ok)' : 'var(--accent)';
   return (
-    <div style={{ marginTop: 26 }}>
-      <p className="ym-kicker">
-        학습 진단{d.level ? <> <span style={{ color: dot }}>·</span> {LEVEL_LABEL[d.level]}</> : null}
+    <div style={{ marginTop: 18, borderRadius: RADIUS.lg, border: '1.5px solid var(--border)', background: 'var(--surface)', padding: 18 }}>
+      <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 800 }}>
+        <span style={{ width: 12, height: 12, borderRadius: 3, background: tone }} />
+        학습 진단{d.level ? ` · ${LEVEL_LABEL[d.level]}` : ''}
       </p>
-      <p style={{ margin: '10px 0 0', fontSize: 17, fontWeight: 650, letterSpacing: '-0.01em' }}>{d.focus}</p>
-      <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.55 }}>{d.message}</p>
+      <p style={{ margin: '12px 0 0', fontSize: 18, fontWeight: 800, letterSpacing: '-0.01em' }}>{d.focus}</p>
+      <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.5, fontWeight: 500 }}>{d.message}</p>
       {d.level !== null && d.recentAccuracy !== null && (
-        <p style={{ margin: '8px 0 0', fontSize: 12, color: 'var(--ink-faint)', fontVariantNumeric: 'tabular-nums' }}>
+        <p style={{ margin: '8px 0 0', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
           직전 세션 정답률 {Math.round(d.recentAccuracy * 100)}%
         </p>
       )}
       {(d.weakKana.length > 0 || d.weakScenes.length > 0) && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 12, alignItems: 'center' }}>
-          <span style={{ fontSize: 12, color: 'var(--ink-faint)' }}>약점</span>
+          <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-faint)' }}>약점</span>
           {d.weakKana.map((w) => (
-            <span key={w.key} style={{ minWidth: 26, height: 26, padding: '0 6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--line)', borderRadius: 6, fontSize: 15, color: 'var(--accent)' }}>{w.label}</span>
+            <span key={w.key} style={{ minWidth: 28, height: 28, padding: '0 6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid var(--border)', borderRadius: 7, fontSize: 15, fontWeight: 700, color: 'var(--accent)' }}>{w.label}</span>
           ))}
           {d.weakScenes.map((w) => (
-            <span key={w.key} style={{ padding: '3px 9px', border: '1px solid var(--line)', borderRadius: 999, fontSize: 12, color: 'var(--ink-soft)' }}>{w.label}</span>
+            <span key={w.key} style={{ padding: '4px 10px', border: '1.5px solid var(--border)', borderRadius: 999, fontSize: 12, fontWeight: 600, color: 'var(--ink-soft)' }}>{w.label}</span>
           ))}
         </div>
       )}
@@ -179,39 +182,35 @@ function lockHint(missionId: string): string {
   return '조금 더 익히기';
 }
 
-// 가나 트랙 — 한 줄 + 얇은 진척선 (카드 박스 없음)
+// 가나 트랙 — 세그먼트(칸) 진척 막대
 function KanaRow({ label, kanaIds, progress }: { label: string; kanaIds: string[]; progress: ProgressMap }) {
   const m = kanaReadMastery(progress, kanaIds);
-  const pct = Math.round((m.mastered / Math.max(1, m.total)) * 100);
+  const pct = m.mastered / Math.max(1, m.total);
+  const SEG = 20;
+  const filled = Math.round(pct * SEG);
   return (
     <div style={{ padding: '10px 0', borderTop: '1px solid var(--line)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: 15 }}>
-        <span style={{ fontWeight: 550 }}>{label}</span>
-        <span style={{ color: 'var(--ink-faint)', fontVariantNumeric: 'tabular-nums' }}>
+        <span style={{ fontWeight: 700 }}>{label}</span>
+        <span style={{ color: 'var(--ink-faint)', fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
           <strong style={{ color: 'var(--ink)' }}>{m.mastered}</strong> / {m.total}
         </span>
       </div>
-      <div style={{ height: 2, background: 'var(--line)', marginTop: 8, overflow: 'hidden' }}>
-        <div style={{ width: `${pct}%`, height: '100%', background: 'var(--accent)', transition: 'width 0.3s' }} />
+      <div style={{ display: 'flex', gap: 3, marginTop: 8 }}>
+        {Array.from({ length: SEG }, (_, i) => (
+          <span key={i} style={{ flex: 1, height: 8, borderRadius: 2, background: i < filled ? 'var(--accent)' : 'var(--surface-2)' }} />
+        ))}
       </div>
     </div>
   );
 }
 
-// 조용한 연습 진입 — 그리드 셀, 헤어라인으로만 구분
-function Quiet({ label, onClick, r }: { label: string; onClick: () => void; r?: boolean }) {
+function Stat({ label, value, tone }: { label: string; value: number; tone?: 'ok' | 'accent' }) {
+  const color = tone === 'ok' ? 'var(--ok)' : tone === 'accent' ? 'var(--accent)' : 'var(--ink)';
   return (
-    <button
-      onClick={onClick}
-      style={{
-        border: 'none', background: 'none', cursor: 'pointer', textAlign: 'left',
-        padding: '14px 4px', fontSize: 15, fontWeight: 500, color: 'var(--ink)',
-        borderBottom: '1px solid var(--line)',
-        borderRight: r ? '1px solid var(--line)' : 'none',
-        paddingLeft: r ? 4 : 14,
-      }}
-    >
-      {label} <span style={{ color: 'var(--ink-faint)' }}>›</span>
-    </button>
+    <div style={{ flex: 1, border: '1.5px solid var(--border)', borderRadius: RADIUS.md, padding: '10px 8px', textAlign: 'center' }}>
+      <div style={{ fontSize: 11, color: 'var(--ink-faint)', fontWeight: 700 }}>{label}</div>
+      <div style={{ fontSize: 22, fontWeight: 800, color, marginTop: 2 }}>{value}</div>
+    </div>
   );
 }
