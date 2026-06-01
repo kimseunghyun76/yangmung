@@ -7,6 +7,7 @@ interface Props {
   settings: Settings;
   onChange: (s: Settings) => void;
   onSelectMode: (m: LearnMode) => void;
+  onMarkKanaKnown: () => void;
   onReset: () => void;
   onClose: () => void;
 }
@@ -18,7 +19,7 @@ const AID_OPTIONS: { v: ReadingAidMode; label: string }[] = [
 ];
 const MODE_ORDER: LearnMode[] = ['beginner', 'default', 'express', 'review', 'kana'];
 
-export function SettingsModal({ settings, onChange, onSelectMode, onReset, onClose }: Props) {
+export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnown, onReset, onClose }: Props) {
   const seg = (active: boolean): React.CSSProperties => ({
     ...BTN, flex: 1, textAlign: 'center', fontSize: 13, padding: '8px 6px',
     background: active ? '#4f46e5' : '#fff', color: active ? '#fff' : '#444',
@@ -63,7 +64,14 @@ export function SettingsModal({ settings, onChange, onSelectMode, onReset, onClo
       </div>
 
       <button
-        style={{ ...BTN, width: '100%', marginTop: 20, textAlign: 'center', color: '#dc2626', borderColor: '#fecaca' }}
+        style={{ ...BTN, width: '100%', marginTop: 18, textAlign: 'center' }}
+        onClick={() => { if (confirm('히라가나·가타카나를 모두 안다고 표시할까요? (가나 드릴을 건너뛰고 발음 보조도 꺼집니다)')) { onMarkKanaKnown(); onClose(); } }}
+      >
+        ✓ 가나는 이미 알아요 (건너뛰기)
+      </button>
+
+      <button
+        style={{ ...BTN, width: '100%', marginTop: 10, textAlign: 'center', color: '#dc2626', borderColor: '#fecaca' }}
         onClick={() => { if (confirm('진척을 모두 지울까요? (가나·표현·세션 기록 초기화)')) { onReset(); onClose(); } }}
       >
         진척 모두 초기화

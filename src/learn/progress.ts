@@ -83,6 +83,14 @@ export function markKanaSeen(seen: SeenKana, chars: string[]): SeenKana {
   return next;
 }
 
+// "이미 알아요": 가나 글자들을 바로 익숙(FAMILIAR_AT)으로 — 발음 보조도 즉시 사라짐
+export function markKanaKnown(seen: SeenKana, chars: string[]): SeenKana {
+  if (chars.length === 0) return seen;
+  const next = { ...seen };
+  for (const c of chars) next[c] = Math.max(next[c] ?? 0, KANA_FAMILIAR_AT);
+  return next;
+}
+
 export function countSeenKana(seen: SeenKana): number {
   return Object.keys(seen).length;
 }
@@ -138,6 +146,23 @@ export function recordAttempt(
       consecutiveCorrect: firstTryCorrect ? prevCC + 1 : 0,
       lastResult: opts.usedRecovery ? 'recovery' : (opts.correct ? 'correct' : 'wrong'),
       lastSessionId: opts.sessionId,
+    },
+  };
+}
+
+// "이미 알아요": 즉시 익숙(2연속 정답 상태)으로 — 다음 세션부터 cooldown. 거주자·중급자용 빠른 패스.
+export function recordKnown(map: ProgressMap, cardId: string, sessionId: number): ProgressMap {
+  const prev: CardProgress = { ...DEFAULT_PROGRESS, ...(map[cardId] ?? {}) };
+  return {
+    ...map,
+    [cardId]: {
+      attempts: prev.attempts + 1,
+      correct: prev.correct + 1,
+      lastSeenAt: new Date().toISOString(),
+      usedRecoveryEver: prev.usedRecoveryEver,
+      consecutiveCorrect: Math.max(2, prev.consecutiveCorrect),
+      lastResult: 'correct',
+      lastSessionId: sessionId,
     },
   };
 }
