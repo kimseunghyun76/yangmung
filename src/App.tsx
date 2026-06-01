@@ -4,7 +4,7 @@ import { buildCards, type Card, type Choice, type DiscoverCard } from './learn/c
 import { CONTENT } from './content';
 import {
   classifyCard, clearProgress, isKanaFamiliar, loadDiscovered, loadProgress, loadSeenKana, loadSession,
-  markKanaSeen, missionsFromCards, nextSessionId, plannedSessionSize, recordAttempt,
+  markKanaKnown, markKanaSeen, missionsFromCards, nextSessionId, plannedSessionSize, recordAttempt, recordKnown,
   saveDiscovered, saveProgress, saveSeenKana, saveSession, selectMissionCards, selectSessionCards,
   type SeenKana, type SessionLogEntry,
 } from './learn/progress';
@@ -59,14 +59,17 @@ export function App() {
 
   // 카드에서 "본 가나"로 적립할 가나 문자 — 깔끔한 가나 필드가 있는 카드만.
   function creditKana(c: Card) {
+    const chars = cardKanaChars(c);
+    if (chars.length === 0) return;
+    setSeenKana((prev) => { const nx = markKanaSeen(prev, chars); saveSeenKana(nx); return nx; });
+  }
+  function cardKanaChars(c: Card): string[] {
     let text = '';
     if (c.kind === 'introduce' || c.kind === 'speak') text = c.kana;
     else if (c.kind === 'dictation') text = c.answer.join('');
     else if (c.kind === 'quiz' && c.reviewTarget?.type === 'kana') text = c.bannerJa ?? '';
-    else if (c.kind === 'quiz' && c.promptPhrase) text = c.promptPhrase.kana; // 미션 프롬프트(점원 발화)
-    const chars = text ? extractKanaChars(text) : [];
-    if (chars.length === 0) return;
-    setSeenKana((prev) => { const nx = markKanaSeen(prev, chars); saveSeenKana(nx); return nx; });
+    else if (c.kind === 'quiz' && c.promptPhrase) text = c.promptPhrase.kana;
+    return text ? extractKanaChars(text) : [];
   }
 
   // 듣기 카드 자동 재생 (설정에서 끌 수 있음)
@@ -128,6 +131,30 @@ export function App() {
     const weak = sessionCards.filter((c) => c.kind === 'quiz' && weakIds.has(c.id));
     if (weak.length === 0) return;
     beginSession(nextSessionId(session), weak, false);
+  }
+  // "이미 알아요": 현재 카드를 즉시 익숙 처리 + 가나 보조 끔 → 다음으로 (점수·약점 집계 X)
+  function markKnown() {
+    if (!card || card.kind === 'tip' || card.kind === 'discover' || card.kind === 'order') { next(); return; }
+    const chars = cardKanaChars(card);
+    if (chars.length) setSeenKana((prev) => { const nx = markKanaKnown(prev, chars); saveSeenKana(nx); return nx; });
+    if ('reviewTarget' in card && card.reviewTarget) {
+      const updated = recordKnown(progress, card.id, sessionId);
+      setProgress(updated); saveProgress(updated);
+    }
+    next();
+  }
+  // 설정 일괄: 가나(히라+가타) 전부 안다고 표시 — 거주자가 가나 트랙 건너뛰기
+  function markAllKanaKnown() {
+    let prog = progress;
+    const chars: string[] = [];
+    for (const c of allCards) {
+      if (c.kind === 'quiz' && c.reviewTarget?.type === 'kana') {
+        prog = recordKnown(prog, c.id, sessionId);
+        if (c.bannerJa) chars.push(...extractKanaChars(c.bannerJa));
+      }
+    }
+    setProgress(prog); saveProgress(prog);
+    setSeenKana((prev) => { const nx = markKanaKnown(prev, chars); saveSeenKana(nx); return nx; });
   }
   function next() {
     // 팁 카드는 점수 없이 "본 적 있음"만 기록 → 다음 세션엔 다른 팁이 회전해 나옴
@@ -234,6 +261,7 @@ export function App() {
           isKanaFamiliar={kanaFamiliar}
           onNext={next}
           onExit={() => setView('home')}
+          onKnown={markKnown}
         />
       );
     }
@@ -252,7 +280,7 @@ export function App() {
       {renderView()}
       {showGuide && <Guide onClose={() => setShowGuide(false)} />}
       {showSettings && (
-        <SettingsModal settings={settings} onChange={updateSettings} onSelectMode={selectMode} onReset={resetAll} onClose={() => setShowSettings(false)} />
+        <SettingsModal settings={settings} onChange={updateSettings} onSelectMode={selectMode} onMarkKanaKnown={markAllKanaKnown} onReset={resetAll} onClose={() => setShowSettings(false)} />
       )}
     </>
   );

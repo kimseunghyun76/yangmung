@@ -24,11 +24,12 @@ interface Props {
   isKanaFamiliar: (char: string) => boolean;
   onNext: () => void;
   onExit: () => void;
+  onKnown: () => void;
 }
 
 const badgeStyle: React.CSSProperties = { display: 'inline-block', padding: '3px 9px', borderRadius: 999, fontSize: 12, fontWeight: 600, marginLeft: 8 };
 
-export function Session({ card, index, total, picked, cardStatus, onChoose, onIntroduceSeen, onSpeakPracticed, onDictationResult, isKanaFamiliar, onNext, onExit }: Props) {
+export function Session({ card, index, total, picked, cardStatus, onChoose, onIntroduceSeen, onSpeakPracticed, onDictationResult, isKanaFamiliar, onNext, onExit, onKnown }: Props) {
   const badge =
     cardStatus === 'due' ? <span style={{ ...badgeStyle, background: '#a78bfa', color: '#fff' }}>🔁 복습</span> :
     cardStatus === 'new' ? <span style={{ ...badgeStyle, background: '#60a5fa', color: '#fff' }}>🆕 신규</span> :
@@ -113,6 +114,12 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
             })}
           </div>
           {picked !== null && <ChoiceFeedback card={card} picked={picked} onNext={onNext} />}
+          {picked === null && (
+            <button
+              onClick={onKnown}
+              style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: '#9aa0ad', marginTop: 14, width: '100%', textAlign: 'center' }}
+            >✓ 이미 알아요 (건너뛰기)</button>
+          )}
         </>
       )}
     </main>
