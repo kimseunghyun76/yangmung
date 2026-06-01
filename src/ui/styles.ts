@@ -23,15 +23,18 @@ export const COLORS = {
   accentInk: 'var(--accent-ink)',
 } as const;
 
-export const RADIUS = { sm: 10, md: 14, lg: 18, pill: 999 } as const;
+export const RADIUS = { sm: 8, md: 12, lg: 16, pill: 999 } as const;
 export const SHADOW = {
   card: 'var(--shadow-card)',
   raised: 'var(--shadow-raised)',
 } as const;
 
-// 기본 버튼 — 카드형, 부드러운 테두리 + 미세 그림자
+// 에디토리얼 헤드라인용 세리프(라틴 전용, iPhone의 New York). 한글은 SF로 폴백.
+export const SERIF = "ui-serif, 'New York', Georgia, serif";
+
+// 기본 버튼 — 플랫, 헤어라인 테두리, 그림자 없음
 export const BTN: CSSProperties = {
-  padding: '13px 16px',
+  padding: '14px 16px',
   borderRadius: RADIUS.md,
   border: `1px solid ${COLORS.line}`,
   background: COLORS.surface,
@@ -40,35 +43,45 @@ export const BTN: CSSProperties = {
   fontSize: 16,
   fontWeight: 500,
   textAlign: 'left',
-  boxShadow: SHADOW.card,
 };
 
-// 주요 액션 버튼 — 액센트, 떠 있는 느낌
+// 주요 액션 — 잉크 솔리드 바(절제), 플랫
 export const PRIMARY: CSSProperties = {
   ...BTN,
-  background: COLORS.indigo,
-  color: COLORS.accentInk,
-  fontWeight: 700,
+  background: COLORS.ink,
+  color: 'var(--bg)',
+  fontWeight: 650,
   textAlign: 'center',
   border: 'none',
-  boxShadow: SHADOW.raised,
+  letterSpacing: '0.01em',
 };
 
-// 카드 컨테이너 (정보 블록 공용)
+// 텍스트형 액션 (에디토리얼: "시작 →") — 밑줄 없는 강조 링크
+export const TEXT_ACTION: CSSProperties = {
+  border: 'none',
+  background: 'none',
+  color: COLORS.indigo,
+  fontWeight: 650,
+  fontSize: 17,
+  cursor: 'pointer',
+  padding: '8px 0',
+  letterSpacing: '-0.01em',
+};
+
+// 카드 컨테이너 — 그림자 대신 헤어라인 + 넉넉한 패딩
 export const CARD: CSSProperties = {
   background: COLORS.surface,
   borderRadius: RADIUS.lg,
   border: `1px solid ${COLORS.line}`,
-  boxShadow: SHADOW.card,
-  padding: 16,
+  padding: 20,
 };
 
 // iOS Safe Area 대응 (노치·홈 인디케이터). HIG: 콘텐츠가 안전 영역 안에 들어오게.
 export const WRAP: CSSProperties = {
-  maxWidth: 560,
+  maxWidth: 540,
   margin: '0 auto',
-  paddingTop: 'max(20px, env(safe-area-inset-top))',
-  paddingBottom: 'max(24px, env(safe-area-inset-bottom))',
-  paddingLeft: 'max(20px, env(safe-area-inset-left))',
-  paddingRight: 'max(20px, env(safe-area-inset-right))',
+  paddingTop: 'max(28px, env(safe-area-inset-top))',
+  paddingBottom: 'max(32px, calc(env(safe-area-inset-bottom) + 12px))',
+  paddingLeft: 'max(24px, env(safe-area-inset-left))',
+  paddingRight: 'max(24px, env(safe-area-inset-right))',
 };

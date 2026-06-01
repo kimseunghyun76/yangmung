@@ -1,4 +1,4 @@
-// 상단 네비게이션 — 허브 화면(홈·지도·복습)에서 자유 이동 + 가이드/설정/테마.
+// 상단 네비게이션 — 에디토리얼: 텍스트 탭 + 朱 언더라인, 모노 컨트롤.
 import { COLORS } from '../ui/styles';
 type NavView = 'home' | 'map' | 'review';
 
@@ -12,29 +12,34 @@ export interface NavBarProps {
 }
 type Props = NavBarProps;
 
-const items: { key: NavView; label: string; icon: string }[] = [
-  { key: 'home', label: '홈', icon: '🏠' },
-  { key: 'map', label: '지도', icon: '🗺' },
-  { key: 'review', label: '복습', icon: '📚' },
+const items: { key: NavView; label: string }[] = [
+  { key: 'home', label: '홈' },
+  { key: 'map', label: '지도' },
+  { key: 'review', label: '복습' },
 ];
 
 export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings, theme, onToggleTheme }: Props) {
-  const btn = (active: boolean): React.CSSProperties => ({
-    border: 'none', background: 'none', cursor: 'pointer', fontSize: 13,
-    padding: '6px 8px', borderRadius: 8, color: active ? COLORS.indigo : COLORS.inkFaint,
-    fontWeight: active ? 700 : 500,
+  const tab = (active: boolean): React.CSSProperties => ({
+    border: 'none', background: 'none', cursor: 'pointer', fontSize: 15,
+    padding: '4px 2px', color: active ? COLORS.ink : COLORS.inkFaint,
+    fontWeight: active ? 700 : 500, letterSpacing: '-0.01em',
+    borderBottom: `2px solid ${active ? COLORS.indigo : 'transparent'}`,
   });
+  const ctrl: React.CSSProperties = {
+    border: 'none', background: 'none', cursor: 'pointer', fontSize: 15,
+    padding: '4px 6px', color: COLORS.inkFaint, minWidth: 32,
+  };
   return (
-    <nav style={{ display: 'flex', alignItems: 'center', gap: 2, marginBottom: 14, borderBottom: `1px solid ${COLORS.line}`, paddingBottom: 10 }}>
+    <nav style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 22 }}>
       {items.map((it) => (
-        <button key={it.key} style={btn(current === it.key)} onClick={() => onNavigate(it.key)}>
-          {it.icon} {it.label}
+        <button key={it.key} style={tab(current === it.key)} onClick={() => onNavigate(it.key)}>
+          {it.label}
         </button>
       ))}
       <span style={{ flex: 1 }} />
-      <button style={btn(false)} onClick={onToggleTheme} title="주간/야간">{theme === 'dark' ? '☀️' : '🌙'}</button>
-      <button style={btn(false)} onClick={onOpenGuide}>❓</button>
-      <button style={btn(false)} onClick={onOpenSettings}>⚙️</button>
+      <button style={ctrl} onClick={onToggleTheme} title="주간/야간">{theme === 'dark' ? '☀' : '☾'}</button>
+      <button style={ctrl} onClick={onOpenGuide} title="가이드">?</button>
+      <button style={ctrl} onClick={onOpenSettings} title="설정">⚙</button>
     </nav>
   );
 }
