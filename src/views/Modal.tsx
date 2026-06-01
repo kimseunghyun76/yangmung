@@ -10,7 +10,7 @@ export function Modal({ title, onClose, children }: { title: string; onClose: ()
       <div
         onClick={(e) => e.stopPropagation()}
         className="ym-reveal"
-        style={{ background: 'var(--surface)', width: '100%', maxWidth: 560, maxHeight: '85vh', overflowY: 'auto', borderRadius: '16px 16px 0 0', padding: 20, fontFamily: 'system-ui, sans-serif' }}
+        style={{ background: 'var(--surface)', width: '100%', maxWidth: 560, maxHeight: '85vh', overflowY: 'auto', borderRadius: '18px 18px 0 0', borderTop: '3px solid var(--accent)', padding: '20px 20px max(24px, env(safe-area-inset-bottom))' }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h2 style={{ margin: 0 }}>{title}</h2>

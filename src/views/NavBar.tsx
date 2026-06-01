@@ -20,14 +20,14 @@ const items: { key: NavView; label: string }[] = [
 
 export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings, theme, onToggleTheme }: Props) {
   const tab = (active: boolean): React.CSSProperties => ({
-    border: 'none', background: 'none', cursor: 'pointer', fontSize: 15,
+    border: 'none', background: 'none', cursor: 'pointer', fontSize: 16,
     padding: '4px 2px', color: active ? COLORS.ink : COLORS.inkFaint,
-    fontWeight: active ? 700 : 500, letterSpacing: '-0.01em',
-    borderBottom: `2px solid ${active ? COLORS.indigo : 'transparent'}`,
+    fontWeight: active ? 800 : 600, letterSpacing: '-0.02em',
+    borderBottom: `3px solid ${active ? COLORS.indigo : 'transparent'}`,
   });
   const ctrl: React.CSSProperties = {
-    border: 'none', background: 'none', cursor: 'pointer', fontSize: 15,
-    padding: '4px 6px', color: COLORS.inkFaint, minWidth: 32,
+    border: 'none', background: 'none', cursor: 'pointer', fontSize: 16,
+    padding: '4px 6px', color: COLORS.inkSoft, minWidth: 32, fontWeight: 700,
   };
   return (
     <nav style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 22 }}>

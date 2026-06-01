@@ -22,7 +22,7 @@ const MODE_ORDER: LearnMode[] = ['beginner', 'default', 'express', 'review', 'ka
 export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnown, onReset, onClose }: Props) {
   const seg = (active: boolean): React.CSSProperties => ({
     ...BTN, flex: 1, textAlign: 'center', fontSize: 13, padding: '8px 6px',
-    background: active ? 'var(--accent)' : 'var(--surface)', color: active ? 'var(--surface)' : 'var(--ink-soft)',
+    background: active ? 'var(--accent)' : 'var(--surface)', color: active ? 'var(--accent-ink)' : 'var(--ink-soft)', borderColor: active ? 'var(--ink)' : 'var(--border)',
   });
   return (
     <Modal title="⚙️ 설정" onClose={onClose}>
@@ -56,7 +56,7 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 18 }}>
         <span style={{ fontWeight: 700, fontSize: 14 }}>🐢 듣기 느리게 재생</span>
         <button
-          style={{ ...BTN, padding: '6px 14px', background: settings.slowListening ? 'var(--accent)' : 'var(--surface)', color: settings.slowListening ? 'var(--surface)' : 'var(--ink-soft)' }}
+          style={{ ...BTN, padding: '6px 14px', background: settings.slowListening ? 'var(--accent)' : 'var(--surface)', color: settings.slowListening ? 'var(--accent-ink)' : 'var(--ink-soft)' }}
           onClick={() => onChange({ ...settings, slowListening: !settings.slowListening })}
         >
           {settings.slowListening ? '켜짐' : '꺼짐'}
@@ -66,7 +66,7 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 14 }}>
         <span style={{ fontWeight: 700, fontSize: 14 }}>⏭️ 정답이면 자동으로 다음</span>
         <button
-          style={{ ...BTN, padding: '6px 14px', background: settings.fastForward ? 'var(--accent)' : 'var(--surface)', color: settings.fastForward ? 'var(--surface)' : 'var(--ink-soft)' }}
+          style={{ ...BTN, padding: '6px 14px', background: settings.fastForward ? 'var(--accent)' : 'var(--surface)', color: settings.fastForward ? 'var(--accent-ink)' : 'var(--ink-soft)' }}
           onClick={() => onChange({ ...settings, fastForward: !settings.fastForward })}
         >
           {settings.fastForward ? '켜짐' : '꺼짐'}

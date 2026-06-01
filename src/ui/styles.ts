@@ -27,53 +27,71 @@ export const RADIUS = { sm: 8, md: 12, lg: 16, pill: 999 } as const;
 export const SHADOW = {
   card: 'var(--shadow-card)',
   raised: 'var(--shadow-raised)',
+  pop: 'var(--shadow-pop)',
+  popSm: 'var(--shadow-pop-sm)',
 } as const;
 
-// 에디토리얼 헤드라인용 세리프(라틴 전용, iPhone의 New York). 한글은 SF로 폴백.
-export const SERIF = "ui-serif, 'New York', Georgia, serif";
+const BORDER = 'var(--border)';
 
-// 기본 버튼 — 플랫, 헤어라인 테두리, 그림자 없음
+// 기본 버튼 — 굵은(1.5px) 테두리, 청키
 export const BTN: CSSProperties = {
-  padding: '14px 16px',
+  padding: '13px 16px',
   borderRadius: RADIUS.md,
-  border: `1px solid ${COLORS.line}`,
+  border: `1.5px solid ${BORDER}`,
   background: COLORS.surface,
   color: COLORS.ink,
   cursor: 'pointer',
   fontSize: 16,
-  fontWeight: 500,
+  fontWeight: 600,
   textAlign: 'left',
 };
 
-// 주요 액션 — 잉크 솔리드 바(절제), 플랫
+// 주요 액션 — 朱 솔리드 + 잉크 테두리 + 하드 오프셋 섀도 (청키 팝)
 export const PRIMARY: CSSProperties = {
   ...BTN,
-  background: COLORS.ink,
-  color: 'var(--bg)',
-  fontWeight: 650,
+  background: COLORS.indigo,
+  color: COLORS.accentInk,
+  fontWeight: 750,
   textAlign: 'center',
-  border: 'none',
+  border: '1.5px solid var(--ink)',
+  boxShadow: SHADOW.pop,
   letterSpacing: '0.01em',
 };
 
-// 텍스트형 액션 (에디토리얼: "시작 →") — 밑줄 없는 강조 링크
+// 텍스트형 액션 — 밑줄 없는 강조 링크
 export const TEXT_ACTION: CSSProperties = {
   border: 'none',
   background: 'none',
   color: COLORS.indigo,
-  fontWeight: 650,
+  fontWeight: 700,
   fontSize: 17,
   cursor: 'pointer',
   padding: '8px 0',
   letterSpacing: '-0.01em',
 };
 
-// 카드 컨테이너 — 그림자 대신 헤어라인 + 넉넉한 패딩
+// 카드 컨테이너 — 굵은 테두리 블록(섀도 없음, 테두리로 정의)
 export const CARD: CSSProperties = {
   background: COLORS.surface,
   borderRadius: RADIUS.lg,
-  border: `1px solid ${COLORS.line}`,
-  padding: 20,
+  border: `1.5px solid ${BORDER}`,
+  padding: 18,
+};
+
+// 칩 — 굵은 테두리 알약
+export const CHIP: CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 6,
+  padding: '6px 12px',
+  borderRadius: RADIUS.pill,
+  border: `1.5px solid ${BORDER}`,
+  background: COLORS.surface,
+  color: COLORS.ink,
+  fontSize: 13,
+  fontWeight: 600,
+  cursor: 'pointer',
+  minHeight: 36,
 };
 
 // iOS Safe Area 대응 (노치·홈 인디케이터). HIG: 콘텐츠가 안전 영역 안에 들어오게.
