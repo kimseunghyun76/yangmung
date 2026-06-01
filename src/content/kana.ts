@@ -40,6 +40,21 @@ const CONFUSABLES: Record<string, string[]> = {
   ク: ['ケ', 'タ'], ケ: ['ク'], コ: ['ユ'], カ: ['カ'],
 };
 
+// 요음 — 자음 + 작은 ゃゅょ. 히라 K31 / 가타 K32 한 묶음씩. [hira, kata, romaji, korean]
+const YOON: [string, string, string, string][] = [
+  ['きゃ','キャ','kya','캬'],['きゅ','キュ','kyu','큐'],['きょ','キョ','kyo','쿄'],
+  ['しゃ','シャ','sha','샤'],['しゅ','シュ','shu','슈'],['しょ','ショ','sho','쇼'],
+  ['ちゃ','チャ','cha','차'],['ちゅ','チュ','chu','추'],['ちょ','チョ','cho','초'],
+  ['にゃ','ニャ','nya','냐'],['にゅ','ニュ','nyu','뉴'],['にょ','ニョ','nyo','뇨'],
+  ['ひゃ','ヒャ','hya','햐'],['ひゅ','ヒュ','hyu','휴'],['ひょ','ヒョ','hyo','효'],
+  ['みゃ','ミャ','mya','먀'],['みゅ','ミュ','myu','뮤'],['みょ','ミョ','myo','묘'],
+  ['りゃ','リャ','rya','랴'],['りゅ','リュ','ryu','류'],['りょ','リョ','ryo','료'],
+  ['ぎゃ','ギャ','gya','갸'],['ぎゅ','ギュ','gyu','규'],['ぎょ','ギョ','gyo','교'],
+  ['じゃ','ジャ','ja','자'],['じゅ','ジュ','ju','주'],['じょ','ジョ','jo','조'],
+  ['びゃ','ビャ','bya','뱌'],['びゅ','ビュ','byu','뷰'],['びょ','ビョ','byo','뵤'],
+  ['ぴゃ','ピャ','pya','퍄'],['ぴゅ','ピュ','pyu','퓨'],['ぴょ','ピョ','pyo','표'],
+];
+
 function build(): KanaItem[] {
   const out: KanaItem[] = [];
   for (const row of ROWS) {
@@ -74,6 +89,11 @@ function build(): KanaItem[] {
         confusables: CONFUSABLES[ch],
       });
     });
+  }
+  // 요음 (히라 K31 / 가타 K32)
+  for (const [hira, kata, romaji, korean] of YOON) {
+    out.push({ id: `k_hira_${romaji}`, char: hira, script: 'hiragana', kind: 'yoon', romaji, koreanSound: korean, level: 'K31', group: '요음', components: [hira[0], hira[1]] });
+    out.push({ id: `k_kata_${romaji}`, char: kata, script: 'katakana', kind: 'yoon', romaji, koreanSound: korean, level: 'K32', group: '요음(カ)', components: [kata[0], kata[1]] });
   }
   // 장음 부호 (특수)
   out.push({ id: 'k_long', char: 'ー', script: 'common', kind: 'special', romaji: '-', koreanSound: '장음', level: 'K20', group: '특수표기' });
