@@ -338,6 +338,7 @@ export function selectSessionCards(
   for (const c of allCards) {
     if (c.kind === 'tip') { tips.push(c); continue; }
     if (c.kind === 'order' || c.kind === 'discover') continue; // 흐름/발견 카드는 SRS 대상 아님
+    if (c.kind === 'quiz' && c.id.startsWith('sign:')) continue; // 거리 읽기는 전용 세션에서만
     if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
     const key = conceptKey(c);
     const arr = byConcept.get(key);
@@ -435,6 +436,17 @@ export function selectMissionCards(allCards: Card[], missionId: string): Card[] 
     (c) => (c.kind === 'introduce' || c.kind === 'quiz' || c.kind === 'order' || c.kind === 'speak')
       && c.reviewTarget?.type === 'mission' && String(c.reviewTarget.id) === missionId,
   );
+}
+
+// 거리 읽기 전용 덱 — 간판·메뉴 카드만, 약점/안 본 것 먼저. (직접 진입)
+export function selectSignCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit = 12): Card[] {
+  const due: Card[] = [], fresh: Card[] = [];
+  for (const c of allCards) {
+    if (c.kind !== 'quiz' || !c.id.startsWith('sign:')) continue;
+    if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
+    (progress[c.id] ? due : fresh).push(c);
+  }
+  return [...due, ...fresh].slice(0, limit);
 }
 
 // 가나 전용 덱 — 한 스크립트(히라/가타)만, 개념별 가장 안 본 형태 1장씩, 약점 먼저. (직접 진입 링크용)

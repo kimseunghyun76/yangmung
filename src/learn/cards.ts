@@ -2,6 +2,7 @@
 // 친구 4차 권고: App.tsx 하드코딩 분리, SRS 도입 전제 조건.
 import { CONTENT } from '../content';
 import type { CLevel, KanaItem, ReviewTarget } from '../content/types';
+import { signs } from '../content/signs';
 import { toReadingUnits } from './kanaReading';
 
 // 받아쓰기 대상 — 짧고 순수 가나인 표현 (초보자 듣기+쓰기 입문)
@@ -344,6 +345,21 @@ export function buildCards(): Card[] {
       ja: ttsText(p) ?? p.kana, answer, korean: p.korean,
       tiles: shuffle([...answer, ...distractors]),
       reviewTarget: { type: 'phrase', id },
+    });
+  }
+
+  // 거리 읽기 — 간판·메뉴·안내·교통 표기 보고 뜻 맞히기 (실제 일본에서 눈에 띄는 것)
+  for (const sg of signs) {
+    const pool = signs.filter((x) => x.category === sg.category && x.korean !== sg.korean);
+    const distract = shuffle(pool.length >= 2 ? pool : signs.filter((x) => x.korean !== sg.korean)).slice(0, 3);
+    cards.push({
+      kind: 'quiz', id: `sign:${sg.id}`, tag: `🏯 ${sg.category} 읽기`,
+      banner: sg.ja, bannerJa: sg.kana, sub: '이 표기는 무슨 뜻일까요?',
+      reviewTarget: { type: 'phrase', id: `sign:${sg.id}` },
+      choices: shuffle([
+        { label: sg.korean, correct: true, ja: sg.kana, phrase: { kana: sg.kana, korean: sg.korean } },
+        ...distract.map((d) => ({ label: d.korean, correct: false, ja: d.kana, phrase: { kana: d.kana, korean: d.korean } })),
+      ]),
     });
   }
 
