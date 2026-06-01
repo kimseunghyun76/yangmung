@@ -10,6 +10,7 @@ import { DictationCardView } from './DictationCard';
 import { DiscoverCardView } from './DiscoverCard';
 import { ReadingAid } from './ReadingAid';
 import { sceneVisualByMission } from './scene';
+import { Icon } from '../ui/Icon';
 
 interface Props {
   card: Card;
@@ -31,8 +32,8 @@ const badgeStyle: React.CSSProperties = { display: 'inline-block', padding: '3px
 
 export function Session({ card, index, total, picked, cardStatus, onChoose, onIntroduceSeen, onSpeakPracticed, onDictationResult, isKanaFamiliar, onNext, onExit, onKnown }: Props) {
   const badge =
-    cardStatus === 'due' ? <span style={{ ...badgeStyle, background: 'var(--accent-soft)', color: 'var(--accent)' }}>🔁 복습</span> :
-    cardStatus === 'new' ? <span style={{ ...badgeStyle, background: 'var(--surface-2)', color: 'var(--ink-soft)' }}>🆕 신규</span> :
+    cardStatus === 'due' ? <span style={{ ...badgeStyle, background: 'var(--accent-soft)', color: 'var(--accent)' }}>복습</span> :
+    cardStatus === 'new' ? <span style={{ ...badgeStyle, background: 'var(--surface-2)', color: 'var(--ink-soft)' }}>신규</span> :
     null;
 
   // 장면 색 테마 — 미션 카드면 장소 색/이모지로 (세션이 장면마다 다르게 보이게)
@@ -51,13 +52,13 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
       </div>
       {card.kind !== 'tip' && card.kind !== 'discover' && card.scenario && (
         <div style={{ display: 'inline-block', marginTop: 4, padding: '4px 12px', borderRadius: 999, fontSize: 13, fontWeight: 600, color: '#fff', background: sv ? sv.accent : 'var(--accent)' }}>
-          {sv ? sv.emoji : '📍'} {card.scenario}
+          {card.scenario}
         </div>
       )}
 
       {card.kind === 'tip' ? (
         <>
-          <h2 style={{ marginTop: 16 }}>💡 {card.label}</h2>
+          <h2 style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="tip" size={22} /> {card.label}</h2>
           <p style={{ fontSize: 17, lineHeight: 1.6, background: 'var(--surface-2)', padding: 16, borderRadius: 10 }}>{card.tipKo}</p>
           <button style={{ ...PRIMARY, marginTop: 16 }} onClick={onNext}>다음</button>
         </>
@@ -86,11 +87,11 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
               <button
                 style={{ ...BTN, padding: card.listen ? '10px 22px' : '6px 12px', fontSize: card.listen ? 18 : undefined, background: card.listen ? 'var(--accent-soft)' : undefined }}
                 onClick={() => speak(card.bannerJa!)} disabled={!ttsSupported()}
-              >🔊 듣기</button>
+              ><Icon name="listen" size={17} /> 듣기</button>
               <button
                 style={{ ...BTN, padding: card.listen ? '10px 18px' : '6px 12px', fontSize: 14 }}
                 onClick={() => speak(card.bannerJa!, { rate: 0.6 })} disabled={!ttsSupported()}
-              >🐢 천천히</button>
+              >천천히</button>
             </div>
           )}
           {card.promptPhrase ? (
@@ -115,7 +116,7 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
               const anim = !reveal ? '' : c.correct ? 'ym-correct' : isPicked ? 'ym-wrong' : '';
               return (
                 <button key={idx} className={anim} style={{ ...BTN, background: bg }} onClick={() => onChoose(idx, c)} disabled={reveal}>
-                  {c.label}{reveal && c.recovery ? ' 🛟' : ''}{reveal && c.correct ? ' ✓' : ''}
+                  {c.label}{reveal && c.recovery ? ' 복구' : ''}{reveal && c.correct ? ' ✓' : ''}
                 </button>
               );
             })}
@@ -148,13 +149,13 @@ function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 
         <div style={{ background: 'var(--ok-soft)', padding: 12, borderRadius: 8, marginBottom: 8 }}>
           <p style={{ margin: 0, color: 'var(--ok)', fontWeight: 600 }}>✓ 정답 — 이 상황에서 자연스러워요</p>
           {ja && <PhraseLine ja={ja} korean={c.phrase!.korean} />}
-          {c.phrase?.tip && <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>💡 {c.phrase.tip}</p>}
+          {c.phrase?.tip && <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)', display: 'flex', alignItems: 'flex-start', gap: 6 }}><Icon name="tip" size={15} style={{ marginTop: 2 }} /> <span>{c.phrase.tip}</span></p>}
           {c.feedback && <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>💬 {c.feedback}</p>}
         </div>
       )}
       {isRecovery && (
         <div style={{ background: 'var(--warn-soft)', padding: 12, borderRadius: 8, marginBottom: 8, border: '1px solid var(--warn)' }}>
-          <p style={{ margin: 0, color: 'var(--warn)', fontWeight: 600 }}>🛟 복구 전략 사용 — 실패가 아니에요</p>
+          <p style={{ margin: 0, color: 'var(--warn)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="recovery" size={18} /> 복구 전략 사용 — 실패가 아니에요</p>
           <p style={{ margin: '4px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>별점은 낮아지지만 미션은 계속 이어집니다.</p>
           {ja && <PhraseLine ja={ja} korean={c.phrase!.korean} />}
           {c.feedback && <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>💬 {c.feedback}</p>}

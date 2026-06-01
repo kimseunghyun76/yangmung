@@ -8,6 +8,7 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
+    "assets:generate": "node scripts/generate-scene-assets.mjs",
     "typecheck": "tsc --noEmit",
     "lint:content": "tsx src/content/validate.ts",
     "test:content": "tsx src/content/validate.test.ts",

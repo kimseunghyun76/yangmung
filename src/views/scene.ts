@@ -31,13 +31,18 @@ export function sceneVisualByMission(missionId?: string): SceneVisual {
   const m = CONTENT.missions.find((x) => x.id === missionId);
   const base = sceneVisualByPlace(m?.place);
   const v = m?.visual;
-  if (!v) return base;
+  const key = missionId?.toLowerCase();
+  const generated = key ? {
+    thumb: `/scenes/${key}-thumb.svg`,
+    hero: `/scenes/${key}-hero.svg`,
+  } : {};
+  if (!v) return { ...base, ...generated };
   return {
     emoji: v.emoji ?? base.emoji,
     bg: v.bg ?? base.bg,
     accent: base.accent,
-    thumb: v.thumb,
-    hero: v.hero,
+    thumb: v.thumb ?? generated.thumb,
+    hero: v.hero ?? generated.hero,
     success: v.success,
     loop: v.loop,
   };

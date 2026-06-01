@@ -5,9 +5,10 @@ import {
   isMissionUnlocked, kanaReadMastery, missionProgress, type ProgressMap,
 } from '../learn/progress';
 import { BTN, CARD, PRIMARY, WRAP } from '../ui/styles';
-import { sceneVisualByPlace } from './scene';
+import { sceneVisualByMission } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
 import { PageHead } from './ui';
+import { Icon } from '../ui/Icon';
 
 const RECOVERY = [
   { ja: 'もう一度お願いします', ko: '다시 말해 주세요' },
@@ -44,8 +45,8 @@ export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props)
           const unlocked = isMissionUnlocked(m.id, progress);
           const p = missionProgress(allCards, progress, m.id);
           const done = unlocked && p.total > 0 && p.mastered === p.total;
-          const status = !unlocked ? '🔒 잠김' : done ? '✅ 완료' : p.started ? `▶ 진행 중 ${p.mastered}/${p.total}` : `시작 전 0/${p.total}`;
-          const sv = sceneVisualByPlace(m.place);
+          const status = !unlocked ? '잠김' : done ? '완료' : p.started ? `진행 중 ${p.mastered}/${p.total}` : `시작 전 0/${p.total}`;
+          const sv = sceneVisualByMission(m.id);
           return (
             <button
               key={m.id}
@@ -59,7 +60,7 @@ export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props)
               }}
             >
               <span style={{ alignSelf: 'stretch', width: 8, background: done ? 'var(--ok)' : unlocked ? sv.accent : 'var(--line)' }} />
-              <span style={{ fontSize: 19, paddingLeft: 4 }}>{sv.emoji}</span>
+              <SceneThumb sv={sv} muted={!unlocked} />
               <span style={{ flex: 1, textAlign: 'left', padding: '10px 0' }}>
                 <span style={{ fontWeight: 700, fontSize: 15 }}>{m.place ?? m.scenario}</span>
                 <span style={{ display: 'block', color: 'var(--ink-faint)', fontSize: 12, fontWeight: 500 }}>{m.scenario}</span>
@@ -74,7 +75,7 @@ export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props)
       <Section title="복구 도구 (막혔을 때)">
         {RECOVERY.map((r) => (
           <div key={r.ja} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, padding: '4px 0' }}>
-            <span style={{ color: 'var(--ink-soft)' }}>🛟 {r.ja}</span>
+            <span style={{ color: 'var(--ink-soft)', display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name="recovery" size={16} />{r.ja}</span>
             <span style={{ color: 'var(--ink-faint)' }}>{r.ko}</span>
           </div>
         ))}
@@ -84,6 +85,17 @@ export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props)
       <button style={{ ...PRIMARY, marginTop: 20, width: '100%' }} onClick={onBack}>홈으로</button>
     </main>
   );
+}
+
+function SceneThumb({ sv, muted = false }: { sv: { emoji: string; thumb?: string; bg: string }; muted?: boolean }) {
+  if (sv.thumb) {
+    return (
+      <span style={{ width: 48, height: 48, marginLeft: 4, flex: '0 0 48px', borderRadius: 14, overflow: 'hidden', opacity: muted ? 0.45 : 1, background: sv.bg, border: '1.5px solid var(--border)' }}>
+        <img src={sv.thumb} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+      </span>
+    );
+  }
+  return <span style={{ fontSize: 19, paddingLeft: 4, opacity: muted ? 0.5 : 1 }}>{sv.emoji}</span>;
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {

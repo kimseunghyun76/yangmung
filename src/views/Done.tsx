@@ -3,6 +3,7 @@ import {
   sessionResult, summarize, type ProgressMap, type SessionLogEntry,
 } from '../learn/progress';
 import { BTN, PRIMARY, WRAP } from '../ui/styles';
+import { Icon } from '../ui/Icon';
 
 interface Props {
   sessionId: number;
@@ -34,7 +35,7 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
             <span key={i} style={{ left: `${8 + i * 11}%`, animationDelay: `${i * 0.08}s` }}>{e}</span>
           ))}
         </div>
-        <div className="ym-burst" style={{ fontSize: 52, lineHeight: 1 }}>{stars >= 3 ? '🏆' : '🎉'}</div>
+        <div className="ym-burst" style={{ lineHeight: 1, color: stars >= 3 ? 'var(--warn)' : 'var(--accent)' }}><Icon name={stars >= 3 ? 'trophy' : 'star'} size={52} /></div>
       </div>
       <h1 style={{ textAlign: 'center', marginTop: 6 }}>세션 {sessionId} 완료</h1>
       <p style={{ fontSize: 26, margin: '8px 0 0', textAlign: 'center' }}>{'⭐'.repeat(stars)}{'☆'.repeat(3 - stars)}</p>
@@ -46,7 +47,7 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
       <p className="ym-kicker" style={{ margin: '22px 0 10px' }}>다음엔?</p>
       {weak > 0 && (
         <button className="ym-pop-sm" style={{ ...PRIMARY, width: '100%' }} onClick={onRetryWeak}>
-          🎯 약점만 다시 풀기 ({weak}카드)
+          <Icon name="target" size={17} /> 약점만 다시 풀기 ({weak}카드)
         </button>
       )}
       {canContinue && (
@@ -55,7 +56,7 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
         </button>
       )}
       <button style={{ ...BTN, width: '100%', textAlign: 'center', marginTop: 10 }} onClick={onHome}>
-        🏠 홈으로
+        <Icon name="nav-home" size={17} /> 홈으로
       </button>
 
       {/* 보조: 이번 세션 통계 */}
@@ -65,10 +66,10 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, fontSize: 14 }}>
             <div>카드 수</div><Num value={quizSeen} />
             <div style={{ color: 'var(--ok)' }}>첫 시도 정답</div><Num value={score} color="var(--ok)" />
-            <div style={{ color: 'var(--warn)' }}>🛟 복구 사용</div><Num value={recoveryUsed} color="var(--warn)" />
+            <div style={{ color: 'var(--warn)', display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="recovery" size={15} /> 복구 사용</div><Num value={recoveryUsed} color="var(--warn)" />
             <div style={{ color: 'var(--accent)' }}>✗ 오답</div><Num value={wrongCount} color="var(--accent)" />
-            {speakCount > 0 && (<><div>🗣 말한 문장</div><Num value={speakCount} /></>)}
-            <div style={{ color: 'var(--ok)' }}>✅ 새로 익숙</div><Num value={sr.masteredNow} color="var(--ok)" />
+            {speakCount > 0 && (<><div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="speak" size={15} /> 말한 문장</div><Num value={speakCount} /></>)}
+            <div style={{ color: 'var(--ok)', display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="check" size={15} /> 새로 익숙</div><Num value={sr.masteredNow} color="var(--ok)" />
           </div>
           <p style={{ margin: '10px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>복구는 별점에 안 들어가요 — 보조 바퀴.</p>
           <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>📊 누적: 본 {s.seen} · 익숙 {s.mastered} · 약점 {s.weak}</p>

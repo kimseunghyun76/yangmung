@@ -4,6 +4,7 @@ import { useState } from 'react';
 import type { DictationCard } from '../learn/cards';
 import { speak, ttsSupported } from '../tts';
 import { BTN, PRIMARY } from '../ui/styles';
+import { Icon } from '../ui/Icon';
 
 interface Props {
   card: DictationCard;
@@ -34,12 +35,12 @@ export function DictationCardView({ card, onResult, onNext }: Props) {
 
   return (
     <div>
-      <h2 style={{ marginTop: 14 }}>✏️ 받아쓰기</h2>
-      <p style={{ color: 'var(--ink-soft)', margin: '4px 0 0' }}>🔊 듣고, 가나를 순서대로 골라 문장을 만들어요</p>
+      <h2 style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="dictation" size={22} /> 받아쓰기</h2>
+      <p style={{ color: 'var(--ink-soft)', margin: '4px 0 0' }}>듣고, 가나를 순서대로 골라 문장을 만들어요</p>
 
       <div style={{ textAlign: 'center', marginTop: 12, display: 'flex', gap: 8, justifyContent: 'center' }}>
-        <button style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: 'var(--accent-soft)' }} onClick={() => speak(card.ja)} disabled={!ttsSupported()}>🔊 듣기</button>
-        <button style={{ ...BTN, padding: '10px 18px', fontSize: 14 }} onClick={() => speak(card.ja, { rate: 0.6 })} disabled={!ttsSupported()}>🐢 천천히</button>
+        <button style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: 'var(--accent-soft)' }} onClick={() => speak(card.ja)} disabled={!ttsSupported()}><Icon name="listen" size={17} /> 듣기</button>
+        <button style={{ ...BTN, padding: '10px 18px', fontSize: 14 }} onClick={() => speak(card.ja, { rate: 0.6 })} disabled={!ttsSupported()}>천천히</button>
       </div>
 
       {/* 만든 문장 */}
