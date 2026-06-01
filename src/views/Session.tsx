@@ -43,9 +43,9 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
     <main style={{ ...WRAP, background: sv ? sv.bg : undefined, minHeight: '100vh', transition: 'background 0.3s' }}>
       <button
         onClick={() => { if (index === 0 || confirm('세션을 끝내고 홈으로 갈까요? (지금까지 푼 카드는 저장돼요)')) onExit(); }}
-        style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 14, color: '#888', padding: '4px 0', marginBottom: 4 }}
+        style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--ink-faint)', padding: '4px 0', marginBottom: 4 }}
       >← 나가기</button>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#888', fontSize: 13 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--ink-faint)', fontSize: 13 }}>
         <span>{card.tag}{badge}</span>
         <span>{index + 1} / {total}</span>
       </div>
@@ -58,7 +58,7 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
       {card.kind === 'tip' ? (
         <>
           <h2 style={{ marginTop: 16 }}>💡 {card.label}</h2>
-          <p style={{ fontSize: 17, lineHeight: 1.6, background: '#f5f5fb', padding: 16, borderRadius: 10 }}>{card.tipKo}</p>
+          <p style={{ fontSize: 17, lineHeight: 1.6, background: 'var(--surface-2)', padding: 16, borderRadius: 10 }}>{card.tipKo}</p>
           <button style={{ ...PRIMARY, marginTop: 16 }} onClick={onNext}>다음</button>
         </>
       ) : card.kind === 'introduce' ? (
@@ -84,7 +84,7 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
           {card.bannerJa && (
             <div style={{ textAlign: 'center', marginBottom: 8, display: 'flex', gap: 8, justifyContent: 'center' }}>
               <button
-                style={{ ...BTN, padding: card.listen ? '10px 22px' : '6px 12px', fontSize: card.listen ? 18 : undefined, background: card.listen ? '#f6e4df' : undefined }}
+                style={{ ...BTN, padding: card.listen ? '10px 22px' : '6px 12px', fontSize: card.listen ? 18 : undefined, background: card.listen ? 'var(--accent-soft)' : undefined }}
                 onClick={() => speak(card.bannerJa!)} disabled={!ttsSupported()}
               >🔊 듣기</button>
               <button
@@ -95,22 +95,22 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
           )}
           {card.promptPhrase ? (
             <div style={{ marginBottom: 4 }}>
-              {card.sub && <p style={{ color: '#888', fontSize: 13, margin: '0 0 4px' }}>{card.sub}</p>}
-              <div style={{ textAlign: 'center', color: '#333' }}>
+              {card.sub && <p style={{ color: 'var(--ink-faint)', fontSize: 13, margin: '0 0 4px' }}>{card.sub}</p>}
+              <div style={{ textAlign: 'center', color: 'var(--ink)' }}>
                 <span style={{ fontSize: 22, verticalAlign: 'bottom' }}>「</span>
                 <ReadingAid text={card.promptPhrase.kana} isFamiliar={isKanaFamiliar} fontSize={24} />
                 <span style={{ fontSize: 22, verticalAlign: 'bottom' }}>」</span>
               </div>
-              <p style={{ textAlign: 'center', color: '#888', fontSize: 14, margin: '4px 0 0' }}>{card.promptPhrase.korean}</p>
+              <p style={{ textAlign: 'center', color: 'var(--ink-faint)', fontSize: 14, margin: '4px 0 0' }}>{card.promptPhrase.korean}</p>
             </div>
           ) : (
-            <p style={{ color: '#555' }}>{card.sub}</p>
+            <p style={{ color: 'var(--ink-soft)' }}>{card.sub}</p>
           )}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 8 }}>
             {card.choices.map((c, idx) => {
               const isPicked = picked === idx;
               const reveal = picked !== null;
-              const bg = !reveal ? '#fff' : c.correct ? '#dcfce7' : isPicked ? '#fee2e2' : '#fff';
+              const bg = !reveal ? 'var(--surface)' : c.correct ? 'var(--ok-soft)' : isPicked ? 'var(--accent-soft)' : 'var(--surface)';
               // 정답 펄스 / 오답(내가 고른 것) 흔들림
               const anim = !reveal ? '' : c.correct ? 'ym-correct' : isPicked ? 'ym-wrong' : '';
               return (
@@ -124,7 +124,7 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
           {picked === null && (
             <button
               onClick={onKnown}
-              style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: '#9aa0ad', marginTop: 14, width: '100%', textAlign: 'center' }}
+              style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--ink-faint)', marginTop: 14, width: '100%', textAlign: 'center' }}
             >✓ 이미 알아요 (건너뛰기)</button>
           )}
         </>
@@ -145,35 +145,35 @@ function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 
   return (
     <div className="ym-reveal" style={{ marginTop: 14 }}>
       {isCorrect && (
-        <div style={{ background: '#dcfce7', padding: 12, borderRadius: 8, marginBottom: 8 }}>
-          <p style={{ margin: 0, color: '#16a34a', fontWeight: 600 }}>✓ 정답 — 이 상황에서 자연스러워요</p>
+        <div style={{ background: 'var(--ok-soft)', padding: 12, borderRadius: 8, marginBottom: 8 }}>
+          <p style={{ margin: 0, color: 'var(--ok)', fontWeight: 600 }}>✓ 정답 — 이 상황에서 자연스러워요</p>
           {ja && <PhraseLine ja={ja} korean={c.phrase!.korean} />}
-          {c.phrase?.tip && <p style={{ margin: '6px 0 0', fontSize: 13, color: '#555' }}>💡 {c.phrase.tip}</p>}
-          {c.feedback && <p style={{ margin: '6px 0 0', fontSize: 13, color: '#555' }}>💬 {c.feedback}</p>}
+          {c.phrase?.tip && <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>💡 {c.phrase.tip}</p>}
+          {c.feedback && <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>💬 {c.feedback}</p>}
         </div>
       )}
       {isRecovery && (
-        <div style={{ background: '#fef3c7', padding: 12, borderRadius: 8, marginBottom: 8, border: '1px solid #fde68a' }}>
-          <p style={{ margin: 0, color: '#b45309', fontWeight: 600 }}>🛟 복구 전략 사용 — 실패가 아니에요</p>
-          <p style={{ margin: '4px 0 0', fontSize: 13, color: '#555' }}>별점은 낮아지지만 미션은 계속 이어집니다.</p>
+        <div style={{ background: 'var(--warn-soft)', padding: 12, borderRadius: 8, marginBottom: 8, border: '1px solid #fde68a' }}>
+          <p style={{ margin: 0, color: 'var(--warn)', fontWeight: 600 }}>🛟 복구 전략 사용 — 실패가 아니에요</p>
+          <p style={{ margin: '4px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>별점은 낮아지지만 미션은 계속 이어집니다.</p>
           {ja && <PhraseLine ja={ja} korean={c.phrase!.korean} />}
-          {c.feedback && <p style={{ margin: '6px 0 0', fontSize: 13, color: '#555' }}>💬 {c.feedback}</p>}
+          {c.feedback && <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>💬 {c.feedback}</p>}
         </div>
       )}
       {isWrong && (
-        <div style={{ background: '#fee2e2', padding: 12, borderRadius: 8, marginBottom: 8 }}>
-          <p style={{ margin: 0, color: '#dc2626', fontWeight: 600 }}>✗ 이 상황에서는 어색해요</p>
-          <p style={{ margin: '6px 0 0', fontSize: 13, color: '#555' }}>💬 {c.feedback ?? '문맥과 맞지 않아 듣는 사람이 갸웃할 수 있어요.'}</p>
+        <div style={{ background: 'var(--accent-soft)', padding: 12, borderRadius: 8, marginBottom: 8 }}>
+          <p style={{ margin: 0, color: 'var(--accent)', fontWeight: 600 }}>✗ 이 상황에서는 어색해요</p>
+          <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>💬 {c.feedback ?? '문맥과 맞지 않아 듣는 사람이 갸웃할 수 있어요.'}</p>
           {correctRef && (
             <p style={{ margin: '8px 0 0', fontSize: 14 }}>
               자연스러운 답 → <strong>{correctRef.phrase!.kanji ?? correctRef.phrase!.kana}</strong>
-              <span style={{ color: '#555' }}> — {correctRef.phrase!.korean}</span>
+              <span style={{ color: 'var(--ink-soft)' }}> — {correctRef.phrase!.korean}</span>
             </p>
           )}
         </div>
       )}
       {card.listen && card.bannerJa && (
-        <p style={{ background: '#fef9c3', padding: 12, borderRadius: 8, fontSize: 16, color: '#444' }}>들린 표현: <strong>{card.bannerJa}</strong></p>
+        <p style={{ background: 'var(--warn-soft)', padding: 12, borderRadius: 8, fontSize: 16, color: 'var(--ink-soft)' }}>들린 표현: <strong>{card.bannerJa}</strong></p>
       )}
       <button style={PRIMARY} onClick={onNext}>다음</button>
     </div>
@@ -184,7 +184,7 @@ function PhraseLine({ ja, korean }: { ja: string; korean: string }) {
   return (
     <p style={{ margin: '6px 0 0', fontSize: 17 }}>
       <strong>{ja}</strong>
-      <span style={{ color: '#555' }}> — {korean}</span>
+      <span style={{ color: 'var(--ink-soft)' }}> — {korean}</span>
     </p>
   );
 }

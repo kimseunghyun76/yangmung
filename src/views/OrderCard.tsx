@@ -11,20 +11,20 @@ export function OrderCardView({ card, onNext }: Props) {
   return (
     <div>
       <h2 style={{ marginTop: 14, marginBottom: 4 }}>🧭 {card.title}</h2>
-      <p style={{ color: '#555', marginTop: 0 }}>{card.prompt}</p>
+      <p style={{ color: 'var(--ink-soft)', marginTop: 0 }}>{card.prompt}</p>
 
       <ol style={{ paddingLeft: 0, listStyle: 'none', margin: '12px 0' }}>
         {card.items.map((it, i) => {
           return (
-            <li key={it.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 10, background: '#f7f7fb', marginBottom: 6, border: '1px solid #e4e4ee' }}>
-              <span style={{ width: 22, height: 22, borderRadius: 999, background: '#c8453a', color: '#fff', fontSize: 13, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{i + 1}</span>
+            <li key={it.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 10, background: 'var(--surface-2)', marginBottom: 6, border: '1px solid var(--line)' }}>
+              <span style={{ width: 22, height: 22, borderRadius: 999, background: 'var(--accent)', color: '#fff', fontSize: 13, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{i + 1}</span>
               <span style={{ fontSize: 16 }}>{it.label}</span>
             </li>
           );
         })}
       </ol>
 
-      <p style={{ background: '#fef9c3', padding: 12, borderRadius: 8, color: '#555', fontSize: 14, lineHeight: 1.5 }}>
+      <p style={{ background: 'var(--warn-soft)', padding: 12, borderRadius: 8, color: 'var(--ink-soft)', fontSize: 14, lineHeight: 1.5 }}>
         가게마다 순서는 조금 달라질 수 있어요. 여기서는 여행자가 자주 만나는 흐름만 미리 봅니다.
       </p>
       <button style={{ ...PRIMARY, marginTop: 8, width: '100%' }} onClick={onNext}>확인</button>

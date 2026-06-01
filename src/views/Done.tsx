@@ -38,12 +38,12 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
       </div>
       <h1 style={{ textAlign: 'center', marginTop: 6 }}>세션 {sessionId} 완료</h1>
       <p style={{ fontSize: 26, margin: '4px 0 0', textAlign: 'center' }}>{'⭐'.repeat(stars)}{'☆'.repeat(3 - stars)}</p>
-      <p style={{ color: '#666', fontSize: 14, margin: '6px 0 0', textAlign: 'center' }}>
+      <p style={{ color: 'var(--ink-soft)', fontSize: 14, margin: '6px 0 0', textAlign: 'center' }}>
         첫 시도 {score}/{quizSeen}{speakCount > 0 ? ` · 말하기 ${speakCount}문장` : ''}{sr.weakNow > 0 ? ` · 약점 ${sr.weakNow}개 다음에 다시 나와요` : ''}
       </p>
 
       {/* 주역: 다음 행동 */}
-      <p style={{ margin: '20px 0 8px', fontSize: 14, color: '#666', fontWeight: 600 }}>다음엔?</p>
+      <p style={{ margin: '20px 0 8px', fontSize: 14, color: 'var(--ink-soft)', fontWeight: 600 }}>다음엔?</p>
       {weak > 0 && (
         <button style={{ ...PRIMARY, width: '100%' }} onClick={onRetryWeak}>
           🎯 약점만 다시 풀기 ({weak}카드)
@@ -60,18 +60,18 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
 
       {/* 보조: 이번 세션 통계 */}
       <details style={{ marginTop: 20 }}>
-        <summary style={{ cursor: 'pointer', fontSize: 13, color: '#888' }}>이번 세션 자세히</summary>
-        <div style={{ marginTop: 10, padding: 14, background: '#f6e4df', borderRadius: 10 }}>
+        <summary style={{ cursor: 'pointer', fontSize: 13, color: 'var(--ink-faint)' }}>이번 세션 자세히</summary>
+        <div style={{ marginTop: 10, padding: 14, background: 'var(--accent-soft)', borderRadius: 10 }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, fontSize: 14 }}>
             <div>카드 수</div><Num value={quizSeen} />
-            <div style={{ color: '#16a34a' }}>첫 시도 정답</div><Num value={score} color="#16a34a" />
-            <div style={{ color: '#b45309' }}>🛟 복구 사용</div><Num value={recoveryUsed} color="#b45309" />
-            <div style={{ color: '#dc2626' }}>✗ 오답</div><Num value={wrongCount} color="#dc2626" />
+            <div style={{ color: 'var(--ok)' }}>첫 시도 정답</div><Num value={score} color="#16a34a" />
+            <div style={{ color: 'var(--warn)' }}>🛟 복구 사용</div><Num value={recoveryUsed} color="#b45309" />
+            <div style={{ color: 'var(--accent)' }}>✗ 오답</div><Num value={wrongCount} color="#dc2626" />
             {speakCount > 0 && (<><div>🗣 말한 문장</div><Num value={speakCount} /></>)}
-            <div style={{ color: '#16a34a' }}>✅ 새로 익숙</div><Num value={sr.masteredNow} color="#16a34a" />
+            <div style={{ color: 'var(--ok)' }}>✅ 새로 익숙</div><Num value={sr.masteredNow} color="#16a34a" />
           </div>
-          <p style={{ margin: '10px 0 0', fontSize: 12, color: '#888' }}>복구는 별점에 안 들어가요 — 보조 바퀴.</p>
-          <p style={{ margin: '6px 0 0', fontSize: 13, color: '#666' }}>📊 누적: 본 {s.seen} · 익숙 {s.mastered} · 약점 {s.weak}</p>
+          <p style={{ margin: '10px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>복구는 별점에 안 들어가요 — 보조 바퀴.</p>
+          <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>📊 누적: 본 {s.seen} · 익숙 {s.mastered} · 약점 {s.weak}</p>
         </div>
       </details>
     </main>

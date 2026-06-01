@@ -35,16 +35,16 @@ export function DictationCardView({ card, onResult, onNext }: Props) {
   return (
     <div>
       <h2 style={{ marginTop: 14 }}>✏️ 받아쓰기</h2>
-      <p style={{ color: '#555', margin: '4px 0 0' }}>🔊 듣고, 가나를 순서대로 골라 문장을 만들어요</p>
+      <p style={{ color: 'var(--ink-soft)', margin: '4px 0 0' }}>🔊 듣고, 가나를 순서대로 골라 문장을 만들어요</p>
 
       <div style={{ textAlign: 'center', marginTop: 12, display: 'flex', gap: 8, justifyContent: 'center' }}>
-        <button style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: '#f6e4df' }} onClick={() => speak(card.ja)} disabled={!ttsSupported()}>🔊 듣기</button>
+        <button style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: 'var(--accent-soft)' }} onClick={() => speak(card.ja)} disabled={!ttsSupported()}>🔊 듣기</button>
         <button style={{ ...BTN, padding: '10px 18px', fontSize: 14 }} onClick={() => speak(card.ja, { rate: 0.6 })} disabled={!ttsSupported()}>🐢 천천히</button>
       </div>
 
       {/* 만든 문장 */}
       <div style={{ minHeight: 52, margin: '16px 0 8px', padding: 10, border: '2px dashed #d0d0d8', borderRadius: 10, textAlign: 'center', fontSize: 28, letterSpacing: 2 }}>
-        {builtText.length ? builtText.join('') : <span style={{ color: '#bbb', fontSize: 15, letterSpacing: 0 }}>여기에 글자가 쌓여요</span>}
+        {builtText.length ? builtText.join('') : <span style={{ color: 'var(--ink-faint)', fontSize: 15, letterSpacing: 0 }}>여기에 글자가 쌓여요</span>}
       </div>
 
       {/* 타일 */}
@@ -67,9 +67,9 @@ export function DictationCardView({ card, onResult, onNext }: Props) {
       ) : (
         <div className="ym-reveal" style={{ marginTop: 16 }}>
           {checked ? (
-            <p style={{ background: '#dcfce7', padding: 12, borderRadius: 8, color: '#16a34a', fontWeight: 600, margin: 0 }}>✓ 정답! {card.answer.join('')} — {card.korean}</p>
+            <p style={{ background: 'var(--ok-soft)', padding: 12, borderRadius: 8, color: 'var(--ok)', fontWeight: 600, margin: 0 }}>✓ 정답! {card.answer.join('')} — {card.korean}</p>
           ) : (
-            <p style={{ background: '#fee2e2', padding: 12, borderRadius: 8, color: '#dc2626', margin: 0 }}>
+            <p style={{ background: 'var(--accent-soft)', padding: 12, borderRadius: 8, color: 'var(--accent)', margin: 0 }}>
               아쉬워요. 정답은 <strong>{card.answer.join('')}</strong> — {card.korean}
             </p>
           )}

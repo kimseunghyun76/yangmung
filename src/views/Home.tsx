@@ -41,32 +41,32 @@ export function Home({ nav, allCards, progress, session, sessionConfig, modeLabe
     <main style={WRAP}>
       <NavBar {...nav} />
       <h1 style={{ marginBottom: 4 }}>yangmung</h1>
-      <p style={{ color: '#888', marginTop: 0, fontSize: 13 }}>일본 여행, 오늘 한 판 · 세션 #{upcomingId}</p>
+      <p style={{ color: 'var(--ink-faint)', marginTop: 0, fontSize: 13 }}>일본 여행, 오늘 한 판 · 세션 #{upcomingId}</p>
 
-      {/* 주인공: 오늘의 목표 + 시작 (藍 남색 + 朱 포인트) */}
-      <div style={{ background: 'linear-gradient(135deg, #244a6e 0%, #1f3f5f 100%)', color: '#fff', padding: 20, borderRadius: 16, marginTop: 14, borderTop: '3px solid #c8453a' }}>
-        <p style={{ margin: 0, fontSize: 13, opacity: 0.85 }}>🎯 오늘 목표</p>
-        <p style={{ margin: '6px 0 0', fontSize: 20, fontWeight: 800, lineHeight: 1.35 }}>{goal}</p>
+      {/* 주인공: 오늘의 목표 + 시작 — 차콜 럭셔리 패널 + 朱 액센트 */}
+      <div style={{ background: 'var(--hero)', color: '#f3f2ef', padding: 22, borderRadius: 18, marginTop: 14, borderTop: '2px solid var(--accent)', boxShadow: 'var(--shadow-raised)' }}>
+        <p style={{ margin: 0, fontSize: 11, letterSpacing: '0.1em', color: 'var(--accent)', fontWeight: 700 }}>오늘 목표</p>
+        <p style={{ margin: '8px 0 0', fontSize: 21, fontWeight: 750, lineHeight: 1.35, letterSpacing: '-0.01em' }}>{goal}</p>
         <button
-          style={{ ...PRIMARY, background: '#fff', color: '#c8453a', marginTop: 16, width: '100%', fontWeight: 800, fontSize: 17 }}
+          style={{ ...PRIMARY, marginTop: 18, width: '100%', fontSize: 16 }}
           onClick={onStart}
           disabled={planned === 0}
         >
-          {planned === 0 ? '오늘 학습할 카드가 없어요' : `시작 (${planned}카드)`}
+          {planned === 0 ? '오늘 학습할 카드가 없어요' : `시작 · ${planned}카드`}
         </button>
-        <p style={{ margin: '10px 0 0', fontSize: 12, opacity: 0.85 }}>
-          🎚 {modeLabel} · 가나 {plan.breakdown.K} · 표현 {plan.breakdown.B} · 미션 {plan.breakdown.C} · 팁 {plan.breakdown.tip}
+        <p style={{ margin: '12px 0 0', fontSize: 12, opacity: 0.7 }}>
+          {modeLabel} · 가나 {plan.breakdown.K} · 표현 {plan.breakdown.B} · 미션 {plan.breakdown.C} · 팁 {plan.breakdown.tip}
         </p>
       </div>
 
       {planned > 0 && counts.due + counts.fresh > planned && (
-        <p style={{ fontSize: 12, color: '#888', marginTop: 8, textAlign: 'center' }}>
+        <p style={{ fontSize: 12, color: 'var(--ink-faint)', marginTop: 8, textAlign: 'center' }}>
           오늘 풀 수 있는 카드는 {counts.due + counts.fresh}개지만 한 번에 {planned}개씩 짧게 진행해요.
         </p>
       )}
 
       <div style={{ ...CARD, marginTop: 14 }}>
-        <p style={{ margin: 0, fontSize: 13, color: '#666', fontWeight: 600 }}>📚 가나 안정도 (읽기 기준)</p>
+        <p style={{ margin: 0, fontSize: 13, color: 'var(--ink-soft)', fontWeight: 600 }}>📚 가나 안정도 (읽기 기준)</p>
         <KanaTrackBar label="히라가나" kanaIds={hiraIds} progress={progress} />
         <KanaTrackBar label="가타카나" kanaIds={kataIds} progress={progress} />
         <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
@@ -82,19 +82,19 @@ export function Home({ nav, allCards, progress, session, sessionConfig, modeLabe
       {s.seen > 0 && (
         <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
           <Stat label="본 카드" value={s.seen} />
-          <Stat label="익숙" value={s.mastered} color="#16a34a" bg="#dcfce7" />
-          <Stat label="약점" value={s.weak} color="#dc2626" bg="#fee2e2" />
+          <Stat label="익숙" value={s.mastered} color="var(--ok)" bg="var(--ok-soft)" />
+          <Stat label="약점" value={s.weak} color="var(--accent)" bg="var(--accent-soft)" />
         </div>
       )}
 
       <div style={{ marginTop: 18 }}>
-        <p style={{ margin: '0 0 6px', fontSize: 13, color: '#666', fontWeight: 600 }}>🎬 장면별 연습</p>
+        <p style={{ margin: '0 0 6px', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 600 }}>🎬 장면별 연습</p>
         {scenes.map((m) => {
           const unlocked = isMissionUnlocked(m.id, progress);
           const sv = sceneVisualByPlace(m.place);
           if (!unlocked) {
             return (
-              <p key={m.id} style={{ margin: '6px 0', fontSize: 13, color: '#aaa' }}>
+              <p key={m.id} style={{ margin: '6px 0', fontSize: 13, color: 'var(--ink-faint)' }}>
                 🔒 {sv.emoji} {m.place ?? m.scenario} — {lockHint(m.id)}
               </p>
             );
@@ -113,9 +113,9 @@ export function Home({ nav, allCards, progress, session, sessionConfig, modeLabe
               <span style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '10px 14px', gap: 5 }}>
                 <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontWeight: 600 }}>{m.place ?? m.scenario} 연습</span>
-                  <span style={{ fontSize: 12, color: done ? '#16a34a' : '#9aa0ad' }}>{done ? '✅ 완료' : `${p.mastered}/${p.total}`}</span>
+                  <span style={{ fontSize: 12, color: done ? 'var(--ok)' : 'var(--ink-faint)' }}>{done ? '✅ 완료' : `${p.mastered}/${p.total}`}</span>
                 </span>
-                <span style={{ height: 4, background: '#eceef4', borderRadius: 2, overflow: 'hidden' }}>
+                <span style={{ height: 4, background: 'var(--surface-2)', borderRadius: 2, overflow: 'hidden' }}>
                   <span style={{ display: 'block', width: `${pct}%`, height: '100%', background: sv.accent }} />
                 </span>
               </span>
@@ -126,14 +126,14 @@ export function Home({ nav, allCards, progress, session, sessionConfig, modeLabe
 
       {s.seen > 0 && (
         <button
-          style={{ ...BTN, marginTop: 16, color: '#888', textAlign: 'center', width: '100%', fontSize: 13 }}
+          style={{ ...BTN, marginTop: 16, color: 'var(--ink-faint)', textAlign: 'center', width: '100%', fontSize: 13 }}
           onClick={() => { if (confirm('진척을 모두 지울까요?')) onReset(); }}
         >
           처음부터 다시
         </button>
       )}
 
-      {!ttsSupported() && <p style={{ color: '#b45309', fontSize: 13, marginTop: 16 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
+      {!ttsSupported() && <p style={{ color: 'var(--warn)', fontSize: 13, marginTop: 16 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
     </main>
   );
 }
@@ -151,20 +151,20 @@ function KanaTrackBar({ label, kanaIds, progress }: { label: string; kanaIds: st
   const pct = Math.round((m.mastered / Math.max(1, m.total)) * 100);
   return (
     <div style={{ marginTop: 10 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#555' }}>
-        <span>{label}</span><span><strong style={{ color: '#c8453a' }}>{m.mastered}</strong> / {m.total}자</span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--ink-soft)' }}>
+        <span>{label}</span><span><strong style={{ color: 'var(--accent)' }}>{m.mastered}</strong> / {m.total}자</span>
       </div>
-      <div style={{ height: 6, background: '#eceef4', borderRadius: 3, marginTop: 5, overflow: 'hidden' }}>
-        <div style={{ width: `${pct}%`, height: '100%', background: '#c8453a', transition: 'width 0.3s' }} />
+      <div style={{ height: 6, background: 'var(--surface-2)', borderRadius: 3, marginTop: 5, overflow: 'hidden' }}>
+        <div style={{ width: `${pct}%`, height: '100%', background: 'var(--accent)', transition: 'width 0.3s' }} />
       </div>
     </div>
   );
 }
 
-function Stat({ label, value, color, bg = '#f6e4df' }: { label: string; value: number; color?: string; bg?: string }) {
+function Stat({ label, value, color, bg = 'var(--accent-soft)' }: { label: string; value: number; color?: string; bg?: string }) {
   return (
     <div style={{ flex: 1, background: bg, padding: 10, borderRadius: 10, textAlign: 'center' }}>
-      <div style={{ fontSize: 11, color: '#666' }}>{label}</div>
+      <div style={{ fontSize: 11, color: 'var(--ink-soft)' }}>{label}</div>
       <div style={{ fontSize: 20, fontWeight: 600, color }}>{value}</div>
     </div>
   );

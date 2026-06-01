@@ -53,6 +53,7 @@ export function App() {
     : isKanaFamiliar(ch, seenKana);
 
   function updateSettings(s: Settings) { setSettings(s); saveSettings(s); }
+  function toggleTheme() { updateSettings({ ...settings, theme: settings.theme === 'dark' ? 'light' : 'dark' }); }
   // 모드 선택 = 프리셋 적용(보조·속도) + 세션 구성 변경. readingAid/속도는 이후 개별 미세조정 가능.
   function selectMode(mode: Settings['mode']) {
     const p = MODE_PRESETS[mode];
@@ -86,6 +87,9 @@ export function App() {
     const t = window.setTimeout(() => speak(ja, { rate: settings.slowListening ? 0.6 : 0.95 }), 120);
     return () => clearTimeout(t);
   }, [i, view, card, settings.slowListening]);
+
+  // 주간/야간 테마를 <html data-theme>에 반영
+  useEffect(() => { document.documentElement.dataset.theme = settings.theme; }, [settings.theme]);
 
   // 카드가 바뀌면 표시 시각 리셋 + 이전 자동넘김 타이머 정리
   useEffect(() => {
@@ -221,7 +225,7 @@ export function App() {
     recordCardResult(card.id, c.correct, !!c.recovery, fast);
     // 정답(복구·오답 아님)이면 자동으로 다음 카드 — 반복 진행 시간 단축
     if (c.correct && !c.recovery && settings.fastForward) {
-      advanceTimerRef.current = window.setTimeout(() => { advanceTimerRef.current = null; next(); }, 850);
+      advanceTimerRef.current = window.setTimeout(() => { advanceTimerRef.current = null; next(); }, 1000);
     }
   }
   // 소개 카드: 퀴즈 전 학습 노출. 점수에는 넣지 않고, 한 번 본 카드로만 기록.
@@ -260,6 +264,8 @@ export function App() {
     onNavigate: (v: 'home' | 'map' | 'review') => setView(v),
     onOpenGuide: () => setShowGuide(true),
     onOpenSettings: () => setShowSettings(true),
+    theme: settings.theme,
+    onToggleTheme: toggleTheme,
   };
 
   function renderView() {

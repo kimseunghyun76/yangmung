@@ -27,11 +27,11 @@ export function SpeakCardView({ card, isKanaFamiliar, onPracticed, onNext }: Pro
       <div style={{ textAlign: 'center', margin: '18px 0 4px' }}>
         <ReadingAid text={card.kana} isFamiliar={isKanaFamiliar} fontSize={30} />
       </div>
-      <p style={{ textAlign: 'center', color: '#555', marginTop: 4 }}>{card.korean}</p>
+      <p style={{ textAlign: 'center', color: 'var(--ink-soft)', marginTop: 4 }}>{card.korean}</p>
 
       <div style={{ textAlign: 'center', marginTop: 14, display: 'flex', gap: 8, justifyContent: 'center' }}>
         <button
-          style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: '#f6e4df' }}
+          style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: 'var(--accent-soft)' }}
           onClick={() => speak(card.ja)} disabled={!ttsSupported()}
         >🔊 듣기</button>
         <button
@@ -48,8 +48,8 @@ export function SpeakCardView({ card, isKanaFamiliar, onPracticed, onNext }: Pro
         <button style={{ ...PRIMARY, marginTop: 8, width: '100%' }} onClick={markSpoke}>말했어요</button>
       ) : (
         <div style={{ marginTop: 12 }}>
-          <p style={{ background: '#dcfce7', padding: 12, borderRadius: 8, color: '#16a34a', fontWeight: 600, margin: 0 }}>👍 좋아요! 입으로 꺼내는 게 진짜 실력이에요</p>
-          {card.tip && <p style={{ background: '#f5f5fb', padding: 12, borderRadius: 8, fontSize: 14, color: '#444', marginTop: 8 }}>💡 {card.tip}</p>}
+          <p style={{ background: 'var(--ok-soft)', padding: 12, borderRadius: 8, color: 'var(--ok)', fontWeight: 600, margin: 0 }}>👍 좋아요! 입으로 꺼내는 게 진짜 실력이에요</p>
+          {card.tip && <p style={{ background: 'var(--surface-2)', padding: 12, borderRadius: 8, fontSize: 14, color: 'var(--ink-soft)', marginTop: 8 }}>💡 {card.tip}</p>}
           <button style={{ ...PRIMARY, marginTop: 8, width: '100%' }} onClick={onNext}>다음</button>
         </div>
       )}
