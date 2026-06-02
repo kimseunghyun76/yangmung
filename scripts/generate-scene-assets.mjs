@@ -105,20 +105,20 @@ function icoFromPng(pngData) {
 }
 
 const scenes = [
-  ['c0', '가게', 'bag'],
-  ['c1', '편의점', 'store'],
-  ['c2', '식당', 'bowl'],
-  ['c3', '전철', 'train'],
-  ['c4', '호텔', 'hotel'],
-  ['c5', '거리', 'sign'],
-  ['c6', '약국', 'cross'],
-  ['c7', '쇼핑', 'tag'],
-  ['c8', '택시', 'taxi'],
-  ['c9', '공항', 'plane'],
-  ['c10', '환전', 'yen'],
-  ['c11', '코인로커', 'locker'],
-  ['c12', '택배', 'box'],
-  ['c13', '라멘', 'ramen'],
+  ['c0', '가게', 'bag', '#fdf2f8', '#db2777'],
+  ['c1', '편의점', 'store', '#eef6ff', '#2563eb'],
+  ['c2', '식당', 'bowl', '#fff4ec', '#ea580c'],
+  ['c3', '전철', 'train', '#eefcf3', '#16a34a'],
+  ['c4', '호텔', 'hotel', '#f3f0ff', '#7c3aed'],
+  ['c5', '거리', 'sign', '#f0fdfa', '#0d9488'],
+  ['c6', '약국', 'cross', '#fef2f2', '#e11d48'],
+  ['c7', '쇼핑', 'tag', '#fdf4ff', '#c026d3'],
+  ['c8', '택시', 'taxi', '#fefce8', '#ca8a04'],
+  ['c9', '공항', 'plane', '#eff6ff', '#2563eb'],
+  ['c10', '환전', 'yen', '#f7fee7', '#65a30d'],
+  ['c11', '코인로커', 'locker', '#f1f5f9', '#475569'],
+  ['c12', '택배', 'box', '#fff7ed', '#c2410c'],
+  ['c13', '라멘', 'ramen', '#fff1f2', '#e11d48'],
 ];
 
 const icons = {
@@ -165,10 +165,10 @@ const icons = {
   fast: '<path d="M5 5v14l7-7zM13 5v14l7-7z"/>',
 };
 
-function motif(kind, x = 600, y = 242, s = 1) {
+function motif(kind, x = 600, y = 242, s = 1, accent = palette.accent) {
   const p = palette;
   const stroke = `stroke="${p.ink}" stroke-width="${8 * s}" stroke-linecap="round" stroke-linejoin="round" fill="none"`;
-  const fillAccent = `fill="${p.accent}"`;
+  const fillAccent = `fill="${accent}"`;
   const fillSurface = `fill="${p.surface}" stroke="${p.ink}" stroke-width="${8 * s}"`;
   if (kind === 'store') return `<path ${stroke} d="M${x-150*s} ${y-40*s}h${300*s}l-${24*s}-${72*s}h-${252*s}z"/><path ${stroke} d="M${x-124*s} ${y-40*s}v${126*s}h${248*s}v-${126*s}"/><path ${stroke} d="M${x-44*s} ${y+86*s}v-${78*s}h${88*s}v${78*s}"/><circle ${fillAccent} cx="${x+94*s}" cy="${y+20*s}" r="${18*s}"/>`;
   if (kind === 'bowl' || kind === 'ramen') return `<path ${stroke} d="M${x-145*s} ${y+10*s}h${290*s}c-${18*s} ${84*s}-${76*s} ${118*s}-${145*s} ${118*s}s-${127*s}-${34*s}-${145*s}-${118*s}z"/><path ${stroke} d="M${x-96*s} ${y-24*s}c${32*s}-${22*s} ${64*s}-${22*s} ${96*s} 0s${64*s} ${22*s} ${96*s} 0"/><path ${stroke} d="M${x-98*s} ${y-70*s}l${78*s} ${70*s}M${x+98*s} ${y-70*s}l-${78*s} ${70*s}"/><circle ${fillAccent} cx="${x+78*s}" cy="${y+62*s}" r="${20*s}"/>`;
@@ -185,30 +185,29 @@ function motif(kind, x = 600, y = 242, s = 1) {
   return `<path ${stroke} d="M${x-96*s} ${y+84*s}h${192*s}l-${22*s}-${150*s}h-${148*s}z"/><path ${stroke} d="M${x-54*s} ${y-18*s}h${108*s}"/><circle ${fillAccent} cx="${x}" cy="${y+28*s}" r="${22*s}"/>`;
 }
 
-function hero(id, label, kind) {
+function hero(id, label, kind, bg, accent) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" role="img" aria-label="${label} scene illustration">
   <rect width="1200" height="480" rx="0" fill="transparent"/>
-  <path d="M70 372C218 294 306 320 436 338c174 24 258-126 424-112 102 8 178 72 270 38" fill="none" stroke="${palette.accent}" stroke-width="20" stroke-linecap="round" opacity=".16"/>
-  <rect x="72" y="70" width="1056" height="340" rx="56" fill="${palette.bg}" stroke="${palette.ink}" stroke-width="10"/>
-  <circle cx="980" cy="126" r="44" fill="${palette.accent}" opacity=".92"/>
-  ${motif(kind)}
+  <path d="M70 372C218 294 306 320 436 338c174 24 258-126 424-112 102 8 178 72 270 38" fill="none" stroke="${accent}" stroke-width="18" stroke-linecap="round" opacity=".12"/>
+  <rect x="72" y="70" width="1056" height="340" rx="56" fill="${bg}" stroke="${palette.ink}" stroke-width="10"/>
+  <circle cx="980" cy="126" r="44" fill="${accent}" opacity=".18"/>
+  ${motif(kind, 600, 242, 1, accent)}
   <path d="M184 374h832" stroke="${palette.ink}" stroke-width="10" stroke-linecap="round" opacity=".16"/>
 </svg>
 `;
 }
 
-function thumb(id, label, kind) {
+function thumb(id, label, kind, bg, accent) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="${label} scene thumbnail">
-  <rect width="96" height="96" rx="20" fill="${palette.bg}" stroke="${palette.ink}" stroke-width="4"/>
-  <circle cx="74" cy="22" r="8" fill="${palette.accent}"/>
-  ${motif(kind, 48, 50, 0.18)}
+  <rect width="96" height="96" rx="20" fill="${bg}" stroke="${palette.ink}" stroke-width="4"/>
+  ${motif(kind, 48, 50, 0.18, accent)}
 </svg>
 `;
 }
 
-for (const [id, label, kind] of scenes) {
-  writeFileSync(join(sceneDir, `${id}-hero.svg`), hero(id, label, kind));
-  writeFileSync(join(sceneDir, `${id}-thumb.svg`), thumb(id, label, kind));
+for (const [id, label, kind, bg, accent] of scenes) {
+  writeFileSync(join(sceneDir, `${id}-hero.svg`), hero(id, label, kind, bg, accent));
+  writeFileSync(join(sceneDir, `${id}-thumb.svg`), thumb(id, label, kind, bg, accent));
 }
 
 for (const [name, body] of Object.entries(icons)) {
