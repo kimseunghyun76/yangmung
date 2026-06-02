@@ -2,6 +2,7 @@
 // goal은 App에서 planSession 기반으로 계산해 전달(복습 뉘앙스 포함).
 import type { Card } from '../learn/cards';
 import { PRIMARY, WRAP } from '../ui/styles';
+import { Icon } from '../ui/Icon';
 import { sceneVisualByMission } from './scene';
 
 export function Intro({ cards, goal, onStart, onBack }: { cards: Card[]; goal: string; onStart: () => void; onBack: () => void }) {
@@ -30,10 +31,8 @@ export function Intro({ cards, goal, onStart, onBack }: { cards: Card[]; goal: s
   return (
     <main style={WRAP}>
       <button onClick={onBack} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--ink-faint)', padding: '4px 0', marginBottom: 8 }}>← 홈으로</button>
-      <div style={{ background: sv.hero ? undefined : 'var(--surface-2)', borderTop: sv.hero ? undefined : `3px solid ${sv.accent}`, borderRadius: 16, padding: sv.hero ? 0 : '28px 16px', textAlign: 'center', marginBottom: 16, overflow: 'hidden' }}>
-        {sv.hero
-          ? <img src={sv.hero} alt="" style={{ width: '100%', display: 'block', maxHeight: 180, objectFit: 'cover' }} />
-          : <div style={{ fontSize: 64, lineHeight: 1 }}>{sv.emoji}</div>}
+      <div style={{ background: 'var(--surface-2)', border: '1.5px solid var(--border)', borderTop: `4px solid ${sv.accent}`, borderRadius: 16, padding: '32px 16px', textAlign: 'center', marginBottom: 16, color: sv.accent }}>
+        <Icon name={sv.icon} size={68} />
       </div>
       <p style={{ color: 'var(--ink-faint)', fontSize: 13, margin: 0 }}>오늘 한 판</p>
       <h1 style={{ margin: '6px 0 0', lineHeight: 1.35 }}>{goal}</h1>

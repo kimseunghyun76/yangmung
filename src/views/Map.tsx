@@ -7,7 +7,7 @@ import {
 import { BTN, CARD, PRIMARY, WRAP } from '../ui/styles';
 import { sceneVisualByMission } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
-import { PageHead } from './ui';
+import { PageHead, SceneThumb } from './ui';
 import { Icon } from '../ui/Icon';
 
 const RECOVERY = [
@@ -60,7 +60,7 @@ export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props)
               }}
             >
               <span style={{ alignSelf: 'stretch', width: 8, background: done ? 'var(--ok)' : unlocked ? sv.accent : 'var(--line)' }} />
-              <SceneThumb sv={sv} muted={!unlocked} />
+              <span style={{ paddingLeft: 4 }}><SceneThumb icon={sv.icon} accent={sv.accent} muted={!unlocked} /></span>
               <span style={{ flex: 1, textAlign: 'left', padding: '10px 0' }}>
                 <span style={{ fontWeight: 700, fontSize: 15 }}>{m.place ?? m.scenario}</span>
                 <span style={{ display: 'block', color: 'var(--ink-faint)', fontSize: 12, fontWeight: 500 }}>{m.scenario}</span>
@@ -85,17 +85,6 @@ export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props)
       <button style={{ ...PRIMARY, marginTop: 20, width: '100%' }} onClick={onBack}>홈으로</button>
     </main>
   );
-}
-
-function SceneThumb({ sv, muted = false }: { sv: { emoji: string; thumb?: string; bg: string }; muted?: boolean }) {
-  if (sv.thumb) {
-    return (
-      <span style={{ width: 48, height: 48, marginLeft: 4, flex: '0 0 48px', borderRadius: 14, overflow: 'hidden', opacity: muted ? 0.45 : 1, background: sv.bg, border: '1.5px solid var(--border)' }}>
-        <img src={sv.thumb} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-      </span>
-    );
-  }
-  return <span style={{ fontSize: 19, paddingLeft: 4, opacity: muted ? 0.5 : 1 }}>{sv.emoji}</span>;
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
