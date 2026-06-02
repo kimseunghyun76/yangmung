@@ -1,6 +1,21 @@
 // 공용 화면 프리미티브 — 모든 페이지가 같은 볼드 모던 언어를 쓰도록 한곳에서.
 import type { CSSProperties, ReactNode } from 'react';
 import { RADIUS, SHADOW } from '../ui/styles';
+import { Icon, type IconName } from '../ui/Icon';
+
+// 장면 썸네일 — 테마 적응 모노 아이콘(currentColor=장면 색)을 중립 타일에. 라이트/다크 자동.
+export function SceneThumb({ icon, accent, size = 48, muted = false }: { icon: IconName; accent: string; size?: number; muted?: boolean }) {
+  return (
+    <span style={{
+      width: size, height: size, flex: `0 0 ${size}px`, borderRadius: 13,
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+      background: 'var(--surface-2)', border: '1.5px solid var(--border)',
+      color: muted ? 'var(--ink-faint)' : accent, opacity: muted ? 0.7 : 1,
+    }}>
+      <Icon name={icon} size={Math.round(size * 0.56)} />
+    </span>
+  );
+}
 
 // 얇은 구분선
 export const Rule = ({ m = 24 }: { m?: number }) => <hr className="ym-rule" style={{ margin: `${m}px 0` }} />;

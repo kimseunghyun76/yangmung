@@ -12,7 +12,7 @@ import { BTN, PRIMARY, RADIUS, WRAP } from '../ui/styles';
 import { sessionGoalText } from './goal';
 import { sceneVisualByMission } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
-import { Block, Kicker, Rule } from './ui';
+import { Block, Kicker, Rule, SceneThumb } from './ui';
 import { Icon } from '../ui/Icon';
 
 interface Props {
@@ -104,8 +104,8 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
           const name = m.place ?? m.scenario;
           if (!unlocked) {
             return (
-              <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: RADIUS.md, border: '1.5px dashed var(--line)', color: 'var(--ink-faint)' }}>
-                <SceneThumb sv={sv} muted />
+              <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px 10px 10px', borderRadius: RADIUS.md, border: '1.5px dashed var(--line)', color: 'var(--ink-faint)' }}>
+                <SceneThumb icon={sv.icon} accent={sv.accent} muted />
                 <span style={{ flex: 1, fontSize: 15, fontWeight: 600 }}>{name}</span>
                 <span style={{ fontSize: 12, fontWeight: 600 }}>{lockHint(m.id)}</span>
               </div>
@@ -118,10 +118,10 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
               key={m.id}
               className="ym-pop-sm"
               onClick={() => onPracticeScene(m.id)}
-              style={{ ...BTN, display: 'flex', alignItems: 'center', gap: 12, padding: 0, overflow: 'hidden' }}
+              style={{ ...BTN, display: 'flex', alignItems: 'center', gap: 12, padding: '8px 0', overflow: 'hidden' }}
             >
               <span style={{ alignSelf: 'stretch', width: 8, background: done ? 'var(--ok)' : sv.accent }} />
-              <SceneThumb sv={sv} />
+              <span style={{ paddingLeft: 4 }}><SceneThumb icon={sv.icon} accent={sv.accent} /></span>
               <span style={{ flex: 1, fontSize: 16, fontWeight: 700, textAlign: 'left' }}>{name}</span>
               <span style={{ fontSize: 13, fontWeight: 700, color: done ? 'var(--ok)' : 'var(--ink-faint)', fontVariantNumeric: 'tabular-nums' }}>
                 {done ? '완료' : `${p.mastered}/${p.total}`}
@@ -144,17 +144,6 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
       {!ttsSupported() && <p style={{ color: 'var(--warn)', fontSize: 13, marginTop: 16, fontWeight: 600 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
     </main>
   );
-}
-
-function SceneThumb({ sv, muted = false }: { sv: { emoji: string; thumb?: string; bg: string }; muted?: boolean }) {
-  if (sv.thumb) {
-    return (
-      <span style={{ width: 48, height: 48, marginLeft: 4, flex: '0 0 48px', borderRadius: 14, overflow: 'hidden', opacity: muted ? 0.45 : 1, background: sv.bg, border: '1.5px solid var(--border)' }}>
-        <img src={sv.thumb} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-      </span>
-    );
-  }
-  return <span style={{ fontSize: 20, paddingLeft: 4, opacity: muted ? 0.5 : 1 }}>{sv.emoji}</span>;
 }
 
 // 학습 진단 — 적응형 엔진의 판단을 보여주는 블록.
