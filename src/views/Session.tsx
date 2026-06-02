@@ -38,18 +38,17 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
   const isMissionStep = card.kind === 'quiz' && !!card.promptPhrase;
   const speaker = isMissionStep ? card.sub : '';
   const scenario = 'scenario' in card ? card.scenario : undefined;
-  const infoHeavy = card.kind === 'introduce' || card.kind === 'tip' || card.kind === 'dictation' || card.kind === 'order';
 
   const exit = () => { if (index === 0 || confirm('세션을 끝내고 홈으로 갈까요? (지금까지 푼 카드는 저장돼요)')) onExit(); };
 
   return (
-    <main style={{ ...WRAP, minHeight: '100vh', display: 'flex', flexDirection: 'column', paddingTop: 0, paddingLeft: 0, paddingRight: 0 }}>
+    <main style={{ ...WRAP, minHeight: '100dvh', display: 'flex', flexDirection: 'column', padding: 0 }}>
       {/* ── 상단: 장면 헤더 (배경, 주인공 아님) ── */}
       <div style={{
         position: 'relative', overflow: 'hidden', paddingTop: 'max(16px, env(safe-area-inset-top))',
         background: sv ? `linear-gradient(165deg, ${hexA(accent, 0.18)}, ${hexA(accent, 0.34)})` : 'var(--surface-2)',
       }}>
-        {sv?.hero && <img src={sv.hero} alt="" aria-hidden style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.9 }} />}
+        {(sv?.backdrop ?? sv?.hero) && <img src={sv?.backdrop ?? sv?.hero} alt="" aria-hidden style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: sv?.backdrop ? 0.82 : 0.9 }} />}
         {sv && <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.5))' }} />}
         <div style={{ position: 'relative', padding: '0 16px 16px', color: sv ? '#fff' : 'var(--ink)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 40 }}>
@@ -69,9 +68,9 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
         </div>
       </div>
 
-      {/* ── 하단: 글래스 학습 시트 ── */}
-      <GlassPanel scroll={infoHeavy} style={{
-        flex: 1, marginTop: -20, borderRadius: '24px 24px 0 0', borderBottom: 'none',
+      {/* ── 하단: 글래스 학습 시트 (flex로 끝까지 채우고, 길면 내부 스크롤) ── */}
+      <GlassPanel style={{
+        flex: 1, minHeight: 0, overflowY: 'auto', marginTop: -20, borderRadius: '24px 24px 0 0', borderBottom: 'none',
         padding: '20px max(20px, env(safe-area-inset-left)) max(24px, calc(env(safe-area-inset-bottom) + 16px))',
       }}>
         <div style={{ maxWidth: 540, margin: '0 auto' }}>
