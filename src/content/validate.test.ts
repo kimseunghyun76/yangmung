@@ -13,7 +13,7 @@ function expectFail(name: string, mutate: (d: ContentBundle) => void, rule: stri
   const d = clone(); mutate(d);
   const got = [...new Set(validateContent(d).filter((i) => i.sev === 'fail').map((i) => i.rule))];
   const ok = got.includes(rule);
-  console.log(`  ${ok ? '✅' : '❌'} ${name} → 기대 ${rule}, 검출 [${got.join(',') || '없음'}]`);
+  console.log(`  ${ok ? 'PASS' : 'FAIL'} ${name} -> 기대 ${rule}, 검출 [${got.join(',') || '없음'}]`);
   if (ok) pass++;
 }
 
@@ -25,8 +25,8 @@ console.log('=== 정상 데이터셋 ===');
   console.log(`하드 실패 ${f.length} / 경고 ${w.length}`);
   // 정상셋: 하드 실패 0. 경고는 C0 면제(V9) 1건만 허용.
   const warnsOk = w.every((x) => x.rule === 'V9');
-  total++; if (f.length === 0 && warnsOk) { pass++; console.log('  ✅ 정상셋 클린 (하드 0, 경고는 C0 면제만)'); }
-  else console.log('  ❌ 정상셋에 예상 밖 이슈');
+  total++; if (f.length === 0 && warnsOk) { pass++; console.log('  PASS 정상셋 클린 (하드 0, 경고는 C0 면제만)'); }
+  else console.log('  FAIL 정상셋에 예상 밖 이슈');
 }
 
 console.log('\n=== 위반 검출 ===');
@@ -63,7 +63,7 @@ total++;
   const f = [...new Set(r.filter((i) => i.sev === 'fail').map((i) => i.rule))];
   const w = [...new Set(r.filter((i) => i.sev === 'warn').map((i) => i.rule))];
   const ok = !f.includes('V9') && w.includes('V9');
-  console.log(`  ${ok ? '✅' : '❌'} V9 면제사유로 강등 → fail[${f.join(',') || '없음'}] warn[${w.join(',') || '없음'}]`);
+  console.log(`  ${ok ? 'PASS' : 'FAIL'} V9 면제사유로 강등 -> fail[${f.join(',') || '없음'}] warn[${w.join(',') || '없음'}]`);
   if (ok) pass++;
 }
 total++;
@@ -72,7 +72,7 @@ total++;
   c1(d).steps[0].choices[0].phraseId = 'p_fukuro'; // receptive를 학습자 발화로
   const w = [...new Set(validateContent(d).filter((i) => i.sev === 'warn').map((i) => i.rule))];
   const ok = w.includes('V13');
-  console.log(`  ${ok ? '✅' : '❌'} V13 receptive를 학습자 선택지로 → warn[${w.join(',') || '없음'}]`);
+  console.log(`  ${ok ? 'PASS' : 'FAIL'} V13 receptive를 학습자 선택지로 -> warn[${w.join(',') || '없음'}]`);
   if (ok) pass++;
 }
 

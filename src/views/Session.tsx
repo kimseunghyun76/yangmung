@@ -36,7 +36,7 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
     cardStatus === 'new' ? <span style={{ ...badgeStyle, background: 'var(--surface-2)', color: 'var(--ink-soft)' }}>신규</span> :
     null;
 
-  // 장면 색 테마 — 미션 카드면 장소 색/이모지로 (세션이 장면마다 다르게 보이게)
+  // 장면 색 테마 — 미션 카드면 장소 색/마크로 (세션이 장면마다 다르게 보이게)
   const sv = card.kind !== 'tip' && card.kind !== 'discover' && card.reviewTarget?.type === 'mission'
     ? sceneVisualByMission(String(card.reviewTarget.id)) : null;
 
@@ -150,7 +150,7 @@ function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 
           <p style={{ margin: 0, color: 'var(--ok)', fontWeight: 600 }}>✓ 정답 — 이 상황에서 자연스러워요</p>
           {ja && <PhraseLine ja={ja} korean={c.phrase!.korean} />}
           {c.phrase?.tip && <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)', display: 'flex', alignItems: 'flex-start', gap: 6 }}><Icon name="tip" size={15} style={{ marginTop: 2 }} /> <span>{c.phrase.tip}</span></p>}
-          {c.feedback && <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>💬 {c.feedback}</p>}
+          {c.feedback && <FeedbackText>{c.feedback}</FeedbackText>}
         </div>
       )}
       {isRecovery && (
@@ -158,13 +158,13 @@ function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 
           <p style={{ margin: 0, color: 'var(--warn)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="recovery" size={18} /> 복구 전략 사용 — 실패가 아니에요</p>
           <p style={{ margin: '4px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>별점은 낮아지지만 미션은 계속 이어집니다.</p>
           {ja && <PhraseLine ja={ja} korean={c.phrase!.korean} />}
-          {c.feedback && <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>💬 {c.feedback}</p>}
+          {c.feedback && <FeedbackText>{c.feedback}</FeedbackText>}
         </div>
       )}
       {isWrong && (
         <div style={{ background: 'var(--accent-soft)', padding: 12, borderRadius: 8, marginBottom: 8 }}>
           <p style={{ margin: 0, color: 'var(--accent)', fontWeight: 600 }}>✗ 이 상황에서는 어색해요</p>
-          <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>💬 {c.feedback ?? '문맥과 맞지 않아 듣는 사람이 갸웃할 수 있어요.'}</p>
+          <FeedbackText>{c.feedback ?? '문맥과 맞지 않아 듣는 사람이 갸웃할 수 있어요.'}</FeedbackText>
           {correctRef && (
             <p style={{ margin: '8px 0 0', fontSize: 14 }}>
               자연스러운 답 → <strong>{correctRef.phrase!.kanji ?? correctRef.phrase!.kana}</strong>
@@ -186,6 +186,15 @@ function PhraseLine({ ja, korean }: { ja: string; korean: string }) {
     <p style={{ margin: '6px 0 0', fontSize: 17 }}>
       <strong>{ja}</strong>
       <span style={{ color: 'var(--ink-soft)' }}> — {korean}</span>
+    </p>
+  );
+}
+
+function FeedbackText({ children }: { children: React.ReactNode }) {
+  return (
+    <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)', display: 'flex', alignItems: 'flex-start', gap: 6 }}>
+      <Icon name="tip" size={15} style={{ marginTop: 2 }} />
+      <span>{children}</span>
     </p>
   );
 }

@@ -148,13 +148,13 @@ const warns = issues.filter((i) => i.sev === 'warn');
 console.log('=== lint:content ===');
 console.log(`KanaItem ${CONTENT.kana.length} · Phrase ${CONTENT.phrases.length} · Unit ${CONTENT.units.length} · Mission ${CONTENT.missions.length} · Grammar ${CONTENT.grammar.length} · N5 ${CONTENT.n5.length}`);
 console.log(`하드 실패: ${fails.length}`);
-fails.forEach((i) => console.log(`  ❌ ${i.rule}: ${i.msg}`));
+fails.forEach((i) => console.log(`  FAIL ${i.rule}: ${i.msg}`));
 console.log(`경고: ${warns.length}`);
-warns.forEach((i) => console.log(`  ⚠️  ${i.rule}: ${i.msg}`));
+warns.forEach((i) => console.log(`  WARN ${i.rule}: ${i.msg}`));
 
 if (fails.length > 0) {
   console.error('\n빌드 차단: 하드 실패 존재.');
   process.exitCode = 1;
 } else {
-  console.log('\n✅ 통과 (하드 실패 0).');
+  console.log('\nPASS 통과 (하드 실패 0).');
 }

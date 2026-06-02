@@ -30,15 +30,15 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
     <main style={WRAP}>
       {/* 완료 축하 — 색종이 + 별 버스트 */}
       <div style={{ position: 'relative', textAlign: 'center', padding: '12px 0 4px' }}>
-        <div className="ym-confetti" aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-          {['🎉', '✨', '🎊', '⭐', '🌸', '🎉', '✨', '🎊'].map((e, i) => (
-            <span key={i} style={{ left: `${8 + i * 11}%`, animationDelay: `${i * 0.08}s` }}>{e}</span>
-          ))}
+        <img className="ym-burst" src="/celebrate.svg" alt="" style={{ width: 132, height: 132, display: 'block', margin: '0 auto' }} />
+        <div style={{ position: 'absolute', left: '50%', top: 42, transform: 'translateX(-50%)', color: stars >= 3 ? 'var(--warn)' : 'var(--accent)' }}>
+          <Icon name={stars >= 3 ? 'trophy' : 'star'} size={42} />
         </div>
-        <div className="ym-burst" style={{ lineHeight: 1, color: stars >= 3 ? 'var(--warn)' : 'var(--accent)' }}><Icon name={stars >= 3 ? 'trophy' : 'star'} size={52} /></div>
       </div>
       <h1 style={{ textAlign: 'center', marginTop: 6 }}>세션 {sessionId} 완료</h1>
-      <p style={{ fontSize: 26, margin: '8px 0 0', textAlign: 'center' }}>{'⭐'.repeat(stars)}{'☆'.repeat(3 - stars)}</p>
+      <p style={{ margin: '8px 0 0', textAlign: 'center', color: 'var(--warn)', display: 'flex', justifyContent: 'center', gap: 4 }}>
+        {Array.from({ length: 3 }, (_, i) => <Icon key={i} name="star" size={24} style={{ opacity: i < stars ? 1 : 0.22 }} />)}
+      </p>
       <p style={{ color: 'var(--ink-soft)', fontSize: 14, margin: '8px 0 0', textAlign: 'center', fontWeight: 600 }}>
         첫 시도 {score}/{quizSeen}{speakCount > 0 ? ` · 말하기 ${speakCount}문장` : ''}{sr.weakNow > 0 ? ` · 약점 ${sr.weakNow}개 다음에 다시 나와요` : ''}
       </p>
@@ -52,7 +52,7 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
       )}
       {canContinue && (
         <button className={weak > 0 ? undefined : 'ym-pop-sm'} style={{ ...(weak > 0 ? BTN : PRIMARY), width: '100%', textAlign: 'center', marginTop: 10 }} onClick={onContinue}>
-          ➕ 바로 한 세션 더
+          <Icon name="plus" size={17} /> 바로 한 세션 더
         </button>
       )}
       <button style={{ ...BTN, width: '100%', textAlign: 'center', marginTop: 10 }} onClick={onHome}>
@@ -67,12 +67,12 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
             <div>카드 수</div><Num value={quizSeen} />
             <div style={{ color: 'var(--ok)' }}>첫 시도 정답</div><Num value={score} color="var(--ok)" />
             <div style={{ color: 'var(--warn)', display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="recovery" size={15} /> 복구 사용</div><Num value={recoveryUsed} color="var(--warn)" />
-            <div style={{ color: 'var(--accent)' }}>✗ 오답</div><Num value={wrongCount} color="var(--accent)" />
+            <div style={{ color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="cross" size={15} /> 오답</div><Num value={wrongCount} color="var(--accent)" />
             {speakCount > 0 && (<><div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="speak" size={15} /> 말한 문장</div><Num value={speakCount} /></>)}
             <div style={{ color: 'var(--ok)', display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="check" size={15} /> 새로 익숙</div><Num value={sr.masteredNow} color="var(--ok)" />
           </div>
           <p style={{ margin: '10px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>복구는 별점에 안 들어가요 — 보조 바퀴.</p>
-          <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>📊 누적: 본 {s.seen} · 익숙 {s.mastered} · 약점 {s.weak}</p>
+          <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)', display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="chart" size={15} /> 누적: 본 {s.seen} · 익숙 {s.mastered} · 약점 {s.weak}</p>
         </div>
       </details>
     </main>

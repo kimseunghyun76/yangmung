@@ -128,7 +128,7 @@ export function App() {
       const chars = extractKanaChars(p.kana);
       if (chars.length < 2) continue;
       if (chars.every((ch) => isKanaFamiliar(ch, seenKana))) {
-        return { kind: 'discover', id: `discover:${p.id}`, tag: '✨ 발견', ja: p.kanji ?? p.displayKana ?? p.kana, kana: p.kana, korean: p.korean };
+        return { kind: 'discover', id: `discover:${p.id}`, tag: '발견', ja: p.kanji ?? p.displayKana ?? p.kana, kana: p.kana, korean: p.korean };
       }
     }
     return null;

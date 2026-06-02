@@ -169,7 +169,7 @@ function buildKanaCards(stage: string, kanaIds: string[], lk: KanaLookup): QuizC
     const distract = shuffle(lk.kana.filter((x) => x.id !== id && x.char !== k.char && x.script === k.script)).slice(0, 2);
     out.push({
       kind: 'quiz', id: `kana:${id}:listen`, tag: `${stage} 가나 · 듣기`,
-      banner: '🎧', bannerJa: k.char, sub: '🔊 듣고 글자를 고르세요',
+      banner: '듣기', bannerJa: k.char, sub: '듣고 글자를 고르세요',
       listen: true,
       reviewTarget: { type: 'kana', id },
       choices: shuffle([
@@ -189,7 +189,7 @@ function buildKanaCards(stage: string, kanaIds: string[], lk: KanaLookup): QuizC
     });
     out.push({
       kind: 'quiz', id: `kana:${id}:confuse`, tag: `${stage} 가나 · 구분`,
-      banner: '🎧', bannerJa: k.char, sub: '🔊 듣고 비슷한 글자 중 고르세요',
+      banner: '듣기', bannerJa: k.char, sub: '듣고 비슷한 글자 중 고르세요',
       listen: true,
       reviewTarget: { type: 'kana', id },
       choices: shuffle([
@@ -217,7 +217,7 @@ export function buildCards(): Card[] {
     cards.push(...buildKanaCards(unit.stage, unit.kanaIds ?? [], { byKana, byKanaChar, kana }));
   }
 
-  // 듣기 — 🔊 듣고 의미 고르기. 여행에서 실제로 듣게 될 점원·역무원 대사(receptive) 중심.
+  // 듣기 — 듣고 의미 고르기. 여행에서 실제로 듣게 될 점원·역무원 대사(receptive) 중심.
   const LISTEN_IDS = [
     'p_arigatou', 'p_hai',
     // 점원·역무원이 말하는 것 → 귀로 알아듣고 반응
@@ -233,8 +233,8 @@ export function buildCards(): Card[] {
     const pool = phrases.filter((x) => x.id !== id && x.korean !== p.korean && LISTEN_IDS.includes(x.id));
     const distractPhrases = shuffle(pool.length >= 2 ? pool : phrases.filter((x) => x.id !== id && x.korean !== p.korean)).slice(0, 2);
     cards.push({
-      kind: 'quiz', id: `listen:${id}`, tag: '🎧 듣기',
-      banner: '🎧', bannerJa: ttsText(p), sub: '🔊 듣고 의미를 고르세요',
+      kind: 'quiz', id: `listen:${id}`, tag: '듣기',
+      banner: '듣기', bannerJa: ttsText(p), sub: '듣고 의미를 고르세요',
       listen: true,
       reviewTarget: { type: 'phrase', id },
       choices: shuffle([
@@ -244,15 +244,15 @@ export function buildCards(): Card[] {
     });
   }
 
-  // 금액·숫자 듣기 — 🔊 듣고 금액 고르기 (계산대 실전). 오답도 금액이라 진짜 들어야 함.
+  // 금액·숫자 듣기 — 듣고 금액 고르기 (계산대 실전). 오답도 금액이라 진짜 들어야 함.
   const PRICE_IDS = ['p_num_hyakuen', 'p_num_gohyakuen', 'p_num_senen', 'p_num_nisenen', 'p_num_gosenen', 'p_num_ichimanen'];
   for (const id of PRICE_IDS) {
     const p = phrases.find((x) => x.id === id);
     if (!p) continue;
     const distract = shuffle(phrases.filter((x) => PRICE_IDS.includes(x.id) && x.id !== id)).slice(0, 3);
     cards.push({
-      kind: 'quiz', id: `listen:${id}`, tag: '🎧 금액 듣기',
-      banner: '🎧', bannerJa: ttsText(p), sub: '🔊 듣고 금액을 고르세요',
+      kind: 'quiz', id: `listen:${id}`, tag: '금액 듣기',
+      banner: '듣기', bannerJa: ttsText(p), sub: '듣고 금액을 고르세요',
       listen: true,
       reviewTarget: { type: 'phrase', id },
       choices: shuffle([
@@ -353,7 +353,7 @@ export function buildCards(): Card[] {
     const pool = signs.filter((x) => x.category === sg.category && x.korean !== sg.korean);
     const distract = shuffle(pool.length >= 2 ? pool : signs.filter((x) => x.korean !== sg.korean)).slice(0, 3);
     cards.push({
-      kind: 'quiz', id: `sign:${sg.id}`, tag: `🏯 ${sg.category} 읽기`,
+      kind: 'quiz', id: `sign:${sg.id}`, tag: `${sg.category} 읽기`,
       banner: sg.ja, bannerJa: sg.kana, sub: '이 표기는 무슨 뜻일까요?',
       reviewTarget: { type: 'phrase', id: `sign:${sg.id}` },
       choices: shuffle([
@@ -366,7 +366,7 @@ export function buildCards(): Card[] {
   // 정확성 팁 (디브리프) — 전체 풀 생성, 세션 선별에서 안 본 것 1개씩 회전
   for (const g of grammar) {
     if (!g.tipKo) continue;
-    cards.push({ kind: 'tip', id: `tip:${g.id}`, tag: g.category ?? '💡 팁', label: g.label, tipKo: g.tipKo });
+    cards.push({ kind: 'tip', id: `tip:${g.id}`, tag: g.category ?? '팁', label: g.label, tipKo: g.tipKo });
   }
 
   return cards;

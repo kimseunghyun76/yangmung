@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" role="img" aria-label="session complete celebration">
+  <rect width="480" height="480" fill="transparent"/>
+  <circle cx="360" cy="104" r="44" fill="#b23b32"/>
+  <circle cx="122" cy="350" r="28" fill="#b5791f" opacity=".88"/>
+  <path d="M156 380 214 174l130 130z" fill="#f6f6f4" stroke="#16171c" stroke-width="12" stroke-linejoin="round"/>
+  <path d="m214 174 42 88-100 118z" fill="#b23b32" opacity=".9"/>
+  <path d="M112 112l28 24M362 308l42 34M314 72l18-42M94 240l-48 12M382 190l50-10" stroke="#16171c" stroke-width="12" stroke-linecap="round"/>
+  <path d="M250 94l16 36 38 10-36 16-10 38-16-36-38-10 36-16z" fill="#b5791f"/>
+</svg>
