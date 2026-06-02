@@ -19,9 +19,9 @@ const items: { key: NavView; label: string }[] = [
 ];
 
 export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings, theme, onToggleTheme }: Props) {
-  const tab = (active: boolean, home = false): React.CSSProperties => ({
+  const tab = (active: boolean): React.CSSProperties => ({
     border: 'none', background: 'none', cursor: 'pointer', fontSize: 16,
-    padding: home ? '1px 2px 5px' : '4px 2px', color: active ? 'var(--ink)' : 'var(--ink-faint)',
+    padding: '4px 2px', color: active ? 'var(--ink)' : 'var(--ink-faint)',
     fontWeight: active ? 800 : 600, letterSpacing: '-0.02em',
     borderBottom: `3px solid ${active ? 'var(--accent)' : 'transparent'}`,
     display: 'inline-flex',
@@ -35,10 +35,8 @@ export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings, theme
   return (
     <nav style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 22 }}>
       {items.map((it) => (
-        <button key={it.key} style={tab(current === it.key, it.key === 'home')} onClick={() => onNavigate(it.key)} aria-label={it.label} title={it.label}>
-          {it.key === 'home'
-            ? <img src="/mascots/yangmung-duo-logo.webp" alt="" width={32} height={32} style={{ objectFit: 'contain', filter: 'drop-shadow(0 7px 12px rgba(0,0,0,0.12))' }} />
-            : it.label}
+        <button key={it.key} style={tab(current === it.key)} onClick={() => onNavigate(it.key)}>
+          {it.label}
         </button>
       ))}
       <span style={{ flex: 1 }} />
