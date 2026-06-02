@@ -30,6 +30,17 @@
         --shadow-card: none;
         --shadow-raised: 4px 4px 0 var(--ink);
         --hero: #15140f;
+        /* Liquid Glass 레이어 (라이트) */
+        --glass-bg: rgba(255,255,255,0.55);
+        --glass-bg-strong: rgba(255,255,255,0.72);
+        --glass-border: rgba(255,255,255,0.7);
+        --glass-hi: rgba(255,255,255,0.9);
+        --glass-shadow: 0 8px 30px rgba(40,30,20,0.10), 0 2px 8px rgba(40,30,20,0.06);
+        --glass-blur: 22px;
+        /* 앰비언트 배경 블롭 */
+        --amb-1: rgba(185,56,46,0.16);   /* 朱 */
+        --amb-2: rgba(70,120,200,0.14);  /* cool */
+        --amb-3: rgba(220,160,60,0.12);  /* warm */
       }
       [data-theme="dark"] {
         --bg: #100f0b;
@@ -50,6 +61,16 @@
         --shadow-card: none;
         --shadow-raised: 4px 4px 0 rgba(0,0,0,0.55);
         --hero: #262318;
+        /* Liquid Glass 레이어 (다크) */
+        --glass-bg: rgba(40,38,30,0.45);
+        --glass-bg-strong: rgba(45,42,33,0.62);
+        --glass-border: rgba(255,255,255,0.12);
+        --glass-hi: rgba(255,255,255,0.16);
+        --glass-shadow: 0 10px 34px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.4);
+        --glass-blur: 22px;
+        --amb-1: rgba(226,101,90,0.18);
+        --amb-2: rgba(90,140,220,0.16);
+        --amb-3: rgba(220,170,90,0.10);
       }
       * { box-sizing: border-box; }
       html, body { margin: 0; padding: 0; }
@@ -66,6 +87,33 @@
         -webkit-text-size-adjust: 100%;
         transition: background 0.25s ease, color 0.25s ease;
       }
+      /* 앰비언트 배경 — 글래스가 굴절할 부드러운 색 블롭 (고정) */
+      .ym-ambient { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+      .ym-ambient::before, .ym-ambient::after {
+        content: ''; position: absolute; border-radius: 50%; filter: blur(60px);
+      }
+      .ym-ambient::before { width: 60vw; height: 60vw; top: -12vh; right: -18vw;
+        background: radial-gradient(circle at center, var(--amb-1), transparent 70%); }
+      .ym-ambient::after { width: 66vw; height: 66vw; bottom: -16vh; left: -20vw;
+        background: radial-gradient(circle at center, var(--amb-2), transparent 70%); }
+      .ym-ambient i { position: absolute; width: 50vw; height: 50vw; left: 30vw; top: 32vh;
+        border-radius: 50%; filter: blur(60px);
+        background: radial-gradient(circle at center, var(--amb-3), transparent 70%); }
+      /* Liquid Glass 머티리얼 */
+      .ym-glass {
+        background: var(--glass-bg);
+        -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.5);
+        backdrop-filter: blur(var(--glass-blur)) saturate(1.5);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-hi);
+        border-radius: 24px;
+      }
+      .ym-glass-strong { background: var(--glass-bg-strong); }
+      /* 스프링 등장 모션 + 누름 반응 */
+      @keyframes ym-rise { from { opacity: 0; transform: translateY(16px) scale(0.985); } to { opacity: 1; transform: none; } }
+      .ym-rise { animation: ym-rise 0.5s cubic-bezier(.2,.8,.2,1) both; }
+      .ym-press { transition: transform 0.12s cubic-bezier(.2,.8,.2,1), box-shadow 0.15s ease; }
+      .ym-press:not(:disabled):active { transform: scale(0.965); }
       /* iOS 터치 타깃 최소 44pt 권장 (HIG) */
       button { min-height: 44px; }
       /* 볼드 모던: 크고 무거운 타이포, 타이트 자간 */
@@ -107,13 +155,14 @@
       .ym-wave i:nth-child(4) { animation-delay: 0.45s; }
       .ym-wave i:nth-child(5) { animation-delay: 0.6s; }
       @media (prefers-reduced-motion: reduce) {
-        .ym-correct, .ym-wrong, .ym-reveal, .ym-listening, .ym-burst { animation: none; }
+        .ym-correct, .ym-wrong, .ym-reveal, .ym-listening, .ym-burst, .ym-rise { animation: none; }
         .ym-confetti span { display: none; }
         .ym-wave i { animation: none; transform: scaleY(0.7); }
       }
     </style>
   </head>
   <body>
+    <div class="ym-ambient" aria-hidden="true"><i></i></div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
