@@ -2,7 +2,13 @@
 import { CONTENT } from '../content';
 import type { IconName } from '../ui/Icon';
 
-export interface SceneVisual { emoji: string; icon: IconName; bg: string; accent: string; thumb?: string; hero?: string; success?: string; loop?: string }
+export interface SceneVisual { emoji: string; icon: IconName; bg: string; accent: string; thumb?: string; hero?: string; backdrop?: string; success?: string; loop?: string }
+
+const BACKDROPS: Record<string, string> = {
+  C1: '/scenes/generated/c1-conbini-bg.webp',
+  C2: '/scenes/generated/c2-restaurant-bg.webp',
+  C3: '/scenes/generated/c3-train-bg.webp',
+};
 
 const BY_PLACE: Record<string, SceneVisual> = {
   편의점: { emoji: '店', icon: 'scene-conbini', bg: '#eef6ff', accent: '#2563eb' },
@@ -36,6 +42,7 @@ export function sceneVisualByMission(missionId?: string): SceneVisual {
   const generated = key ? {
     thumb: `/scenes/${key}-thumb.svg`,
     hero: `/scenes/${key}-hero.svg`,
+    backdrop: BACKDROPS[missionId ?? ''],
   } : {};
   if (!v) return { ...base, ...generated };
   return {
@@ -45,6 +52,7 @@ export function sceneVisualByMission(missionId?: string): SceneVisual {
     accent: base.accent,
     thumb: v.thumb ?? generated.thumb,
     hero: v.hero ?? generated.hero,
+    backdrop: generated.backdrop,
     success: v.success,
     loop: v.loop,
   };

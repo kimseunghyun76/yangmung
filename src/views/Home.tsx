@@ -57,12 +57,15 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
     <main style={WRAP}>
       <NavBar {...nav} />
 
-      <h1 className="ym-rise" style={{ margin: '0 0 14px', fontSize: 32, fontWeight: 700, letterSpacing: '-0.03em' }}>yangmung</h1>
+      <h1 className="ym-rise" style={{ margin: '0 0 14px', display: 'flex', alignItems: 'center', gap: 10, fontSize: 32, fontWeight: 750, letterSpacing: '-0.035em' }}>
+        <img src="/mascots/yangmung-duo-logo.webp" alt="" width={48} height={48} style={{ objectFit: 'contain', filter: 'drop-shadow(0 8px 14px rgba(0,0,0,0.12))' }} />
+        <span>yangmung</span>
+      </h1>
 
       {/* 오늘의 장면 — 히어로 + 강한 CTA */}
       <div className="ym-rise" style={{ animationDelay: '.04s' }}>
         <HomeSceneCard
-          hero={primary ? heroSv.hero : undefined}
+          hero={primary ? (heroSv.backdrop ?? heroSv.hero) : undefined}
           accent={heroSv.accent}
           kicker={primary ? `오늘의 장면 · ${heroPlace}` : '오늘 한 판'}
           title={goal}
@@ -162,6 +165,7 @@ function HomeSceneCard({ hero, accent, kicker, title, meta, planned, onStart }: 
   planned: number;
   onStart: () => void;
 }) {
+  const generatedBackdrop = hero?.includes('/generated/');
   return (
     <section style={{
       position: 'relative',
@@ -189,15 +193,15 @@ function HomeSceneCard({ hero, accent, kicker, title, meta, planned, onStart }: 
           aria-hidden
           style={{
             position: 'absolute',
-            right: -180,
-            top: 18,
-            width: 560,
-            height: 230,
+            right: generatedBackdrop ? -68 : -180,
+            top: generatedBackdrop ? 0 : 18,
+            width: generatedBackdrop ? 520 : 560,
+            height: generatedBackdrop ? '100%' : 230,
             objectFit: 'cover',
-            opacity: 0.22,
-            filter: 'saturate(0.9) contrast(1.08)',
-            transform: 'rotate(-3deg)',
-            borderRadius: 34,
+            opacity: generatedBackdrop ? 0.38 : 0.22,
+            filter: generatedBackdrop ? 'saturate(0.88) contrast(1.04)' : 'saturate(0.9) contrast(1.08)',
+            transform: generatedBackdrop ? 'none' : 'rotate(-3deg)',
+            borderRadius: generatedBackdrop ? 0 : 34,
             pointerEvents: 'none',
           }}
         />
@@ -240,6 +244,7 @@ function DiagnosisBody({ d }: { d: Diagnosis }) {
   return (
     <>
       <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 700 }}>
+        <img src="/mascots/yang-cat-face.webp" alt="" width={28} height={28} style={{ objectFit: 'contain', marginRight: 2 }} />
         <span style={{ width: 9, height: 9, borderRadius: 99, background: tone, boxShadow: `0 0 8px ${tone}` }} />
         오늘의 코치{d.level ? ` · ${LEVEL_LABEL[d.level]}` : ''}
       </p>
