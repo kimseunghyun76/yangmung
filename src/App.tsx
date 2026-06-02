@@ -4,7 +4,7 @@ import { buildCards, type Card, type Choice, type DiscoverCard } from './learn/c
 import { CONTENT } from './content';
 import {
   classifyCard, clearProgress, isKanaFamiliar, loadDiscovered, loadProgress, loadSeenKana, loadSession,
-  markKanaKnown, markKanaSeen, missionsFromCards, nextSessionId, plannedSessionSize, recordAttempt, recordKnown,
+  markKanaKnown, markKanaSeen, missionsFromCards, nextSessionId, planSession, plannedSessionSize, recordAttempt, recordKnown,
   saveDiscovered, saveProgress, saveSeenKana, saveSession, selectDictationCards, selectMissionCards, selectScriptKanaCards, selectSessionCards, selectSignCards,
   type SeenKana, type SessionLogEntry,
 } from './learn/progress';
@@ -299,10 +299,17 @@ export function App() {
     }
     if (view === 'done') {
       const canContinue = plannedSessionSize(allCards, progress, nextSessionId(session), sessionConfig) > 0;
+      // 표시용 파생(로직 불변): 이번 세션에 등장한 장면 / 다음 세션의 첫 장면
+      const clearedSceneIds = [...new Set(
+        missionsFromCards(sessionCards, progress, sessionId).filter((m) => m.id !== 'C0').map((m) => m.id),
+      )];
+      const nextSceneId = planSession(allCards, progress, nextSessionId(session), sessionConfig)
+        .missions.find((m) => m.id !== 'C0')?.id;
       return (
         <Done
           sessionId={sessionId} score={score} quizSeen={quizSeen} sessionLog={sessionLog}
           progress={progress} canContinue={canContinue}
+          clearedSceneIds={clearedSceneIds} nextSceneId={nextSceneId}
           speakCount={sessionCards.filter((c) => c.kind === 'speak').length}
           onRetryWeak={retryWeakSession} onContinue={startSession} onHome={() => setView('home')}
         />
