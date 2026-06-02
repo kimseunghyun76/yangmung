@@ -57,10 +57,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
     <main style={WRAP}>
       <NavBar {...nav} />
 
-      <h1 className="ym-rise" style={{ margin: '0 0 14px', display: 'flex', alignItems: 'center', gap: 10, fontSize: 32, fontWeight: 750, letterSpacing: '-0.035em' }}>
-        <img src="/mascots/yangmung-duo-logo.webp" alt="" width={48} height={48} style={{ objectFit: 'contain', filter: 'drop-shadow(0 8px 14px rgba(0,0,0,0.12))' }} />
-        <span>yangmung</span>
-      </h1>
+      <h1 className="ym-rise" style={{ margin: '0 0 14px', fontSize: 34, fontWeight: 800, letterSpacing: '-0.035em' }}>yangmung</h1>
 
       {/* 오늘의 장면 — 히어로 + 강한 CTA */}
       <div className="ym-rise" style={{ animationDelay: '.04s' }}>
@@ -166,13 +163,16 @@ function HomeSceneCard({ hero, accent, kicker, title, meta, planned, onStart }: 
   onStart: () => void;
 }) {
   const generatedBackdrop = hero?.includes('/generated/');
+  const foreground = generatedBackdrop ? '#fff' : 'var(--ink)';
+  const muted = generatedBackdrop ? 'rgba(255,255,255,0.78)' : 'var(--ink-soft)';
+  const kickerColor = generatedBackdrop ? 'rgba(255,255,255,0.86)' : accent;
   return (
     <section style={{
       position: 'relative',
       overflow: 'hidden',
       borderRadius: 28,
       padding: 18,
-      border: '1px solid var(--glass-border)',
+      border: generatedBackdrop ? '1px solid rgba(255,255,255,0.22)' : '1px solid var(--glass-border)',
       background: `
         radial-gradient(circle at 82% 18%, ${hexA(accent, 0.28)}, transparent 34%),
         linear-gradient(155deg, var(--glass-bg-strong), ${hexA(accent, 0.10)} 58%, var(--glass-bg))
@@ -195,16 +195,26 @@ function HomeSceneCard({ hero, accent, kicker, title, meta, planned, onStart }: 
             position: 'absolute',
             right: generatedBackdrop ? -68 : -180,
             top: generatedBackdrop ? 0 : 18,
-            width: generatedBackdrop ? 520 : 560,
+            width: generatedBackdrop ? 'calc(100% + 92px)' : 560,
             height: generatedBackdrop ? '100%' : 230,
             objectFit: 'cover',
-            opacity: generatedBackdrop ? 0.38 : 0.22,
-            filter: generatedBackdrop ? 'saturate(0.88) contrast(1.04)' : 'saturate(0.9) contrast(1.08)',
+            opacity: generatedBackdrop ? 1 : 0.22,
+            filter: generatedBackdrop ? 'saturate(0.92) contrast(1.05)' : 'saturate(0.9) contrast(1.08)',
             transform: generatedBackdrop ? 'none' : 'rotate(-3deg)',
             borderRadius: generatedBackdrop ? 0 : 34,
             pointerEvents: 'none',
           }}
         />
+      )}
+      {generatedBackdrop && (
+        <div aria-hidden style={{
+          position: 'absolute',
+          inset: 0,
+          background: `
+            linear-gradient(90deg, rgba(10,12,18,0.78), rgba(10,12,18,0.48) 48%, rgba(10,12,18,0.2)),
+            linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.42))
+          `,
+        }} />
       )}
       <div aria-hidden style={{
         position: 'absolute',
@@ -218,16 +228,17 @@ function HomeSceneCard({ hero, accent, kicker, title, meta, planned, onStart }: 
         boxShadow: `0 18px 46px ${hexA(accent, 0.16)}`,
       }} />
       <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', minHeight: 212 }}>
-        <p style={{ ...label, color: accent, margin: 0 }}>{kicker}</p>
+        <p style={{ ...label, color: kickerColor, margin: 0 }}>{kicker}</p>
         <h2 style={{
           margin: '10px 0 0',
           maxWidth: 270,
           fontSize: 29,
           lineHeight: 1.12,
           letterSpacing: '-0.035em',
-          color: 'var(--ink)',
+          color: foreground,
+          textShadow: generatedBackdrop ? '0 2px 18px rgba(0,0,0,0.28)' : undefined,
         }}>{title}</h2>
-        <p style={{ margin: '10px 0 0', maxWidth: 310, fontSize: 13, color: 'var(--ink-soft)', fontWeight: 650, lineHeight: 1.45 }}>
+        <p style={{ margin: '10px 0 0', maxWidth: 310, fontSize: 13, color: muted, fontWeight: 650, lineHeight: 1.45 }}>
           {meta}
         </p>
         <div style={{ flex: 1 }} />
