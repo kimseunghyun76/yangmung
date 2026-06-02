@@ -4,7 +4,7 @@ import type { CardStatus } from '../learn/progress';
 import { speak, ttsSupported } from '../tts';
 import { BTN, PRIMARY, WRAP } from '../ui/styles';
 import { IntroduceCardView } from './IntroduceCard';
-import { OrderCardView } from './OrderCard';
+import { OrderCardView, type PickMap } from './OrderCard';
 import { SpeakCardView } from './SpeakCard';
 import { DictationCardView } from './DictationCard';
 import { DiscoverCardView } from './DiscoverCard';
@@ -26,11 +26,12 @@ interface Props {
   onNext: () => void;
   onExit: () => void;
   onKnown: () => void;
+  picks: PickMap;
 }
 
 const badgeStyle: React.CSSProperties = { display: 'inline-block', padding: '3px 9px', borderRadius: 999, fontSize: 12, fontWeight: 600, marginLeft: 8 };
 
-export function Session({ card, index, total, picked, cardStatus, onChoose, onIntroduceSeen, onSpeakPracticed, onDictationResult, isKanaFamiliar, onNext, onExit, onKnown }: Props) {
+export function Session({ card, index, total, picked, cardStatus, onChoose, onIntroduceSeen, onSpeakPracticed, onDictationResult, isKanaFamiliar, onNext, onExit, onKnown, picks }: Props) {
   const badge =
     cardStatus === 'due' ? <span style={{ ...badgeStyle, background: 'var(--accent-soft)', color: 'var(--accent)' }}>복습</span> :
     cardStatus === 'new' ? <span style={{ ...badgeStyle, background: 'var(--surface-2)', color: 'var(--ink-soft)' }}>신규</span> :
@@ -65,7 +66,7 @@ export function Session({ card, index, total, picked, cardStatus, onChoose, onIn
       ) : card.kind === 'introduce' ? (
         <IntroduceCardView key={card.id} card={card} isKanaFamiliar={isKanaFamiliar} onSeen={onIntroduceSeen} onNext={onNext} />
       ) : card.kind === 'order' ? (
-        <OrderCardView key={card.id} card={card} onNext={onNext} />
+        <OrderCardView key={card.id} card={card} picks={picks} isKanaFamiliar={isKanaFamiliar} onNext={onNext} />
       ) : card.kind === 'speak' ? (
         <SpeakCardView key={card.id} card={card} isKanaFamiliar={isKanaFamiliar} onPracticed={onSpeakPracticed} onNext={onNext} />
       ) : card.kind === 'dictation' ? (

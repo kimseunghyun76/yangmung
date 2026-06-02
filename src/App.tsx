@@ -17,6 +17,7 @@ import { WRAP } from './ui/styles';
 import { Home } from './views/Home';
 import { Intro } from './views/Intro';
 import { Session } from './views/Session';
+import type { PickMap } from './views/OrderCard';
 import { Done } from './views/Done';
 import { Map } from './views/Map';
 import { Review } from './views/Review';
@@ -37,6 +38,7 @@ export function App() {
   const [score, setScore] = useState(0);
   const [quizSeen, setQuizSeen] = useState(0);
   const [sessionLog, setSessionLog] = useState<SessionLogEntry[]>([]);
+  const [picks, setPicks] = useState<PickMap>({}); // 미션 스텝별 내가 고른 답변 (대화 리캡용)
   const [seenKana, setSeenKana] = useState<SeenKana>(() => loadSeenKana());
   const [discovered, setDiscovered] = useState<string[]>(() => loadDiscovered());
   const [settings, setSettings] = useState<Settings>(() => loadSettings());
@@ -118,7 +120,7 @@ export function App() {
   function beginSession(id: number, cards: Card[], showIntro: boolean) {
     setSessionId(id);
     setSessionCards(cards);
-    setI(0); setPicked(null); setScore(0); setQuizSeen(0); setSessionLog([]);
+    setI(0); setPicked(null); setScore(0); setQuizSeen(0); setSessionLog([]); setPicks({});
     setView(showIntro ? 'intro' : 'session');
   }
   // 발견 카드: 배운 가나로만 된(2자 이상) 아직 축하 안 한 표현 1개 → 세션 끝 보상으로
@@ -229,6 +231,13 @@ export function App() {
     setPicked(idx);
     if (c.ja) speak(c.ja);
     if (card.kind !== 'quiz') return;
+    // 미션 스텝이면 "내가 고른 답변" 기록 (대화 리캡용)
+    if (card.reviewTarget?.type === 'mission') {
+      setPicks((prev) => ({
+        ...prev,
+        [card.id]: { label: c.label, ja: c.ja, kana: c.phrase?.kana, korean: c.phrase?.korean, recovery: !!c.recovery, hasPhrase: !!c.phrase },
+      }));
+    }
     creditKana(card);
     recordCardResult(card.id, c.correct, !!c.recovery, fast);
     // 정답(복구·오답 아님)이면 자동으로 다음 카드 — 반복 진행 시간 단축
@@ -307,6 +316,7 @@ export function App() {
           index={i}
           total={sessionCards.length}
           picked={picked}
+          picks={picks}
           cardStatus={card.kind === 'tip' || card.kind === 'order' || card.kind === 'discover' ? null : classifyCard(card, progress[card.id], sessionId)}
           onChoose={choose}
           onIntroduceSeen={introduceSeen}

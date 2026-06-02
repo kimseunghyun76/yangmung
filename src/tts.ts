@@ -40,3 +40,23 @@ export function speak(text: string, opts: SpeakOpts = {}): void {
   window.speechSynthesis.cancel();
   window.speechSynthesis.speak(u);
 }
+
+// 여러 문장을 순서대로 이어 읽기 (대화 리캡 "전체 듣기"용). 한 번만 취소 후 큐에 쌓는다.
+export function speakSequence(texts: string[], opts: SpeakOpts = {}): void {
+  if (!ttsSupported()) return;
+  window.speechSynthesis.cancel();
+  const v = pickVoice();
+  for (const text of texts) {
+    if (!text) continue;
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'ja-JP';
+    u.rate = opts.rate ?? 0.95;
+    if (v) u.voice = v;
+    window.speechSynthesis.speak(u); // 네이티브 큐에 순차 적재
+  }
+}
+
+// 재생 중지 (화면 이탈·다시 듣기 전)
+export function stopSpeaking(): void {
+  if (ttsSupported()) window.speechSynthesis.cancel();
+}
