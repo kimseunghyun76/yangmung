@@ -2,6 +2,7 @@
 import { MODE_PRESETS, type LearnMode, type ReadingAidMode, type Settings } from '../learn/settings';
 import { Modal } from './Modal';
 import { BTN } from '../ui/styles';
+import { Icon } from '../ui/Icon';
 
 interface Props {
   settings: Settings;
@@ -25,8 +26,8 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
     background: active ? 'var(--accent)' : 'var(--surface)', color: active ? 'var(--accent-ink)' : 'var(--ink-soft)', borderColor: active ? 'var(--ink)' : 'var(--border)',
   });
   return (
-    <Modal title="⚙️ 설정" onClose={onClose}>
-      <p style={{ margin: '0 0 6px', fontWeight: 700, fontSize: 14 }}>🎚 학습 모드</p>
+    <Modal title="설정" onClose={onClose}>
+      <p style={{ margin: '0 0 6px', fontWeight: 700, fontSize: 14, display: 'flex', alignItems: 'center', gap: 7 }}><Icon name="mode" size={16} /> 학습 모드</p>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
         {MODE_ORDER.map((m) => {
           const p = MODE_PRESETS[m];
@@ -44,7 +45,7 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
         })}
       </div>
 
-      <p style={{ margin: '18px 0 6px', fontWeight: 700, fontSize: 14 }}>👀 발음 보조 (로마자)</p>
+      <p style={{ margin: '18px 0 6px', fontWeight: 700, fontSize: 14, display: 'flex', alignItems: 'center', gap: 7 }}><Icon name="discover" size={16} /> 발음 보조 (로마자)</p>
       <div style={{ display: 'flex', gap: 8 }}>
         {AID_OPTIONS.map((o) => (
           <button key={o.v} style={seg(settings.readingAid === o.v)} onClick={() => onChange({ ...settings, readingAid: o.v })}>
@@ -54,7 +55,7 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 18 }}>
-        <span style={{ fontWeight: 700, fontSize: 14 }}>🐢 듣기 느리게 재생</span>
+        <span style={{ fontWeight: 700, fontSize: 14, display: 'flex', alignItems: 'center', gap: 7 }}><Icon name="listen" size={16} /> 듣기 느리게 재생</span>
         <button
           style={{ ...BTN, padding: '6px 14px', background: settings.slowListening ? 'var(--accent)' : 'var(--surface)', color: settings.slowListening ? 'var(--accent-ink)' : 'var(--ink-soft)' }}
           onClick={() => onChange({ ...settings, slowListening: !settings.slowListening })}
@@ -64,7 +65,7 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 14 }}>
-        <span style={{ fontWeight: 700, fontSize: 14 }}>⏭️ 정답이면 자동으로 다음</span>
+        <span style={{ fontWeight: 700, fontSize: 14, display: 'flex', alignItems: 'center', gap: 7 }}><Icon name="fast" size={16} /> 정답이면 자동으로 다음</span>
         <button
           style={{ ...BTN, padding: '6px 14px', background: settings.fastForward ? 'var(--accent)' : 'var(--surface)', color: settings.fastForward ? 'var(--accent-ink)' : 'var(--ink-soft)' }}
           onClick={() => onChange({ ...settings, fastForward: !settings.fastForward })}

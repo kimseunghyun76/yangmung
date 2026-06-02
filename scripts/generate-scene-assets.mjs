@@ -1,6 +1,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { deflateSync } from 'node:zlib';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const sceneDir = join(root, 'public', 'scenes');
@@ -17,6 +18,91 @@ const palette = {
   ok: '#2e8b57',
   warn: '#b5791f',
 };
+
+function crc32(buf) {
+  let c = 0xffffffff;
+  for (let i = 0; i < buf.length; i++) {
+    c ^= buf[i];
+    for (let k = 0; k < 8; k++) c = (c >>> 1) ^ (0xedb88320 & -(c & 1));
+  }
+  return (c ^ 0xffffffff) >>> 0;
+}
+
+function chunk(type, data) {
+  const t = Buffer.from(type);
+  const len = Buffer.alloc(4);
+  len.writeUInt32BE(data.length);
+  const crc = Buffer.alloc(4);
+  crc.writeUInt32BE(crc32(Buffer.concat([t, data])));
+  return Buffer.concat([len, t, data, crc]);
+}
+
+function png(width, height, draw) {
+  const rgba = Buffer.alloc(width * height * 4);
+  const set = (x, y, color) => {
+    if (x < 0 || x >= width || y < 0 || y >= height) return;
+    const i = (y * width + x) * 4;
+    rgba[i] = color[0]; rgba[i + 1] = color[1]; rgba[i + 2] = color[2]; rgba[i + 3] = color[3] ?? 255;
+  };
+  const fill = (color) => {
+    for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) set(x, y, color);
+  };
+  const circle = (cx, cy, r, color) => {
+    const rr = r * r;
+    for (let y = Math.floor(cy - r); y <= Math.ceil(cy + r); y++) {
+      for (let x = Math.floor(cx - r); x <= Math.ceil(cx + r); x++) {
+        if ((x - cx) ** 2 + (y - cy) ** 2 <= rr) set(x, y, color);
+      }
+    }
+  };
+  const line = (x1, y1, x2, y2, w, color) => {
+    const steps = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1)) * 2;
+    for (let i = 0; i <= steps; i++) {
+      const t = i / Math.max(1, steps);
+      circle(x1 + (x2 - x1) * t, y1 + (y2 - y1) * t, w / 2, color);
+    }
+  };
+  draw({ fill, circle, line, width, height });
+  const rows = [];
+  for (let y = 0; y < height; y++) rows.push(Buffer.concat([Buffer.from([0]), rgba.subarray(y * width * 4, (y + 1) * width * 4)]));
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(width, 0); ihdr.writeUInt32BE(height, 4);
+  ihdr[8] = 8; ihdr[9] = 6; ihdr[10] = 0; ihdr[11] = 0; ihdr[12] = 0;
+  return Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    chunk('IHDR', ihdr),
+    chunk('IDAT', deflateSync(Buffer.concat(rows))),
+    chunk('IEND', Buffer.alloc(0)),
+  ]);
+}
+
+const hex = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16), 255];
+
+function appIconPng(size) {
+  const ink = hex(palette.ink);
+  const accent = hex(palette.accent);
+  const paper = hex('#f6f6f4');
+  return png(size, size, ({ fill, circle, line, width }) => {
+    fill(ink);
+    circle(width * 0.74, width * 0.24, width * 0.09, accent);
+    line(width * 0.30, width * 0.32, width * 0.70, width * 0.32, width * 0.055, paper);
+    line(width * 0.31, width * 0.66, width * 0.44, width * 0.75, width * 0.065, paper);
+    line(width * 0.44, width * 0.75, width * 0.62, width * 0.67, width * 0.065, paper);
+    line(width * 0.62, width * 0.67, width * 0.58, width * 0.49, width * 0.065, paper);
+    line(width * 0.58, width * 0.49, width * 0.39, width * 0.48, width * 0.065, paper);
+    line(width * 0.39, width * 0.48, width * 0.32, width * 0.66, width * 0.065, paper);
+  });
+}
+
+function icoFromPng(pngData) {
+  const header = Buffer.alloc(6);
+  header.writeUInt16LE(0, 0); header.writeUInt16LE(1, 2); header.writeUInt16LE(1, 4);
+  const entry = Buffer.alloc(16);
+  entry[0] = 32; entry[1] = 32; entry[2] = 0; entry[3] = 0;
+  entry.writeUInt16LE(1, 4); entry.writeUInt16LE(32, 6);
+  entry.writeUInt32LE(pngData.length, 8); entry.writeUInt32LE(22, 12);
+  return Buffer.concat([header, entry, pngData]);
+}
 
 const scenes = [
   ['c0', '가게', 'bag'],
@@ -72,6 +158,11 @@ const icons = {
   'scene-locker': '<rect x="5" y="4" width="14" height="16" rx="2"/><path d="M10 4v16M14 4v16M5 12h14"/><circle cx="7.5" cy="8" r=".5"/><circle cx="12" cy="8" r=".5"/><circle cx="16.5" cy="8" r=".5"/>',
   'scene-delivery': '<path d="M4 8 12 4l8 4v8l-8 4-8-4z"/><path d="M12 12v8M4 8l8 4 8-4M8 6l8 4"/>',
   'scene-ramen': '<path d="M5 14h14c-.8 4-3.4 6-7 6s-6.2-2-7-6z"/><path d="M7 10c3-2 7-2 10 0M8 5l4 5M16 5l-4 5"/><circle cx="15" cy="16" r="1.5"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  chart: '<path d="M4 19V5M4 19h16"/><path d="M8 15v-4M12 15V8M16 15v-7"/>',
+  celebrate: '<path d="m5 21 3-9 7 7z"/><path d="M14 4l1 3 3 1-3 1-1 3-1-3-3-1 3-1zM19 13l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>',
+  mode: '<path d="M5 7h14M5 12h14M5 17h14"/><circle cx="9" cy="7" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="11" cy="17" r="2"/>',
+  fast: '<path d="M5 5v14l7-7zM13 5v14l7-7z"/>',
 };
 
 function motif(kind, x = 600, y = 242, s = 1) {
@@ -134,5 +225,22 @@ writeFileSync(join(publicDir, 'app-icon.svg'), `<svg xmlns="http://www.w3.org/20
 `);
 writeFileSync(join(publicDir, 'favicon.svg'), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="${palette.ink}"/><circle cx="47" cy="16" r="6" fill="${palette.accent}"/><path d="M20 40c5 7 14 9 21 4 6-4 7-13 2-18-5-5-14-5-20 1-5 5-6 14-1 20" fill="none" stroke="#f6f6f4" stroke-width="5" stroke-linecap="round"/></svg>
 `);
+writeFileSync(join(publicDir, 'celebrate.svg'), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" role="img" aria-label="session complete celebration">
+  <rect width="480" height="480" fill="transparent"/>
+  <circle cx="360" cy="104" r="44" fill="${palette.accent}"/>
+  <circle cx="122" cy="350" r="28" fill="${palette.warn}" opacity=".88"/>
+  <path d="M156 380 214 174l130 130z" fill="${palette.bg}" stroke="${palette.ink}" stroke-width="12" stroke-linejoin="round"/>
+  <path d="m214 174 42 88-100 118z" fill="${palette.accent}" opacity=".9"/>
+  <path d="M112 112l28 24M362 308l42 34M314 72l18-42M94 240l-48 12M382 190l50-10" stroke="${palette.ink}" stroke-width="12" stroke-linecap="round"/>
+  <path d="M250 94l16 36 38 10-36 16-10 38-16-36-38-10 36-16z" fill="${palette.warn}"/>
+</svg>
+`);
 
-console.log(`Generated ${scenes.length * 2 + Object.keys(icons).length + 2} assets in public/.`);
+const app1024 = appIconPng(1024);
+const apple180 = appIconPng(180);
+const fav32 = appIconPng(32);
+writeFileSync(join(publicDir, 'app-icon.png'), app1024);
+writeFileSync(join(publicDir, 'apple-touch-icon.png'), apple180);
+writeFileSync(join(publicDir, 'favicon.ico'), icoFromPng(fav32));
+
+console.log(`Generated ${scenes.length * 2 + Object.keys(icons).length + 6} assets in public/.`);

@@ -49,7 +49,9 @@ export function SpeakCardView({ card, isKanaFamiliar, onPracticed, onNext }: Pro
         <button style={{ ...PRIMARY, marginTop: 8, width: '100%' }} onClick={markSpoke}>말했어요</button>
       ) : (
         <div style={{ marginTop: 12 }}>
-          <p style={{ background: 'var(--ok-soft)', padding: 12, borderRadius: 8, color: 'var(--ok)', fontWeight: 600, margin: 0 }}>👍 좋아요! 입으로 꺼내는 게 진짜 실력이에요</p>
+          <p style={{ background: 'var(--ok-soft)', padding: 12, borderRadius: 8, color: 'var(--ok)', fontWeight: 600, margin: 0 }}>
+            <Icon name="check" size={16} style={{ marginRight: 6 }} />좋아요! 입으로 꺼내는 게 진짜 실력이에요
+          </p>
           {card.tip && <p style={{ background: 'var(--surface-2)', padding: 12, borderRadius: 8, fontSize: 14, color: 'var(--ink-soft)', marginTop: 8 }}><Icon name="tip" size={15} style={{ marginRight: 6 }} />{card.tip}</p>}
           <button style={{ ...PRIMARY, marginTop: 8, width: '100%' }} onClick={onNext}>다음</button>
         </div>

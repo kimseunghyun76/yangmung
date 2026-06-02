@@ -35,7 +35,7 @@ export function Intro({ cards, goal, onStart, onBack }: { cards: Card[]; goal: s
           ? <img src={sv.hero} alt="" style={{ width: '100%', display: 'block', maxHeight: 180, objectFit: 'cover' }} />
           : <div style={{ fontSize: 64, lineHeight: 1 }}>{sv.emoji}</div>}
       </div>
-      <p style={{ color: 'var(--ink-faint)', fontSize: 13, margin: 0 }}>오늘 한 판 🎒</p>
+      <p style={{ color: 'var(--ink-faint)', fontSize: 13, margin: 0 }}>오늘 한 판</p>
       <h1 style={{ margin: '6px 0 0', lineHeight: 1.35 }}>{goal}</h1>
       <p style={{ color: 'var(--ink-soft)', fontSize: 15, lineHeight: 1.6, marginTop: 14 }}>
         짧게 {cards.length}장이에요{lead}

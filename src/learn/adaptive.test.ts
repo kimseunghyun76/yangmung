@@ -9,7 +9,7 @@ const cards = buildCards();
 let pass = 0, total = 0;
 function check(name: string, cond: boolean) {
   total++; if (cond) pass++;
-  console.log(`  ${cond ? '✅' : '❌'} ${name}`);
+  console.log(`  ${cond ? 'PASS' : 'FAIL'} ${name}`);
 }
 
 // 진척 엔트리 헬퍼
