@@ -42,7 +42,11 @@ export function speak(text: string, opts: SpeakOpts = {}): void {
     let fired = false;
     const done = () => { if (fired) return; fired = true; opts.onEnd!(); };
     u.onend = done;
-    u.onerror = done; // 중단/오류여도 진행이 멈추지 않게
+    u.onerror = (ev) => {
+      const err = 'error' in ev ? String(ev.error) : '';
+      if (err === 'canceled' || err === 'interrupted') return;
+      done();
+    };
   }
   window.speechSynthesis.cancel();
   window.speechSynthesis.speak(u);

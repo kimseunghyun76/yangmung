@@ -1,5 +1,4 @@
 // 상단 네비게이션 — 에디토리얼: 텍스트 탭 + 朱 언더라인, 모노 컨트롤.
-import { COLORS } from '../ui/styles';
 import { Icon } from '../ui/Icon';
 type NavView = 'home' | 'map' | 'review';
 
@@ -20,21 +19,26 @@ const items: { key: NavView; label: string }[] = [
 ];
 
 export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings, theme, onToggleTheme }: Props) {
-  const tab = (active: boolean): React.CSSProperties => ({
+  const tab = (active: boolean, home = false): React.CSSProperties => ({
     border: 'none', background: 'none', cursor: 'pointer', fontSize: 16,
-    padding: '4px 2px', color: active ? COLORS.ink : COLORS.inkFaint,
+    padding: home ? '1px 2px 5px' : '4px 2px', color: active ? 'var(--ink)' : 'var(--ink-faint)',
     fontWeight: active ? 800 : 600, letterSpacing: '-0.02em',
-    borderBottom: `3px solid ${active ? COLORS.indigo : 'transparent'}`,
+    borderBottom: `3px solid ${active ? 'var(--accent)' : 'transparent'}`,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   });
   const ctrl: React.CSSProperties = {
     border: 'none', background: 'none', cursor: 'pointer', fontSize: 16,
-    padding: '4px 6px', color: COLORS.inkSoft, minWidth: 32, fontWeight: 700,
+    padding: '4px 6px', color: 'var(--ink-soft)', minWidth: 32, fontWeight: 700,
   };
   return (
     <nav style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 22 }}>
       {items.map((it) => (
-        <button key={it.key} style={tab(current === it.key)} onClick={() => onNavigate(it.key)}>
-          {it.label}
+        <button key={it.key} style={tab(current === it.key, it.key === 'home')} onClick={() => onNavigate(it.key)} aria-label={it.label} title={it.label}>
+          {it.key === 'home'
+            ? <img src="/mascots/yangmung-duo-logo.webp" alt="" width={32} height={32} style={{ objectFit: 'contain', filter: 'drop-shadow(0 7px 12px rgba(0,0,0,0.12))' }} />
+            : it.label}
         </button>
       ))}
       <span style={{ flex: 1 }} />

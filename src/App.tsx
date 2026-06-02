@@ -47,6 +47,8 @@ export function App() {
   const cardStartRef = useRef<number>(Date.now());     // 현재 카드 표시 시각 (빠른 정답 판정)
   const advanceTimerRef = useRef<number | null>(null);  // 정답 자동 넘김 타이머
   const safetyTimerRef = useRef<number | null>(null);   // TTS onend 미발화 대비 안전망
+  const currentCardKeyRef = useRef<string>('');          // 이전 카드 TTS 콜백이 새 카드로 넘어오지 않게 하는 가드
+  const pendingAdvanceKeyRef = useRef<string | null>(null);
   const FAST_MS = 4000;
 
   const card: Card | undefined = view === 'session' ? sessionCards[i] : undefined;
@@ -105,8 +107,10 @@ export function App() {
   // 카드가 바뀌면 표시 시각 리셋 + 이전 자동넘김 타이머 정리
   useEffect(() => {
     cardStartRef.current = Date.now();
+    currentCardKeyRef.current = card ? `${i}:${card.id}` : '';
+    pendingAdvanceKeyRef.current = null;
     return () => { if (advanceTimerRef.current) { clearTimeout(advanceTimerRef.current); advanceTimerRef.current = null; } };
-  }, [i, view]);
+  }, [i, view, card]);
 
   // 세션 중 카드 소진되면 done으로 (render 중 setState 금지)
   useEffect(() => {
@@ -208,6 +212,7 @@ export function App() {
   function next() {
     if (advanceTimerRef.current) { clearTimeout(advanceTimerRef.current); advanceTimerRef.current = null; }
     if (safetyTimerRef.current) { clearTimeout(safetyTimerRef.current); safetyTimerRef.current = null; }
+    pendingAdvanceKeyRef.current = null;
     // 팁 카드는 점수 없이 "본 적 있음"만 기록 → 다음 세션엔 다른 팁이 회전해 나옴
     if (card?.kind === 'tip') {
       const updated = recordAttempt(progress, card.id, { correct: true, usedRecovery: false, sessionId });
@@ -243,11 +248,14 @@ export function App() {
     recordCardResult(card.id, c.correct, !!c.recovery, fast);
 
     // 자동 넘김 1회 예약(중복 방지)
+    const advanceKey = `${i}:${card.id}`;
     const armNext = () => {
+      if (pendingAdvanceKeyRef.current !== advanceKey || currentCardKeyRef.current !== advanceKey) return;
       if (advanceTimerRef.current !== null) return;
       advanceTimerRef.current = window.setTimeout(() => { advanceTimerRef.current = null; next(); }, 1000);
     };
     const willAuto = c.correct && !c.recovery && settings.fastForward;
+    pendingAdvanceKeyRef.current = willAuto ? advanceKey : null;
     // 정답이면 표현을 읽어주고 → "다 읽은 뒤 1초"에 넘어감
     if (c.ja && ttsSupported()) {
       speak(c.ja, willAuto ? { onEnd: armNext } : {});
