@@ -27,6 +27,7 @@ export function ttsSupported(): boolean {
 export interface SpeakOpts {
   audioId?: string; // 있으면 mp3 우선 (MVP에선 미사용)
   rate?: number;    // 느린 청해용
+  onEnd?: () => void; // 읽기 종료(또는 오류) 시 1회 호출 — "다 읽고 넘어가기"용
 }
 
 export function speak(text: string, opts: SpeakOpts = {}): void {
@@ -37,6 +38,12 @@ export function speak(text: string, opts: SpeakOpts = {}): void {
   u.rate = opts.rate ?? 0.95;
   const v = pickVoice();
   if (v) u.voice = v;
+  if (opts.onEnd) {
+    let fired = false;
+    const done = () => { if (fired) return; fired = true; opts.onEnd!(); };
+    u.onend = done;
+    u.onerror = done; // 중단/오류여도 진행이 멈추지 않게
+  }
   window.speechSynthesis.cancel();
   window.speechSynthesis.speak(u);
 }
