@@ -13,7 +13,7 @@ import { sessionGoalText } from './goal';
 import { sceneVisualByMission, sceneVisualByPlace } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
 import { SceneThumb } from './ui';
-import { GlassPanel, PrimaryAction, SceneHero } from './shell';
+import { GlassPanel, PrimaryAction, hexA } from './shell';
 
 interface Props {
   nav: NavBarProps;
@@ -61,19 +61,15 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
 
       {/* 오늘의 장면 — 히어로 + 강한 CTA */}
       <div className="ym-rise" style={{ animationDelay: '.04s' }}>
-        <SceneHero
+        <HomeSceneCard
           hero={primary ? heroSv.hero : undefined}
           accent={heroSv.accent}
           kicker={primary ? `오늘의 장면 · ${heroPlace}` : '오늘 한 판'}
           title={goal}
-        >
-          <p style={{ margin: '10px 0 0', fontSize: 12, fontWeight: 600, opacity: 0.85 }}>
-            {modeLabel} · 가나 {plan.breakdown.K} · 표현 {plan.breakdown.B} · 미션 {plan.breakdown.C} · 팁 {plan.breakdown.tip}
-          </p>
-          <PrimaryAction onClick={onStart} disabled={planned === 0} style={{ marginTop: 14 }}>
-            {planned === 0 ? '오늘 학습할 카드가 없어요' : `▶  시작 · ${planned}장`}
-          </PrimaryAction>
-        </SceneHero>
+          meta={`${modeLabel} · 가나 ${plan.breakdown.K} · 표현 ${plan.breakdown.B} · 미션 ${plan.breakdown.C} · 팁 ${plan.breakdown.tip}`}
+          planned={planned}
+          onStart={onStart}
+        />
       </div>
       {planned > 0 && counts.due + counts.fresh > planned && (
         <p style={{ fontSize: 12, color: 'var(--ink-faint)', marginTop: 10, textAlign: 'center', fontWeight: 600 }}>
@@ -156,6 +152,88 @@ const pill: React.CSSProperties = {
   background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 650, fontSize: 14,
   textAlign: 'center', cursor: 'pointer',
 };
+
+function HomeSceneCard({ hero, accent, kicker, title, meta, planned, onStart }: {
+  hero?: string;
+  accent: string;
+  kicker: string;
+  title: string;
+  meta: string;
+  planned: number;
+  onStart: () => void;
+}) {
+  return (
+    <section style={{
+      position: 'relative',
+      overflow: 'hidden',
+      borderRadius: 28,
+      padding: 18,
+      border: '1px solid var(--glass-border)',
+      background: `
+        radial-gradient(circle at 82% 18%, ${hexA(accent, 0.28)}, transparent 34%),
+        linear-gradient(155deg, var(--glass-bg-strong), ${hexA(accent, 0.10)} 58%, var(--glass-bg))
+      `,
+      boxShadow: 'var(--glass-shadow)',
+      minHeight: 248,
+    }}>
+      <div aria-hidden style={{
+        position: 'absolute',
+        inset: 0,
+        background: `linear-gradient(135deg, transparent 0 62%, ${hexA(accent, 0.18)} 62% 100%)`,
+        opacity: 0.8,
+      }} />
+      {hero && (
+        <img
+          src={hero}
+          alt=""
+          aria-hidden
+          style={{
+            position: 'absolute',
+            right: -180,
+            top: 18,
+            width: 560,
+            height: 230,
+            objectFit: 'cover',
+            opacity: 0.22,
+            filter: 'saturate(0.9) contrast(1.08)',
+            transform: 'rotate(-3deg)',
+            borderRadius: 34,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+      <div aria-hidden style={{
+        position: 'absolute',
+        right: 18,
+        top: 18,
+        width: 78,
+        height: 78,
+        borderRadius: 24,
+        border: `1px solid ${hexA(accent, 0.24)}`,
+        background: hexA(accent, 0.12),
+        boxShadow: `0 18px 46px ${hexA(accent, 0.16)}`,
+      }} />
+      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', minHeight: 212 }}>
+        <p style={{ ...label, color: accent, margin: 0 }}>{kicker}</p>
+        <h2 style={{
+          margin: '10px 0 0',
+          maxWidth: 270,
+          fontSize: 29,
+          lineHeight: 1.12,
+          letterSpacing: '-0.035em',
+          color: 'var(--ink)',
+        }}>{title}</h2>
+        <p style={{ margin: '10px 0 0', maxWidth: 310, fontSize: 13, color: 'var(--ink-soft)', fontWeight: 650, lineHeight: 1.45 }}>
+          {meta}
+        </p>
+        <div style={{ flex: 1 }} />
+        <PrimaryAction onClick={onStart} disabled={planned === 0} style={{ marginTop: 18 }}>
+          {planned === 0 ? '오늘 학습할 카드가 없어요' : `시작 · ${planned}장`}
+        </PrimaryAction>
+      </div>
+    </section>
+  );
+}
 
 function DiagnosisBody({ d }: { d: Diagnosis }) {
   const tone = d.level === 'struggling' ? 'var(--warn)' : d.level === 'cruising' ? 'var(--ok)' : 'var(--accent)';
