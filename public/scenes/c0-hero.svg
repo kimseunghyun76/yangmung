@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" role="img" aria-label="가게 scene illustration">
   <rect width="1200" height="480" rx="0" fill="transparent"/>
-  <path d="M70 372C218 294 306 320 436 338c174 24 258-126 424-112 102 8 178 72 270 38" fill="none" stroke="#b23b32" stroke-width="20" stroke-linecap="round" opacity=".16"/>
-  <rect x="72" y="70" width="1056" height="340" rx="56" fill="#f6f6f4" stroke="#16171c" stroke-width="10"/>
-  <circle cx="980" cy="126" r="44" fill="#b23b32" opacity=".92"/>
-  <path stroke="#16171c" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M504 326h192l-22-150h-148z"/><path stroke="#16171c" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M546 224h108"/><circle fill="#b23b32" cx="600" cy="270" r="22"/>
+  <path d="M70 372C218 294 306 320 436 338c174 24 258-126 424-112 102 8 178 72 270 38" fill="none" stroke="#db2777" stroke-width="18" stroke-linecap="round" opacity=".12"/>
+  <rect x="72" y="70" width="1056" height="340" rx="56" fill="#fdf2f8" stroke="#16171c" stroke-width="10"/>
+  <circle cx="980" cy="126" r="44" fill="#db2777" opacity=".18"/>
+  <path stroke="#16171c" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M504 326h192l-22-150h-148z"/><path stroke="#16171c" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M546 224h108"/><circle fill="#db2777" cx="600" cy="270" r="22"/>
   <path d="M184 374h832" stroke="#16171c" stroke-width="10" stroke-linecap="round" opacity=".16"/>
 </svg>

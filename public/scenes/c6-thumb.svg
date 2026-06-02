@@ -1,5 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="약국 scene thumbnail">
-  <rect width="96" height="96" rx="20" fill="#f6f6f4" stroke="#16171c" stroke-width="4"/>
-  <circle cx="74" cy="22" r="8" fill="#b23b32"/>
-  <rect fill="#ffffff" stroke="#16171c" stroke-width="1.44" x="26.04" y="34.52" width="43.92" height="30.959999999999997" rx="5.04"/><path stroke="#16171c" stroke-width="1.44" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M48 40.64v18.72M38.64 50h18.72"/><circle fill="#b23b32" cx="64.56" cy="38.84" r="3.2399999999999998"/>
+  <rect width="96" height="96" rx="20" fill="#fef2f2" stroke="#16171c" stroke-width="4"/>
+  <rect fill="#ffffff" stroke="#16171c" stroke-width="1.44" x="26.04" y="34.52" width="43.92" height="30.959999999999997" rx="5.04"/><path stroke="#16171c" stroke-width="1.44" stroke-linecap="round" stroke-linejoin="round" fill="none" d="M48 40.64v18.72M38.64 50h18.72"/><circle fill="#e11d48" cx="64.56" cy="38.84" r="3.2399999999999998"/>
 </svg>
