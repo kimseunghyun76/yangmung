@@ -77,7 +77,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
       </div>
       {planned > 0 && counts.due + counts.fresh > planned && (
         <p style={{ fontSize: 12, color: 'var(--ink-faint)', marginTop: 10, textAlign: 'center', fontWeight: 600 }}>
-          오늘 풀 수 있는 카드 {counts.due + counts.fresh}개 중 {planned}개씩 짧게 진행해요.
+          풀 수 있는 카드 {counts.due + counts.fresh}장 중 오늘은 {planned}장씩 짧게 진행해요.
         </p>
       )}
 

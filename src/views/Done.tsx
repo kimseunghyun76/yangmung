@@ -124,8 +124,8 @@ function Stamp({ id, idx }: { id: string; idx: number }) {
   const sv = sceneVisualByMission(id);
   const rot = idx % 2 === 0 ? -7 : 6;
   return (
-    <div className="ym-burst" style={{ animationDelay: `${0.1 + idx * 0.08}s`, transform: `rotate(${rot}deg)`, width: 104, height: 104, borderRadius: 18, border: `2.5px solid ${sv.accent}`, color: sv.accent, background: hexA(sv.accent, 0.08), display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, position: 'relative' }}>
-      <Icon name={sv.icon} size={30} />
+    <div className="ym-burst" style={{ animationDelay: `${0.1 + idx * 0.08}s`, transform: `rotate(${rot}deg)`, width: 94, height: 94, borderRadius: 18, border: `2.5px solid ${sv.accent}`, color: sv.accent, background: hexA(sv.accent, 0.08), display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, position: 'relative' }}>
+      <Icon name={sv.icon} size={28} />
       <span style={{ fontSize: 13, fontWeight: 800 }}>{placeOf(id)}</span>
       <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.14em', border: `1.5px solid ${sv.accent}`, borderRadius: 4, padding: '1px 5px' }}>CLEAR</span>
     </div>

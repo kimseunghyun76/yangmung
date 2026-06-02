@@ -53,9 +53,9 @@ export function SceneHero({ hero, accent, kicker, title, children, minH = 210, s
       background: `linear-gradient(165deg, ${hexA(accent, 0.16)}, ${hexA(accent, 0.30)})`,
       border: '1px solid var(--glass-border)', boxShadow: 'var(--glass-shadow)', ...style,
     }}>
-      {hero && <img src={hero} alt="" aria-hidden style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.92 }} />}
-      {/* 스크림 — 하단을 어둡게(테마 무관) 해서 흰 텍스트 가독 확보 */}
-      <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.05) 25%, rgba(0,0,0,0.30) 60%, rgba(0,0,0,0.62) 100%)' }} />
+      {hero && <img src={hero} alt="" aria-hidden style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.82 }} />}
+      {/* 스크림 — 전반적으로 어둡게(테마 무관) 해서 흰 텍스트 가독 확보 */}
+      <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.34) 45%, rgba(0,0,0,0.68) 100%)' }} />
       <div style={{ position: 'relative', minHeight: minH, padding: 18, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', color: '#fff' }}>
         {kicker && <p style={{ margin: 0, fontSize: 12, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', textShadow: '0 1px 6px rgba(0,0,0,0.5)' }}>{kicker}</p>}
         {title && <p style={{ margin: '6px 0 0', fontSize: 25, fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.02em', textShadow: '0 1px 10px rgba(0,0,0,0.55)' }}>{title}</p>}
