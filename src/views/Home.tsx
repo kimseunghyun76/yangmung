@@ -57,7 +57,25 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
     <main style={WRAP}>
       <NavBar {...nav} />
 
-      <h1 className="ym-rise" style={{ margin: '0 0 14px', fontSize: 34, fontWeight: 800, letterSpacing: '-0.035em' }}>yangmung</h1>
+      <div className="ym-rise" style={{ margin: '0 0 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+        <img src="/mascots/yangmung-duo-logo.webp" alt="yangmung" width={70} height={70} style={{ objectFit: 'contain', filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.16))' }} />
+        <div style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 8,
+          padding: '9px 13px',
+          borderRadius: 999,
+          border: '1px solid var(--glass-border)',
+          background: 'var(--glass-bg-strong)',
+          color: 'var(--ink)',
+          fontSize: 13,
+          fontWeight: 750,
+          boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
+        }}>
+          <span style={{ width: 8, height: 8, borderRadius: 99, background: 'var(--accent)', boxShadow: '0 0 10px var(--accent)' }} />
+          {modeLabel}
+        </div>
+      </div>
 
       {/* 오늘의 장면 — 히어로 + 강한 CTA */}
       <div className="ym-rise" style={{ animationDelay: '.04s' }}>
