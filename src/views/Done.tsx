@@ -1,9 +1,10 @@
-// 세션 완료 화면 — "다음엔?" 행동 버튼이 주역, 통계는 아래로.
-import {
-  sessionResult, summarize, type ProgressMap, type SessionLogEntry,
-} from '../learn/progress';
-import { BTN, PRIMARY, WRAP } from '../ui/styles';
+// 세션 완료 — Immersive Scene Coach. 장면 클리어 감정 + 여권 스탬프 + 다음 장면 예고.
+import { CONTENT } from '../content';
+import { sessionResult, summarize, type ProgressMap, type SessionLogEntry } from '../learn/progress';
+import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
+import { GlassPanel, PrimaryAction, hexA } from './shell';
+import { sceneVisualByMission } from './scene';
 
 interface Props {
   sessionId: number;
@@ -13,72 +14,129 @@ interface Props {
   progress: ProgressMap;
   speakCount: number;
   canContinue: boolean;
+  clearedSceneIds: string[];
+  nextSceneId?: string;
   onRetryWeak: () => void;
   onContinue: () => void;
   onHome: () => void;
 }
 
-export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, onRetryWeak, onContinue, onHome }: Props) {
+const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place
+  ?? CONTENT.missions.find((m) => m.id === id)?.scenario ?? id;
+
+export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, onRetryWeak, onContinue, onHome }: Props) {
   const stars = quizSeen ? Math.max(1, Math.round((score / quizSeen) * 3)) : 0;
   const s = summarize(progress);
   const sr = sessionResult(progress, sessionId);
   const recoveryUsed = sessionLog.filter((r) => r.result === 'recovery').length;
   const wrongCount = sessionLog.filter((r) => r.result === 'wrong').length;
   const weak = new Set(sessionLog.filter((r) => r.result !== 'correct').map((r) => r.id)).size;
+  const stamps = clearedSceneIds.slice(0, 3);
 
   return (
-    <main style={WRAP}>
-      {/* 완료 축하 — 색종이 + 별 버스트 */}
-      <div style={{ position: 'relative', textAlign: 'center', padding: '12px 0 4px' }}>
-        <img className="ym-burst" src="/celebrate.svg" alt="" style={{ width: 132, height: 132, display: 'block', margin: '0 auto' }} />
-        <div style={{ position: 'absolute', left: '50%', top: 42, transform: 'translateX(-50%)', color: stars >= 3 ? 'var(--warn)' : 'var(--accent)' }}>
-          <Icon name={stars >= 3 ? 'trophy' : 'star'} size={42} />
+    <main style={{ ...WRAP }}>
+      {/* 축하 헤드 */}
+      <div className="ym-rise" style={{ textAlign: 'center', paddingTop: 8 }}>
+        <div className="ym-burst" style={{ width: 76, height: 76, margin: '0 auto', borderRadius: 99, background: 'var(--accent)', color: 'var(--accent-ink)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 28px rgba(185,56,46,0.4)' }}>
+          <Icon name={stars >= 3 ? 'trophy' : 'check'} size={38} />
         </div>
+        <h1 style={{ margin: '16px 0 0', fontSize: 28 }}>세션 {sessionId} 완료</h1>
+        <p style={{ fontSize: 22, margin: '10px 0 0', letterSpacing: 2, color: 'var(--accent)' }}>
+          {'★'.repeat(stars)}<span style={{ color: 'var(--glass-border)' }}>{'★'.repeat(3 - stars)}</span>
+        </p>
+        <p style={{ color: 'var(--ink-soft)', fontSize: 14, margin: '8px 0 0', fontWeight: 600 }}>
+          첫 시도 {score}/{quizSeen}{speakCount > 0 ? ` · 말하기 ${speakCount}` : ''}
+        </p>
       </div>
-      <h1 style={{ textAlign: 'center', marginTop: 6 }}>세션 {sessionId} 완료</h1>
-      <p style={{ margin: '8px 0 0', textAlign: 'center', color: 'var(--warn)', display: 'flex', justifyContent: 'center', gap: 4 }}>
-        {Array.from({ length: 3 }, (_, i) => <Icon key={i} name="star" size={24} style={{ opacity: i < stars ? 1 : 0.22 }} />)}
-      </p>
-      <p style={{ color: 'var(--ink-soft)', fontSize: 14, margin: '8px 0 0', textAlign: 'center', fontWeight: 600 }}>
-        첫 시도 {score}/{quizSeen}{speakCount > 0 ? ` · 말하기 ${speakCount}문장` : ''}{sr.weakNow > 0 ? ` · 약점 ${sr.weakNow}개 다음에 다시 나와요` : ''}
-      </p>
 
-      {/* 주역: 다음 행동 */}
-      <p className="ym-kicker" style={{ margin: '22px 0 10px' }}>다음엔?</p>
-      {weak > 0 && (
-        <button className="ym-pop-sm" style={{ ...PRIMARY, width: '100%' }} onClick={onRetryWeak}>
-          <Icon name="target" size={17} /> 약점만 다시 풀기 ({weak}카드)
-        </button>
-      )}
-      {canContinue && (
-        <button className={weak > 0 ? undefined : 'ym-pop-sm'} style={{ ...(weak > 0 ? BTN : PRIMARY), width: '100%', textAlign: 'center', marginTop: 10 }} onClick={onContinue}>
-          <Icon name="plus" size={17} /> 바로 한 세션 더
-        </button>
-      )}
-      <button style={{ ...BTN, width: '100%', textAlign: 'center', marginTop: 10 }} onClick={onHome}>
-        <Icon name="nav-home" size={17} /> 홈으로
-      </button>
-
-      {/* 보조: 이번 세션 통계 */}
-      <details style={{ marginTop: 20 }}>
-        <summary style={{ cursor: 'pointer', fontSize: 13, color: 'var(--ink-faint)' }}>이번 세션 자세히</summary>
-        <div style={{ marginTop: 10, padding: 14, background: 'var(--surface)', border: '1.5px solid var(--border)', borderRadius: 12 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, fontSize: 14 }}>
-            <div>카드 수</div><Num value={quizSeen} />
-            <div style={{ color: 'var(--ok)' }}>첫 시도 정답</div><Num value={score} color="var(--ok)" />
-            <div style={{ color: 'var(--warn)', display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="recovery" size={15} /> 복구 사용</div><Num value={recoveryUsed} color="var(--warn)" />
-            <div style={{ color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="cross" size={15} /> 오답</div><Num value={wrongCount} color="var(--accent)" />
-            {speakCount > 0 && (<><div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="speak" size={15} /> 말한 문장</div><Num value={speakCount} /></>)}
-            <div style={{ color: 'var(--ok)', display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="check" size={15} /> 새로 익숙</div><Num value={sr.masteredNow} color="var(--ok)" />
+      {/* 여권 스탬프 — 오늘 해낸 장면 */}
+      {stamps.length > 0 && (
+        <div className="ym-rise" style={{ animationDelay: '.08s', marginTop: 22 }}>
+          <p style={{ ...kicker, textAlign: 'center', marginBottom: 12 }}>오늘 일본에서 해낸 일</p>
+          <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+            {stamps.map((id, i) => <Stamp key={id} id={id} idx={i} />)}
           </div>
-          <p style={{ margin: '10px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>복구는 별점에 안 들어가요 — 보조 바퀴.</p>
-          <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)', display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="chart" size={15} /> 누적: 본 {s.seen} · 익숙 {s.mastered} · 약점 {s.weak}</p>
         </div>
+      )}
+
+      {/* 복구 성공 */}
+      {recoveryUsed > 0 && (
+        <p className="ym-rise" style={{ animationDelay: '.12s', textAlign: 'center', marginTop: 16, fontSize: 13, color: 'var(--warn)', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+          <Icon name="recovery" size={16} /> 복구 {recoveryUsed}회 — 막혀도 끝까지 이어갔어요
+        </p>
+      )}
+
+      {/* 다음 장면 예고 */}
+      {nextSceneId && (
+        <div className="ym-rise" style={{ animationDelay: '.16s', marginTop: 20 }}>
+          <GlassPanel style={{ display: 'flex', alignItems: 'center', gap: 14, padding: 16 }}>
+            <span style={{ width: 46, height: 46, flex: '0 0 46px', borderRadius: 13, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: hexA(sceneVisualByMission(nextSceneId).accent, 0.16), color: sceneVisualByMission(nextSceneId).accent }}>
+              <Icon name={sceneVisualByMission(nextSceneId).icon} size={26} />
+            </span>
+            <div style={{ flex: 1 }}>
+              <p style={{ margin: 0, ...kicker }}>다음 장면</p>
+              <p style={{ margin: '3px 0 0', fontSize: 16, fontWeight: 700 }}>{placeOf(nextSceneId)}</p>
+            </div>
+            <Icon name="flow" size={20} style={{ color: 'var(--ink-faint)' }} />
+          </GlassPanel>
+        </div>
+      )}
+
+      {/* 다음 행동 */}
+      <div className="ym-rise" style={{ animationDelay: '.2s', marginTop: 22, display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {weak > 0 && (
+          <button className="ym-press" style={glassBtn} onClick={onRetryWeak}>
+            <Icon name="target" size={18} style={{ color: 'var(--accent)' }} /> 약점만 다시 풀기 ({weak})
+          </button>
+        )}
+        {canContinue && <PrimaryAction onClick={onContinue}><Icon name="plus" size={18} /> 한 세션 더</PrimaryAction>}
+        <button className="ym-press" style={glassBtn} onClick={onHome}>
+          <Icon name="nav-home" size={18} /> 홈으로
+        </button>
+      </div>
+
+      {/* 통계 (접힘) */}
+      <details style={{ marginTop: 20 }}>
+        <summary style={{ ...kicker, cursor: 'pointer', listStyle: 'none', textAlign: 'center', padding: 6 }}>이번 세션 자세히</summary>
+        <GlassPanel style={{ marginTop: 10 }}>
+          <Row label="카드 수" value={quizSeen} />
+          <Row label="첫 시도 정답" value={score} color="var(--ok)" />
+          <Row label="복구 사용" value={recoveryUsed} color="var(--warn)" />
+          <Row label="오답" value={wrongCount} color="var(--accent)" />
+          {speakCount > 0 && <Row label="말한 문장" value={speakCount} />}
+          <Row label="새로 익숙" value={sr.masteredNow} color="var(--ok)" />
+          <p style={{ margin: '10px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>누적: 본 {s.seen} · 익숙 {s.mastered} · 약점 {s.weak}</p>
+        </GlassPanel>
       </details>
     </main>
   );
 }
 
-function Num({ value, color }: { value: number; color?: string }) {
-  return <div style={{ textAlign: 'right', color }}><strong>{value}</strong></div>;
+const kicker: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase', margin: 0 };
+const glassBtn: React.CSSProperties = {
+  width: '100%', padding: '15px 16px', borderRadius: 16, border: '1px solid var(--glass-border)',
+  background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 650, fontSize: 16, cursor: 'pointer',
+  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+};
+
+// 여권 스탬프 — 장면 클리어 도장
+function Stamp({ id, idx }: { id: string; idx: number }) {
+  const sv = sceneVisualByMission(id);
+  const rot = idx % 2 === 0 ? -7 : 6;
+  return (
+    <div className="ym-burst" style={{ animationDelay: `${0.1 + idx * 0.08}s`, transform: `rotate(${rot}deg)`, width: 104, height: 104, borderRadius: 18, border: `2.5px solid ${sv.accent}`, color: sv.accent, background: hexA(sv.accent, 0.08), display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, position: 'relative' }}>
+      <Icon name={sv.icon} size={30} />
+      <span style={{ fontSize: 13, fontWeight: 800 }}>{placeOf(id)}</span>
+      <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.14em', border: `1.5px solid ${sv.accent}`, borderRadius: 4, padding: '1px 5px' }}>CLEAR</span>
+    </div>
+  );
+}
+
+function Row({ label, value, color }: { label: string; value: number; color?: string }) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: 14, padding: '4px 0' }}>
+      <span style={{ color: 'var(--ink-soft)' }}>{label}</span>
+      <strong style={{ color: color ?? 'var(--ink)', fontVariantNumeric: 'tabular-nums' }}>{value}</strong>
+    </div>
+  );
 }
