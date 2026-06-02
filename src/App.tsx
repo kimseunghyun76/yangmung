@@ -12,7 +12,7 @@ import { adaptSessionConfig, diagnose } from './learn/adaptive';
 import { extractKanaChars } from './learn/kanaReading';
 import { loadSettings, MODE_PRESETS, saveSettings, type Settings } from './learn/settings';
 import { sessionGoalText } from './views/goal';
-import { speak } from './tts';
+import { speak, ttsSupported } from './tts';
 import { WRAP } from './ui/styles';
 import { Home } from './views/Home';
 import { Intro } from './views/Intro';
@@ -46,6 +46,7 @@ export function App() {
   const [showSettings, setShowSettings] = useState(false);
   const cardStartRef = useRef<number>(Date.now());     // 현재 카드 표시 시각 (빠른 정답 판정)
   const advanceTimerRef = useRef<number | null>(null);  // 정답 자동 넘김 타이머
+  const safetyTimerRef = useRef<number | null>(null);   // TTS onend 미발화 대비 안전망
   const FAST_MS = 4000;
 
   const card: Card | undefined = view === 'session' ? sessionCards[i] : undefined;
@@ -206,6 +207,7 @@ export function App() {
   }
   function next() {
     if (advanceTimerRef.current) { clearTimeout(advanceTimerRef.current); advanceTimerRef.current = null; }
+    if (safetyTimerRef.current) { clearTimeout(safetyTimerRef.current); safetyTimerRef.current = null; }
     // 팁 카드는 점수 없이 "본 적 있음"만 기록 → 다음 세션엔 다른 팁이 회전해 나옴
     if (card?.kind === 'tip') {
       const updated = recordAttempt(progress, card.id, { correct: true, usedRecovery: false, sessionId });
@@ -229,8 +231,7 @@ export function App() {
     if (!card || picked !== null) return;
     const fast = Date.now() - cardStartRef.current < FAST_MS;
     setPicked(idx);
-    if (c.ja) speak(c.ja);
-    if (card.kind !== 'quiz') return;
+    if (card.kind !== 'quiz') { if (c.ja) speak(c.ja); return; }
     // 미션 스텝이면 "내가 고른 답변" 기록 (대화 리캡용)
     if (card.reviewTarget?.type === 'mission') {
       setPicks((prev) => ({
@@ -240,9 +241,20 @@ export function App() {
     }
     creditKana(card);
     recordCardResult(card.id, c.correct, !!c.recovery, fast);
-    // 정답(복구·오답 아님)이면 자동으로 다음 카드 — 반복 진행 시간 단축
-    if (c.correct && !c.recovery && settings.fastForward) {
+
+    // 자동 넘김 1회 예약(중복 방지)
+    const armNext = () => {
+      if (advanceTimerRef.current !== null) return;
       advanceTimerRef.current = window.setTimeout(() => { advanceTimerRef.current = null; next(); }, 1000);
+    };
+    const willAuto = c.correct && !c.recovery && settings.fastForward;
+    // 정답이면 표현을 읽어주고 → "다 읽은 뒤 1초"에 넘어감
+    if (c.ja && ttsSupported()) {
+      speak(c.ja, willAuto ? { onEnd: armNext } : {});
+      // 안전망: onend가 안 오는 브라우저 대비 (읽기 길이+여유)
+      if (willAuto) safetyTimerRef.current = window.setTimeout(armNext, 8000);
+    } else if (willAuto) {
+      armNext(); // 읽을 음성이 없으면 그냥 1초 후
     }
   }
   // 소개 카드: 퀴즈 전 학습 노출. 점수에는 넣지 않고, 한 번 본 카드로만 기록.
