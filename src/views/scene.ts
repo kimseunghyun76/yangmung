@@ -8,6 +8,16 @@ const BACKDROPS: Record<string, string> = {
   C1: '/scenes/generated/c1-conbini-bg.webp',
   C2: '/scenes/generated/c2-restaurant-bg.webp',
   C3: '/scenes/generated/c3-train-bg.webp',
+  C4: '/scenes/generated/c4-hotel-bg.webp',
+  C5: '/scenes/generated/c5-street-bg.webp',
+  C6: '/scenes/generated/c6-pharmacy-bg.webp',
+  C7: '/scenes/generated/c7-shopping-bg.webp',
+  C8: '/scenes/generated/c8-taxi-bg.webp',
+  C9: '/scenes/generated/c9-airport-bg.webp',
+  C10: '/scenes/generated/c10-exchange-bg.webp',
+  C11: '/scenes/generated/c11-locker-bg.webp',
+  C12: '/scenes/generated/c12-delivery-bg.webp',
+  C13: '/scenes/generated/c13-ramen-bg.webp',
 };
 
 const BY_PLACE: Record<string, SceneVisual> = {

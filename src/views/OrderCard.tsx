@@ -8,6 +8,7 @@ import { PRIMARY } from '../ui/styles';
 import { Icon } from '../ui/Icon';
 import { ReadingAid } from './ReadingAid';
 import { sceneVisualByMission } from './scene';
+import { PrimaryAction } from './shell';
 
 // 세션 중 내가 고른 답변 (App에서 기록 → 리캡에서 재현)
 export interface PickInfo { label: string; ja?: string; kana?: string; korean?: string; recovery: boolean; hasPhrase: boolean }
@@ -70,14 +71,13 @@ export function OrderCardView({ card, picks, isKanaFamiliar, onNext }: Props) {
         방금 나눈 대화예요. 내가 고른 답으로 전체를 한 번 읽어볼까요?
       </p>
 
-      <button
-        className="ym-pop-sm"
-        style={{ ...PRIMARY, width: '100%', marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+      <PrimaryAction
+        style={{ width: '100%', marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
         onClick={playAll}
         disabled={!ttsSupported()}
       >
         <Icon name="listen" size={18} /> 전체 듣기
-      </button>
+      </PrimaryAction>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {turns.map((t) => (
