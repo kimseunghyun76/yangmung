@@ -1,8 +1,29 @@
 // 런타임 듣기 레이어.
-// 정책(kana-master 계승): audioId 있으면 사전 mp3, 없으면 브라우저 Web Speech 폴백.
-// MVP는 mp3 자산 0 → Web Speech(ja-JP)만으로 듣기 루프 확보.
+// 정책: 사전 생성 mp3(Nanami) 우선 → 없거나 재생 실패 시 Web Speech(ja-JP) 폴백.
+
+interface AudioManifestItem {
+  text: string;
+  path: string;
+  voice: string;
+  source?: string;
+  sourceId?: string;
+}
+
+interface AudioManifest {
+  generatedAt: string | null;
+  voices: Record<string, { name: string; lang: string; label: string; gender: string }>;
+  items: Record<string, AudioManifestItem>;
+  textIndex: Record<string, string>;
+}
 
 let jaVoice: SpeechSynthesisVoice | null = null;
+let manifestPromise: Promise<AudioManifest | null> | null = null;
+let currentAudio: HTMLAudioElement | null = null;
+let speakToken = 0;
+
+function normalizeText(text: string): string {
+  return String(text || '').replace(/[〜~]/g, '').replace(/\s+/g, ' ').trim();
+}
 
 function pickVoice(): SpeechSynthesisVoice | null {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return null;
@@ -20,19 +41,44 @@ if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
   };
 }
 
-export function ttsSupported(): boolean {
+function audioElementSupported(): boolean {
+  return typeof window !== 'undefined' && typeof Audio !== 'undefined';
+}
+
+function webSpeechSupported(): boolean {
   return typeof window !== 'undefined' && 'speechSynthesis' in window;
 }
 
-export interface SpeakOpts {
-  audioId?: string; // 있으면 mp3 우선 (MVP에선 미사용)
-  rate?: number;    // 느린 청해용
-  onEnd?: () => void; // 읽기 종료(또는 오류) 시 1회 호출 — "다 읽고 넘어가기"용
+export function ttsSupported(): boolean {
+  return audioElementSupported() || webSpeechSupported();
 }
 
-export function speak(text: string, opts: SpeakOpts = {}): void {
-  if (!ttsSupported() || !text) return;
-  // audioId 사전 mp3 경로는 후행 (지금은 항상 Web Speech 폴백)
+function loadManifest(): Promise<AudioManifest | null> {
+  if (typeof window === 'undefined') return Promise.resolve(null);
+  if (!manifestPromise) {
+    manifestPromise = fetch('/audio/manifest.json', { cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() as Promise<AudioManifest> : null))
+      .catch(() => null);
+  }
+  return manifestPromise;
+}
+
+void loadManifest();
+
+function stopAudioOnly(): void {
+  if (!currentAudio) return;
+  currentAudio.onended = null;
+  currentAudio.onerror = null;
+  currentAudio.pause();
+  currentAudio.currentTime = 0;
+  currentAudio = null;
+}
+
+function speakWeb(text: string, opts: SpeakOpts = {}, token = speakToken): void {
+  if (!webSpeechSupported() || !text) {
+    opts.onEnd?.();
+    return;
+  }
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'ja-JP';
   u.rate = opts.rate ?? 0.95;
@@ -40,7 +86,11 @@ export function speak(text: string, opts: SpeakOpts = {}): void {
   if (v) u.voice = v;
   if (opts.onEnd) {
     let fired = false;
-    const done = () => { if (fired) return; fired = true; opts.onEnd!(); };
+    const done = () => {
+      if (fired || token !== speakToken) return;
+      fired = true;
+      opts.onEnd!();
+    };
     u.onend = done;
     u.onerror = (ev) => {
       const err = 'error' in ev ? String(ev.error) : '';
@@ -52,22 +102,71 @@ export function speak(text: string, opts: SpeakOpts = {}): void {
   window.speechSynthesis.speak(u);
 }
 
-// 여러 문장을 순서대로 이어 읽기 (대화 리캡 "전체 듣기"용). 한 번만 취소 후 큐에 쌓는다.
+export interface SpeakOpts {
+  audioId?: string;
+  rate?: number;    // 느린 청해용. mp3는 playbackRate, Web Speech는 utterance.rate.
+  onEnd?: () => void;
+}
+
+export function speak(text: string, opts: SpeakOpts = {}): void {
+  const clean = normalizeText(text);
+  if (!ttsSupported() || !clean) return;
+  const token = ++speakToken;
+  stopAudioOnly();
+  if (webSpeechSupported()) window.speechSynthesis.cancel();
+
+  void loadManifest().then((manifest) => {
+    if (token !== speakToken) return;
+    const id = opts.audioId ?? manifest?.textIndex[clean];
+    const item = id ? manifest?.items[id] : undefined;
+    if (!item?.path || !audioElementSupported()) {
+      speakWeb(clean, opts, token);
+      return;
+    }
+
+    const audio = new Audio(item.path);
+    currentAudio = audio;
+    audio.playbackRate = opts.rate ?? 1;
+    let done = false;
+    const finish = () => {
+      if (done || token !== speakToken) return;
+      done = true;
+      if (currentAudio === audio) currentAudio = null;
+      opts.onEnd?.();
+    };
+    audio.onended = finish;
+    audio.onerror = () => {
+      if (token !== speakToken) return;
+      if (currentAudio === audio) currentAudio = null;
+      speakWeb(clean, opts, token);
+    };
+    audio.play().catch(() => {
+      if (token !== speakToken) return;
+      if (currentAudio === audio) currentAudio = null;
+      speakWeb(clean, opts, token);
+    });
+  });
+}
+
+// 여러 문장을 순서대로 이어 읽기. 각 문장마다 mp3 우선 → Web Speech 폴백.
 export function speakSequence(texts: string[], opts: SpeakOpts = {}): void {
-  if (!ttsSupported()) return;
-  window.speechSynthesis.cancel();
-  const v = pickVoice();
-  for (const text of texts) {
-    if (!text) continue;
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'ja-JP';
-    u.rate = opts.rate ?? 0.95;
-    if (v) u.voice = v;
-    window.speechSynthesis.speak(u); // 네이티브 큐에 순차 적재
-  }
+  const seq = texts.map(normalizeText).filter(Boolean);
+  if (!ttsSupported() || seq.length === 0) return;
+  stopSpeaking();
+  let i = 0;
+  const next = () => {
+    if (i >= seq.length) {
+      opts.onEnd?.();
+      return;
+    }
+    speak(seq[i++], { ...opts, onEnd: next });
+  };
+  next();
 }
 
 // 재생 중지 (화면 이탈·다시 듣기 전)
 export function stopSpeaking(): void {
-  if (ttsSupported()) window.speechSynthesis.cancel();
+  speakToken++;
+  stopAudioOnly();
+  if (webSpeechSupported()) window.speechSynthesis.cancel();
 }

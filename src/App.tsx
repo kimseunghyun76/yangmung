@@ -362,7 +362,7 @@ export function App() {
         allCards={allCards} progress={progress} session={session} sessionConfig={sessionConfig}
         diagnosis={diag}
         modeLabel={MODE_PRESETS[settings.mode].label}
-        onStart={startSession} onReset={resetAll} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession}
+        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession}
       />
     );
   }

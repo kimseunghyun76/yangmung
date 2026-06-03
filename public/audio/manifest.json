@@ -1,0 +1,4729 @@
+{
+  "generatedAt": "2026-06-03T20:15:14.573Z",
+  "voices": {
+    "nanami": {
+      "name": "ja-JP-NanamiNeural",
+      "lang": "ja-JP",
+      "label": "Nanami (ja-JP)",
+      "gender": "F"
+    }
+  },
+  "items": {
+    "tts_1f9bd4d2bc10": {
+      "text": "ー",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_long",
+      "sources": [
+        "kana:k_long"
+      ],
+      "path": "/audio/nanami/tts_1f9bd4d2bc10.mp3"
+    },
+    "tts_98fdfc0a7426": {
+      "text": "あ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_a",
+      "sources": [
+        "kana:k_hira_a"
+      ],
+      "path": "/audio/nanami/tts_98fdfc0a7426.mp3"
+    },
+    "tts_1b4c4cc65ff2": {
+      "text": "ア",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_a",
+      "sources": [
+        "kana:k_kata_a"
+      ],
+      "path": "/audio/nanami/tts_1b4c4cc65ff2.mp3"
+    },
+    "tts_3c01c77f19cd": {
+      "text": "い",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_i",
+      "sources": [
+        "kana:k_hira_i"
+      ],
+      "path": "/audio/nanami/tts_3c01c77f19cd.mp3"
+    },
+    "tts_b284de61340b": {
+      "text": "イ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_i",
+      "sources": [
+        "kana:k_kata_i"
+      ],
+      "path": "/audio/nanami/tts_b284de61340b.mp3"
+    },
+    "tts_af2b29a995c7": {
+      "text": "う",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_u",
+      "sources": [
+        "kana:k_hira_u"
+      ],
+      "path": "/audio/nanami/tts_af2b29a995c7.mp3"
+    },
+    "tts_86686c311378": {
+      "text": "ウ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_u",
+      "sources": [
+        "kana:k_kata_u"
+      ],
+      "path": "/audio/nanami/tts_86686c311378.mp3"
+    },
+    "tts_a60311a2fc88": {
+      "text": "え",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_e",
+      "sources": [
+        "kana:k_hira_e"
+      ],
+      "path": "/audio/nanami/tts_a60311a2fc88.mp3"
+    },
+    "tts_3707bab0c47b": {
+      "text": "エ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_e",
+      "sources": [
+        "kana:k_kata_e"
+      ],
+      "path": "/audio/nanami/tts_3707bab0c47b.mp3"
+    },
+    "tts_ac6bc7de7112": {
+      "text": "お",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_o",
+      "sources": [
+        "kana:k_hira_o"
+      ],
+      "path": "/audio/nanami/tts_ac6bc7de7112.mp3"
+    },
+    "tts_06716d34cc81": {
+      "text": "オ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_o",
+      "sources": [
+        "kana:k_kata_o"
+      ],
+      "path": "/audio/nanami/tts_06716d34cc81.mp3"
+    },
+    "tts_288c9e077190": {
+      "text": "か",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ka",
+      "sources": [
+        "kana:k_hira_ka"
+      ],
+      "path": "/audio/nanami/tts_288c9e077190.mp3"
+    },
+    "tts_00ed9f08e29e": {
+      "text": "カ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ka",
+      "sources": [
+        "kana:k_kata_ka"
+      ],
+      "path": "/audio/nanami/tts_00ed9f08e29e.mp3"
+    },
+    "tts_a142816563b3": {
+      "text": "が",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ga",
+      "sources": [
+        "kana:k_hira_ga"
+      ],
+      "path": "/audio/nanami/tts_a142816563b3.mp3"
+    },
+    "tts_2cf8934dec55": {
+      "text": "ガ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ga",
+      "sources": [
+        "kana:k_kata_ga"
+      ],
+      "path": "/audio/nanami/tts_2cf8934dec55.mp3"
+    },
+    "tts_27acc76c0055": {
+      "text": "き",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ki",
+      "sources": [
+        "kana:k_hira_ki"
+      ],
+      "path": "/audio/nanami/tts_27acc76c0055.mp3"
+    },
+    "tts_408ae436f0e0": {
+      "text": "キ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ki",
+      "sources": [
+        "kana:k_kata_ki"
+      ],
+      "path": "/audio/nanami/tts_408ae436f0e0.mp3"
+    },
+    "tts_9a77c2df496e": {
+      "text": "ぎ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_gi",
+      "sources": [
+        "kana:k_hira_gi"
+      ],
+      "path": "/audio/nanami/tts_9a77c2df496e.mp3"
+    },
+    "tts_5bbbbf8a5aff": {
+      "text": "ギ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_gi",
+      "sources": [
+        "kana:k_kata_gi"
+      ],
+      "path": "/audio/nanami/tts_5bbbbf8a5aff.mp3"
+    },
+    "tts_b2b7e45bf39e": {
+      "text": "きゃ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_kya",
+      "sources": [
+        "kana:k_hira_kya"
+      ],
+      "path": "/audio/nanami/tts_b2b7e45bf39e.mp3"
+    },
+    "tts_b051252d619f": {
+      "text": "キャ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_kya",
+      "sources": [
+        "kana:k_kata_kya"
+      ],
+      "path": "/audio/nanami/tts_b051252d619f.mp3"
+    },
+    "tts_95e3d0ad8f6f": {
+      "text": "ぎゃ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_gya",
+      "sources": [
+        "kana:k_hira_gya"
+      ],
+      "path": "/audio/nanami/tts_95e3d0ad8f6f.mp3"
+    },
+    "tts_200e0575fb28": {
+      "text": "ギャ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_gya",
+      "sources": [
+        "kana:k_kata_gya"
+      ],
+      "path": "/audio/nanami/tts_200e0575fb28.mp3"
+    },
+    "tts_298ab383a42d": {
+      "text": "きゅ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_kyu",
+      "sources": [
+        "kana:k_hira_kyu"
+      ],
+      "path": "/audio/nanami/tts_298ab383a42d.mp3"
+    },
+    "tts_767fe200f3be": {
+      "text": "キュ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_kyu",
+      "sources": [
+        "kana:k_kata_kyu"
+      ],
+      "path": "/audio/nanami/tts_767fe200f3be.mp3"
+    },
+    "tts_81a5e9e8a034": {
+      "text": "ぎゅ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_gyu",
+      "sources": [
+        "kana:k_hira_gyu"
+      ],
+      "path": "/audio/nanami/tts_81a5e9e8a034.mp3"
+    },
+    "tts_4af7d2dbff30": {
+      "text": "ギュ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_gyu",
+      "sources": [
+        "kana:k_kata_gyu"
+      ],
+      "path": "/audio/nanami/tts_4af7d2dbff30.mp3"
+    },
+    "tts_d9ee3c16a677": {
+      "text": "きょ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_kyo",
+      "sources": [
+        "kana:k_hira_kyo"
+      ],
+      "path": "/audio/nanami/tts_d9ee3c16a677.mp3"
+    },
+    "tts_97de23410f24": {
+      "text": "キョ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_kyo",
+      "sources": [
+        "kana:k_kata_kyo"
+      ],
+      "path": "/audio/nanami/tts_97de23410f24.mp3"
+    },
+    "tts_08831cb24c9b": {
+      "text": "ぎょ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_gyo",
+      "sources": [
+        "kana:k_hira_gyo"
+      ],
+      "path": "/audio/nanami/tts_08831cb24c9b.mp3"
+    },
+    "tts_d1b4351db075": {
+      "text": "ギョ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_gyo",
+      "sources": [
+        "kana:k_kata_gyo"
+      ],
+      "path": "/audio/nanami/tts_d1b4351db075.mp3"
+    },
+    "tts_ac94e112183c": {
+      "text": "く",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ku",
+      "sources": [
+        "kana:k_hira_ku"
+      ],
+      "path": "/audio/nanami/tts_ac94e112183c.mp3"
+    },
+    "tts_15901a60a347": {
+      "text": "ク",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ku",
+      "sources": [
+        "kana:k_kata_ku"
+      ],
+      "path": "/audio/nanami/tts_15901a60a347.mp3"
+    },
+    "tts_6e159a91b7ce": {
+      "text": "ぐ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_gu",
+      "sources": [
+        "kana:k_hira_gu"
+      ],
+      "path": "/audio/nanami/tts_6e159a91b7ce.mp3"
+    },
+    "tts_65429ee5e7b4": {
+      "text": "グ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_gu",
+      "sources": [
+        "kana:k_kata_gu"
+      ],
+      "path": "/audio/nanami/tts_65429ee5e7b4.mp3"
+    },
+    "tts_d32afeb0abe6": {
+      "text": "け",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ke",
+      "sources": [
+        "kana:k_hira_ke"
+      ],
+      "path": "/audio/nanami/tts_d32afeb0abe6.mp3"
+    },
+    "tts_b50e4b46f608": {
+      "text": "ケ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ke",
+      "sources": [
+        "kana:k_kata_ke"
+      ],
+      "path": "/audio/nanami/tts_b50e4b46f608.mp3"
+    },
+    "tts_9167af511d53": {
+      "text": "げ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ge",
+      "sources": [
+        "kana:k_hira_ge"
+      ],
+      "path": "/audio/nanami/tts_9167af511d53.mp3"
+    },
+    "tts_df715d6e0967": {
+      "text": "ゲ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ge",
+      "sources": [
+        "kana:k_kata_ge"
+      ],
+      "path": "/audio/nanami/tts_df715d6e0967.mp3"
+    },
+    "tts_91714b00e5a3": {
+      "text": "こ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ko",
+      "sources": [
+        "kana:k_hira_ko"
+      ],
+      "path": "/audio/nanami/tts_91714b00e5a3.mp3"
+    },
+    "tts_202a6b25e725": {
+      "text": "コ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ko",
+      "sources": [
+        "kana:k_kata_ko"
+      ],
+      "path": "/audio/nanami/tts_202a6b25e725.mp3"
+    },
+    "tts_27a87259d93f": {
+      "text": "ご",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_go",
+      "sources": [
+        "kana:k_hira_go"
+      ],
+      "path": "/audio/nanami/tts_27a87259d93f.mp3"
+    },
+    "tts_f684fe6c107a": {
+      "text": "ゴ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_go",
+      "sources": [
+        "kana:k_kata_go"
+      ],
+      "path": "/audio/nanami/tts_f684fe6c107a.mp3"
+    },
+    "tts_7a4faed063b6": {
+      "text": "さ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_sa",
+      "sources": [
+        "kana:k_hira_sa"
+      ],
+      "path": "/audio/nanami/tts_7a4faed063b6.mp3"
+    },
+    "tts_bf2cbaccbc43": {
+      "text": "サ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_sa",
+      "sources": [
+        "kana:k_kata_sa"
+      ],
+      "path": "/audio/nanami/tts_bf2cbaccbc43.mp3"
+    },
+    "tts_d08b42329511": {
+      "text": "ざ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_za",
+      "sources": [
+        "kana:k_hira_za"
+      ],
+      "path": "/audio/nanami/tts_d08b42329511.mp3"
+    },
+    "tts_bdf380ec22e5": {
+      "text": "ザ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_za",
+      "sources": [
+        "kana:k_kata_za"
+      ],
+      "path": "/audio/nanami/tts_bdf380ec22e5.mp3"
+    },
+    "tts_812f45bfcf7e": {
+      "text": "し",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_shi",
+      "sources": [
+        "kana:k_hira_shi"
+      ],
+      "path": "/audio/nanami/tts_812f45bfcf7e.mp3"
+    },
+    "tts_1afad7703773": {
+      "text": "シ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_shi",
+      "sources": [
+        "kana:k_kata_shi"
+      ],
+      "path": "/audio/nanami/tts_1afad7703773.mp3"
+    },
+    "tts_41f11fe610d4": {
+      "text": "じ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ji",
+      "sources": [
+        "kana:k_hira_ji"
+      ],
+      "path": "/audio/nanami/tts_41f11fe610d4.mp3"
+    },
+    "tts_fcd474ce77e4": {
+      "text": "ジ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ji",
+      "sources": [
+        "kana:k_kata_ji"
+      ],
+      "path": "/audio/nanami/tts_fcd474ce77e4.mp3"
+    },
+    "tts_b6e3f9666c7a": {
+      "text": "しゃ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_sha",
+      "sources": [
+        "kana:k_hira_sha"
+      ],
+      "path": "/audio/nanami/tts_b6e3f9666c7a.mp3"
+    },
+    "tts_b754a5ae0dcc": {
+      "text": "シャ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_sha",
+      "sources": [
+        "kana:k_kata_sha"
+      ],
+      "path": "/audio/nanami/tts_b754a5ae0dcc.mp3"
+    },
+    "tts_d91490197bd6": {
+      "text": "じゃ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ja",
+      "sources": [
+        "kana:k_hira_ja"
+      ],
+      "path": "/audio/nanami/tts_d91490197bd6.mp3"
+    },
+    "tts_d27a2c8d5a25": {
+      "text": "ジャ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ja",
+      "sources": [
+        "kana:k_kata_ja"
+      ],
+      "path": "/audio/nanami/tts_d27a2c8d5a25.mp3"
+    },
+    "tts_64d073703829": {
+      "text": "しゅ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_shu",
+      "sources": [
+        "kana:k_hira_shu"
+      ],
+      "path": "/audio/nanami/tts_64d073703829.mp3"
+    },
+    "tts_1583ea07ca02": {
+      "text": "シュ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_shu",
+      "sources": [
+        "kana:k_kata_shu"
+      ],
+      "path": "/audio/nanami/tts_1583ea07ca02.mp3"
+    },
+    "tts_567ca1db796e": {
+      "text": "じゅ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ju",
+      "sources": [
+        "kana:k_hira_ju"
+      ],
+      "path": "/audio/nanami/tts_567ca1db796e.mp3"
+    },
+    "tts_d689cdfde221": {
+      "text": "ジュ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ju",
+      "sources": [
+        "kana:k_kata_ju"
+      ],
+      "path": "/audio/nanami/tts_d689cdfde221.mp3"
+    },
+    "tts_7a5aea55155b": {
+      "text": "しょ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_sho",
+      "sources": [
+        "kana:k_hira_sho"
+      ],
+      "path": "/audio/nanami/tts_7a5aea55155b.mp3"
+    },
+    "tts_0adbf3139511": {
+      "text": "ショ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_sho",
+      "sources": [
+        "kana:k_kata_sho"
+      ],
+      "path": "/audio/nanami/tts_0adbf3139511.mp3"
+    },
+    "tts_115759838422": {
+      "text": "じょ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_jo",
+      "sources": [
+        "kana:k_hira_jo"
+      ],
+      "path": "/audio/nanami/tts_115759838422.mp3"
+    },
+    "tts_76ed0c2287aa": {
+      "text": "ジョ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_jo",
+      "sources": [
+        "kana:k_kata_jo"
+      ],
+      "path": "/audio/nanami/tts_76ed0c2287aa.mp3"
+    },
+    "tts_5b8252a1e93f": {
+      "text": "す",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_su",
+      "sources": [
+        "kana:k_hira_su"
+      ],
+      "path": "/audio/nanami/tts_5b8252a1e93f.mp3"
+    },
+    "tts_4df8398708ab": {
+      "text": "ス",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_su",
+      "sources": [
+        "kana:k_kata_su"
+      ],
+      "path": "/audio/nanami/tts_4df8398708ab.mp3"
+    },
+    "tts_e77eb4831e6a": {
+      "text": "ず",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_zu",
+      "sources": [
+        "kana:k_hira_zu"
+      ],
+      "path": "/audio/nanami/tts_e77eb4831e6a.mp3"
+    },
+    "tts_3c1a103b5b4f": {
+      "text": "ズ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_zu",
+      "sources": [
+        "kana:k_kata_zu"
+      ],
+      "path": "/audio/nanami/tts_3c1a103b5b4f.mp3"
+    },
+    "tts_e1c730bd83c3": {
+      "text": "せ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_se",
+      "sources": [
+        "kana:k_hira_se"
+      ],
+      "path": "/audio/nanami/tts_e1c730bd83c3.mp3"
+    },
+    "tts_825cec98c430": {
+      "text": "セ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_se",
+      "sources": [
+        "kana:k_kata_se"
+      ],
+      "path": "/audio/nanami/tts_825cec98c430.mp3"
+    },
+    "tts_8759dfeb913a": {
+      "text": "ぜ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ze",
+      "sources": [
+        "kana:k_hira_ze"
+      ],
+      "path": "/audio/nanami/tts_8759dfeb913a.mp3"
+    },
+    "tts_56c35c37128e": {
+      "text": "ゼ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ze",
+      "sources": [
+        "kana:k_kata_ze"
+      ],
+      "path": "/audio/nanami/tts_56c35c37128e.mp3"
+    },
+    "tts_b345d8cc8368": {
+      "text": "そ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_so",
+      "sources": [
+        "kana:k_hira_so"
+      ],
+      "path": "/audio/nanami/tts_b345d8cc8368.mp3"
+    },
+    "tts_7394858d1c1b": {
+      "text": "ソ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_so",
+      "sources": [
+        "kana:k_kata_so"
+      ],
+      "path": "/audio/nanami/tts_7394858d1c1b.mp3"
+    },
+    "tts_bad314622d68": {
+      "text": "ぞ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_zo",
+      "sources": [
+        "kana:k_hira_zo"
+      ],
+      "path": "/audio/nanami/tts_bad314622d68.mp3"
+    },
+    "tts_7797100cc0f2": {
+      "text": "ゾ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_zo",
+      "sources": [
+        "kana:k_kata_zo"
+      ],
+      "path": "/audio/nanami/tts_7797100cc0f2.mp3"
+    },
+    "tts_cf4d17f99d10": {
+      "text": "た",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ta",
+      "sources": [
+        "kana:k_hira_ta"
+      ],
+      "path": "/audio/nanami/tts_cf4d17f99d10.mp3"
+    },
+    "tts_056cfad24eb2": {
+      "text": "タ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ta",
+      "sources": [
+        "kana:k_kata_ta"
+      ],
+      "path": "/audio/nanami/tts_056cfad24eb2.mp3"
+    },
+    "tts_b3d236275fac": {
+      "text": "だ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_da",
+      "sources": [
+        "kana:k_hira_da"
+      ],
+      "path": "/audio/nanami/tts_b3d236275fac.mp3"
+    },
+    "tts_919e596fb58d": {
+      "text": "ダ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_da",
+      "sources": [
+        "kana:k_kata_da"
+      ],
+      "path": "/audio/nanami/tts_919e596fb58d.mp3"
+    },
+    "tts_e022bea2e9d6": {
+      "text": "ち",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_chi",
+      "sources": [
+        "kana:k_hira_chi"
+      ],
+      "path": "/audio/nanami/tts_e022bea2e9d6.mp3"
+    },
+    "tts_7e62c71ff6cf": {
+      "text": "チ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_chi",
+      "sources": [
+        "kana:k_kata_chi"
+      ],
+      "path": "/audio/nanami/tts_7e62c71ff6cf.mp3"
+    },
+    "tts_139b8c6e1d18": {
+      "text": "ぢ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_dji",
+      "sources": [
+        "kana:k_hira_dji"
+      ],
+      "path": "/audio/nanami/tts_139b8c6e1d18.mp3"
+    },
+    "tts_71ece90ea76a": {
+      "text": "ヂ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_dji",
+      "sources": [
+        "kana:k_kata_dji"
+      ],
+      "path": "/audio/nanami/tts_71ece90ea76a.mp3"
+    },
+    "tts_062957be362f": {
+      "text": "ちゃ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_cha",
+      "sources": [
+        "kana:k_hira_cha"
+      ],
+      "path": "/audio/nanami/tts_062957be362f.mp3"
+    },
+    "tts_8e1841b64e0f": {
+      "text": "チャ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_cha",
+      "sources": [
+        "kana:k_kata_cha"
+      ],
+      "path": "/audio/nanami/tts_8e1841b64e0f.mp3"
+    },
+    "tts_619fdc4f9348": {
+      "text": "ちゅ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_chu",
+      "sources": [
+        "kana:k_hira_chu"
+      ],
+      "path": "/audio/nanami/tts_619fdc4f9348.mp3"
+    },
+    "tts_7069a936e85c": {
+      "text": "チュ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_chu",
+      "sources": [
+        "kana:k_kata_chu"
+      ],
+      "path": "/audio/nanami/tts_7069a936e85c.mp3"
+    },
+    "tts_4def51326a2d": {
+      "text": "ちょ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_cho",
+      "sources": [
+        "kana:k_hira_cho"
+      ],
+      "path": "/audio/nanami/tts_4def51326a2d.mp3"
+    },
+    "tts_012bdc51d4c2": {
+      "text": "チョ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_cho",
+      "sources": [
+        "kana:k_kata_cho"
+      ],
+      "path": "/audio/nanami/tts_012bdc51d4c2.mp3"
+    },
+    "tts_0c414c812bd8": {
+      "text": "つ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_tsu",
+      "sources": [
+        "kana:k_hira_tsu"
+      ],
+      "path": "/audio/nanami/tts_0c414c812bd8.mp3"
+    },
+    "tts_ee5fe18a7c76": {
+      "text": "ツ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_tsu",
+      "sources": [
+        "kana:k_kata_tsu"
+      ],
+      "path": "/audio/nanami/tts_ee5fe18a7c76.mp3"
+    },
+    "tts_600f5ab1c0a4": {
+      "text": "づ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_dzu",
+      "sources": [
+        "kana:k_hira_dzu"
+      ],
+      "path": "/audio/nanami/tts_600f5ab1c0a4.mp3"
+    },
+    "tts_b39cf6bd854a": {
+      "text": "ヅ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_dzu",
+      "sources": [
+        "kana:k_kata_dzu"
+      ],
+      "path": "/audio/nanami/tts_b39cf6bd854a.mp3"
+    },
+    "tts_e2d970611589": {
+      "text": "て",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_te",
+      "sources": [
+        "kana:k_hira_te"
+      ],
+      "path": "/audio/nanami/tts_e2d970611589.mp3"
+    },
+    "tts_8996011e5796": {
+      "text": "テ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_te",
+      "sources": [
+        "kana:k_kata_te"
+      ],
+      "path": "/audio/nanami/tts_8996011e5796.mp3"
+    },
+    "tts_7350618fcec3": {
+      "text": "で",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_de",
+      "sources": [
+        "kana:k_hira_de"
+      ],
+      "path": "/audio/nanami/tts_7350618fcec3.mp3"
+    },
+    "tts_5dc5d5b8abb3": {
+      "text": "デ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_de",
+      "sources": [
+        "kana:k_kata_de"
+      ],
+      "path": "/audio/nanami/tts_5dc5d5b8abb3.mp3"
+    },
+    "tts_a986a7bc9e03": {
+      "text": "と",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_to",
+      "sources": [
+        "kana:k_hira_to"
+      ],
+      "path": "/audio/nanami/tts_a986a7bc9e03.mp3"
+    },
+    "tts_d729bd2b2767": {
+      "text": "ト",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_to",
+      "sources": [
+        "kana:k_kata_to"
+      ],
+      "path": "/audio/nanami/tts_d729bd2b2767.mp3"
+    },
+    "tts_76504d613664": {
+      "text": "ど",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_do",
+      "sources": [
+        "kana:k_hira_do"
+      ],
+      "path": "/audio/nanami/tts_76504d613664.mp3"
+    },
+    "tts_a9a84e4c1845": {
+      "text": "ド",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_do",
+      "sources": [
+        "kana:k_kata_do"
+      ],
+      "path": "/audio/nanami/tts_a9a84e4c1845.mp3"
+    },
+    "tts_478d2f9eb192": {
+      "text": "な",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_na",
+      "sources": [
+        "kana:k_hira_na"
+      ],
+      "path": "/audio/nanami/tts_478d2f9eb192.mp3"
+    },
+    "tts_8f67916a925b": {
+      "text": "ナ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_na",
+      "sources": [
+        "kana:k_kata_na"
+      ],
+      "path": "/audio/nanami/tts_8f67916a925b.mp3"
+    },
+    "tts_de3d1ecc94b2": {
+      "text": "に",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ni",
+      "sources": [
+        "kana:k_hira_ni"
+      ],
+      "path": "/audio/nanami/tts_de3d1ecc94b2.mp3"
+    },
+    "tts_d8a8e4205aa7": {
+      "text": "ニ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ni",
+      "sources": [
+        "kana:k_kata_ni"
+      ],
+      "path": "/audio/nanami/tts_d8a8e4205aa7.mp3"
+    },
+    "tts_be4c29664dfd": {
+      "text": "にゃ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_nya",
+      "sources": [
+        "kana:k_hira_nya"
+      ],
+      "path": "/audio/nanami/tts_be4c29664dfd.mp3"
+    },
+    "tts_1dc73d614c19": {
+      "text": "ニャ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_nya",
+      "sources": [
+        "kana:k_kata_nya"
+      ],
+      "path": "/audio/nanami/tts_1dc73d614c19.mp3"
+    },
+    "tts_658da3d97ec6": {
+      "text": "にゅ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_nyu",
+      "sources": [
+        "kana:k_hira_nyu"
+      ],
+      "path": "/audio/nanami/tts_658da3d97ec6.mp3"
+    },
+    "tts_d3b3fc36dfa4": {
+      "text": "ニュ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_nyu",
+      "sources": [
+        "kana:k_kata_nyu"
+      ],
+      "path": "/audio/nanami/tts_d3b3fc36dfa4.mp3"
+    },
+    "tts_0954bcc57525": {
+      "text": "にょ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_nyo",
+      "sources": [
+        "kana:k_hira_nyo"
+      ],
+      "path": "/audio/nanami/tts_0954bcc57525.mp3"
+    },
+    "tts_7cd8a1e2e9f2": {
+      "text": "ニョ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_nyo",
+      "sources": [
+        "kana:k_kata_nyo"
+      ],
+      "path": "/audio/nanami/tts_7cd8a1e2e9f2.mp3"
+    },
+    "tts_ad142ed0573d": {
+      "text": "ぬ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_nu",
+      "sources": [
+        "kana:k_hira_nu"
+      ],
+      "path": "/audio/nanami/tts_ad142ed0573d.mp3"
+    },
+    "tts_065ebce83a18": {
+      "text": "ヌ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_nu",
+      "sources": [
+        "kana:k_kata_nu"
+      ],
+      "path": "/audio/nanami/tts_065ebce83a18.mp3"
+    },
+    "tts_3a104bbe569e": {
+      "text": "ね",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ne",
+      "sources": [
+        "kana:k_hira_ne"
+      ],
+      "path": "/audio/nanami/tts_3a104bbe569e.mp3"
+    },
+    "tts_edc16abe75a1": {
+      "text": "ネ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ne",
+      "sources": [
+        "kana:k_kata_ne"
+      ],
+      "path": "/audio/nanami/tts_edc16abe75a1.mp3"
+    },
+    "tts_56377d14d4ef": {
+      "text": "の",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_no",
+      "sources": [
+        "kana:k_hira_no"
+      ],
+      "path": "/audio/nanami/tts_56377d14d4ef.mp3"
+    },
+    "tts_6c807d0ae2cd": {
+      "text": "ノ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_no",
+      "sources": [
+        "kana:k_kata_no"
+      ],
+      "path": "/audio/nanami/tts_6c807d0ae2cd.mp3"
+    },
+    "tts_1fa0519cfd09": {
+      "text": "は",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ha",
+      "sources": [
+        "kana:k_hira_ha"
+      ],
+      "path": "/audio/nanami/tts_1fa0519cfd09.mp3"
+    },
+    "tts_35104655d4d6": {
+      "text": "ハ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ha",
+      "sources": [
+        "kana:k_kata_ha"
+      ],
+      "path": "/audio/nanami/tts_35104655d4d6.mp3"
+    },
+    "tts_d8c158e0a2d1": {
+      "text": "ば",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ba",
+      "sources": [
+        "kana:k_hira_ba"
+      ],
+      "path": "/audio/nanami/tts_d8c158e0a2d1.mp3"
+    },
+    "tts_2768d02f9098": {
+      "text": "バ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ba",
+      "sources": [
+        "kana:k_kata_ba"
+      ],
+      "path": "/audio/nanami/tts_2768d02f9098.mp3"
+    },
+    "tts_81223f8ee527": {
+      "text": "ぱ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_pa",
+      "sources": [
+        "kana:k_hira_pa"
+      ],
+      "path": "/audio/nanami/tts_81223f8ee527.mp3"
+    },
+    "tts_d4c65564c4ad": {
+      "text": "パ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_pa",
+      "sources": [
+        "kana:k_kata_pa"
+      ],
+      "path": "/audio/nanami/tts_d4c65564c4ad.mp3"
+    },
+    "tts_469e92c9cf65": {
+      "text": "ひ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_hi",
+      "sources": [
+        "kana:k_hira_hi"
+      ],
+      "path": "/audio/nanami/tts_469e92c9cf65.mp3"
+    },
+    "tts_9da359d5199d": {
+      "text": "ヒ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_hi",
+      "sources": [
+        "kana:k_kata_hi"
+      ],
+      "path": "/audio/nanami/tts_9da359d5199d.mp3"
+    },
+    "tts_5fb5aba49978": {
+      "text": "び",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_bi",
+      "sources": [
+        "kana:k_hira_bi"
+      ],
+      "path": "/audio/nanami/tts_5fb5aba49978.mp3"
+    },
+    "tts_d5725b2f8d16": {
+      "text": "ビ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_bi",
+      "sources": [
+        "kana:k_kata_bi"
+      ],
+      "path": "/audio/nanami/tts_d5725b2f8d16.mp3"
+    },
+    "tts_749766f43a50": {
+      "text": "ぴ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_pi",
+      "sources": [
+        "kana:k_hira_pi"
+      ],
+      "path": "/audio/nanami/tts_749766f43a50.mp3"
+    },
+    "tts_2083aa096d7e": {
+      "text": "ピ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_pi",
+      "sources": [
+        "kana:k_kata_pi"
+      ],
+      "path": "/audio/nanami/tts_2083aa096d7e.mp3"
+    },
+    "tts_f28cd0be883a": {
+      "text": "ひゃ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_hya",
+      "sources": [
+        "kana:k_hira_hya"
+      ],
+      "path": "/audio/nanami/tts_f28cd0be883a.mp3"
+    },
+    "tts_248349b7522f": {
+      "text": "ヒャ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_hya",
+      "sources": [
+        "kana:k_kata_hya"
+      ],
+      "path": "/audio/nanami/tts_248349b7522f.mp3"
+    },
+    "tts_4d8780b09f52": {
+      "text": "びゃ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_bya",
+      "sources": [
+        "kana:k_hira_bya"
+      ],
+      "path": "/audio/nanami/tts_4d8780b09f52.mp3"
+    },
+    "tts_5a4cf9bffb1f": {
+      "text": "ビャ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_bya",
+      "sources": [
+        "kana:k_kata_bya"
+      ],
+      "path": "/audio/nanami/tts_5a4cf9bffb1f.mp3"
+    },
+    "tts_ef826d2af5c0": {
+      "text": "ぴゃ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_pya",
+      "sources": [
+        "kana:k_hira_pya"
+      ],
+      "path": "/audio/nanami/tts_ef826d2af5c0.mp3"
+    },
+    "tts_5348b4d2b56b": {
+      "text": "ピャ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_pya",
+      "sources": [
+        "kana:k_kata_pya"
+      ],
+      "path": "/audio/nanami/tts_5348b4d2b56b.mp3"
+    },
+    "tts_e0e6bdfbd67b": {
+      "text": "ひゅ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_hyu",
+      "sources": [
+        "kana:k_hira_hyu"
+      ],
+      "path": "/audio/nanami/tts_e0e6bdfbd67b.mp3"
+    },
+    "tts_deb524a5b5f8": {
+      "text": "ヒュ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_hyu",
+      "sources": [
+        "kana:k_kata_hyu"
+      ],
+      "path": "/audio/nanami/tts_deb524a5b5f8.mp3"
+    },
+    "tts_747dbd8ebca5": {
+      "text": "びゅ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_byu",
+      "sources": [
+        "kana:k_hira_byu"
+      ],
+      "path": "/audio/nanami/tts_747dbd8ebca5.mp3"
+    },
+    "tts_429869337235": {
+      "text": "ビュ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_byu",
+      "sources": [
+        "kana:k_kata_byu"
+      ],
+      "path": "/audio/nanami/tts_429869337235.mp3"
+    },
+    "tts_984576b5cea2": {
+      "text": "ぴゅ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_pyu",
+      "sources": [
+        "kana:k_hira_pyu"
+      ],
+      "path": "/audio/nanami/tts_984576b5cea2.mp3"
+    },
+    "tts_b658c8b0f387": {
+      "text": "ピュ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_pyu",
+      "sources": [
+        "kana:k_kata_pyu"
+      ],
+      "path": "/audio/nanami/tts_b658c8b0f387.mp3"
+    },
+    "tts_0627f890934c": {
+      "text": "ひょ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_hyo",
+      "sources": [
+        "kana:k_hira_hyo"
+      ],
+      "path": "/audio/nanami/tts_0627f890934c.mp3"
+    },
+    "tts_c7eb35e4d18b": {
+      "text": "ヒョ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_hyo",
+      "sources": [
+        "kana:k_kata_hyo"
+      ],
+      "path": "/audio/nanami/tts_c7eb35e4d18b.mp3"
+    },
+    "tts_0a1cc845facd": {
+      "text": "びょ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_byo",
+      "sources": [
+        "kana:k_hira_byo"
+      ],
+      "path": "/audio/nanami/tts_0a1cc845facd.mp3"
+    },
+    "tts_994a6ef5bd87": {
+      "text": "ビョ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_byo",
+      "sources": [
+        "kana:k_kata_byo"
+      ],
+      "path": "/audio/nanami/tts_994a6ef5bd87.mp3"
+    },
+    "tts_220216f18a88": {
+      "text": "ぴょ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_pyo",
+      "sources": [
+        "kana:k_hira_pyo"
+      ],
+      "path": "/audio/nanami/tts_220216f18a88.mp3"
+    },
+    "tts_6d394d8c8a26": {
+      "text": "ピョ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_pyo",
+      "sources": [
+        "kana:k_kata_pyo"
+      ],
+      "path": "/audio/nanami/tts_6d394d8c8a26.mp3"
+    },
+    "tts_382a438fd4c5": {
+      "text": "ふ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_fu",
+      "sources": [
+        "kana:k_hira_fu"
+      ],
+      "path": "/audio/nanami/tts_382a438fd4c5.mp3"
+    },
+    "tts_c2fa87c3ddd2": {
+      "text": "フ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_fu",
+      "sources": [
+        "kana:k_kata_fu"
+      ],
+      "path": "/audio/nanami/tts_c2fa87c3ddd2.mp3"
+    },
+    "tts_82b3fbb77164": {
+      "text": "ぶ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_bu",
+      "sources": [
+        "kana:k_hira_bu"
+      ],
+      "path": "/audio/nanami/tts_82b3fbb77164.mp3"
+    },
+    "tts_c11cd8dd4563": {
+      "text": "ブ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_bu",
+      "sources": [
+        "kana:k_kata_bu"
+      ],
+      "path": "/audio/nanami/tts_c11cd8dd4563.mp3"
+    },
+    "tts_224fecb16293": {
+      "text": "ぷ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_pu",
+      "sources": [
+        "kana:k_hira_pu"
+      ],
+      "path": "/audio/nanami/tts_224fecb16293.mp3"
+    },
+    "tts_a3b8f9e1263b": {
+      "text": "プ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_pu",
+      "sources": [
+        "kana:k_kata_pu"
+      ],
+      "path": "/audio/nanami/tts_a3b8f9e1263b.mp3"
+    },
+    "tts_72c746d609d4": {
+      "text": "へ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_he",
+      "sources": [
+        "kana:k_hira_he"
+      ],
+      "path": "/audio/nanami/tts_72c746d609d4.mp3"
+    },
+    "tts_5cf428be4474": {
+      "text": "ヘ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_he",
+      "sources": [
+        "kana:k_kata_he"
+      ],
+      "path": "/audio/nanami/tts_5cf428be4474.mp3"
+    },
+    "tts_eefc5770b9dc": {
+      "text": "べ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_be",
+      "sources": [
+        "kana:k_hira_be"
+      ],
+      "path": "/audio/nanami/tts_eefc5770b9dc.mp3"
+    },
+    "tts_e24283733b4a": {
+      "text": "ベ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_be",
+      "sources": [
+        "kana:k_kata_be"
+      ],
+      "path": "/audio/nanami/tts_e24283733b4a.mp3"
+    },
+    "tts_bd1d8044336d": {
+      "text": "ぺ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_pe",
+      "sources": [
+        "kana:k_hira_pe"
+      ],
+      "path": "/audio/nanami/tts_bd1d8044336d.mp3"
+    },
+    "tts_8a8021085114": {
+      "text": "ペ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_pe",
+      "sources": [
+        "kana:k_kata_pe"
+      ],
+      "path": "/audio/nanami/tts_8a8021085114.mp3"
+    },
+    "tts_5a340fe4758d": {
+      "text": "ほ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ho",
+      "sources": [
+        "kana:k_hira_ho"
+      ],
+      "path": "/audio/nanami/tts_5a340fe4758d.mp3"
+    },
+    "tts_41a11f66f540": {
+      "text": "ホ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ho",
+      "sources": [
+        "kana:k_kata_ho"
+      ],
+      "path": "/audio/nanami/tts_41a11f66f540.mp3"
+    },
+    "tts_7ebddc850724": {
+      "text": "ぼ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_bo",
+      "sources": [
+        "kana:k_hira_bo"
+      ],
+      "path": "/audio/nanami/tts_7ebddc850724.mp3"
+    },
+    "tts_c6be80a62e61": {
+      "text": "ボ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_bo",
+      "sources": [
+        "kana:k_kata_bo"
+      ],
+      "path": "/audio/nanami/tts_c6be80a62e61.mp3"
+    },
+    "tts_06b58547dc73": {
+      "text": "ぽ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_po",
+      "sources": [
+        "kana:k_hira_po"
+      ],
+      "path": "/audio/nanami/tts_06b58547dc73.mp3"
+    },
+    "tts_23239011ca96": {
+      "text": "ポ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_po",
+      "sources": [
+        "kana:k_kata_po"
+      ],
+      "path": "/audio/nanami/tts_23239011ca96.mp3"
+    },
+    "tts_400805e5a9e2": {
+      "text": "ま",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ma",
+      "sources": [
+        "kana:k_hira_ma"
+      ],
+      "path": "/audio/nanami/tts_400805e5a9e2.mp3"
+    },
+    "tts_55d42f593ce9": {
+      "text": "マ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ma",
+      "sources": [
+        "kana:k_kata_ma"
+      ],
+      "path": "/audio/nanami/tts_55d42f593ce9.mp3"
+    },
+    "tts_1c5425dae8c9": {
+      "text": "み",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_mi",
+      "sources": [
+        "kana:k_hira_mi"
+      ],
+      "path": "/audio/nanami/tts_1c5425dae8c9.mp3"
+    },
+    "tts_651d85849d50": {
+      "text": "ミ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_mi",
+      "sources": [
+        "kana:k_kata_mi"
+      ],
+      "path": "/audio/nanami/tts_651d85849d50.mp3"
+    },
+    "tts_0eb0633f6c68": {
+      "text": "みゃ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_mya",
+      "sources": [
+        "kana:k_hira_mya"
+      ],
+      "path": "/audio/nanami/tts_0eb0633f6c68.mp3"
+    },
+    "tts_9fe6e9cb4973": {
+      "text": "ミャ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_mya",
+      "sources": [
+        "kana:k_kata_mya"
+      ],
+      "path": "/audio/nanami/tts_9fe6e9cb4973.mp3"
+    },
+    "tts_5bd384349a78": {
+      "text": "みゅ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_myu",
+      "sources": [
+        "kana:k_hira_myu"
+      ],
+      "path": "/audio/nanami/tts_5bd384349a78.mp3"
+    },
+    "tts_79997b44c04f": {
+      "text": "ミュ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_myu",
+      "sources": [
+        "kana:k_kata_myu"
+      ],
+      "path": "/audio/nanami/tts_79997b44c04f.mp3"
+    },
+    "tts_6617e33d9583": {
+      "text": "みょ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_myo",
+      "sources": [
+        "kana:k_hira_myo"
+      ],
+      "path": "/audio/nanami/tts_6617e33d9583.mp3"
+    },
+    "tts_8c8c6e6803f6": {
+      "text": "ミョ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_myo",
+      "sources": [
+        "kana:k_kata_myo"
+      ],
+      "path": "/audio/nanami/tts_8c8c6e6803f6.mp3"
+    },
+    "tts_50029791cb9f": {
+      "text": "む",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_mu",
+      "sources": [
+        "kana:k_hira_mu"
+      ],
+      "path": "/audio/nanami/tts_50029791cb9f.mp3"
+    },
+    "tts_c6abfe263593": {
+      "text": "ム",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_mu",
+      "sources": [
+        "kana:k_kata_mu"
+      ],
+      "path": "/audio/nanami/tts_c6abfe263593.mp3"
+    },
+    "tts_634540f05d98": {
+      "text": "め",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_me",
+      "sources": [
+        "kana:k_hira_me"
+      ],
+      "path": "/audio/nanami/tts_634540f05d98.mp3"
+    },
+    "tts_cfc3325ef061": {
+      "text": "メ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_me",
+      "sources": [
+        "kana:k_kata_me"
+      ],
+      "path": "/audio/nanami/tts_cfc3325ef061.mp3"
+    },
+    "tts_3c6945772d72": {
+      "text": "も",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_mo",
+      "sources": [
+        "kana:k_hira_mo"
+      ],
+      "path": "/audio/nanami/tts_3c6945772d72.mp3"
+    },
+    "tts_577210255a86": {
+      "text": "モ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_mo",
+      "sources": [
+        "kana:k_kata_mo"
+      ],
+      "path": "/audio/nanami/tts_577210255a86.mp3"
+    },
+    "tts_bdab1b17397d": {
+      "text": "や",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ya",
+      "sources": [
+        "kana:k_hira_ya"
+      ],
+      "path": "/audio/nanami/tts_bdab1b17397d.mp3"
+    },
+    "tts_8e621f06c443": {
+      "text": "ヤ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ya",
+      "sources": [
+        "kana:k_kata_ya"
+      ],
+      "path": "/audio/nanami/tts_8e621f06c443.mp3"
+    },
+    "tts_44567171f335": {
+      "text": "ゆ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_yu",
+      "sources": [
+        "kana:k_hira_yu"
+      ],
+      "path": "/audio/nanami/tts_44567171f335.mp3"
+    },
+    "tts_ea633878f249": {
+      "text": "ユ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_yu",
+      "sources": [
+        "kana:k_kata_yu"
+      ],
+      "path": "/audio/nanami/tts_ea633878f249.mp3"
+    },
+    "tts_6f46f7d4a286": {
+      "text": "よ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_yo",
+      "sources": [
+        "kana:k_hira_yo"
+      ],
+      "path": "/audio/nanami/tts_6f46f7d4a286.mp3"
+    },
+    "tts_da6c6a6baf77": {
+      "text": "ヨ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_yo",
+      "sources": [
+        "kana:k_kata_yo"
+      ],
+      "path": "/audio/nanami/tts_da6c6a6baf77.mp3"
+    },
+    "tts_ba7526a5c03f": {
+      "text": "ら",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ra",
+      "sources": [
+        "kana:k_hira_ra"
+      ],
+      "path": "/audio/nanami/tts_ba7526a5c03f.mp3"
+    },
+    "tts_d5f1ca173fcd": {
+      "text": "ラ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ra",
+      "sources": [
+        "kana:k_kata_ra"
+      ],
+      "path": "/audio/nanami/tts_d5f1ca173fcd.mp3"
+    },
+    "tts_71d1c63e507f": {
+      "text": "り",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ri",
+      "sources": [
+        "kana:k_hira_ri"
+      ],
+      "path": "/audio/nanami/tts_71d1c63e507f.mp3"
+    },
+    "tts_56cb721117e2": {
+      "text": "リ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ri",
+      "sources": [
+        "kana:k_kata_ri"
+      ],
+      "path": "/audio/nanami/tts_56cb721117e2.mp3"
+    },
+    "tts_f58558332c0c": {
+      "text": "りゃ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_rya",
+      "sources": [
+        "kana:k_hira_rya"
+      ],
+      "path": "/audio/nanami/tts_f58558332c0c.mp3"
+    },
+    "tts_35e4b64905cc": {
+      "text": "リャ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_rya",
+      "sources": [
+        "kana:k_kata_rya"
+      ],
+      "path": "/audio/nanami/tts_35e4b64905cc.mp3"
+    },
+    "tts_73c41f0e483e": {
+      "text": "りゅ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ryu",
+      "sources": [
+        "kana:k_hira_ryu"
+      ],
+      "path": "/audio/nanami/tts_73c41f0e483e.mp3"
+    },
+    "tts_32cba6c979fc": {
+      "text": "リュ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ryu",
+      "sources": [
+        "kana:k_kata_ryu"
+      ],
+      "path": "/audio/nanami/tts_32cba6c979fc.mp3"
+    },
+    "tts_1ab62bb6d7b6": {
+      "text": "りょ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ryo",
+      "sources": [
+        "kana:k_hira_ryo"
+      ],
+      "path": "/audio/nanami/tts_1ab62bb6d7b6.mp3"
+    },
+    "tts_4ec97d4fbf84": {
+      "text": "リョ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ryo",
+      "sources": [
+        "kana:k_kata_ryo"
+      ],
+      "path": "/audio/nanami/tts_4ec97d4fbf84.mp3"
+    },
+    "tts_ffab9d02a311": {
+      "text": "る",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ru",
+      "sources": [
+        "kana:k_hira_ru"
+      ],
+      "path": "/audio/nanami/tts_ffab9d02a311.mp3"
+    },
+    "tts_1d672f91e3ff": {
+      "text": "ル",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ru",
+      "sources": [
+        "kana:k_kata_ru"
+      ],
+      "path": "/audio/nanami/tts_1d672f91e3ff.mp3"
+    },
+    "tts_df82f999c7fb": {
+      "text": "れ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_re",
+      "sources": [
+        "kana:k_hira_re"
+      ],
+      "path": "/audio/nanami/tts_df82f999c7fb.mp3"
+    },
+    "tts_00859a61c08f": {
+      "text": "レ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_re",
+      "sources": [
+        "kana:k_kata_re"
+      ],
+      "path": "/audio/nanami/tts_00859a61c08f.mp3"
+    },
+    "tts_eb766006aba2": {
+      "text": "ろ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_ro",
+      "sources": [
+        "kana:k_hira_ro"
+      ],
+      "path": "/audio/nanami/tts_eb766006aba2.mp3"
+    },
+    "tts_4c1fe526f363": {
+      "text": "ロ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_ro",
+      "sources": [
+        "kana:k_kata_ro"
+      ],
+      "path": "/audio/nanami/tts_4c1fe526f363.mp3"
+    },
+    "tts_dedb707d8398": {
+      "text": "わ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_wa",
+      "sources": [
+        "kana:k_hira_wa"
+      ],
+      "path": "/audio/nanami/tts_dedb707d8398.mp3"
+    },
+    "tts_a2fbf25469bc": {
+      "text": "ワ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_wa",
+      "sources": [
+        "kana:k_kata_wa"
+      ],
+      "path": "/audio/nanami/tts_a2fbf25469bc.mp3"
+    },
+    "tts_eba95ba0c666": {
+      "text": "を",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_wo",
+      "sources": [
+        "kana:k_hira_wo"
+      ],
+      "path": "/audio/nanami/tts_eba95ba0c666.mp3"
+    },
+    "tts_b40c5f345cb9": {
+      "text": "ヲ",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_wo",
+      "sources": [
+        "kana:k_kata_wo"
+      ],
+      "path": "/audio/nanami/tts_b40c5f345cb9.mp3"
+    },
+    "tts_48a866bfdaf9": {
+      "text": "ん",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_hira_n",
+      "sources": [
+        "kana:k_hira_n"
+      ],
+      "path": "/audio/nanami/tts_48a866bfdaf9.mp3"
+    },
+    "tts_6ad7ee833add": {
+      "text": "ン",
+      "voice": "nanami",
+      "source": "kana",
+      "sourceId": "k_kata_n",
+      "sources": [
+        "kana:k_kata_n"
+      ],
+      "path": "/audio/nanami/tts_6ad7ee833add.mp3"
+    },
+    "tts_c5fbafbf9de4": {
+      "text": "Wi-Fiはありますか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_wifi_arimasu_ka",
+      "sources": [
+        "phrase:p_wifi_arimasu_ka"
+      ],
+      "path": "/audio/nanami/tts_c5fbafbf9de4.mp3"
+    },
+    "tts_24afcca10e22": {
+      "text": "ありがとうございます",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_arigatou_gozaimasu",
+      "sources": [
+        "phrase:p_arigatou_gozaimasu"
+      ],
+      "path": "/audio/nanami/tts_24afcca10e22.mp3"
+    },
+    "tts_8331810b5438": {
+      "text": "あります",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_arimasu",
+      "sources": [
+        "phrase:p_arimasu"
+      ],
+      "path": "/audio/nanami/tts_8331810b5438.mp3"
+    },
+    "tts_90e81821e6c7": {
+      "text": "ありません",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_arimasen",
+      "sources": [
+        "phrase:p_arimasen"
+      ],
+      "path": "/audio/nanami/tts_90e81821e6c7.mp3"
+    },
+    "tts_953ff70fbc08": {
+      "text": "アレルギーが、あります",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_arerugi",
+      "sources": [
+        "phrase:p_arerugi"
+      ],
+      "path": "/audio/nanami/tts_953ff70fbc08.mp3"
+    },
+    "tts_f901585367d6": {
+      "text": "いいえ",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_iie",
+      "sources": [
+        "phrase:p_iie"
+      ],
+      "path": "/audio/nanami/tts_f901585367d6.mp3"
+    },
+    "tts_201c28585903": {
+      "text": "いくらですか？",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_ikura_desu_ka",
+      "sources": [
+        "phrase:p_ikura_desu_ka"
+      ],
+      "path": "/audio/nanami/tts_201c28585903.mp3"
+    },
+    "tts_97bed54b1a17": {
+      "text": "いらっしゃいませ",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_irasshai",
+      "sources": [
+        "phrase:p_irasshai"
+      ],
+      "path": "/audio/nanami/tts_97bed54b1a17.mp3"
+    },
+    "tts_be6bffc79ae4": {
+      "text": "お飲み物は",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_nomimono",
+      "sources": [
+        "phrase:p_nomimono"
+      ]
+    },
+    "tts_53ec7cc7a336": {
+      "text": "お会計お願いします",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_okaikei",
+      "sources": [
+        "phrase:p_okaikei"
+      ],
+      "path": "/audio/nanami/tts_53ec7cc7a336.mp3"
+    },
+    "tts_f21c244d4b6a": {
+      "text": "お勧めは何ですか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_osusume_wa",
+      "sources": [
+        "phrase:p_osusume_wa"
+      ],
+      "path": "/audio/nanami/tts_f21c244d4b6a.mp3"
+    },
+    "tts_540846684992": {
+      "text": "お支払い方法は",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_shiharai_houhou",
+      "sources": [
+        "phrase:p_shiharai_houhou"
+      ]
+    },
+    "tts_a5ed351d5a63": {
+      "text": "お腹が痛いです",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_onaka_itai",
+      "sources": [
+        "phrase:p_onaka_itai"
+      ]
+    },
+    "tts_12c9a41c11c1": {
+      "text": "お名前は",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_onamae_wa",
+      "sources": [
+        "phrase:p_onamae_wa"
+      ]
+    },
+    "tts_6fa2bd19c929": {
+      "text": "カードで",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_card_de",
+      "sources": [
+        "phrase:p_card_de"
+      ]
+    },
+    "tts_9fa002dbc4bd": {
+      "text": "カードは使えますか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_card_tsukaemasu_ka",
+      "sources": [
+        "phrase:p_card_tsukaemasu_ka"
+      ]
+    },
+    "tts_df5c2a6b5120": {
+      "text": "コインロッカーは、どこですか？",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_koinrokkaa",
+      "sources": [
+        "phrase:p_koinrokkaa"
+      ]
+    },
+    "tts_de2ab70b8c1a": {
+      "text": "ここで止めてください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_koko_de_tomete",
+      "sources": [
+        "phrase:p_koko_de_tomete"
+      ]
+    },
+    "tts_11c8fca7e223": {
+      "text": "ごちそうさまでした",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_gochisousama",
+      "sources": [
+        "phrase:p_gochisousama"
+      ],
+      "path": "/audio/nanami/tts_11c8fca7e223.mp3"
+    },
+    "tts_767b0fb18e47": {
+      "text": "この薬は何ですか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kono_kusuri",
+      "sources": [
+        "phrase:p_kono_kusuri"
+      ]
+    },
+    "tts_ee06f1be0e0c": {
+      "text": "これとこれ",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kore_to_kore",
+      "sources": [
+        "phrase:p_kore_to_kore"
+      ]
+    },
+    "tts_3d9192b39b71": {
+      "text": "これにします",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kore_kudasai_shop",
+      "sources": [
+        "phrase:p_kore_kudasai_shop"
+      ]
+    },
+    "tts_d33c910ad45c": {
+      "text": "これはいくらですか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kore_ikura",
+      "sources": [
+        "phrase:p_kore_ikura"
+      ],
+      "path": "/audio/nanami/tts_d33c910ad45c.mp3"
+    },
+    "tts_dac385e8e35b": {
+      "text": "これを送りたいです",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_okuritai",
+      "sources": [
+        "phrase:p_okuritai"
+      ]
+    },
+    "tts_6c3263889223": {
+      "text": "これを抜いてください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kore_nuite",
+      "sources": [
+        "phrase:p_kore_nuite"
+      ]
+    },
+    "tts_7df5f7b8afef": {
+      "text": "これ下さい",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kore_kudasai",
+      "sources": [
+        "phrase:p_kore_kudasai"
+      ]
+    },
+    "tts_20427a708c3f": {
+      "text": "こんにちは",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_konnichiwa",
+      "sources": [
+        "phrase:p_konnichiwa"
+      ],
+      "path": "/audio/nanami/tts_20427a708c3f.mp3"
+    },
+    "tts_c9dd521168da": {
+      "text": "ご注文はお決まりですか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_gochuumon",
+      "sources": [
+        "phrase:p_gochuumon"
+      ]
+    },
+    "tts_f1fc99ad2e21": {
+      "text": "スイカで",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_suica_de",
+      "sources": [
+        "phrase:p_suica_de"
+      ]
+    },
+    "tts_cce1862bcbd9": {
+      "text": "すみません",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_sumimasen",
+      "sources": [
+        "phrase:p_sumimasen"
+      ],
+      "path": "/audio/nanami/tts_cce1862bcbd9.mp3"
+    },
+    "tts_6ead72186de1": {
+      "text": "そのままで",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_sono_mama_de",
+      "sources": [
+        "phrase:p_sono_mama_de"
+      ]
+    },
+    "tts_274595ef5da3": {
+      "text": "たいざいは？",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_taizai_wa",
+      "sources": [
+        "phrase:p_taizai_wa"
+      ]
+    },
+    "tts_dd76552b7fb1": {
+      "text": "タクシーお願いします",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_takushi_onegai",
+      "sources": [
+        "phrase:p_takushi_onegai"
+      ]
+    },
+    "tts_f9094ef33b23": {
+      "text": "チェックインお願いします",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_checkin_onegai",
+      "sources": [
+        "phrase:p_checkin_onegai"
+      ],
+      "path": "/audio/nanami/tts_f9094ef33b23.mp3"
+    },
+    "tts_24db552f7a23": {
+      "text": "チャージお願いします",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_chaaji_onegai",
+      "sources": [
+        "phrase:p_chaaji_onegai"
+      ]
+    },
+    "tts_96020f040b35": {
+      "text": "ちょっと待ってください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_chotto_matte",
+      "sources": [
+        "phrase:p_chotto_matte"
+      ],
+      "path": "/audio/nanami/tts_96020f040b35.mp3"
+    },
+    "tts_cefcb6266096": {
+      "text": "トイレは、どこですか？",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_toire_doko",
+      "sources": [
+        "phrase:p_toire_doko"
+      ],
+      "path": "/audio/nanami/tts_cefcb6266096.mp3"
+    },
+    "tts_cbf1450a1127": {
+      "text": "どうしましたか？",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_dou_shimashita",
+      "sources": [
+        "phrase:p_dou_shimashita"
+      ]
+    },
+    "tts_161b40e8f515": {
+      "text": "どこですか？",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_doko_desu_ka",
+      "sources": [
+        "phrase:p_doko_desu_ka"
+      ]
+    },
+    "tts_5b8c6da435e2": {
+      "text": "どこに泊まりますか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_doko_tomaru",
+      "sources": [
+        "phrase:p_doko_tomaru"
+      ]
+    },
+    "tts_2812f9721cb7": {
+      "text": "どこまでですか？",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_doko_made",
+      "sources": [
+        "phrase:p_doko_made"
+      ]
+    },
+    "tts_89d6e45b8498": {
+      "text": "どちらですか？",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_dochira_desu_ka",
+      "sources": [
+        "phrase:p_dochira_desu_ka"
+      ]
+    },
+    "tts_c92b4cda8bdf": {
+      "text": "はい",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_hai",
+      "sources": [
+        "phrase:p_hai"
+      ],
+      "path": "/audio/nanami/tts_c92b4cda8bdf.mp3"
+    },
+    "tts_6845e6e2f286": {
+      "text": "パスポートお願いします",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_passport_onegai",
+      "sources": [
+        "phrase:p_passport_onegai"
+      ]
+    },
+    "tts_e06edf599f89": {
+      "text": "パスポートは、こちらです",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_pasupooto_arimasu",
+      "sources": [
+        "phrase:p_pasupooto_arimasu"
+      ],
+      "path": "/audio/nanami/tts_e06edf599f89.mp3"
+    },
+    "tts_ee4563b88dfa": {
+      "text": "ポイントカードはありますか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_pointo_arimasu_ka",
+      "sources": [
+        "phrase:p_pointo_arimasu_ka"
+      ]
+    },
+    "tts_917c5faf1b6c": {
+      "text": "ホテルです",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_hoteru_desu",
+      "sources": [
+        "phrase:p_hoteru_desu"
+      ]
+    },
+    "tts_7e442986e2ce": {
+      "text": "までお願いします",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_made_onegai",
+      "sources": [
+        "phrase:p_made_onegai"
+      ],
+      "path": "/audio/nanami/tts_7e442986e2ce.mp3"
+    },
+    "tts_a3ddd3b0e16a": {
+      "text": "メニューを見せてください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_menu_misete",
+      "sources": [
+        "phrase:p_menu_misete"
+      ]
+    },
+    "tts_459ec391610b": {
+      "text": "もう一度お願いします",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_mou_ichido",
+      "sources": [
+        "phrase:p_mou_ichido"
+      ],
+      "path": "/audio/nanami/tts_459ec391610b.mp3"
+    },
+    "tts_0b46aa740d09": {
+      "text": "もくてきは？",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_mokuteki_wa",
+      "sources": [
+        "phrase:p_mokuteki_wa"
+      ]
+    },
+    "tts_922f44dcc064": {
+      "text": "やさしい日本語でお願いします",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_yasashii_nihongo",
+      "sources": [
+        "phrase:p_yasashii_nihongo"
+      ]
+    },
+    "tts_255df2950150": {
+      "text": "ゆっくりお願いします",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_yukkuri",
+      "sources": [
+        "phrase:p_yukkuri"
+      ]
+    },
+    "tts_19ef31be44b5": {
+      "text": "レシートをください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_reshiito_kudasai",
+      "sources": [
+        "phrase:p_reshiito_kudasai"
+      ]
+    },
+    "tts_25c2ea256737": {
+      "text": "一つください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_hitotsu_kudasai",
+      "sources": [
+        "phrase:p_hitotsu_kudasai"
+      ],
+      "path": "/audio/nanami/tts_25c2ea256737.mp3"
+    },
+    "tts_9d8314ffa6b6": {
+      "text": "一週間です",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_isshuukan",
+      "sources": [
+        "phrase:p_isshuukan"
+      ]
+    },
+    "tts_801d3641b026": {
+      "text": "一人です",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_hitori_desu",
+      "sources": [
+        "phrase:p_hitori_desu"
+      ]
+    },
+    "tts_db333033026b": {
+      "text": "英語で大丈夫ですか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_eigo_de",
+      "sources": [
+        "phrase:p_eigo_de"
+      ]
+    },
+    "tts_1887ccf58d57": {
+      "text": "温めてください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_atatamete",
+      "sources": [
+        "phrase:p_atatamete"
+      ],
+      "path": "/audio/nanami/tts_1887ccf58d57.mp3"
+    },
+    "tts_1198fe760c61": {
+      "text": "温めますか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_atatamemasu_ka",
+      "sources": [
+        "phrase:p_atatamemasu_ka"
+      ]
+    },
+    "tts_08f2c6fa423b": {
+      "text": "何番線ですか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_nanbansen",
+      "sources": [
+        "phrase:p_nanbansen"
+      ]
+    },
+    "tts_de62605c83c0": {
+      "text": "何名様ですか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_nanmeisama",
+      "sources": [
+        "phrase:p_nanmeisama"
+      ]
+    },
+    "tts_cfbbdf7f80d2": {
+      "text": "改札はどこですか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kaisatsu_doko",
+      "sources": [
+        "phrase:p_kaisatsu_doko"
+      ]
+    },
+    "tts_71bad4af0b24": {
+      "text": "観光です",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kankou_desu",
+      "sources": [
+        "phrase:p_kankou_desu"
+      ]
+    },
+    "tts_6d410d19febc": {
+      "text": "券売機はどこですか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kenbaiki",
+      "sources": [
+        "phrase:p_kenbaiki"
+      ]
+    },
+    "tts_46570b3440e9": {
+      "text": "鍵です",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kagi_desu",
+      "sources": [
+        "phrase:p_kagi_desu"
+      ]
+    },
+    "tts_bbfb06c9f1f6": {
+      "text": "現金で",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_genkin_de",
+      "sources": [
+        "phrase:p_genkin_de"
+      ]
+    },
+    "tts_76a0e7601001": {
+      "text": "合計千円です",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_price",
+      "sources": [
+        "phrase:p_price"
+      ]
+    },
+    "tts_e27b2dce6d3d": {
+      "text": "細かくしてください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_komakaku",
+      "sources": [
+        "phrase:p_komakaku"
+      ]
+    },
+    "tts_525fa60af262": {
+      "text": "三日です",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_mikka",
+      "sources": [
+        "phrase:p_mikka"
+      ]
+    },
+    "tts_79699efe7955": {
+      "text": "仕事です",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_shigoto_desu",
+      "sources": [
+        "phrase:p_shigoto_desu"
+      ]
+    },
+    "tts_1944d65bed89": {
+      "text": "使い方を教えてください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_tsukaikata",
+      "sources": [
+        "phrase:p_tsukaikata"
+      ]
+    },
+    "tts_5e0478865db7": {
+      "text": "試着してもいいですか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_shichaku",
+      "sources": [
+        "phrase:p_shichaku"
+      ],
+      "path": "/audio/nanami/tts_5e0478865db7.mp3"
+    },
+    "tts_d9715e893032": {
+      "text": "次の駅で乗り換えてください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_norikae_kudasai",
+      "sources": [
+        "phrase:p_norikae_kudasai"
+      ]
+    },
+    "tts_0013a9ca6df3": {
+      "text": "次は渋谷ですか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_tsugi_wa_shibuya",
+      "sources": [
+        "phrase:p_tsugi_wa_shibuya"
+      ]
+    },
+    "tts_f4039f302c54": {
+      "text": "写真お願いします",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_shashin_onegai",
+      "sources": [
+        "phrase:p_shashin_onegai"
+      ]
+    },
+    "tts_475df71987da": {
+      "text": "写真撮ってもいいですか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_shashin_ii",
+      "sources": [
+        "phrase:p_shashin_ii"
+      ]
+    },
+    "tts_ff981a0756cd": {
+      "text": "助けてください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_tasukete",
+      "sources": [
+        "phrase:p_tasukete"
+      ],
+      "path": "/audio/nanami/tts_ff981a0756cd.mp3"
+    },
+    "tts_d0f6d0eb4769": {
+      "text": "新宿駅はどこですか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_shinjuku_doko",
+      "sources": [
+        "phrase:p_shinjuku_doko"
+      ]
+    },
+    "tts_67537207f82b": {
+      "text": "辛いですか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_karai_desu_ka",
+      "sources": [
+        "phrase:p_karai_desu_ka"
+      ]
+    },
+    "tts_e0058ffaf3a2": {
+      "text": "水をください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_mizu_kudasai",
+      "sources": [
+        "phrase:p_mizu_kudasai"
+      ]
+    },
+    "tts_32fcb38e7a80": {
+      "text": "切符をください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kippu_kudasai",
+      "sources": [
+        "phrase:p_kippu_kudasai"
+      ]
+    },
+    "tts_c4f612cf95c9": {
+      "text": "替え玉お願いします",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kaedama",
+      "sources": [
+        "phrase:p_kaedama"
+      ]
+    },
+    "tts_17bf70df7307": {
+      "text": "袋は要りますか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_fukuro",
+      "sources": [
+        "phrase:p_fukuro"
+      ]
+    },
+    "tts_303d7b8ce335": {
+      "text": "袋は要りません",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_fukuro_iranai",
+      "sources": [
+        "phrase:p_fukuro_iranai"
+      ]
+    },
+    "tts_b4e6d4a5c89e": {
+      "text": "大丈夫",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_daijoubu",
+      "sources": [
+        "phrase:p_daijoubu"
+      ]
+    },
+    "tts_5bd0c900547a": {
+      "text": "大盛りできますか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_oomori",
+      "sources": [
+        "phrase:p_oomori"
+      ]
+    },
+    "tts_8358b57d89dd": {
+      "text": "宅急便お願いします",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_takkyubin",
+      "sources": [
+        "phrase:p_takkyubin"
+      ]
+    },
+    "tts_9b81e1ae1ba9": {
+      "text": "朝食は",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_choushoku_wa",
+      "sources": [
+        "phrase:p_choushoku_wa"
+      ]
+    },
+    "tts_4d329d63463c": {
+      "text": "頭が痛いです",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_atama_itai",
+      "sources": [
+        "phrase:p_atama_itai"
+      ]
+    },
+    "tts_52d9f59c245d": {
+      "text": "道を教えてください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_michi_oshiete",
+      "sources": [
+        "phrase:p_michi_oshiete"
+      ]
+    },
+    "tts_db9f5acc1108": {
+      "text": "二つください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_futatsu_kudasai",
+      "sources": [
+        "phrase:p_futatsu_kudasai"
+      ]
+    },
+    "tts_a554a4a22c16": {
+      "text": "二人です",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_futari_desu",
+      "sources": [
+        "phrase:p_futari_desu"
+      ],
+      "path": "/audio/nanami/tts_a554a4a22c16.mp3"
+    },
+    "tts_724523899771": {
+      "text": "箸は要りますか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_hashi_irimasu_ka",
+      "sources": [
+        "phrase:p_hashi_irimasu_ka"
+      ]
+    },
+    "tts_74ef5e57a71a": {
+      "text": "箸をください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_hashi_kudasai",
+      "sources": [
+        "phrase:p_hashi_kudasai"
+      ]
+    },
+    "tts_58a31b3e0c1b": {
+      "text": "部屋はどこですか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_heya_doko",
+      "sources": [
+        "phrase:p_heya_doko"
+      ]
+    },
+    "tts_1c39b46cebc4": {
+      "text": "風邪です",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kaze_desu",
+      "sources": [
+        "phrase:p_kaze_desu"
+      ]
+    },
+    "tts_ebb1f7244fb5": {
+      "text": "分かりました",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_wakarimashita",
+      "sources": [
+        "phrase:p_wakarimashita"
+      ],
+      "path": "/audio/nanami/tts_ebb1f7244fb5.mp3"
+    },
+    "tts_7519c2a1c491": {
+      "text": "分かりません",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_wakarimasen",
+      "sources": [
+        "phrase:p_wakarimasen"
+      ],
+      "path": "/audio/nanami/tts_7519c2a1c491.mp3"
+    },
+    "tts_8612b57ba693": {
+      "text": "別々で",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_betsubetsu_de",
+      "sources": [
+        "phrase:p_betsubetsu_de"
+      ]
+    },
+    "tts_5629044ee050": {
+      "text": "免税できますか",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_menzei_dekimasu_ka",
+      "sources": [
+        "phrase:p_menzei_dekimasu_ka"
+      ]
+    },
+    "tts_1c83f478ab11": {
+      "text": "薬をください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kusuri_kudasai",
+      "sources": [
+        "phrase:p_kusuri_kudasai"
+      ]
+    },
+    "tts_8ad0ccd0e10e": {
+      "text": "予約しています",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_yoyaku_shiteimasu",
+      "sources": [
+        "phrase:p_yoyaku_shiteimasu"
+      ]
+    },
+    "tts_92e9f3031369": {
+      "text": "要りません",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_irimasen",
+      "sources": [
+        "phrase:p_irimasen"
+      ]
+    },
+    "tts_2b7437d20739": {
+      "text": "両替お願いします",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_ryougae",
+      "sources": [
+        "phrase:p_ryougae"
+      ]
+    },
+    "tts_dbd31a0b4b51": {
+      "text": "領収書をください",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_ryoushuusho",
+      "sources": [
+        "phrase:p_ryoushuusho"
+      ],
+      "path": "/audio/nanami/tts_dbd31a0b4b51.mp3"
+    },
+    "tts_42d0969029e9": {
+      "text": "ありがとう",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_arigatou",
+      "sources": [
+        "phrase:p_arigatou"
+      ]
+    },
+    "tts_01dd1d4130bb": {
+      "text": "あれ",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_are",
+      "sources": [
+        "phrase:p_are"
+      ],
+      "path": "/audio/nanami/tts_01dd1d4130bb.mp3"
+    },
+    "tts_c9177450298c": {
+      "text": "いや",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_iya",
+      "sources": [
+        "phrase:p_iya"
+      ]
+    },
+    "tts_22f503aaf294": {
+      "text": "うん",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_un",
+      "sources": [
+        "phrase:p_un"
+      ]
+    },
+    "tts_ac15ff145286": {
+      "text": "おいしい",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_oishii",
+      "sources": [
+        "phrase:p_oishii"
+      ],
+      "path": "/audio/nanami/tts_ac15ff145286.mp3"
+    },
+    "tts_2b7c52d264e5": {
+      "text": "お願いします",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_onegai_shimasu",
+      "sources": [
+        "phrase:p_onegai_shimasu"
+      ],
+      "path": "/audio/nanami/tts_2b7c52d264e5.mp3"
+    },
+    "tts_ac62cbc2adad": {
+      "text": "これ",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kore",
+      "sources": [
+        "phrase:p_kore"
+      ],
+      "path": "/audio/nanami/tts_ac62cbc2adad.mp3"
+    },
+    "tts_a86cd2b6f9f8": {
+      "text": "これでお願いします",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kore_de",
+      "sources": [
+        "phrase:p_kore_de"
+      ]
+    },
+    "tts_f7df6ac2474a": {
+      "text": "そうです",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_sou_desu",
+      "sources": [
+        "phrase:p_sou_desu"
+      ]
+    },
+    "tts_f7b0201b3f0e": {
+      "text": "ちょっと",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_chotto",
+      "sources": [
+        "phrase:p_chotto"
+      ]
+    },
+    "tts_97a411a26ee3": {
+      "text": "ほしいです",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_hoshii_desu",
+      "sources": [
+        "phrase:p_hoshii_desu"
+      ]
+    },
+    "tts_bcd0524dba9f": {
+      "text": "もう大丈夫です",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_mou_daijoubu_desu",
+      "sources": [
+        "phrase:p_mou_daijoubu_desu"
+      ]
+    },
+    "tts_27a065ed775f": {
+      "text": "一万円",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_num_ichimanen",
+      "sources": [
+        "phrase:p_num_ichimanen"
+      ]
+    },
+    "tts_e70b5299d05d": {
+      "text": "駅",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_eki",
+      "sources": [
+        "phrase:p_eki"
+      ],
+      "path": "/audio/nanami/tts_e70b5299d05d.mp3"
+    },
+    "tts_a63df47d88c3": {
+      "text": "改札",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kaisatsu",
+      "sources": [
+        "phrase:p_kaisatsu"
+      ]
+    },
+    "tts_3370b12e0f02": {
+      "text": "五千円",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_num_gosenen",
+      "sources": [
+        "phrase:p_num_gosenen"
+      ]
+    },
+    "tts_c685e280f421": {
+      "text": "五百円",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_num_gohyakuen",
+      "sources": [
+        "phrase:p_num_gohyakuen"
+      ]
+    },
+    "tts_455ec8daabaa": {
+      "text": "乗り換え",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_norikae",
+      "sources": [
+        "phrase:p_norikae",
+        "sign:norikae_sign:ja"
+      ],
+      "path": "/audio/nanami/tts_455ec8daabaa.mp3"
+    },
+    "tts_ff55adcf8d52": {
+      "text": "食べます",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_tabemasu",
+      "sources": [
+        "phrase:p_tabemasu"
+      ]
+    },
+    "tts_4c3076304aa5": {
+      "text": "切符",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_kippu",
+      "sources": [
+        "phrase:p_kippu"
+      ],
+      "path": "/audio/nanami/tts_4c3076304aa5.mp3"
+    },
+    "tts_1ae8cde53509": {
+      "text": "千円",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_num_senen",
+      "sources": [
+        "phrase:p_num_senen"
+      ]
+    },
+    "tts_87a4d24d046d": {
+      "text": "大丈夫です",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_daijoubu_desu",
+      "sources": [
+        "phrase:p_daijoubu_desu"
+      ],
+      "path": "/audio/nanami/tts_87a4d24d046d.mp3"
+    },
+    "tts_e2e9f12b440b": {
+      "text": "二千円",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_num_nisenen",
+      "sources": [
+        "phrase:p_num_nisenen"
+      ]
+    },
+    "tts_dd134499531a": {
+      "text": "百円",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_num_hyakuen",
+      "sources": [
+        "phrase:p_num_hyakuen"
+      ]
+    },
+    "tts_6e4b392552c7": {
+      "text": "分かりました、ありがとうございます",
+      "voice": "nanami",
+      "source": "phrase",
+      "sourceId": "p_wakarimashita_arigatou",
+      "sources": [
+        "phrase:p_wakarimashita_arigatou"
+      ]
+    },
+    "tts_66f0b9161217": {
+      "text": "あしもとちゅうい",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "ashimoto",
+      "sources": [
+        "sign:ashimoto"
+      ]
+    },
+    "tts_d13aa1e57ee3": {
+      "text": "あたたかい",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "atatakai",
+      "sources": [
+        "sign:atatakai"
+      ]
+    },
+    "tts_c0df549e3258": {
+      "text": "あまくち",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "amakuchi",
+      "sources": [
+        "sign:amakuchi"
+      ]
+    },
+    "tts_4db3472b6e41": {
+      "text": "あんない",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "annai",
+      "sources": [
+        "sign:annai"
+      ]
+    },
+    "tts_408e2ae255b0": {
+      "text": "いちじていし",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "ichiji_teishi",
+      "sources": [
+        "sign:ichiji_teishi"
+      ]
+    },
+    "tts_43c0172ad9a5": {
+      "text": "いりぐち",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "iriguchi",
+      "sources": [
+        "sign:iriguchi"
+      ],
+      "path": "/audio/nanami/tts_43c0172ad9a5.mp3"
+    },
+    "tts_0a1544d65547": {
+      "text": "うけつけ",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "uketsuke",
+      "sources": [
+        "sign:uketsuke"
+      ]
+    },
+    "tts_ace7c64eca2e": {
+      "text": "うりきれ",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "urikire",
+      "sources": [
+        "sign:urikire"
+      ]
+    },
+    "tts_33f612435d8c": {
+      "text": "えいぎょうじかん",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "eigyoujikan",
+      "sources": [
+        "sign:eigyoujikan"
+      ]
+    },
+    "tts_e56c3caf0f9f": {
+      "text": "えいぎょうちゅう",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "eigyouchu",
+      "sources": [
+        "sign:eigyouchu"
+      ],
+      "path": "/audio/nanami/tts_e56c3caf0f9f.mp3"
+    },
+    "tts_6ab8af25a297": {
+      "text": "おおもり",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "oomori_menu",
+      "sources": [
+        "sign:oomori_menu"
+      ]
+    },
+    "tts_cb1434a4bdae": {
+      "text": "おしずかに",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "shizukani",
+      "sources": [
+        "sign:shizukani"
+      ]
+    },
+    "tts_0f40454243d0": {
+      "text": "おす",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "osu",
+      "sources": [
+        "sign:osu"
+      ]
+    },
+    "tts_343a26d4817b": {
+      "text": "おすすめ",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "osusume_menu",
+      "sources": [
+        "sign:osusume_menu"
+      ]
+    },
+    "tts_8b8ccdbe3855": {
+      "text": "おてあらい",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "otearai",
+      "sources": [
+        "sign:otearai"
+      ]
+    },
+    "tts_51dce2f31fa8": {
+      "text": "おもちかえり",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "mochikaeri",
+      "sources": [
+        "sign:mochikaeri"
+      ]
+    },
+    "tts_9b27c35ef9c2": {
+      "text": "カードたいおう",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "card_taiou",
+      "sources": [
+        "sign:card_taiou"
+      ]
+    },
+    "tts_ef41926cafdd": {
+      "text": "かいさつぐち",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "kaisatsu",
+      "sources": [
+        "sign:kaisatsu"
+      ]
+    },
+    "tts_1182ea1ef6a5": {
+      "text": "かくえきていしゃ",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "kakueki",
+      "sources": [
+        "sign:kakueki"
+      ]
+    },
+    "tts_3b22787de227": {
+      "text": "からくち",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "karakuchi",
+      "sources": [
+        "sign:karakuchi"
+      ]
+    },
+    "tts_5531b47e1962": {
+      "text": "かんけいしゃいがいたちいりきんし",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "tachiiri_kinshi2",
+      "sources": [
+        "sign:tachiiri_kinshi2"
+      ]
+    },
+    "tts_483284272a48": {
+      "text": "きかんげんてい",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "kikan_gentei",
+      "sources": [
+        "sign:kikan_gentei"
+      ]
+    },
+    "tts_07f0dc914ce2": {
+      "text": "きけん",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "kiken",
+      "sources": [
+        "sign:kiken"
+      ]
+    },
+    "tts_6b9dd05b0f89": {
+      "text": "きたぐち",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "kitaguchi",
+      "sources": [
+        "sign:kitaguchi"
+      ]
+    },
+    "tts_ffc9b55b7118": {
+      "text": "きゅうこう",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "kyuukou",
+      "sources": [
+        "sign:kyuukou"
+      ]
+    },
+    "tts_c5f142d6c696": {
+      "text": "きんえん",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "kinen",
+      "sources": [
+        "sign:kinen"
+      ]
+    },
+    "tts_dcb46e0fc29b": {
+      "text": "くうしつ",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "kuushitsu",
+      "sources": [
+        "sign:kuushitsu"
+      ]
+    },
+    "tts_65746967ebdc": {
+      "text": "げんきん",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "genkin_sign",
+      "sources": [
+        "sign:genkin_sign"
+      ]
+    },
+    "tts_18689fc391a6": {
+      "text": "こうじちゅう",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "koujichu",
+      "sources": [
+        "sign:koujichu"
+      ]
+    },
+    "tts_0b640f76f069": {
+      "text": "こうつうけいアイシー",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "koutsuukei",
+      "sources": [
+        "sign:koutsuukei"
+      ]
+    },
+    "tts_600583ea7606": {
+      "text": "こしょうちゅう",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "koshouchu",
+      "sources": [
+        "sign:koshouchu"
+      ]
+    },
+    "tts_29f0cdaefb3f": {
+      "text": "さつえいきんし",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "satsuei_kinshi",
+      "sources": [
+        "sign:satsuei_kinshi"
+      ]
+    },
+    "tts_e441dfe79fc2": {
+      "text": "じゅんびちゅう",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "junbichu",
+      "sources": [
+        "sign:junbichu"
+      ]
+    },
+    "tts_dfae1f286a52": {
+      "text": "しんはつばい",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "shinhatsubai",
+      "sources": [
+        "sign:shinhatsubai"
+      ]
+    },
+    "tts_fefca6a7da90": {
+      "text": "すうりょうげんてい",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "gentei_menu",
+      "sources": [
+        "sign:gentei_menu"
+      ]
+    },
+    "tts_79844fe2e1d5": {
+      "text": "ぜいこみ",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "zeikomi",
+      "sources": [
+        "sign:zeikomi"
+      ]
+    },
+    "tts_536c40f98792": {
+      "text": "セール",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "sale",
+      "sources": [
+        "sign:sale"
+      ]
+    },
+    "tts_4f70eee769de": {
+      "text": "セット",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "set_menu",
+      "sources": [
+        "sign:set_menu"
+      ]
+    },
+    "tts_75912da153aa": {
+      "text": "ぜんぴん",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "zenpin",
+      "sources": [
+        "sign:zenpin"
+      ]
+    },
+    "tts_94dc5b6ee2d5": {
+      "text": "たちいりきんし",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "tachiiri",
+      "sources": [
+        "sign:tachiiri"
+      ]
+    },
+    "tts_a793f835e5f7": {
+      "text": "たべほうだい",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "tabehoudai",
+      "sources": [
+        "sign:tabehoudai"
+      ]
+    },
+    "tts_1fa6428b6198": {
+      "text": "たんぴん",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "tanpin",
+      "sources": [
+        "sign:tanpin"
+      ]
+    },
+    "tts_b8037e65f6fc": {
+      "text": "ちゅうい",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "chuui",
+      "sources": [
+        "sign:chuui"
+      ]
+    },
+    "tts_44e650f65879": {
+      "text": "つめたい",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "tsumetai",
+      "sources": [
+        "sign:tsumetai"
+      ],
+      "path": "/audio/nanami/tts_44e650f65879.mp3"
+    },
+    "tts_1a22edfee12d": {
+      "text": "つりせん",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "tsurisen",
+      "sources": [
+        "sign:tsurisen"
+      ]
+    },
+    "tts_b7338fa57221": {
+      "text": "ていきゅうび",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "teikyuubi",
+      "sources": [
+        "sign:teikyuubi"
+      ]
+    },
+    "tts_a63458c6e63c": {
+      "text": "ていしょく",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "teishoku",
+      "sources": [
+        "sign:teishoku"
+      ],
+      "path": "/audio/nanami/tts_a63458c6e63c.mp3"
+    },
+    "tts_3ca6e73dde08": {
+      "text": "でぐち",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "deguchi",
+      "sources": [
+        "sign:deguchi"
+      ],
+      "path": "/audio/nanami/tts_3ca6e73dde08.mp3"
+    },
+    "tts_18a5949f7ff9": {
+      "text": "とっきゅう",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "tokkyuu",
+      "sources": [
+        "sign:tokkyuu"
+      ]
+    },
+    "tts_542bb0932f55": {
+      "text": "にしぐち",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "nishiguchi",
+      "sources": [
+        "sign:nishiguchi"
+      ]
+    },
+    "tts_28b4b2603013": {
+      "text": "のみほうだい",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "nomihoudai",
+      "sources": [
+        "sign:nomihoudai"
+      ]
+    },
+    "tts_015adc4a3380": {
+      "text": "のりかえ",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "norikae_sign",
+      "sources": [
+        "sign:norikae_sign"
+      ],
+      "path": "/audio/nanami/tts_015adc4a3380.mp3"
+    },
+    "tts_b1172e31d4d0": {
+      "text": "のりば",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "noriba",
+      "sources": [
+        "sign:noriba"
+      ],
+      "path": "/audio/nanami/tts_b1172e31d4d0.mp3"
+    },
+    "tts_dfb06cbf112e": {
+      "text": "ばいてん",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "baiten",
+      "sources": [
+        "sign:baiten"
+      ]
+    },
+    "tts_61d1edd2b906": {
+      "text": "はんがく",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "hangaku",
+      "sources": [
+        "sign:hangaku"
+      ]
+    },
+    "tts_333ac66b7a4a": {
+      "text": "ひがしぐち",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "higashiguchi",
+      "sources": [
+        "sign:higashiguchi"
+      ]
+    },
+    "tts_a2d3fe43375c": {
+      "text": "ひく",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "hiku",
+      "sources": [
+        "sign:hiku"
+      ]
+    },
+    "tts_c312c4956af0": {
+      "text": "ひじょうぐち",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "hijouguchi",
+      "sources": [
+        "sign:hijouguchi"
+      ]
+    },
+    "tts_274e92640342": {
+      "text": "ほんじつ",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "honjitsu",
+      "sources": [
+        "sign:honjitsu"
+      ]
+    },
+    "tts_4829e3102f04": {
+      "text": "まんしつ",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "manshitsu",
+      "sources": [
+        "sign:manshitsu"
+      ]
+    },
+    "tts_b19662b70811": {
+      "text": "みなみぐち",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "minamiguchi",
+      "sources": [
+        "sign:minamiguchi"
+      ]
+    },
+    "tts_d4a9d9ef26f0": {
+      "text": "むりょう",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "muryou",
+      "sources": [
+        "sign:muryou"
+      ]
+    },
+    "tts_0baffcd85e68": {
+      "text": "むりょうWi-Fi",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "tasuku",
+      "sources": [
+        "sign:tasuku"
+      ]
+    },
+    "tts_86ae0d89c5b9": {
+      "text": "ランチ",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "lunch",
+      "sources": [
+        "sign:lunch"
+      ]
+    },
+    "tts_6e2d1ad8f812": {
+      "text": "りょうがえ",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "ryougae_sign",
+      "sources": [
+        "sign:ryougae_sign"
+      ],
+      "path": "/audio/nanami/tts_6e2d1ad8f812.mp3"
+    },
+    "tts_14230c31486d": {
+      "text": "わりびき",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "waribiki",
+      "sources": [
+        "sign:waribiki"
+      ]
+    },
+    "tts_ebb323c6fe75": {
+      "text": "お持ち帰り",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "mochikaeri:ja",
+      "sources": [
+        "sign:mochikaeri:ja"
+      ]
+    },
+    "tts_73e6684ff80e": {
+      "text": "お手洗い",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "otearai:ja",
+      "sources": [
+        "sign:otearai:ja"
+      ]
+    },
+    "tts_0e1ebb0f5c19": {
+      "text": "お静かに",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "shizukani:ja",
+      "sources": [
+        "sign:shizukani:ja"
+      ]
+    },
+    "tts_ab32cfca34b7": {
+      "text": "カード対応",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "card_taiou:ja",
+      "sources": [
+        "sign:card_taiou:ja"
+      ]
+    },
+    "tts_9f57e6792e87": {
+      "text": "つり銭",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "tsurisen:ja",
+      "sources": [
+        "sign:tsurisen:ja"
+      ]
+    },
+    "tts_c09cb5acee9e": {
+      "text": "案内",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "annai:ja",
+      "sources": [
+        "sign:annai:ja"
+      ]
+    },
+    "tts_21941967f1cf": {
+      "text": "一時停止",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "ichiji_teishi:ja",
+      "sources": [
+        "sign:ichiji_teishi:ja"
+      ]
+    },
+    "tts_7a8a08a87847": {
+      "text": "引",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "hiku:ja",
+      "sources": [
+        "sign:hiku:ja"
+      ]
+    },
+    "tts_f13952ac0063": {
+      "text": "飲み放題",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "nomihoudai:ja",
+      "sources": [
+        "sign:nomihoudai:ja"
+      ]
+    },
+    "tts_de70b7fbff7d": {
+      "text": "営業時間",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "eigyoujikan:ja",
+      "sources": [
+        "sign:eigyoujikan:ja"
+      ]
+    },
+    "tts_44f4dc039bb1": {
+      "text": "営業中",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "eigyouchu:ja",
+      "sources": [
+        "sign:eigyouchu:ja"
+      ],
+      "path": "/audio/nanami/tts_44f4dc039bb1.mp3"
+    },
+    "tts_a59b01a704e2": {
+      "text": "押",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "osu:ja",
+      "sources": [
+        "sign:osu:ja"
+      ]
+    },
+    "tts_2aaaffaf75b8": {
+      "text": "温かい",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "atatakai:ja",
+      "sources": [
+        "sign:atatakai:ja"
+      ]
+    },
+    "tts_bb3cfa59d2e8": {
+      "text": "改札口",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "kaisatsu:ja",
+      "sources": [
+        "sign:kaisatsu:ja"
+      ]
+    },
+    "tts_7e9d116b4531": {
+      "text": "各駅停車",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "kakueki:ja",
+      "sources": [
+        "sign:kakueki:ja"
+      ]
+    },
+    "tts_a99917e86228": {
+      "text": "割引",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "waribiki:ja",
+      "sources": [
+        "sign:waribiki:ja"
+      ]
+    },
+    "tts_f966cf45097b": {
+      "text": "甘口",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "amakuchi:ja",
+      "sources": [
+        "sign:amakuchi:ja"
+      ]
+    },
+    "tts_d8a5678c1db1": {
+      "text": "関係者以外立入禁止",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "tachiiri_kinshi2:ja",
+      "sources": [
+        "sign:tachiiri_kinshi2:ja"
+      ]
+    },
+    "tts_265af6914f6b": {
+      "text": "危険",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "kiken:ja",
+      "sources": [
+        "sign:kiken:ja"
+      ]
+    },
+    "tts_a8bb8cbb2df2": {
+      "text": "期間限定",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "kikan_gentei:ja",
+      "sources": [
+        "sign:kikan_gentei:ja"
+      ]
+    },
+    "tts_954df4424486": {
+      "text": "急行",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "kyuukou:ja",
+      "sources": [
+        "sign:kyuukou:ja"
+      ]
+    },
+    "tts_375c1e1161f0": {
+      "text": "禁煙",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "kinen:ja",
+      "sources": [
+        "sign:kinen:ja"
+      ]
+    },
+    "tts_6de5e7f369c2": {
+      "text": "空室",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "kuushitsu:ja",
+      "sources": [
+        "sign:kuushitsu:ja"
+      ]
+    },
+    "tts_e3ca5905c270": {
+      "text": "現金",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "genkin_sign:ja",
+      "sources": [
+        "sign:genkin_sign:ja"
+      ]
+    },
+    "tts_e66ac9ef8731": {
+      "text": "故障中",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "koshouchu:ja",
+      "sources": [
+        "sign:koshouchu:ja"
+      ]
+    },
+    "tts_bd6fbd4f01f9": {
+      "text": "交通系IC",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "koutsuukei:ja",
+      "sources": [
+        "sign:koutsuukei:ja"
+      ]
+    },
+    "tts_d8aa2258c01a": {
+      "text": "工事中",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "koujichu:ja",
+      "sources": [
+        "sign:koujichu:ja"
+      ]
+    },
+    "tts_5c4e286f3d9a": {
+      "text": "撮影禁止",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "satsuei_kinshi:ja",
+      "sources": [
+        "sign:satsuei_kinshi:ja"
+      ]
+    },
+    "tts_312b15da556c": {
+      "text": "受付",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "uketsuke:ja",
+      "sources": [
+        "sign:uketsuke:ja"
+      ]
+    },
+    "tts_dd877ebcea7c": {
+      "text": "出口",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "deguchi:ja",
+      "sources": [
+        "sign:deguchi:ja"
+      ],
+      "path": "/audio/nanami/tts_dd877ebcea7c.mp3"
+    },
+    "tts_69683a901b7d": {
+      "text": "準備中",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "junbichu:ja",
+      "sources": [
+        "sign:junbichu:ja"
+      ]
+    },
+    "tts_e33ba9c65056": {
+      "text": "食べ放題",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "tabehoudai:ja",
+      "sources": [
+        "sign:tabehoudai:ja"
+      ]
+    },
+    "tts_f12955f3b5c9": {
+      "text": "新発売",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "shinhatsubai:ja",
+      "sources": [
+        "sign:shinhatsubai:ja"
+      ]
+    },
+    "tts_3c4a45690fb1": {
+      "text": "辛口",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "karakuchi:ja",
+      "sources": [
+        "sign:karakuchi:ja"
+      ]
+    },
+    "tts_625612e2e5d4": {
+      "text": "数量限定",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "gentei_menu:ja",
+      "sources": [
+        "sign:gentei_menu:ja"
+      ]
+    },
+    "tts_883518371afb": {
+      "text": "西口",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "nishiguchi:ja",
+      "sources": [
+        "sign:nishiguchi:ja"
+      ]
+    },
+    "tts_1cbfe63e1994": {
+      "text": "税込",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "zeikomi:ja",
+      "sources": [
+        "sign:zeikomi:ja"
+      ]
+    },
+    "tts_6befd2370848": {
+      "text": "全品",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "zenpin:ja",
+      "sources": [
+        "sign:zenpin:ja"
+      ]
+    },
+    "tts_53b75a47175a": {
+      "text": "足元注意",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "ashimoto:ja",
+      "sources": [
+        "sign:ashimoto:ja"
+      ]
+    },
+    "tts_06e899c3f983": {
+      "text": "大盛り",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "oomori_menu:ja",
+      "sources": [
+        "sign:oomori_menu:ja"
+      ]
+    },
+    "tts_2a345e41e969": {
+      "text": "単品",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "tanpin:ja",
+      "sources": [
+        "sign:tanpin:ja"
+      ]
+    },
+    "tts_f08b55c42cfa": {
+      "text": "注意",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "chuui:ja",
+      "sources": [
+        "sign:chuui:ja"
+      ]
+    },
+    "tts_fef3ad6a1bd4": {
+      "text": "定休日",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "teikyuubi:ja",
+      "sources": [
+        "sign:teikyuubi:ja"
+      ]
+    },
+    "tts_c89c95bdcba2": {
+      "text": "定食",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "teishoku:ja",
+      "sources": [
+        "sign:teishoku:ja"
+      ],
+      "path": "/audio/nanami/tts_c89c95bdcba2.mp3"
+    },
+    "tts_53dcb0fe0927": {
+      "text": "東口",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "higashiguchi:ja",
+      "sources": [
+        "sign:higashiguchi:ja"
+      ]
+    },
+    "tts_4c80d67f1adb": {
+      "text": "特急",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "tokkyuu:ja",
+      "sources": [
+        "sign:tokkyuu:ja"
+      ]
+    },
+    "tts_268d6b3096cb": {
+      "text": "南口",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "minamiguchi:ja",
+      "sources": [
+        "sign:minamiguchi:ja"
+      ]
+    },
+    "tts_38e9cd1ffb95": {
+      "text": "入口",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "iriguchi:ja",
+      "sources": [
+        "sign:iriguchi:ja"
+      ],
+      "path": "/audio/nanami/tts_38e9cd1ffb95.mp3"
+    },
+    "tts_dd74f606abc0": {
+      "text": "売り切れ",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "urikire:ja",
+      "sources": [
+        "sign:urikire:ja"
+      ]
+    },
+    "tts_cb365f543bc8": {
+      "text": "売店",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "baiten:ja",
+      "sources": [
+        "sign:baiten:ja"
+      ]
+    },
+    "tts_d84accc4d4cc": {
+      "text": "半額",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "hangaku:ja",
+      "sources": [
+        "sign:hangaku:ja"
+      ]
+    },
+    "tts_e907e460b7bb": {
+      "text": "非常口",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "hijouguchi:ja",
+      "sources": [
+        "sign:hijouguchi:ja"
+      ]
+    },
+    "tts_9e0b645acb8c": {
+      "text": "北口",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "kitaguchi:ja",
+      "sources": [
+        "sign:kitaguchi:ja"
+      ]
+    },
+    "tts_ebb72f98b8c5": {
+      "text": "本日",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "honjitsu:ja",
+      "sources": [
+        "sign:honjitsu:ja"
+      ]
+    },
+    "tts_b358db5a50d0": {
+      "text": "満室",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "manshitsu:ja",
+      "sources": [
+        "sign:manshitsu:ja"
+      ]
+    },
+    "tts_501451d6eb67": {
+      "text": "無料",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "muryou:ja",
+      "sources": [
+        "sign:muryou:ja"
+      ]
+    },
+    "tts_fd0a1c6abd72": {
+      "text": "無料Wi-Fi",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "tasuku:ja",
+      "sources": [
+        "sign:tasuku:ja"
+      ]
+    },
+    "tts_0f887d746198": {
+      "text": "立入禁止",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "tachiiri:ja",
+      "sources": [
+        "sign:tachiiri:ja"
+      ]
+    },
+    "tts_0b87bc8eea28": {
+      "text": "両替",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "ryougae_sign:ja",
+      "sources": [
+        "sign:ryougae_sign:ja"
+      ],
+      "path": "/audio/nanami/tts_0b87bc8eea28.mp3"
+    },
+    "tts_e546e7d633e6": {
+      "text": "冷たい",
+      "voice": "nanami",
+      "source": "sign",
+      "sourceId": "tsumetai:ja",
+      "sources": [
+        "sign:tsumetai:ja"
+      ],
+      "path": "/audio/nanami/tts_e546e7d633e6.mp3"
+    }
+  },
+  "textIndex": {
+    "あ": "tts_98fdfc0a7426",
+    "ア": "tts_1b4c4cc65ff2",
+    "い": "tts_3c01c77f19cd",
+    "イ": "tts_b284de61340b",
+    "う": "tts_af2b29a995c7",
+    "ウ": "tts_86686c311378",
+    "え": "tts_a60311a2fc88",
+    "エ": "tts_3707bab0c47b",
+    "お": "tts_ac6bc7de7112",
+    "オ": "tts_06716d34cc81",
+    "か": "tts_288c9e077190",
+    "カ": "tts_00ed9f08e29e",
+    "が": "tts_a142816563b3",
+    "ガ": "tts_2cf8934dec55",
+    "き": "tts_27acc76c0055",
+    "キ": "tts_408ae436f0e0",
+    "ぎ": "tts_9a77c2df496e",
+    "ギ": "tts_5bbbbf8a5aff",
+    "きゃ": "tts_b2b7e45bf39e",
+    "キャ": "tts_b051252d619f",
+    "ぎゃ": "tts_95e3d0ad8f6f",
+    "ギャ": "tts_200e0575fb28",
+    "きゅ": "tts_298ab383a42d",
+    "キュ": "tts_767fe200f3be",
+    "ぎゅ": "tts_81a5e9e8a034",
+    "ギュ": "tts_4af7d2dbff30",
+    "きょ": "tts_d9ee3c16a677",
+    "キョ": "tts_97de23410f24",
+    "ぎょ": "tts_08831cb24c9b",
+    "ギョ": "tts_d1b4351db075",
+    "く": "tts_ac94e112183c",
+    "ク": "tts_15901a60a347",
+    "ぐ": "tts_6e159a91b7ce",
+    "グ": "tts_65429ee5e7b4",
+    "け": "tts_d32afeb0abe6",
+    "ケ": "tts_b50e4b46f608",
+    "げ": "tts_9167af511d53",
+    "ゲ": "tts_df715d6e0967",
+    "こ": "tts_91714b00e5a3",
+    "コ": "tts_202a6b25e725",
+    "ご": "tts_27a87259d93f",
+    "ゴ": "tts_f684fe6c107a",
+    "さ": "tts_7a4faed063b6",
+    "サ": "tts_bf2cbaccbc43",
+    "ざ": "tts_d08b42329511",
+    "ザ": "tts_bdf380ec22e5",
+    "し": "tts_812f45bfcf7e",
+    "シ": "tts_1afad7703773",
+    "じ": "tts_41f11fe610d4",
+    "ジ": "tts_fcd474ce77e4",
+    "しゃ": "tts_b6e3f9666c7a",
+    "シャ": "tts_b754a5ae0dcc",
+    "じゃ": "tts_d91490197bd6",
+    "ジャ": "tts_d27a2c8d5a25",
+    "しゅ": "tts_64d073703829",
+    "シュ": "tts_1583ea07ca02",
+    "じゅ": "tts_567ca1db796e",
+    "ジュ": "tts_d689cdfde221",
+    "しょ": "tts_7a5aea55155b",
+    "ショ": "tts_0adbf3139511",
+    "じょ": "tts_115759838422",
+    "ジョ": "tts_76ed0c2287aa",
+    "す": "tts_5b8252a1e93f",
+    "ス": "tts_4df8398708ab",
+    "ず": "tts_e77eb4831e6a",
+    "ズ": "tts_3c1a103b5b4f",
+    "せ": "tts_e1c730bd83c3",
+    "セ": "tts_825cec98c430",
+    "ぜ": "tts_8759dfeb913a",
+    "ゼ": "tts_56c35c37128e",
+    "そ": "tts_b345d8cc8368",
+    "ソ": "tts_7394858d1c1b",
+    "ぞ": "tts_bad314622d68",
+    "ゾ": "tts_7797100cc0f2",
+    "た": "tts_cf4d17f99d10",
+    "タ": "tts_056cfad24eb2",
+    "だ": "tts_b3d236275fac",
+    "ダ": "tts_919e596fb58d",
+    "ち": "tts_e022bea2e9d6",
+    "チ": "tts_7e62c71ff6cf",
+    "ぢ": "tts_139b8c6e1d18",
+    "ヂ": "tts_71ece90ea76a",
+    "ちゃ": "tts_062957be362f",
+    "チャ": "tts_8e1841b64e0f",
+    "ちゅ": "tts_619fdc4f9348",
+    "チュ": "tts_7069a936e85c",
+    "ちょ": "tts_4def51326a2d",
+    "チョ": "tts_012bdc51d4c2",
+    "つ": "tts_0c414c812bd8",
+    "ツ": "tts_ee5fe18a7c76",
+    "づ": "tts_600f5ab1c0a4",
+    "ヅ": "tts_b39cf6bd854a",
+    "て": "tts_e2d970611589",
+    "テ": "tts_8996011e5796",
+    "で": "tts_7350618fcec3",
+    "デ": "tts_5dc5d5b8abb3",
+    "と": "tts_a986a7bc9e03",
+    "ト": "tts_d729bd2b2767",
+    "ど": "tts_76504d613664",
+    "ド": "tts_a9a84e4c1845",
+    "な": "tts_478d2f9eb192",
+    "ナ": "tts_8f67916a925b",
+    "に": "tts_de3d1ecc94b2",
+    "ニ": "tts_d8a8e4205aa7",
+    "にゃ": "tts_be4c29664dfd",
+    "ニャ": "tts_1dc73d614c19",
+    "にゅ": "tts_658da3d97ec6",
+    "ニュ": "tts_d3b3fc36dfa4",
+    "にょ": "tts_0954bcc57525",
+    "ニョ": "tts_7cd8a1e2e9f2",
+    "ぬ": "tts_ad142ed0573d",
+    "ヌ": "tts_065ebce83a18",
+    "ね": "tts_3a104bbe569e",
+    "ネ": "tts_edc16abe75a1",
+    "の": "tts_56377d14d4ef",
+    "ノ": "tts_6c807d0ae2cd",
+    "は": "tts_1fa0519cfd09",
+    "ハ": "tts_35104655d4d6",
+    "ば": "tts_d8c158e0a2d1",
+    "バ": "tts_2768d02f9098",
+    "ぱ": "tts_81223f8ee527",
+    "パ": "tts_d4c65564c4ad",
+    "ひ": "tts_469e92c9cf65",
+    "ヒ": "tts_9da359d5199d",
+    "び": "tts_5fb5aba49978",
+    "ビ": "tts_d5725b2f8d16",
+    "ぴ": "tts_749766f43a50",
+    "ピ": "tts_2083aa096d7e",
+    "ひゃ": "tts_f28cd0be883a",
+    "ヒャ": "tts_248349b7522f",
+    "びゃ": "tts_4d8780b09f52",
+    "ビャ": "tts_5a4cf9bffb1f",
+    "ぴゃ": "tts_ef826d2af5c0",
+    "ピャ": "tts_5348b4d2b56b",
+    "ひゅ": "tts_e0e6bdfbd67b",
+    "ヒュ": "tts_deb524a5b5f8",
+    "びゅ": "tts_747dbd8ebca5",
+    "ビュ": "tts_429869337235",
+    "ぴゅ": "tts_984576b5cea2",
+    "ピュ": "tts_b658c8b0f387",
+    "ひょ": "tts_0627f890934c",
+    "ヒョ": "tts_c7eb35e4d18b",
+    "びょ": "tts_0a1cc845facd",
+    "ビョ": "tts_994a6ef5bd87",
+    "ぴょ": "tts_220216f18a88",
+    "ピョ": "tts_6d394d8c8a26",
+    "ふ": "tts_382a438fd4c5",
+    "フ": "tts_c2fa87c3ddd2",
+    "ぶ": "tts_82b3fbb77164",
+    "ブ": "tts_c11cd8dd4563",
+    "ぷ": "tts_224fecb16293",
+    "プ": "tts_a3b8f9e1263b",
+    "へ": "tts_72c746d609d4",
+    "ヘ": "tts_5cf428be4474",
+    "べ": "tts_eefc5770b9dc",
+    "ベ": "tts_e24283733b4a",
+    "ぺ": "tts_bd1d8044336d",
+    "ペ": "tts_8a8021085114",
+    "ほ": "tts_5a340fe4758d",
+    "ホ": "tts_41a11f66f540",
+    "ぼ": "tts_7ebddc850724",
+    "ボ": "tts_c6be80a62e61",
+    "ぽ": "tts_06b58547dc73",
+    "ポ": "tts_23239011ca96",
+    "ま": "tts_400805e5a9e2",
+    "マ": "tts_55d42f593ce9",
+    "み": "tts_1c5425dae8c9",
+    "ミ": "tts_651d85849d50",
+    "みゃ": "tts_0eb0633f6c68",
+    "ミャ": "tts_9fe6e9cb4973",
+    "みゅ": "tts_5bd384349a78",
+    "ミュ": "tts_79997b44c04f",
+    "みょ": "tts_6617e33d9583",
+    "ミョ": "tts_8c8c6e6803f6",
+    "む": "tts_50029791cb9f",
+    "ム": "tts_c6abfe263593",
+    "め": "tts_634540f05d98",
+    "メ": "tts_cfc3325ef061",
+    "も": "tts_3c6945772d72",
+    "モ": "tts_577210255a86",
+    "や": "tts_bdab1b17397d",
+    "ヤ": "tts_8e621f06c443",
+    "ゆ": "tts_44567171f335",
+    "ユ": "tts_ea633878f249",
+    "よ": "tts_6f46f7d4a286",
+    "ヨ": "tts_da6c6a6baf77",
+    "ら": "tts_ba7526a5c03f",
+    "ラ": "tts_d5f1ca173fcd",
+    "り": "tts_71d1c63e507f",
+    "リ": "tts_56cb721117e2",
+    "りゃ": "tts_f58558332c0c",
+    "リャ": "tts_35e4b64905cc",
+    "りゅ": "tts_73c41f0e483e",
+    "リュ": "tts_32cba6c979fc",
+    "りょ": "tts_1ab62bb6d7b6",
+    "リョ": "tts_4ec97d4fbf84",
+    "る": "tts_ffab9d02a311",
+    "ル": "tts_1d672f91e3ff",
+    "れ": "tts_df82f999c7fb",
+    "レ": "tts_00859a61c08f",
+    "ろ": "tts_eb766006aba2",
+    "ロ": "tts_4c1fe526f363",
+    "わ": "tts_dedb707d8398",
+    "ワ": "tts_a2fbf25469bc",
+    "を": "tts_eba95ba0c666",
+    "ヲ": "tts_b40c5f345cb9",
+    "ん": "tts_48a866bfdaf9",
+    "ン": "tts_6ad7ee833add",
+    "Wi-Fiはありますか": "tts_c5fbafbf9de4",
+    "ありがとうございます": "tts_24afcca10e22",
+    "あります": "tts_8331810b5438",
+    "ありません": "tts_90e81821e6c7",
+    "アレルギーが、あります": "tts_953ff70fbc08",
+    "いいえ": "tts_f901585367d6",
+    "いくらですか？": "tts_201c28585903",
+    "いらっしゃいませ": "tts_97bed54b1a17",
+    "お会計お願いします": "tts_53ec7cc7a336",
+    "お勧めは何ですか": "tts_f21c244d4b6a",
+    "ごちそうさまでした": "tts_11c8fca7e223",
+    "これはいくらですか": "tts_d33c910ad45c",
+    "こんにちは": "tts_20427a708c3f",
+    "すみません": "tts_cce1862bcbd9",
+    "チェックインお願いします": "tts_f9094ef33b23",
+    "ちょっと待ってください": "tts_96020f040b35",
+    "トイレは、どこですか？": "tts_cefcb6266096",
+    "はい": "tts_c92b4cda8bdf",
+    "パスポートは、こちらです": "tts_e06edf599f89",
+    "までお願いします": "tts_7e442986e2ce",
+    "もう一度お願いします": "tts_459ec391610b",
+    "一つください": "tts_25c2ea256737",
+    "温めてください": "tts_1887ccf58d57",
+    "試着してもいいですか": "tts_5e0478865db7",
+    "助けてください": "tts_ff981a0756cd",
+    "二人です": "tts_a554a4a22c16",
+    "分かりました": "tts_ebb1f7244fb5",
+    "分かりません": "tts_7519c2a1c491",
+    "領収書をください": "tts_dbd31a0b4b51",
+    "あれ": "tts_01dd1d4130bb",
+    "おいしい": "tts_ac15ff145286",
+    "お願いします": "tts_2b7c52d264e5",
+    "これ": "tts_ac62cbc2adad",
+    "駅": "tts_e70b5299d05d",
+    "乗り換え": "tts_455ec8daabaa",
+    "切符": "tts_4c3076304aa5",
+    "大丈夫です": "tts_87a4d24d046d",
+    "いりぐち": "tts_43c0172ad9a5",
+    "えいぎょうちゅう": "tts_e56c3caf0f9f",
+    "つめたい": "tts_44e650f65879",
+    "ていしょく": "tts_a63458c6e63c",
+    "でぐち": "tts_3ca6e73dde08",
+    "のりかえ": "tts_015adc4a3380",
+    "のりば": "tts_b1172e31d4d0",
+    "りょうがえ": "tts_6e2d1ad8f812",
+    "営業中": "tts_44f4dc039bb1",
+    "出口": "tts_dd877ebcea7c",
+    "定食": "tts_c89c95bdcba2",
+    "入口": "tts_38e9cd1ffb95",
+    "両替": "tts_0b87bc8eea28",
+    "冷たい": "tts_e546e7d633e6"
+  }
+}
