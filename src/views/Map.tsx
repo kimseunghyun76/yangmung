@@ -1,11 +1,11 @@
-// 학습 지도 — 일본 여행 루트형 노드 UI. 공항→전철→편의점… 진행/잠김/완료.
+// 학습 지도 — 추천 / 열린 장면 / 곧 열릴 여행지 3구획. (정보 밀도 정리)
 import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
 import { isMissionUnlocked, kanaReadMastery, missionProgress, type ProgressMap } from '../learn/progress';
 import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
-import { sceneVisualByPlace } from './scene';
+import { sceneVisualByPlace, type SceneVisual } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
 import { PageHead, SceneImageThumb } from './ui';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
@@ -27,78 +27,103 @@ interface Props {
 
 const kicker: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase', margin: 0 };
 
+function lockHint(missionId: string): string {
+  if (missionId === 'C3') return '편의점·식당을 더 익히면 열려요';
+  if (missionId === 'C4') return '전철을 더 익히면 열려요';
+  return '앞 장면을 더 익히면 열려요';
+}
+
+interface SceneItem { m: typeof CONTENT.missions[number]; sv: SceneVisual; unlocked: boolean; done: boolean; started: boolean; mastered: number; total: number }
+
 export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props) {
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
-  const hiraIds = CONTENT.kana.filter((k) => k.script === 'hiragana').map((k) => k.id);
-  const kataIds = CONTENT.kana.filter((k) => k.script === 'katakana').map((k) => k.id);
-  const hira = kanaReadMastery(progress, hiraIds);
-  const kata = kanaReadMastery(progress, kataIds);
+  const hira = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'hiragana').map((k) => k.id));
+  const kata = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'katakana').map((k) => k.id));
+
+  const items: SceneItem[] = scenes.map((m) => {
+    const unlocked = isMissionUnlocked(m.id, progress);
+    const p = missionProgress(allCards, progress, m.id);
+    return { m, sv: sceneVisualByPlace(m.place), unlocked, done: unlocked && p.total > 0 && p.mastered === p.total, started: p.started, mastered: p.mastered, total: p.total };
+  });
+  const open = items.filter((x) => x.unlocked);
+  const locked = items.filter((x) => !x.unlocked);
+  // 추천: 진행 중(미완료) 우선 → 시작 전 → (없으면) 첫 열린 장면
+  const recommended = open.find((x) => x.started && !x.done) ?? open.find((x) => !x.started) ?? open[0];
+  const rest = open.filter((x) => x.m.id !== recommended?.m.id);
 
   return (
     <main style={WRAP}>
       <NavBar {...nav} />
       <PageHead title="학습 지도" sub="공항에서 출발해 장면을 하나씩 열어가요" />
 
-      {/* 가나 */}
       <GlassPanel style={{ marginBottom: 18 }}>
         <p style={{ ...kicker, marginBottom: 10 }}>가나 · 읽기 기준</p>
         <Bar label="히라가나" m={hira} />
         <Bar label="가타카나" m={kata} />
       </GlassPanel>
 
-      {/* 여행 루트 */}
-      <p style={{ ...kicker, margin: '0 0 14px 2px' }}>여행 루트</p>
-      <div>
-        {scenes.map((m, i) => {
-          const unlocked = isMissionUnlocked(m.id, progress);
-          const sv = sceneVisualByPlace(m.place);
-          const p = missionProgress(allCards, progress, m.id);
-          const done = unlocked && p.total > 0 && p.mastered === p.total;
-          const status = !unlocked ? '잠김' : done ? '완료' : p.started ? `진행 중 ${p.mastered}/${p.total}` : `시작 전 0/${p.total}`;
-          const nodeColor = done ? 'var(--ok)' : unlocked ? sv.accent : 'var(--ink-faint)';
-          return (
-            <div key={m.id} style={{ display: 'flex', gap: 14, alignItems: 'stretch' }}>
-              {/* 레일 + 노드 */}
-              <div style={{ position: 'relative', width: 44, flex: '0 0 44px', display: 'flex', justifyContent: 'center' }}>
-                <span style={{ position: 'absolute', left: 21, width: 2, top: i === 0 ? '28px' : 0, bottom: i === scenes.length - 1 ? 'calc(100% - 28px)' : 0, background: 'var(--glass-border)' }} />
-                <span style={{
-                  position: 'relative', zIndex: 1, marginTop: 6, width: 44, height: 44, borderRadius: 13, alignSelf: 'flex-start',
-                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                  background: unlocked ? hexA(sv.accent, 0.16) : 'var(--glass-bg)',
-                  border: `1.5px solid ${done ? 'var(--ok)' : 'var(--glass-border)'}`,
-                  color: nodeColor, opacity: unlocked ? 1 : 0.6,
-                }}>
-                  <Icon name={done ? 'check' : sv.icon} size={done ? 22 : 24} />
-                </span>
-              </div>
-              {/* 카드 */}
-              <button
-                className={unlocked ? 'ym-glass ym-press' : undefined}
-                onClick={() => unlocked && onPracticeScene(m.id)}
-                disabled={!unlocked}
-                style={{
-                  flex: 1, marginBottom: 12, padding: '14px 16px', textAlign: 'left', cursor: unlocked ? 'pointer' : 'default',
-                  display: 'flex', alignItems: 'center', gap: 10, color: 'var(--ink)',
-                  borderRadius: 16, border: unlocked ? undefined : '1px dashed var(--glass-border)',
-                  background: unlocked ? undefined : 'var(--glass-bg)', opacity: unlocked ? 1 : 0.65,
-                }}
-              >
-                <SceneImageThumb src={sv.backdrop ?? sv.thumb} icon={sv.icon} accent={sv.accent} size={52} muted={!unlocked} />
+      {/* 추천 */}
+      {recommended && (
+        <section style={{ marginBottom: 18 }}>
+          <p style={{ ...kicker, marginBottom: 12 }}>오늘의 추천</p>
+          <button className="ym-glass ym-press" onClick={() => onPracticeScene(recommended.m.id)}
+            style={{ display: 'flex', alignItems: 'center', gap: 14, width: '100%', padding: 14, textAlign: 'left', cursor: 'pointer', color: 'var(--ink)', borderRadius: 20, border: `1.5px solid ${hexA(recommended.sv.accent, 0.5)}` }}>
+            <SceneImageThumb src={recommended.sv.backdrop ?? recommended.sv.thumb} icon={recommended.sv.icon} accent={recommended.sv.accent} size={64} />
+            <span style={{ flex: 1, minWidth: 0 }}>
+              <span style={{ display: 'block', fontSize: 18, fontWeight: 800 }}>{recommended.m.place ?? recommended.m.scenario}</span>
+              <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 600, marginTop: 2 }}>{recommended.m.scenario}</span>
+              <span style={{ display: 'inline-block', marginTop: 6, fontSize: 12, fontWeight: 800, color: recommended.sv.accent }}>
+                {recommended.started ? `이어서 · ${recommended.mastered}/${recommended.total}` : '바로 시작'}
+              </span>
+            </span>
+            <Icon name="flow" size={20} style={{ color: 'var(--ink-faint)' }} />
+          </button>
+        </section>
+      )}
+
+      {/* 열린 장면 */}
+      {rest.length > 0 && (
+        <section style={{ marginBottom: 18 }}>
+          <p style={{ ...kicker, marginBottom: 12 }}>열린 장면</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {rest.map((x) => (
+              <button key={x.m.id} className="ym-glass ym-press" onClick={() => onPracticeScene(x.m.id)}
+                style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%', padding: '10px 14px', textAlign: 'left', cursor: 'pointer', color: 'var(--ink)', borderRadius: 16 }}>
+                <SceneImageThumb src={x.sv.backdrop ?? x.sv.thumb} icon={x.sv.icon} accent={x.sv.accent} size={44} />
                 <span style={{ flex: 1, minWidth: 0 }}>
-                  <span style={{ display: 'block', fontSize: 16, fontWeight: 700 }}>{m.place ?? m.scenario}</span>
-                  <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 500, marginTop: 1 }}>{m.scenario}</span>
+                  <span style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{x.m.place ?? x.m.scenario}</span>
+                  <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 500, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{x.m.scenario}</span>
                 </span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: done ? 'var(--ok)' : unlocked ? 'var(--ink-soft)' : 'var(--ink-faint)', display: 'flex', alignItems: 'center', gap: 5 }}>
-                  {!unlocked && <Icon name="recovery" size={13} style={{ opacity: 0 }} />}{status}
+                <span style={{ fontSize: 12, fontWeight: 700, color: x.done ? 'var(--ok)' : 'var(--ink-soft)', fontVariantNumeric: 'tabular-nums' }}>
+                  {x.done ? '완료' : `${x.mastered}/${x.total}`}
                 </span>
               </button>
-            </div>
-          );
-        })}
-      </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 곧 열릴 여행지 */}
+      {locked.length > 0 && (
+        <section style={{ marginBottom: 18 }}>
+          <p style={{ ...kicker, marginBottom: 12 }}>곧 열릴 여행지</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {locked.map((x) => (
+              <div key={x.m.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 16, border: '1px dashed var(--glass-border)', background: 'var(--glass-bg)', opacity: 0.75 }}>
+                <SceneImageThumb src={x.sv.backdrop ?? x.sv.thumb} icon={x.sv.icon} accent={x.sv.accent} size={44} muted />
+                <span style={{ flex: 1, minWidth: 0 }}>
+                  <span style={{ display: 'block', fontSize: 15, fontWeight: 700, color: 'var(--ink-soft)' }}>{x.m.place ?? x.m.scenario}</span>
+                  <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 500, marginTop: 1 }}>{lockHint(x.m.id)}</span>
+                </span>
+                <span style={{ fontSize: 16, color: 'var(--ink-faint)' }}>🔒</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* 복구 도구 */}
-      <GlassPanel style={{ marginTop: 8 }}>
+      <GlassPanel>
         <p style={{ ...kicker, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="recovery" size={16} /> 막혔을 때</p>
         {RECOVERY.map((r) => (
           <button key={r.ja} className="ym-press" onClick={() => speak(r.ja)} disabled={!ttsSupported()}
