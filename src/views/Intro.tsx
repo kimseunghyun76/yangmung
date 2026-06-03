@@ -6,7 +6,7 @@ import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
 import { sceneVisualByMission } from './scene';
 import { PrimaryAction, hexA } from './shell';
-import { MascotBubble, mascotCopy } from './mascot';
+import { MascotLine } from './mascot';
 
 export function Intro({ cards, goal, onStart, onBack }: { cards: Card[]; goal: string; onStart: () => void; onBack: () => void }) {
   let k = 0, b = 0, c = 0;
@@ -81,7 +81,7 @@ export function Intro({ cards, goal, onStart, onBack }: { cards: Card[]; goal: s
             가나 {k} · 표현 {b} · 미션 {c}
           </p>
           {place && (
-            <MascotBubble who="yang" size={38} style={{ marginTop: 16 }}>{mascotCopy('introYang', { place })}</MascotBubble>
+            <MascotLine key={firstMissionId} copyKey="introYang" place={place} size={38} style={{ marginTop: 16 }} />
           )}
           <PrimaryAction onClick={onStart} style={{ marginTop: 16, width: '100%', fontSize: 17 }}>
             시작

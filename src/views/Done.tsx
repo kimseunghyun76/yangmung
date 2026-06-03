@@ -5,6 +5,7 @@ import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
 import { sceneVisualByMission } from './scene';
+import { MascotLine } from './mascot';
 
 interface Props {
   sessionId: number;
@@ -56,6 +57,7 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
           <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
             {stamps.map((id, i) => <Stamp key={id} id={id} idx={i} />)}
           </div>
+          <MascotLine copyKey="doneDuo" style={{ marginTop: 16 }} />
         </div>
       )}
 

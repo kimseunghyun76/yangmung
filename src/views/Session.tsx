@@ -13,6 +13,7 @@ import { ReadingAid } from './ReadingAid';
 import { sceneVisualByMission } from './scene';
 import { Icon } from '../ui/Icon';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
+import { MascotLine, mascotShows } from './mascot';
 
 interface Props {
   card: Card;
@@ -78,6 +79,7 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
             <>
               <h2 style={{ marginTop: 4, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="tip" size={22} /> {card.label}</h2>
               <p style={{ fontSize: 17, lineHeight: 1.6, color: 'var(--ink-soft)' }}>{card.tipKo}</p>
+              <MascotLine key={`${card.id}:tip`} copyKey="tip" style={{ marginTop: 14 }} />
               <PrimaryAction onClick={onNext} style={{ marginTop: 16 }}>다음</PrimaryAction>
             </>
           ) : card.kind === 'introduce' ? (
@@ -91,7 +93,7 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
           ) : card.kind === 'discover' ? (
             <DiscoverCardView key={card.id} card={card} onNext={onNext} />
           ) : (
-            <QuizBody card={card} picked={picked} isMissionStep={isMissionStep} isKanaFamiliar={isKanaFamiliar} onChoose={onChoose} onNext={onNext} onKnown={onKnown} />
+            <QuizBody card={card} index={index} picked={picked} isMissionStep={isMissionStep} isKanaFamiliar={isKanaFamiliar} onChoose={onChoose} onNext={onNext} onKnown={onKnown} />
           )}
         </div>
       </GlassPanel>
@@ -114,8 +116,8 @@ function Dots({ i, total, onScene }: { i: number; total: number; onScene: boolea
 }
 
 // 퀴즈/듣기 본문 — 일본어(주인공) → 듣기(1급) → 선택(행동) → 한국어(보조)
-function QuizBody({ card, picked, isMissionStep, isKanaFamiliar, onChoose, onNext, onKnown }: {
-  card: Extract<Card, { kind: 'quiz' }>; picked: number | null; isMissionStep: boolean;
+function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose, onNext, onKnown }: {
+  card: Extract<Card, { kind: 'quiz' }>; index: number; picked: number | null; isMissionStep: boolean;
   isKanaFamiliar: (c: string) => boolean; onChoose: (i: number, c: Choice) => void; onNext: () => void; onKnown: () => void;
 }) {
   const reveal = picked !== null;
@@ -175,7 +177,7 @@ function QuizBody({ card, picked, isMissionStep, isKanaFamiliar, onChoose, onNex
         })}
       </div>
 
-      {reveal && <ChoiceFeedback card={card} picked={picked!} onNext={onNext} />}
+      {reveal && <ChoiceFeedback card={card} picked={picked!} cardIndex={index} onNext={onNext} />}
       {!reveal && (
         <button onClick={onKnown} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--ink-faint)', fontWeight: 600, marginTop: 14, width: '100%', textAlign: 'center' }}>이미 알아요 (건너뛰기)</button>
       )}
@@ -205,11 +207,12 @@ function choiceStyle(state: 'idle' | 'correct' | 'wrong' | 'dim'): React.CSSProp
 }
 
 // 선택 후 피드백 — 정답 / 오답 / 복구
-function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 'quiz' }>; picked: number; onNext: () => void }) {
+function ChoiceFeedback({ card, picked, cardIndex, onNext }: { card: Extract<Card, { kind: 'quiz' }>; picked: number; cardIndex: number; onNext: () => void }) {
   const c = card.choices[picked];
   const isRecovery = !!c.recovery;
   const isCorrect = c.correct && !isRecovery;
   const isWrong = !c.correct;
+  const event = isRecovery ? 'recovery' : isCorrect ? 'correct' : 'wrong';
   const correctRef = card.choices.find((x) => x.correct && !x.recovery && x.phrase);
   const ja = c.phrase ? (c.phrase.kanji ?? c.phrase.kana) : undefined;
 
@@ -246,6 +249,7 @@ function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 
       {card.listen && card.bannerJa && (
         <p style={{ background: 'var(--surface-2)', padding: 12, borderRadius: 12, fontSize: 16, color: 'var(--ink-soft)' }}>들린 표현: <strong style={{ color: 'var(--ink)' }}>{card.bannerJa}</strong></p>
       )}
+      {mascotShows(event, cardIndex) && <MascotLine key={`${card.id}:${picked}`} copyKey={event} who="mung" style={{ marginBottom: 12 }} />}
       <PrimaryAction onClick={onNext} style={{ marginTop: 4 }}>다음</PrimaryAction>
     </div>
   );
