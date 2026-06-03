@@ -39,13 +39,15 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
   const isMissionStep = card.kind === 'quiz' && !!card.promptPhrase;
   const speaker = isMissionStep ? card.sub : '';
   const scenario = 'scenario' in card ? card.scenario : undefined;
+  // 장면 진입 모션 키 — 같은 장면(미션) 안에서는 유지, 새 장면으로 바뀔 때만 재생.
+  const sceneKey = sv && 'reviewTarget' in card && card.reviewTarget ? `sc-${String(card.reviewTarget.id)}` : 'plain';
 
   const exit = () => { if (index === 0 || confirm('세션을 끝내고 홈으로 갈까요? (지금까지 푼 카드는 저장돼요)')) onExit(); };
 
   return (
     <main style={{ ...WRAP, minHeight: '100dvh', display: 'flex', flexDirection: 'column', padding: 0 }}>
       {/* ── 상단: 장면 헤더 (배경, 주인공 아님) ── */}
-      <div style={{
+      <div key={sceneKey} className="ym-scene-bg" style={{
         position: 'relative', overflow: 'hidden', paddingTop: 'max(16px, env(safe-area-inset-top))',
         background: sv ? `linear-gradient(165deg, ${hexA(accent, 0.18)}, ${hexA(accent, 0.34)})` : 'var(--surface-2)',
       }}>
@@ -74,7 +76,7 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
         flex: 1, minHeight: 0, overflowY: 'auto', marginTop: -20, borderRadius: '24px 24px 0 0', borderBottom: 'none',
         padding: '20px max(20px, env(safe-area-inset-left)) max(24px, calc(env(safe-area-inset-bottom) + 16px))',
       }}>
-        <div style={{ maxWidth: 540, margin: '0 auto' }}>
+        <div key={sceneKey} className="ym-sheet-up" style={{ maxWidth: 540, margin: '0 auto' }}>
           {card.kind === 'tip' ? (
             <>
               <h2 style={{ marginTop: 4, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="tip" size={22} /> {card.label}</h2>
