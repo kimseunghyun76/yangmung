@@ -119,9 +119,10 @@ export interface DictationCard {
 
 export type Card = QuizCard | TipCard | IntroduceCard | OrderCard | SpeakCard | DictationCard | DiscoverCard;
 
-// TTS는 자연 표기 우선 (문장부호 prosody)
+// 학습 카드 TTS는 화면에 보이는 가나와 맞춘다.
+// 한자를 먼저 읽으면 초보자에게 "표시와 음성이 다르다"는 체감이 생긴다.
 const ttsText = (p?: { kanji?: string; displayKana?: string; kana: string }) =>
-  p ? (p.kanji ?? p.displayKana ?? p.kana) : undefined;
+  p ? (p.displayKana ?? p.kana) : undefined;
 
 const phraseInfo = (p?: { id?: string; kana: string; kanji?: string; korean: string; tip?: string }): ChoicePhrase | undefined =>
   p ? { id: p.id, kana: p.kana, kanji: p.kanji, korean: p.korean, tip: p.tip } : undefined;

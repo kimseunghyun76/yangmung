@@ -224,7 +224,7 @@ function PhraseList({ phrases, phraseSeen }: { phrases: Phrase[]; phraseSeen: Se
                 <p style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>{p.kanji ?? p.displayKana ?? p.kana}</p>
                 <p style={{ margin: '3px 0 0', color: 'var(--ink-soft)', fontSize: 13 }}>{p.displayKana ?? p.kana} · {p.korean}</p>
               </div>
-              <button className="ym-press" onClick={() => speak(p.kanji ?? p.displayKana ?? p.kana)} disabled={!ttsSupported()}
+              <button className="ym-press" onClick={() => speak(p.displayKana ?? p.kana)} disabled={!ttsSupported()}
                 style={{ width: 44, height: 44, flex: '0 0 44px', borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--accent-soft)', color: 'var(--accent)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Icon name="listen" size={18} />
               </button>
