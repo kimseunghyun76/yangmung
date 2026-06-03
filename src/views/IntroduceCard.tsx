@@ -4,6 +4,7 @@ import { speak, ttsSupported } from '../tts';
 import { BTN, PRIMARY } from '../ui/styles';
 import { ReadingAid } from './ReadingAid';
 import { Icon } from '../ui/Icon';
+import { MascotLine } from './mascot';
 
 interface Props {
   card: IntroduceCard;
@@ -52,6 +53,7 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext }: Prop
         </p>
       )}
 
+      <MascotLine key={`${card.id}:intro`} copyKey="introducePhrase" style={{ marginTop: 14 }} />
       <button style={{ ...PRIMARY, width: '100%', marginTop: 14 }} onClick={next}>알겠어요</button>
     </div>
   );

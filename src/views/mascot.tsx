@@ -1,5 +1,6 @@
 // 마스코트 공용 — yang/mung 얼굴·말풍선 + 카피 뱅크 + 빈도 게이트.
 // 기준: MASCOT_DIRECTION.md (해요체 통일 / 이벤트성 등장 / 표시 레이어만, 로직 불변).
+import { useMemo } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 
 export type Who = 'yang' | 'mung' | 'duo';
@@ -75,4 +76,13 @@ export function mascotCopy(key: CopyKey, vars?: { place?: string }): string {
 export function mascotShows(event: CopyKey, cardIndex = 0): boolean {
   if (event === 'correct') return cardIndex % 3 === 0;
   return true;
+}
+
+// 카피 1줄을 마운트 시 1회만 뽑아 고정(리렌더로 문구가 바뀌지 않게). 카드별 remount는 key로.
+export function MascotLine({ copyKey, who, place, size = 36, style }: {
+  copyKey: CopyKey; who?: Who; place?: string; size?: number; style?: CSSProperties;
+}) {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const text = useMemo(() => mascotCopy(copyKey, place ? { place } : undefined), []);
+  return <MascotBubble who={who ?? mascotWho(copyKey)} size={size} style={style}>{text}</MascotBubble>;
 }
