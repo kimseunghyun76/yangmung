@@ -9,11 +9,11 @@ import {
 } from '../learn/progress';
 import { ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
-import { sessionGoalText } from './goal';
 import { sceneVisualByMission, sceneVisualByPlace } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
 import { SceneThumb } from './ui';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
+import { MascotBubble, type Who } from './mascot';
 
 interface Props {
   nav: NavBarProps;
@@ -44,7 +44,6 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
   const kata = kanaReadMastery(progress, kataIds);
   const kanaPct = Math.round(((hira.mastered + kata.mastered) / Math.max(1, hira.total + kata.total)) * 100);
   const s = summarize(progress);
-  const goal = sessionGoalText(plan.missions, plan.breakdown.K > 0);
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
 
   // 오늘의 장면 = goal과 동일 기준(튜토리얼 C0 제외한 첫 장면). 없으면 가나 위주의 날.
@@ -52,6 +51,10 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
   const heroMission = primary ? CONTENT.missions.find((m) => m.id === primary.id) : undefined;
   const heroSv = primary ? sceneVisualByMission(primary.id) : sceneVisualByPlace(undefined);
   const heroPlace = heroMission?.place ?? primary?.scenario;
+  const heroTitle = homeGoal(heroMission);
+  const heroChips = heroMission ? phraseChips(heroMission.id).slice(0, 3) : kanaChips(allCards);
+  const outcome = outcomeLine(heroMission, planned);
+  const coach = coachForHome(diagnosis, heroMission, plan.breakdown.B + plan.breakdown.C);
 
   return (
     <main style={WRAP}>
@@ -73,6 +76,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
           boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
         }}>
           <span style={{ width: 8, height: 8, borderRadius: 99, background: 'var(--accent)', boxShadow: '0 0 10px var(--accent)' }} />
+          <span style={{ color: 'var(--ink-faint)', fontWeight: 650 }}>학습 모드</span>
           {modeLabel}
         </div>
       </div>
@@ -82,15 +86,20 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
         <HomeSceneCard
           hero={primary ? (heroSv.backdrop ?? heroSv.hero) : undefined}
           accent={heroSv.accent}
-          kicker={primary ? `오늘의 장면 · ${heroPlace}` : '오늘 한 판'}
-          title={goal}
-          meta={`${modeLabel} · 가나 ${plan.breakdown.K} · 표현 ${plan.breakdown.B} · 미션 ${plan.breakdown.C} · 팁 ${plan.breakdown.tip}`}
+          kicker={primary ? `오늘의 여행 미션 · ${heroPlace}` : '오늘 한 판'}
+          title={heroTitle}
+          chips={heroChips}
           planned={planned}
           onStart={onStart}
         />
       </div>
+      {outcome && (
+        <p className="ym-rise" style={{ animationDelay: '.07s', fontSize: 13, color: 'var(--ink-soft)', margin: '10px 2px 0', textAlign: 'center', fontWeight: 700, lineHeight: 1.45 }}>
+          {outcome}
+        </p>
+      )}
       {planned > 0 && counts.due + counts.fresh > planned && (
-        <p style={{ fontSize: 12, color: 'var(--ink-faint)', marginTop: 10, textAlign: 'center', fontWeight: 600 }}>
+        <p style={{ fontSize: 12, color: 'var(--ink-faint)', marginTop: 6, textAlign: 'center', fontWeight: 600 }}>
           풀 수 있는 카드 {counts.due + counts.fresh}장 중 오늘은 {planned}장씩 짧게 진행해요.
         </p>
       )}
@@ -98,7 +107,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
       {/* 오늘의 코치 (적응형 진단) */}
       <div className="ym-rise" style={{ animationDelay: '.09s', marginTop: 14 }}>
         <GlassPanel>
-          <DiagnosisBody d={diagnosis} />
+          <HomeCoachBody d={diagnosis} who={coach.who} line={coach.line} />
         </GlassPanel>
       </div>
 
@@ -106,19 +115,24 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
       <div className="ym-rise" style={{ animationDelay: '.13s', marginTop: 14 }}>
         <GlassPanel>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <Ring pct={kanaPct} />
+            <Ring pct={kanaPct} size={58} />
             <div style={{ flex: 1 }}>
               <p style={{ margin: 0, ...label }}>가나 안정도</p>
               <KanaRow label="히라가나" m={hira} />
               <KanaRow label="가타카나" m={kata} />
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 14 }}>
-            <button className="ym-press" style={pill} onClick={() => onPracticeKana('hiragana')}>히라가나 연습</button>
-            <button className="ym-press" style={pill} onClick={() => onPracticeKana('katakana')}>가타카나 연습</button>
-            <button className="ym-press" style={pill} onClick={onPracticeSigns}>간판·메뉴 읽기</button>
-            <button className="ym-press" style={pill} onClick={onPracticeDictation}>받아쓰기</button>
-          </div>
+          <details style={{ marginTop: 12 }}>
+            <summary style={{ ...label, cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+              빠른 연습 <span style={{ color: 'var(--ink-faint)' }}>›</span>
+            </summary>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 12 }}>
+              <button className="ym-press" style={pill} onClick={() => onPracticeKana('hiragana')}>히라가나</button>
+              <button className="ym-press" style={pill} onClick={() => onPracticeKana('katakana')}>가타카나</button>
+              <button className="ym-press" style={pill} onClick={onPracticeSigns}>간판·메뉴</button>
+              <button className="ym-press" style={pill} onClick={onPracticeDictation}>받아쓰기</button>
+            </div>
+          </details>
         </GlassPanel>
       </div>
 
@@ -137,7 +151,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
                 <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', borderRadius: 16, border: '1px dashed var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink-faint)' }}>
                   <SceneThumb icon={sv.icon} accent={sv.accent} muted size={38} />
                   <span style={{ flex: 1, fontSize: 14, fontWeight: 600 }}>{name}</span>
-                  <span style={{ fontSize: 12, fontWeight: 600 }}>🔒 {lockHint(m.id)}</span>
+                  <span style={{ fontSize: 12, fontWeight: 600 }}>곧 열릴 여행지 · {lockHint(m.id)}</span>
                 </div>
               );
             }
@@ -171,18 +185,17 @@ const pill: React.CSSProperties = {
   textAlign: 'center', cursor: 'pointer',
 };
 
-function HomeSceneCard({ hero, accent, kicker, title, meta, planned, onStart }: {
+function HomeSceneCard({ hero, accent, kicker, title, chips, planned, onStart }: {
   hero?: string;
   accent: string;
   kicker: string;
   title: string;
-  meta: string;
+  chips: string[];
   planned: number;
   onStart: () => void;
 }) {
   const generatedBackdrop = hero?.includes('/generated/');
   const foreground = generatedBackdrop ? '#fff' : 'var(--ink)';
-  const muted = generatedBackdrop ? 'rgba(255,255,255,0.78)' : 'var(--ink-soft)';
   const kickerColor = generatedBackdrop ? 'rgba(255,255,255,0.86)' : accent;
   return (
     <section style={{
@@ -238,27 +251,41 @@ function HomeSceneCard({ hero, accent, kicker, title, meta, planned, onStart }: 
         position: 'absolute',
         right: 18,
         top: 18,
-        width: 78,
-        height: 78,
-        borderRadius: 24,
+        width: 96,
+        height: 96,
+        borderRadius: 28,
         border: `1px solid ${hexA(accent, 0.24)}`,
-        background: hexA(accent, 0.12),
+        background: generatedBackdrop ? 'rgba(255,255,255,0.1)' : hexA(accent, 0.12),
         boxShadow: `0 18px 46px ${hexA(accent, 0.16)}`,
       }} />
       <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', minHeight: 212 }}>
         <p style={{ ...label, color: kickerColor, margin: 0 }}>{kicker}</p>
         <h2 style={{
           margin: '10px 0 0',
-          maxWidth: 270,
+          maxWidth: 300,
           fontSize: 29,
           lineHeight: 1.12,
           letterSpacing: '-0.035em',
           color: foreground,
           textShadow: generatedBackdrop ? '0 2px 18px rgba(0,0,0,0.28)' : undefined,
         }}>{title}</h2>
-        <p style={{ margin: '10px 0 0', maxWidth: 310, fontSize: 13, color: muted, fontWeight: 650, lineHeight: 1.45 }}>
-          {meta}
-        </p>
+        {chips.length > 0 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 13, maxWidth: 320 }}>
+            {chips.map((chip) => (
+              <span key={chip} style={{
+                padding: '7px 10px',
+                borderRadius: 999,
+                border: generatedBackdrop ? '1px solid rgba(255,255,255,0.22)' : '1px solid var(--glass-border)',
+                background: generatedBackdrop ? 'rgba(255,255,255,0.16)' : 'var(--glass-bg-strong)',
+                color: generatedBackdrop ? '#fff' : 'var(--ink)',
+                fontSize: 13,
+                fontWeight: 750,
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+              }}>{chip}</span>
+            ))}
+          </div>
+        )}
         <div style={{ flex: 1 }} />
         <PrimaryAction onClick={onStart} disabled={planned === 0} style={{ marginTop: 18 }}>
           {planned === 0 ? '오늘 학습할 카드가 없어요' : `시작 · ${planned}장`}
@@ -268,17 +295,22 @@ function HomeSceneCard({ hero, accent, kicker, title, meta, planned, onStart }: 
   );
 }
 
-function DiagnosisBody({ d }: { d: Diagnosis }) {
+function HomeCoachBody({ d, who, line }: { d: Diagnosis; who: Who; line: string }) {
   const tone = d.level === 'struggling' ? 'var(--warn)' : d.level === 'cruising' ? 'var(--ok)' : 'var(--accent)';
   return (
     <>
-      <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 700 }}>
-        <img src="/mascots/yang-cat-face.webp" alt="" width={28} height={28} style={{ objectFit: 'contain', marginRight: 2 }} />
-        <span style={{ width: 9, height: 9, borderRadius: 99, background: tone, boxShadow: `0 0 8px ${tone}` }} />
-        오늘의 코치{d.level ? ` · ${LEVEL_LABEL[d.level]}` : ''}
-      </p>
-      <p style={{ margin: '12px 0 0', fontSize: 18, fontWeight: 750, letterSpacing: '-0.01em' }}>{d.focus}</p>
-      <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.5 }}>{d.message}</p>
+      <MascotBubble who={who} size={38} style={{ animationDelay: '0s' }}>
+        <strong style={{ display: 'block', fontSize: 14, marginBottom: 3 }}>오늘의 코치</strong>
+        <span>{line}</span>
+      </MascotBubble>
+      <div style={{ marginTop: 12, paddingTop: 11, borderTop: '1px solid var(--glass-border)' }}>
+        <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, fontWeight: 700, color: 'var(--ink-faint)' }}>
+          <span style={{ width: 8, height: 8, borderRadius: 99, background: tone, boxShadow: `0 0 8px ${tone}` }} />
+          학습 상태{d.level ? ` · ${LEVEL_LABEL[d.level]}` : ''}
+        </p>
+        <p style={{ margin: '7px 0 0', fontSize: 15, fontWeight: 750, letterSpacing: '-0.01em' }}>{d.focus}</p>
+        <p style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--ink-soft)', lineHeight: 1.5 }}>{d.message}</p>
+      </div>
       {d.level !== null && d.recentAccuracy !== null && (
         <p style={{ margin: '8px 0 0', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>직전 세션 정답률 {Math.round(d.recentAccuracy * 100)}%</p>
       )}
@@ -297,14 +329,15 @@ function DiagnosisBody({ d }: { d: Diagnosis }) {
   );
 }
 
-function Ring({ pct }: { pct: number }) {
-  const r = 26, c = 2 * Math.PI * r, off = c * (1 - pct / 100);
+function Ring({ pct, size = 68 }: { pct: number; size?: number }) {
+  const r = size / 2 - 8, c = 2 * Math.PI * r, off = c * (1 - pct / 100);
+  const center = size / 2;
   return (
-    <svg width="68" height="68" viewBox="0 0 68 68" style={{ flex: '0 0 68px' }}>
-      <circle cx="34" cy="34" r={r} fill="none" stroke="var(--glass-border)" strokeWidth="6" />
-      <circle cx="34" cy="34" r={r} fill="none" stroke="var(--accent)" strokeWidth="6" strokeLinecap="round"
-        strokeDasharray={c} strokeDashoffset={off} transform="rotate(-90 34 34)" style={{ transition: 'stroke-dashoffset 0.6s cubic-bezier(.2,.8,.2,1)' }} />
-      <text x="34" y="38" textAnchor="middle" fontSize="16" fontWeight="750" fill="var(--ink)">{pct}%</text>
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ flex: `0 0 ${size}px` }}>
+      <circle cx={center} cy={center} r={r} fill="none" stroke="var(--glass-border)" strokeWidth="6" />
+      <circle cx={center} cy={center} r={r} fill="none" stroke="var(--accent)" strokeWidth="6" strokeLinecap="round"
+        strokeDasharray={c} strokeDashoffset={off} transform={`rotate(-90 ${center} ${center})`} style={{ transition: 'stroke-dashoffset 0.6s cubic-bezier(.2,.8,.2,1)' }} />
+      <text x={center} y={center + 5} textAnchor="middle" fontSize="14" fontWeight="750" fill="var(--ink)">{pct}%</text>
     </svg>
   );
 }
@@ -321,7 +354,76 @@ function KanaRow({ label: lbl, m }: { label: string; m: { mastered: number; tota
 }
 
 function lockHint(missionId: string): string {
-  if (missionId === 'C3') return '편의점·식당 더 익히기';
-  if (missionId === 'C4') return '전철 더 익히기';
-  return '조금 더 익히기';
+  if (missionId === 'C3') return '전철';
+  if (missionId === 'C4') return '호텔';
+  return '다음 장면';
+}
+
+function homeGoal(mission?: { id: string; place?: string; scenario: string; canDo: string }): string {
+  if (!mission) return '가나를 눈에 익히는 짧은 한 판';
+  const goals: Record<string, string> = {
+    C1: '편의점 계산대에서 당황하지 않기',
+    C2: '식당에서 자연스럽게 주문하기',
+    C3: '전철 이동 중 필요한 말 알아듣기',
+    C4: '호텔 프런트에서 체크인하기',
+    C5: '길거리에서 도움 청하기',
+    C6: '약국에서 증상 말하고 약 사기',
+    C7: '쇼핑하고 면세까지 묻기',
+    C8: '택시에서 목적지 말하기',
+    C9: '공항 입국심사 통과하기',
+    C10: '환전소에서 엔화 바꾸기',
+    C11: '코인로커에 짐 맡기기',
+    C12: '편의점에서 택배 부치기',
+    C13: '라멘집 식권기로 주문하기',
+  };
+  return goals[mission.id] ?? `${mission.place ?? mission.scenario}에서 필요한 말 익히기`;
+}
+
+function phraseById(id?: string) {
+  return id ? CONTENT.phrases.find((p) => p.id === id) : undefined;
+}
+
+function phraseChips(missionId: string): string[] {
+  const mission = CONTENT.missions.find((m) => m.id === missionId);
+  if (!mission) return [];
+  const ids: string[] = [];
+  for (const step of mission.steps) {
+    if (step.promptPhraseId) ids.push(step.promptPhraseId);
+    for (const c of step.choices) if (c.phraseId) ids.push(c.phraseId);
+  }
+  ids.push(...(mission.speakPhraseIds ?? []));
+  return [...new Set(ids)]
+    .map((id) => phraseById(id))
+    .filter((p): p is NonNullable<ReturnType<typeof phraseById>> => !!p)
+    .map((p) => p.kanji ?? p.displayKana ?? p.kana)
+    .slice(0, 3);
+}
+
+function kanaChips(cards: Card[]): string[] {
+  const out: string[] = [];
+  for (const c of cards) {
+    if (c.kind !== 'quiz' || c.reviewTarget?.type !== 'kana') continue;
+    out.push(c.bannerJa ?? c.banner);
+    if (out.length >= 3) break;
+  }
+  return out;
+}
+
+function outcomeLine(mission: ReturnType<typeof CONTENT.missions.find>, planned: number): string {
+  if (!mission || planned === 0) return '';
+  const prompt = phraseById(mission.steps.find((s) => s.promptPhraseId)?.promptPhraseId);
+  if (!prompt) return `오늘 ${planned}장이면 ${mission.place ?? mission.scenario} 장면을 짧게 해볼 수 있어요.`;
+  const ko = prompt.korean.replace(/[.。]+$/g, '');
+  return `오늘 ${planned}장이면 「${ko}」에 답할 수 있어요.`;
+}
+
+function coachForHome(d: Diagnosis, mission: ReturnType<typeof CONTENT.missions.find>, sceneWeight: number): { who: Who; line: string } {
+  if (d.level === 'struggling') {
+    return { who: 'mung', line: '막히면 「もう一度お願いします」만 기억해도 대화는 이어져요.' };
+  }
+  if (sceneWeight >= 4 && mission) {
+    const p = phraseById(mission.steps.find((s) => s.promptPhraseId)?.promptPhraseId);
+    if (p) return { who: 'yang', line: `오늘은 「${p.kanji ?? p.displayKana ?? p.kana}」를 먼저 귀에 익혀요.` };
+  }
+  return { who: 'mung', line: '짧게 한 판만 해도 다음 장면이 훨씬 덜 낯설어요.' };
 }
