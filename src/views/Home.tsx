@@ -1,11 +1,11 @@
-// 홈 — Immersive Scene Coach. 오늘의 장면 히어로 + 강한 CTA + 글래스 패널 + 접힌 다른 장면.
+// 홈 — Immersive Scene Coach. 오늘의 루트 + 장면 히어로 + 가나/여행 루트 진입.
 import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
 import type { Diagnosis } from '../learn/adaptive';
 import { LEVEL_LABEL } from '../learn/adaptive';
 import {
   isMissionUnlocked, kanaReadMastery, missionProgress, nextSessionId, planSession,
-  sessionCounts, summarize, type ProgressMap, type SessionConfig, type SessionState,
+  type ProgressMap, type SessionConfig, type SessionState,
 } from '../learn/progress';
 import { ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
@@ -24,7 +24,6 @@ interface Props {
   diagnosis: Diagnosis;
   modeLabel: string;
   onStart: () => void;
-  onReset: () => void;
   onPracticeScene: (missionId: string) => void;
   onPracticeKana: (script: 'hiragana' | 'katakana') => void;
   onPracticeSigns: () => void;
@@ -33,9 +32,8 @@ interface Props {
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' };
 
-export function Home({ nav, allCards, progress, session, sessionConfig, diagnosis, modeLabel, onStart, onReset, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation }: Props) {
   const upcomingId = nextSessionId(session);
-  const counts = sessionCounts(allCards, progress, upcomingId);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
   const planned = plan.size;
   const hiraIds = CONTENT.kana.filter((k) => k.script === 'hiragana').map((k) => k.id);
@@ -43,8 +41,8 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
   const hira = kanaReadMastery(progress, hiraIds);
   const kata = kanaReadMastery(progress, kataIds);
   const kanaPct = Math.round(((hira.mastered + kata.mastered) / Math.max(1, hira.total + kata.total)) * 100);
-  const s = summarize(progress);
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
+  const routeScenes = scenes.filter((m) => isMissionUnlocked(m.id, progress)).slice(0, 3);
 
   // 오늘의 장면 = goal과 동일 기준(튜토리얼 C0 제외한 첫 장면). 없으면 가나 위주의 날.
   const primary = plan.missions.find((m) => m.id !== 'C0') ?? plan.missions[0];
@@ -60,8 +58,25 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
     <main style={WRAP}>
       <NavBar {...nav} />
 
-      <div className="ym-rise" style={{ margin: '0 0 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-        <img src="/mascots/yangmung-duo-logo.webp" alt="yangmung" width={70} height={70} style={{ objectFit: 'contain', filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.16))' }} />
+      <div className="ym-rise" style={{
+        margin: '0 0 14px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 12,
+        padding: '10px 12px',
+        border: '1px solid var(--glass-border)',
+        borderRadius: 24,
+        background: 'var(--glass-bg)',
+        boxShadow: '0 10px 34px rgba(0,0,0,0.05)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
+          <img src="/mascots/yangmung-duo-logo.webp" alt="yangmung" width={56} height={56} style={{ objectFit: 'contain', filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.14))' }} />
+          <div>
+            <p style={{ margin: 0, fontSize: 12, color: 'var(--ink-faint)', fontWeight: 750 }}>오늘의 루트</p>
+            <p style={{ margin: '3px 0 0', fontSize: 18, color: 'var(--ink)', fontWeight: 850, letterSpacing: '-0.025em' }}>{heroPlace ?? '가나 입문'}</p>
+          </div>
+        </div>
         <div style={{
           display: 'inline-flex',
           alignItems: 'center',
@@ -73,10 +88,8 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
           color: 'var(--ink)',
           fontSize: 13,
           fontWeight: 750,
-          boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
         }}>
           <span style={{ width: 8, height: 8, borderRadius: 99, background: 'var(--accent)', boxShadow: '0 0 10px var(--accent)' }} />
-          <span style={{ color: 'var(--ink-faint)', fontWeight: 650 }}>학습 모드</span>
           {modeLabel}
         </div>
       </div>
@@ -96,11 +109,6 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
       {outcome && (
         <p className="ym-rise" style={{ animationDelay: '.07s', fontSize: 13, color: 'var(--ink-soft)', margin: '10px 2px 0', textAlign: 'center', fontWeight: 700, lineHeight: 1.45 }}>
           {outcome}
-        </p>
-      )}
-      {planned > 0 && counts.due + counts.fresh > planned && (
-        <p style={{ fontSize: 12, color: 'var(--ink-faint)', marginTop: 6, textAlign: 'center', fontWeight: 600 }}>
-          풀 수 있는 카드 {counts.due + counts.fresh}장 중 오늘은 {planned}장씩 짧게 진행해요.
         </p>
       )}
 
@@ -136,44 +144,49 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
         </GlassPanel>
       </div>
 
-      {/* 다른 장면 연습 — 접힘 (기본은 오늘의 장면에 집중) */}
-      <details className="ym-rise" style={{ animationDelay: '.17s', marginTop: 18 }}>
-        <summary style={{ ...label, cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'center', gap: 6, padding: '4px 2px' }}>
-          다른 장면 연습 <span style={{ color: 'var(--ink-faint)' }}>›</span>
-        </summary>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 12 }}>
-          {scenes.map((m) => {
-            const unlocked = isMissionUnlocked(m.id, progress);
-            const sv = sceneVisualByPlace(m.place);
-            const name = m.place ?? m.scenario;
-            if (!unlocked) {
+      <div className="ym-rise" style={{ animationDelay: '.17s', marginTop: 14 }}>
+        <GlassPanel>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+            <div>
+              <p style={{ margin: 0, ...label }}>여행 루트</p>
+              <p style={{ margin: '5px 0 0', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 650 }}>열린 장면만 바로 연습할 수 있어요.</p>
+            </div>
+            <button className="ym-press" onClick={() => nav.onNavigate('map')} style={{
+              border: '1px solid var(--glass-border)',
+              background: 'var(--glass-bg-strong)',
+              color: 'var(--ink)',
+              borderRadius: 999,
+              padding: '9px 12px',
+              fontSize: 13,
+              fontWeight: 800,
+              cursor: 'pointer',
+            }}>지도 보기</button>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8, marginTop: 13 }}>
+            {routeScenes.map((m) => {
+              const sv = sceneVisualByPlace(m.place);
+              const p = missionProgress(allCards, progress, m.id);
+              const done = p.total > 0 && p.mastered === p.total;
               return (
-                <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', borderRadius: 16, border: '1px dashed var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink-faint)' }}>
-                  <SceneThumb icon={sv.icon} accent={sv.accent} muted size={38} />
-                  <span style={{ flex: 1, fontSize: 14, fontWeight: 600 }}>{name}</span>
-                  <span style={{ fontSize: 12, fontWeight: 600 }}>곧 열릴 여행지 · {lockHint(m.id)}</span>
-                </div>
+                <button key={m.id} className="ym-press" onClick={() => onPracticeScene(m.id)} style={{
+                  minWidth: 0,
+                  border: '1px solid var(--glass-border)',
+                  background: 'var(--glass-bg-strong)',
+                  color: 'var(--ink)',
+                  borderRadius: 16,
+                  padding: '11px 8px',
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                }}>
+                  <SceneThumb icon={sv.icon} accent={sv.accent} size={34} />
+                  <span style={{ display: 'block', marginTop: 7, fontSize: 13, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.place ?? m.scenario}</span>
+                  <span style={{ display: 'block', marginTop: 3, fontSize: 11, color: done ? 'var(--ok)' : 'var(--ink-faint)', fontWeight: 750 }}>{done ? '완료' : `${p.mastered}/${p.total}`}</span>
+                </button>
               );
-            }
-            const p = missionProgress(allCards, progress, m.id);
-            const done = p.total > 0 && p.mastered === p.total;
-            return (
-              <button key={m.id} className="ym-glass ym-press" onClick={() => onPracticeScene(m.id)}
-                style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', cursor: 'pointer', textAlign: 'left', color: 'var(--ink)', borderRadius: 16 }}>
-                <SceneThumb icon={sv.icon} accent={sv.accent} size={38} />
-                <span style={{ flex: 1, fontSize: 15, fontWeight: 700 }}>{name}</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: done ? 'var(--ok)' : 'var(--ink-faint)', fontVariantNumeric: 'tabular-nums' }}>{done ? '완료' : `${p.mastered}/${p.total}`}</span>
-                <span style={{ fontSize: 16, color: 'var(--ink-faint)' }}>›</span>
-              </button>
-            );
-          })}
-        </div>
-      </details>
-
-      {s.seen > 0 && (
-        <button style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'var(--ink-faint)', fontSize: 13, fontWeight: 600, marginTop: 22, width: '100%', textAlign: 'center' }}
-          onClick={() => { if (confirm('진척을 모두 지울까요?')) onReset(); }}>처음부터 다시</button>
-      )}
+            })}
+          </div>
+        </GlassPanel>
+      </div>
       {!ttsSupported() && <p style={{ color: 'var(--warn)', fontSize: 13, marginTop: 16, fontWeight: 600 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
     </main>
   );
@@ -351,12 +364,6 @@ function KanaRow({ label: lbl, m }: { label: string; m: { mastered: number; tota
       </span>
     </div>
   );
-}
-
-function lockHint(missionId: string): string {
-  if (missionId === 'C3') return '전철';
-  if (missionId === 'C4') return '호텔';
-  return '다음 장면';
 }
 
 function homeGoal(mission?: { id: string; place?: string; scenario: string; canDo: string }): string {

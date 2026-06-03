@@ -9,6 +9,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "assets:generate": "node scripts/generate-scene-assets.mjs",
+    "audio": "tsx scripts/generate-audio.mjs",
+    "audio:dry": "tsx scripts/generate-audio.mjs --dry",
     "typecheck": "tsc --noEmit",
     "lint:content": "tsx src/content/validate.ts",
     "test:content": "tsx src/content/validate.test.ts",
