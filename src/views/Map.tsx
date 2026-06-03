@@ -9,6 +9,7 @@ import { sceneVisualByPlace, type SceneVisual } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
 import { PageHead, SceneImageThumb } from './ui';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
+import { DeckButton } from './Gacha';
 
 const RECOVERY = [
   { ja: 'もう一度お願いします', ko: '다시 말해 주세요' },
@@ -55,6 +56,10 @@ export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props)
     <main style={WRAP}>
       <NavBar {...nav} />
       <PageHead title="학습 지도" sub="공항에서 출발해 장면을 하나씩 열어가요" />
+
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14, marginTop: -8 }}>
+        <DeckButton />
+      </div>
 
       <GlassPanel style={{ marginBottom: 18 }}>
         <p style={{ ...kicker, marginBottom: 10 }}>가나 · 읽기 기준</p>
