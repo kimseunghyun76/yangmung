@@ -1,5 +1,5 @@
 // 공용 화면 프리미티브 — 모든 페이지가 같은 볼드 모던 언어를 쓰도록 한곳에서.
-import type { CSSProperties, ReactNode } from 'react';
+import { useState, type CSSProperties, type ReactNode } from 'react';
 import { RADIUS, SHADOW } from '../ui/styles';
 import { Icon, type IconName } from '../ui/Icon';
 
@@ -13,6 +13,50 @@ export function SceneThumb({ icon, accent, size = 48, muted = false }: { icon: I
       color: muted ? 'var(--ink-faint)' : accent, opacity: muted ? 0.7 : 1,
     }}>
       <Icon name={icon} size={Math.round(size * 0.56)} />
+    </span>
+  );
+}
+
+// 장면 이미지 썸네일 — 생성 배경이 있으면 사진을 쓰고, 실패하면 기존 모노 아이콘으로 안전하게 폴백.
+export function SceneImageThumb({ src, icon, accent, size = 64, muted = false, style }: {
+  src?: string;
+  icon: IconName;
+  accent: string;
+  size?: number;
+  muted?: boolean;
+  style?: CSSProperties;
+}) {
+  const [failed, setFailed] = useState(false);
+  if (!src || failed) return <SceneThumb icon={icon} accent={accent} size={size} muted={muted} />;
+  return (
+    <span style={{
+      position: 'relative',
+      overflow: 'hidden',
+      width: size,
+      height: size,
+      flex: `0 0 ${size}px`,
+      borderRadius: Math.max(14, Math.round(size * 0.24)),
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      border: '1px solid var(--glass-border)',
+      background: `linear-gradient(135deg, ${accent}22, var(--glass-bg-strong))`,
+      opacity: muted ? 0.62 : 1,
+      boxShadow: muted ? undefined : `0 14px 34px ${accent}20`,
+      ...style,
+    }}>
+      <img
+        src={src}
+        alt=""
+        aria-hidden
+        loading="lazy"
+        onError={() => setFailed(true)}
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'saturate(0.96) contrast(1.04)' }}
+      />
+      <span aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.34))' }} />
+      <span style={{ position: 'relative', color: '#fff', filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.42))', display: 'inline-flex' }}>
+        <Icon name={icon} size={Math.round(size * 0.38)} />
+      </span>
     </span>
   );
 }

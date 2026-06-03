@@ -11,7 +11,7 @@ import { ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { sceneVisualByMission, sceneVisualByPlace } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
-import { SceneThumb } from './ui';
+import { SceneImageThumb } from './ui';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
 import { MascotBubble, type Who } from './mascot';
 
@@ -178,7 +178,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
                   cursor: 'pointer',
                   textAlign: 'center',
                 }}>
-                  <SceneThumb icon={sv.icon} accent={sv.accent} size={34} />
+                  <SceneImageThumb src={sv.backdrop ?? sv.thumb} icon={sv.icon} accent={sv.accent} size={42} />
                   <span style={{ display: 'block', marginTop: 7, fontSize: 13, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.place ?? m.scenario}</span>
                   <span style={{ display: 'block', marginTop: 3, fontSize: 11, color: done ? 'var(--ok)' : 'var(--ink-faint)', fontWeight: 750 }}>{done ? '완료' : `${p.mastered}/${p.total}`}</span>
                 </button>

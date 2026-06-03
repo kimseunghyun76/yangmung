@@ -9,7 +9,7 @@ import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
 import { NavBar, type NavBarProps } from './NavBar';
-import { PageHead } from './ui';
+import { PageHead, SceneImageThumb } from './ui';
 import { GlassPanel, hexA } from './shell';
 import { sceneVisualByPlace } from './scene';
 import { phraseIdsByPlace } from './scene';
@@ -134,7 +134,18 @@ function SceneSheets({ places, byId, phraseSeen }: { places: { place: string; ph
         })}
       </div>
       <GlassPanel>
-        <p style={{ ...kicker, marginBottom: 10 }}>{sel}에서 쓰는 표현</p>
+        {(() => {
+          const sv = sceneVisualByPlace(sel);
+          return (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+              <SceneImageThumb src={sv.backdrop ?? sv.thumb} icon={sv.icon} accent={sv.accent} size={58} />
+              <div>
+                <p style={{ ...kicker, marginBottom: 4 }}>{sel}에서 쓰는 표현</p>
+                <p style={{ margin: 0, fontSize: 13, color: 'var(--ink-soft)', fontWeight: 650 }}>장면을 떠올리면서 다시 들어보세요.</p>
+              </div>
+            </div>
+          );
+        })()}
         <PhraseList phrases={(cur?.phraseIds ?? []).map((id) => byId[id]).filter(Boolean)} phraseSeen={phraseSeen} />
       </GlassPanel>
     </>
