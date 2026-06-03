@@ -6,6 +6,7 @@ import { Icon } from '../ui/Icon';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
 import { sceneVisualByMission } from './scene';
 import { MascotLine } from './mascot';
+import { GachaBox } from './Gacha';
 
 interface Props {
   sessionId: number;
@@ -67,6 +68,9 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
           <Icon name="recovery" size={16} /> 복구 {recoveryUsed}회 — 막혀도 끝까지 이어갔어요
         </p>
       )}
+
+      {/* 가챠 보석함 — 장면 카드 적립 (학습 로직과 분리) */}
+      <GachaBox sessionId={sessionId} sceneIds={clearedSceneIds} />
 
       {/* 다음 장면 예고 */}
       {nextSceneId && (
