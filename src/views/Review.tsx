@@ -13,6 +13,7 @@ import { PageHead, SceneImageThumb } from './ui';
 import { GlassPanel, hexA } from './shell';
 import { sceneVisualByPlace } from './scene';
 import { phraseIdsByPlace } from './scene';
+import { MascotEmpty } from './mascot';
 
 interface Props {
   nav: NavBarProps;
@@ -238,7 +239,7 @@ function PhraseList({ phrases, phraseSeen }: { phrases: Phrase[]; phraseSeen: Se
 }
 
 function Empty({ children }: { children: React.ReactNode }) {
-  return <p style={{ color: 'var(--ink-faint)', fontSize: 14, margin: 0, textAlign: 'center', padding: '12px 0' }}>{children}</p>;
+  return <MascotEmpty who="yang" title="아직 채울 공간이에요">{children}</MascotEmpty>;
 }
 
 function groupBy<T>(items: T[], key: (item: T) => string): Record<string, T[]> {

@@ -13,7 +13,7 @@ import { sceneVisualByMission, sceneVisualByPlace } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
 import { SceneImageThumb } from './ui';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
-import { MascotBubble, type Who } from './mascot';
+import { MascotBubble, MascotEmpty, type Who } from './mascot';
 
 interface Props {
   nav: NavBarProps;
@@ -303,6 +303,11 @@ function HomeSceneCard({ hero, accent, kicker, title, chips, planned, onStart }:
         <PrimaryAction onClick={onStart} disabled={planned === 0} style={{ marginTop: 18 }}>
           {planned === 0 ? '오늘 학습할 카드가 없어요' : `시작 · ${planned}장`}
         </PrimaryAction>
+        {planned === 0 && (
+          <MascotEmpty who="duo" size={48} title="오늘은 복습장으로 가볼까요?" style={{ padding: '12px 0 0' }}>
+            지도나 복습장에서 다시 듣고 익숙한 표현을 확인할 수 있어요.
+          </MascotEmpty>
+        )}
       </div>
     </section>
   );

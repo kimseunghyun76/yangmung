@@ -23,6 +23,7 @@ import { Map } from './views/Map';
 import { Review } from './views/Review';
 import { Guide } from './views/Guide';
 import { SettingsModal } from './views/SettingsModal';
+import { MascotEmpty } from './views/mascot';
 
 type View = 'home' | 'map' | 'review' | 'intro' | 'session' | 'done';
 
@@ -336,7 +337,7 @@ export function App() {
       );
     }
     if (view === 'session') {
-      if (!card) return <main style={WRAP}><p>로딩…</p></main>;
+      if (!card) return <main style={WRAP}><MascotEmpty who="mung" title="장면을 준비하고 있어요">잠시만 기다려 주세요.</MascotEmpty></main>;
       return (
         <Session
           card={card}

@@ -40,6 +40,33 @@ export function MascotBubble({ who, children, size = 40, tone = 'glass', style }
   );
 }
 
+// 빈 상태·로딩용. 학습 흐름을 방해하지 않게 얼굴 중심으로 작게만 노출.
+export function MascotEmpty({ who = 'yang', title, children, size = 58, style }: {
+  who?: Who;
+  title?: ReactNode;
+  children: ReactNode;
+  size?: number;
+  style?: CSSProperties;
+}) {
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      padding: '18px 12px',
+      textAlign: 'center',
+      color: 'var(--ink-soft)',
+      ...style,
+    }}>
+      <MascotFace who={who} size={size} style={{ filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.14))' }} />
+      {title && <strong style={{ color: 'var(--ink)', fontSize: 15, lineHeight: 1.35 }}>{title}</strong>}
+      <p style={{ color: 'var(--ink-faint)', fontSize: 13, lineHeight: 1.5, margin: 0, maxWidth: 260 }}>{children}</p>
+    </div>
+  );
+}
+
 // ── 카피 뱅크 (해요체·성인 톤·1줄·이모지 0~1) ──────────────
 export type CopyKey = 'introYang' | 'correct' | 'wrong' | 'recovery' | 'tip' | 'introducePhrase' | 'doneDuo' | 'empty';
 
