@@ -7,6 +7,7 @@ import { GlassPanel, PrimaryAction, hexA } from './shell';
 import { sceneVisualByMission } from './scene';
 import { MascotLine } from './mascot';
 import { GachaBox } from './Gacha';
+import { boxGrade } from '../learn/collection';
 
 interface Props {
   sessionId: number;
@@ -69,8 +70,8 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
         </p>
       )}
 
-      {/* 가챠 보석함 — 장면 카드 적립 (학습 로직과 분리) */}
-      <GachaBox sessionId={sessionId} sceneIds={clearedSceneIds} />
+      {/* 가챠 보석함 — 성과 등급별 조각 적립 (학습 로직과 분리) */}
+      <GachaBox sessionId={sessionId} sceneIds={clearedSceneIds} grade={boxGrade(stars, recoveryUsed)} />
 
       {/* 다음 장면 예고 */}
       {nextSceneId && (
