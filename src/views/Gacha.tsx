@@ -1,6 +1,7 @@
 // 가챠 덱 G1 — 완료 후 보석함 개봉 + 도감. 자체 localStorage(학습 로직 영향 0).
 // 단계 외형은 CSS(단계 색 링/리본), 장면 식별은 기존 모노 아이콘. (에셋 생기면 프레임으로 교체)
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { CONTENT } from '../content';
 import { claim, loadCollection, saveCollection, tierMeta, tierNeed, MAX_TIER, ownedCount, diamondCount, BOX, type BoxGrade, type Collection, type DropResult } from '../learn/collection';
 import { Icon } from '../ui/Icon';
@@ -15,16 +16,22 @@ function DeckCardFace({ sceneId, tier, size = 56 }: { sceneId: string; tier: num
   const sv = sceneVisualByMission(sceneId);
   const meta = tierMeta(tier);
   const diamond = tier >= MAX_TIER;
+  const shine = diamond
+    ? 'linear-gradient(135deg, rgba(255,255,255,0.9), rgba(91,199,224,0.32), rgba(226,101,90,0.2), rgba(255,255,255,0.68))'
+    : `linear-gradient(145deg, rgba(255,255,255,0.52), ${meta.color}28 46%, rgba(0,0,0,0.1))`;
   return (
     <span style={{
-      width: size, height: size, flex: `0 0 ${size}px`, borderRadius: 16,
+      width: size, height: size, flex: `0 0 ${size}px`, borderRadius: Math.round(size * 0.27),
+      position: 'relative', overflow: 'hidden',
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
       color: sv.accent,
-      background: `radial-gradient(circle at 50% 38%, ${meta.color}22, transparent 70%)`,
-      border: `2.5px solid ${meta.color}`,
-      boxShadow: diamond ? `0 0 14px ${meta.color}aa` : `0 4px 14px ${meta.color}33`,
+      background: shine,
+      border: `${Math.max(2, Math.round(size * 0.045))}px solid ${meta.color}`,
+      boxShadow: diamond ? `0 0 20px ${meta.color}aa, inset 0 1px 0 rgba(255,255,255,0.8)` : `0 8px 18px ${meta.color}33, inset 0 1px 0 rgba(255,255,255,0.62)`,
     }}>
-      <Icon name={sv.icon} size={Math.round(size * 0.5)} />
+      <span aria-hidden style={{ position: 'absolute', inset: '13%', borderRadius: Math.round(size * 0.18), background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)' }} />
+      <span aria-hidden style={{ position: 'absolute', top: '-35%', left: '-60%', width: '55%', height: '160%', transform: 'rotate(28deg)', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.56), transparent)' }} />
+      <Icon name={sv.icon} size={Math.round(size * 0.48)} style={{ position: 'relative', filter: diamond ? `drop-shadow(0 0 8px ${meta.color})` : undefined }} />
     </span>
   );
 }
@@ -34,13 +41,43 @@ function TierRibbon({ tier }: { tier: number }) {
   return <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.06em', color: meta.color, border: `1.5px solid ${meta.color}`, borderRadius: 6, padding: '1px 6px' }}>{meta.label}</span>;
 }
 
+// 등급 박스 비주얼 — 이미지 있으면 사용, 없으면 이모지+그라데이션 폴백.
+function BoxArt({ grade, size = 64, className }: { grade: BoxGrade; size?: number; className?: string }) {
+  const [failed, setFailed] = useState(false);
+  const box = BOX[grade];
+  if (failed) {
+    return <span className={className} style={{ width: size, height: size, borderRadius: Math.round(size * 0.28), display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: Math.round(size * 0.5), background: `linear-gradient(160deg, ${box.colors[0]}, ${box.colors[1]})`, boxShadow: `0 10px 26px ${box.colors[0]}66` }}>🎁</span>;
+  }
+  return <img className={className} src={`/gacha/box/${grade}.webp`} alt="" aria-hidden width={size} height={size} onError={() => setFailed(true)} style={{ objectFit: 'contain', filter: `drop-shadow(0 14px 24px ${box.colors[0]}66)` }} />;
+}
+
+function RevealCards({ results, shards, animate }: { results: DropResult[]; shards: number; animate?: boolean }) {
+  return (
+    <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+      {results.map((r, i) => (
+        <div key={r.sceneId} className={animate ? 'ym-card-in' : undefined} style={{ animationDelay: animate ? `${0.7 + i * 0.12}s` : undefined, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, minWidth: 86, position: 'relative', zIndex: 2 }}>
+          <DeckCardFace sceneId={r.sceneId} tier={r.tier} size={animate ? 72 : 58} />
+          <span style={{ fontSize: 13, fontWeight: 800 }}>{placeOf(r.sceneId)}</span>
+          <TierRibbon tier={r.tier} />
+          <span style={{ fontSize: 11, fontWeight: 800, color: r.leveledTo ? 'var(--ok)' : r.isNew ? 'var(--accent)' : 'var(--ink-faint)' }}>
+            {r.leveledTo ? `${tierMeta(r.leveledTo).label} 승급!` : r.isNew ? 'NEW' : `조각 +${shards}`}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const reduceMotion = () => typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
 // ── 보석함 (완료 화면) ──────────────────────────────
 export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: number; sceneIds: string[]; grade?: BoxGrade }) {
-  const [opened, setOpened] = useState(false);
+  const [phase, setPhase] = useState<'closed' | 'opening' | 'revealed'>('closed');
   const [results, setResults] = useState<DropResult[]>([]);
   const [deck, setDeck] = useState(false);
   if (sceneIds.length === 0) return null;
   const box = BOX[grade];
+  const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 800, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase', margin: '0 0 12px', textAlign: 'center' };
 
   function open() {
     const res = claim(loadCollection(), sessionId, sceneIds, box.shards);
@@ -51,34 +88,27 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
       r = sceneIds.map((id) => ({ sceneId: id, isNew: false, leveledTo: null, tier: c.cards[id]?.tier ?? 1, shards: c.cards[id]?.shards ?? 0 }));
     }
     setResults(r);
-    setOpened(true);
+    setPhase(reduceMotion() ? 'revealed' : 'opening');
   }
 
   return (
     <div className="ym-rise" style={{ marginTop: 22 }}>
-      <p style={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase', margin: '0 0 12px', textAlign: 'center' }}>오늘의 보석함</p>
+      <p style={labelStyle}>오늘의 보석함</p>
 
-      {!opened ? (
+      {phase === 'closed' && (
         <button className="ym-press" onClick={open}
-          style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: '20px', borderRadius: 20, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', cursor: 'pointer', color: 'var(--ink)' }}>
-          <span className="ym-listening" style={{ width: 64, height: 64, borderRadius: 18, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, background: `linear-gradient(160deg, ${box.colors[0]}, ${box.colors[1]})`, boxShadow: `0 10px 26px ${box.colors[0]}66` }}>🎁</span>
+          style={{ width: '100%', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: '18px 20px 20px', borderRadius: 22, border: '1px solid var(--glass-border)', background: `radial-gradient(circle at 50% 26%, ${box.colors[1]}2e, transparent 42%), var(--glass-bg-strong)`, cursor: 'pointer', color: 'var(--ink)' }}>
+          <GachaGlow color={box.colors[1]} />
+          <BoxArt grade={grade} size={112} className="ym-listening" />
           <span style={{ fontWeight: 800, fontSize: 16 }}>{box.label} 열기</span>
           <span style={{ fontSize: 12, color: 'var(--ink-faint)', fontWeight: 700 }}>장면당 조각 +{box.shards}</span>
         </button>
-      ) : (
-        <div className="ym-burst" style={{ padding: 18, borderRadius: 20, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)' }}>
-          <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
-            {results.map((r) => (
-              <div key={r.sceneId} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, minWidth: 86 }}>
-                <DeckCardFace sceneId={r.sceneId} tier={r.tier} />
-                <span style={{ fontSize: 13, fontWeight: 800 }}>{placeOf(r.sceneId)}</span>
-                <TierRibbon tier={r.tier} />
-                <span style={{ fontSize: 11, fontWeight: 800, color: r.leveledTo ? 'var(--ok)' : r.isNew ? 'var(--accent)' : 'var(--ink-faint)' }}>
-                  {r.leveledTo ? `${tierMeta(r.leveledTo).label} 승급!` : r.isNew ? 'NEW' : `조각 +${box.shards}`}
-                </span>
-              </div>
-            ))}
-          </div>
+      )}
+
+      {phase === 'revealed' && (
+        <div style={{ position: 'relative', overflow: 'hidden', padding: 18, borderRadius: 22, border: '1px solid var(--glass-border)', background: `radial-gradient(circle at 50% 18%, ${box.colors[1]}24, transparent 50%), var(--glass-bg-strong)` }}>
+          <GachaGlow color={box.colors[1]} strong />
+          <RevealCards results={results} shards={box.shards} />
           <button className="ym-press" onClick={() => setDeck(true)}
             style={{ width: '100%', marginTop: 16, padding: '12px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)', fontWeight: 700, fontSize: 14, cursor: 'pointer' }}>
             내 도감 보기
@@ -86,8 +116,64 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
         </div>
       )}
 
+      {/* 개봉 오버레이 — 풀스크린 드라마 (body 포털, 탭하면 닫힘) */}
+      {phase === 'opening' && typeof document !== 'undefined' && createPortal(
+        <div onClick={() => setPhase('revealed')}
+          style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, padding: 24, background: 'radial-gradient(circle at 50% 34%, rgba(255,255,255,0.18), transparent 24%), rgba(0,0,0,0.68)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
+          <div className="ym-confetti" aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+            {['✦', '★', '✦', '✧', '★', '✦', '✧', '★'].map((e, i) => (
+              <span key={i} style={{ left: `${8 + i * 11}%`, color: i % 2 ? box.colors[1] : 'var(--accent)', animationDelay: `${0.7 + i * 0.06}s` }}>{e}</span>
+            ))}
+          </div>
+          <BurstParticles color={box.colors[1]} />
+          <div style={{ position: 'relative', width: 220, height: 178, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span className="ym-gacha-rays" aria-hidden style={{ position: 'absolute', inset: -54, color: box.colors[1], opacity: 0.8 }} />
+            <span className="ym-glow" aria-hidden style={{ position: 'absolute', inset: -18, borderRadius: '50%', background: `radial-gradient(circle, ${box.colors[1]}cc, ${box.colors[1]}44 36%, transparent 68%)` }} />
+            <BoxArt grade={grade} size={150} className="ym-chest" />
+          </div>
+          <RevealCards results={results} shards={box.shards} animate />
+          <button className="ym-card-in" style={{ animationDelay: '1.1s', marginTop: 6, padding: '12px 28px', borderRadius: 14, border: 'none', background: 'var(--accent)', color: 'var(--accent-ink)', fontWeight: 800, fontSize: 15, cursor: 'pointer', boxShadow: '0 8px 22px rgba(185,56,46,0.4)' }}>좋아요</button>
+        </div>,
+        document.body,
+      )}
+
       {deck && <DeckModal onClose={() => setDeck(false)} />}
     </div>
+  );
+}
+
+function GachaGlow({ color, strong = false }: { color: string; strong?: boolean }) {
+  return (
+    <span aria-hidden className="ym-glow" style={{
+      position: 'absolute',
+      left: strong ? 'calc(50% - 115px)' : 'calc(50% - 85px)',
+      top: strong ? -44 : -24,
+      width: strong ? 230 : 170,
+      height: strong ? 230 : 170,
+      borderRadius: 999,
+      background: `radial-gradient(circle, ${color}${strong ? '66' : '44'} 0%, ${color}1f 40%, transparent 72%)`,
+      filter: 'blur(2px)',
+      pointerEvents: 'none',
+    }} />
+  );
+}
+
+function BurstParticles({ color }: { color: string }) {
+  return (
+    <span aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+      {Array.from({ length: 16 }).map((_, i) => (
+        <i key={i} className="ym-gacha-spark" style={{
+          left: `${8 + ((i * 19) % 84)}%`,
+          top: `${14 + ((i * 11) % 54)}%`,
+          width: i % 3 === 0 ? 8 : 5,
+          height: i % 3 === 0 ? 8 : 5,
+          borderRadius: i % 2 === 0 ? 999 : 2,
+          background: i % 4 === 0 ? 'rgba(255,255,255,0.96)' : color,
+          boxShadow: `0 0 14px ${color}`,
+          animationDelay: `${0.2 + i * 0.045}s`,
+        }} />
+      ))}
+    </span>
   );
 }
 

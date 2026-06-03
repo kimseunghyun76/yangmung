@@ -1,5 +1,6 @@
-// 공용 모달 — 화면 위 팝업 (가이드·설정).
+// 공용 모달 — 화면 위 팝업 (가이드·설정·도감). body 포털로 어떤 조상(transform 등) 안에서도 풀스크린.
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { PrimaryAction } from './shell';
 
 export function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
@@ -11,7 +12,8 @@ export function Modal({ title, onClose, children }: { title: string; onClose: ()
     return () => window.removeEventListener('keydown', onKey);
   }, [onClose]);
 
-  return (
+  if (typeof document === 'undefined') return null;
+  return createPortal(
     <div
       onClick={onClose}
       role="dialog"
@@ -37,6 +39,7 @@ export function Modal({ title, onClose, children }: { title: string; onClose: ()
         <div style={{ marginTop: 12 }}>{children}</div>
         <PrimaryAction onClick={onClose} style={{ marginTop: 16 }}>닫기</PrimaryAction>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
