@@ -1,10 +1,12 @@
 // 세션 시작 전 "오늘 한 판" 인트로 — 목표와 첫 행동을 정렬.
 // goal은 App에서 planSession 기반으로 계산해 전달(복습 뉘앙스 포함).
 import type { Card } from '../learn/cards';
+import { CONTENT } from '../content';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
 import { sceneVisualByMission } from './scene';
 import { PrimaryAction, hexA } from './shell';
+import { MascotBubble, mascotCopy } from './mascot';
 
 export function Intro({ cards, goal, onStart, onBack }: { cards: Card[]; goal: string; onStart: () => void; onBack: () => void }) {
   let k = 0, b = 0, c = 0;
@@ -28,6 +30,7 @@ export function Intro({ cards, goal, onStart, onBack }: { cards: Card[]; goal: s
   }
   const sv = sceneVisualByMission(firstMissionId);
   const backdrop = sv.backdrop ?? sv.hero;
+  const place = firstMissionId ? CONTENT.missions.find((m) => m.id === firstMissionId)?.place : undefined;
   const sceneOnly = k === 0 && b === 0 && c > 0; // 장면 단독 연습
   const lead =
     sceneOnly ? ' — 실제 상황만 짧게 연습합니다.'
@@ -77,7 +80,10 @@ export function Intro({ cards, goal, onStart, onBack }: { cards: Card[]; goal: s
           <p style={{ color: backdrop ? 'rgba(255,255,255,0.68)' : 'var(--ink-faint)', fontSize: 13, marginTop: 6, fontWeight: 650 }}>
             가나 {k} · 표현 {b} · 미션 {c}
           </p>
-          <PrimaryAction onClick={onStart} style={{ marginTop: 20, width: '100%', fontSize: 17 }}>
+          {place && (
+            <MascotBubble who="yang" size={38} style={{ marginTop: 16 }}>{mascotCopy('introYang', { place })}</MascotBubble>
+          )}
+          <PrimaryAction onClick={onStart} style={{ marginTop: 16, width: '100%', fontSize: 17 }}>
             시작
           </PrimaryAction>
         </div>
