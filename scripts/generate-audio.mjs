@@ -44,7 +44,7 @@ function normalizeText(text) {
 }
 
 function displayText(p) {
-  return normalizeText(p.kanji ?? p.displayKana ?? p.kana);
+  return normalizeText(p.displayKana ?? p.kana);
 }
 
 function addItem(items, seen, source, sourceId, text, priority = 50, altTexts = []) {
@@ -214,9 +214,14 @@ function copyReusableAudio(items, manifest, voiceDir) {
 
 function markAvailable(manifest, item) {
   manifest.textIndex[item.text] = item.id;
+  for (const alias of item.altTexts ?? []) {
+    const clean = normalizeText(alias);
+    if (clean && !UNSPEAKABLE_TEXTS.has(clean)) manifest.textIndex[clean] = item.id;
+  }
   manifest.items[item.id] = {
     ...(manifest.items[item.id] ?? {}),
     text: item.text,
+    altTexts: item.altTexts,
     path: `/audio/${VOICE_KEY}/${item.id}.mp3`,
     voice: VOICE_KEY,
     source: item.source,
@@ -244,11 +249,18 @@ async function main() {
   const manifestPath = path.join(OUT_DIR, 'manifest.json');
   const voiceDir = path.join(OUT_DIR, VOICE_KEY);
   const manifest = loadManifest(manifestPath);
+  const currentIds = new Set(items.map((item) => item.id));
 
   for (const text of UNSPEAKABLE_TEXTS) {
     const id = manifest.textIndex[text] ?? `tts_${hashText(text)}`;
     delete manifest.textIndex[text];
     delete manifest.items[id];
+  }
+  for (const id of Object.keys(manifest.items)) {
+    if (!currentIds.has(id)) delete manifest.items[id];
+  }
+  for (const [text, id] of Object.entries(manifest.textIndex)) {
+    if (!currentIds.has(id)) delete manifest.textIndex[text];
   }
 
   manifest.voices[VOICE_KEY] = VOICE;
@@ -261,6 +273,7 @@ async function main() {
       source: item.source,
       sourceId: item.sourceId,
       sources: item.sources,
+      altTexts: item.altTexts,
     };
   }
 

@@ -43,7 +43,7 @@ export function OrderCardView({ card, picks, isKanaFamiliar, onNext }: Props) {
         // 이번 세션에 안 고른 스텝 → 모범(자연스러운) 답변으로 폴백
         const model = step.choices.find((c) => c.correct && c.phraseId && !c.recoveryType);
         const mp = model?.phraseId ? byId[model.phraseId] : undefined;
-        if (mp) answer = { ja: mp.kanji ?? mp.displayKana ?? mp.kana, kana: mp.kana, korean: mp.korean, action: false, recovery: false, model: true };
+        if (mp) answer = { ja: mp.displayKana ?? mp.kana, kana: mp.kana, korean: mp.korean, action: false, recovery: false, model: true };
         else if (model) answer = { label: model.text, action: true, recovery: false, model: true };
       }
       return { idx, step, prompt, answer };
@@ -54,7 +54,7 @@ export function OrderCardView({ card, picks, isKanaFamiliar, onNext }: Props) {
   function playAll() {
     const seq: string[] = [];
     for (const t of turns) {
-      if (t.prompt) seq.push(t.prompt.kanji ?? t.prompt.displayKana ?? t.prompt.kana);
+      if (t.prompt) seq.push(t.prompt.displayKana ?? t.prompt.kana);
       if (t.answer && !t.answer.action && t.answer.ja) seq.push(t.answer.ja);
     }
     speakSequence(seq);
@@ -83,7 +83,7 @@ export function OrderCardView({ card, picks, isKanaFamiliar, onNext }: Props) {
         {turns.map((t) => (
           <div key={t.idx} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {t.prompt && (
-              <Bubble side="left" who="점원" accent={sv.accent} ja={t.prompt.kanji ?? t.prompt.displayKana ?? t.prompt.kana} kana={t.prompt.displayKana ?? t.prompt.kana} korean={t.prompt.korean} isKanaFamiliar={isKanaFamiliar} />
+              <Bubble side="left" who="점원" accent={sv.accent} ja={t.prompt.displayKana ?? t.prompt.kana} kana={t.prompt.displayKana ?? t.prompt.kana} korean={t.prompt.korean} isKanaFamiliar={isKanaFamiliar} />
             )}
             {t.answer && (
               t.answer.action
