@@ -25,6 +25,7 @@ const force = args.includes('--force');
 const only = valueArg('--only'); // kana | phrases | signs | core
 const limit = Number(valueArg('--limit') || '0');
 const reuseRoot = valueArg('--reuse-root') || path.resolve(ROOT, '..', 'kana-master', 'public', 'audio');
+const UNSPEAKABLE_TEXTS = new Set(['ー']);
 
 function valueArg(name) {
   const i = args.indexOf(name);
@@ -49,6 +50,7 @@ function displayText(p) {
 function addItem(items, seen, source, sourceId, text, priority = 50, altTexts = []) {
   const clean = normalizeText(text);
   if (!clean) return;
+  if (UNSPEAKABLE_TEXTS.has(clean)) return;
   const key = clean;
   if (seen.has(key)) {
     const prev = seen.get(key);
@@ -243,6 +245,12 @@ async function main() {
   const voiceDir = path.join(OUT_DIR, VOICE_KEY);
   const manifest = loadManifest(manifestPath);
 
+  for (const text of UNSPEAKABLE_TEXTS) {
+    const id = manifest.textIndex[text] ?? `tts_${hashText(text)}`;
+    delete manifest.textIndex[text];
+    delete manifest.items[id];
+  }
+
   manifest.voices[VOICE_KEY] = VOICE;
   for (const item of items) {
     const cur = manifest.items[item.id] ?? {};
@@ -295,6 +303,7 @@ async function main() {
       if (wait > 0) await new Promise((r) => setTimeout(r, wait));
       lastCallAt = Date.now();
       const buf = await synth(job.text);
+      if (buf.length === 0) throw new Error('empty audio response');
       fs.writeFileSync(path.join(voiceDir, `${job.id}.mp3`), buf);
       markAvailable(manifest, job);
       done++;
