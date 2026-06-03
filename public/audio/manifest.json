@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-03T20:15:14.573Z",
+  "generatedAt": "2026-06-03T20:55:12.223Z",
   "voices": {
     "nanami": {
       "name": "ja-JP-NanamiNeural",
@@ -9,16 +9,6 @@
     }
   },
   "items": {
-    "tts_1f9bd4d2bc10": {
-      "text": "ー",
-      "voice": "nanami",
-      "source": "kana",
-      "sourceId": "k_long",
-      "sources": [
-        "kana:k_long"
-      ],
-      "path": "/audio/nanami/tts_1f9bd4d2bc10.mp3"
-    },
     "tts_98fdfc0a7426": {
       "text": "あ",
       "voice": "nanami",
@@ -2186,7 +2176,8 @@
       "sourceId": "p_nomimono",
       "sources": [
         "phrase:p_nomimono"
-      ]
+      ],
+      "path": "/audio/nanami/tts_be6bffc79ae4.mp3"
     },
     "tts_53ec7cc7a336": {
       "text": "お会計お願いします",
@@ -2215,7 +2206,8 @@
       "sourceId": "p_shiharai_houhou",
       "sources": [
         "phrase:p_shiharai_houhou"
-      ]
+      ],
+      "path": "/audio/nanami/tts_540846684992.mp3"
     },
     "tts_a5ed351d5a63": {
       "text": "お腹が痛いです",
@@ -2224,7 +2216,8 @@
       "sourceId": "p_onaka_itai",
       "sources": [
         "phrase:p_onaka_itai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_a5ed351d5a63.mp3"
     },
     "tts_12c9a41c11c1": {
       "text": "お名前は",
@@ -2233,7 +2226,8 @@
       "sourceId": "p_onamae_wa",
       "sources": [
         "phrase:p_onamae_wa"
-      ]
+      ],
+      "path": "/audio/nanami/tts_12c9a41c11c1.mp3"
     },
     "tts_6fa2bd19c929": {
       "text": "カードで",
@@ -2242,7 +2236,8 @@
       "sourceId": "p_card_de",
       "sources": [
         "phrase:p_card_de"
-      ]
+      ],
+      "path": "/audio/nanami/tts_6fa2bd19c929.mp3"
     },
     "tts_9fa002dbc4bd": {
       "text": "カードは使えますか",
@@ -2251,7 +2246,8 @@
       "sourceId": "p_card_tsukaemasu_ka",
       "sources": [
         "phrase:p_card_tsukaemasu_ka"
-      ]
+      ],
+      "path": "/audio/nanami/tts_9fa002dbc4bd.mp3"
     },
     "tts_df5c2a6b5120": {
       "text": "コインロッカーは、どこですか？",
@@ -2260,7 +2256,8 @@
       "sourceId": "p_koinrokkaa",
       "sources": [
         "phrase:p_koinrokkaa"
-      ]
+      ],
+      "path": "/audio/nanami/tts_df5c2a6b5120.mp3"
     },
     "tts_de2ab70b8c1a": {
       "text": "ここで止めてください",
@@ -2269,7 +2266,8 @@
       "sourceId": "p_koko_de_tomete",
       "sources": [
         "phrase:p_koko_de_tomete"
-      ]
+      ],
+      "path": "/audio/nanami/tts_de2ab70b8c1a.mp3"
     },
     "tts_11c8fca7e223": {
       "text": "ごちそうさまでした",
@@ -2288,7 +2286,8 @@
       "sourceId": "p_kono_kusuri",
       "sources": [
         "phrase:p_kono_kusuri"
-      ]
+      ],
+      "path": "/audio/nanami/tts_767b0fb18e47.mp3"
     },
     "tts_ee06f1be0e0c": {
       "text": "これとこれ",
@@ -2297,7 +2296,8 @@
       "sourceId": "p_kore_to_kore",
       "sources": [
         "phrase:p_kore_to_kore"
-      ]
+      ],
+      "path": "/audio/nanami/tts_ee06f1be0e0c.mp3"
     },
     "tts_3d9192b39b71": {
       "text": "これにします",
@@ -2306,7 +2306,8 @@
       "sourceId": "p_kore_kudasai_shop",
       "sources": [
         "phrase:p_kore_kudasai_shop"
-      ]
+      ],
+      "path": "/audio/nanami/tts_3d9192b39b71.mp3"
     },
     "tts_d33c910ad45c": {
       "text": "これはいくらですか",
@@ -2325,7 +2326,8 @@
       "sourceId": "p_okuritai",
       "sources": [
         "phrase:p_okuritai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_dac385e8e35b.mp3"
     },
     "tts_6c3263889223": {
       "text": "これを抜いてください",
@@ -2334,7 +2336,8 @@
       "sourceId": "p_kore_nuite",
       "sources": [
         "phrase:p_kore_nuite"
-      ]
+      ],
+      "path": "/audio/nanami/tts_6c3263889223.mp3"
     },
     "tts_7df5f7b8afef": {
       "text": "これ下さい",
@@ -2343,7 +2346,8 @@
       "sourceId": "p_kore_kudasai",
       "sources": [
         "phrase:p_kore_kudasai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_7df5f7b8afef.mp3"
     },
     "tts_20427a708c3f": {
       "text": "こんにちは",
@@ -2362,7 +2366,8 @@
       "sourceId": "p_gochuumon",
       "sources": [
         "phrase:p_gochuumon"
-      ]
+      ],
+      "path": "/audio/nanami/tts_c9dd521168da.mp3"
     },
     "tts_f1fc99ad2e21": {
       "text": "スイカで",
@@ -2371,7 +2376,8 @@
       "sourceId": "p_suica_de",
       "sources": [
         "phrase:p_suica_de"
-      ]
+      ],
+      "path": "/audio/nanami/tts_f1fc99ad2e21.mp3"
     },
     "tts_cce1862bcbd9": {
       "text": "すみません",
@@ -2390,7 +2396,8 @@
       "sourceId": "p_sono_mama_de",
       "sources": [
         "phrase:p_sono_mama_de"
-      ]
+      ],
+      "path": "/audio/nanami/tts_6ead72186de1.mp3"
     },
     "tts_274595ef5da3": {
       "text": "たいざいは？",
@@ -2399,7 +2406,8 @@
       "sourceId": "p_taizai_wa",
       "sources": [
         "phrase:p_taizai_wa"
-      ]
+      ],
+      "path": "/audio/nanami/tts_274595ef5da3.mp3"
     },
     "tts_dd76552b7fb1": {
       "text": "タクシーお願いします",
@@ -2408,7 +2416,8 @@
       "sourceId": "p_takushi_onegai",
       "sources": [
         "phrase:p_takushi_onegai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_dd76552b7fb1.mp3"
     },
     "tts_f9094ef33b23": {
       "text": "チェックインお願いします",
@@ -2427,7 +2436,8 @@
       "sourceId": "p_chaaji_onegai",
       "sources": [
         "phrase:p_chaaji_onegai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_24db552f7a23.mp3"
     },
     "tts_96020f040b35": {
       "text": "ちょっと待ってください",
@@ -2456,7 +2466,8 @@
       "sourceId": "p_dou_shimashita",
       "sources": [
         "phrase:p_dou_shimashita"
-      ]
+      ],
+      "path": "/audio/nanami/tts_cbf1450a1127.mp3"
     },
     "tts_161b40e8f515": {
       "text": "どこですか？",
@@ -2465,7 +2476,8 @@
       "sourceId": "p_doko_desu_ka",
       "sources": [
         "phrase:p_doko_desu_ka"
-      ]
+      ],
+      "path": "/audio/nanami/tts_161b40e8f515.mp3"
     },
     "tts_5b8c6da435e2": {
       "text": "どこに泊まりますか",
@@ -2474,7 +2486,8 @@
       "sourceId": "p_doko_tomaru",
       "sources": [
         "phrase:p_doko_tomaru"
-      ]
+      ],
+      "path": "/audio/nanami/tts_5b8c6da435e2.mp3"
     },
     "tts_2812f9721cb7": {
       "text": "どこまでですか？",
@@ -2483,7 +2496,8 @@
       "sourceId": "p_doko_made",
       "sources": [
         "phrase:p_doko_made"
-      ]
+      ],
+      "path": "/audio/nanami/tts_2812f9721cb7.mp3"
     },
     "tts_89d6e45b8498": {
       "text": "どちらですか？",
@@ -2492,7 +2506,8 @@
       "sourceId": "p_dochira_desu_ka",
       "sources": [
         "phrase:p_dochira_desu_ka"
-      ]
+      ],
+      "path": "/audio/nanami/tts_89d6e45b8498.mp3"
     },
     "tts_c92b4cda8bdf": {
       "text": "はい",
@@ -2511,7 +2526,8 @@
       "sourceId": "p_passport_onegai",
       "sources": [
         "phrase:p_passport_onegai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_6845e6e2f286.mp3"
     },
     "tts_e06edf599f89": {
       "text": "パスポートは、こちらです",
@@ -2530,7 +2546,8 @@
       "sourceId": "p_pointo_arimasu_ka",
       "sources": [
         "phrase:p_pointo_arimasu_ka"
-      ]
+      ],
+      "path": "/audio/nanami/tts_ee4563b88dfa.mp3"
     },
     "tts_917c5faf1b6c": {
       "text": "ホテルです",
@@ -2539,7 +2556,8 @@
       "sourceId": "p_hoteru_desu",
       "sources": [
         "phrase:p_hoteru_desu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_917c5faf1b6c.mp3"
     },
     "tts_7e442986e2ce": {
       "text": "までお願いします",
@@ -2558,7 +2576,8 @@
       "sourceId": "p_menu_misete",
       "sources": [
         "phrase:p_menu_misete"
-      ]
+      ],
+      "path": "/audio/nanami/tts_a3ddd3b0e16a.mp3"
     },
     "tts_459ec391610b": {
       "text": "もう一度お願いします",
@@ -2577,7 +2596,8 @@
       "sourceId": "p_mokuteki_wa",
       "sources": [
         "phrase:p_mokuteki_wa"
-      ]
+      ],
+      "path": "/audio/nanami/tts_0b46aa740d09.mp3"
     },
     "tts_922f44dcc064": {
       "text": "やさしい日本語でお願いします",
@@ -2586,7 +2606,8 @@
       "sourceId": "p_yasashii_nihongo",
       "sources": [
         "phrase:p_yasashii_nihongo"
-      ]
+      ],
+      "path": "/audio/nanami/tts_922f44dcc064.mp3"
     },
     "tts_255df2950150": {
       "text": "ゆっくりお願いします",
@@ -2595,7 +2616,8 @@
       "sourceId": "p_yukkuri",
       "sources": [
         "phrase:p_yukkuri"
-      ]
+      ],
+      "path": "/audio/nanami/tts_255df2950150.mp3"
     },
     "tts_19ef31be44b5": {
       "text": "レシートをください",
@@ -2604,7 +2626,8 @@
       "sourceId": "p_reshiito_kudasai",
       "sources": [
         "phrase:p_reshiito_kudasai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_19ef31be44b5.mp3"
     },
     "tts_25c2ea256737": {
       "text": "一つください",
@@ -2623,7 +2646,8 @@
       "sourceId": "p_isshuukan",
       "sources": [
         "phrase:p_isshuukan"
-      ]
+      ],
+      "path": "/audio/nanami/tts_9d8314ffa6b6.mp3"
     },
     "tts_801d3641b026": {
       "text": "一人です",
@@ -2632,7 +2656,8 @@
       "sourceId": "p_hitori_desu",
       "sources": [
         "phrase:p_hitori_desu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_801d3641b026.mp3"
     },
     "tts_db333033026b": {
       "text": "英語で大丈夫ですか",
@@ -2641,7 +2666,8 @@
       "sourceId": "p_eigo_de",
       "sources": [
         "phrase:p_eigo_de"
-      ]
+      ],
+      "path": "/audio/nanami/tts_db333033026b.mp3"
     },
     "tts_1887ccf58d57": {
       "text": "温めてください",
@@ -2660,7 +2686,8 @@
       "sourceId": "p_atatamemasu_ka",
       "sources": [
         "phrase:p_atatamemasu_ka"
-      ]
+      ],
+      "path": "/audio/nanami/tts_1198fe760c61.mp3"
     },
     "tts_08f2c6fa423b": {
       "text": "何番線ですか",
@@ -2669,7 +2696,8 @@
       "sourceId": "p_nanbansen",
       "sources": [
         "phrase:p_nanbansen"
-      ]
+      ],
+      "path": "/audio/nanami/tts_08f2c6fa423b.mp3"
     },
     "tts_de62605c83c0": {
       "text": "何名様ですか",
@@ -2678,7 +2706,8 @@
       "sourceId": "p_nanmeisama",
       "sources": [
         "phrase:p_nanmeisama"
-      ]
+      ],
+      "path": "/audio/nanami/tts_de62605c83c0.mp3"
     },
     "tts_cfbbdf7f80d2": {
       "text": "改札はどこですか",
@@ -2687,7 +2716,8 @@
       "sourceId": "p_kaisatsu_doko",
       "sources": [
         "phrase:p_kaisatsu_doko"
-      ]
+      ],
+      "path": "/audio/nanami/tts_cfbbdf7f80d2.mp3"
     },
     "tts_71bad4af0b24": {
       "text": "観光です",
@@ -2696,7 +2726,8 @@
       "sourceId": "p_kankou_desu",
       "sources": [
         "phrase:p_kankou_desu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_71bad4af0b24.mp3"
     },
     "tts_6d410d19febc": {
       "text": "券売機はどこですか",
@@ -2705,7 +2736,8 @@
       "sourceId": "p_kenbaiki",
       "sources": [
         "phrase:p_kenbaiki"
-      ]
+      ],
+      "path": "/audio/nanami/tts_6d410d19febc.mp3"
     },
     "tts_46570b3440e9": {
       "text": "鍵です",
@@ -2714,7 +2746,8 @@
       "sourceId": "p_kagi_desu",
       "sources": [
         "phrase:p_kagi_desu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_46570b3440e9.mp3"
     },
     "tts_bbfb06c9f1f6": {
       "text": "現金で",
@@ -2723,7 +2756,8 @@
       "sourceId": "p_genkin_de",
       "sources": [
         "phrase:p_genkin_de"
-      ]
+      ],
+      "path": "/audio/nanami/tts_bbfb06c9f1f6.mp3"
     },
     "tts_76a0e7601001": {
       "text": "合計千円です",
@@ -2732,7 +2766,8 @@
       "sourceId": "p_price",
       "sources": [
         "phrase:p_price"
-      ]
+      ],
+      "path": "/audio/nanami/tts_76a0e7601001.mp3"
     },
     "tts_e27b2dce6d3d": {
       "text": "細かくしてください",
@@ -2741,7 +2776,8 @@
       "sourceId": "p_komakaku",
       "sources": [
         "phrase:p_komakaku"
-      ]
+      ],
+      "path": "/audio/nanami/tts_e27b2dce6d3d.mp3"
     },
     "tts_525fa60af262": {
       "text": "三日です",
@@ -2750,7 +2786,8 @@
       "sourceId": "p_mikka",
       "sources": [
         "phrase:p_mikka"
-      ]
+      ],
+      "path": "/audio/nanami/tts_525fa60af262.mp3"
     },
     "tts_79699efe7955": {
       "text": "仕事です",
@@ -2759,7 +2796,8 @@
       "sourceId": "p_shigoto_desu",
       "sources": [
         "phrase:p_shigoto_desu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_79699efe7955.mp3"
     },
     "tts_1944d65bed89": {
       "text": "使い方を教えてください",
@@ -2768,7 +2806,8 @@
       "sourceId": "p_tsukaikata",
       "sources": [
         "phrase:p_tsukaikata"
-      ]
+      ],
+      "path": "/audio/nanami/tts_1944d65bed89.mp3"
     },
     "tts_5e0478865db7": {
       "text": "試着してもいいですか",
@@ -2787,7 +2826,8 @@
       "sourceId": "p_norikae_kudasai",
       "sources": [
         "phrase:p_norikae_kudasai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_d9715e893032.mp3"
     },
     "tts_0013a9ca6df3": {
       "text": "次は渋谷ですか",
@@ -2796,7 +2836,8 @@
       "sourceId": "p_tsugi_wa_shibuya",
       "sources": [
         "phrase:p_tsugi_wa_shibuya"
-      ]
+      ],
+      "path": "/audio/nanami/tts_0013a9ca6df3.mp3"
     },
     "tts_f4039f302c54": {
       "text": "写真お願いします",
@@ -2805,7 +2846,8 @@
       "sourceId": "p_shashin_onegai",
       "sources": [
         "phrase:p_shashin_onegai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_f4039f302c54.mp3"
     },
     "tts_475df71987da": {
       "text": "写真撮ってもいいですか",
@@ -2814,7 +2856,8 @@
       "sourceId": "p_shashin_ii",
       "sources": [
         "phrase:p_shashin_ii"
-      ]
+      ],
+      "path": "/audio/nanami/tts_475df71987da.mp3"
     },
     "tts_ff981a0756cd": {
       "text": "助けてください",
@@ -2833,7 +2876,8 @@
       "sourceId": "p_shinjuku_doko",
       "sources": [
         "phrase:p_shinjuku_doko"
-      ]
+      ],
+      "path": "/audio/nanami/tts_d0f6d0eb4769.mp3"
     },
     "tts_67537207f82b": {
       "text": "辛いですか",
@@ -2842,7 +2886,8 @@
       "sourceId": "p_karai_desu_ka",
       "sources": [
         "phrase:p_karai_desu_ka"
-      ]
+      ],
+      "path": "/audio/nanami/tts_67537207f82b.mp3"
     },
     "tts_e0058ffaf3a2": {
       "text": "水をください",
@@ -2851,7 +2896,8 @@
       "sourceId": "p_mizu_kudasai",
       "sources": [
         "phrase:p_mizu_kudasai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_e0058ffaf3a2.mp3"
     },
     "tts_32fcb38e7a80": {
       "text": "切符をください",
@@ -2860,7 +2906,8 @@
       "sourceId": "p_kippu_kudasai",
       "sources": [
         "phrase:p_kippu_kudasai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_32fcb38e7a80.mp3"
     },
     "tts_c4f612cf95c9": {
       "text": "替え玉お願いします",
@@ -2869,7 +2916,8 @@
       "sourceId": "p_kaedama",
       "sources": [
         "phrase:p_kaedama"
-      ]
+      ],
+      "path": "/audio/nanami/tts_c4f612cf95c9.mp3"
     },
     "tts_17bf70df7307": {
       "text": "袋は要りますか",
@@ -2878,7 +2926,8 @@
       "sourceId": "p_fukuro",
       "sources": [
         "phrase:p_fukuro"
-      ]
+      ],
+      "path": "/audio/nanami/tts_17bf70df7307.mp3"
     },
     "tts_303d7b8ce335": {
       "text": "袋は要りません",
@@ -2887,7 +2936,8 @@
       "sourceId": "p_fukuro_iranai",
       "sources": [
         "phrase:p_fukuro_iranai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_303d7b8ce335.mp3"
     },
     "tts_b4e6d4a5c89e": {
       "text": "大丈夫",
@@ -2896,7 +2946,8 @@
       "sourceId": "p_daijoubu",
       "sources": [
         "phrase:p_daijoubu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_b4e6d4a5c89e.mp3"
     },
     "tts_5bd0c900547a": {
       "text": "大盛りできますか",
@@ -2905,7 +2956,8 @@
       "sourceId": "p_oomori",
       "sources": [
         "phrase:p_oomori"
-      ]
+      ],
+      "path": "/audio/nanami/tts_5bd0c900547a.mp3"
     },
     "tts_8358b57d89dd": {
       "text": "宅急便お願いします",
@@ -2914,7 +2966,8 @@
       "sourceId": "p_takkyubin",
       "sources": [
         "phrase:p_takkyubin"
-      ]
+      ],
+      "path": "/audio/nanami/tts_8358b57d89dd.mp3"
     },
     "tts_9b81e1ae1ba9": {
       "text": "朝食は",
@@ -2923,7 +2976,8 @@
       "sourceId": "p_choushoku_wa",
       "sources": [
         "phrase:p_choushoku_wa"
-      ]
+      ],
+      "path": "/audio/nanami/tts_9b81e1ae1ba9.mp3"
     },
     "tts_4d329d63463c": {
       "text": "頭が痛いです",
@@ -2932,7 +2986,8 @@
       "sourceId": "p_atama_itai",
       "sources": [
         "phrase:p_atama_itai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_4d329d63463c.mp3"
     },
     "tts_52d9f59c245d": {
       "text": "道を教えてください",
@@ -2941,7 +2996,8 @@
       "sourceId": "p_michi_oshiete",
       "sources": [
         "phrase:p_michi_oshiete"
-      ]
+      ],
+      "path": "/audio/nanami/tts_52d9f59c245d.mp3"
     },
     "tts_db9f5acc1108": {
       "text": "二つください",
@@ -2950,7 +3006,8 @@
       "sourceId": "p_futatsu_kudasai",
       "sources": [
         "phrase:p_futatsu_kudasai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_db9f5acc1108.mp3"
     },
     "tts_a554a4a22c16": {
       "text": "二人です",
@@ -2969,7 +3026,8 @@
       "sourceId": "p_hashi_irimasu_ka",
       "sources": [
         "phrase:p_hashi_irimasu_ka"
-      ]
+      ],
+      "path": "/audio/nanami/tts_724523899771.mp3"
     },
     "tts_74ef5e57a71a": {
       "text": "箸をください",
@@ -2978,7 +3036,8 @@
       "sourceId": "p_hashi_kudasai",
       "sources": [
         "phrase:p_hashi_kudasai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_74ef5e57a71a.mp3"
     },
     "tts_58a31b3e0c1b": {
       "text": "部屋はどこですか",
@@ -2987,7 +3046,8 @@
       "sourceId": "p_heya_doko",
       "sources": [
         "phrase:p_heya_doko"
-      ]
+      ],
+      "path": "/audio/nanami/tts_58a31b3e0c1b.mp3"
     },
     "tts_1c39b46cebc4": {
       "text": "風邪です",
@@ -2996,7 +3056,8 @@
       "sourceId": "p_kaze_desu",
       "sources": [
         "phrase:p_kaze_desu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_1c39b46cebc4.mp3"
     },
     "tts_ebb1f7244fb5": {
       "text": "分かりました",
@@ -3025,7 +3086,8 @@
       "sourceId": "p_betsubetsu_de",
       "sources": [
         "phrase:p_betsubetsu_de"
-      ]
+      ],
+      "path": "/audio/nanami/tts_8612b57ba693.mp3"
     },
     "tts_5629044ee050": {
       "text": "免税できますか",
@@ -3034,7 +3096,8 @@
       "sourceId": "p_menzei_dekimasu_ka",
       "sources": [
         "phrase:p_menzei_dekimasu_ka"
-      ]
+      ],
+      "path": "/audio/nanami/tts_5629044ee050.mp3"
     },
     "tts_1c83f478ab11": {
       "text": "薬をください",
@@ -3043,7 +3106,8 @@
       "sourceId": "p_kusuri_kudasai",
       "sources": [
         "phrase:p_kusuri_kudasai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_1c83f478ab11.mp3"
     },
     "tts_8ad0ccd0e10e": {
       "text": "予約しています",
@@ -3052,7 +3116,8 @@
       "sourceId": "p_yoyaku_shiteimasu",
       "sources": [
         "phrase:p_yoyaku_shiteimasu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_8ad0ccd0e10e.mp3"
     },
     "tts_92e9f3031369": {
       "text": "要りません",
@@ -3061,7 +3126,8 @@
       "sourceId": "p_irimasen",
       "sources": [
         "phrase:p_irimasen"
-      ]
+      ],
+      "path": "/audio/nanami/tts_92e9f3031369.mp3"
     },
     "tts_2b7437d20739": {
       "text": "両替お願いします",
@@ -3070,7 +3136,8 @@
       "sourceId": "p_ryougae",
       "sources": [
         "phrase:p_ryougae"
-      ]
+      ],
+      "path": "/audio/nanami/tts_2b7437d20739.mp3"
     },
     "tts_dbd31a0b4b51": {
       "text": "領収書をください",
@@ -3089,7 +3156,8 @@
       "sourceId": "p_arigatou",
       "sources": [
         "phrase:p_arigatou"
-      ]
+      ],
+      "path": "/audio/nanami/tts_42d0969029e9.mp3"
     },
     "tts_01dd1d4130bb": {
       "text": "あれ",
@@ -3108,7 +3176,8 @@
       "sourceId": "p_iya",
       "sources": [
         "phrase:p_iya"
-      ]
+      ],
+      "path": "/audio/nanami/tts_c9177450298c.mp3"
     },
     "tts_22f503aaf294": {
       "text": "うん",
@@ -3117,7 +3186,8 @@
       "sourceId": "p_un",
       "sources": [
         "phrase:p_un"
-      ]
+      ],
+      "path": "/audio/nanami/tts_22f503aaf294.mp3"
     },
     "tts_ac15ff145286": {
       "text": "おいしい",
@@ -3156,7 +3226,8 @@
       "sourceId": "p_kore_de",
       "sources": [
         "phrase:p_kore_de"
-      ]
+      ],
+      "path": "/audio/nanami/tts_a86cd2b6f9f8.mp3"
     },
     "tts_f7df6ac2474a": {
       "text": "そうです",
@@ -3165,7 +3236,8 @@
       "sourceId": "p_sou_desu",
       "sources": [
         "phrase:p_sou_desu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_f7df6ac2474a.mp3"
     },
     "tts_f7b0201b3f0e": {
       "text": "ちょっと",
@@ -3174,7 +3246,8 @@
       "sourceId": "p_chotto",
       "sources": [
         "phrase:p_chotto"
-      ]
+      ],
+      "path": "/audio/nanami/tts_f7b0201b3f0e.mp3"
     },
     "tts_97a411a26ee3": {
       "text": "ほしいです",
@@ -3183,7 +3256,8 @@
       "sourceId": "p_hoshii_desu",
       "sources": [
         "phrase:p_hoshii_desu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_97a411a26ee3.mp3"
     },
     "tts_bcd0524dba9f": {
       "text": "もう大丈夫です",
@@ -3192,7 +3266,8 @@
       "sourceId": "p_mou_daijoubu_desu",
       "sources": [
         "phrase:p_mou_daijoubu_desu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_bcd0524dba9f.mp3"
     },
     "tts_27a065ed775f": {
       "text": "一万円",
@@ -3201,7 +3276,8 @@
       "sourceId": "p_num_ichimanen",
       "sources": [
         "phrase:p_num_ichimanen"
-      ]
+      ],
+      "path": "/audio/nanami/tts_27a065ed775f.mp3"
     },
     "tts_e70b5299d05d": {
       "text": "駅",
@@ -3220,7 +3296,8 @@
       "sourceId": "p_kaisatsu",
       "sources": [
         "phrase:p_kaisatsu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_a63df47d88c3.mp3"
     },
     "tts_3370b12e0f02": {
       "text": "五千円",
@@ -3229,7 +3306,8 @@
       "sourceId": "p_num_gosenen",
       "sources": [
         "phrase:p_num_gosenen"
-      ]
+      ],
+      "path": "/audio/nanami/tts_3370b12e0f02.mp3"
     },
     "tts_c685e280f421": {
       "text": "五百円",
@@ -3238,7 +3316,8 @@
       "sourceId": "p_num_gohyakuen",
       "sources": [
         "phrase:p_num_gohyakuen"
-      ]
+      ],
+      "path": "/audio/nanami/tts_c685e280f421.mp3"
     },
     "tts_455ec8daabaa": {
       "text": "乗り換え",
@@ -3258,7 +3337,8 @@
       "sourceId": "p_tabemasu",
       "sources": [
         "phrase:p_tabemasu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_ff55adcf8d52.mp3"
     },
     "tts_4c3076304aa5": {
       "text": "切符",
@@ -3277,7 +3357,8 @@
       "sourceId": "p_num_senen",
       "sources": [
         "phrase:p_num_senen"
-      ]
+      ],
+      "path": "/audio/nanami/tts_1ae8cde53509.mp3"
     },
     "tts_87a4d24d046d": {
       "text": "大丈夫です",
@@ -3296,7 +3377,8 @@
       "sourceId": "p_num_nisenen",
       "sources": [
         "phrase:p_num_nisenen"
-      ]
+      ],
+      "path": "/audio/nanami/tts_e2e9f12b440b.mp3"
     },
     "tts_dd134499531a": {
       "text": "百円",
@@ -3305,7 +3387,8 @@
       "sourceId": "p_num_hyakuen",
       "sources": [
         "phrase:p_num_hyakuen"
-      ]
+      ],
+      "path": "/audio/nanami/tts_dd134499531a.mp3"
     },
     "tts_6e4b392552c7": {
       "text": "分かりました、ありがとうございます",
@@ -3314,7 +3397,8 @@
       "sourceId": "p_wakarimashita_arigatou",
       "sources": [
         "phrase:p_wakarimashita_arigatou"
-      ]
+      ],
+      "path": "/audio/nanami/tts_6e4b392552c7.mp3"
     },
     "tts_66f0b9161217": {
       "text": "あしもとちゅうい",
@@ -3323,7 +3407,8 @@
       "sourceId": "ashimoto",
       "sources": [
         "sign:ashimoto"
-      ]
+      ],
+      "path": "/audio/nanami/tts_66f0b9161217.mp3"
     },
     "tts_d13aa1e57ee3": {
       "text": "あたたかい",
@@ -3332,7 +3417,8 @@
       "sourceId": "atatakai",
       "sources": [
         "sign:atatakai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_d13aa1e57ee3.mp3"
     },
     "tts_c0df549e3258": {
       "text": "あまくち",
@@ -3341,7 +3427,8 @@
       "sourceId": "amakuchi",
       "sources": [
         "sign:amakuchi"
-      ]
+      ],
+      "path": "/audio/nanami/tts_c0df549e3258.mp3"
     },
     "tts_4db3472b6e41": {
       "text": "あんない",
@@ -3350,7 +3437,8 @@
       "sourceId": "annai",
       "sources": [
         "sign:annai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_4db3472b6e41.mp3"
     },
     "tts_408e2ae255b0": {
       "text": "いちじていし",
@@ -3359,7 +3447,8 @@
       "sourceId": "ichiji_teishi",
       "sources": [
         "sign:ichiji_teishi"
-      ]
+      ],
+      "path": "/audio/nanami/tts_408e2ae255b0.mp3"
     },
     "tts_43c0172ad9a5": {
       "text": "いりぐち",
@@ -3378,7 +3467,8 @@
       "sourceId": "uketsuke",
       "sources": [
         "sign:uketsuke"
-      ]
+      ],
+      "path": "/audio/nanami/tts_0a1544d65547.mp3"
     },
     "tts_ace7c64eca2e": {
       "text": "うりきれ",
@@ -3387,7 +3477,8 @@
       "sourceId": "urikire",
       "sources": [
         "sign:urikire"
-      ]
+      ],
+      "path": "/audio/nanami/tts_ace7c64eca2e.mp3"
     },
     "tts_33f612435d8c": {
       "text": "えいぎょうじかん",
@@ -3396,7 +3487,8 @@
       "sourceId": "eigyoujikan",
       "sources": [
         "sign:eigyoujikan"
-      ]
+      ],
+      "path": "/audio/nanami/tts_33f612435d8c.mp3"
     },
     "tts_e56c3caf0f9f": {
       "text": "えいぎょうちゅう",
@@ -3415,7 +3507,8 @@
       "sourceId": "oomori_menu",
       "sources": [
         "sign:oomori_menu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_6ab8af25a297.mp3"
     },
     "tts_cb1434a4bdae": {
       "text": "おしずかに",
@@ -3424,7 +3517,8 @@
       "sourceId": "shizukani",
       "sources": [
         "sign:shizukani"
-      ]
+      ],
+      "path": "/audio/nanami/tts_cb1434a4bdae.mp3"
     },
     "tts_0f40454243d0": {
       "text": "おす",
@@ -3433,7 +3527,8 @@
       "sourceId": "osu",
       "sources": [
         "sign:osu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_0f40454243d0.mp3"
     },
     "tts_343a26d4817b": {
       "text": "おすすめ",
@@ -3442,7 +3537,8 @@
       "sourceId": "osusume_menu",
       "sources": [
         "sign:osusume_menu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_343a26d4817b.mp3"
     },
     "tts_8b8ccdbe3855": {
       "text": "おてあらい",
@@ -3451,7 +3547,8 @@
       "sourceId": "otearai",
       "sources": [
         "sign:otearai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_8b8ccdbe3855.mp3"
     },
     "tts_51dce2f31fa8": {
       "text": "おもちかえり",
@@ -3460,7 +3557,8 @@
       "sourceId": "mochikaeri",
       "sources": [
         "sign:mochikaeri"
-      ]
+      ],
+      "path": "/audio/nanami/tts_51dce2f31fa8.mp3"
     },
     "tts_9b27c35ef9c2": {
       "text": "カードたいおう",
@@ -3469,7 +3567,8 @@
       "sourceId": "card_taiou",
       "sources": [
         "sign:card_taiou"
-      ]
+      ],
+      "path": "/audio/nanami/tts_9b27c35ef9c2.mp3"
     },
     "tts_ef41926cafdd": {
       "text": "かいさつぐち",
@@ -3478,7 +3577,8 @@
       "sourceId": "kaisatsu",
       "sources": [
         "sign:kaisatsu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_ef41926cafdd.mp3"
     },
     "tts_1182ea1ef6a5": {
       "text": "かくえきていしゃ",
@@ -3487,7 +3587,8 @@
       "sourceId": "kakueki",
       "sources": [
         "sign:kakueki"
-      ]
+      ],
+      "path": "/audio/nanami/tts_1182ea1ef6a5.mp3"
     },
     "tts_3b22787de227": {
       "text": "からくち",
@@ -3496,7 +3597,8 @@
       "sourceId": "karakuchi",
       "sources": [
         "sign:karakuchi"
-      ]
+      ],
+      "path": "/audio/nanami/tts_3b22787de227.mp3"
     },
     "tts_5531b47e1962": {
       "text": "かんけいしゃいがいたちいりきんし",
@@ -3505,7 +3607,8 @@
       "sourceId": "tachiiri_kinshi2",
       "sources": [
         "sign:tachiiri_kinshi2"
-      ]
+      ],
+      "path": "/audio/nanami/tts_5531b47e1962.mp3"
     },
     "tts_483284272a48": {
       "text": "きかんげんてい",
@@ -3514,7 +3617,8 @@
       "sourceId": "kikan_gentei",
       "sources": [
         "sign:kikan_gentei"
-      ]
+      ],
+      "path": "/audio/nanami/tts_483284272a48.mp3"
     },
     "tts_07f0dc914ce2": {
       "text": "きけん",
@@ -3523,7 +3627,8 @@
       "sourceId": "kiken",
       "sources": [
         "sign:kiken"
-      ]
+      ],
+      "path": "/audio/nanami/tts_07f0dc914ce2.mp3"
     },
     "tts_6b9dd05b0f89": {
       "text": "きたぐち",
@@ -3532,7 +3637,8 @@
       "sourceId": "kitaguchi",
       "sources": [
         "sign:kitaguchi"
-      ]
+      ],
+      "path": "/audio/nanami/tts_6b9dd05b0f89.mp3"
     },
     "tts_ffc9b55b7118": {
       "text": "きゅうこう",
@@ -3541,7 +3647,8 @@
       "sourceId": "kyuukou",
       "sources": [
         "sign:kyuukou"
-      ]
+      ],
+      "path": "/audio/nanami/tts_ffc9b55b7118.mp3"
     },
     "tts_c5f142d6c696": {
       "text": "きんえん",
@@ -3550,7 +3657,8 @@
       "sourceId": "kinen",
       "sources": [
         "sign:kinen"
-      ]
+      ],
+      "path": "/audio/nanami/tts_c5f142d6c696.mp3"
     },
     "tts_dcb46e0fc29b": {
       "text": "くうしつ",
@@ -3559,7 +3667,8 @@
       "sourceId": "kuushitsu",
       "sources": [
         "sign:kuushitsu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_dcb46e0fc29b.mp3"
     },
     "tts_65746967ebdc": {
       "text": "げんきん",
@@ -3568,7 +3677,8 @@
       "sourceId": "genkin_sign",
       "sources": [
         "sign:genkin_sign"
-      ]
+      ],
+      "path": "/audio/nanami/tts_65746967ebdc.mp3"
     },
     "tts_18689fc391a6": {
       "text": "こうじちゅう",
@@ -3577,7 +3687,8 @@
       "sourceId": "koujichu",
       "sources": [
         "sign:koujichu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_18689fc391a6.mp3"
     },
     "tts_0b640f76f069": {
       "text": "こうつうけいアイシー",
@@ -3586,7 +3697,8 @@
       "sourceId": "koutsuukei",
       "sources": [
         "sign:koutsuukei"
-      ]
+      ],
+      "path": "/audio/nanami/tts_0b640f76f069.mp3"
     },
     "tts_600583ea7606": {
       "text": "こしょうちゅう",
@@ -3595,7 +3707,8 @@
       "sourceId": "koshouchu",
       "sources": [
         "sign:koshouchu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_600583ea7606.mp3"
     },
     "tts_29f0cdaefb3f": {
       "text": "さつえいきんし",
@@ -3604,7 +3717,8 @@
       "sourceId": "satsuei_kinshi",
       "sources": [
         "sign:satsuei_kinshi"
-      ]
+      ],
+      "path": "/audio/nanami/tts_29f0cdaefb3f.mp3"
     },
     "tts_e441dfe79fc2": {
       "text": "じゅんびちゅう",
@@ -3613,7 +3727,8 @@
       "sourceId": "junbichu",
       "sources": [
         "sign:junbichu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_e441dfe79fc2.mp3"
     },
     "tts_dfae1f286a52": {
       "text": "しんはつばい",
@@ -3622,7 +3737,8 @@
       "sourceId": "shinhatsubai",
       "sources": [
         "sign:shinhatsubai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_dfae1f286a52.mp3"
     },
     "tts_fefca6a7da90": {
       "text": "すうりょうげんてい",
@@ -3631,7 +3747,8 @@
       "sourceId": "gentei_menu",
       "sources": [
         "sign:gentei_menu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_fefca6a7da90.mp3"
     },
     "tts_79844fe2e1d5": {
       "text": "ぜいこみ",
@@ -3640,7 +3757,8 @@
       "sourceId": "zeikomi",
       "sources": [
         "sign:zeikomi"
-      ]
+      ],
+      "path": "/audio/nanami/tts_79844fe2e1d5.mp3"
     },
     "tts_536c40f98792": {
       "text": "セール",
@@ -3649,7 +3767,8 @@
       "sourceId": "sale",
       "sources": [
         "sign:sale"
-      ]
+      ],
+      "path": "/audio/nanami/tts_536c40f98792.mp3"
     },
     "tts_4f70eee769de": {
       "text": "セット",
@@ -3658,7 +3777,8 @@
       "sourceId": "set_menu",
       "sources": [
         "sign:set_menu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_4f70eee769de.mp3"
     },
     "tts_75912da153aa": {
       "text": "ぜんぴん",
@@ -3667,7 +3787,8 @@
       "sourceId": "zenpin",
       "sources": [
         "sign:zenpin"
-      ]
+      ],
+      "path": "/audio/nanami/tts_75912da153aa.mp3"
     },
     "tts_94dc5b6ee2d5": {
       "text": "たちいりきんし",
@@ -3676,7 +3797,8 @@
       "sourceId": "tachiiri",
       "sources": [
         "sign:tachiiri"
-      ]
+      ],
+      "path": "/audio/nanami/tts_94dc5b6ee2d5.mp3"
     },
     "tts_a793f835e5f7": {
       "text": "たべほうだい",
@@ -3685,7 +3807,8 @@
       "sourceId": "tabehoudai",
       "sources": [
         "sign:tabehoudai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_a793f835e5f7.mp3"
     },
     "tts_1fa6428b6198": {
       "text": "たんぴん",
@@ -3694,7 +3817,8 @@
       "sourceId": "tanpin",
       "sources": [
         "sign:tanpin"
-      ]
+      ],
+      "path": "/audio/nanami/tts_1fa6428b6198.mp3"
     },
     "tts_b8037e65f6fc": {
       "text": "ちゅうい",
@@ -3703,7 +3827,8 @@
       "sourceId": "chuui",
       "sources": [
         "sign:chuui"
-      ]
+      ],
+      "path": "/audio/nanami/tts_b8037e65f6fc.mp3"
     },
     "tts_44e650f65879": {
       "text": "つめたい",
@@ -3722,7 +3847,8 @@
       "sourceId": "tsurisen",
       "sources": [
         "sign:tsurisen"
-      ]
+      ],
+      "path": "/audio/nanami/tts_1a22edfee12d.mp3"
     },
     "tts_b7338fa57221": {
       "text": "ていきゅうび",
@@ -3731,7 +3857,8 @@
       "sourceId": "teikyuubi",
       "sources": [
         "sign:teikyuubi"
-      ]
+      ],
+      "path": "/audio/nanami/tts_b7338fa57221.mp3"
     },
     "tts_a63458c6e63c": {
       "text": "ていしょく",
@@ -3760,7 +3887,8 @@
       "sourceId": "tokkyuu",
       "sources": [
         "sign:tokkyuu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_18a5949f7ff9.mp3"
     },
     "tts_542bb0932f55": {
       "text": "にしぐち",
@@ -3769,7 +3897,8 @@
       "sourceId": "nishiguchi",
       "sources": [
         "sign:nishiguchi"
-      ]
+      ],
+      "path": "/audio/nanami/tts_542bb0932f55.mp3"
     },
     "tts_28b4b2603013": {
       "text": "のみほうだい",
@@ -3778,7 +3907,8 @@
       "sourceId": "nomihoudai",
       "sources": [
         "sign:nomihoudai"
-      ]
+      ],
+      "path": "/audio/nanami/tts_28b4b2603013.mp3"
     },
     "tts_015adc4a3380": {
       "text": "のりかえ",
@@ -3807,7 +3937,8 @@
       "sourceId": "baiten",
       "sources": [
         "sign:baiten"
-      ]
+      ],
+      "path": "/audio/nanami/tts_dfb06cbf112e.mp3"
     },
     "tts_61d1edd2b906": {
       "text": "はんがく",
@@ -3816,7 +3947,8 @@
       "sourceId": "hangaku",
       "sources": [
         "sign:hangaku"
-      ]
+      ],
+      "path": "/audio/nanami/tts_61d1edd2b906.mp3"
     },
     "tts_333ac66b7a4a": {
       "text": "ひがしぐち",
@@ -3825,7 +3957,8 @@
       "sourceId": "higashiguchi",
       "sources": [
         "sign:higashiguchi"
-      ]
+      ],
+      "path": "/audio/nanami/tts_333ac66b7a4a.mp3"
     },
     "tts_a2d3fe43375c": {
       "text": "ひく",
@@ -3834,7 +3967,8 @@
       "sourceId": "hiku",
       "sources": [
         "sign:hiku"
-      ]
+      ],
+      "path": "/audio/nanami/tts_a2d3fe43375c.mp3"
     },
     "tts_c312c4956af0": {
       "text": "ひじょうぐち",
@@ -3843,7 +3977,8 @@
       "sourceId": "hijouguchi",
       "sources": [
         "sign:hijouguchi"
-      ]
+      ],
+      "path": "/audio/nanami/tts_c312c4956af0.mp3"
     },
     "tts_274e92640342": {
       "text": "ほんじつ",
@@ -3852,7 +3987,8 @@
       "sourceId": "honjitsu",
       "sources": [
         "sign:honjitsu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_274e92640342.mp3"
     },
     "tts_4829e3102f04": {
       "text": "まんしつ",
@@ -3861,7 +3997,8 @@
       "sourceId": "manshitsu",
       "sources": [
         "sign:manshitsu"
-      ]
+      ],
+      "path": "/audio/nanami/tts_4829e3102f04.mp3"
     },
     "tts_b19662b70811": {
       "text": "みなみぐち",
@@ -3870,7 +4007,8 @@
       "sourceId": "minamiguchi",
       "sources": [
         "sign:minamiguchi"
-      ]
+      ],
+      "path": "/audio/nanami/tts_b19662b70811.mp3"
     },
     "tts_d4a9d9ef26f0": {
       "text": "むりょう",
@@ -3879,7 +4017,8 @@
       "sourceId": "muryou",
       "sources": [
         "sign:muryou"
-      ]
+      ],
+      "path": "/audio/nanami/tts_d4a9d9ef26f0.mp3"
     },
     "tts_0baffcd85e68": {
       "text": "むりょうWi-Fi",
@@ -3888,7 +4027,8 @@
       "sourceId": "tasuku",
       "sources": [
         "sign:tasuku"
-      ]
+      ],
+      "path": "/audio/nanami/tts_0baffcd85e68.mp3"
     },
     "tts_86ae0d89c5b9": {
       "text": "ランチ",
@@ -3897,7 +4037,8 @@
       "sourceId": "lunch",
       "sources": [
         "sign:lunch"
-      ]
+      ],
+      "path": "/audio/nanami/tts_86ae0d89c5b9.mp3"
     },
     "tts_6e2d1ad8f812": {
       "text": "りょうがえ",
@@ -3916,7 +4057,8 @@
       "sourceId": "waribiki",
       "sources": [
         "sign:waribiki"
-      ]
+      ],
+      "path": "/audio/nanami/tts_14230c31486d.mp3"
     },
     "tts_ebb323c6fe75": {
       "text": "お持ち帰り",
@@ -3925,7 +4067,8 @@
       "sourceId": "mochikaeri:ja",
       "sources": [
         "sign:mochikaeri:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_ebb323c6fe75.mp3"
     },
     "tts_73e6684ff80e": {
       "text": "お手洗い",
@@ -3934,7 +4077,8 @@
       "sourceId": "otearai:ja",
       "sources": [
         "sign:otearai:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_73e6684ff80e.mp3"
     },
     "tts_0e1ebb0f5c19": {
       "text": "お静かに",
@@ -3943,7 +4087,8 @@
       "sourceId": "shizukani:ja",
       "sources": [
         "sign:shizukani:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_0e1ebb0f5c19.mp3"
     },
     "tts_ab32cfca34b7": {
       "text": "カード対応",
@@ -3952,7 +4097,8 @@
       "sourceId": "card_taiou:ja",
       "sources": [
         "sign:card_taiou:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_ab32cfca34b7.mp3"
     },
     "tts_9f57e6792e87": {
       "text": "つり銭",
@@ -3961,7 +4107,8 @@
       "sourceId": "tsurisen:ja",
       "sources": [
         "sign:tsurisen:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_9f57e6792e87.mp3"
     },
     "tts_c09cb5acee9e": {
       "text": "案内",
@@ -3970,7 +4117,8 @@
       "sourceId": "annai:ja",
       "sources": [
         "sign:annai:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_c09cb5acee9e.mp3"
     },
     "tts_21941967f1cf": {
       "text": "一時停止",
@@ -3979,7 +4127,8 @@
       "sourceId": "ichiji_teishi:ja",
       "sources": [
         "sign:ichiji_teishi:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_21941967f1cf.mp3"
     },
     "tts_7a8a08a87847": {
       "text": "引",
@@ -3988,7 +4137,8 @@
       "sourceId": "hiku:ja",
       "sources": [
         "sign:hiku:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_7a8a08a87847.mp3"
     },
     "tts_f13952ac0063": {
       "text": "飲み放題",
@@ -3997,7 +4147,8 @@
       "sourceId": "nomihoudai:ja",
       "sources": [
         "sign:nomihoudai:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_f13952ac0063.mp3"
     },
     "tts_de70b7fbff7d": {
       "text": "営業時間",
@@ -4006,7 +4157,8 @@
       "sourceId": "eigyoujikan:ja",
       "sources": [
         "sign:eigyoujikan:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_de70b7fbff7d.mp3"
     },
     "tts_44f4dc039bb1": {
       "text": "営業中",
@@ -4025,7 +4177,8 @@
       "sourceId": "osu:ja",
       "sources": [
         "sign:osu:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_a59b01a704e2.mp3"
     },
     "tts_2aaaffaf75b8": {
       "text": "温かい",
@@ -4034,7 +4187,8 @@
       "sourceId": "atatakai:ja",
       "sources": [
         "sign:atatakai:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_2aaaffaf75b8.mp3"
     },
     "tts_bb3cfa59d2e8": {
       "text": "改札口",
@@ -4043,7 +4197,8 @@
       "sourceId": "kaisatsu:ja",
       "sources": [
         "sign:kaisatsu:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_bb3cfa59d2e8.mp3"
     },
     "tts_7e9d116b4531": {
       "text": "各駅停車",
@@ -4052,7 +4207,8 @@
       "sourceId": "kakueki:ja",
       "sources": [
         "sign:kakueki:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_7e9d116b4531.mp3"
     },
     "tts_a99917e86228": {
       "text": "割引",
@@ -4061,7 +4217,8 @@
       "sourceId": "waribiki:ja",
       "sources": [
         "sign:waribiki:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_a99917e86228.mp3"
     },
     "tts_f966cf45097b": {
       "text": "甘口",
@@ -4070,7 +4227,8 @@
       "sourceId": "amakuchi:ja",
       "sources": [
         "sign:amakuchi:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_f966cf45097b.mp3"
     },
     "tts_d8a5678c1db1": {
       "text": "関係者以外立入禁止",
@@ -4079,7 +4237,8 @@
       "sourceId": "tachiiri_kinshi2:ja",
       "sources": [
         "sign:tachiiri_kinshi2:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_d8a5678c1db1.mp3"
     },
     "tts_265af6914f6b": {
       "text": "危険",
@@ -4088,7 +4247,8 @@
       "sourceId": "kiken:ja",
       "sources": [
         "sign:kiken:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_265af6914f6b.mp3"
     },
     "tts_a8bb8cbb2df2": {
       "text": "期間限定",
@@ -4097,7 +4257,8 @@
       "sourceId": "kikan_gentei:ja",
       "sources": [
         "sign:kikan_gentei:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_a8bb8cbb2df2.mp3"
     },
     "tts_954df4424486": {
       "text": "急行",
@@ -4106,7 +4267,8 @@
       "sourceId": "kyuukou:ja",
       "sources": [
         "sign:kyuukou:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_954df4424486.mp3"
     },
     "tts_375c1e1161f0": {
       "text": "禁煙",
@@ -4115,7 +4277,8 @@
       "sourceId": "kinen:ja",
       "sources": [
         "sign:kinen:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_375c1e1161f0.mp3"
     },
     "tts_6de5e7f369c2": {
       "text": "空室",
@@ -4124,7 +4287,8 @@
       "sourceId": "kuushitsu:ja",
       "sources": [
         "sign:kuushitsu:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_6de5e7f369c2.mp3"
     },
     "tts_e3ca5905c270": {
       "text": "現金",
@@ -4133,7 +4297,8 @@
       "sourceId": "genkin_sign:ja",
       "sources": [
         "sign:genkin_sign:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_e3ca5905c270.mp3"
     },
     "tts_e66ac9ef8731": {
       "text": "故障中",
@@ -4142,7 +4307,8 @@
       "sourceId": "koshouchu:ja",
       "sources": [
         "sign:koshouchu:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_e66ac9ef8731.mp3"
     },
     "tts_bd6fbd4f01f9": {
       "text": "交通系IC",
@@ -4151,7 +4317,8 @@
       "sourceId": "koutsuukei:ja",
       "sources": [
         "sign:koutsuukei:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_bd6fbd4f01f9.mp3"
     },
     "tts_d8aa2258c01a": {
       "text": "工事中",
@@ -4160,7 +4327,8 @@
       "sourceId": "koujichu:ja",
       "sources": [
         "sign:koujichu:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_d8aa2258c01a.mp3"
     },
     "tts_5c4e286f3d9a": {
       "text": "撮影禁止",
@@ -4169,7 +4337,8 @@
       "sourceId": "satsuei_kinshi:ja",
       "sources": [
         "sign:satsuei_kinshi:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_5c4e286f3d9a.mp3"
     },
     "tts_312b15da556c": {
       "text": "受付",
@@ -4178,7 +4347,8 @@
       "sourceId": "uketsuke:ja",
       "sources": [
         "sign:uketsuke:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_312b15da556c.mp3"
     },
     "tts_dd877ebcea7c": {
       "text": "出口",
@@ -4197,7 +4367,8 @@
       "sourceId": "junbichu:ja",
       "sources": [
         "sign:junbichu:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_69683a901b7d.mp3"
     },
     "tts_e33ba9c65056": {
       "text": "食べ放題",
@@ -4206,7 +4377,8 @@
       "sourceId": "tabehoudai:ja",
       "sources": [
         "sign:tabehoudai:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_e33ba9c65056.mp3"
     },
     "tts_f12955f3b5c9": {
       "text": "新発売",
@@ -4215,7 +4387,8 @@
       "sourceId": "shinhatsubai:ja",
       "sources": [
         "sign:shinhatsubai:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_f12955f3b5c9.mp3"
     },
     "tts_3c4a45690fb1": {
       "text": "辛口",
@@ -4224,7 +4397,8 @@
       "sourceId": "karakuchi:ja",
       "sources": [
         "sign:karakuchi:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_3c4a45690fb1.mp3"
     },
     "tts_625612e2e5d4": {
       "text": "数量限定",
@@ -4233,7 +4407,8 @@
       "sourceId": "gentei_menu:ja",
       "sources": [
         "sign:gentei_menu:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_625612e2e5d4.mp3"
     },
     "tts_883518371afb": {
       "text": "西口",
@@ -4242,7 +4417,8 @@
       "sourceId": "nishiguchi:ja",
       "sources": [
         "sign:nishiguchi:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_883518371afb.mp3"
     },
     "tts_1cbfe63e1994": {
       "text": "税込",
@@ -4251,7 +4427,8 @@
       "sourceId": "zeikomi:ja",
       "sources": [
         "sign:zeikomi:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_1cbfe63e1994.mp3"
     },
     "tts_6befd2370848": {
       "text": "全品",
@@ -4260,7 +4437,8 @@
       "sourceId": "zenpin:ja",
       "sources": [
         "sign:zenpin:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_6befd2370848.mp3"
     },
     "tts_53b75a47175a": {
       "text": "足元注意",
@@ -4269,7 +4447,8 @@
       "sourceId": "ashimoto:ja",
       "sources": [
         "sign:ashimoto:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_53b75a47175a.mp3"
     },
     "tts_06e899c3f983": {
       "text": "大盛り",
@@ -4278,7 +4457,8 @@
       "sourceId": "oomori_menu:ja",
       "sources": [
         "sign:oomori_menu:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_06e899c3f983.mp3"
     },
     "tts_2a345e41e969": {
       "text": "単品",
@@ -4287,7 +4467,8 @@
       "sourceId": "tanpin:ja",
       "sources": [
         "sign:tanpin:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_2a345e41e969.mp3"
     },
     "tts_f08b55c42cfa": {
       "text": "注意",
@@ -4296,7 +4477,8 @@
       "sourceId": "chuui:ja",
       "sources": [
         "sign:chuui:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_f08b55c42cfa.mp3"
     },
     "tts_fef3ad6a1bd4": {
       "text": "定休日",
@@ -4305,7 +4487,8 @@
       "sourceId": "teikyuubi:ja",
       "sources": [
         "sign:teikyuubi:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_fef3ad6a1bd4.mp3"
     },
     "tts_c89c95bdcba2": {
       "text": "定食",
@@ -4324,7 +4507,8 @@
       "sourceId": "higashiguchi:ja",
       "sources": [
         "sign:higashiguchi:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_53dcb0fe0927.mp3"
     },
     "tts_4c80d67f1adb": {
       "text": "特急",
@@ -4333,7 +4517,8 @@
       "sourceId": "tokkyuu:ja",
       "sources": [
         "sign:tokkyuu:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_4c80d67f1adb.mp3"
     },
     "tts_268d6b3096cb": {
       "text": "南口",
@@ -4342,7 +4527,8 @@
       "sourceId": "minamiguchi:ja",
       "sources": [
         "sign:minamiguchi:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_268d6b3096cb.mp3"
     },
     "tts_38e9cd1ffb95": {
       "text": "入口",
@@ -4361,7 +4547,8 @@
       "sourceId": "urikire:ja",
       "sources": [
         "sign:urikire:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_dd74f606abc0.mp3"
     },
     "tts_cb365f543bc8": {
       "text": "売店",
@@ -4370,7 +4557,8 @@
       "sourceId": "baiten:ja",
       "sources": [
         "sign:baiten:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_cb365f543bc8.mp3"
     },
     "tts_d84accc4d4cc": {
       "text": "半額",
@@ -4379,7 +4567,8 @@
       "sourceId": "hangaku:ja",
       "sources": [
         "sign:hangaku:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_d84accc4d4cc.mp3"
     },
     "tts_e907e460b7bb": {
       "text": "非常口",
@@ -4388,7 +4577,8 @@
       "sourceId": "hijouguchi:ja",
       "sources": [
         "sign:hijouguchi:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_e907e460b7bb.mp3"
     },
     "tts_9e0b645acb8c": {
       "text": "北口",
@@ -4397,7 +4587,8 @@
       "sourceId": "kitaguchi:ja",
       "sources": [
         "sign:kitaguchi:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_9e0b645acb8c.mp3"
     },
     "tts_ebb72f98b8c5": {
       "text": "本日",
@@ -4406,7 +4597,8 @@
       "sourceId": "honjitsu:ja",
       "sources": [
         "sign:honjitsu:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_ebb72f98b8c5.mp3"
     },
     "tts_b358db5a50d0": {
       "text": "満室",
@@ -4415,7 +4607,8 @@
       "sourceId": "manshitsu:ja",
       "sources": [
         "sign:manshitsu:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_b358db5a50d0.mp3"
     },
     "tts_501451d6eb67": {
       "text": "無料",
@@ -4424,7 +4617,8 @@
       "sourceId": "muryou:ja",
       "sources": [
         "sign:muryou:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_501451d6eb67.mp3"
     },
     "tts_fd0a1c6abd72": {
       "text": "無料Wi-Fi",
@@ -4433,7 +4627,8 @@
       "sourceId": "tasuku:ja",
       "sources": [
         "sign:tasuku:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_fd0a1c6abd72.mp3"
     },
     "tts_0f887d746198": {
       "text": "立入禁止",
@@ -4442,7 +4637,8 @@
       "sourceId": "tachiiri:ja",
       "sources": [
         "sign:tachiiri:ja"
-      ]
+      ],
+      "path": "/audio/nanami/tts_0f887d746198.mp3"
     },
     "tts_0b87bc8eea28": {
       "text": "両替",
@@ -4724,6 +4920,212 @@
     "定食": "tts_c89c95bdcba2",
     "入口": "tts_38e9cd1ffb95",
     "両替": "tts_0b87bc8eea28",
-    "冷たい": "tts_e546e7d633e6"
+    "冷たい": "tts_e546e7d633e6",
+    "お飲み物は": "tts_be6bffc79ae4",
+    "お支払い方法は": "tts_540846684992",
+    "お腹が痛いです": "tts_a5ed351d5a63",
+    "お名前は": "tts_12c9a41c11c1",
+    "カードで": "tts_6fa2bd19c929",
+    "カードは使えますか": "tts_9fa002dbc4bd",
+    "コインロッカーは、どこですか？": "tts_df5c2a6b5120",
+    "ここで止めてください": "tts_de2ab70b8c1a",
+    "この薬は何ですか": "tts_767b0fb18e47",
+    "これとこれ": "tts_ee06f1be0e0c",
+    "これにします": "tts_3d9192b39b71",
+    "これを送りたいです": "tts_dac385e8e35b",
+    "これを抜いてください": "tts_6c3263889223",
+    "これ下さい": "tts_7df5f7b8afef",
+    "ご注文はお決まりですか": "tts_c9dd521168da",
+    "スイカで": "tts_f1fc99ad2e21",
+    "そのままで": "tts_6ead72186de1",
+    "たいざいは？": "tts_274595ef5da3",
+    "タクシーお願いします": "tts_dd76552b7fb1",
+    "チャージお願いします": "tts_24db552f7a23",
+    "どうしましたか？": "tts_cbf1450a1127",
+    "どこですか？": "tts_161b40e8f515",
+    "どこに泊まりますか": "tts_5b8c6da435e2",
+    "どこまでですか？": "tts_2812f9721cb7",
+    "どちらですか？": "tts_89d6e45b8498",
+    "パスポートお願いします": "tts_6845e6e2f286",
+    "ポイントカードはありますか": "tts_ee4563b88dfa",
+    "ホテルです": "tts_917c5faf1b6c",
+    "メニューを見せてください": "tts_a3ddd3b0e16a",
+    "もくてきは？": "tts_0b46aa740d09",
+    "やさしい日本語でお願いします": "tts_922f44dcc064",
+    "ゆっくりお願いします": "tts_255df2950150",
+    "レシートをください": "tts_19ef31be44b5",
+    "一週間です": "tts_9d8314ffa6b6",
+    "一人です": "tts_801d3641b026",
+    "英語で大丈夫ですか": "tts_db333033026b",
+    "温めますか": "tts_1198fe760c61",
+    "何番線ですか": "tts_08f2c6fa423b",
+    "何名様ですか": "tts_de62605c83c0",
+    "改札はどこですか": "tts_cfbbdf7f80d2",
+    "観光です": "tts_71bad4af0b24",
+    "券売機はどこですか": "tts_6d410d19febc",
+    "鍵です": "tts_46570b3440e9",
+    "現金で": "tts_bbfb06c9f1f6",
+    "合計千円です": "tts_76a0e7601001",
+    "細かくしてください": "tts_e27b2dce6d3d",
+    "三日です": "tts_525fa60af262",
+    "仕事です": "tts_79699efe7955",
+    "使い方を教えてください": "tts_1944d65bed89",
+    "次の駅で乗り換えてください": "tts_d9715e893032",
+    "次は渋谷ですか": "tts_0013a9ca6df3",
+    "写真お願いします": "tts_f4039f302c54",
+    "写真撮ってもいいですか": "tts_475df71987da",
+    "新宿駅はどこですか": "tts_d0f6d0eb4769",
+    "辛いですか": "tts_67537207f82b",
+    "水をください": "tts_e0058ffaf3a2",
+    "切符をください": "tts_32fcb38e7a80",
+    "替え玉お願いします": "tts_c4f612cf95c9",
+    "袋は要りますか": "tts_17bf70df7307",
+    "袋は要りません": "tts_303d7b8ce335",
+    "大丈夫": "tts_b4e6d4a5c89e",
+    "大盛りできますか": "tts_5bd0c900547a",
+    "宅急便お願いします": "tts_8358b57d89dd",
+    "朝食は": "tts_9b81e1ae1ba9",
+    "頭が痛いです": "tts_4d329d63463c",
+    "道を教えてください": "tts_52d9f59c245d",
+    "二つください": "tts_db9f5acc1108",
+    "箸は要りますか": "tts_724523899771",
+    "箸をください": "tts_74ef5e57a71a",
+    "部屋はどこですか": "tts_58a31b3e0c1b",
+    "風邪です": "tts_1c39b46cebc4",
+    "別々で": "tts_8612b57ba693",
+    "免税できますか": "tts_5629044ee050",
+    "薬をください": "tts_1c83f478ab11",
+    "予約しています": "tts_8ad0ccd0e10e",
+    "要りません": "tts_92e9f3031369",
+    "両替お願いします": "tts_2b7437d20739",
+    "ありがとう": "tts_42d0969029e9",
+    "いや": "tts_c9177450298c",
+    "うん": "tts_22f503aaf294",
+    "これでお願いします": "tts_a86cd2b6f9f8",
+    "そうです": "tts_f7df6ac2474a",
+    "ちょっと": "tts_f7b0201b3f0e",
+    "ほしいです": "tts_97a411a26ee3",
+    "もう大丈夫です": "tts_bcd0524dba9f",
+    "一万円": "tts_27a065ed775f",
+    "改札": "tts_a63df47d88c3",
+    "五千円": "tts_3370b12e0f02",
+    "五百円": "tts_c685e280f421",
+    "食べます": "tts_ff55adcf8d52",
+    "千円": "tts_1ae8cde53509",
+    "二千円": "tts_e2e9f12b440b",
+    "百円": "tts_dd134499531a",
+    "分かりました、ありがとうございます": "tts_6e4b392552c7",
+    "あしもとちゅうい": "tts_66f0b9161217",
+    "あたたかい": "tts_d13aa1e57ee3",
+    "あまくち": "tts_c0df549e3258",
+    "あんない": "tts_4db3472b6e41",
+    "いちじていし": "tts_408e2ae255b0",
+    "うけつけ": "tts_0a1544d65547",
+    "うりきれ": "tts_ace7c64eca2e",
+    "えいぎょうじかん": "tts_33f612435d8c",
+    "おおもり": "tts_6ab8af25a297",
+    "おしずかに": "tts_cb1434a4bdae",
+    "おす": "tts_0f40454243d0",
+    "おすすめ": "tts_343a26d4817b",
+    "おてあらい": "tts_8b8ccdbe3855",
+    "おもちかえり": "tts_51dce2f31fa8",
+    "カードたいおう": "tts_9b27c35ef9c2",
+    "かいさつぐち": "tts_ef41926cafdd",
+    "かくえきていしゃ": "tts_1182ea1ef6a5",
+    "からくち": "tts_3b22787de227",
+    "かんけいしゃいがいたちいりきんし": "tts_5531b47e1962",
+    "きかんげんてい": "tts_483284272a48",
+    "きけん": "tts_07f0dc914ce2",
+    "きたぐち": "tts_6b9dd05b0f89",
+    "きゅうこう": "tts_ffc9b55b7118",
+    "きんえん": "tts_c5f142d6c696",
+    "くうしつ": "tts_dcb46e0fc29b",
+    "げんきん": "tts_65746967ebdc",
+    "こうじちゅう": "tts_18689fc391a6",
+    "こうつうけいアイシー": "tts_0b640f76f069",
+    "こしょうちゅう": "tts_600583ea7606",
+    "さつえいきんし": "tts_29f0cdaefb3f",
+    "じゅんびちゅう": "tts_e441dfe79fc2",
+    "しんはつばい": "tts_dfae1f286a52",
+    "すうりょうげんてい": "tts_fefca6a7da90",
+    "ぜいこみ": "tts_79844fe2e1d5",
+    "セール": "tts_536c40f98792",
+    "セット": "tts_4f70eee769de",
+    "ぜんぴん": "tts_75912da153aa",
+    "たちいりきんし": "tts_94dc5b6ee2d5",
+    "たべほうだい": "tts_a793f835e5f7",
+    "たんぴん": "tts_1fa6428b6198",
+    "ちゅうい": "tts_b8037e65f6fc",
+    "つりせん": "tts_1a22edfee12d",
+    "ていきゅうび": "tts_b7338fa57221",
+    "とっきゅう": "tts_18a5949f7ff9",
+    "にしぐち": "tts_542bb0932f55",
+    "のみほうだい": "tts_28b4b2603013",
+    "ばいてん": "tts_dfb06cbf112e",
+    "はんがく": "tts_61d1edd2b906",
+    "ひがしぐち": "tts_333ac66b7a4a",
+    "ひく": "tts_a2d3fe43375c",
+    "ひじょうぐち": "tts_c312c4956af0",
+    "ほんじつ": "tts_274e92640342",
+    "まんしつ": "tts_4829e3102f04",
+    "みなみぐち": "tts_b19662b70811",
+    "むりょう": "tts_d4a9d9ef26f0",
+    "むりょうWi-Fi": "tts_0baffcd85e68",
+    "ランチ": "tts_86ae0d89c5b9",
+    "わりびき": "tts_14230c31486d",
+    "お持ち帰り": "tts_ebb323c6fe75",
+    "お手洗い": "tts_73e6684ff80e",
+    "お静かに": "tts_0e1ebb0f5c19",
+    "カード対応": "tts_ab32cfca34b7",
+    "つり銭": "tts_9f57e6792e87",
+    "案内": "tts_c09cb5acee9e",
+    "一時停止": "tts_21941967f1cf",
+    "引": "tts_7a8a08a87847",
+    "飲み放題": "tts_f13952ac0063",
+    "営業時間": "tts_de70b7fbff7d",
+    "押": "tts_a59b01a704e2",
+    "温かい": "tts_2aaaffaf75b8",
+    "改札口": "tts_bb3cfa59d2e8",
+    "各駅停車": "tts_7e9d116b4531",
+    "割引": "tts_a99917e86228",
+    "甘口": "tts_f966cf45097b",
+    "関係者以外立入禁止": "tts_d8a5678c1db1",
+    "危険": "tts_265af6914f6b",
+    "期間限定": "tts_a8bb8cbb2df2",
+    "急行": "tts_954df4424486",
+    "禁煙": "tts_375c1e1161f0",
+    "空室": "tts_6de5e7f369c2",
+    "現金": "tts_e3ca5905c270",
+    "故障中": "tts_e66ac9ef8731",
+    "交通系IC": "tts_bd6fbd4f01f9",
+    "工事中": "tts_d8aa2258c01a",
+    "撮影禁止": "tts_5c4e286f3d9a",
+    "受付": "tts_312b15da556c",
+    "準備中": "tts_69683a901b7d",
+    "食べ放題": "tts_e33ba9c65056",
+    "新発売": "tts_f12955f3b5c9",
+    "辛口": "tts_3c4a45690fb1",
+    "数量限定": "tts_625612e2e5d4",
+    "西口": "tts_883518371afb",
+    "税込": "tts_1cbfe63e1994",
+    "全品": "tts_6befd2370848",
+    "足元注意": "tts_53b75a47175a",
+    "大盛り": "tts_06e899c3f983",
+    "単品": "tts_2a345e41e969",
+    "注意": "tts_f08b55c42cfa",
+    "定休日": "tts_fef3ad6a1bd4",
+    "東口": "tts_53dcb0fe0927",
+    "特急": "tts_4c80d67f1adb",
+    "南口": "tts_268d6b3096cb",
+    "売り切れ": "tts_dd74f606abc0",
+    "売店": "tts_cb365f543bc8",
+    "半額": "tts_d84accc4d4cc",
+    "非常口": "tts_e907e460b7bb",
+    "北口": "tts_9e0b645acb8c",
+    "本日": "tts_ebb72f98b8c5",
+    "満室": "tts_b358db5a50d0",
+    "無料": "tts_501451d6eb67",
+    "無料Wi-Fi": "tts_fd0a1c6abd72",
+    "立入禁止": "tts_0f887d746198"
   }
 }
