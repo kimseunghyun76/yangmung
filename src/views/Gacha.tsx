@@ -2,7 +2,7 @@
 // 단계 외형은 CSS(단계 색 링/리본), 장면 식별은 기존 모노 아이콘. (에셋 생기면 프레임으로 교체)
 import { useState } from 'react';
 import { CONTENT } from '../content';
-import { claim, loadCollection, saveCollection, tierMeta, tierNeed, MAX_TIER, ownedCount, diamondCount, type Collection, type DropResult } from '../learn/collection';
+import { claim, loadCollection, saveCollection, tierMeta, tierNeed, MAX_TIER, ownedCount, diamondCount, BOX, type BoxGrade, type Collection, type DropResult } from '../learn/collection';
 import { Icon } from '../ui/Icon';
 import { Modal } from './Modal';
 import { sceneVisualByMission } from './scene';
@@ -35,14 +35,15 @@ function TierRibbon({ tier }: { tier: number }) {
 }
 
 // ── 보석함 (완료 화면) ──────────────────────────────
-export function GachaBox({ sessionId, sceneIds }: { sessionId: number; sceneIds: string[] }) {
+export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: number; sceneIds: string[]; grade?: BoxGrade }) {
   const [opened, setOpened] = useState(false);
   const [results, setResults] = useState<DropResult[]>([]);
   const [deck, setDeck] = useState(false);
   if (sceneIds.length === 0) return null;
+  const box = BOX[grade];
 
   function open() {
-    const res = claim(loadCollection(), sessionId, sceneIds);
+    const res = claim(loadCollection(), sessionId, sceneIds, box.shards);
     saveCollection(res.collection);
     let r = res.results;
     if (r.length === 0) {
@@ -60,8 +61,9 @@ export function GachaBox({ sessionId, sceneIds }: { sessionId: number; sceneIds:
       {!opened ? (
         <button className="ym-press" onClick={open}
           style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: '20px', borderRadius: 20, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', cursor: 'pointer', color: 'var(--ink)' }}>
-          <span className="ym-listening" style={{ width: 64, height: 64, borderRadius: 18, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, background: 'linear-gradient(160deg, var(--accent), #d9a531)', boxShadow: '0 10px 26px rgba(185,56,46,0.4)' }}>🎁</span>
-          <span style={{ fontWeight: 800, fontSize: 16 }}>탭해서 열기</span>
+          <span className="ym-listening" style={{ width: 64, height: 64, borderRadius: 18, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, background: `linear-gradient(160deg, ${box.colors[0]}, ${box.colors[1]})`, boxShadow: `0 10px 26px ${box.colors[0]}66` }}>🎁</span>
+          <span style={{ fontWeight: 800, fontSize: 16 }}>{box.label} 열기</span>
+          <span style={{ fontSize: 12, color: 'var(--ink-faint)', fontWeight: 700 }}>장면당 조각 +{box.shards}</span>
         </button>
       ) : (
         <div className="ym-burst" style={{ padding: 18, borderRadius: 20, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)' }}>
@@ -72,7 +74,7 @@ export function GachaBox({ sessionId, sceneIds }: { sessionId: number; sceneIds:
                 <span style={{ fontSize: 13, fontWeight: 800 }}>{placeOf(r.sceneId)}</span>
                 <TierRibbon tier={r.tier} />
                 <span style={{ fontSize: 11, fontWeight: 800, color: r.leveledTo ? 'var(--ok)' : r.isNew ? 'var(--accent)' : 'var(--ink-faint)' }}>
-                  {r.leveledTo ? `${tierMeta(r.leveledTo).label} 승급!` : r.isNew ? 'NEW' : `조각 +1`}
+                  {r.leveledTo ? `${tierMeta(r.leveledTo).label} 승급!` : r.isNew ? 'NEW' : `조각 +${box.shards}`}
                 </span>
               </div>
             ))}

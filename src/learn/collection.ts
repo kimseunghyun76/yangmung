@@ -66,5 +66,19 @@ export function claim(prev: Collection, sessionId: number, sceneIds: string[], p
   return { collection: { cards, lastClaimedSessionId: sessionId }, results };
 }
 
+// 상자 등급 — 세션 성과로 결정. 등급이 높을수록 장면당 조각 더.
+export type BoxGrade = 'wood' | 'silver' | 'gold';
+export const BOX: Record<BoxGrade, { label: string; shards: number; colors: [string, string] }> = {
+  wood: { label: '나무 상자', shards: 1, colors: ['#7a5a3a', '#a9743b'] },
+  silver: { label: '은 상자', shards: 2, colors: ['#7f8794', '#c7ccd4'] },
+  gold: { label: '금 상자', shards: 3, colors: ['#c8951f', '#e8c45a'] },
+};
+// 별점·복구로 등급 산정 (별3·무복구=금, 별2이상=은, 그 외=나무)
+export function boxGrade(stars: number, recoveryUsed: number): BoxGrade {
+  if (stars >= 3 && recoveryUsed === 0) return 'gold';
+  if (stars >= 2) return 'silver';
+  return 'wood';
+}
+
 export const ownedCount = (c: Collection) => Object.keys(c.cards).length;
 export const diamondCount = (c: Collection) => Object.values(c.cards).filter((x) => x.tier >= MAX_TIER).length;
