@@ -7,7 +7,7 @@ import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
 import { sceneVisualByPlace } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
-import { PageHead } from './ui';
+import { PageHead, SceneImageThumb } from './ui';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
 
 const RECOVERY = [
@@ -83,7 +83,8 @@ export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props)
                   background: unlocked ? undefined : 'var(--glass-bg)', opacity: unlocked ? 1 : 0.65,
                 }}
               >
-                <span style={{ flex: 1 }}>
+                <SceneImageThumb src={sv.backdrop ?? sv.thumb} icon={sv.icon} accent={sv.accent} size={52} muted={!unlocked} />
+                <span style={{ flex: 1, minWidth: 0 }}>
                   <span style={{ display: 'block', fontSize: 16, fontWeight: 700 }}>{m.place ?? m.scenario}</span>
                   <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 500, marginTop: 1 }}>{m.scenario}</span>
                 </span>

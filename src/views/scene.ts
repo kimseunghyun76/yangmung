@@ -40,7 +40,16 @@ const BY_PLACE: Record<string, SceneVisual> = {
 const DEFAULT: SceneVisual = { emoji: '旅', icon: 'scene-store', bg: '#f6e4df', accent: '#c8453a' };
 
 export function sceneVisualByPlace(place?: string): SceneVisual {
-  return (place && BY_PLACE[place]) || DEFAULT;
+  const base = (place && BY_PLACE[place]) || DEFAULT;
+  const mission = place ? CONTENT.missions.find((m) => m.place === place && BACKDROPS[m.id]) : undefined;
+  if (!mission) return base;
+  const key = mission.id.toLowerCase();
+  return {
+    ...base,
+    thumb: `/scenes/${key}-thumb.svg`,
+    hero: `/scenes/${key}-hero.svg`,
+    backdrop: BACKDROPS[mission.id],
+  };
 }
 
 // 미션의 visual 슬롯이 있으면 우선 적용(이미지/영상 갈아끼우기 지점), 없으면 장소 기본값.
