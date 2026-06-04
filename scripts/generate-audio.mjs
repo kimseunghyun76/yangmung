@@ -5,6 +5,7 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { CONTENT } from '../src/content/index.ts';
 import { signs } from '../src/content/signs.ts';
+import { SCENE_SENTENCES } from '../src/content/sceneSentences.ts';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -22,7 +23,7 @@ const REGION = process.env.AZURE_SPEECH_REGION || 'koreacentral';
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry');
 const force = args.includes('--force');
-const only = valueArg('--only'); // kana | phrases | signs | core
+const only = valueArg('--only'); // kana | phrases | signs | sentences | core
 const sourceIdFilter = valueArg('--source-id'); // 특정 Phrase/Kana/Sign id만 재생성
 const limit = Number(valueArg('--limit') || '0');
 const reuseRoot = valueArg('--reuse-root') || path.resolve(ROOT, '..', 'kana-master', 'public', 'audio');
@@ -50,6 +51,11 @@ function displayText(p) {
 
 function synthesisText(p) {
   return normalizeText(p.kanji ?? p.displayKana ?? p.kana);
+}
+
+function inheritedSpeechPhoneme(item) {
+  const keys = new Set([displayText(item), synthesisText(item), normalizeText(item.kana), normalizeText(item.kanji)].filter(Boolean));
+  return CONTENT.phrases.find((p) => p.speechPhoneme && [displayText(p), synthesisText(p), normalizeText(p.kana), normalizeText(p.kanji)].some((text) => keys.has(text)))?.speechPhoneme;
 }
 
 function addItem(items, seen, source, sourceId, text, priority = 50, altTexts = [], synthText = text, speechPhoneme = undefined) {
@@ -105,6 +111,23 @@ function collectItems() {
     for (const s of signs) {
       addItem(items, seen, 'sign', s.id, normalizeText(s.kana || s.ja), 45, [s.ja]);
       if (s.ja && s.ja !== s.kana) addItem(items, seen, 'sign', `${s.id}:ja`, s.ja, 50, [s.kana]);
+    }
+  }
+  if (!only || only === 'sentences') {
+    for (const [sceneId, sentences] of Object.entries(SCENE_SENTENCES)) {
+      for (const s of sentences) {
+        addItem(
+          items,
+          seen,
+          'sentence',
+          s.id,
+          displayText(s),
+          55,
+          [s.displayKana, s.kana, s.kanji].filter(Boolean),
+          synthesisText(s),
+          inheritedSpeechPhoneme(s),
+        );
+      }
     }
   }
 

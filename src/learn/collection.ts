@@ -4,11 +4,12 @@
 export interface DeckCard { tier: number; shards: number } // tier 1~5, shards = 다음 단계 진척
 export interface Collection {
   cards: Record<string, DeckCard>;      // key = 미션 id (C1…)
+  sentences: Record<string, string[]>;  // key = 미션 id, value = 획득한 SceneSentence id
   lastClaimedSessionId: number;          // 같은 세션 중복 보상 방지
 }
 
 const KEY = 'yangmung:collection:v1';
-const EMPTY: Collection = { cards: {}, lastClaimedSessionId: 0 };
+const EMPTY: Collection = { cards: {}, sentences: {}, lastClaimedSessionId: 0 };
 
 // 단계 진행에 필요한 조각 수 (현재 tier → 다음). 5단계는 최종.
 const NEED: Record<number, number> = { 1: 2, 2: 3, 3: 5, 4: 8, 5: Infinity };
@@ -30,7 +31,7 @@ export function loadCollection(): Collection {
     const raw = window.localStorage.getItem(KEY);
     if (!raw) return { ...EMPTY };
     const c = JSON.parse(raw) as Collection;
-    return { cards: c.cards ?? {}, lastClaimedSessionId: c.lastClaimedSessionId ?? 0 };
+    return { cards: c.cards ?? {}, sentences: c.sentences ?? {}, lastClaimedSessionId: c.lastClaimedSessionId ?? 0 };
   } catch { return { ...EMPTY }; }
 }
 
@@ -39,13 +40,14 @@ export function saveCollection(c: Collection): void {
   try { window.localStorage.setItem(KEY, JSON.stringify(c)); } catch {}
 }
 
-export interface DropResult { sceneId: string; isNew: boolean; leveledTo: number | null; tier: number; shards: number }
+export interface DropResult { sceneId: string; isNew: boolean; leveledTo: number | null; tier: number; shards: number; sentenceIds: string[] }
 
 // 세션 보상 적립 — sceneIds 각각 조각 +1(중복 보상 1세션 1회). 결과 + 갱신 컬렉션 반환.
 export function claim(prev: Collection, sessionId: number, sceneIds: string[], perScene = 1): { collection: Collection; results: DropResult[] } {
   if (sessionId > 0 && prev.lastClaimedSessionId === sessionId) return { collection: prev, results: [] };
   if (sceneIds.length === 0) return { collection: prev, results: [] };
   const cards = { ...prev.cards };
+  const sentences = Object.fromEntries(Object.entries(prev.sentences ?? {}).map(([id, rows]) => [id, [...rows]]));
   const results: DropResult[] = [];
   for (const id of sceneIds) {
     const existed = !!cards[id];
@@ -61,9 +63,20 @@ export function claim(prev: Collection, sessionId: number, sceneIds: string[], p
       }
     }
     cards[id] = cur;
-    results.push({ sceneId: id, isNew: !existed, leveledTo, tier: cur.tier, shards: cur.shards });
+    const owned = new Set(sentences[id] ?? []);
+    const sentenceIds = pickNewSentenceIds(id, owned, perScene);
+    sentences[id] = [...owned, ...sentenceIds];
+    results.push({ sceneId: id, isNew: !existed, leveledTo, tier: cur.tier, shards: cur.shards, sentenceIds });
   }
-  return { collection: { cards, lastClaimedSessionId: sessionId }, results };
+  return { collection: { cards, sentences, lastClaimedSessionId: sessionId }, results };
+}
+
+function pickNewSentenceIds(sceneId: string, owned: Set<string>, count: number): string[] {
+  // 동적 import 없이 컬렉션 모듈을 가볍게 유지하기 위해 규칙 기반 id를 사용한다.
+  // 각 장면은 명세상 정확히 30개이며, 낮은 번호(자주 쓰는 표현)를 먼저 지급한다.
+  const candidates = Array.from({ length: 30 }, (_, i) => `ss_${sceneId.toLowerCase()}_${String(i + 1).padStart(2, '0')}`)
+    .filter((id) => !owned.has(id));
+  return candidates.slice(0, Math.max(1, count));
 }
 
 // 상자 등급 — 세션 성과로 결정. 등급이 높을수록 장면당 조각 더.
@@ -82,3 +95,4 @@ export function boxGrade(stars: number, recoveryUsed: number): BoxGrade {
 
 export const ownedCount = (c: Collection) => Object.keys(c.cards).length;
 export const diamondCount = (c: Collection) => Object.values(c.cards).filter((x) => x.tier >= MAX_TIER).length;
+export const sentenceCount = (c: Collection) => Object.values(c.sentences ?? {}).reduce((sum, rows) => sum + rows.length, 0);
