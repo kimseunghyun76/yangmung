@@ -40,6 +40,7 @@ export function App() {
   const [quizSeen, setQuizSeen] = useState(0);
   const [sessionLog, setSessionLog] = useState<SessionLogEntry[]>([]);
   const [picks, setPicks] = useState<PickMap>({}); // 미션 스텝별 내가 고른 답변 (대화 리캡용)
+  const [gachaEligible, setGachaEligible] = useState(true); // 약점 재도전 세션은 보석함 제외
   const [seenKana, setSeenKana] = useState<SeenKana>(() => loadSeenKana());
   const [discovered, setDiscovered] = useState<string[]>(() => loadDiscovered());
   const [settings, setSettings] = useState<Settings>(() => loadSettings());
@@ -123,10 +124,11 @@ export function App() {
 
   // ── 액션 ─────────────────────────────────────────
   // showIntro: 새 "한 판"이면 인트로부터(목표↔첫 카드 정렬), 약점 재출제는 바로 세션.
-  function beginSession(id: number, cards: Card[], showIntro: boolean) {
+  function beginSession(id: number, cards: Card[], showIntro: boolean, gacha = true) {
     setSessionId(id);
     setSessionCards(cards);
     setI(0); setPicked(null); setScore(0); setQuizSeen(0); setSessionLog([]); setPicks({});
+    setGachaEligible(gacha);
     setView(showIntro ? 'intro' : 'session');
   }
   // 발견 카드: 배운 가나로만 된(2자 이상) 아직 축하 안 한 표현 1개 → 세션 끝 보상으로
@@ -164,7 +166,8 @@ export function App() {
   // 히라가나/가타카나 직접 연습 — 현재 모드와 무관하게 그 스크립트 가나만
   function startKanaSession(script: 'hiragana' | 'katakana') {
     const ids = new Set(CONTENT.kana.filter((k) => k.script === script).map((k) => k.id));
-    const cards = selectScriptKanaCards(allCards, progress, nextSessionId(session), ids);
+    // 전체 학습: 스크립트 전체를 한 세션에(끊김 없이). limit 크게.
+    const cards = selectScriptKanaCards(allCards, progress, nextSessionId(session), ids, 999);
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true);
   }
@@ -184,7 +187,7 @@ export function App() {
     const weakIds = new Set(sessionLog.filter((r) => r.result !== 'correct').map((r) => r.id));
     const weak = sessionCards.filter((c) => c.kind === 'quiz' && weakIds.has(c.id));
     if (weak.length === 0) return;
-    beginSession(nextSessionId(session), weak, false);
+    beginSession(nextSessionId(session), weak, false, false); // 약점 재도전 = 보석함 X
   }
   // "이미 알아요": 현재 카드를 즉시 익숙 처리 + 가나 보조 끔 → 다음으로 (점수·약점 집계 X)
   function markKnown() {
@@ -253,17 +256,17 @@ export function App() {
     const armNext = () => {
       if (pendingAdvanceKeyRef.current !== advanceKey || currentCardKeyRef.current !== advanceKey) return;
       if (advanceTimerRef.current !== null) return;
-      advanceTimerRef.current = window.setTimeout(() => { advanceTimerRef.current = null; next(); }, 1000);
+      advanceTimerRef.current = window.setTimeout(() => { advanceTimerRef.current = null; next(); }, 500);
     };
     const willAuto = c.correct && !c.recovery && settings.fastForward;
     pendingAdvanceKeyRef.current = willAuto ? advanceKey : null;
-    // 정답이면 표현을 읽어주고 → "다 읽은 뒤 1초"에 넘어감
+    // 정답이면 표현을 읽어주고 → "다 읽은 뒤 0.5초"에 넘어감(체감 50% 빠르게)
     if (c.ja && ttsSupported()) {
       speak(c.ja, willAuto ? { onEnd: armNext } : {});
       // 안전망: onend가 안 오는 브라우저 대비 (읽기 길이+여유)
       if (willAuto) safetyTimerRef.current = window.setTimeout(armNext, 8000);
     } else if (willAuto) {
-      armNext(); // 읽을 음성이 없으면 그냥 1초 후
+      armNext(); // 읽을 음성이 없으면 그냥 0.5초 후
     }
   }
   // 소개 카드: 퀴즈 전 학습 노출. 점수에는 넣지 않고, 한 번 본 카드로만 기록.
@@ -330,7 +333,7 @@ export function App() {
         <Done
           sessionId={sessionId} score={score} quizSeen={quizSeen} sessionLog={sessionLog}
           progress={progress} canContinue={canContinue}
-          clearedSceneIds={clearedSceneIds} nextSceneId={nextSceneId}
+          clearedSceneIds={clearedSceneIds} nextSceneId={nextSceneId} showGacha={gachaEligible}
           speakCount={sessionCards.filter((c) => c.kind === 'speak').length}
           onRetryWeak={retryWeakSession} onContinue={startSession} onHome={() => setView('home')}
         />
