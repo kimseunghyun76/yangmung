@@ -327,9 +327,24 @@ function pickPool(pool: Pool, quota: number, minFresh: number, progress: Progres
 
 // 미션 카드는 "한 장면"에 집중: 진행 순서(C0→C1→…)대로 한 미션을 통째로 채우고
 // quota가 남을 때만 다음 미션으로 넘어감. → "편의점 한 판" 같은 몰입감.
-function pickScene(byMission: Map<string, Pool>, quota: number, progress: ProgressMap): ReviewableCard[] {
+// 세션 id로 시드한 결정적 셔플 — 같은 세션이면 항상 같은 순서(홈 미리보기=실제 세션 일치),
+// 세션이 바뀌면 순서가 바뀜(매번 같은 장면이 메인에 뜨는 지겨움 해소).
+function seededOrder<T>(arr: T[], seed: number): T[] {
+  let a = (seed >>> 0) || 1;
+  const rng = () => { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  const r = [...arr];
+  for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; }
+  return r;
+}
+
+function pickScene(byMission: Map<string, Pool>, quota: number, progress: ProgressMap, seed: number): ReviewableCard[] {
   const out: ReviewableCard[] = [];
-  for (const pool of byMission.values()) {           // Map = 등장(=진행) 순서 유지
+  // 이미 시작한 장면은 세션마다 순서를 회전(다양성), 아직 시작 안 한 장면은 진행 순서 유지(초보에게 먼 장면이 튀지 않게).
+  const entries = [...byMission.entries()];
+  const started = entries.filter(([mid]) => missionExperiencedCount(progress, mid) > 0);
+  const fresh = entries.filter(([mid]) => missionExperiencedCount(progress, mid) === 0);
+  const ordered = [...seededOrder(started, seed), ...fresh];
+  for (const [, pool] of ordered) {
     if (out.length >= quota) break;
     for (const c of [...sortWeakFirst(pool.due, progress), ...pool.fresh]) { // 장면 안에서는 약점 먼저, 그 다음 신규
       if (out.length >= quota) break;
@@ -378,7 +393,7 @@ export function selectSessionCards(
   }
   const kSel = pickPool(k, config.quotas.K, config.minFresh.K, progress);
   const bSel = pickPool(b, config.quotas.B, config.minFresh.B, progress);
-  const scene = pickScene(cByMission, config.quotas.C, progress);
+  const scene = pickScene(cByMission, config.quotas.C, progress, currentSessionId);
   // 팁: 안 본 것/오래된 것부터 1개씩 회전 (매번 같은 팁 X)
   const tipsSel = [...tips]
     .sort((a, b2) => (progress[a.id]?.lastSeenAt ?? '') < (progress[b2.id]?.lastSeenAt ?? '') ? -1 : 1)
