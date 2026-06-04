@@ -478,7 +478,8 @@ export function selectSignCards(allCards: Card[], progress: ProgressMap, current
     if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
     (progress[c.id] ? due : fresh).push(c);
   }
-  return [...due, ...fresh].slice(0, limit);
+  // 약점 먼저(due) 유지하되 각 그룹 내부는 셔플 — 풀이 커도 매번 같은 앞 12개만 나오지 않게.
+  return [...shuffleKana(due), ...shuffleKana(fresh)].slice(0, limit);
 }
 
 // 받아쓰기 전용 덱 — 받아쓰기 카드만, 약점/안 본 것 먼저. (직접 진입)
@@ -489,7 +490,7 @@ export function selectDictationCards(allCards: Card[], progress: ProgressMap, cu
     if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
     (progress[c.id] ? due : fresh).push(c);
   }
-  return [...due, ...fresh].slice(0, limit);
+  return [...shuffleKana(due), ...shuffleKana(fresh)].slice(0, limit);
 }
 
 // 속도전 플래시 — 이미 본(복습) 객관식 카드를 무작위로. 빠른 즉답 게임용(SRS 영향 최소).
@@ -512,7 +513,7 @@ export function selectComposeCards(allCards: Card[], progress: ProgressMap, curr
     if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
     (progress[c.id] ? due : fresh).push(c);
   }
-  return [...due, ...fresh].slice(0, limit);
+  return [...shuffleKana(due), ...shuffleKana(fresh)].slice(0, limit);
 }
 
 // 가나 전용 덱 — 한 스크립트(히라/가타)만, 개념별 가장 안 본 형태 1장씩, 약점 먼저. (직접 진입 링크용)
