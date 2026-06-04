@@ -7,6 +7,7 @@ interface AudioManifestItem {
   voice: string;
   source?: string;
   sourceId?: string;
+  synthSignature?: string;
 }
 
 interface AudioManifest {
@@ -124,7 +125,8 @@ export function speak(text: string, opts: SpeakOpts = {}): void {
       return;
     }
 
-    const audio = new Audio(item.path);
+    const version = item.synthSignature ? `?v=${encodeURIComponent(item.synthSignature)}` : '';
+    const audio = new Audio(`${item.path}${version}`);
     currentAudio = audio;
     audio.playbackRate = opts.rate ?? 1;
     let done = false;
