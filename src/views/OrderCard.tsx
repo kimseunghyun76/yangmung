@@ -32,6 +32,11 @@ function fallbackPrompt(situation: string): RecapPrompt {
   if (/증상|아프|약|병원|긴급|도움/.test(situation)) return { ja: 'どうしましたか', kana: 'どうしましたか', korean: '무슨 일이 있으세요?' };
   if (/길|위치|방향|승강장|버스|열차|전철/.test(situation)) return { ja: 'どちらへいきますか', kana: 'どちらへいきますか', korean: '어디로 가시나요?' };
   if (/상품|빵|고르|면세|유심/.test(situation)) return { ja: 'なにをおさがしですか', kana: 'なにをおさがしですか', korean: '무엇을 찾으세요?' };
+  if (/환전|잔돈|엔으로/.test(situation)) return { ja: 'りょうがえですね', kana: 'りょうがえですね', korean: '환전이시군요?' };
+  if (/짐|로커|보관|맡/.test(situation)) return { ja: 'おにもつですか', kana: 'おにもつですか', korean: '짐 맡기실 건가요?' };
+  if (/택배|발송|부치|보내/.test(situation)) return { ja: 'はっそうですね', kana: 'はっそうですね', korean: '발송이시군요?' };
+  if (/사진|촬영/.test(situation)) return { ja: 'おとりしましょうか', kana: 'おとりしましょうか', korean: '제가 찍어 드릴까요?' };
+  if (/사용법|충전|식권/.test(situation)) return { ja: 'ごあんないします', kana: 'ごあんないします', korean: '안내해 드릴게요' };
   return { ja: 'ごようけんはなんですか', kana: 'ごようけんはなんですか', korean: '무엇을 도와드릴까요?' };
 }
 

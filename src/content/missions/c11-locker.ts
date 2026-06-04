@@ -17,6 +17,7 @@ export const c11: Mission = {
         { text: '코인로커 어디예요?', phraseId: 'p_koinrokkaa', correct: true },
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: true },
         { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: true },
+        { text: '메뉴 보여 주세요', phraseId: 'p_menu_misete', correct: false, feedback: '식당 표현이에요 — 지금은 코인로커 상황' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
