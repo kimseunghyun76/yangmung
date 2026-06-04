@@ -3,7 +3,7 @@ import { CONTENT } from '../content';
 import { sessionResult, summarize, type ProgressMap, type SessionLogEntry } from '../learn/progress';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
-import { GlassPanel, PrimaryAction, hexA } from './shell';
+import { GlassPanel, hexA } from './shell';
 import { sceneVisualByMission } from './scene';
 import { MascotLine } from './mascot';
 import { GachaBox } from './Gacha';
@@ -20,15 +20,21 @@ interface Props {
   clearedSceneIds: string[];
   nextSceneId?: string;
   showGacha?: boolean;
+  reviewCount?: number;
+  dictationCount?: number;
+  signCount?: number;
   onRetryWeak: () => void;
   onContinue: () => void;
+  onReview?: () => void;
+  onDictation?: () => void;
+  onSigns?: () => void;
   onHome: () => void;
 }
 
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place
   ?? CONTENT.missions.find((m) => m.id === id)?.scenario ?? id;
 
-export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, showGacha = true, onRetryWeak, onContinue, onHome }: Props) {
+export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, showGacha = true, reviewCount = 0, dictationCount = 0, signCount = 0, onRetryWeak, onContinue, onReview, onDictation, onSigns, onHome }: Props) {
   const stars = quizSeen ? Math.max(1, Math.round((score / quizSeen) * 3)) : 0;
   const s = summarize(progress);
   const sr = sessionResult(progress, sessionId);
@@ -74,31 +80,36 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
       {/* 가챠 보석함 — 성과 등급별 조각 적립 (학습 로직과 분리). 약점 재도전 세션 제외 */}
       {showGacha && <GachaBox sessionId={sessionId} sceneIds={clearedSceneIds} grade={boxGrade(stars, recoveryUsed)} />}
 
-      {/* 다음 장면 예고 */}
-      {nextSceneId && (
-        <div className="ym-rise" style={{ animationDelay: '.16s', marginTop: 20 }}>
-          <GlassPanel style={{ display: 'flex', alignItems: 'center', gap: 14, padding: 16 }}>
-            <span style={{ width: 46, height: 46, flex: '0 0 46px', borderRadius: 13, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: hexA(sceneVisualByMission(nextSceneId).accent, 0.16), color: sceneVisualByMission(nextSceneId).accent }}>
-              <Icon name={sceneVisualByMission(nextSceneId).icon} size={26} />
-            </span>
-            <div style={{ flex: 1 }}>
-              <p style={{ margin: 0, ...kicker }}>다음 장면</p>
-              <p style={{ margin: '3px 0 0', fontSize: 16, fontWeight: 700 }}>{placeOf(nextSceneId)}</p>
-            </div>
-            <Icon name="flow" size={20} style={{ color: 'var(--ink-faint)' }} />
-          </GlassPanel>
+      {/* 다음 단계 추천 — 매번 같은 다음 장면 대신 신규·복습·다른 연습을 골라가며 */}
+      <div className="ym-rise" style={{ animationDelay: '.16s', marginTop: 24 }}>
+        <p style={{ ...kicker, textAlign: 'center', marginBottom: 12 }}>다음엔 무엇을 할까요?</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {weak > 0 && (
+            <NextStep icon="target" accent="var(--accent)" title="약점만 다시 풀기"
+              sub={`이번에 막힌 ${weak}개 집중`} onClick={onRetryWeak} />
+          )}
+          {canContinue && (
+            <NextStep
+              icon={nextSceneId ? sceneVisualByMission(nextSceneId).icon : 'flow'}
+              accent={nextSceneId ? sceneVisualByMission(nextSceneId).accent : 'var(--accent)'}
+              title="새 장면 학습" primary
+              sub={nextSceneId ? `다음 장면 · ${placeOf(nextSceneId)}` : '새로운 표현 익히기'}
+              onClick={onContinue} />
+          )}
+          {onReview && reviewCount > 0 && (
+            <NextStep icon="recovery" accent="var(--ok)" title="복습하기"
+              sub={`익힌 것·오래된 것 ${reviewCount}개 다시`} onClick={onReview} />
+          )}
+          {onDictation && dictationCount > 0 && (
+            <NextStep icon="dictation" accent="var(--warn)" title="받아쓰기"
+              sub="듣고 가나 타일로 쓰기" onClick={onDictation} />
+          )}
+          {onSigns && signCount > 0 && (
+            <NextStep icon="sign" accent="var(--accent)" title="거리 읽기"
+              sub="간판·메뉴·안내 읽기" onClick={onSigns} />
+          )}
         </div>
-      )}
-
-      {/* 다음 행동 */}
-      <div className="ym-rise" style={{ animationDelay: '.2s', marginTop: 22, display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {weak > 0 && (
-          <button className="ym-press" style={glassBtn} onClick={onRetryWeak}>
-            <Icon name="target" size={18} style={{ color: 'var(--accent)' }} /> 약점만 다시 풀기 ({weak})
-          </button>
-        )}
-        {canContinue && <PrimaryAction onClick={onContinue}><Icon name="plus" size={18} /> 한 세션 더</PrimaryAction>}
-        <button className="ym-press" style={glassBtn} onClick={onHome}>
+        <button className="ym-press" style={{ ...glassBtn, marginTop: 12 }} onClick={onHome}>
           <Icon name="nav-home" size={18} /> 홈으로
         </button>
       </div>
@@ -137,6 +148,29 @@ function Stamp({ id, idx }: { id: string; idx: number }) {
       <span style={{ fontSize: 13, fontWeight: 800 }}>{placeOf(id)}</span>
       <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: '0.14em', border: `1.5px solid ${sv.accent}`, borderRadius: 4, padding: '1px 5px' }}>CLEAR</span>
     </div>
+  );
+}
+
+// 다음 단계 선택지 — 큰 탭 타깃 + 무엇/왜를 한눈에. primary는 강조 테두리.
+function NextStep({ icon, accent, title, sub, primary, onClick }: {
+  icon: React.ComponentProps<typeof Icon>['name']; accent: string; title: string; sub: string; primary?: boolean; onClick: () => void;
+}) {
+  return (
+    <button className="ym-press" onClick={onClick} style={{
+      width: '100%', display: 'flex', alignItems: 'center', gap: 14, textAlign: 'left',
+      padding: '14px 16px', borderRadius: 16, cursor: 'pointer',
+      border: `${primary ? 2 : 1}px solid ${primary ? accent : 'var(--glass-border)'}`,
+      background: primary ? hexA(accent, 0.1) : 'var(--glass-bg-strong)', color: 'var(--ink)',
+    }}>
+      <span style={{ width: 44, height: 44, flex: '0 0 44px', borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: hexA(accent, 0.16), color: accent }}>
+        <Icon name={icon} size={24} />
+      </span>
+      <span style={{ flex: 1 }}>
+        <span style={{ display: 'block', fontSize: 16, fontWeight: 700 }}>{title}</span>
+        <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 2 }}>{sub}</span>
+      </span>
+      <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)' }} />
+    </button>
   );
 }
 

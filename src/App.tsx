@@ -70,6 +70,8 @@ export function App() {
   // 적응형: 진척을 진단해 약점·난이도를 판단하고, 세션 신규/복습 비율을 동적으로 조정.
   // (복습 모드는 사용자가 명시적으로 고른 것이라 적응 조정 제외 — 의도 존중)
   const baseConfig = { quotas: MODE_PRESETS[settings.mode].quotas, minFresh: MODE_PRESETS[settings.mode].minFresh };
+  // 복습 전용 구성(신규 0 · 틀린·오래된 것 우선) — Done 화면 "복습하기" 제안용. 현재 모드와 무관.
+  const reviewConfig = { quotas: MODE_PRESETS.review.quotas, minFresh: MODE_PRESETS.review.minFresh };
   const diag = useMemo(
     () => diagnose(allCards, progress, session.lastCompletedSessionId),
     [allCards, progress, session.lastCompletedSessionId],
@@ -156,6 +158,13 @@ export function App() {
       const pid = disc.id.slice('discover:'.length);
       const nx = [...discovered, pid]; setDiscovered(nx); saveDiscovered(nx);
     }
+    beginSession(id, cards, true);
+  }
+  // 복습 세션 — 신규 없이 틀린 것·오래 안 본 것 위주(현재 모드와 무관). Done의 "복습하기" 제안.
+  function startReviewSession() {
+    const id = nextSessionId(session);
+    const cards = selectSessionCards(allCards, progress, id, reviewConfig);
+    if (cards.length === 0) return;
     beginSession(id, cards, true);
   }
   function startSceneSession(missionId: string) {
@@ -322,20 +331,28 @@ export function App() {
       return <Intro cards={sessionCards} goal={sessionGoalText(missions, hasKana)} onStart={() => setView('session')} onBack={() => setView('home')} />;
     }
     if (view === 'done') {
-      const canContinue = plannedSessionSize(allCards, progress, nextSessionId(session), sessionConfig) > 0;
+      const nextId = nextSessionId(session);
+      const canContinue = plannedSessionSize(allCards, progress, nextId, sessionConfig) > 0;
       // 표시용 파생(로직 불변): 이번 세션에 등장한 장면 / 다음 세션의 첫 장면
       const clearedSceneIds = [...new Set(
         missionsFromCards(sessionCards, progress, sessionId).filter((m) => m.id !== 'C0').map((m) => m.id),
       )];
-      const nextSceneId = planSession(allCards, progress, nextSessionId(session), sessionConfig)
+      const nextSceneId = planSession(allCards, progress, nextId, sessionConfig)
         .missions.find((m) => m.id !== 'C0')?.id;
+      // 다음 단계 제안: 복습·받아쓰기·거리읽기 가용 개수(반복되는 "다음 장면" 대신 다른 선택지)
+      const reviewCount = selectSessionCards(allCards, progress, nextId, reviewConfig).length;
+      const dictationCount = selectDictationCards(allCards, progress, nextId).length;
+      const signCount = selectSignCards(allCards, progress, nextId).length;
       return (
         <Done
           sessionId={sessionId} score={score} quizSeen={quizSeen} sessionLog={sessionLog}
           progress={progress} canContinue={canContinue}
           clearedSceneIds={clearedSceneIds} nextSceneId={nextSceneId} showGacha={gachaEligible}
+          reviewCount={reviewCount} dictationCount={dictationCount} signCount={signCount}
           speakCount={sessionCards.filter((c) => c.kind === 'speak').length}
-          onRetryWeak={retryWeakSession} onContinue={startSession} onHome={() => setView('home')}
+          onRetryWeak={retryWeakSession} onContinue={startSession}
+          onReview={startReviewSession} onDictation={startDictationSession} onSigns={startSignSession}
+          onHome={() => setView('home')}
         />
       );
     }
