@@ -6,7 +6,10 @@ export type KLevel =
   | 'K21' | 'K22' | 'K23' | 'K24' | 'K25' | 'K26' | 'K27' | 'K28' | 'K29' | 'K30'
   | 'K31' | 'K32';
 export type BLevel = 'B0' | 'B1' | 'B2' | 'B3' | 'B4' | 'B5';
-export type CLevel = 'C0' | 'C1' | 'C2' | 'C3' | 'C4' | 'C5' | 'C6' | 'C7' | 'C8' | 'C9' | 'C10' | 'C11' | 'C12' | 'C13'; // C0 = 튜토리얼 미니미션
+export type CLevel =
+  | 'C0' | 'C1' | 'C2' | 'C3' | 'C4' | 'C5' | 'C6' | 'C7' | 'C8' | 'C9'
+  | 'C10' | 'C11' | 'C12' | 'C13' | 'C14' | 'C15' | 'C16' | 'C17' | 'C18' | 'C19'
+  | 'C20' | 'C21' | 'C22' | 'C23' | 'C24' | 'C25' | 'C26' | 'C27' | 'C28' | 'C29' | 'C30'; // C0 = 튜토리얼 미니미션
 
 export type EvalMode =
   | 'drill' | 'match' | 'cloze' | 'reaction' | 'action' | 'recovery' | 'branch';
@@ -94,6 +97,8 @@ export interface MissionStep {
   situationKo: string;
   speaker?: string;
   promptPhraseId?: string;
+  recapPromptJa?: string; // 대화 다시보기용 상대 질문. promptPhraseId가 없을 때 사용
+  recapPromptKo?: string;
   choices: Choice[];
 }
 
@@ -111,6 +116,10 @@ export interface GrammarPoint {
   id: string;
   label: string;
   tipKo?: string;   // 10초 마이크로 정확도 팁 (한국어 대조, just-in-time 노출)
+  exampleJa?: string;
+  exampleKo?: string;
+  commonMistake?: string;
+  action?: string;
   category?: string; // 팁 분류 배지 (문법·문화·발음·여행)
   n5Refs?: string[];
 }

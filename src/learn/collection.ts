@@ -1,5 +1,7 @@
 // 가챠 덱 컬렉션 — 자체 localStorage(기존 progress/SRS와 완전 분리, 학습 로직 영향 0).
 // 장면(미션) 카드를 모아 5단계(기본→동→은→금→다이아)로 키운다.
+import { SCENE_SENTENCES } from '../content/sceneSentences';
+import type { CLevel } from '../content/types';
 
 export interface DeckCard { tier: number; shards: number } // tier 1~5, shards = 다음 단계 진척
 export interface Collection {
@@ -72,10 +74,8 @@ export function claim(prev: Collection, sessionId: number, sceneIds: string[], p
 }
 
 function pickNewSentenceIds(sceneId: string, owned: Set<string>, count: number): string[] {
-  // 동적 import 없이 컬렉션 모듈을 가볍게 유지하기 위해 규칙 기반 id를 사용한다.
-  // 각 장면은 명세상 정확히 30개이며, 낮은 번호(자주 쓰는 표현)를 먼저 지급한다.
-  const candidates = Array.from({ length: 30 }, (_, i) => `ss_${sceneId.toLowerCase()}_${String(i + 1).padStart(2, '0')}`)
-    .filter((id) => !owned.has(id));
+  // 장면 문장 풀이 있는 장면만 문장 카드를 지급한다. 신규 장면은 장면 카드부터 모으고 문장은 후속 확장한다.
+  const candidates = (SCENE_SENTENCES[sceneId as CLevel] ?? []).map((row) => row.id).filter((id) => !owned.has(id));
   return candidates.slice(0, Math.max(1, count));
 }
 

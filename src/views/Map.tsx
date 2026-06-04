@@ -10,6 +10,7 @@ import { NavBar, type NavBarProps } from './NavBar';
 import { PageHead, SceneImageThumb } from './ui';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
 import { DeckButton } from './Gacha';
+import { MascotBubble } from './mascot';
 
 const RECOVERY = [
   { ja: 'もう一度お願いします', ko: '다시 말해 주세요' },
@@ -35,6 +36,13 @@ function lockHint(missionId: string): string {
 }
 
 interface SceneItem { m: typeof CONTENT.missions[number]; sv: SceneVisual; unlocked: boolean; done: boolean; started: boolean; mastered: number; total: number }
+const ROUTES = [
+  { label: '첫 여행 생존', ids: ['C1','C2','C3','C4','C5','C6','C7','C8','C9'] },
+  { label: '먹고 즐기기', ids: ['C13','C14','C15','C16','C17','C30'] },
+  { label: '이동과 관광', ids: ['C18','C19','C22','C23','C24'] },
+  { label: '숙박과 생활', ids: ['C10','C11','C12','C20','C21','C28','C29'] },
+  { label: '문제 해결', ids: ['C25','C26','C27'] },
+] as const;
 
 export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props) {
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
@@ -47,15 +55,21 @@ export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props)
     return { m, sv: sceneVisualByPlace(m.place), unlocked, done: unlocked && p.total > 0 && p.mastered === p.total, started: p.started, mastered: p.mastered, total: p.total };
   });
   const open = items.filter((x) => x.unlocked);
-  const locked = items.filter((x) => !x.unlocked);
   // 추천: 진행 중(미완료) 우선 → 시작 전 → (없으면) 첫 열린 장면
   const recommended = open.find((x) => x.started && !x.done) ?? open.find((x) => !x.started) ?? open[0];
-  const rest = open.filter((x) => x.m.id !== recommended?.m.id);
+  const routeGroups = ROUTES.map((route) => ({ ...route, items: route.ids.map((id) => items.find((x) => x.m.id === id)).filter((x): x is SceneItem => !!x) }));
 
   return (
     <main style={WRAP}>
       <NavBar {...nav} />
       <PageHead title="학습 지도" sub="공항에서 출발해 장면을 하나씩 열어가요" />
+      <div style={{ position: 'relative', overflow: 'hidden', height: 150, borderRadius: 20, marginBottom: 12, border: '1px solid var(--glass-border)', boxShadow: 'var(--glass-shadow)' }}>
+        <img src="/map/travel-routes.webp" alt="Yang과 Mung이 안내하는 일본 여행 루트" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 45%, rgba(10,12,18,0.48))' }} />
+        <strong style={{ position: 'absolute', left: 14, bottom: 12, color: '#fff', fontSize: 16, textShadow: '0 2px 10px rgba(0,0,0,.5)' }}>다음 여행 장면을 골라요</strong>
+      </div>
+      <p style={{ margin: '-4px 0 14px', color: 'var(--ink-soft)', fontSize: 13, fontWeight: 700 }}>30개 장면 · 5개 여행 루트</p>
+      <MascotBubble who="duo" size={44} style={{ marginBottom: 14 }}>가고 싶은 여행 루트를 골라 하나씩 열어봐요.</MascotBubble>
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14, marginTop: -8 }}>
         <DeckButton />
@@ -86,46 +100,23 @@ export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props)
         </section>
       )}
 
-      {/* 열린 장면 */}
-      {rest.length > 0 && (
-        <section style={{ marginBottom: 18 }}>
-          <p style={{ ...kicker, marginBottom: 12 }}>열린 장면</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {rest.map((x) => (
-              <button key={x.m.id} className="ym-glass ym-press" onClick={() => onPracticeScene(x.m.id)}
-                style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%', padding: '10px 14px', textAlign: 'left', cursor: 'pointer', color: 'var(--ink)', borderRadius: 16 }}>
-                <SceneImageThumb src={x.sv.backdrop ?? x.sv.thumb} icon={x.sv.icon} accent={x.sv.accent} size={44} />
-                <span style={{ flex: 1, minWidth: 0 }}>
-                  <span style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{x.m.place ?? x.m.scenario}</span>
-                  <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 500, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{x.m.scenario}</span>
-                </span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: x.done ? 'var(--ok)' : 'var(--ink-soft)', fontVariantNumeric: 'tabular-nums' }}>
-                  {x.done ? '완료' : `${x.mastered}/${x.total}`}
-                </span>
-              </button>
-            ))}
-          </div>
+      {routeGroups.map((route) => (
+        <section key={route.label} style={{ marginBottom: 18 }}>
+          <p style={{ ...kicker, marginBottom: 10 }}>{route.label}</p>
+          <GlassPanel style={{ padding: 10 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8 }}>
+              {route.items.map((x) => (
+                <button key={x.m.id} className="ym-press" disabled={!x.unlocked} onClick={() => onPracticeScene(x.m.id)}
+                  style={{ minWidth: 0, padding: '10px 6px', borderRadius: 14, border: x.unlocked ? '1px solid var(--glass-border)' : '1px dashed var(--glass-border)', background: x.unlocked ? 'var(--glass-bg-strong)' : 'transparent', color: 'var(--ink)', cursor: x.unlocked ? 'pointer' : 'default', opacity: x.unlocked ? 1 : 0.58 }}>
+                  <SceneImageThumb src={x.sv.backdrop ?? x.sv.thumb} icon={x.sv.icon} accent={x.sv.accent} size={42} muted={!x.unlocked} />
+                  <span style={{ display: 'block', marginTop: 6, fontSize: 12.5, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{x.m.place ?? x.m.scenario}</span>
+                  <span title={x.unlocked ? undefined : lockHint(x.m.id)} style={{ display: 'block', marginTop: 3, fontSize: 10.5, color: x.done ? 'var(--ok)' : 'var(--ink-faint)', fontWeight: 700 }}>{x.done ? '완료' : x.unlocked ? `${x.mastered}/${x.total}` : '🔒 잠김'}</span>
+                </button>
+              ))}
+            </div>
+          </GlassPanel>
         </section>
-      )}
-
-      {/* 곧 열릴 여행지 */}
-      {locked.length > 0 && (
-        <section style={{ marginBottom: 18 }}>
-          <p style={{ ...kicker, marginBottom: 12 }}>곧 열릴 여행지</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {locked.map((x) => (
-              <div key={x.m.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderRadius: 16, border: '1px dashed var(--glass-border)', background: 'var(--glass-bg)', opacity: 0.75 }}>
-                <SceneImageThumb src={x.sv.backdrop ?? x.sv.thumb} icon={x.sv.icon} accent={x.sv.accent} size={44} muted />
-                <span style={{ flex: 1, minWidth: 0 }}>
-                  <span style={{ display: 'block', fontSize: 15, fontWeight: 700, color: 'var(--ink-soft)' }}>{x.m.place ?? x.m.scenario}</span>
-                  <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 500, marginTop: 1 }}>{lockHint(x.m.id)}</span>
-                </span>
-                <span style={{ fontSize: 16, color: 'var(--ink-faint)' }}>🔒</span>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      ))}
 
       {/* 복구 도구 */}
       <GlassPanel>

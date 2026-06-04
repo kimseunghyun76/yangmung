@@ -6,6 +6,7 @@ import { speak, ttsSupported } from '../tts';
 import { BTN, PRIMARY } from '../ui/styles';
 import { ReadingAid } from './ReadingAid';
 import { Icon } from '../ui/Icon';
+import { MascotBubble } from './mascot';
 
 interface Props {
   card: SpeakCard;
@@ -119,6 +120,7 @@ export function SpeakCardView({ card, isKanaFamiliar, onPracticed, onNext }: Pro
       {/* 완료 안내 + 다음 */}
       {spoke && (
         <div style={{ marginTop: 12 }}>
+          <MascotBubble who="mung" size={38}>입으로 꺼낸 표현은 여행지에서 훨씬 빨리 나와요.</MascotBubble>
           <p style={{ background: 'var(--ok-soft)', padding: 12, borderRadius: 12, color: 'var(--ok)', fontWeight: 600, margin: 0 }}>
             <Icon name="check" size={16} style={{ marginRight: 6 }} />좋아요! 입으로 꺼내는 게 진짜 실력이에요
           </p>
