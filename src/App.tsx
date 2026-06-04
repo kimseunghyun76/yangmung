@@ -5,7 +5,7 @@ import { CONTENT } from './content';
 import {
   classifyCard, clearProgress, isKanaFamiliar, loadDiscovered, loadProgress, loadSeenKana, loadSession,
   markKanaKnown, markKanaSeen, missionsFromCards, nextSessionId, planSession, plannedSessionSize, recordAttempt, recordKnown,
-  saveDiscovered, saveProgress, saveSeenKana, saveSession, selectComposeCards, selectDictationCards, selectMissionCards, selectScriptKanaCards, selectSessionCards, selectSignCards,
+  saveDiscovered, saveProgress, saveSeenKana, saveSession, selectComposeCards, selectDictationCards, selectFlashCards, selectMissionCards, selectScriptKanaCards, selectSessionCards, selectSignCards,
   type SeenKana, type SessionLogEntry,
 } from './learn/progress';
 import { adaptSessionConfig, diagnose } from './learn/adaptive';
@@ -20,12 +20,13 @@ import { Session } from './views/Session';
 import type { PickMap } from './views/OrderCard';
 import { Done } from './views/Done';
 import { Map } from './views/Map';
+import { Flash } from './views/Flash';
 import { Review } from './views/Review';
 import { Guide } from './views/Guide';
 import { SettingsModal } from './views/SettingsModal';
 import { MascotEmpty } from './views/mascot';
 
-type View = 'home' | 'map' | 'review' | 'intro' | 'session' | 'done';
+type View = 'home' | 'map' | 'review' | 'intro' | 'session' | 'done' | 'flash';
 
 export function App() {
   const allCards = useMemo<Card[]>(buildCards, []);
@@ -41,6 +42,7 @@ export function App() {
   const [sessionLog, setSessionLog] = useState<SessionLogEntry[]>([]);
   const [picks, setPicks] = useState<PickMap>({}); // 미션 스텝별 내가 고른 답변 (대화 리캡용)
   const [gachaEligible, setGachaEligible] = useState(true); // 약점 재도전 세션은 보석함 제외
+  const [flashCards, setFlashCards] = useState<Card[]>([]); // 속도전 플래시(세션 SRS와 분리)
   const [seenKana, setSeenKana] = useState<SeenKana>(() => loadSeenKana());
   const [discovered, setDiscovered] = useState<string[]>(() => loadDiscovered());
   const [settings, setSettings] = useState<Settings>(() => loadSettings());
@@ -199,6 +201,13 @@ export function App() {
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true);
   }
+  // 속도전 플래시 — 제한시간 즉답 게임(세션/SRS와 분리). 매번 새로 섞음.
+  function startFlashSession() {
+    const cards = selectFlashCards(allCards, progress, 12);
+    if (cards.length === 0) return;
+    setFlashCards(cards);
+    setView('flash');
+  }
   function retryWeakSession() {
     const weakIds = new Set(sessionLog.filter((r) => r.result !== 'correct').map((r) => r.id));
     const weak = sessionCards.filter((c) => c.kind === 'quiz' && weakIds.has(c.id));
@@ -332,6 +341,9 @@ export function App() {
     if (view === 'review') {
       return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} onBack={() => setView('home')} />;
     }
+    if (view === 'flash') {
+      return <Flash cards={flashCards} onExit={() => setView('home')} onReplay={startFlashSession} />;
+    }
     if (view === 'intro') {
       const missions = missionsFromCards(sessionCards, progress, sessionId);
       const hasKana = sessionCards.some((c) => c.kind === 'quiz' && c.reviewTarget?.type === 'kana');
@@ -359,7 +371,7 @@ export function App() {
           reviewCount={reviewCount} dictationCount={dictationCount} composeCount={composeCount} signCount={signCount}
           speakCount={sessionCards.filter((c) => c.kind === 'speak').length}
           onRetryWeak={retryWeakSession} onContinue={startSession}
-          onReview={startReviewSession} onDictation={startDictationSession} onCompose={startComposeSession} onSigns={startSignSession}
+          onReview={startReviewSession} onDictation={startDictationSession} onCompose={startComposeSession} onSigns={startSignSession} onFlash={startFlashSession}
           onHome={() => setView('home')}
         />
       );
@@ -391,7 +403,7 @@ export function App() {
         allCards={allCards} progress={progress} session={session} sessionConfig={sessionConfig}
         diagnosis={diag}
         modeLabel={MODE_PRESETS[settings.mode].label}
-        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession} onPracticeCompose={startComposeSession}
+        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession} onPracticeCompose={startComposeSession} onPracticeFlash={startFlashSession}
       />
     );
   }
