@@ -16,7 +16,7 @@ const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place
 const sentenceOf = (sceneId: string, sentenceId: string) => SCENE_SENTENCES[sceneId as keyof typeof SCENE_SENTENCES]?.find((s) => s.id === sentenceId);
 type RewardItem = { result: DropResult; sentenceId?: string };
 
-// 단계 색 링에 장면 아이콘
+// 단계 색 링에 장면 아이콘. 실사 보상 대신 게임 아이템 카드처럼 보이게 구성한다.
 function DeckCardFace({ sceneId, tier, size = 56 }: { sceneId: string; tier: number; size?: number }) {
   const sv = sceneVisualByMission(sceneId);
   const meta = tierMeta(tier);
@@ -25,7 +25,9 @@ function DeckCardFace({ sceneId, tier, size = 56 }: { sceneId: string; tier: num
     ? 'linear-gradient(135deg, rgba(255,255,255,0.9), rgba(91,199,224,0.32), rgba(226,101,90,0.2), rgba(255,255,255,0.68))'
     : `linear-gradient(145deg, rgba(255,255,255,0.52), ${meta.color}28 46%, rgba(0,0,0,0.1))`;
   return (
-    <span style={{
+    <span className="ym-game-item-face" data-tier={tier} style={{
+      ['--tier-color' as string]: meta.color,
+      ['--scene-accent' as string]: sv.accent,
       width: size, height: size, flex: `0 0 ${size}px`, borderRadius: Math.round(size * 0.27),
       position: 'relative', overflow: 'hidden',
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
@@ -37,6 +39,7 @@ function DeckCardFace({ sceneId, tier, size = 56 }: { sceneId: string; tier: num
       <span aria-hidden style={{ position: 'absolute', inset: '13%', borderRadius: Math.round(size * 0.18), background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)' }} />
       <span aria-hidden style={{ position: 'absolute', top: '-35%', left: '-60%', width: '55%', height: '160%', transform: 'rotate(28deg)', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.56), transparent)' }} />
       <Icon name={sv.icon} size={Math.round(size * 0.48)} style={{ position: 'relative', filter: diamond ? `drop-shadow(0 0 8px ${meta.color})` : undefined }} />
+      <span aria-hidden className="ym-game-item-star" style={{ right: Math.round(size * 0.12), top: Math.round(size * 0.09), fontSize: Math.max(9, Math.round(size * 0.17)) }}>✦</span>
     </span>
   );
 }
@@ -70,6 +73,36 @@ function RevealCards({ results, shards, animate }: { results: DropResult[]; shar
           {r.sentenceIds.length > 0 && <span style={{ fontSize: 10.5, color: 'var(--ink-soft)', fontWeight: 750 }}>표현 +{r.sentenceIds.length}</span>}
         </div>
       ))}
+    </div>
+  );
+}
+
+function RewardPopCard({ item, color, index, total }: { item: RewardItem; color: string; index: number; total: number }) {
+  const sentence = item.sentenceId ? sentenceOf(item.result.sceneId, item.sentenceId) : undefined;
+  return (
+    <div
+      key={`${item.result.sceneId}:${item.sentenceId ?? index}`}
+      className="ym-item-out ym-gacha-reward-card"
+      style={{
+        ['--reward-color' as string]: color,
+        ['--reward-accent' as string]: tierMeta(item.result.tier).color,
+      }}
+    >
+      <span className="ym-gacha-reward-badge">GET {index}/{total}</span>
+      <DeckCardFace sceneId={item.result.sceneId} tier={item.result.tier} size={90} />
+      <span className="ym-gacha-reward-place">{placeOf(item.result.sceneId)}</span>
+      {sentence ? (
+        <>
+          <span className="ym-gacha-reward-type">NEW EXPRESSION</span>
+          <span lang="ja" className="ym-gacha-reward-ja">{sentence.kanji ?? sentence.kana}</span>
+          <span className="ym-gacha-reward-ko">{sentence.korean}</span>
+        </>
+      ) : (
+        <>
+          <span className="ym-gacha-reward-type">SCENE SHARD</span>
+          <TierRibbon tier={item.result.tier} />
+        </>
+      )}
     </div>
   );
 }
@@ -150,10 +183,13 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
 
       {/* 개봉 오버레이 — 여러 번 탭해 상자 깨기 → 아이템 하나씩 → 전체 (body 포털) */}
       {phase === 'open' && typeof document !== 'undefined' && createPortal(
-        <div onClick={overlayTap}
-          style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18, padding: 24, background: 'radial-gradient(circle at 50% 34%, rgba(255,255,255,0.16), transparent 24%), rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
+        <div onClick={overlayTap} className={`ym-gacha-stage ${burst ? 'is-burst' : ''}`}
+          style={{ ['--gacha-color' as string]: box.colors[1], position: 'fixed', inset: 0, zIndex: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18, padding: 24, background: 'radial-gradient(circle at 50% 34%, rgba(255,255,255,0.16), transparent 24%), rgba(0,0,0,0.72)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
+          <span className="ym-gacha-runes" aria-hidden />
+          {burst && <span className="ym-gacha-shockwave" aria-hidden />}
           {burst && (
             <>
+              <span className="ym-gacha-rays" aria-hidden style={{ position: 'absolute', width: 360, height: 360, color: box.colors[1], opacity: 0.55 }} />
               <div className="ym-confetti" aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
                 {['✦', '★', '✦', '✧', '★', '✦', '✧', '★'].map((e, i) => (
                   <span key={i} style={{ left: `${8 + i * 11}%`, color: i % 2 ? box.colors[1] : 'var(--accent)', animationDelay: `${i * 0.06}s` }}>{e}</span>
@@ -167,7 +203,7 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
             <>
               <div style={{ position: 'relative', width: 220, height: 178, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <span className="ym-glow" aria-hidden style={{ position: 'absolute', inset: -18, borderRadius: '50%', background: `radial-gradient(circle, ${box.colors[1]}aa, ${box.colors[1]}33 40%, transparent 70%)` }} />
-                <div key={taps} className={taps > 0 ? 'ym-wrong' : undefined} style={{ transform: `scale(${1 + taps * 0.08})`, transition: 'transform .12s' }}>
+                <div key={taps} className={taps > 0 ? 'ym-gacha-box-hit' : undefined} style={{ transform: `scale(${1 + taps * 0.08})`, transition: 'transform .12s' }}>
                   <BoxArt grade={grade} size={150} />
                 </div>
               </div>
@@ -184,16 +220,7 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
                 <span style={{ position: 'absolute', left: '50%', bottom: 0, transform: 'translateX(-50%)', zIndex: 2 }}><BoxArt grade={grade} size={138} open /></span>
                 {currentReward ? (
                   <div style={{ position: 'absolute', left: '50%', top: '36%', transform: 'translate(-50%, -50%)', zIndex: 3 }}>
-                    <div key={`${currentReward.result.sceneId}:${currentReward.sentenceId ?? revealed}`} className="ym-item-out" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, minWidth: 210, padding: '20px 16px', borderRadius: 22, border: `1px solid ${box.colors[1]}88`, background: 'rgba(12,13,20,0.86)', boxShadow: `0 0 42px ${box.colors[1]}88` }}>
-                      <DeckCardFace sceneId={currentReward.result.sceneId} tier={currentReward.result.tier} size={82} />
-                      <span style={{ fontSize: 12, fontWeight: 850, color: box.colors[1] }}>{placeOf(currentReward.result.sceneId)} · NEW EXPRESSION</span>
-                      {currentReward.sentenceId ? (
-                        <>
-                          <span lang="ja" style={{ maxWidth: 210, fontSize: 19, lineHeight: 1.4, fontWeight: 900, color: '#fff', textAlign: 'center' }}>{sentenceOf(currentReward.result.sceneId, currentReward.sentenceId)?.kanji ?? sentenceOf(currentReward.result.sceneId, currentReward.sentenceId)?.kana}</span>
-                          <span style={{ maxWidth: 210, fontSize: 12, lineHeight: 1.4, fontWeight: 700, color: 'rgba(255,255,255,0.72)', textAlign: 'center' }}>{sentenceOf(currentReward.result.sceneId, currentReward.sentenceId)?.korean}</span>
-                        </>
-                      ) : <TierRibbon tier={currentReward.result.tier} />}
-                    </div>
+                    <RewardPopCard item={currentReward} color={box.colors[1]} index={revealed} total={rewardItems.length} />
                   </div>
                 ) : (
                   <img className="ym-listening" src="/gacha/item/mystery-sentence.webp" alt="상자에서 나올 표현 카드" width={94} height={120} style={{ position: 'absolute', left: '50%', top: '36%', transform: 'translate(-50%, -50%)', objectFit: 'contain', zIndex: 3, filter: `drop-shadow(0 0 24px ${box.colors[1]}cc)` }} />

@@ -133,28 +133,30 @@ export function Flash({ cards, unlockedSceneIds, onExit, onReplay }: Props) {
   const barColor = ratio > 0.5 ? '#3fb27f' : ratio > 0.25 ? '#e0a23a' : '#e0564a';
   const hot = combo >= 3;
   const promptText = card.listen ? null : (card.bannerJa || card.banner);
+  const cardFx = callout === 'miss' ? 'ym-speed-card is-miss' : callout ? `ym-speed-card is-${callout}` : `ym-speed-card${hot ? ' is-hot' : ''}`;
 
   return (
-    <main style={WRAP}>
+    <main className={`ym-flash-arena ${hot ? 'is-hot' : ''} ${low ? 'is-low' : ''}`} style={{ ...WRAP, position: 'relative', overflow: 'hidden' }}>
+      <span className="ym-speed-lines" aria-hidden />
       {/* 상단 — 그만 / 진행 / 점수 */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 }}>
+      <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 }}>
         <button onClick={onExit} className="ym-press" style={{ border: 0, background: 'transparent', color: 'var(--ink-soft)', fontWeight: 800, cursor: 'pointer', padding: 4 }}>← 그만</button>
         <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--ink-soft)', fontVariantNumeric: 'tabular-nums' }}>{idx + 1} / {cards.length}</span>
         <span style={{ fontSize: 13, fontWeight: 850, color: 'var(--ink-soft)', fontVariantNumeric: 'tabular-nums' }}>점수 {score}</span>
       </div>
 
       {/* 콤보 미터 */}
-      <div style={{ textAlign: 'center', height: 30, marginTop: 6 }}>
-        {hot && <span className="ym-burst" key={combo} style={{ fontSize: 18, fontWeight: 900, color: 'var(--accent)' }}>🔥 {combo} COMBO</span>}
+      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', height: 36, marginTop: 6 }}>
+        {hot && <span className="ym-combo-badge" key={combo}>🔥 {combo} COMBO</span>}
       </div>
 
       {/* 에너지(타이머) 게이지 */}
-      <div style={{ height: 12, borderRadius: 99, background: 'var(--glass-border)', overflow: 'hidden', boxShadow: low ? '0 0 14px #e0564a88' : undefined }}>
-        <div style={{ height: '100%', width: `${ratio * 100}%`, background: `linear-gradient(90deg, ${barColor}, ${barColor}cc)`, borderRadius: 99, transition: 'width .07s linear' }} />
+      <div className={`ym-speed-timer ${low ? 'is-low' : ''}`} style={{ position: 'relative', zIndex: 1 }}>
+        <div className="ym-speed-timer-fill" style={{ width: `${ratio * 100}%`, background: `linear-gradient(90deg, ${barColor}, ${barColor}cc)` }} />
       </div>
 
       {/* 문제 카드 — 콤보 높으면 달아오름 */}
-      <div key={`${idx}:${callout ?? ''}`} className={callout === 'miss' ? 'ym-wrong' : ''} style={{
+      <div key={`${idx}:${callout ?? ''}`} className={cardFx} style={{
         marginTop: 16, textAlign: 'center', padding: '30px 16px', borderRadius: 22, position: 'relative',
         border: `2px solid ${hot ? 'var(--accent)' : 'var(--glass-border)'}`,
         background: hot ? 'linear-gradient(160deg, var(--glass-bg-strong), rgba(185,56,46,0.12))' : 'var(--glass-bg-strong)',
@@ -162,10 +164,11 @@ export function Flash({ cards, unlockedSceneIds, onExit, onReplay }: Props) {
       }}>
         {/* 콜아웃 */}
         {callout && (
-          <span className="ym-burst" style={{ position: 'absolute', top: 8, left: '50%', transform: 'translateX(-50%)', fontSize: 15, fontWeight: 900, color: callout === 'miss' ? 'var(--accent)' : callout === 'perfect' ? '#f0a23a' : 'var(--ok)' }}>
+          <span className={`ym-speed-callout is-${callout}`}>
             {callout === 'perfect' ? 'PERFECT! ✨' : callout === 'good' ? 'GOOD!' : 'MISS'}
           </span>
         )}
+        {callout && <FlashHitFx tone={callout} />}
         {card.listen ? (
           <button className="ym-press" onClick={() => card.bannerJa && speak(card.bannerJa)} disabled={!ttsSupported()}
             style={{ width: 84, height: 84, borderRadius: 99, border: '1px solid var(--glass-border)', background: 'var(--accent-soft)', color: 'var(--accent)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -178,16 +181,17 @@ export function Flash({ cards, unlockedSceneIds, onExit, onReplay }: Props) {
       </div>
 
       {/* 보기 */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 16 }}>
+      <div style={{ position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 16 }}>
         {card.choices.map((c, i) => {
           const isPicked = picked === i;
           const reveal = picked !== null;
           const right = c.correct && !c.recovery;
+          const fx = reveal && right ? ' ym-answer-correct' : reveal && isPicked && !right ? ' ym-answer-wrong' : '';
           let border = 'var(--glass-border)', bg = 'var(--glass-bg-strong)', color = 'var(--ink)';
           if (reveal && right) { border = 'var(--ok)'; bg = 'var(--ok-soft)'; color = 'var(--ok)'; }
           else if (reveal && isPicked && !right) { border = 'var(--accent)'; bg = 'var(--accent-soft)'; color = 'var(--accent)'; }
           return (
-            <button key={i} className="ym-press" onClick={() => handle(i)} disabled={picked !== null}
+            <button key={i} className={`ym-press${fx}`} onClick={() => handle(i)} disabled={picked !== null}
               style={{ padding: '16px 12px', borderRadius: 16, border: `1.5px solid ${border}`, background: bg, color, fontSize: 16, fontWeight: 750, cursor: picked === null ? 'pointer' : 'default', minHeight: 60 }}>
               {c.label}
             </button>
@@ -195,6 +199,21 @@ export function Flash({ cards, unlockedSceneIds, onExit, onReplay }: Props) {
         })}
       </div>
     </main>
+  );
+}
+
+function FlashHitFx({ tone }: { tone: Exclude<Callout, null> }) {
+  const color = tone === 'miss' ? '#e0564a' : tone === 'perfect' ? '#f0b43f' : '#4cae79';
+  return (
+    <span aria-hidden className={`ym-speed-hitfx is-${tone}`}>
+      {Array.from({ length: tone === 'perfect' ? 14 : 9 }).map((_, i) => (
+        <i key={i} style={{
+          ['--fx-color' as string]: color,
+          ['--fx-rot' as string]: `${i * (360 / (tone === 'perfect' ? 14 : 9))}deg`,
+          animationDelay: `${i * 0.012}s`,
+        }} />
+      ))}
+    </span>
   );
 }
 
