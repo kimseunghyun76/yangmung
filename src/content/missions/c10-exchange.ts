@@ -16,6 +16,7 @@ export const c10: Mission = {
       choices: [
         { text: '환전해 주세요', phraseId: 'p_ryougae', correct: true },
         { text: '얼마예요? (수수료)', phraseId: 'p_ikura_desu_ka', correct: true },
+        { text: '데워 주세요', phraseId: 'p_atatamete', correct: false, feedback: '여긴 환전소예요 — 편의점에서 쓰는 말이에요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
       ],

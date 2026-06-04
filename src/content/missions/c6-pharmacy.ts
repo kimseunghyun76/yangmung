@@ -34,6 +34,7 @@ export const c6: Mission = {
     {
       situationKo: '약사가 빠르게 복용법을 설명한다 — 잘 안 들린다',
       speaker: '약사',
+      promptPhraseId: 'p_shokugo_nonde',
       choices: [
         { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true },
         { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true },

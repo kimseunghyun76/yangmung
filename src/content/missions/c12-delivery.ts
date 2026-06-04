@@ -17,6 +17,7 @@ export const c12: Mission = {
         { text: '이거 보내고 싶어요', phraseId: 'p_okuritai', correct: true },
         { text: '택배 부탁해요', phraseId: 'p_takkyubin', correct: true },
         { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: true },
+        { text: '젓가락 주세요', phraseId: 'p_hashi_kudasai', correct: false, feedback: '편의점 계산대 표현이에요 — 지금은 택배 부치기' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },

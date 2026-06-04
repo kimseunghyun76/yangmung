@@ -127,6 +127,7 @@ export const phrases: Phrase[] = [
   { id: 'p_kaze_desu', kana: 'かぜです', kanji: '風邪です', korean: '감기예요', register: 'productive' },
   { id: 'p_kusuri_kudasai', kana: 'くすりをください', kanji: '薬をください', korean: '약 주세요', register: 'productive' },
   { id: 'p_kono_kusuri', kana: 'このくすりはなんですか', kanji: 'この薬は何ですか', displayKana: 'このくすりは、なんですか？', korean: '이 약은 뭐예요?', register: 'productive', grammarRefs: ['g_masuka'] },
+  { id: 'p_shokugo_nonde', kana: 'しょくごにのんでください', kanji: '食後に飲んでください', displayKana: 'しょくごに、のんでください', korean: '식후에 드세요', register: 'receptive' },
 
   // ── C7 쇼핑·면세 ──
   { id: 'p_kore_ikura', kana: 'これはいくらですか', kanji: 'これはいくらですか', displayKana: 'これは、いくらですか？', korean: '이거 얼마예요?', register: 'productive', grammarRefs: ['g_masuka'] },

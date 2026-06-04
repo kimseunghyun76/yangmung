@@ -17,6 +17,7 @@ export const c13: Mission = {
         { text: '식권기 어디예요?', phraseId: 'p_kenbaiki', correct: true },
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: true },
         { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: true },
+        { text: '표 주세요', phraseId: 'p_kippu_kudasai', correct: false, feedback: '역에서 쓰는 말이에요 — 라멘집은 식권기(券売機)예요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
