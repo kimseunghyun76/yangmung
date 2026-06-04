@@ -3,13 +3,17 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CONTENT } from '../content';
-import { claim, loadCollection, saveCollection, tierMeta, tierNeed, MAX_TIER, ownedCount, diamondCount, BOX, type BoxGrade, type Collection, type DropResult } from '../learn/collection';
+import { SCENE_SENTENCES } from '../content/sceneSentences';
+import { claim, loadCollection, saveCollection, tierMeta, tierNeed, MAX_TIER, ownedCount, diamondCount, sentenceCount, BOX, type BoxGrade, type Collection, type DropResult } from '../learn/collection';
 import { Icon } from '../ui/Icon';
+import { speak, ttsSupported } from '../tts';
 import { Modal } from './Modal';
 import { sceneVisualByMission } from './scene';
 
 const SCENES = CONTENT.missions.filter((m) => m.id !== 'C0');
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place ?? id;
+const sentenceOf = (sceneId: string, sentenceId: string) => SCENE_SENTENCES[sceneId as keyof typeof SCENE_SENTENCES]?.find((s) => s.id === sentenceId);
+type RewardItem = { result: DropResult; sentenceId?: string };
 
 // 단계 색 링에 장면 아이콘
 function DeckCardFace({ sceneId, tier, size = 56 }: { sceneId: string; tier: number; size?: number }) {
@@ -42,13 +46,13 @@ function TierRibbon({ tier }: { tier: number }) {
 }
 
 // 등급 박스 비주얼 — 이미지 있으면 사용, 없으면 이모지+그라데이션 폴백.
-function BoxArt({ grade, size = 64, className }: { grade: BoxGrade; size?: number; className?: string }) {
+function BoxArt({ grade, size = 64, className, open = false }: { grade: BoxGrade; size?: number; className?: string; open?: boolean }) {
   const [failed, setFailed] = useState(false);
   const box = BOX[grade];
   if (failed) {
     return <span className={className} style={{ width: size, height: size, borderRadius: Math.round(size * 0.28), display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: Math.round(size * 0.5), background: `linear-gradient(160deg, ${box.colors[0]}, ${box.colors[1]})`, boxShadow: `0 10px 26px ${box.colors[0]}66` }}>🎁</span>;
   }
-  return <img className={className} src={`/gacha/box/${grade}.webp`} alt="" aria-hidden width={size} height={size} onError={() => setFailed(true)} style={{ objectFit: 'contain', filter: `drop-shadow(0 14px 24px ${box.colors[0]}66)` }} />;
+  return <img className={className} src={`/gacha/box/${grade}${open ? '-open' : ''}.webp`} alt="" aria-hidden width={size} height={size} onError={() => setFailed(true)} style={{ objectFit: 'contain', filter: `drop-shadow(0 14px 24px ${box.colors[0]}66)` }} />;
 }
 
 function RevealCards({ results, shards, animate }: { results: DropResult[]; shards: number; animate?: boolean }) {
@@ -62,6 +66,7 @@ function RevealCards({ results, shards, animate }: { results: DropResult[]; shar
           <span style={{ fontSize: 11, fontWeight: 800, color: r.leveledTo ? 'var(--ok)' : r.isNew ? 'var(--accent)' : 'var(--ink-faint)' }}>
             {r.leveledTo ? `${tierMeta(r.leveledTo).label} 승급!` : r.isNew ? 'NEW' : `조각 +${shards}`}
           </span>
+          {r.sentenceIds.length > 0 && <span style={{ fontSize: 10.5, color: 'var(--ink-soft)', fontWeight: 750 }}>표현 +{r.sentenceIds.length}</span>}
         </div>
       ))}
     </div>
@@ -89,7 +94,7 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
     let r = res.results;
     if (r.length === 0) {
       const c = loadCollection();
-      r = sceneIds.map((id) => ({ sceneId: id, isNew: false, leveledTo: null, tier: c.cards[id]?.tier ?? 1, shards: c.cards[id]?.shards ?? 0 }));
+      r = sceneIds.map((id) => ({ sceneId: id, isNew: false, leveledTo: null, tier: c.cards[id]?.tier ?? 1, shards: c.cards[id]?.shards ?? 0, sentenceIds: [] }));
     }
     setResults(r);
     return r;
@@ -98,17 +103,23 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
     if (reduceMotion()) { doClaim(); setPhase('revealed'); return; }
     setTaps(0); setBurst(false); setRevealed(0); setPhase('open');
   }
-  // 오버레이 탭: 상자 깨기(여러 번) → 터지면 아이템 하나씩 공개
+  const rewardItems: RewardItem[] = results.flatMap<RewardItem>((result) =>
+    result.sentenceIds.length > 0
+      ? result.sentenceIds.map((sentenceId) => ({ result, sentenceId }))
+      : [{ result, sentenceId: undefined }],
+  );
+  // 오버레이 탭: 상자 깨기(여러 번) → 아이템 한 개씩 단독 공개 → 마지막 확인 후 전체 요약
   function overlayTap() {
     if (!burst) {
       const n = taps + 1;
       setTaps(n);
       if (n >= TAPS) { doClaim(); setBurst(true); setRevealed(0); }
-    } else if (revealed < results.length) {
+    } else if (revealed <= rewardItems.length) {
       setRevealed((v) => v + 1);
     }
   }
-  const complete = burst && revealed >= results.length;
+  const complete = burst && rewardItems.length > 0 && revealed > rewardItems.length;
+  const currentReward = revealed > 0 && revealed <= rewardItems.length ? rewardItems[revealed - 1] : undefined;
 
   return (
     <div className="ym-rise" style={{ marginTop: 22 }}>
@@ -167,21 +178,30 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
             </>
           ) : !complete ? (
             <>
-              <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
-                {results.map((r, i) => i < revealed ? (
-                  <div key={r.sceneId} className="ym-card-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, minWidth: 86, position: 'relative', zIndex: 2 }}>
-                    <DeckCardFace sceneId={r.sceneId} tier={r.tier} size={72} />
-                    <span style={{ fontSize: 13, fontWeight: 800, color: '#fff' }}>{placeOf(r.sceneId)}</span>
-                    <TierRibbon tier={r.tier} />
-                    <span style={{ fontSize: 11, fontWeight: 800, color: r.leveledTo ? 'var(--ok)' : r.isNew ? box.colors[1] : 'rgba(255,255,255,0.7)' }}>
-                      {r.leveledTo ? `${tierMeta(r.leveledTo).label} 승급!` : r.isNew ? 'NEW' : `조각 +${box.shards}`}
-                    </span>
+              <div style={{ position: 'relative', width: 260, minHeight: 330, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ position: 'absolute', left: '50%', bottom: 0, transform: 'translateX(-50%)', zIndex: 2 }}><BoxArt grade={grade} size={138} open /></span>
+                {currentReward ? (
+                  <div style={{ position: 'absolute', left: '50%', top: '36%', transform: 'translate(-50%, -50%)', zIndex: 3 }}>
+                    <div key={`${currentReward.result.sceneId}:${currentReward.sentenceId ?? revealed}`} className="ym-item-out" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, minWidth: 210, padding: '20px 16px', borderRadius: 22, border: `1px solid ${box.colors[1]}88`, background: 'rgba(12,13,20,0.86)', boxShadow: `0 0 42px ${box.colors[1]}88` }}>
+                      <DeckCardFace sceneId={currentReward.result.sceneId} tier={currentReward.result.tier} size={82} />
+                      <span style={{ fontSize: 12, fontWeight: 850, color: box.colors[1] }}>{placeOf(currentReward.result.sceneId)} · NEW EXPRESSION</span>
+                      {currentReward.sentenceId ? (
+                        <>
+                          <span lang="ja" style={{ maxWidth: 210, fontSize: 19, lineHeight: 1.4, fontWeight: 900, color: '#fff', textAlign: 'center' }}>{sentenceOf(currentReward.result.sceneId, currentReward.sentenceId)?.kanji ?? sentenceOf(currentReward.result.sceneId, currentReward.sentenceId)?.kana}</span>
+                          <span style={{ maxWidth: 210, fontSize: 12, lineHeight: 1.4, fontWeight: 700, color: 'rgba(255,255,255,0.72)', textAlign: 'center' }}>{sentenceOf(currentReward.result.sceneId, currentReward.sentenceId)?.korean}</span>
+                        </>
+                      ) : <TierRibbon tier={currentReward.result.tier} />}
+                    </div>
                   </div>
                 ) : (
-                  <div key={r.sceneId} style={{ width: 72, height: 72, borderRadius: 18, border: '1.5px dashed rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30, fontWeight: 800, color: 'rgba(255,255,255,0.6)', background: 'rgba(255,255,255,0.06)', position: 'relative', zIndex: 2 }}>?</div>
-                ))}
+                  <img className="ym-listening" src="/gacha/item/mystery-sentence.webp" alt="상자에서 나올 표현 카드" width={94} height={120} style={{ position: 'absolute', left: '50%', top: '36%', transform: 'translate(-50%, -50%)', objectFit: 'contain', zIndex: 3, filter: `drop-shadow(0 0 24px ${box.colors[1]}cc)` }} />
+                )}
               </div>
-              <p style={{ color: '#fff', fontWeight: 800, fontSize: 15, textShadow: '0 1px 8px rgba(0,0,0,.5)' }}>탭해서 아이템 받기 · {revealed}/{results.length}</p>
+              <p style={{ color: '#fff', fontWeight: 800, fontSize: 15, textShadow: '0 1px 8px rgba(0,0,0,.5)' }}>
+                {currentReward
+                  ? `${revealed === rewardItems.length ? '마지막 아이템 확인' : '탭해서 다음 아이템'} · ${revealed}/${rewardItems.length}`
+                  : `탭해서 첫 아이템 받기 · 0/${rewardItems.length}`}
+              </p>
             </>
           ) : (
             <>
@@ -237,10 +257,32 @@ function BurstParticles({ color }: { color: string }) {
 // ── 도감 모달 ──────────────────────────────────────
 export function DeckModal({ onClose }: { onClose: () => void }) {
   const c: Collection = loadCollection();
+  const [selected, setSelected] = useState<string>();
+  if (selected) {
+    const ownedIds = c.sentences[selected] ?? [];
+    const rows = SCENE_SENTENCES[selected as keyof typeof SCENE_SENTENCES].filter((row) => ownedIds.includes(row.id));
+    return (
+      <Modal title={`${placeOf(selected)} 표현`} onClose={onClose}>
+        <button className="ym-press" onClick={() => setSelected(undefined)} style={{ border: 0, background: 'transparent', color: 'var(--ink-soft)', fontWeight: 800, padding: '4px 0 12px', cursor: 'pointer' }}>← 도감으로</button>
+        <p style={{ margin: '0 0 14px', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>모은 표현 {rows.length}/30</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
+          {rows.map((row) => (
+            <button key={row.id} className="ym-press" onClick={() => speak(row.kanji ?? row.kana)} disabled={!ttsSupported()} style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%', padding: '12px 13px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', cursor: 'pointer', textAlign: 'left' }}>
+              <span style={{ flex: 1, minWidth: 0 }}>
+                <span lang="ja" style={{ display: 'block', fontSize: 16, fontWeight: 850 }}>{row.kanji ?? row.kana}</span>
+                <span style={{ display: 'block', marginTop: 3, fontSize: 12, color: 'var(--ink-soft)', fontWeight: 650 }}>{row.korean}</span>
+              </span>
+              <Icon name="listen" size={18} style={{ color: 'var(--accent)' }} />
+            </button>
+          ))}
+        </div>
+      </Modal>
+    );
+  }
   return (
     <Modal title="내 여행 도감" onClose={onClose}>
       <p style={{ margin: '0 0 14px', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 650 }}>
-        모은 장면 <strong style={{ color: 'var(--ink)' }}>{ownedCount(c)}</strong>/{SCENES.length} · 다이아 <strong style={{ color: '#5bc7e0' }}>{diamondCount(c)}</strong>
+        모은 장면 <strong style={{ color: 'var(--ink)' }}>{ownedCount(c)}</strong>/{SCENES.length} · 표현 <strong style={{ color: 'var(--accent)' }}>{sentenceCount(c)}</strong>/390 · 다이아 <strong style={{ color: '#5bc7e0' }}>{diamondCount(c)}</strong>
       </p>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
         {SCENES.map((m) => {
@@ -260,7 +302,7 @@ export function DeckModal({ onClose }: { onClose: () => void }) {
           const need = tierNeed(tier);
           const pct = need === Infinity ? 100 : Math.round((card!.shards / need) * 100);
           return (
-            <div key={m.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '12px 6px', borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)' }}>
+            <button key={m.id} className="ym-press" onClick={() => setSelected(m.id)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '12px 6px', borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', cursor: 'pointer' }}>
               <DeckCardFace sceneId={m.id} tier={tier} />
               <span style={{ fontSize: 12, fontWeight: 800 }}>{placeOf(m.id)}</span>
               <TierRibbon tier={tier} />
@@ -268,7 +310,8 @@ export function DeckModal({ onClose }: { onClose: () => void }) {
                 <span style={{ display: 'block', width: `${pct}%`, height: '100%', background: tierMeta(tier).color }} />
               </div>
               <span style={{ fontSize: 10, color: 'var(--ink-faint)', fontWeight: 700 }}>{need === Infinity ? 'MAX' : `${card!.shards}/${need}`}</span>
-            </div>
+              <span style={{ fontSize: 10, color: 'var(--ink-faint)', fontWeight: 700 }}>표현 {c.sentences[m.id]?.length ?? 0}/30</span>
+            </button>
           );
         })}
       </div>

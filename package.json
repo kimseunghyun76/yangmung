@@ -13,6 +13,7 @@
     "audio:dry": "tsx scripts/generate-audio.mjs --dry",
     "typecheck": "tsc --noEmit",
     "lint:content": "tsx src/content/validate.ts",
+    "lint:sentences": "tsx src/content/sceneSentences.validate.ts",
     "test:content": "tsx src/content/validate.test.ts",
     "test:adaptive": "tsx src/learn/adaptive.test.ts"
   },
