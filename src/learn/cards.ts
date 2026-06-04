@@ -114,6 +114,7 @@ export interface DictationCard {
   answer: string[];      // 정답 가나 단위 순서
   korean: string;
   tiles: string[];       // 섞인 타일(정답 + 방해)
+  promptKind?: 'listen' | 'korean'; // listen: 듣고 쓰기(기본) · korean: 한국어 보고 작문(산출)
   reviewTarget?: ReviewTarget;
 }
 
@@ -343,6 +344,20 @@ export function buildCards(): Card[] {
     const distractors = shuffle(DICTATION_DISTRACTORS.filter((d) => !answer.includes(d))).slice(0, 3);
     cards.push({
       kind: 'dictation', id: `dictation:${id}`, tag: '받아쓰기',
+      ja: ttsText(p) ?? p.kana, answer, korean: p.korean,
+      tiles: shuffle([...answer, ...distractors]),
+      reviewTarget: { type: 'phrase', id },
+    });
+  }
+
+  // 한→일 작문 카드 (한국어 뜻 보고 가나 타일로 일본어 조립) — 산출 강화. dictation UI 재사용.
+  for (const id of DICTATION_IDS) {
+    const p = phrases.find((x) => x.id === id);
+    if (!p) continue;
+    const answer = toReadingUnits(p.kana).map((u) => u.text).filter((t) => t.trim());
+    const distractors = shuffle(DICTATION_DISTRACTORS.filter((d) => !answer.includes(d))).slice(0, 3);
+    cards.push({
+      kind: 'dictation', id: `compose:${id}`, tag: '작문', promptKind: 'korean',
       ja: ttsText(p) ?? p.kana, answer, korean: p.korean,
       tiles: shuffle([...answer, ...distractors]),
       reviewTarget: { type: 'phrase', id },

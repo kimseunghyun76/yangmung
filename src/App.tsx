@@ -5,7 +5,7 @@ import { CONTENT } from './content';
 import {
   classifyCard, clearProgress, isKanaFamiliar, loadDiscovered, loadProgress, loadSeenKana, loadSession,
   markKanaKnown, markKanaSeen, missionsFromCards, nextSessionId, planSession, plannedSessionSize, recordAttempt, recordKnown,
-  saveDiscovered, saveProgress, saveSeenKana, saveSession, selectDictationCards, selectMissionCards, selectScriptKanaCards, selectSessionCards, selectSignCards,
+  saveDiscovered, saveProgress, saveSeenKana, saveSession, selectComposeCards, selectDictationCards, selectMissionCards, selectScriptKanaCards, selectSessionCards, selectSignCards,
   type SeenKana, type SessionLogEntry,
 } from './learn/progress';
 import { adaptSessionConfig, diagnose } from './learn/adaptive';
@@ -99,7 +99,8 @@ export function App() {
     if (view !== 'session' || !card) return;
     let ja = '';
     if (card.kind === 'quiz' && (card.listen || card.promptPhrase)) ja = card.bannerJa ?? '';
-    else if (card.kind === 'introduce' || card.kind === 'speak' || card.kind === 'discover' || card.kind === 'dictation') ja = card.ja;
+    else if (card.kind === 'introduce' || card.kind === 'speak' || card.kind === 'discover') ja = card.ja;
+    else if (card.kind === 'dictation' && card.promptKind !== 'korean') ja = card.ja; // 작문(한국어 프롬프트)은 자동재생 X
     if (!ja) return;
     const t = window.setTimeout(() => speak(ja, { rate: settings.slowListening ? 0.6 : 0.95 }), 120);
     return () => clearTimeout(t);
@@ -189,6 +190,12 @@ export function App() {
   // 받아쓰기 전용 — 듣고 가나 타일로 쓰기
   function startDictationSession() {
     const cards = selectDictationCards(allCards, progress, nextSessionId(session));
+    if (cards.length === 0) return;
+    beginSession(nextSessionId(session), cards, true);
+  }
+  // 한→일 작문 전용 — 한국어 보고 일본어 조립(산출)
+  function startComposeSession() {
+    const cards = selectComposeCards(allCards, progress, nextSessionId(session));
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true);
   }
@@ -342,16 +349,17 @@ export function App() {
       // 다음 단계 제안: 복습·받아쓰기·거리읽기 가용 개수(반복되는 "다음 장면" 대신 다른 선택지)
       const reviewCount = selectSessionCards(allCards, progress, nextId, reviewConfig).length;
       const dictationCount = selectDictationCards(allCards, progress, nextId).length;
+      const composeCount = selectComposeCards(allCards, progress, nextId).length;
       const signCount = selectSignCards(allCards, progress, nextId).length;
       return (
         <Done
           sessionId={sessionId} score={score} quizSeen={quizSeen} sessionLog={sessionLog}
           progress={progress} canContinue={canContinue}
           clearedSceneIds={clearedSceneIds} nextSceneId={nextSceneId} showGacha={gachaEligible}
-          reviewCount={reviewCount} dictationCount={dictationCount} signCount={signCount}
+          reviewCount={reviewCount} dictationCount={dictationCount} composeCount={composeCount} signCount={signCount}
           speakCount={sessionCards.filter((c) => c.kind === 'speak').length}
           onRetryWeak={retryWeakSession} onContinue={startSession}
-          onReview={startReviewSession} onDictation={startDictationSession} onSigns={startSignSession}
+          onReview={startReviewSession} onDictation={startDictationSession} onCompose={startComposeSession} onSigns={startSignSession}
           onHome={() => setView('home')}
         />
       );
@@ -383,7 +391,7 @@ export function App() {
         allCards={allCards} progress={progress} session={session} sessionConfig={sessionConfig}
         diagnosis={diag}
         modeLabel={MODE_PRESETS[settings.mode].label}
-        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession}
+        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession} onPracticeCompose={startComposeSession}
       />
     );
   }

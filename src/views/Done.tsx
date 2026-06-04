@@ -22,11 +22,13 @@ interface Props {
   showGacha?: boolean;
   reviewCount?: number;
   dictationCount?: number;
+  composeCount?: number;
   signCount?: number;
   onRetryWeak: () => void;
   onContinue: () => void;
   onReview?: () => void;
   onDictation?: () => void;
+  onCompose?: () => void;
   onSigns?: () => void;
   onHome: () => void;
 }
@@ -34,7 +36,7 @@ interface Props {
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place
   ?? CONTENT.missions.find((m) => m.id === id)?.scenario ?? id;
 
-export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, showGacha = true, reviewCount = 0, dictationCount = 0, signCount = 0, onRetryWeak, onContinue, onReview, onDictation, onSigns, onHome }: Props) {
+export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, showGacha = true, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, onRetryWeak, onContinue, onReview, onDictation, onCompose, onSigns, onHome }: Props) {
   const stars = quizSeen ? Math.max(1, Math.round((score / quizSeen) * 3)) : 0;
   const s = summarize(progress);
   const sr = sessionResult(progress, sessionId);
@@ -103,6 +105,10 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
           {onDictation && dictationCount > 0 && (
             <NextStep icon="dictation" accent="var(--warn)" title="받아쓰기"
               sub="듣고 가나 타일로 쓰기" onClick={onDictation} />
+          )}
+          {onCompose && composeCount > 0 && (
+            <NextStep icon="speak" accent="var(--accent)" title="한→일 작문"
+              sub="뜻을 보고 일본어로 만들기" onClick={onCompose} />
           )}
           {onSigns && signCount > 0 && (
             <NextStep icon="sign" accent="var(--accent)" title="거리 읽기"
