@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { buildCards, type Card, type Choice, type DiscoverCard } from './learn/cards';
 import { CONTENT } from './content';
 import {
-  classifyCard, clearProgress, isKanaFamiliar, loadDiscovered, loadProgress, loadSeenKana, loadSession,
+  classifyCard, clearProgress, isKanaFamiliar, isMissionUnlocked, loadDiscovered, loadProgress, loadSeenKana, loadSession,
   markKanaKnown, markKanaSeen, missionsFromCards, nextSessionId, planSession, plannedSessionSize, recordAttempt, recordKnown,
   saveDiscovered, saveProgress, saveSeenKana, saveSession, selectComposeCards, selectDictationCards, selectFlashCards, selectMissionCards, selectScriptKanaCards, selectSessionCards, selectSignCards,
   type SeenKana, type SessionLogEntry,
@@ -355,7 +355,8 @@ export function App() {
       return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} onBack={() => setView('home')} />;
     }
     if (view === 'flash') {
-      return <Flash cards={flashCards} onExit={() => setView('home')} onReplay={startFlashSession} />;
+      const unlockedSceneIds = CONTENT.missions.filter((m) => m.id !== 'C0' && isMissionUnlocked(m.id, progress)).map((m) => m.id);
+      return <Flash cards={flashCards} unlockedSceneIds={unlockedSceneIds} onExit={() => setView('home')} onReplay={startFlashSession} />;
     }
     if (view === 'write') {
       return <KanaWrite items={writeItems} onExit={() => setView('home')} onReplay={startKanaWrite} />;
