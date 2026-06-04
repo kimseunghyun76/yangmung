@@ -470,7 +470,18 @@ export function selectSignCards(allCards: Card[], progress: ProgressMap, current
 export function selectDictationCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit = 12): Card[] {
   const due: Card[] = [], fresh: Card[] = [];
   for (const c of allCards) {
-    if (c.kind !== 'dictation') continue;
+    if (c.kind !== 'dictation' || c.promptKind === 'korean') continue; // 작문(korean)은 별도 트랙
+    if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
+    (progress[c.id] ? due : fresh).push(c);
+  }
+  return [...due, ...fresh].slice(0, limit);
+}
+
+// 한→일 작문 전용 덱 — 한국어 보고 가나 타일로 일본어 조립(산출 강화).
+export function selectComposeCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit = 12): Card[] {
+  const due: Card[] = [], fresh: Card[] = [];
+  for (const c of allCards) {
+    if (c.kind !== 'dictation' || c.promptKind !== 'korean') continue;
     if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
     (progress[c.id] ? due : fresh).push(c);
   }

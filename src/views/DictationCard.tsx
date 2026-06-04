@@ -38,15 +38,29 @@ export function DictationCardView({ card, onResult, onNext }: Props) {
     onResult(correct);
   }
 
+  const compose = card.promptKind === 'korean'; // 한→일 작문: 한국어 보고 일본어 조립
+
   return (
     <div>
-      <h2 style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="dictation" size={22} /> 받아쓰기</h2>
-      <p style={{ color: 'var(--ink-soft)', margin: '4px 0 0' }}>듣고, 가나를 순서대로 골라 문장을 만들어요</p>
+      <h2 style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+        <Icon name="dictation" size={22} /> {compose ? '작문' : '받아쓰기'}
+      </h2>
+      <p style={{ color: 'var(--ink-soft)', margin: '4px 0 0' }}>
+        {compose ? '뜻을 보고, 가나를 골라 일본어 문장을 만들어요' : '듣고, 가나를 순서대로 골라 문장을 만들어요'}
+      </p>
 
-      <div style={{ textAlign: 'center', marginTop: 12, display: 'flex', gap: 8, justifyContent: 'center' }}>
-        <button style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: 'var(--accent-soft)' }} onClick={() => speak(card.ja)} disabled={!ttsSupported()}><Icon name="listen" size={17} /> 듣기</button>
-        <button style={{ ...BTN, padding: '10px 18px', fontSize: 14 }} onClick={() => speak(card.ja, { rate: 0.6 })} disabled={!ttsSupported()}>천천히</button>
-      </div>
+      {compose ? (
+        // 작문: 한국어 프롬프트를 보여줌. 정답 음성은 채점 후에만(미리 들으면 유추됨).
+        <div style={{ textAlign: 'center', marginTop: 14 }}>
+          <p style={{ fontSize: 22, fontWeight: 800, color: 'var(--ink)', margin: 0 }}>{card.korean}</p>
+          <p style={{ fontSize: 13, color: 'var(--ink-faint)', margin: '6px 0 0' }}>일본어로 만들어 보세요</p>
+        </div>
+      ) : (
+        <div style={{ textAlign: 'center', marginTop: 12, display: 'flex', gap: 8, justifyContent: 'center' }}>
+          <button style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: 'var(--accent-soft)' }} onClick={() => speak(card.ja)} disabled={!ttsSupported()}><Icon name="listen" size={17} /> 듣기</button>
+          <button style={{ ...BTN, padding: '10px 18px', fontSize: 14 }} onClick={() => speak(card.ja, { rate: 0.6 })} disabled={!ttsSupported()}>천천히</button>
+        </div>
+      )}
 
       {/* 글자 슬롯 — 채워질 자리 + 진행감. 채운 글자는 탭해서 빼기. 채점 후 글자별 정/오답 색. */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center', margin: '18px 0 6px', minHeight: 52 }}>
@@ -99,6 +113,11 @@ export function DictationCardView({ card, onResult, onNext }: Props) {
             <p style={{ background: 'var(--accent-soft)', padding: 12, borderRadius: 12, color: 'var(--accent)', margin: 0 }}>
               아쉬워요. 정답은 <strong>{card.answer.join('')}</strong> <span style={{ color: 'var(--ink-soft)' }}>— {card.korean}</span>
             </p>
+          )}
+          {compose && (
+            <button style={{ ...BTN, marginTop: 10, width: '100%' }} onClick={() => speak(card.ja)} disabled={!ttsSupported()}>
+              <Icon name="listen" size={16} /> 발음 듣기
+            </button>
           )}
           <button style={{ ...PRIMARY, marginTop: 10, width: '100%' }} onClick={onNext}>다음</button>
         </div>
