@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-04T14:01:34.665Z",
+  "generatedAt": "2026-06-04T14:48:27.616Z",
   "voices": {
     "nanami": {
       "name": "ja-JP-NanamiNeural",
@@ -6897,14 +6897,12 @@
     "tts_d1eed17fc7f0": {
       "text": "アレルギーがあります",
       "voice": "nanami",
-      "source": "sentence",
-      "sourceId": "ss_c6_27",
+      "source": "tip",
+      "sourceId": "g_sushi",
       "sources": [
-        "sentence:ss_c6_27"
+        "tip:g_sushi"
       ],
-      "altTexts": [
-        "アレルギーがあります"
-      ],
+      "altTexts": [],
       "synthText": "アレルギーがあります",
       "synthSignature": "7d360ae480a3",
       "path": "/audio/nanami/tts_d1eed17fc7f0.mp3"
@@ -7128,17 +7126,14 @@
     "tts_528f6538e26b": {
       "text": "おしはらいはどうしますか",
       "voice": "nanami",
-      "source": "sentence",
-      "sourceId": "ss_c1_27",
+      "source": "recap",
+      "sourceId": "recap_1",
       "sources": [
-        "sentence:ss_c1_27"
+        "recap:recap_1"
       ],
-      "altTexts": [
-        "おしはらいはどうしますか",
-        "お支払いはどうしますか"
-      ],
-      "synthText": "お支払いはどうしますか",
-      "synthSignature": "313903c10379",
+      "altTexts": [],
+      "synthText": "おしはらいはどうしますか",
+      "synthSignature": "82fee6f09711",
       "path": "/audio/nanami/tts_528f6538e26b.mp3"
     },
     "tts_ef7642a2bfdd": {
@@ -7618,17 +7613,14 @@
     "tts_340d1c51ee11": {
       "text": "ごちゅうもんはおきまりですか",
       "voice": "nanami",
-      "source": "sentence",
-      "sourceId": "ss_c2_21",
+      "source": "recap",
+      "sourceId": "recap_2",
       "sources": [
-        "sentence:ss_c2_21"
+        "recap:recap_2"
       ],
-      "altTexts": [
-        "ごちゅうもんはおきまりですか",
-        "ご注文はお決まりですか"
-      ],
-      "synthText": "ご注文はお決まりですか",
-      "synthSignature": "755526a55780",
+      "altTexts": [],
+      "synthText": "ごちゅうもんはおきまりですか",
+      "synthSignature": "466430f05f2b",
       "path": "/audio/nanami/tts_340d1c51ee11.mp3"
     },
     "tts_8d719e7aa55e": {
@@ -8471,14 +8463,12 @@
     "tts_08561afa26c8": {
       "text": "どうしましたか",
       "voice": "nanami",
-      "source": "sentence",
-      "sourceId": "ss_c6_19",
+      "source": "recap",
+      "sourceId": "recap_5",
       "sources": [
-        "sentence:ss_c6_19"
+        "recap:recap_5"
       ],
-      "altTexts": [
-        "どうしましたか"
-      ],
+      "altTexts": [],
       "synthText": "どうしましたか",
       "synthSignature": "26ebac3e652d",
       "path": "/audio/nanami/tts_08561afa26c8.mp3"
@@ -8705,17 +8695,14 @@
     "tts_831d69965ed9": {
       "text": "なんめいさまですか",
       "voice": "nanami",
-      "source": "sentence",
-      "sourceId": "ss_c2_19",
+      "source": "recap",
+      "sourceId": "recap_3",
       "sources": [
-        "sentence:ss_c2_19"
+        "recap:recap_3"
       ],
-      "altTexts": [
-        "なんめいさまですか",
-        "何名様ですか"
-      ],
-      "synthText": "何名様ですか",
-      "synthSignature": "ea2b3107562b",
+      "altTexts": [],
+      "synthText": "なんめいさまですか",
+      "synthSignature": "654bcd2c01db",
       "path": "/audio/nanami/tts_831d69965ed9.mp3"
     },
     "tts_9f5628ac5d50": {
@@ -9506,6 +9493,228 @@
       "synthText": "割れ物シールを貼ります",
       "synthSignature": "b91f56100074",
       "path": "/audio/nanami/tts_c25c1ec50971.mp3"
+    },
+    "tts_a5ed351d5a63": {
+      "text": "お腹が痛いです",
+      "voice": "nanami",
+      "source": "tip",
+      "sourceId": "g_hospital",
+      "sources": [
+        "tip:g_hospital"
+      ],
+      "altTexts": [],
+      "synthText": "お腹が痛いです",
+      "synthSignature": "fac5eb797fe8",
+      "path": "/audio/nanami/tts_a5ed351d5a63.mp3"
+    },
+    "tts_9fa002dbc4bd": {
+      "text": "カードは使えますか",
+      "voice": "nanami",
+      "source": "tip",
+      "sourceId": "g_masuka",
+      "sources": [
+        "tip:g_masuka"
+      ],
+      "altTexts": [],
+      "synthText": "カードは使えますか",
+      "synthSignature": "356637548ae4",
+      "path": "/audio/nanami/tts_9fa002dbc4bd.mp3"
+    },
+    "tts_e72b7d7266eb": {
+      "text": "きって",
+      "voice": "nanami",
+      "source": "tip",
+      "sourceId": "g_sokuon",
+      "sources": [
+        "tip:g_sokuon"
+      ],
+      "altTexts": [],
+      "synthText": "きって",
+      "synthSignature": "6eb094d54207",
+      "path": "/audio/nanami/tts_e72b7d7266eb.mp3"
+    },
+    "tts_8d3e543b3527": {
+      "text": "ここはどこですか",
+      "voice": "nanami",
+      "source": "tip",
+      "sourceId": "g_tourist_info",
+      "sources": [
+        "tip:g_tourist_info"
+      ],
+      "altTexts": [],
+      "synthText": "ここはどこですか",
+      "synthSignature": "ba400f54e3cc",
+      "path": "/audio/nanami/tts_8d3e543b3527.mp3"
+    },
+    "tts_c46cd0f8a3db": {
+      "text": "これとこれをお願いします",
+      "voice": "nanami",
+      "source": "tip",
+      "sourceId": "g_bakery",
+      "sources": [
+        "tip:g_bakery"
+      ],
+      "altTexts": [],
+      "synthText": "これとこれをお願いします",
+      "synthSignature": "800b4f87194e",
+      "path": "/audio/nanami/tts_c46cd0f8a3db.mp3"
+    },
+    "tts_0f2af3893c51": {
+      "text": "これを一つお願いします",
+      "voice": "nanami",
+      "source": "tip",
+      "sourceId": "g_cafe",
+      "sources": [
+        "tip:g_cafe"
+      ],
+      "altTexts": [],
+      "synthText": "これを一つお願いします",
+      "synthSignature": "10227b21787d",
+      "path": "/audio/nanami/tts_0f2af3893c51.mp3"
+    },
+    "tts_fa04552a87a5": {
+      "text": "これを見せてください",
+      "voice": "nanami",
+      "source": "tip",
+      "sourceId": "g_kudasai",
+      "sources": [
+        "tip:g_kudasai"
+      ],
+      "altTexts": [],
+      "synthText": "これを見せてください",
+      "synthSignature": "1080562c7d98",
+      "path": "/audio/nanami/tts_fa04552a87a5.mp3"
+    },
+    "tts_26466b102272": {
+      "text": "ビル / ビール",
+      "voice": "nanami",
+      "source": "tip",
+      "sourceId": "g_long_vowel",
+      "sources": [
+        "tip:g_long_vowel"
+      ],
+      "altTexts": [],
+      "synthText": "ビル / ビール",
+      "synthSignature": "19d9fced729a",
+      "path": "/audio/nanami/tts_26466b102272.mp3"
+    },
+    "tts_255df2950150": {
+      "text": "ゆっくりお願いします",
+      "voice": "nanami",
+      "source": "tip",
+      "sourceId": "g_onegai",
+      "sources": [
+        "tip:g_onegai"
+      ],
+      "altTexts": [],
+      "synthText": "ゆっくりお願いします",
+      "synthSignature": "d77375c29e80",
+      "path": "/audio/nanami/tts_255df2950150.mp3"
+    },
+    "tts_6779ad7af165": {
+      "text": "写真を撮ってもいいですか",
+      "voice": "nanami",
+      "source": "tip",
+      "sourceId": "g_shrine",
+      "sources": [
+        "tip:g_shrine"
+      ],
+      "altTexts": [],
+      "synthText": "写真を撮ってもいいですか",
+      "synthSignature": "4a24472f720f",
+      "reusedFrom": "kana-master:sp_7",
+      "path": "/audio/nanami/tts_6779ad7af165.mp3"
+    },
+    "tts_ff981a0756cd": {
+      "text": "助けてください",
+      "voice": "nanami",
+      "source": "tip",
+      "sourceId": "g_police",
+      "sources": [
+        "tip:g_police"
+      ],
+      "altTexts": [],
+      "synthText": "助けてください",
+      "synthSignature": "df5c65bcb399",
+      "path": "/audio/nanami/tts_ff981a0756cd.mp3"
+    },
+    "tts_b1c61d611556": {
+      "text": "朝食は何時ですか",
+      "voice": "nanami",
+      "source": "tip",
+      "sourceId": "g_ryokan",
+      "sources": [
+        "tip:g_ryokan"
+      ],
+      "altTexts": [],
+      "synthText": "朝食は何時ですか",
+      "synthSignature": "de7ecb67d27e",
+      "path": "/audio/nanami/tts_b1c61d611556.mp3"
+    },
+    "tts_9cd3bf9fa0b3": {
+      "text": "ごようけんはなんですか",
+      "voice": "nanami",
+      "source": "recap",
+      "sourceId": "recap_8",
+      "sources": [
+        "recap:recap_8"
+      ],
+      "altTexts": [],
+      "synthText": "ごようけんはなんですか",
+      "synthSignature": "31d3eb9546c7",
+      "path": "/audio/nanami/tts_9cd3bf9fa0b3.mp3"
+    },
+    "tts_39bf5b9de31e": {
+      "text": "ごよやくはありますか",
+      "voice": "nanami",
+      "source": "recap",
+      "sourceId": "recap_4",
+      "sources": [
+        "recap:recap_4"
+      ],
+      "altTexts": [],
+      "synthText": "ごよやくはありますか",
+      "synthSignature": "e7daf1efbce9",
+      "path": "/audio/nanami/tts_39bf5b9de31e.mp3"
+    },
+    "tts_b3e160fe6bde": {
+      "text": "どちらへいきますか",
+      "voice": "nanami",
+      "source": "recap",
+      "sourceId": "recap_6",
+      "sources": [
+        "recap:recap_6"
+      ],
+      "altTexts": [],
+      "synthText": "どちらへいきますか",
+      "synthSignature": "f05c9f763c8a",
+      "path": "/audio/nanami/tts_b3e160fe6bde.mp3"
+    },
+    "tts_160faa9fd6cf": {
+      "text": "なにをおさがしですか",
+      "voice": "nanami",
+      "source": "recap",
+      "sourceId": "recap_7",
+      "sources": [
+        "recap:recap_7"
+      ],
+      "altTexts": [],
+      "synthText": "なにをおさがしですか",
+      "synthSignature": "a4354b8f058f",
+      "path": "/audio/nanami/tts_160faa9fd6cf.mp3"
+    },
+    "tts_88f80bae2567": {
+      "text": "ほかになにかありますか",
+      "voice": "nanami",
+      "source": "recap",
+      "sourceId": "recap_9",
+      "sources": [
+        "recap:recap_9"
+      ],
+      "altTexts": [],
+      "synthText": "ほかになにかありますか",
+      "synthSignature": "42bc6d6214a6",
+      "path": "/audio/nanami/tts_88f80bae2567.mp3"
     }
   },
   "textIndex": {
@@ -9895,7 +10104,7 @@
     "しちゃくしてもいいですか": "tts_7be119ce8416",
     "試着してもいいですか": "tts_7be119ce8416",
     "たいざいは": "tts_274595ef5da3",
-    "助けてください": "tts_1546cc0f76e8",
+    "助けてください": "tts_ff981a0756cd",
     "チェックイン、おねがいします": "tts_b8422219fa15",
     "チェックインおねがいします": "tts_b8422219fa15",
     "チェックインお願いします": "tts_b8422219fa15",
@@ -9937,13 +10146,13 @@
     "おしはらいほうほうは": "tts_4e07437ae2a7",
     "お支払い方法は": "tts_4e07437ae2a7",
     "おなかがいたいです": "tts_04d2702039af",
-    "お腹が痛いです": "tts_04d2702039af",
+    "お腹が痛いです": "tts_a5ed351d5a63",
     "おなまえは": "tts_7eb703e402b6",
     "お名前は": "tts_7eb703e402b6",
     "おのみものは": "tts_e3275e917a4f",
     "お飲み物は": "tts_e3275e917a4f",
     "カードはつかえますか": "tts_4d5a5dccfedc",
-    "カードは使えますか": "tts_4d5a5dccfedc",
+    "カードは使えますか": "tts_9fa002dbc4bd",
     "かいさつはどこですか": "tts_9b50f3c802d7",
     "改札はどこですか": "tts_9b50f3c802d7",
     "かえだまおねがいします": "tts_c38feb3fad05",
@@ -10022,7 +10231,7 @@
     "やさしいにほんごでおねがいします": "tts_a2352f91e4bd",
     "やさしい日本語でお願いします": "tts_a2352f91e4bd",
     "ゆっくりおねがいします": "tts_a63cdcc7ec23",
-    "ゆっくりお願いします": "tts_a63cdcc7ec23",
+    "ゆっくりお願いします": "tts_255df2950150",
     "予約しています": "tts_958d7a5f3eec",
     "りょうがえおねがいします": "tts_e0a453ace596",
     "両替お願いします": "tts_e0a453ace596",
@@ -10243,7 +10452,7 @@
     "これをひとつください": "tts_5218d9715455",
     "これを一つください": "tts_5218d9715455",
     "これをみせてください": "tts_95d9a60c2ed7",
-    "これを見せてください": "tts_95d9a60c2ed7",
+    "これを見せてください": "tts_fa04552a87a5",
     "ざいこをかくにんします": "tts_62fe7baacded",
     "在庫を確認します": "tts_62fe7baacded",
     "さいしゅうでんしゃはなんじですか": "tts_9b9f9bae9412",
@@ -10401,6 +10610,18 @@
     "割れ物が入っています": "tts_c19bdcb44a82",
     "われものシールをはります": "tts_c25c1ec50971",
     "割れ物シールを貼ります": "tts_c25c1ec50971",
-    "あたためてください": "tts_cfa65d3cfe88"
+    "あたためてください": "tts_cfa65d3cfe88",
+    "写真を撮ってもいいですか": "tts_6779ad7af165",
+    "きって": "tts_e72b7d7266eb",
+    "ここはどこですか": "tts_8d3e543b3527",
+    "これとこれをお願いします": "tts_c46cd0f8a3db",
+    "これを一つお願いします": "tts_0f2af3893c51",
+    "ビル / ビール": "tts_26466b102272",
+    "朝食は何時ですか": "tts_b1c61d611556",
+    "ごようけんはなんですか": "tts_9cd3bf9fa0b3",
+    "ごよやくはありますか": "tts_39bf5b9de31e",
+    "どちらへいきますか": "tts_b3e160fe6bde",
+    "なにをおさがしですか": "tts_160faa9fd6cf",
+    "ほかになにかありますか": "tts_88f80bae2567"
   }
 }

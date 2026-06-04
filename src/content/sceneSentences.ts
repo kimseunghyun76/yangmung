@@ -16,6 +16,7 @@ export interface SceneSentence {
 }
 
 type Seed = [kana: string, kanji: string, korean: string, speaker: 'clerk' | 'me', tier?: 1 | 2 | 3, tip?: string];
+type SentenceScene = 'C1' | 'C2' | 'C3' | 'C4' | 'C5' | 'C6' | 'C7' | 'C8' | 'C9' | 'C10' | 'C11' | 'C12' | 'C13';
 
 const romaji = (kana: string) => {
   const units = toReadingUnits(kana);
@@ -65,7 +66,7 @@ const COMMON: Seed[] = [
   ['たすかりました','助かりました','덕분에 살았어요','me',3],
 ];
 
-const SPECIFIC: Record<Exclude<CLevel, 'C0'>, Seed[]> = {
+const SPECIFIC: Record<SentenceScene, Seed[]> = {
   C1: [
     ['ふくろはいりますか','袋は要りますか','봉투 필요하세요?','clerk'], ['ふくろはけっこうです','袋は結構です','봉투는 괜찮아요','me'],
     ['あたためますか','温めますか','데워 드릴까요?','clerk'], ['あたためてください','温めてください','데워 주세요','me'],
@@ -172,7 +173,7 @@ const SPECIFIC: Record<Exclude<CLevel, 'C0'>, Seed[]> = {
   ],
 };
 
-const buildScene = (scene: Exclude<CLevel, 'C0'>): SceneSentence[] =>
+const buildScene = (scene: SentenceScene): SceneSentence[] =>
   [...COMMON, ...SPECIFIC[scene]].map((seed, i) => sentence(scene, i + 1, seed));
 
 export const SCENE_SENTENCES: Record<CLevel, SceneSentence[]> = {
@@ -180,4 +181,6 @@ export const SCENE_SENTENCES: Record<CLevel, SceneSentence[]> = {
   C1: buildScene('C1'), C2: buildScene('C2'), C3: buildScene('C3'), C4: buildScene('C4'),
   C5: buildScene('C5'), C6: buildScene('C6'), C7: buildScene('C7'), C8: buildScene('C8'),
   C9: buildScene('C9'), C10: buildScene('C10'), C11: buildScene('C11'), C12: buildScene('C12'), C13: buildScene('C13'),
+  C14: [], C15: [], C16: [], C17: [], C18: [], C19: [], C20: [], C21: [], C22: [], C23: [],
+  C24: [], C25: [], C26: [], C27: [], C28: [], C29: [], C30: [],
 };

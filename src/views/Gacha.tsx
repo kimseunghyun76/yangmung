@@ -9,6 +9,7 @@ import { Icon } from '../ui/Icon';
 import { speak, ttsSupported } from '../tts';
 import { Modal } from './Modal';
 import { sceneVisualByMission } from './scene';
+import { MascotBubble } from './mascot';
 
 const SCENES = CONTENT.missions.filter((m) => m.id !== 'C0');
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place ?? id;
@@ -138,6 +139,7 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
       {phase === 'revealed' && (
         <div style={{ position: 'relative', overflow: 'hidden', padding: 18, borderRadius: 22, border: '1px solid var(--glass-border)', background: `radial-gradient(circle at 50% 18%, ${box.colors[1]}24, transparent 50%), var(--glass-bg-strong)` }}>
           <GachaGlow color={box.colors[1]} strong />
+          <MascotBubble who="duo" size={42} style={{ marginBottom: 14 }}>오늘 모은 장면과 표현이 여행 도감에 들어갔어요.</MascotBubble>
           <RevealCards results={results} shards={box.shards} />
           <button className="ym-press" onClick={() => setDeck(true)}
             style={{ width: '100%', marginTop: 16, padding: '12px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)', fontWeight: 700, fontSize: 14, cursor: 'pointer' }}>
@@ -310,7 +312,9 @@ export function DeckModal({ onClose }: { onClose: () => void }) {
                 <span style={{ display: 'block', width: `${pct}%`, height: '100%', background: tierMeta(tier).color }} />
               </div>
               <span style={{ fontSize: 10, color: 'var(--ink-faint)', fontWeight: 700 }}>{need === Infinity ? 'MAX' : `${card!.shards}/${need}`}</span>
-              <span style={{ fontSize: 10, color: 'var(--ink-faint)', fontWeight: 700 }}>표현 {c.sentences[m.id]?.length ?? 0}/30</span>
+              <span style={{ fontSize: 10, color: 'var(--ink-faint)', fontWeight: 700 }}>
+                {SCENE_SENTENCES[m.id].length > 0 ? `표현 ${c.sentences[m.id]?.length ?? 0}/${SCENE_SENTENCES[m.id].length}` : '표현 카드 준비 중'}
+              </span>
             </button>
           );
         })}

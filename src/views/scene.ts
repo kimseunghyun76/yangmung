@@ -34,6 +34,23 @@ const BY_PLACE: Record<string, SceneVisual> = {
   코인로커: { emoji: '鍵', icon: 'scene-locker', bg: '#f1f5f9', accent: '#475569' },
   택배: { emoji: '箱', icon: 'scene-delivery', bg: '#fff7ed', accent: '#c2410c' },
   라멘: { emoji: '麺', icon: 'scene-ramen', bg: '#fff1f2', accent: '#e11d48' },
+  카페: { emoji: '珈', icon: 'scene-restaurant', bg: '#fff7ed', accent: '#b45309' },
+  빵집: { emoji: '麺', icon: 'scene-store', bg: '#fefce8', accent: '#ca8a04' },
+  이자카야: { emoji: '酒', icon: 'scene-restaurant', bg: '#fff1f2', accent: '#be123c' },
+  스시집: { emoji: '鮨', icon: 'scene-restaurant', bg: '#ecfeff', accent: '#0891b2' },
+  관광안내소: { emoji: '旅', icon: 'scene-street', bg: '#eff6ff', accent: '#2563eb' },
+  신사: { emoji: '社', icon: 'scene-street', bg: '#fff1f2', accent: '#dc2626' },
+  온천: { emoji: '湯', icon: 'scene-hotel', bg: '#ecfeff', accent: '#0e7490' },
+  료칸: { emoji: '宿', icon: 'scene-hotel', bg: '#faf5ff', accent: '#9333ea' },
+  버스: { emoji: '車', icon: 'scene-train', bg: '#f0fdf4', accent: '#15803d' },
+  신칸센: { emoji: '新', icon: 'scene-train', bg: '#eff6ff', accent: '#1d4ed8' },
+  렌터카: { emoji: '車', icon: 'scene-taxi', bg: '#fefce8', accent: '#a16207' },
+  병원: { emoji: '医', icon: 'scene-pharmacy', bg: '#fef2f2', accent: '#dc2626' },
+  경찰서: { emoji: '交', icon: 'scene-street', bg: '#eff6ff', accent: '#1d4ed8' },
+  긴급상황: { emoji: '助', icon: 'scene-pharmacy', bg: '#fff1f2', accent: '#e11d48' },
+  통신매장: { emoji: '信', icon: 'scene-shopping', bg: '#f5f3ff', accent: '#7c3aed' },
+  코인세탁: { emoji: '洗', icon: 'scene-store', bg: '#ecfeff', accent: '#0891b2' },
+  축제: { emoji: '祭', icon: 'scene-street', bg: '#fff7ed', accent: '#ea580c' },
   가게: { emoji: '店', icon: 'scene-store', bg: '#fdf2f8', accent: '#db2777' },
 };
 
@@ -58,7 +75,8 @@ export function sceneVisualByMission(missionId?: string): SceneVisual {
   const base = sceneVisualByPlace(m?.place);
   const v = m?.visual;
   const key = missionId?.toLowerCase();
-  const generated = key ? {
+  const hasGeneratedAsset = missionId === 'C0' || !!BACKDROPS[missionId ?? ''];
+  const generated = key && hasGeneratedAsset ? {
     thumb: `/scenes/${key}-thumb.svg`,
     hero: `/scenes/${key}-hero.svg`,
     backdrop: BACKDROPS[missionId ?? ''],

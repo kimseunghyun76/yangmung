@@ -23,11 +23,22 @@ const REGION = process.env.AZURE_SPEECH_REGION || 'koreacentral';
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry');
 const force = args.includes('--force');
-const only = valueArg('--only'); // kana | phrases | signs | sentences | core
+const only = valueArg('--only'); // kana | phrases | signs | sentences | tips | core
 const sourceIdFilter = valueArg('--source-id'); // 특정 Phrase/Kana/Sign id만 재생성
 const limit = Number(valueArg('--limit') || '0');
 const reuseRoot = valueArg('--reuse-root') || path.resolve(ROOT, '..', 'kana-master', 'public', 'audio');
 const UNSPEAKABLE_TEXTS = new Set(['ー']);
+const RECAP_PROMPTS = [
+  'おしはらいはどうしますか',
+  'ごちゅうもんはおきまりですか',
+  'なんめいさまですか',
+  'ごよやくはありますか',
+  'どうしましたか',
+  'どちらへいきますか',
+  'なにをおさがしですか',
+  'ごようけんはなんですか',
+  'ほかになにかありますか',
+];
 
 function valueArg(name) {
   const i = args.indexOf(name);
@@ -129,6 +140,14 @@ function collectItems() {
         );
       }
     }
+  }
+  if (!only || only === 'tips') {
+    for (const tip of CONTENT.grammar) {
+      if (tip.exampleJa) addItem(items, seen, 'tip', tip.id, tip.exampleJa, 58);
+    }
+  }
+  if (!only || only === 'recap') {
+    RECAP_PROMPTS.forEach((text, i) => addItem(items, seen, 'recap', `recap_${i + 1}`, text, 32));
   }
 
   items.sort((a, b) => a.priority - b.priority || a.text.localeCompare(b.text, 'ja'));

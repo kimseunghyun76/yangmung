@@ -1,7 +1,7 @@
 import { SCENE_SENTENCES } from './sceneSentences';
 import type { CLevel } from './types';
 
-const scenes: CLevel[] = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12', 'C13'];
+const scenes: CLevel[] = Array.from({ length: 31 }, (_, i) => `C${i}` as CLevel);
 const kanaOnly = /^[\u3040-\u309f\u30a0-\u30ffー]+$/u;
 const idPattern = /^ss_c(?:[1-9]|1[0-3])_\d{2}$/;
 const ids = new Set<string>();
@@ -10,7 +10,7 @@ const warnings: string[] = [];
 
 for (const scene of scenes) {
   const rows = SCENE_SENTENCES[scene];
-  const expected = scene === 'C0' ? 0 : 30;
+  const expected = Number(scene.slice(1)) >= 1 && Number(scene.slice(1)) <= 13 ? 30 : 0;
   if (rows.length !== expected) errors.push(`${scene}: expected ${expected}, got ${rows.length}`);
 
   const speakers = { clerk: 0, me: 0 };
@@ -33,7 +33,7 @@ for (const scene of scenes) {
     if ((row.tip?.length ?? 0) > 40) warnings.push(`${row.id}: tip exceeds 40 characters`);
   }
 
-  if (scene !== 'C0') {
+  if (expected > 0) {
     if (speakers.clerk < 8 || speakers.me < 16) warnings.push(`${scene}: speaker balance clerk/me=${speakers.clerk}/${speakers.me}`);
     if (tiers[1] < 12 || tiers[2] < 8 || tiers[3] < 4) warnings.push(`${scene}: tier balance=${tiers[1]}/${tiers[2]}/${tiers[3]}`);
   }

@@ -22,6 +22,18 @@ interface Props {
 }
 
 interface Answer { ja?: string; kana?: string; korean?: string; label?: string; action: boolean; recovery: boolean; model: boolean }
+interface RecapPrompt { ja: string; kana: string; korean: string }
+
+function fallbackPrompt(situation: string): RecapPrompt {
+  if (/결제|계산|요금|가격/.test(situation)) return { ja: 'おしはらいはどうしますか', kana: 'おしはらいはどうしますか', korean: '결제는 어떻게 하시겠어요?' };
+  if (/주문|메뉴|음료|먹거리/.test(situation)) return { ja: 'ごちゅうもんはおきまりですか', kana: 'ごちゅうもんはおきまりですか', korean: '주문은 정하셨나요?' };
+  if (/인원|자리|입장/.test(situation)) return { ja: 'なんめいさまですか', kana: 'なんめいさまですか', korean: '몇 분이세요?' };
+  if (/예약|체크인|숙소|호텔|료칸/.test(situation)) return { ja: 'ごよやくはありますか', kana: 'ごよやくはありますか', korean: '예약하셨나요?' };
+  if (/증상|아프|약|병원|긴급|도움/.test(situation)) return { ja: 'どうしましたか', kana: 'どうしましたか', korean: '무슨 일이 있으세요?' };
+  if (/길|위치|방향|승강장|버스|열차|전철/.test(situation)) return { ja: 'どちらへいきますか', kana: 'どちらへいきますか', korean: '어디로 가시나요?' };
+  if (/상품|빵|고르|면세|유심/.test(situation)) return { ja: 'なにをおさがしですか', kana: 'なにをおさがしですか', korean: '무엇을 찾으세요?' };
+  return { ja: 'ごようけんはなんですか', kana: 'ごようけんはなんですか', korean: '무엇을 도와드릴까요?' };
+}
 
 export function OrderCardView({ card, picks, isKanaFamiliar, onNext }: Props) {
   const missionId = card.reviewTarget?.id ? String(card.reviewTarget.id) : undefined;
@@ -33,6 +45,11 @@ export function OrderCardView({ card, picks, isKanaFamiliar, onNext }: Props) {
     if (!mission) return [];
     return mission.steps.map((step, idx) => {
       const prompt = step.promptPhraseId ? byId[step.promptPhraseId] : undefined;
+      const recapPrompt: RecapPrompt = prompt
+        ? { ja: prompt.displayKana ?? prompt.kana, kana: prompt.displayKana ?? prompt.kana, korean: prompt.korean }
+        : step.recapPromptJa
+          ? { ja: step.recapPromptJa, kana: step.recapPromptJa, korean: step.recapPromptKo ?? step.situationKo }
+          : fallbackPrompt(step.situationKo);
       const pick = picks[`mission:${mission.id}:${idx}`];
       let answer: Answer | undefined;
       if (pick) {
@@ -46,7 +63,7 @@ export function OrderCardView({ card, picks, isKanaFamiliar, onNext }: Props) {
         if (mp) answer = { ja: mp.displayKana ?? mp.kana, kana: mp.kana, korean: mp.korean, action: false, recovery: false, model: true };
         else if (model) answer = { label: model.text, action: true, recovery: false, model: true };
       }
-      return { idx, step, prompt, answer };
+      return { idx, step, recapPrompt, answer };
     });
   }, [mission, picks, byId]);
 
@@ -54,7 +71,7 @@ export function OrderCardView({ card, picks, isKanaFamiliar, onNext }: Props) {
   function playAll() {
     const seq: string[] = [];
     for (const t of turns) {
-      if (t.prompt) seq.push(t.prompt.displayKana ?? t.prompt.kana);
+      seq.push(t.recapPrompt.ja);
       if (t.answer && !t.answer.action && t.answer.ja) seq.push(t.answer.ja);
     }
     speakSequence(seq);
@@ -82,9 +99,8 @@ export function OrderCardView({ card, picks, isKanaFamiliar, onNext }: Props) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {turns.map((t) => (
           <div key={t.idx} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {t.prompt && (
-              <Bubble side="left" who="점원" accent={sv.accent} ja={t.prompt.displayKana ?? t.prompt.kana} kana={t.prompt.displayKana ?? t.prompt.kana} korean={t.prompt.korean} isKanaFamiliar={isKanaFamiliar} />
-            )}
+            <p style={{ margin: '2px 4px -3px', fontSize: 11.5, color: 'var(--ink-faint)', fontWeight: 650 }}>{t.step.situationKo}</p>
+            <Bubble side="left" who={t.step.speaker && t.step.speaker !== '나' ? t.step.speaker : '상대'} accent={sv.accent} ja={t.recapPrompt.ja} kana={t.recapPrompt.kana} korean={t.recapPrompt.korean} isKanaFamiliar={isKanaFamiliar} />
             {t.answer && (
               t.answer.action
                 ? <ActionLine label={t.answer.label ?? ''} model={t.answer.model} />
