@@ -18,6 +18,7 @@ interface Props {
   speakCount: number;
   canContinue: boolean;
   clearedSceneIds: string[];
+  fallbackSceneIds?: string[]; // 장면이 없는 연습 세션(간판·받아쓰기·작문…)에서 점수 좋으면 줄 보상 장면
   nextSceneId?: string;
   showGacha?: boolean;
   reviewCount?: number;
@@ -37,7 +38,7 @@ interface Props {
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place
   ?? CONTENT.missions.find((m) => m.id === id)?.scenario ?? id;
 
-export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, showGacha = true, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, onRetryWeak, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onHome }: Props) {
+export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, fallbackSceneIds = [], nextSceneId, showGacha = true, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, onRetryWeak, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onHome }: Props) {
   const stars = quizSeen ? Math.max(1, Math.round((score / quizSeen) * 3)) : 0;
   const s = summarize(progress);
   const sr = sessionResult(progress, sessionId);
@@ -81,7 +82,8 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
       )}
 
       {/* 가챠 보석함 — 성과 등급별 조각 적립 (학습 로직과 분리). 약점 재도전 세션 제외 */}
-      {showGacha && <GachaBox sessionId={sessionId} sceneIds={clearedSceneIds} grade={boxGrade(stars, recoveryUsed)} />}
+      {/* 장면 세션은 클리어 장면으로 보상. 연습 세션(장면 없음)은 별 2개↑일 때만 보상(점수 기준). */}
+      {showGacha && <GachaBox sessionId={sessionId} sceneIds={clearedSceneIds.length ? clearedSceneIds : (stars >= 2 ? fallbackSceneIds : [])} grade={boxGrade(stars, recoveryUsed)} />}
 
       {/* 다음 단계 추천 — 매번 같은 다음 장면 대신 신규·복습·다른 연습을 골라가며 */}
       <div className="ym-rise" style={{ animationDelay: '.16s', marginTop: 24 }}>

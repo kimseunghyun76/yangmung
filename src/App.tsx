@@ -375,6 +375,11 @@ export function App() {
       )];
       const nextSceneId = planSession(allCards, progress, nextId, sessionConfig)
         .missions.find((m) => m.id !== 'C0')?.id;
+      // 연습 세션(장면 없음)용 보상 장면 — 해금 장면에서 세션 id로 결정적 선택(2개)
+      const unlockedForReward = CONTENT.missions.filter((m) => m.id !== 'C0' && isMissionUnlocked(m.id, progress)).map((m) => m.id);
+      const fallbackSceneIds = unlockedForReward.length
+        ? [...new Set([unlockedForReward[sessionId % unlockedForReward.length], unlockedForReward[(sessionId + 1) % unlockedForReward.length]])]
+        : [];
       // 다음 단계 제안: 복습·받아쓰기·거리읽기 가용 개수(반복되는 "다음 장면" 대신 다른 선택지)
       const reviewCount = selectSessionCards(allCards, progress, nextId, reviewConfig).length;
       const dictationCount = selectDictationCards(allCards, progress, nextId).length;
@@ -384,7 +389,7 @@ export function App() {
         <Done
           sessionId={sessionId} score={score} quizSeen={quizSeen} sessionLog={sessionLog}
           progress={progress} canContinue={canContinue}
-          clearedSceneIds={clearedSceneIds} nextSceneId={nextSceneId} showGacha={gachaEligible}
+          clearedSceneIds={clearedSceneIds} fallbackSceneIds={fallbackSceneIds} nextSceneId={nextSceneId} showGacha={gachaEligible}
           reviewCount={reviewCount} dictationCount={dictationCount} composeCount={composeCount} signCount={signCount}
           speakCount={sessionCards.filter((c) => c.kind === 'speak').length}
           onRetryWeak={retryWeakSession} onContinue={startSession}
