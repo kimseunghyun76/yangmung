@@ -495,7 +495,19 @@ export function selectScriptKanaCards(
     const rep = pickFreshestVariant(variants, progress);
     (progress[rep.id] ? due : fresh).push(rep);
   }
-  return [...due, ...fresh].slice(0, limit);
+  // 가나는 오십음도(あいうえお…) 순으로 나오면 다음 글자가 유추됨 → 그룹 내부를 섞어 순서 추측 차단.
+  // 학습 의도(약점 먼저)는 유지: 복습(due)을 신규(fresh)보다 앞에 두되, 각 그룹 안은 무작위.
+  return [...shuffleKana(due), ...shuffleKana(fresh)].slice(0, limit);
+}
+
+// Fisher–Yates 셔플 — 가나 순서 유추 방지용
+function shuffleKana<T>(a: T[]): T[] {
+  const r = [...a];
+  for (let i = r.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [r[i], r[j]] = [r[j], r[i]];
+  }
+  return r;
 }
 
 // 미션(장면) 진척 — 익숙(2연속 정답) 카드 수 / 전체 카드 수.
