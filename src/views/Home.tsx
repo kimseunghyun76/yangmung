@@ -111,69 +111,101 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
         </div>
       )}
 
-      {/* ③ 학습 가방 (접힘) — 코치 진단 · 가나 안정도 · 빠른 연습 · 여행 루트 */}
-      <div className="ym-rise" style={{ animationDelay: '.14s', marginTop: 14 }}>
+      {/* ③ 속도전 대결 배너 — 점수로 보석함 획득 */}
+      <button className="ym-rise ym-press" onClick={onPracticeFlash} style={{
+        animationDelay: '.14s', width: '100%', marginTop: 14, textAlign: 'left', cursor: 'pointer',
+        display: 'flex', alignItems: 'center', gap: 14, padding: '16px 18px', borderRadius: 20,
+        border: '1px solid var(--accent)', color: '#fff',
+        background: 'linear-gradient(135deg, #b9382e, #e0564a 60%, #f0a23a)',
+        boxShadow: '0 12px 30px rgba(185,56,46,0.34)',
+      }}>
+        <span style={{ fontSize: 34, lineHeight: 1 }}>⚡</span>
+        <span style={{ flex: 1 }}>
+          <span style={{ display: 'block', fontSize: 18, fontWeight: 900, letterSpacing: '-0.02em' }}>속도전 대결</span>
+          <span style={{ display: 'block', fontSize: 12.5, fontWeight: 700, color: 'rgba(255,255,255,0.9)', marginTop: 2 }}>제한시간 안에 빠르게! 높은 점수로 보석함 획득 🎁</span>
+        </span>
+        <Icon name="flow" size={20} style={{ color: 'rgba(255,255,255,0.85)' }} />
+      </button>
+
+      {/* ④ 빠른 연습 — 꽉 찬 타일 그리드 */}
+      <div className="ym-rise" style={{ animationDelay: '.17s', marginTop: 14 }}>
         <GlassPanel>
-          <details>
-            <summary style={{ cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'center', gap: 9 }}>
-              <Icon name="discover" size={18} style={{ color: 'var(--accent)' }} />
-              <span style={{ fontSize: 15, fontWeight: 800 }}>학습 가방</span>
-              <span style={{ marginLeft: 'auto', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 700 }}>가나 {kanaPct}% · 진단 · 연습 ›</span>
-            </summary>
-
-            {/* 코치 진단 */}
-            <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--glass-border)' }}>
-              <HomeCoachBody d={diagnosis} who={coach.who} line={coach.line} />
-            </div>
-
-            {/* 가나 안정도 */}
-            <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', gap: 16 }}>
-              <Ring pct={kanaPct} size={58} />
-              <div style={{ flex: 1 }}>
-                <p style={{ margin: 0, ...label }}>가나 안정도</p>
-                <KanaRow label="히라가나" m={hira} />
-                <KanaRow label="가타카나" m={kata} />
-              </div>
-            </div>
-
-            {/* 빠른 연습 */}
-            <p style={{ ...label, margin: '16px 0 0' }}>빠른 연습</p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 10 }}>
-              <button className="ym-press" style={pill} onClick={() => onPracticeKana('hiragana')}>히라가나</button>
-              <button className="ym-press" style={pill} onClick={() => onPracticeKana('katakana')}>가타카나</button>
-              <button className="ym-press" style={pill} onClick={onPracticeSigns}>간판·메뉴</button>
-              <button className="ym-press" style={pill} onClick={onPracticeDictation}>받아쓰기</button>
-              <button className="ym-press" style={pill} onClick={onPracticeCompose}>한→일 작문</button>
-              <button className="ym-press" style={pill} onClick={onPracticeFlash}>⚡ 속도전</button>
-              <button className="ym-press" style={pill} onClick={onPracticeWrite}>✍️ 가나 쓰기</button>
-            </div>
-
-            {/* 여행 루트 */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, margin: '18px 0 0' }}>
-              <p style={{ margin: 0, ...label }}>여행 루트</p>
-              <button className="ym-press" onClick={() => nav.onNavigate('map')} style={{
+          <p style={{ margin: 0, ...label }}>빠른 연습</p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 12 }}>
+            {([
+              { label: '히라가나', sub: '46자 읽기', icon: 'kana', onClick: () => onPracticeKana('hiragana') },
+              { label: '가타카나', sub: '46자 읽기', icon: 'kana', onClick: () => onPracticeKana('katakana') },
+              { label: '간판·메뉴', sub: '실전 읽기 66', icon: 'sign', onClick: onPracticeSigns },
+              { label: '받아쓰기', sub: '듣고 가나 쓰기', icon: 'dictation', onClick: onPracticeDictation },
+              { label: '한→일 작문', sub: '뜻 보고 작문', icon: 'speak', onClick: onPracticeCompose },
+              { label: '가나 쓰기', sub: '따라쓰기', icon: 'dictation', onClick: onPracticeWrite },
+            ] as { label: string; sub: string; icon: IconName; onClick: () => void }[]).map((t) => (
+              <button key={t.label} className="ym-press" onClick={t.onClick} style={{
+                display: 'flex', alignItems: 'center', gap: 11, textAlign: 'left', minWidth: 0,
                 border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
-                borderRadius: 999, padding: '8px 12px', fontSize: 12.5, fontWeight: 800, cursor: 'pointer',
-              }}>지도 보기</button>
+                borderRadius: 16, padding: '12px 12px', cursor: 'pointer',
+              }}>
+                <span style={{ width: 38, height: 38, flex: '0 0 38px', borderRadius: 11, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: hexA('#b9382e', 0.13), color: 'var(--accent)' }}>
+                  <Icon name={t.icon} size={20} />
+                </span>
+                <span style={{ minWidth: 0 }}>
+                  <span style={{ display: 'block', fontSize: 14, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.label}</span>
+                  <span style={{ display: 'block', fontSize: 11, color: 'var(--ink-faint)', fontWeight: 700, marginTop: 1 }}>{t.sub}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </GlassPanel>
+      </div>
+
+      {/* ⑤ 가나 안정도 */}
+      <div className="ym-rise" style={{ animationDelay: '.2s', marginTop: 14 }}>
+        <GlassPanel>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <Ring pct={kanaPct} size={58} />
+            <div style={{ flex: 1 }}>
+              <p style={{ margin: 0, ...label }}>가나 안정도</p>
+              <KanaRow label="히라가나" m={hira} />
+              <KanaRow label="가타카나" m={kata} />
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8, marginTop: 10 }}>
-              {routeScenes.map((m) => {
-                const sv = sceneVisualByPlace(m.place);
-                const p = missionProgress(allCards, progress, m.id);
-                const done = p.total > 0 && p.mastered === p.total;
-                return (
-                  <button key={m.id} className="ym-press" onClick={() => onPracticeScene(m.id)} style={{
-                    minWidth: 0, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)',
-                    color: 'var(--ink)', borderRadius: 16, padding: '11px 8px', cursor: 'pointer', textAlign: 'center',
-                  }}>
-                    <SceneImageThumb src={sv.backdrop ?? sv.thumb} icon={sv.icon} accent={sv.accent} size={42} />
-                    <span style={{ display: 'block', marginTop: 7, fontSize: 13, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.place ?? m.scenario}</span>
-                    <span style={{ display: 'block', marginTop: 3, fontSize: 11, color: done ? 'var(--ok)' : 'var(--ink-faint)', fontWeight: 750 }}>{done ? '완료' : `${p.mastered}/${p.total}`}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </details>
+          </div>
+        </GlassPanel>
+      </div>
+
+      {/* ⑥ 오늘의 코치 */}
+      <div className="ym-rise" style={{ animationDelay: '.23s', marginTop: 14 }}>
+        <GlassPanel>
+          <HomeCoachBody d={diagnosis} who={coach.who} line={coach.line} />
+        </GlassPanel>
+      </div>
+
+      {/* ⑦ 여행 루트 */}
+      <div className="ym-rise" style={{ animationDelay: '.26s', marginTop: 14 }}>
+        <GlassPanel>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+            <p style={{ margin: 0, ...label }}>여행 루트</p>
+            <button className="ym-press" onClick={() => nav.onNavigate('map')} style={{
+              border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
+              borderRadius: 999, padding: '8px 12px', fontSize: 12.5, fontWeight: 800, cursor: 'pointer',
+            }}>지도 보기</button>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8, marginTop: 12 }}>
+            {routeScenes.map((m) => {
+              const sv = sceneVisualByPlace(m.place);
+              const p = missionProgress(allCards, progress, m.id);
+              const done = p.total > 0 && p.mastered === p.total;
+              return (
+                <button key={m.id} className="ym-press" onClick={() => onPracticeScene(m.id)} style={{
+                  minWidth: 0, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)',
+                  color: 'var(--ink)', borderRadius: 16, padding: '11px 8px', cursor: 'pointer', textAlign: 'center',
+                }}>
+                  <SceneImageThumb src={sv.backdrop ?? sv.thumb} icon={sv.icon} accent={sv.accent} size={42} />
+                  <span style={{ display: 'block', marginTop: 7, fontSize: 13, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.place ?? m.scenario}</span>
+                  <span style={{ display: 'block', marginTop: 3, fontSize: 11, color: done ? 'var(--ok)' : 'var(--ink-faint)', fontWeight: 750 }}>{done ? '완료' : `${p.mastered}/${p.total}`}</span>
+                </button>
+              );
+            })}
+          </div>
         </GlassPanel>
       </div>
       {!ttsSupported() && <p style={{ color: 'var(--warn)', fontSize: 13, marginTop: 16, fontWeight: 600 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
@@ -204,11 +236,6 @@ function nextOneAction({ scenes, progress, allCards, hira, kata, kanaPct, onPrac
   return { label: '받아쓰기로 복습', sub: '듣고 가나로 써보기', icon: 'dictation', onClick: onPracticeDictation };
 }
 
-const pill: React.CSSProperties = {
-  padding: '13px 12px', borderRadius: 14, border: '1px solid var(--glass-border)',
-  background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 650, fontSize: 14,
-  textAlign: 'center', cursor: 'pointer',
-};
 
 function HomeSceneCard({ hero, accent, kicker, title, chips, planned, guideLine, onStart }: {
   hero?: string;
