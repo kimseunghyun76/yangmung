@@ -13,7 +13,8 @@ import { sceneVisualByMission, sceneVisualByPlace } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
 import { SceneImageThumb } from './ui';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
-import { MascotBubble, MascotEmpty, type Who } from './mascot';
+import { MascotBubble, MascotEmpty, MascotFace, type Who } from './mascot';
+import { Icon, type IconName } from '../ui/Icon';
 
 interface Props {
   nav: NavBarProps;
@@ -54,48 +55,21 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
   const heroChips = heroMission ? phraseChips(heroMission.id).slice(0, 3) : kanaChips(allCards);
   const outcome = outcomeLine(heroMission, planned);
   const coach = coachForHome(diagnosis, heroMission, plan.breakdown.B + plan.breakdown.C);
+  const nextAction = nextOneAction({ scenes, progress, allCards, hira, kata, kanaPct, onPracticeScene, onPracticeKana, onPracticeDictation });
 
   return (
     <main style={WRAP}>
       <NavBar {...nav} />
 
-      <div className="ym-rise" style={{
-        margin: '0 0 14px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 12,
-        padding: '10px 12px',
-        border: '1px solid var(--glass-border)',
-        borderRadius: 24,
-        background: 'var(--glass-bg)',
-        boxShadow: '0 10px 34px rgba(0,0,0,0.05)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
-          <img src="/mascots/yangmung-duo-logo.webp" alt="yangmung" width={56} height={56} style={{ objectFit: 'contain', filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.14))' }} />
-          <div>
-            <p style={{ margin: 0, fontSize: 12, color: 'var(--ink-faint)', fontWeight: 750 }}>오늘의 루트</p>
-            <p style={{ margin: '3px 0 0', fontSize: 18, color: 'var(--ink)', fontWeight: 850, letterSpacing: '-0.025em' }}>{heroPlace ?? '가나 입문'}</p>
-          </div>
-        </div>
-        <div style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 8,
-          padding: '9px 13px',
-          borderRadius: 999,
-          border: '1px solid var(--glass-border)',
-          background: 'var(--glass-bg-strong)',
-          color: 'var(--ink)',
-          fontSize: 13,
-          fontWeight: 750,
-        }}>
-          <span style={{ width: 8, height: 8, borderRadius: 99, background: 'var(--accent)', boxShadow: '0 0 10px var(--accent)' }} />
+      {/* 슬림 헤더 — 모드 칩만(듀오는 오늘의 장면 안 여행 안내자로 이동) */}
+      <div className="ym-rise" style={{ display: 'flex', justifyContent: 'flex-end', margin: '0 0 12px' }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '7px 12px', borderRadius: 999, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontSize: 12.5, fontWeight: 750 }}>
+          <span style={{ width: 7, height: 7, borderRadius: 99, background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)' }} />
           {modeLabel}
-        </div>
+        </span>
       </div>
 
-      {/* 오늘의 장면 — 히어로 + 강한 CTA */}
+      {/* ① 오늘의 장면 — 듀오 여행 안내자 + 히어로 + 시작 CTA */}
       <div className="ym-rise" style={{ animationDelay: '.04s' }}>
         <HomeSceneCard
           hero={primary ? (heroSv.backdrop ?? heroSv.hero) : undefined}
@@ -104,6 +78,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
           title={heroTitle}
           chips={heroChips}
           planned={planned}
+          guideLine={coach.line}
           onStart={onStart}
         />
       </div>
@@ -113,85 +88,116 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
         </p>
       )}
 
-      {/* 오늘의 코치 (적응형 진단) */}
-      <div className="ym-rise" style={{ animationDelay: '.09s', marginTop: 14 }}>
-        <GlassPanel>
-          <HomeCoachBody d={diagnosis} who={coach.who} line={coach.line} />
-        </GlassPanel>
-      </div>
+      {/* ② 이어서 할 한 가지 행동 */}
+      {nextAction && (
+        <div className="ym-rise" style={{ animationDelay: '.1s', marginTop: 14 }}>
+          <button className="ym-press" onClick={nextAction.onClick} style={{
+            width: '100%', display: 'flex', alignItems: 'center', gap: 13, textAlign: 'left',
+            padding: '15px 16px', borderRadius: 18, cursor: 'pointer',
+            border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
+          }}>
+            <span style={{ width: 42, height: 42, flex: '0 0 42px', borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: hexA('#b9382e', 0.14), color: 'var(--accent)' }}>
+              <Icon name={nextAction.icon} size={23} />
+            </span>
+            <span style={{ flex: 1 }}>
+              <span style={{ display: 'block', fontSize: 12, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.04em' }}>이어서 할 한 가지</span>
+              <span style={{ display: 'block', fontSize: 16, fontWeight: 750, marginTop: 2 }}>{nextAction.label}</span>
+              <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 1 }}>{nextAction.sub}</span>
+            </span>
+            <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)' }} />
+          </button>
+        </div>
+      )}
 
-      {/* 가나 안정도 — 링 + 빠른 연습 */}
-      <div className="ym-rise" style={{ animationDelay: '.13s', marginTop: 14 }}>
+      {/* ③ 학습 가방 (접힘) — 코치 진단 · 가나 안정도 · 빠른 연습 · 여행 루트 */}
+      <div className="ym-rise" style={{ animationDelay: '.14s', marginTop: 14 }}>
         <GlassPanel>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <Ring pct={kanaPct} size={58} />
-            <div style={{ flex: 1 }}>
-              <p style={{ margin: 0, ...label }}>가나 안정도</p>
-              <KanaRow label="히라가나" m={hira} />
-              <KanaRow label="가타카나" m={kata} />
-            </div>
-          </div>
-          <details style={{ marginTop: 12 }}>
-            <summary style={{ ...label, cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
-              빠른 연습 <span style={{ color: 'var(--ink-faint)' }}>›</span>
+          <details>
+            <summary style={{ cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'center', gap: 9 }}>
+              <Icon name="discover" size={18} style={{ color: 'var(--accent)' }} />
+              <span style={{ fontSize: 15, fontWeight: 800 }}>학습 가방</span>
+              <span style={{ marginLeft: 'auto', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 700 }}>가나 {kanaPct}% · 진단 · 연습 ›</span>
             </summary>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 12 }}>
+
+            {/* 코치 진단 */}
+            <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--glass-border)' }}>
+              <HomeCoachBody d={diagnosis} who={coach.who} line={coach.line} />
+            </div>
+
+            {/* 가나 안정도 */}
+            <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--glass-border)', display: 'flex', alignItems: 'center', gap: 16 }}>
+              <Ring pct={kanaPct} size={58} />
+              <div style={{ flex: 1 }}>
+                <p style={{ margin: 0, ...label }}>가나 안정도</p>
+                <KanaRow label="히라가나" m={hira} />
+                <KanaRow label="가타카나" m={kata} />
+              </div>
+            </div>
+
+            {/* 빠른 연습 */}
+            <p style={{ ...label, margin: '16px 0 0' }}>빠른 연습</p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 10 }}>
               <button className="ym-press" style={pill} onClick={() => onPracticeKana('hiragana')}>히라가나</button>
               <button className="ym-press" style={pill} onClick={() => onPracticeKana('katakana')}>가타카나</button>
               <button className="ym-press" style={pill} onClick={onPracticeSigns}>간판·메뉴</button>
               <button className="ym-press" style={pill} onClick={onPracticeDictation}>받아쓰기</button>
               <button className="ym-press" style={pill} onClick={onPracticeCompose}>한→일 작문</button>
             </div>
-          </details>
-        </GlassPanel>
-      </div>
 
-      <div className="ym-rise" style={{ animationDelay: '.17s', marginTop: 14 }}>
-        <GlassPanel>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-            <div>
+            {/* 여행 루트 */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, margin: '18px 0 0' }}>
               <p style={{ margin: 0, ...label }}>여행 루트</p>
-              <p style={{ margin: '5px 0 0', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 650 }}>열린 장면만 바로 연습할 수 있어요.</p>
+              <button className="ym-press" onClick={() => nav.onNavigate('map')} style={{
+                border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
+                borderRadius: 999, padding: '8px 12px', fontSize: 12.5, fontWeight: 800, cursor: 'pointer',
+              }}>지도 보기</button>
             </div>
-            <button className="ym-press" onClick={() => nav.onNavigate('map')} style={{
-              border: '1px solid var(--glass-border)',
-              background: 'var(--glass-bg-strong)',
-              color: 'var(--ink)',
-              borderRadius: 999,
-              padding: '9px 12px',
-              fontSize: 13,
-              fontWeight: 800,
-              cursor: 'pointer',
-            }}>지도 보기</button>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8, marginTop: 13 }}>
-            {routeScenes.map((m) => {
-              const sv = sceneVisualByPlace(m.place);
-              const p = missionProgress(allCards, progress, m.id);
-              const done = p.total > 0 && p.mastered === p.total;
-              return (
-                <button key={m.id} className="ym-press" onClick={() => onPracticeScene(m.id)} style={{
-                  minWidth: 0,
-                  border: '1px solid var(--glass-border)',
-                  background: 'var(--glass-bg-strong)',
-                  color: 'var(--ink)',
-                  borderRadius: 16,
-                  padding: '11px 8px',
-                  cursor: 'pointer',
-                  textAlign: 'center',
-                }}>
-                  <SceneImageThumb src={sv.backdrop ?? sv.thumb} icon={sv.icon} accent={sv.accent} size={42} />
-                  <span style={{ display: 'block', marginTop: 7, fontSize: 13, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.place ?? m.scenario}</span>
-                  <span style={{ display: 'block', marginTop: 3, fontSize: 11, color: done ? 'var(--ok)' : 'var(--ink-faint)', fontWeight: 750 }}>{done ? '완료' : `${p.mastered}/${p.total}`}</span>
-                </button>
-              );
-            })}
-          </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8, marginTop: 10 }}>
+              {routeScenes.map((m) => {
+                const sv = sceneVisualByPlace(m.place);
+                const p = missionProgress(allCards, progress, m.id);
+                const done = p.total > 0 && p.mastered === p.total;
+                return (
+                  <button key={m.id} className="ym-press" onClick={() => onPracticeScene(m.id)} style={{
+                    minWidth: 0, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)',
+                    color: 'var(--ink)', borderRadius: 16, padding: '11px 8px', cursor: 'pointer', textAlign: 'center',
+                  }}>
+                    <SceneImageThumb src={sv.backdrop ?? sv.thumb} icon={sv.icon} accent={sv.accent} size={42} />
+                    <span style={{ display: 'block', marginTop: 7, fontSize: 13, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.place ?? m.scenario}</span>
+                    <span style={{ display: 'block', marginTop: 3, fontSize: 11, color: done ? 'var(--ok)' : 'var(--ink-faint)', fontWeight: 750 }}>{done ? '완료' : `${p.mastered}/${p.total}`}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </details>
         </GlassPanel>
       </div>
       {!ttsSupported() && <p style={{ color: 'var(--warn)', fontSize: 13, marginTop: 16, fontWeight: 600 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
     </main>
   );
+}
+
+// 이어서 할 "한 가지" 행동 — 시작 전 진행중 장면 > 흔들리는 가나 > 받아쓰기 복습 순.
+function nextOneAction({ scenes, progress, allCards, hira, kata, kanaPct, onPracticeScene, onPracticeKana, onPracticeDictation }: {
+  scenes: typeof CONTENT.missions; progress: ProgressMap; allCards: Card[];
+  hira: { mastered: number; total: number }; kata: { mastered: number; total: number }; kanaPct: number;
+  onPracticeScene: (id: string) => void; onPracticeKana: (s: 'hiragana' | 'katakana') => void; onPracticeDictation: () => void;
+}): { label: string; sub: string; icon: IconName; onClick: () => void } | null {
+  const resume = scenes.find((m) => {
+    if (m.id === 'C0' || !isMissionUnlocked(m.id, progress)) return false;
+    const p = missionProgress(allCards, progress, m.id);
+    return p.started && !(p.total > 0 && p.mastered === p.total);
+  });
+  if (resume) {
+    return { label: `${resume.place ?? resume.scenario} 마저 하기`, sub: '시작한 장면을 마무리해요', icon: 'flow', onClick: () => onPracticeScene(resume.id) };
+  }
+  if (kanaPct < 100) {
+    const hr = hira.mastered / Math.max(1, hira.total);
+    const kr = kata.mastered / Math.max(1, kata.total);
+    const weaker: 'hiragana' | 'katakana' = hr <= kr ? 'hiragana' : 'katakana';
+    return { label: `${weaker === 'hiragana' ? '히라가나' : '가타카나'} 다지기`, sub: '아직 흔들리는 가나를 무작위로', icon: 'kana', onClick: () => onPracticeKana(weaker) };
+  }
+  return { label: '받아쓰기로 복습', sub: '듣고 가나로 써보기', icon: 'dictation', onClick: onPracticeDictation };
 }
 
 const pill: React.CSSProperties = {
@@ -200,13 +206,14 @@ const pill: React.CSSProperties = {
   textAlign: 'center', cursor: 'pointer',
 };
 
-function HomeSceneCard({ hero, accent, kicker, title, chips, planned, onStart }: {
+function HomeSceneCard({ hero, accent, kicker, title, chips, planned, guideLine, onStart }: {
   hero?: string;
   accent: string;
   kicker: string;
   title: string;
   chips: string[];
   planned: number;
+  guideLine?: string;
   onStart: () => void;
 }) {
   const generatedBackdrop = hero?.includes('/generated/');
@@ -302,7 +309,17 @@ function HomeSceneCard({ hero, accent, kicker, title, chips, planned, onStart }:
           </div>
         )}
         <div style={{ flex: 1 }} />
-        <PrimaryAction onClick={onStart} disabled={planned === 0} style={{ marginTop: 18 }}>
+        {guideLine && planned > 0 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginTop: 16 }}>
+            <MascotFace who="duo" size={34} style={{ filter: 'drop-shadow(0 6px 14px rgba(0,0,0,0.22))' }} />
+            <p style={{
+              margin: 0, fontSize: 13, fontWeight: 700, lineHeight: 1.4,
+              color: generatedBackdrop ? 'rgba(255,255,255,0.92)' : 'var(--ink-soft)',
+              textShadow: generatedBackdrop ? '0 1px 10px rgba(0,0,0,0.3)' : undefined,
+            }}>{guideLine}</p>
+          </div>
+        )}
+        <PrimaryAction onClick={onStart} disabled={planned === 0} style={{ marginTop: 14 }}>
           {planned === 0 ? '오늘 학습할 카드가 없어요' : `시작 · ${planned}장`}
         </PrimaryAction>
         {planned === 0 && (
