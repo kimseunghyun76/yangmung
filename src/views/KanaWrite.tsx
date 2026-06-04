@@ -11,19 +11,21 @@ interface Props {
   items: KanaItem[];
   onExit: () => void;
   onReplay: () => void;
+  onKanaWritten?: (item: KanaItem, score: number) => void; // 합격 시 '본 가나'로 기록(인식 강화)
 }
 
 const SIZE = 300;        // 캔버스 내부 해상도
 const PASS = 55;         // 합격 커버리지(%)
 const INK_WIDTH = 17;    // 펜 굵기
 
-export function KanaWrite({ items, onExit, onReplay }: Props) {
+export function KanaWrite({ items, onExit, onReplay, onKanaWritten }: Props) {
   const [idx, setIdx] = useState(0);
   const [scores, setScores] = useState<number[]>([]);
   const [done, setDone] = useState(items.length === 0);
   const item = items[idx];
 
   function complete(score: number) {
+    if (item) onKanaWritten?.(item, score);
     setScores((s) => [...s, score]);
     if (idx + 1 >= items.length) setDone(true); else setIdx((i) => i + 1);
   }
