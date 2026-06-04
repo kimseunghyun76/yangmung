@@ -2,6 +2,7 @@
 // 시각 위계: 일본어 > 듣기 > 행동(선택/말하기) > 한국어. (UI_REDESIGN_PROPOSAL.md §4-2)
 import type { Card, Choice } from '../learn/cards';
 import type { CardStatus } from '../learn/progress';
+import type { GrammarPoint } from '../content/types';
 import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { IntroduceCardView } from './IntroduceCard';
@@ -14,6 +15,7 @@ import { sceneVisualByMission } from './scene';
 import { Icon } from '../ui/Icon';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
 import { MascotLine, mascotShows } from './mascot';
+import { CONTENT } from '../content';
 
 interface Props {
   card: Card;
@@ -78,12 +80,7 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
       }}>
         <div key={sceneKey} className="ym-sheet-up" style={{ maxWidth: 540, margin: '0 auto' }}>
           {card.kind === 'tip' ? (
-            <>
-              <h2 style={{ marginTop: 4, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="tip" size={22} /> {card.label}</h2>
-              <p style={{ fontSize: 17, lineHeight: 1.6, color: 'var(--ink-soft)' }}>{card.tipKo}</p>
-              <MascotLine key={`${card.id}:tip`} copyKey="tip" style={{ marginTop: 14 }} />
-              <PrimaryAction onClick={onNext} style={{ marginTop: 16 }}>다음</PrimaryAction>
-            </>
+            <TipBody card={card} onNext={onNext} />
           ) : card.kind === 'introduce' ? (
             <IntroduceCardView key={card.id} card={card} isKanaFamiliar={isKanaFamiliar} onSeen={onIntroduceSeen} onNext={onNext} />
           ) : card.kind === 'order' ? (
@@ -103,6 +100,30 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
   );
 }
 
+function TipBody({ card, onNext }: { card: Extract<Card, { kind: 'tip' }>; onNext: () => void }) {
+  const detail = CONTENT.grammar.find((g) => `tip:${g.id}` === card.id);
+  return (
+    <>
+              <h2 style={{ marginTop: 4, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="tip" size={22} /> {card.label}</h2>
+              <p style={{ fontSize: 17, lineHeight: 1.6, color: 'var(--ink-soft)' }}>{card.tipKo}</p>
+              {detail?.exampleJa && (
+                <button className="ym-press" onClick={() => speak(detail.exampleJa!)} style={{ width: '100%', padding: 14, borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', textAlign: 'left', cursor: 'pointer' }}>
+                  <span style={{ display: 'block', fontSize: 12, fontWeight: 800, color: 'var(--accent)' }}>실제 예문 · 눌러서 듣기</span>
+                  <strong lang="ja" style={{ display: 'block', marginTop: 5, fontSize: 19 }}>{detail.exampleJa}</strong>
+                  {detail.exampleKo && <span style={{ display: 'block', marginTop: 3, fontSize: 13, color: 'var(--ink-soft)' }}>{detail.exampleKo}</span>}
+                </button>
+              )}
+              {detail?.commonMistake && <TipDetail label="흔한 실수" text={detail.commonMistake} tone="var(--warn)" />}
+              {detail?.action && <TipDetail label="바로 해보기" text={detail.action} tone="var(--ok)" />}
+              <MascotLine key={`${card.id}:tip`} copyKey="tip" style={{ marginTop: 14 }} />
+              <PrimaryAction onClick={onNext} style={{ marginTop: 16 }}>다음</PrimaryAction>
+    </>
+  );
+}
+
+function TipDetail({ label, text, tone }: { label: string; text: string; tone: string }) {
+  return <div style={{ marginTop: 10, padding: '11px 13px', borderRadius: 13, borderLeft: `3px solid ${tone}`, background: 'var(--surface-2)' }}><strong style={{ display: 'block', fontSize: 12, color: tone }}>{label}</strong><span style={{ display: 'block', marginTop: 3, fontSize: 13.5, lineHeight: 1.5, color: 'var(--ink-soft)' }}>{text}</span></div>;
+}
 // 진행 스텝 도트
 function Dots({ i, total, onScene }: { i: number; total: number; onScene: boolean }) {
   const n = Math.min(total, 16);
@@ -217,6 +238,8 @@ function ChoiceFeedback({ card, picked, cardIndex, onNext }: { card: Extract<Car
   const event = isRecovery ? 'recovery' : isCorrect ? 'correct' : 'wrong';
   const correctRef = card.choices.find((x) => x.correct && !x.recovery && x.phrase);
   const ja = c.phrase ? (c.phrase.kanji ?? c.phrase.kana) : undefined;
+  // 오답일 때 이 표현과 연결된 문법 팁을 즉시 노출(세션 끝 무작위 팁과 별개로 "맞는 순간" 학습)
+  const wrongTip = isWrong ? relatedGrammar(card) : undefined;
 
   return (
     <div className="ym-reveal" style={{ marginTop: 14 }}>
@@ -246,6 +269,7 @@ function ChoiceFeedback({ card, picked, cardIndex, onNext }: { card: Extract<Car
               <span style={{ color: 'var(--ink-soft)' }}> — {correctRef.phrase!.korean}</span>
             </p>
           )}
+          {wrongTip && <WrongTip g={wrongTip} />}
         </div>
       )}
       {card.listen && card.bannerJa && (
@@ -253,6 +277,37 @@ function ChoiceFeedback({ card, picked, cardIndex, onNext }: { card: Extract<Car
       )}
       {mascotShows(event, cardIndex) && <MascotLine key={`${card.id}:${picked}`} copyKey={event} who="mung" style={{ marginBottom: 12 }} />}
       <PrimaryAction onClick={onNext} style={{ marginTop: 4 }}>다음</PrimaryAction>
+    </div>
+  );
+}
+
+// 정답 표현 → grammarRefs → 문법 팁. 오답 순간에 맞는 규칙을 즉시 보여주기 위함.
+function relatedGrammar(card: Extract<Card, { kind: 'quiz' }>): GrammarPoint | undefined {
+  const correct = card.choices.find((x) => x.correct && !x.recovery) ?? card.choices.find((x) => x.correct);
+  const phraseId = correct?.phrase?.id
+    ?? (card.reviewTarget?.type === 'phrase' ? String(card.reviewTarget.id) : undefined);
+  if (!phraseId) return undefined;
+  const p = CONTENT.phrases.find((x) => x.id === phraseId);
+  const gid = p?.grammarRefs?.[0];
+  if (!gid) return undefined;
+  return CONTENT.grammar.find((g) => g.id === gid);
+}
+
+// 오답 시 즉시 노출되는 관련 팁 — 규칙 한 줄 + 예문 듣기. (전체 팁 카드보다 가벼움)
+function WrongTip({ g }: { g: GrammarPoint }) {
+  return (
+    <div style={{ marginTop: 10, padding: 12, borderRadius: 12, background: 'var(--surface-2)', border: '1px solid var(--glass-border)' }}>
+      <p style={{ margin: 0, fontSize: 12, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.03em', display: 'flex', alignItems: 'center', gap: 5 }}>
+        <Icon name="tip" size={14} /> 관련 팁 · {g.label}
+      </p>
+      <p style={{ margin: '6px 0 0', fontSize: 13.5, lineHeight: 1.55, color: 'var(--ink-soft)' }}>{g.tipKo}</p>
+      {g.exampleJa && (
+        <button className="ym-press" onClick={() => speak(g.exampleJa!)} disabled={!ttsSupported()}
+          style={{ marginTop: 8, width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Icon name="listen" size={15} style={{ flex: '0 0 15px', color: 'var(--accent)' }} />
+          <span style={{ fontSize: 14 }}><strong lang="ja">{g.exampleJa}</strong>{g.exampleKo ? <span style={{ color: 'var(--ink-soft)' }}> — {g.exampleKo}</span> : null}</span>
+        </button>
+      )}
     </div>
   );
 }
