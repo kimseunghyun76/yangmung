@@ -10,12 +10,19 @@ import { SCENE_SENTENCES } from '../src/content/sceneSentences.ts';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const OUT_DIR = path.join(ROOT, 'public', 'audio');
-const VOICE_KEY = 'nanami';
-const VOICE = {
-  name: 'ja-JP-NanamiNeural',
-  lang: 'ja-JP',
-  label: 'Nanami (ja-JP)',
-  gender: 'F',
+const VOICES = {
+  nanami: {
+    name: 'ja-JP-NanamiNeural',
+    lang: 'ja-JP',
+    label: 'Nanami (ja-JP)',
+    gender: 'F',
+  },
+  keita: {
+    name: 'ja-JP-KeitaNeural',
+    lang: 'ja-JP',
+    label: 'Keita (ja-JP)',
+    gender: 'M',
+  },
 };
 
 const KEY = process.env.AZURE_SPEECH_KEY;
@@ -23,7 +30,9 @@ const REGION = process.env.AZURE_SPEECH_REGION || 'koreacentral';
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry');
 const force = args.includes('--force');
-const only = valueArg('--only'); // kana | phrases | signs | sentences | tips | core
+const only = valueArg('--only'); // kana | phrases | signs | sentences | tips | recap | core
+const VOICE_KEY = valueArg('--voice') || (only === 'recap' ? 'keita' : 'nanami');
+const VOICE = VOICES[VOICE_KEY];
 const sourceIdFilter = valueArg('--source-id'); // 특정 Phrase/Kana/Sign id만 재생성
 const limit = Number(valueArg('--limit') || '0');
 const reuseRoot = valueArg('--reuse-root') || path.resolve(ROOT, '..', 'kana-master', 'public', 'audio');
@@ -43,6 +52,11 @@ const RECAP_PROMPTS = [
 function valueArg(name) {
   const i = args.indexOf(name);
   return i >= 0 ? args[i + 1] : undefined;
+}
+
+if (!VOICE) {
+  console.error(`Unknown voice "${VOICE_KEY}". Available: ${Object.keys(VOICES).join(', ')}`);
+  process.exit(1);
 }
 
 function hashText(text) {
@@ -85,7 +99,7 @@ function addItem(items, seen, source, sourceId, text, priority = 50, altTexts = 
     prev.priority = Math.min(prev.priority, priority);
     return;
   }
-  const id = `tts_${hashText(clean)}`;
+  const id = VOICE_KEY === 'nanami' ? `tts_${hashText(clean)}` : `tts_${VOICE_KEY}_${hashText(clean)}`;
   const item = { id, text: clean, synthText: cleanSynthText, speechPhoneme: cleanPhoneme || undefined, synthSignature, altTexts: [...new Set(altTexts.map(normalizeText).filter(Boolean))], source, sourceId, sources: [`${source}:${sourceId}`], priority };
   seen.set(key, item);
   items.push(item);
@@ -202,18 +216,20 @@ async function synth(item, attempt = 1) {
 
 function loadManifest(manifestPath) {
   if (!fs.existsSync(manifestPath)) {
-    return { generatedAt: null, voices: {}, items: {}, textIndex: {} };
+    return { generatedAt: null, voices: {}, items: {}, textIndex: {}, voiceTextIndex: {} };
   }
   try {
     const old = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    const textIndex = old.textIndex ?? {};
     return {
       generatedAt: old.generatedAt ?? null,
       voices: old.voices ?? {},
       items: old.items ?? {},
-      textIndex: old.textIndex ?? {},
+      textIndex,
+      voiceTextIndex: old.voiceTextIndex ?? { nanami: { ...textIndex } },
     };
   } catch {
-    return { generatedAt: null, voices: {}, items: {}, textIndex: {} };
+    return { generatedAt: null, voices: {}, items: {}, textIndex: {}, voiceTextIndex: {} };
   }
 }
 
@@ -241,7 +257,8 @@ function copyReusableAudio(items, manifest, voiceDir) {
     if (item.speechPhoneme) continue;
     const outPath = path.join(voiceDir, `${item.id}.mp3`);
     if (!force && !needsGeneration(item, manifest, voiceDir)) continue;
-    const sourceId = source.textIndex?.[item.synthText];
+    const sourceId = source.voiceTextIndex?.[VOICE_KEY]?.[item.synthText]
+      ?? (VOICE_KEY === 'nanami' ? source.textIndex?.[item.synthText] : undefined);
     if (!sourceId) continue;
     const sourcePath = path.join(reuseRoot, VOICE_KEY, `${sourceId}.mp3`);
     if (!audioFileReady(sourcePath)) continue;
@@ -255,10 +272,15 @@ function copyReusableAudio(items, manifest, voiceDir) {
 }
 
 function markAvailable(manifest, item) {
-  manifest.textIndex[item.text] = item.id;
+  manifest.voiceTextIndex[VOICE_KEY] ??= {};
+  manifest.voiceTextIndex[VOICE_KEY][item.text] = item.id;
+  if (VOICE_KEY === 'nanami') manifest.textIndex[item.text] = item.id;
   for (const alias of item.altTexts ?? []) {
     const clean = normalizeText(alias);
-    if (clean && !UNSPEAKABLE_TEXTS.has(clean)) manifest.textIndex[clean] = item.id;
+    if (clean && !UNSPEAKABLE_TEXTS.has(clean)) {
+      manifest.voiceTextIndex[VOICE_KEY][clean] = item.id;
+      if (VOICE_KEY === 'nanami') manifest.textIndex[clean] = item.id;
+    }
   }
   manifest.items[item.id] = {
     ...(manifest.items[item.id] ?? {}),
@@ -284,9 +306,13 @@ function needsGeneration(item, manifest, voiceDir) {
 }
 
 function syncAvailableManifest(items, manifest, voiceDir) {
+  manifest.voiceTextIndex[VOICE_KEY] ??= {};
   for (const item of items) {
     if (!needsGeneration(item, manifest, voiceDir)) markAvailable(manifest, item);
-    else if (manifest.textIndex[item.text] === item.id) delete manifest.textIndex[item.text];
+    else {
+      if (manifest.voiceTextIndex[VOICE_KEY][item.text] === item.id) delete manifest.voiceTextIndex[VOICE_KEY][item.text];
+      if (VOICE_KEY === 'nanami' && manifest.textIndex[item.text] === item.id) delete manifest.textIndex[item.text];
+    }
   }
 }
 
@@ -303,19 +329,23 @@ async function main() {
   const voiceDir = path.join(OUT_DIR, VOICE_KEY);
   const manifest = loadManifest(manifestPath);
   const currentIds = new Set(items.map((item) => item.id));
-  const fullCollection = !only && !sourceIdFilter && limit <= 0;
+  const fullCollection = VOICE_KEY === 'nanami' && !only && !sourceIdFilter && limit <= 0;
 
   if (fullCollection) {
     for (const text of UNSPEAKABLE_TEXTS) {
       const id = manifest.textIndex[text] ?? `tts_${hashText(text)}`;
       delete manifest.textIndex[text];
+      delete manifest.voiceTextIndex.nanami?.[text];
       delete manifest.items[id];
     }
     for (const id of Object.keys(manifest.items)) {
-      if (!currentIds.has(id)) delete manifest.items[id];
+      if (manifest.items[id]?.voice === 'nanami' && !currentIds.has(id)) delete manifest.items[id];
     }
     for (const [text, id] of Object.entries(manifest.textIndex)) {
       if (!currentIds.has(id)) delete manifest.textIndex[text];
+    }
+    for (const [text, id] of Object.entries(manifest.voiceTextIndex.nanami ?? {})) {
+      if (!currentIds.has(id)) delete manifest.voiceTextIndex.nanami[text];
     }
   }
 
