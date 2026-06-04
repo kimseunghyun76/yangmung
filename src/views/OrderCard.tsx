@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { CONTENT } from '../content';
 import type { OrderCard } from '../learn/cards';
-import { speak, speakSequence, ttsSupported } from '../tts';
+import { speak, speakParts, ttsSupported, type SpeakOpts } from '../tts';
 import { PRIMARY } from '../ui/styles';
 import { Icon } from '../ui/Icon';
 import { ReadingAid } from './ReadingAid';
@@ -69,12 +69,12 @@ export function OrderCardView({ card, picks, isKanaFamiliar, onNext }: Props) {
 
   // 전체 듣기 — 점원→나→점원… 순서대로 이어 읽기
   function playAll() {
-    const seq: string[] = [];
+    const seq: { text: string; voice?: SpeakOpts['voice'] }[] = [];
     for (const t of turns) {
-      seq.push(t.recapPrompt.ja);
-      if (t.answer && !t.answer.action && t.answer.ja) seq.push(t.answer.ja);
+      seq.push({ text: t.recapPrompt.ja, voice: 'keita' });
+      if (t.answer && !t.answer.action && t.answer.ja) seq.push({ text: t.answer.ja });
     }
-    speakSequence(seq);
+    speakParts(seq);
   }
 
   const place = mission?.place ?? mission?.scenario ?? '';
@@ -100,7 +100,7 @@ export function OrderCardView({ card, picks, isKanaFamiliar, onNext }: Props) {
         {turns.map((t) => (
           <div key={t.idx} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <p style={{ margin: '2px 4px -3px', fontSize: 11.5, color: 'var(--ink-faint)', fontWeight: 650 }}>{t.step.situationKo}</p>
-            <Bubble side="left" who={t.step.speaker && t.step.speaker !== '나' ? t.step.speaker : '상대'} accent={sv.accent} ja={t.recapPrompt.ja} kana={t.recapPrompt.kana} korean={t.recapPrompt.korean} isKanaFamiliar={isKanaFamiliar} />
+            <Bubble side="left" who={t.step.speaker && t.step.speaker !== '나' ? t.step.speaker : '상대'} accent={sv.accent} ja={t.recapPrompt.ja} kana={t.recapPrompt.kana} korean={t.recapPrompt.korean} isKanaFamiliar={isKanaFamiliar} voice="keita" />
             {t.answer && (
               t.answer.action
                 ? <ActionLine label={t.answer.label ?? ''} model={t.answer.model} />
@@ -115,9 +115,9 @@ export function OrderCardView({ card, picks, isKanaFamiliar, onNext }: Props) {
   );
 }
 
-function Bubble({ side, who, accent, ja, kana, korean, isKanaFamiliar, tag }: {
+function Bubble({ side, who, accent, ja, kana, korean, isKanaFamiliar, tag, voice }: {
   side: 'left' | 'right'; who: string; accent: string; ja: string; kana: string; korean: string;
-  isKanaFamiliar: (c: string) => boolean; tag?: string;
+  isKanaFamiliar: (c: string) => boolean; tag?: string; voice?: SpeakOpts['voice'];
 }) {
   const right = side === 'right';
   return (
@@ -134,7 +134,7 @@ function Bubble({ side, who, accent, ja, kana, korean, isKanaFamiliar, tag }: {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ flex: 1 }}><ReadingAid text={kana} isFamiliar={isKanaFamiliar} fontSize={19} /></div>
           <button
-            onClick={() => speak(ja || kana)} disabled={!ttsSupported()}
+            onClick={() => speak(ja || kana, { voice })} disabled={!ttsSupported()}
             style={{ border: 'none', background: 'none', cursor: 'pointer', color: accent, padding: 2, minHeight: 0, flex: '0 0 auto' }}
             aria-label="듣기"
           ><Icon name="listen" size={17} /></button>

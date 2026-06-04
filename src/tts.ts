@@ -15,6 +15,7 @@ interface AudioManifest {
   voices: Record<string, { name: string; lang: string; label: string; gender: string }>;
   items: Record<string, AudioManifestItem>;
   textIndex: Record<string, string>;
+  voiceTextIndex?: Record<string, Record<string, string>>;
 }
 
 let jaVoice: SpeechSynthesisVoice | null = null;
@@ -105,6 +106,7 @@ function speakWeb(text: string, opts: SpeakOpts = {}, token = speakToken): void 
 
 export interface SpeakOpts {
   audioId?: string;
+  voice?: 'nanami' | 'keita';
   rate?: number;    // 느린 청해용. mp3는 playbackRate, Web Speech는 utterance.rate.
   onEnd?: () => void;
 }
@@ -118,7 +120,8 @@ export function speak(text: string, opts: SpeakOpts = {}): void {
 
   void loadManifest().then((manifest) => {
     if (token !== speakToken) return;
-    const id = opts.audioId ?? manifest?.textIndex[clean];
+    const voiceId = opts.voice ? manifest?.voiceTextIndex?.[opts.voice]?.[clean] : undefined;
+    const id = opts.audioId ?? voiceId ?? manifest?.textIndex[clean];
     const item = id ? manifest?.items[id] : undefined;
     if (!item?.path || !audioElementSupported()) {
       speakWeb(clean, opts, token);
@@ -162,6 +165,30 @@ export function speakSequence(texts: string[], opts: SpeakOpts = {}): void {
       return;
     }
     speak(seq[i++], { ...opts, onEnd: next });
+  };
+  next();
+}
+
+export interface SpeakPart {
+  text: string;
+  voice?: SpeakOpts['voice'];
+}
+
+// 화자별 음성을 유지하며 여러 문장을 순서대로 이어 읽기.
+export function speakParts(parts: SpeakPart[], opts: SpeakOpts = {}): void {
+  const seq = parts
+    .map((part) => ({ ...part, text: normalizeText(part.text) }))
+    .filter((part) => Boolean(part.text));
+  if (!ttsSupported() || seq.length === 0) return;
+  stopSpeaking();
+  let i = 0;
+  const next = () => {
+    if (i >= seq.length) {
+      opts.onEnd?.();
+      return;
+    }
+    const part = seq[i++];
+    speak(part.text, { ...opts, voice: part.voice, onEnd: next });
   };
   next();
 }
