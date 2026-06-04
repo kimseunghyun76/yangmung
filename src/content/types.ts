@@ -49,6 +49,7 @@ export interface Phrase {
   n5Refs?: string[];
   recoveryType?: RecoveryType;
   audioId?: string;      // 지금은 비움 (오디오 후행)
+  speechPhoneme?: string;// Azure ja-JP SAPI 가타카나 발음 강제. 자동 발음이 틀릴 때만 사용
 }
 
 export interface Unit {

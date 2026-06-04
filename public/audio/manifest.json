@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-03T21:16:23.154Z",
+  "generatedAt": "2026-06-04T12:17:07.309Z",
   "voices": {
     "nanami": {
       "name": "ja-JP-NanamiNeural",
@@ -18,7 +18,9 @@
       "sources": [
         "kana:k_hira_a"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "あ",
+      "synthSignature": "b67d05e8d6ca"
     },
     "tts_1b4c4cc65ff2": {
       "text": "ア",
@@ -29,7 +31,9 @@
       "sources": [
         "kana:k_kata_a"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ア",
+      "synthSignature": "418a2690e9a2"
     },
     "tts_3c01c77f19cd": {
       "text": "い",
@@ -40,7 +44,9 @@
       "sources": [
         "kana:k_hira_i"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "い",
+      "synthSignature": "38b456a2782b"
     },
     "tts_b284de61340b": {
       "text": "イ",
@@ -51,7 +57,9 @@
       "sources": [
         "kana:k_kata_i"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "イ",
+      "synthSignature": "b7e2a122f491"
     },
     "tts_af2b29a995c7": {
       "text": "う",
@@ -62,7 +70,9 @@
       "sources": [
         "kana:k_hira_u"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "う",
+      "synthSignature": "837a57736ad2"
     },
     "tts_86686c311378": {
       "text": "ウ",
@@ -73,7 +83,9 @@
       "sources": [
         "kana:k_kata_u"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ウ",
+      "synthSignature": "ee1cfa0b5007"
     },
     "tts_a60311a2fc88": {
       "text": "え",
@@ -84,7 +96,9 @@
       "sources": [
         "kana:k_hira_e"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "え",
+      "synthSignature": "db99406946fa"
     },
     "tts_3707bab0c47b": {
       "text": "エ",
@@ -95,7 +109,9 @@
       "sources": [
         "kana:k_kata_e"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "エ",
+      "synthSignature": "1d3edf776d53"
     },
     "tts_ac6bc7de7112": {
       "text": "お",
@@ -106,7 +122,9 @@
       "sources": [
         "kana:k_hira_o"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "お",
+      "synthSignature": "4b69e39282dd"
     },
     "tts_06716d34cc81": {
       "text": "オ",
@@ -117,7 +135,9 @@
       "sources": [
         "kana:k_kata_o"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "オ",
+      "synthSignature": "fb7d0940528c"
     },
     "tts_288c9e077190": {
       "text": "か",
@@ -128,7 +148,9 @@
       "sources": [
         "kana:k_hira_ka"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "か",
+      "synthSignature": "648fa4bce8a7"
     },
     "tts_00ed9f08e29e": {
       "text": "カ",
@@ -139,7 +161,9 @@
       "sources": [
         "kana:k_kata_ka"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "カ",
+      "synthSignature": "7744d1e01f7f"
     },
     "tts_a142816563b3": {
       "text": "が",
@@ -150,7 +174,9 @@
       "sources": [
         "kana:k_hira_ga"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "が",
+      "synthSignature": "7ab80b277cbc"
     },
     "tts_2cf8934dec55": {
       "text": "ガ",
@@ -161,7 +187,9 @@
       "sources": [
         "kana:k_kata_ga"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ガ",
+      "synthSignature": "18cfc42eee90"
     },
     "tts_27acc76c0055": {
       "text": "き",
@@ -172,7 +200,9 @@
       "sources": [
         "kana:k_hira_ki"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "き",
+      "synthSignature": "662c9b98448b"
     },
     "tts_408ae436f0e0": {
       "text": "キ",
@@ -183,7 +213,9 @@
       "sources": [
         "kana:k_kata_ki"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "キ",
+      "synthSignature": "b41be6c59ff1"
     },
     "tts_9a77c2df496e": {
       "text": "ぎ",
@@ -194,7 +226,9 @@
       "sources": [
         "kana:k_hira_gi"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぎ",
+      "synthSignature": "3f7783989fe6"
     },
     "tts_5bbbbf8a5aff": {
       "text": "ギ",
@@ -205,7 +239,9 @@
       "sources": [
         "kana:k_kata_gi"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ギ",
+      "synthSignature": "3521d5df94a5"
     },
     "tts_b2b7e45bf39e": {
       "text": "きゃ",
@@ -216,7 +252,9 @@
       "sources": [
         "kana:k_hira_kya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "きゃ",
+      "synthSignature": "abb9fca1c9d3"
     },
     "tts_b051252d619f": {
       "text": "キャ",
@@ -227,7 +265,9 @@
       "sources": [
         "kana:k_kata_kya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "キャ",
+      "synthSignature": "618812744047"
     },
     "tts_95e3d0ad8f6f": {
       "text": "ぎゃ",
@@ -238,7 +278,9 @@
       "sources": [
         "kana:k_hira_gya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぎゃ",
+      "synthSignature": "fb94a2e2d6c8"
     },
     "tts_200e0575fb28": {
       "text": "ギャ",
@@ -249,7 +291,9 @@
       "sources": [
         "kana:k_kata_gya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ギャ",
+      "synthSignature": "a32a66a5c6fd"
     },
     "tts_298ab383a42d": {
       "text": "きゅ",
@@ -260,7 +304,9 @@
       "sources": [
         "kana:k_hira_kyu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "きゅ",
+      "synthSignature": "78bd3a35274a"
     },
     "tts_767fe200f3be": {
       "text": "キュ",
@@ -271,7 +317,9 @@
       "sources": [
         "kana:k_kata_kyu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "キュ",
+      "synthSignature": "62b0f69be870"
     },
     "tts_81a5e9e8a034": {
       "text": "ぎゅ",
@@ -282,7 +330,9 @@
       "sources": [
         "kana:k_hira_gyu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぎゅ",
+      "synthSignature": "bd99452ae7c5"
     },
     "tts_4af7d2dbff30": {
       "text": "ギュ",
@@ -293,7 +343,9 @@
       "sources": [
         "kana:k_kata_gyu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ギュ",
+      "synthSignature": "3a25e4783c59"
     },
     "tts_d9ee3c16a677": {
       "text": "きょ",
@@ -304,7 +356,9 @@
       "sources": [
         "kana:k_hira_kyo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "きょ",
+      "synthSignature": "cb23f307e9f0"
     },
     "tts_97de23410f24": {
       "text": "キョ",
@@ -315,7 +369,9 @@
       "sources": [
         "kana:k_kata_kyo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "キョ",
+      "synthSignature": "8845a078df58"
     },
     "tts_08831cb24c9b": {
       "text": "ぎょ",
@@ -326,7 +382,9 @@
       "sources": [
         "kana:k_hira_gyo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぎょ",
+      "synthSignature": "2b17eba8288b"
     },
     "tts_d1b4351db075": {
       "text": "ギョ",
@@ -337,7 +395,9 @@
       "sources": [
         "kana:k_kata_gyo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ギョ",
+      "synthSignature": "0e509d62ffc5"
     },
     "tts_ac94e112183c": {
       "text": "く",
@@ -348,7 +408,9 @@
       "sources": [
         "kana:k_hira_ku"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "く",
+      "synthSignature": "ffbf946c1704"
     },
     "tts_15901a60a347": {
       "text": "ク",
@@ -359,7 +421,9 @@
       "sources": [
         "kana:k_kata_ku"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ク",
+      "synthSignature": "6a8c18f24d09"
     },
     "tts_6e159a91b7ce": {
       "text": "ぐ",
@@ -370,7 +434,9 @@
       "sources": [
         "kana:k_hira_gu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぐ",
+      "synthSignature": "0073b5d377ff"
     },
     "tts_65429ee5e7b4": {
       "text": "グ",
@@ -381,7 +447,9 @@
       "sources": [
         "kana:k_kata_gu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "グ",
+      "synthSignature": "bbba18e5ffd4"
     },
     "tts_d32afeb0abe6": {
       "text": "け",
@@ -392,7 +460,9 @@
       "sources": [
         "kana:k_hira_ke"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "け",
+      "synthSignature": "cf57dde1b780"
     },
     "tts_b50e4b46f608": {
       "text": "ケ",
@@ -403,7 +473,9 @@
       "sources": [
         "kana:k_kata_ke"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ケ",
+      "synthSignature": "fd42483b0624"
     },
     "tts_9167af511d53": {
       "text": "げ",
@@ -414,7 +486,9 @@
       "sources": [
         "kana:k_hira_ge"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "げ",
+      "synthSignature": "4a5dd7708de0"
     },
     "tts_df715d6e0967": {
       "text": "ゲ",
@@ -425,7 +499,9 @@
       "sources": [
         "kana:k_kata_ge"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ゲ",
+      "synthSignature": "f4b5f1b4dcd1"
     },
     "tts_91714b00e5a3": {
       "text": "こ",
@@ -436,7 +512,9 @@
       "sources": [
         "kana:k_hira_ko"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "こ",
+      "synthSignature": "55a614f262be"
     },
     "tts_202a6b25e725": {
       "text": "コ",
@@ -447,7 +525,9 @@
       "sources": [
         "kana:k_kata_ko"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "コ",
+      "synthSignature": "0bcc79c4acbe"
     },
     "tts_27a87259d93f": {
       "text": "ご",
@@ -458,7 +538,9 @@
       "sources": [
         "kana:k_hira_go"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ご",
+      "synthSignature": "4811ce3f8f3f"
     },
     "tts_f684fe6c107a": {
       "text": "ゴ",
@@ -469,7 +551,9 @@
       "sources": [
         "kana:k_kata_go"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ゴ",
+      "synthSignature": "c5af6ba24dff"
     },
     "tts_7a4faed063b6": {
       "text": "さ",
@@ -480,7 +564,9 @@
       "sources": [
         "kana:k_hira_sa"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "さ",
+      "synthSignature": "67cf149c5334"
     },
     "tts_bf2cbaccbc43": {
       "text": "サ",
@@ -491,7 +577,9 @@
       "sources": [
         "kana:k_kata_sa"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "サ",
+      "synthSignature": "7aad33736d63"
     },
     "tts_d08b42329511": {
       "text": "ざ",
@@ -502,7 +590,9 @@
       "sources": [
         "kana:k_hira_za"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ざ",
+      "synthSignature": "ef34955fa145"
     },
     "tts_bdf380ec22e5": {
       "text": "ザ",
@@ -513,7 +603,9 @@
       "sources": [
         "kana:k_kata_za"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ザ",
+      "synthSignature": "419efd71d0bb"
     },
     "tts_812f45bfcf7e": {
       "text": "し",
@@ -524,7 +616,9 @@
       "sources": [
         "kana:k_hira_shi"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "し",
+      "synthSignature": "a87688f489a1"
     },
     "tts_1afad7703773": {
       "text": "シ",
@@ -535,7 +629,9 @@
       "sources": [
         "kana:k_kata_shi"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "シ",
+      "synthSignature": "f688e9367477"
     },
     "tts_41f11fe610d4": {
       "text": "じ",
@@ -546,7 +642,9 @@
       "sources": [
         "kana:k_hira_ji"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "じ",
+      "synthSignature": "9969c80d09b0"
     },
     "tts_fcd474ce77e4": {
       "text": "ジ",
@@ -557,7 +655,9 @@
       "sources": [
         "kana:k_kata_ji"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ジ",
+      "synthSignature": "69972212f0fa"
     },
     "tts_b6e3f9666c7a": {
       "text": "しゃ",
@@ -568,7 +668,9 @@
       "sources": [
         "kana:k_hira_sha"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "しゃ",
+      "synthSignature": "31a139ecfb62"
     },
     "tts_b754a5ae0dcc": {
       "text": "シャ",
@@ -579,7 +681,9 @@
       "sources": [
         "kana:k_kata_sha"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "シャ",
+      "synthSignature": "ef455679a042"
     },
     "tts_d91490197bd6": {
       "text": "じゃ",
@@ -590,7 +694,9 @@
       "sources": [
         "kana:k_hira_ja"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "じゃ",
+      "synthSignature": "59865268ad11"
     },
     "tts_d27a2c8d5a25": {
       "text": "ジャ",
@@ -601,7 +707,9 @@
       "sources": [
         "kana:k_kata_ja"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ジャ",
+      "synthSignature": "5ad48aa20d4e"
     },
     "tts_64d073703829": {
       "text": "しゅ",
@@ -612,7 +720,9 @@
       "sources": [
         "kana:k_hira_shu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "しゅ",
+      "synthSignature": "64c0f9456b4d"
     },
     "tts_1583ea07ca02": {
       "text": "シュ",
@@ -623,7 +733,9 @@
       "sources": [
         "kana:k_kata_shu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "シュ",
+      "synthSignature": "e74aef59157f"
     },
     "tts_567ca1db796e": {
       "text": "じゅ",
@@ -634,7 +746,9 @@
       "sources": [
         "kana:k_hira_ju"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "じゅ",
+      "synthSignature": "e2c21cc6367f"
     },
     "tts_d689cdfde221": {
       "text": "ジュ",
@@ -645,7 +759,9 @@
       "sources": [
         "kana:k_kata_ju"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ジュ",
+      "synthSignature": "f0a41334ee06"
     },
     "tts_7a5aea55155b": {
       "text": "しょ",
@@ -656,7 +772,9 @@
       "sources": [
         "kana:k_hira_sho"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "しょ",
+      "synthSignature": "f20d2e04b77a"
     },
     "tts_0adbf3139511": {
       "text": "ショ",
@@ -667,7 +785,9 @@
       "sources": [
         "kana:k_kata_sho"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ショ",
+      "synthSignature": "466995a5a8bf"
     },
     "tts_115759838422": {
       "text": "じょ",
@@ -678,7 +798,9 @@
       "sources": [
         "kana:k_hira_jo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "じょ",
+      "synthSignature": "c64767a0eed0"
     },
     "tts_76ed0c2287aa": {
       "text": "ジョ",
@@ -689,7 +811,9 @@
       "sources": [
         "kana:k_kata_jo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ジョ",
+      "synthSignature": "f23047584599"
     },
     "tts_5b8252a1e93f": {
       "text": "す",
@@ -700,7 +824,9 @@
       "sources": [
         "kana:k_hira_su"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "す",
+      "synthSignature": "9aca98126304"
     },
     "tts_4df8398708ab": {
       "text": "ス",
@@ -711,7 +837,9 @@
       "sources": [
         "kana:k_kata_su"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ス",
+      "synthSignature": "cc91f1d71b37"
     },
     "tts_e77eb4831e6a": {
       "text": "ず",
@@ -722,7 +850,9 @@
       "sources": [
         "kana:k_hira_zu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ず",
+      "synthSignature": "8c70ff832c11"
     },
     "tts_3c1a103b5b4f": {
       "text": "ズ",
@@ -733,7 +863,9 @@
       "sources": [
         "kana:k_kata_zu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ズ",
+      "synthSignature": "191dee1ff50f"
     },
     "tts_e1c730bd83c3": {
       "text": "せ",
@@ -744,7 +876,9 @@
       "sources": [
         "kana:k_hira_se"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "せ",
+      "synthSignature": "80a6e0e579dd"
     },
     "tts_825cec98c430": {
       "text": "セ",
@@ -755,7 +889,9 @@
       "sources": [
         "kana:k_kata_se"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "セ",
+      "synthSignature": "e311c95658b7"
     },
     "tts_8759dfeb913a": {
       "text": "ぜ",
@@ -766,7 +902,9 @@
       "sources": [
         "kana:k_hira_ze"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぜ",
+      "synthSignature": "01e18d9d848d"
     },
     "tts_56c35c37128e": {
       "text": "ゼ",
@@ -777,7 +915,9 @@
       "sources": [
         "kana:k_kata_ze"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ゼ",
+      "synthSignature": "bba6363485fc"
     },
     "tts_b345d8cc8368": {
       "text": "そ",
@@ -788,7 +928,9 @@
       "sources": [
         "kana:k_hira_so"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "そ",
+      "synthSignature": "0ec2fbd16221"
     },
     "tts_7394858d1c1b": {
       "text": "ソ",
@@ -799,7 +941,9 @@
       "sources": [
         "kana:k_kata_so"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ソ",
+      "synthSignature": "b720a6553d63"
     },
     "tts_bad314622d68": {
       "text": "ぞ",
@@ -810,7 +954,9 @@
       "sources": [
         "kana:k_hira_zo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぞ",
+      "synthSignature": "9c332e28836a"
     },
     "tts_7797100cc0f2": {
       "text": "ゾ",
@@ -821,7 +967,9 @@
       "sources": [
         "kana:k_kata_zo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ゾ",
+      "synthSignature": "423b5fc203bc"
     },
     "tts_cf4d17f99d10": {
       "text": "た",
@@ -832,7 +980,9 @@
       "sources": [
         "kana:k_hira_ta"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "た",
+      "synthSignature": "7b71777058d9"
     },
     "tts_056cfad24eb2": {
       "text": "タ",
@@ -843,7 +993,9 @@
       "sources": [
         "kana:k_kata_ta"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "タ",
+      "synthSignature": "b8dbbd62cc21"
     },
     "tts_b3d236275fac": {
       "text": "だ",
@@ -854,7 +1006,9 @@
       "sources": [
         "kana:k_hira_da"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "だ",
+      "synthSignature": "2784218a1edb"
     },
     "tts_919e596fb58d": {
       "text": "ダ",
@@ -865,7 +1019,9 @@
       "sources": [
         "kana:k_kata_da"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ダ",
+      "synthSignature": "d1a7f830114c"
     },
     "tts_e022bea2e9d6": {
       "text": "ち",
@@ -876,7 +1032,9 @@
       "sources": [
         "kana:k_hira_chi"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ち",
+      "synthSignature": "6aa3da2d2238"
     },
     "tts_7e62c71ff6cf": {
       "text": "チ",
@@ -887,7 +1045,9 @@
       "sources": [
         "kana:k_kata_chi"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "チ",
+      "synthSignature": "fedeb5f820dd"
     },
     "tts_139b8c6e1d18": {
       "text": "ぢ",
@@ -898,7 +1058,9 @@
       "sources": [
         "kana:k_hira_dji"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぢ",
+      "synthSignature": "c9efc311f075"
     },
     "tts_71ece90ea76a": {
       "text": "ヂ",
@@ -909,7 +1071,9 @@
       "sources": [
         "kana:k_kata_dji"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ヂ",
+      "synthSignature": "3301d2d4fd9c"
     },
     "tts_062957be362f": {
       "text": "ちゃ",
@@ -920,7 +1084,9 @@
       "sources": [
         "kana:k_hira_cha"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ちゃ",
+      "synthSignature": "168ffc6a8fbf"
     },
     "tts_8e1841b64e0f": {
       "text": "チャ",
@@ -931,7 +1097,9 @@
       "sources": [
         "kana:k_kata_cha"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "チャ",
+      "synthSignature": "60e60cea80ce"
     },
     "tts_619fdc4f9348": {
       "text": "ちゅ",
@@ -942,7 +1110,9 @@
       "sources": [
         "kana:k_hira_chu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ちゅ",
+      "synthSignature": "63e37b2d7f01"
     },
     "tts_7069a936e85c": {
       "text": "チュ",
@@ -953,7 +1123,9 @@
       "sources": [
         "kana:k_kata_chu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "チュ",
+      "synthSignature": "ec3d0480add0"
     },
     "tts_4def51326a2d": {
       "text": "ちょ",
@@ -964,7 +1136,9 @@
       "sources": [
         "kana:k_hira_cho"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ちょ",
+      "synthSignature": "89525c7d83f3"
     },
     "tts_012bdc51d4c2": {
       "text": "チョ",
@@ -975,7 +1149,9 @@
       "sources": [
         "kana:k_kata_cho"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "チョ",
+      "synthSignature": "fff8a6ad88a2"
     },
     "tts_0c414c812bd8": {
       "text": "つ",
@@ -986,7 +1162,9 @@
       "sources": [
         "kana:k_hira_tsu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "つ",
+      "synthSignature": "ac4c547f707a"
     },
     "tts_ee5fe18a7c76": {
       "text": "ツ",
@@ -997,7 +1175,9 @@
       "sources": [
         "kana:k_kata_tsu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ツ",
+      "synthSignature": "8fe6aa8fb457"
     },
     "tts_600f5ab1c0a4": {
       "text": "づ",
@@ -1008,7 +1188,9 @@
       "sources": [
         "kana:k_hira_dzu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "づ",
+      "synthSignature": "5bb005fb7fea"
     },
     "tts_b39cf6bd854a": {
       "text": "ヅ",
@@ -1019,7 +1201,9 @@
       "sources": [
         "kana:k_kata_dzu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ヅ",
+      "synthSignature": "f80657309396"
     },
     "tts_e2d970611589": {
       "text": "て",
@@ -1030,7 +1214,9 @@
       "sources": [
         "kana:k_hira_te"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "て",
+      "synthSignature": "1124d5083781"
     },
     "tts_8996011e5796": {
       "text": "テ",
@@ -1041,7 +1227,9 @@
       "sources": [
         "kana:k_kata_te"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "テ",
+      "synthSignature": "0bf5c43f27e7"
     },
     "tts_7350618fcec3": {
       "text": "で",
@@ -1052,7 +1240,9 @@
       "sources": [
         "kana:k_hira_de"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "で",
+      "synthSignature": "9845cfafd7a3"
     },
     "tts_5dc5d5b8abb3": {
       "text": "デ",
@@ -1063,7 +1253,9 @@
       "sources": [
         "kana:k_kata_de"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "デ",
+      "synthSignature": "e3d52390e19b"
     },
     "tts_a986a7bc9e03": {
       "text": "と",
@@ -1074,7 +1266,9 @@
       "sources": [
         "kana:k_hira_to"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "と",
+      "synthSignature": "c5d78f54b8c4"
     },
     "tts_d729bd2b2767": {
       "text": "ト",
@@ -1085,7 +1279,9 @@
       "sources": [
         "kana:k_kata_to"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ト",
+      "synthSignature": "5644384be108"
     },
     "tts_76504d613664": {
       "text": "ど",
@@ -1096,7 +1292,9 @@
       "sources": [
         "kana:k_hira_do"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ど",
+      "synthSignature": "241a2ea248a2"
     },
     "tts_a9a84e4c1845": {
       "text": "ド",
@@ -1107,7 +1305,9 @@
       "sources": [
         "kana:k_kata_do"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ド",
+      "synthSignature": "3c6c0351639f"
     },
     "tts_478d2f9eb192": {
       "text": "な",
@@ -1118,7 +1318,9 @@
       "sources": [
         "kana:k_hira_na"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "な",
+      "synthSignature": "28eb59888062"
     },
     "tts_8f67916a925b": {
       "text": "ナ",
@@ -1129,7 +1331,9 @@
       "sources": [
         "kana:k_kata_na"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ナ",
+      "synthSignature": "3463c6a17a1b"
     },
     "tts_de3d1ecc94b2": {
       "text": "に",
@@ -1140,7 +1344,9 @@
       "sources": [
         "kana:k_hira_ni"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "に",
+      "synthSignature": "1b25a21db27a"
     },
     "tts_d8a8e4205aa7": {
       "text": "ニ",
@@ -1151,7 +1357,9 @@
       "sources": [
         "kana:k_kata_ni"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ニ",
+      "synthSignature": "5a3f66454499"
     },
     "tts_be4c29664dfd": {
       "text": "にゃ",
@@ -1162,7 +1370,9 @@
       "sources": [
         "kana:k_hira_nya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "にゃ",
+      "synthSignature": "928231ed3c62"
     },
     "tts_1dc73d614c19": {
       "text": "ニャ",
@@ -1173,7 +1383,9 @@
       "sources": [
         "kana:k_kata_nya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ニャ",
+      "synthSignature": "da8122f43ffc"
     },
     "tts_658da3d97ec6": {
       "text": "にゅ",
@@ -1184,7 +1396,9 @@
       "sources": [
         "kana:k_hira_nyu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "にゅ",
+      "synthSignature": "61ca5e8f66d8"
     },
     "tts_d3b3fc36dfa4": {
       "text": "ニュ",
@@ -1195,7 +1409,9 @@
       "sources": [
         "kana:k_kata_nyu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ニュ",
+      "synthSignature": "c48b79679aef"
     },
     "tts_0954bcc57525": {
       "text": "にょ",
@@ -1206,7 +1422,9 @@
       "sources": [
         "kana:k_hira_nyo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "にょ",
+      "synthSignature": "8f9d241d7733"
     },
     "tts_7cd8a1e2e9f2": {
       "text": "ニョ",
@@ -1217,7 +1435,9 @@
       "sources": [
         "kana:k_kata_nyo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ニョ",
+      "synthSignature": "d4af6a7abb78"
     },
     "tts_ad142ed0573d": {
       "text": "ぬ",
@@ -1228,7 +1448,9 @@
       "sources": [
         "kana:k_hira_nu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぬ",
+      "synthSignature": "22f187cdbf20"
     },
     "tts_065ebce83a18": {
       "text": "ヌ",
@@ -1239,7 +1461,9 @@
       "sources": [
         "kana:k_kata_nu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ヌ",
+      "synthSignature": "e2cc6955d2b7"
     },
     "tts_3a104bbe569e": {
       "text": "ね",
@@ -1250,7 +1474,9 @@
       "sources": [
         "kana:k_hira_ne"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ね",
+      "synthSignature": "6cb6f0affb93"
     },
     "tts_edc16abe75a1": {
       "text": "ネ",
@@ -1261,7 +1487,9 @@
       "sources": [
         "kana:k_kata_ne"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ネ",
+      "synthSignature": "22c7f7ef6e86"
     },
     "tts_56377d14d4ef": {
       "text": "の",
@@ -1272,7 +1500,9 @@
       "sources": [
         "kana:k_hira_no"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "の",
+      "synthSignature": "e7edcac2c6f3"
     },
     "tts_6c807d0ae2cd": {
       "text": "ノ",
@@ -1283,7 +1513,9 @@
       "sources": [
         "kana:k_kata_no"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ノ",
+      "synthSignature": "0829462383d6"
     },
     "tts_1fa0519cfd09": {
       "text": "は",
@@ -1294,7 +1526,9 @@
       "sources": [
         "kana:k_hira_ha"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "は",
+      "synthSignature": "6fb944850e14"
     },
     "tts_35104655d4d6": {
       "text": "ハ",
@@ -1305,7 +1539,9 @@
       "sources": [
         "kana:k_kata_ha"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ハ",
+      "synthSignature": "bb2fdc15fa90"
     },
     "tts_d8c158e0a2d1": {
       "text": "ば",
@@ -1316,7 +1552,9 @@
       "sources": [
         "kana:k_hira_ba"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ば",
+      "synthSignature": "a849137b79cd"
     },
     "tts_2768d02f9098": {
       "text": "バ",
@@ -1327,7 +1565,9 @@
       "sources": [
         "kana:k_kata_ba"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "バ",
+      "synthSignature": "d83f2ccd99e9"
     },
     "tts_81223f8ee527": {
       "text": "ぱ",
@@ -1338,7 +1578,9 @@
       "sources": [
         "kana:k_hira_pa"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぱ",
+      "synthSignature": "c40d062d0c84"
     },
     "tts_d4c65564c4ad": {
       "text": "パ",
@@ -1349,7 +1591,9 @@
       "sources": [
         "kana:k_kata_pa"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "パ",
+      "synthSignature": "eed29acbdfba"
     },
     "tts_469e92c9cf65": {
       "text": "ひ",
@@ -1360,7 +1604,9 @@
       "sources": [
         "kana:k_hira_hi"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ひ",
+      "synthSignature": "8691ac3c2a3b"
     },
     "tts_9da359d5199d": {
       "text": "ヒ",
@@ -1371,7 +1617,9 @@
       "sources": [
         "kana:k_kata_hi"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ヒ",
+      "synthSignature": "02c2337d13e0"
     },
     "tts_5fb5aba49978": {
       "text": "び",
@@ -1382,7 +1630,9 @@
       "sources": [
         "kana:k_hira_bi"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "び",
+      "synthSignature": "c5e9bcef0565"
     },
     "tts_d5725b2f8d16": {
       "text": "ビ",
@@ -1393,7 +1643,9 @@
       "sources": [
         "kana:k_kata_bi"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ビ",
+      "synthSignature": "54df4ddb11d3"
     },
     "tts_749766f43a50": {
       "text": "ぴ",
@@ -1404,7 +1656,9 @@
       "sources": [
         "kana:k_hira_pi"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぴ",
+      "synthSignature": "1cf1716f38b0"
     },
     "tts_2083aa096d7e": {
       "text": "ピ",
@@ -1415,7 +1669,9 @@
       "sources": [
         "kana:k_kata_pi"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ピ",
+      "synthSignature": "ba09210feb79"
     },
     "tts_f28cd0be883a": {
       "text": "ひゃ",
@@ -1426,7 +1682,9 @@
       "sources": [
         "kana:k_hira_hya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ひゃ",
+      "synthSignature": "26220a03fe7b"
     },
     "tts_248349b7522f": {
       "text": "ヒャ",
@@ -1437,7 +1695,9 @@
       "sources": [
         "kana:k_kata_hya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ヒャ",
+      "synthSignature": "9d0a3247d891"
     },
     "tts_4d8780b09f52": {
       "text": "びゃ",
@@ -1448,7 +1708,9 @@
       "sources": [
         "kana:k_hira_bya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "びゃ",
+      "synthSignature": "366975ac5ecf"
     },
     "tts_5a4cf9bffb1f": {
       "text": "ビャ",
@@ -1459,7 +1721,9 @@
       "sources": [
         "kana:k_kata_bya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ビャ",
+      "synthSignature": "dbfde77d1d92"
     },
     "tts_ef826d2af5c0": {
       "text": "ぴゃ",
@@ -1470,7 +1734,9 @@
       "sources": [
         "kana:k_hira_pya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぴゃ",
+      "synthSignature": "78f844da7d09"
     },
     "tts_5348b4d2b56b": {
       "text": "ピャ",
@@ -1481,7 +1747,9 @@
       "sources": [
         "kana:k_kata_pya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ピャ",
+      "synthSignature": "9df0779bab5a"
     },
     "tts_e0e6bdfbd67b": {
       "text": "ひゅ",
@@ -1492,7 +1760,9 @@
       "sources": [
         "kana:k_hira_hyu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ひゅ",
+      "synthSignature": "d105e7b0c8eb"
     },
     "tts_deb524a5b5f8": {
       "text": "ヒュ",
@@ -1503,7 +1773,9 @@
       "sources": [
         "kana:k_kata_hyu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ヒュ",
+      "synthSignature": "0fdfe0e918ea"
     },
     "tts_747dbd8ebca5": {
       "text": "びゅ",
@@ -1514,7 +1786,9 @@
       "sources": [
         "kana:k_hira_byu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "びゅ",
+      "synthSignature": "01af831ea4fa"
     },
     "tts_429869337235": {
       "text": "ビュ",
@@ -1525,7 +1799,9 @@
       "sources": [
         "kana:k_kata_byu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ビュ",
+      "synthSignature": "a13a4b8fc78f"
     },
     "tts_984576b5cea2": {
       "text": "ぴゅ",
@@ -1536,7 +1812,9 @@
       "sources": [
         "kana:k_hira_pyu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぴゅ",
+      "synthSignature": "6b09dcd9fd18"
     },
     "tts_b658c8b0f387": {
       "text": "ピュ",
@@ -1547,7 +1825,9 @@
       "sources": [
         "kana:k_kata_pyu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ピュ",
+      "synthSignature": "9567b3dd62af"
     },
     "tts_0627f890934c": {
       "text": "ひょ",
@@ -1558,7 +1838,9 @@
       "sources": [
         "kana:k_hira_hyo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ひょ",
+      "synthSignature": "5e42bfd169b0"
     },
     "tts_c7eb35e4d18b": {
       "text": "ヒョ",
@@ -1569,7 +1851,9 @@
       "sources": [
         "kana:k_kata_hyo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ヒョ",
+      "synthSignature": "01af8397b1b8"
     },
     "tts_0a1cc845facd": {
       "text": "びょ",
@@ -1580,7 +1864,9 @@
       "sources": [
         "kana:k_hira_byo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "びょ",
+      "synthSignature": "d46f73cb6558"
     },
     "tts_994a6ef5bd87": {
       "text": "ビョ",
@@ -1591,7 +1877,9 @@
       "sources": [
         "kana:k_kata_byo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ビョ",
+      "synthSignature": "d6b31a7e2eae"
     },
     "tts_220216f18a88": {
       "text": "ぴょ",
@@ -1602,7 +1890,9 @@
       "sources": [
         "kana:k_hira_pyo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぴょ",
+      "synthSignature": "582a15e4687b"
     },
     "tts_6d394d8c8a26": {
       "text": "ピョ",
@@ -1613,7 +1903,9 @@
       "sources": [
         "kana:k_kata_pyo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ピョ",
+      "synthSignature": "c5715870250d"
     },
     "tts_382a438fd4c5": {
       "text": "ふ",
@@ -1624,7 +1916,9 @@
       "sources": [
         "kana:k_hira_fu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ふ",
+      "synthSignature": "a919b1d9d7bf"
     },
     "tts_c2fa87c3ddd2": {
       "text": "フ",
@@ -1635,7 +1929,9 @@
       "sources": [
         "kana:k_kata_fu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "フ",
+      "synthSignature": "5e424b81bde8"
     },
     "tts_82b3fbb77164": {
       "text": "ぶ",
@@ -1646,7 +1942,9 @@
       "sources": [
         "kana:k_hira_bu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぶ",
+      "synthSignature": "64c0a85381ea"
     },
     "tts_c11cd8dd4563": {
       "text": "ブ",
@@ -1657,7 +1955,9 @@
       "sources": [
         "kana:k_kata_bu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ブ",
+      "synthSignature": "458f8618e7b8"
     },
     "tts_224fecb16293": {
       "text": "ぷ",
@@ -1668,7 +1968,9 @@
       "sources": [
         "kana:k_hira_pu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぷ",
+      "synthSignature": "70b2ba51c07f"
     },
     "tts_a3b8f9e1263b": {
       "text": "プ",
@@ -1679,7 +1981,9 @@
       "sources": [
         "kana:k_kata_pu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "プ",
+      "synthSignature": "a9a56b7dff33"
     },
     "tts_72c746d609d4": {
       "text": "へ",
@@ -1690,7 +1994,9 @@
       "sources": [
         "kana:k_hira_he"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "へ",
+      "synthSignature": "48753234d8a2"
     },
     "tts_5cf428be4474": {
       "text": "ヘ",
@@ -1701,7 +2007,9 @@
       "sources": [
         "kana:k_kata_he"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ヘ",
+      "synthSignature": "c017c75114c3"
     },
     "tts_eefc5770b9dc": {
       "text": "べ",
@@ -1712,7 +2020,9 @@
       "sources": [
         "kana:k_hira_be"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "べ",
+      "synthSignature": "0119e2a2a92c"
     },
     "tts_e24283733b4a": {
       "text": "ベ",
@@ -1723,7 +2033,9 @@
       "sources": [
         "kana:k_kata_be"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ベ",
+      "synthSignature": "2c80e2b9cdeb"
     },
     "tts_bd1d8044336d": {
       "text": "ぺ",
@@ -1734,7 +2046,9 @@
       "sources": [
         "kana:k_hira_pe"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぺ",
+      "synthSignature": "b52c7d500197"
     },
     "tts_8a8021085114": {
       "text": "ペ",
@@ -1745,7 +2059,9 @@
       "sources": [
         "kana:k_kata_pe"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ペ",
+      "synthSignature": "019c5799eb16"
     },
     "tts_5a340fe4758d": {
       "text": "ほ",
@@ -1756,7 +2072,9 @@
       "sources": [
         "kana:k_hira_ho"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ほ",
+      "synthSignature": "59f3ab98ec82"
     },
     "tts_41a11f66f540": {
       "text": "ホ",
@@ -1767,7 +2085,9 @@
       "sources": [
         "kana:k_kata_ho"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ホ",
+      "synthSignature": "9d8ee2425d05"
     },
     "tts_7ebddc850724": {
       "text": "ぼ",
@@ -1778,7 +2098,9 @@
       "sources": [
         "kana:k_hira_bo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぼ",
+      "synthSignature": "c90985faca86"
     },
     "tts_c6be80a62e61": {
       "text": "ボ",
@@ -1789,7 +2111,9 @@
       "sources": [
         "kana:k_kata_bo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ボ",
+      "synthSignature": "256c5d073125"
     },
     "tts_06b58547dc73": {
       "text": "ぽ",
@@ -1800,7 +2124,9 @@
       "sources": [
         "kana:k_hira_po"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ぽ",
+      "synthSignature": "eb1dd3e3ecfc"
     },
     "tts_23239011ca96": {
       "text": "ポ",
@@ -1811,7 +2137,9 @@
       "sources": [
         "kana:k_kata_po"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ポ",
+      "synthSignature": "b6d242c64cad"
     },
     "tts_400805e5a9e2": {
       "text": "ま",
@@ -1822,7 +2150,9 @@
       "sources": [
         "kana:k_hira_ma"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ま",
+      "synthSignature": "60820ddbbd05"
     },
     "tts_55d42f593ce9": {
       "text": "マ",
@@ -1833,7 +2163,9 @@
       "sources": [
         "kana:k_kata_ma"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "マ",
+      "synthSignature": "31e0135d0665"
     },
     "tts_1c5425dae8c9": {
       "text": "み",
@@ -1844,7 +2176,9 @@
       "sources": [
         "kana:k_hira_mi"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "み",
+      "synthSignature": "c2e4ffebce32"
     },
     "tts_651d85849d50": {
       "text": "ミ",
@@ -1855,7 +2189,9 @@
       "sources": [
         "kana:k_kata_mi"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ミ",
+      "synthSignature": "3352833cd09a"
     },
     "tts_0eb0633f6c68": {
       "text": "みゃ",
@@ -1866,7 +2202,9 @@
       "sources": [
         "kana:k_hira_mya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "みゃ",
+      "synthSignature": "ab97d95a48cd"
     },
     "tts_9fe6e9cb4973": {
       "text": "ミャ",
@@ -1877,7 +2215,9 @@
       "sources": [
         "kana:k_kata_mya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ミャ",
+      "synthSignature": "307bd66bd42f"
     },
     "tts_5bd384349a78": {
       "text": "みゅ",
@@ -1888,7 +2228,9 @@
       "sources": [
         "kana:k_hira_myu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "みゅ",
+      "synthSignature": "4fcff35ec609"
     },
     "tts_79997b44c04f": {
       "text": "ミュ",
@@ -1899,7 +2241,9 @@
       "sources": [
         "kana:k_kata_myu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ミュ",
+      "synthSignature": "1ef009e06818"
     },
     "tts_6617e33d9583": {
       "text": "みょ",
@@ -1910,7 +2254,9 @@
       "sources": [
         "kana:k_hira_myo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "みょ",
+      "synthSignature": "1816c8368f5c"
     },
     "tts_8c8c6e6803f6": {
       "text": "ミョ",
@@ -1921,7 +2267,9 @@
       "sources": [
         "kana:k_kata_myo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ミョ",
+      "synthSignature": "9686d0598abd"
     },
     "tts_50029791cb9f": {
       "text": "む",
@@ -1932,7 +2280,9 @@
       "sources": [
         "kana:k_hira_mu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "む",
+      "synthSignature": "a4168678463d"
     },
     "tts_c6abfe263593": {
       "text": "ム",
@@ -1943,7 +2293,9 @@
       "sources": [
         "kana:k_kata_mu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ム",
+      "synthSignature": "e4d16f1d5f8d"
     },
     "tts_634540f05d98": {
       "text": "め",
@@ -1954,7 +2306,9 @@
       "sources": [
         "kana:k_hira_me"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "め",
+      "synthSignature": "a1ec205b1440"
     },
     "tts_cfc3325ef061": {
       "text": "メ",
@@ -1965,7 +2319,9 @@
       "sources": [
         "kana:k_kata_me"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "メ",
+      "synthSignature": "1d5b8d7ee4df"
     },
     "tts_3c6945772d72": {
       "text": "も",
@@ -1976,7 +2332,9 @@
       "sources": [
         "kana:k_hira_mo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "も",
+      "synthSignature": "4edf954a3e39"
     },
     "tts_577210255a86": {
       "text": "モ",
@@ -1987,7 +2345,9 @@
       "sources": [
         "kana:k_kata_mo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "モ",
+      "synthSignature": "747dbbb63cd8"
     },
     "tts_bdab1b17397d": {
       "text": "や",
@@ -1998,7 +2358,9 @@
       "sources": [
         "kana:k_hira_ya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "や",
+      "synthSignature": "3aeb4d92cfc5"
     },
     "tts_8e621f06c443": {
       "text": "ヤ",
@@ -2009,7 +2371,9 @@
       "sources": [
         "kana:k_kata_ya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ヤ",
+      "synthSignature": "00ddda7412b9"
     },
     "tts_44567171f335": {
       "text": "ゆ",
@@ -2020,7 +2384,9 @@
       "sources": [
         "kana:k_hira_yu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ゆ",
+      "synthSignature": "b520280a77dd"
     },
     "tts_ea633878f249": {
       "text": "ユ",
@@ -2031,7 +2397,9 @@
       "sources": [
         "kana:k_kata_yu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ユ",
+      "synthSignature": "a8512dbf1372"
     },
     "tts_6f46f7d4a286": {
       "text": "よ",
@@ -2042,7 +2410,9 @@
       "sources": [
         "kana:k_hira_yo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "よ",
+      "synthSignature": "884c6862ba11"
     },
     "tts_da6c6a6baf77": {
       "text": "ヨ",
@@ -2053,7 +2423,9 @@
       "sources": [
         "kana:k_kata_yo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ヨ",
+      "synthSignature": "2da904bb70ee"
     },
     "tts_ba7526a5c03f": {
       "text": "ら",
@@ -2064,7 +2436,9 @@
       "sources": [
         "kana:k_hira_ra"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ら",
+      "synthSignature": "eb552093ada9"
     },
     "tts_d5f1ca173fcd": {
       "text": "ラ",
@@ -2075,7 +2449,9 @@
       "sources": [
         "kana:k_kata_ra"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ラ",
+      "synthSignature": "631a85cf53c6"
     },
     "tts_71d1c63e507f": {
       "text": "り",
@@ -2086,7 +2462,9 @@
       "sources": [
         "kana:k_hira_ri"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "り",
+      "synthSignature": "9a9ad67062de"
     },
     "tts_56cb721117e2": {
       "text": "リ",
@@ -2097,7 +2475,9 @@
       "sources": [
         "kana:k_kata_ri"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "リ",
+      "synthSignature": "444e8299ee95"
     },
     "tts_f58558332c0c": {
       "text": "りゃ",
@@ -2108,7 +2488,9 @@
       "sources": [
         "kana:k_hira_rya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "りゃ",
+      "synthSignature": "5fcd118c1120"
     },
     "tts_35e4b64905cc": {
       "text": "リャ",
@@ -2119,7 +2501,9 @@
       "sources": [
         "kana:k_kata_rya"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "リャ",
+      "synthSignature": "cf49b845dc58"
     },
     "tts_73c41f0e483e": {
       "text": "りゅ",
@@ -2130,7 +2514,9 @@
       "sources": [
         "kana:k_hira_ryu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "りゅ",
+      "synthSignature": "9ee372f541d0"
     },
     "tts_32cba6c979fc": {
       "text": "リュ",
@@ -2141,7 +2527,9 @@
       "sources": [
         "kana:k_kata_ryu"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "リュ",
+      "synthSignature": "a4c6e023ceb6"
     },
     "tts_1ab62bb6d7b6": {
       "text": "りょ",
@@ -2152,7 +2540,9 @@
       "sources": [
         "kana:k_hira_ryo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "りょ",
+      "synthSignature": "4846443ba873"
     },
     "tts_4ec97d4fbf84": {
       "text": "リョ",
@@ -2163,7 +2553,9 @@
       "sources": [
         "kana:k_kata_ryo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "リョ",
+      "synthSignature": "b9ead6d4b1bc"
     },
     "tts_ffab9d02a311": {
       "text": "る",
@@ -2174,7 +2566,9 @@
       "sources": [
         "kana:k_hira_ru"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "る",
+      "synthSignature": "76e9b6d1fb27"
     },
     "tts_1d672f91e3ff": {
       "text": "ル",
@@ -2185,7 +2579,9 @@
       "sources": [
         "kana:k_kata_ru"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ル",
+      "synthSignature": "8caa08e0e24a"
     },
     "tts_df82f999c7fb": {
       "text": "れ",
@@ -2196,7 +2592,9 @@
       "sources": [
         "kana:k_hira_re"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "れ",
+      "synthSignature": "af0785a09f28"
     },
     "tts_00859a61c08f": {
       "text": "レ",
@@ -2207,7 +2605,9 @@
       "sources": [
         "kana:k_kata_re"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "レ",
+      "synthSignature": "eaa7a608eb1f"
     },
     "tts_eb766006aba2": {
       "text": "ろ",
@@ -2218,7 +2618,9 @@
       "sources": [
         "kana:k_hira_ro"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ろ",
+      "synthSignature": "534a84b38e83"
     },
     "tts_4c1fe526f363": {
       "text": "ロ",
@@ -2229,7 +2631,9 @@
       "sources": [
         "kana:k_kata_ro"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ロ",
+      "synthSignature": "f74f8af1e695"
     },
     "tts_dedb707d8398": {
       "text": "わ",
@@ -2240,7 +2644,9 @@
       "sources": [
         "kana:k_hira_wa"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "わ",
+      "synthSignature": "a146086b4b01"
     },
     "tts_a2fbf25469bc": {
       "text": "ワ",
@@ -2251,7 +2657,9 @@
       "sources": [
         "kana:k_kata_wa"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ワ",
+      "synthSignature": "f952c9832ff1"
     },
     "tts_eba95ba0c666": {
       "text": "を",
@@ -2262,7 +2670,9 @@
       "sources": [
         "kana:k_hira_wo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "を",
+      "synthSignature": "cabeafabc0ce"
     },
     "tts_b40c5f345cb9": {
       "text": "ヲ",
@@ -2273,7 +2683,9 @@
       "sources": [
         "kana:k_kata_wo"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ヲ",
+      "synthSignature": "b9ecaf45dcdf"
     },
     "tts_48a866bfdaf9": {
       "text": "ん",
@@ -2284,7 +2696,9 @@
       "sources": [
         "kana:k_hira_n"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ん",
+      "synthSignature": "1412da04a465"
     },
     "tts_6ad7ee833add": {
       "text": "ン",
@@ -2295,7 +2709,9 @@
       "sources": [
         "kana:k_kata_n"
       ],
-      "altTexts": []
+      "altTexts": [],
+      "synthText": "ン",
+      "synthSignature": "69039b528d72"
     },
     "tts_24afcca10e22": {
       "text": "ありがとうございます",
@@ -2308,7 +2724,9 @@
       ],
       "altTexts": [
         "ありがとうございます"
-      ]
+      ],
+      "synthText": "ありがとうございます",
+      "synthSignature": "fbe45c7e14f7"
     },
     "tts_8331810b5438": {
       "text": "あります",
@@ -2321,7 +2739,9 @@
       ],
       "altTexts": [
         "あります"
-      ]
+      ],
+      "synthText": "あります",
+      "synthSignature": "4f8689295cdc"
     },
     "tts_90e81821e6c7": {
       "text": "ありません",
@@ -2334,7 +2754,9 @@
       ],
       "altTexts": [
         "ありません"
-      ]
+      ],
+      "synthText": "ありません",
+      "synthSignature": "a5a2ba781716"
     },
     "tts_953ff70fbc08": {
       "text": "アレルギーが、あります",
@@ -2348,7 +2770,9 @@
       "altTexts": [
         "アレルギーが、あります",
         "アレルギーがあります"
-      ]
+      ],
+      "synthText": "アレルギーが、あります",
+      "synthSignature": "8c5e9558932d"
     },
     "tts_f901585367d6": {
       "text": "いいえ",
@@ -2361,7 +2785,9 @@
       ],
       "altTexts": [
         "いいえ"
-      ]
+      ],
+      "synthText": "いいえ",
+      "synthSignature": "b1f78ef0197e"
     },
     "tts_201c28585903": {
       "text": "いくらですか？",
@@ -2375,7 +2801,9 @@
       "altTexts": [
         "いくらですか？",
         "いくらですか"
-      ]
+      ],
+      "synthText": "いくらですか？",
+      "synthSignature": "921fec00fefd"
     },
     "tts_97bed54b1a17": {
       "text": "いらっしゃいませ",
@@ -2388,7 +2816,9 @@
       ],
       "altTexts": [
         "いらっしゃいませ"
-      ]
+      ],
+      "synthText": "いらっしゃいませ",
+      "synthSignature": "2fe07e382d60"
     },
     "tts_6fa2bd19c929": {
       "text": "カードで",
@@ -2401,7 +2831,9 @@
       ],
       "altTexts": [
         "カードで"
-      ]
+      ],
+      "synthText": "カードで",
+      "synthSignature": "627280005cde"
     },
     "tts_df5c2a6b5120": {
       "text": "コインロッカーは、どこですか？",
@@ -2415,7 +2847,9 @@
       "altTexts": [
         "コインロッカーは、どこですか？",
         "コインロッカーはどこですか"
-      ]
+      ],
+      "synthText": "コインロッカーは、どこですか？",
+      "synthSignature": "b128f5ba7260"
     },
     "tts_11c8fca7e223": {
       "text": "ごちそうさまでした",
@@ -2428,7 +2862,9 @@
       ],
       "altTexts": [
         "ごちそうさまでした"
-      ]
+      ],
+      "synthText": "ごちそうさまでした",
+      "synthSignature": "f9fe283f3847"
     },
     "tts_ee06f1be0e0c": {
       "text": "これとこれ",
@@ -2441,7 +2877,9 @@
       ],
       "altTexts": [
         "これとこれ"
-      ]
+      ],
+      "synthText": "これとこれ",
+      "synthSignature": "22301571f797"
     },
     "tts_3d9192b39b71": {
       "text": "これにします",
@@ -2454,7 +2892,9 @@
       ],
       "altTexts": [
         "これにします"
-      ]
+      ],
+      "synthText": "これにします",
+      "synthSignature": "fe710ab42a5a"
     },
     "tts_20427a708c3f": {
       "text": "こんにちは",
@@ -2467,7 +2907,9 @@
       ],
       "altTexts": [
         "こんにちは"
-      ]
+      ],
+      "synthText": "こんにちは",
+      "synthSignature": "522e3b18d586"
     },
     "tts_f1fc99ad2e21": {
       "text": "スイカで",
@@ -2480,7 +2922,9 @@
       ],
       "altTexts": [
         "スイカで"
-      ]
+      ],
+      "synthText": "スイカで",
+      "synthSignature": "62644a3ca3df"
     },
     "tts_cce1862bcbd9": {
       "text": "すみません",
@@ -2493,7 +2937,9 @@
       ],
       "altTexts": [
         "すみません"
-      ]
+      ],
+      "synthText": "すみません",
+      "synthSignature": "81f8540e2da7"
     },
     "tts_6ead72186de1": {
       "text": "そのままで",
@@ -2506,7 +2952,9 @@
       ],
       "altTexts": [
         "そのままで"
-      ]
+      ],
+      "synthText": "そのままで",
+      "synthSignature": "5342ae6c57be"
     },
     "tts_274595ef5da3": {
       "text": "たいざいは？",
@@ -2520,7 +2968,9 @@
       "altTexts": [
         "たいざいは？",
         "たいざいは"
-      ]
+      ],
+      "synthText": "たいざいは？",
+      "synthSignature": "e5eb90f00acb"
     },
     "tts_cefcb6266096": {
       "text": "トイレは、どこですか？",
@@ -2534,7 +2984,9 @@
       "altTexts": [
         "トイレは、どこですか？",
         "トイレはどこですか"
-      ]
+      ],
+      "synthText": "トイレは、どこですか？",
+      "synthSignature": "933666381426"
     },
     "tts_cbf1450a1127": {
       "text": "どうしましたか？",
@@ -2548,7 +3000,9 @@
       "altTexts": [
         "どうしましたか？",
         "どうしましたか"
-      ]
+      ],
+      "synthText": "どうしましたか？",
+      "synthSignature": "dcd0f29c7867"
     },
     "tts_161b40e8f515": {
       "text": "どこですか？",
@@ -2562,7 +3016,9 @@
       "altTexts": [
         "どこですか？",
         "どこですか"
-      ]
+      ],
+      "synthText": "どこですか？",
+      "synthSignature": "fee636fa6245"
     },
     "tts_2812f9721cb7": {
       "text": "どこまでですか？",
@@ -2576,7 +3032,9 @@
       "altTexts": [
         "どこまでですか？",
         "どこまでですか"
-      ]
+      ],
+      "synthText": "どこまでですか？",
+      "synthSignature": "23ac07ee8b55"
     },
     "tts_89d6e45b8498": {
       "text": "どちらですか？",
@@ -2590,7 +3048,9 @@
       "altTexts": [
         "どちらですか？",
         "どちらですか"
-      ]
+      ],
+      "synthText": "どちらですか？",
+      "synthSignature": "5083738e7de0"
     },
     "tts_c92b4cda8bdf": {
       "text": "はい",
@@ -2603,7 +3063,9 @@
       ],
       "altTexts": [
         "はい"
-      ]
+      ],
+      "synthText": "はい",
+      "synthSignature": "4ccf9bb4a848"
     },
     "tts_e06edf599f89": {
       "text": "パスポートは、こちらです",
@@ -2617,7 +3079,9 @@
       "altTexts": [
         "パスポートは、こちらです",
         "パスポートはこちらです"
-      ]
+      ],
+      "synthText": "パスポートは、こちらです",
+      "synthSignature": "ac1340e93320"
     },
     "tts_917c5faf1b6c": {
       "text": "ホテルです",
@@ -2630,7 +3094,9 @@
       ],
       "altTexts": [
         "ホテルです"
-      ]
+      ],
+      "synthText": "ホテルです",
+      "synthSignature": "33bfa03e8285"
     },
     "tts_0b46aa740d09": {
       "text": "もくてきは？",
@@ -2644,7 +3110,9 @@
       "altTexts": [
         "もくてきは？",
         "もくてきは"
-      ]
+      ],
+      "synthText": "もくてきは？",
+      "synthSignature": "dd69bb9e3c9b"
     },
     "tts_19ef31be44b5": {
       "text": "レシートをください",
@@ -2657,7 +3125,9 @@
       ],
       "altTexts": [
         "レシートをください"
-      ]
+      ],
+      "synthText": "レシートをください",
+      "synthSignature": "733f97f43fa2"
     },
     "tts_42d0969029e9": {
       "text": "ありがとう",
@@ -2670,7 +3140,9 @@
       ],
       "altTexts": [
         "ありがとう"
-      ]
+      ],
+      "synthText": "ありがとう",
+      "synthSignature": "82f6c980964a"
     },
     "tts_01dd1d4130bb": {
       "text": "あれ",
@@ -2683,7 +3155,9 @@
       ],
       "altTexts": [
         "あれ"
-      ]
+      ],
+      "synthText": "あれ",
+      "synthSignature": "bd4724e5d774"
     },
     "tts_c9177450298c": {
       "text": "いや",
@@ -2696,7 +3170,9 @@
       ],
       "altTexts": [
         "いや"
-      ]
+      ],
+      "synthText": "いや",
+      "synthSignature": "de9ceeac761a"
     },
     "tts_22f503aaf294": {
       "text": "うん",
@@ -2709,7 +3185,9 @@
       ],
       "altTexts": [
         "うん"
-      ]
+      ],
+      "synthText": "うん",
+      "synthSignature": "fc149e4b7da4"
     },
     "tts_ac15ff145286": {
       "text": "おいしい",
@@ -2722,7 +3200,9 @@
       ],
       "altTexts": [
         "おいしい"
-      ]
+      ],
+      "synthText": "おいしい",
+      "synthSignature": "915ffb8dc9b0"
     },
     "tts_ac62cbc2adad": {
       "text": "これ",
@@ -2735,7 +3215,9 @@
       ],
       "altTexts": [
         "これ"
-      ]
+      ],
+      "synthText": "これ",
+      "synthSignature": "9be6d0fe136e"
     },
     "tts_f7df6ac2474a": {
       "text": "そうです",
@@ -2748,7 +3230,9 @@
       ],
       "altTexts": [
         "そうです"
-      ]
+      ],
+      "synthText": "そうです",
+      "synthSignature": "19a5262e9ea1"
     },
     "tts_f7b0201b3f0e": {
       "text": "ちょっと",
@@ -2761,7 +3245,9 @@
       ],
       "altTexts": [
         "ちょっと"
-      ]
+      ],
+      "synthText": "ちょっと",
+      "synthSignature": "d90b8aad648a"
     },
     "tts_97a411a26ee3": {
       "text": "ほしいです",
@@ -2774,7 +3260,9 @@
       ],
       "altTexts": [
         "ほしいです"
-      ]
+      ],
+      "synthText": "ほしいです",
+      "synthSignature": "17dd2750feb7"
     },
     "tts_455ec8daabaa": {
       "text": "乗り換え",
@@ -2787,7 +3275,9 @@
       ],
       "altTexts": [
         "のりかえ"
-      ]
+      ],
+      "synthText": "乗り換え",
+      "synthSignature": "fdc7799fc80b"
     },
     "tts_66f0b9161217": {
       "text": "あしもとちゅうい",
@@ -2800,7 +3290,9 @@
       ],
       "altTexts": [
         "足元注意"
-      ]
+      ],
+      "synthText": "あしもとちゅうい",
+      "synthSignature": "d6718487894d"
     },
     "tts_d13aa1e57ee3": {
       "text": "あたたかい",
@@ -2813,7 +3305,9 @@
       ],
       "altTexts": [
         "温かい"
-      ]
+      ],
+      "synthText": "あたたかい",
+      "synthSignature": "a8863558aa1c"
     },
     "tts_c0df549e3258": {
       "text": "あまくち",
@@ -2826,7 +3320,9 @@
       ],
       "altTexts": [
         "甘口"
-      ]
+      ],
+      "synthText": "あまくち",
+      "synthSignature": "85df8c2a8495"
     },
     "tts_4db3472b6e41": {
       "text": "あんない",
@@ -2839,7 +3335,9 @@
       ],
       "altTexts": [
         "案内"
-      ]
+      ],
+      "synthText": "あんない",
+      "synthSignature": "7bc4681d53e7"
     },
     "tts_408e2ae255b0": {
       "text": "いちじていし",
@@ -2852,7 +3350,9 @@
       ],
       "altTexts": [
         "一時停止"
-      ]
+      ],
+      "synthText": "いちじていし",
+      "synthSignature": "a73a815f1d3d"
     },
     "tts_43c0172ad9a5": {
       "text": "いりぐち",
@@ -2865,7 +3365,9 @@
       ],
       "altTexts": [
         "入口"
-      ]
+      ],
+      "synthText": "いりぐち",
+      "synthSignature": "a3a9e6ccb018"
     },
     "tts_0a1544d65547": {
       "text": "うけつけ",
@@ -2878,7 +3380,9 @@
       ],
       "altTexts": [
         "受付"
-      ]
+      ],
+      "synthText": "うけつけ",
+      "synthSignature": "9a766f6792c3"
     },
     "tts_ace7c64eca2e": {
       "text": "うりきれ",
@@ -2891,7 +3395,9 @@
       ],
       "altTexts": [
         "売り切れ"
-      ]
+      ],
+      "synthText": "うりきれ",
+      "synthSignature": "5f35ff8df91a"
     },
     "tts_33f612435d8c": {
       "text": "えいぎょうじかん",
@@ -2904,7 +3410,9 @@
       ],
       "altTexts": [
         "営業時間"
-      ]
+      ],
+      "synthText": "えいぎょうじかん",
+      "synthSignature": "f55f6f0b2948"
     },
     "tts_e56c3caf0f9f": {
       "text": "えいぎょうちゅう",
@@ -2917,7 +3425,9 @@
       ],
       "altTexts": [
         "営業中"
-      ]
+      ],
+      "synthText": "えいぎょうちゅう",
+      "synthSignature": "2488e6e9b087"
     },
     "tts_6ab8af25a297": {
       "text": "おおもり",
@@ -2930,7 +3440,9 @@
       ],
       "altTexts": [
         "大盛り"
-      ]
+      ],
+      "synthText": "おおもり",
+      "synthSignature": "ac388aa1d325"
     },
     "tts_cb1434a4bdae": {
       "text": "おしずかに",
@@ -2943,7 +3455,9 @@
       ],
       "altTexts": [
         "お静かに"
-      ]
+      ],
+      "synthText": "おしずかに",
+      "synthSignature": "2f224f5eab9a"
     },
     "tts_0f40454243d0": {
       "text": "おす",
@@ -2956,7 +3470,9 @@
       ],
       "altTexts": [
         "押"
-      ]
+      ],
+      "synthText": "おす",
+      "synthSignature": "9012cc273b3f"
     },
     "tts_343a26d4817b": {
       "text": "おすすめ",
@@ -2969,7 +3485,9 @@
       ],
       "altTexts": [
         "おすすめ"
-      ]
+      ],
+      "synthText": "おすすめ",
+      "synthSignature": "3e406e17f224"
     },
     "tts_8b8ccdbe3855": {
       "text": "おてあらい",
@@ -2982,7 +3500,9 @@
       ],
       "altTexts": [
         "お手洗い"
-      ]
+      ],
+      "synthText": "おてあらい",
+      "synthSignature": "bc7051342eac"
     },
     "tts_51dce2f31fa8": {
       "text": "おもちかえり",
@@ -2995,7 +3515,9 @@
       ],
       "altTexts": [
         "お持ち帰り"
-      ]
+      ],
+      "synthText": "おもちかえり",
+      "synthSignature": "021811fe36ae"
     },
     "tts_9b27c35ef9c2": {
       "text": "カードたいおう",
@@ -3008,7 +3530,9 @@
       ],
       "altTexts": [
         "カード対応"
-      ]
+      ],
+      "synthText": "カードたいおう",
+      "synthSignature": "ddcd9bd35e75"
     },
     "tts_ef41926cafdd": {
       "text": "かいさつぐち",
@@ -3021,7 +3545,9 @@
       ],
       "altTexts": [
         "改札口"
-      ]
+      ],
+      "synthText": "かいさつぐち",
+      "synthSignature": "cbdc3695bd55"
     },
     "tts_1182ea1ef6a5": {
       "text": "かくえきていしゃ",
@@ -3034,7 +3560,9 @@
       ],
       "altTexts": [
         "各駅停車"
-      ]
+      ],
+      "synthText": "かくえきていしゃ",
+      "synthSignature": "d8162143d872"
     },
     "tts_3b22787de227": {
       "text": "からくち",
@@ -3047,7 +3575,9 @@
       ],
       "altTexts": [
         "辛口"
-      ]
+      ],
+      "synthText": "からくち",
+      "synthSignature": "2ab2a4a53e16"
     },
     "tts_5531b47e1962": {
       "text": "かんけいしゃいがいたちいりきんし",
@@ -3060,7 +3590,9 @@
       ],
       "altTexts": [
         "関係者以外立入禁止"
-      ]
+      ],
+      "synthText": "かんけいしゃいがいたちいりきんし",
+      "synthSignature": "95ca74d3ce68"
     },
     "tts_483284272a48": {
       "text": "きかんげんてい",
@@ -3073,7 +3605,9 @@
       ],
       "altTexts": [
         "期間限定"
-      ]
+      ],
+      "synthText": "きかんげんてい",
+      "synthSignature": "e1992730290c"
     },
     "tts_07f0dc914ce2": {
       "text": "きけん",
@@ -3086,7 +3620,9 @@
       ],
       "altTexts": [
         "危険"
-      ]
+      ],
+      "synthText": "きけん",
+      "synthSignature": "225116fa32ab"
     },
     "tts_6b9dd05b0f89": {
       "text": "きたぐち",
@@ -3099,7 +3635,9 @@
       ],
       "altTexts": [
         "北口"
-      ]
+      ],
+      "synthText": "きたぐち",
+      "synthSignature": "83064159d7ca"
     },
     "tts_ffc9b55b7118": {
       "text": "きゅうこう",
@@ -3112,7 +3650,9 @@
       ],
       "altTexts": [
         "急行"
-      ]
+      ],
+      "synthText": "きゅうこう",
+      "synthSignature": "4ddd7afab36b"
     },
     "tts_c5f142d6c696": {
       "text": "きんえん",
@@ -3125,7 +3665,9 @@
       ],
       "altTexts": [
         "禁煙"
-      ]
+      ],
+      "synthText": "きんえん",
+      "synthSignature": "0738ad49c3dd"
     },
     "tts_dcb46e0fc29b": {
       "text": "くうしつ",
@@ -3138,7 +3680,9 @@
       ],
       "altTexts": [
         "空室"
-      ]
+      ],
+      "synthText": "くうしつ",
+      "synthSignature": "9ef7706aa650"
     },
     "tts_65746967ebdc": {
       "text": "げんきん",
@@ -3151,7 +3695,9 @@
       ],
       "altTexts": [
         "現金"
-      ]
+      ],
+      "synthText": "げんきん",
+      "synthSignature": "d2b0af07ac85"
     },
     "tts_18689fc391a6": {
       "text": "こうじちゅう",
@@ -3164,7 +3710,9 @@
       ],
       "altTexts": [
         "工事中"
-      ]
+      ],
+      "synthText": "こうじちゅう",
+      "synthSignature": "56947b33c4a3"
     },
     "tts_0b640f76f069": {
       "text": "こうつうけいアイシー",
@@ -3177,7 +3725,9 @@
       ],
       "altTexts": [
         "交通系IC"
-      ]
+      ],
+      "synthText": "こうつうけいアイシー",
+      "synthSignature": "b4430768015b"
     },
     "tts_600583ea7606": {
       "text": "こしょうちゅう",
@@ -3190,7 +3740,9 @@
       ],
       "altTexts": [
         "故障中"
-      ]
+      ],
+      "synthText": "こしょうちゅう",
+      "synthSignature": "afb71127f4ca"
     },
     "tts_29f0cdaefb3f": {
       "text": "さつえいきんし",
@@ -3203,7 +3755,9 @@
       ],
       "altTexts": [
         "撮影禁止"
-      ]
+      ],
+      "synthText": "さつえいきんし",
+      "synthSignature": "99c90bbeff6c"
     },
     "tts_e441dfe79fc2": {
       "text": "じゅんびちゅう",
@@ -3216,7 +3770,9 @@
       ],
       "altTexts": [
         "準備中"
-      ]
+      ],
+      "synthText": "じゅんびちゅう",
+      "synthSignature": "baef7c5382dd"
     },
     "tts_dfae1f286a52": {
       "text": "しんはつばい",
@@ -3229,7 +3785,9 @@
       ],
       "altTexts": [
         "新発売"
-      ]
+      ],
+      "synthText": "しんはつばい",
+      "synthSignature": "7e97c2e4c341"
     },
     "tts_fefca6a7da90": {
       "text": "すうりょうげんてい",
@@ -3242,7 +3800,9 @@
       ],
       "altTexts": [
         "数量限定"
-      ]
+      ],
+      "synthText": "すうりょうげんてい",
+      "synthSignature": "6df09bd49742"
     },
     "tts_79844fe2e1d5": {
       "text": "ぜいこみ",
@@ -3255,7 +3815,9 @@
       ],
       "altTexts": [
         "税込"
-      ]
+      ],
+      "synthText": "ぜいこみ",
+      "synthSignature": "11a90fe8556a"
     },
     "tts_536c40f98792": {
       "text": "セール",
@@ -3268,7 +3830,9 @@
       ],
       "altTexts": [
         "セール"
-      ]
+      ],
+      "synthText": "セール",
+      "synthSignature": "8747eb58e922"
     },
     "tts_4f70eee769de": {
       "text": "セット",
@@ -3281,7 +3845,9 @@
       ],
       "altTexts": [
         "セット"
-      ]
+      ],
+      "synthText": "セット",
+      "synthSignature": "f91ed7a48e2b"
     },
     "tts_75912da153aa": {
       "text": "ぜんぴん",
@@ -3294,7 +3860,9 @@
       ],
       "altTexts": [
         "全品"
-      ]
+      ],
+      "synthText": "ぜんぴん",
+      "synthSignature": "861cea2248ba"
     },
     "tts_94dc5b6ee2d5": {
       "text": "たちいりきんし",
@@ -3307,7 +3875,9 @@
       ],
       "altTexts": [
         "立入禁止"
-      ]
+      ],
+      "synthText": "たちいりきんし",
+      "synthSignature": "f9a45c851372"
     },
     "tts_a793f835e5f7": {
       "text": "たべほうだい",
@@ -3320,7 +3890,9 @@
       ],
       "altTexts": [
         "食べ放題"
-      ]
+      ],
+      "synthText": "たべほうだい",
+      "synthSignature": "37e21939bf2c"
     },
     "tts_1fa6428b6198": {
       "text": "たんぴん",
@@ -3333,7 +3905,9 @@
       ],
       "altTexts": [
         "単品"
-      ]
+      ],
+      "synthText": "たんぴん",
+      "synthSignature": "344d2e2fcca4"
     },
     "tts_b8037e65f6fc": {
       "text": "ちゅうい",
@@ -3346,7 +3920,9 @@
       ],
       "altTexts": [
         "注意"
-      ]
+      ],
+      "synthText": "ちゅうい",
+      "synthSignature": "ed1f971d8d3b"
     },
     "tts_44e650f65879": {
       "text": "つめたい",
@@ -3359,7 +3935,9 @@
       ],
       "altTexts": [
         "冷たい"
-      ]
+      ],
+      "synthText": "つめたい",
+      "synthSignature": "e7b8dffcc090"
     },
     "tts_1a22edfee12d": {
       "text": "つりせん",
@@ -3372,7 +3950,9 @@
       ],
       "altTexts": [
         "つり銭"
-      ]
+      ],
+      "synthText": "つりせん",
+      "synthSignature": "2c9c919e4226"
     },
     "tts_b7338fa57221": {
       "text": "ていきゅうび",
@@ -3385,7 +3965,9 @@
       ],
       "altTexts": [
         "定休日"
-      ]
+      ],
+      "synthText": "ていきゅうび",
+      "synthSignature": "49117f0c1ecd"
     },
     "tts_a63458c6e63c": {
       "text": "ていしょく",
@@ -3398,7 +3980,9 @@
       ],
       "altTexts": [
         "定食"
-      ]
+      ],
+      "synthText": "ていしょく",
+      "synthSignature": "4440f45d8a07"
     },
     "tts_3ca6e73dde08": {
       "text": "でぐち",
@@ -3411,7 +3995,9 @@
       ],
       "altTexts": [
         "出口"
-      ]
+      ],
+      "synthText": "でぐち",
+      "synthSignature": "6683f2b6c7e1"
     },
     "tts_18a5949f7ff9": {
       "text": "とっきゅう",
@@ -3424,7 +4010,9 @@
       ],
       "altTexts": [
         "特急"
-      ]
+      ],
+      "synthText": "とっきゅう",
+      "synthSignature": "df4e7c5b208c"
     },
     "tts_542bb0932f55": {
       "text": "にしぐち",
@@ -3437,7 +4025,9 @@
       ],
       "altTexts": [
         "西口"
-      ]
+      ],
+      "synthText": "にしぐち",
+      "synthSignature": "bd1fbe0a4bd9"
     },
     "tts_28b4b2603013": {
       "text": "のみほうだい",
@@ -3450,7 +4040,9 @@
       ],
       "altTexts": [
         "飲み放題"
-      ]
+      ],
+      "synthText": "のみほうだい",
+      "synthSignature": "9f1903d14138"
     },
     "tts_015adc4a3380": {
       "text": "のりかえ",
@@ -3465,7 +4057,9 @@
       "altTexts": [
         "のりかえ",
         "乗り換え"
-      ]
+      ],
+      "synthText": "乗り換え",
+      "synthSignature": "fdc7799fc80b"
     },
     "tts_b1172e31d4d0": {
       "text": "のりば",
@@ -3478,7 +4072,9 @@
       ],
       "altTexts": [
         "のりば"
-      ]
+      ],
+      "synthText": "のりば",
+      "synthSignature": "174d03e783e6"
     },
     "tts_dfb06cbf112e": {
       "text": "ばいてん",
@@ -3491,7 +4087,9 @@
       ],
       "altTexts": [
         "売店"
-      ]
+      ],
+      "synthText": "ばいてん",
+      "synthSignature": "5a1e52ef7697"
     },
     "tts_61d1edd2b906": {
       "text": "はんがく",
@@ -3504,7 +4102,9 @@
       ],
       "altTexts": [
         "半額"
-      ]
+      ],
+      "synthText": "はんがく",
+      "synthSignature": "099d50710be4"
     },
     "tts_333ac66b7a4a": {
       "text": "ひがしぐち",
@@ -3517,7 +4117,9 @@
       ],
       "altTexts": [
         "東口"
-      ]
+      ],
+      "synthText": "ひがしぐち",
+      "synthSignature": "891ca7e2caff"
     },
     "tts_a2d3fe43375c": {
       "text": "ひく",
@@ -3530,7 +4132,9 @@
       ],
       "altTexts": [
         "引"
-      ]
+      ],
+      "synthText": "ひく",
+      "synthSignature": "cf26201538f2"
     },
     "tts_c312c4956af0": {
       "text": "ひじょうぐち",
@@ -3543,7 +4147,9 @@
       ],
       "altTexts": [
         "非常口"
-      ]
+      ],
+      "synthText": "ひじょうぐち",
+      "synthSignature": "26dddd3b3cdc"
     },
     "tts_274e92640342": {
       "text": "ほんじつ",
@@ -3556,7 +4162,9 @@
       ],
       "altTexts": [
         "本日"
-      ]
+      ],
+      "synthText": "ほんじつ",
+      "synthSignature": "1f5b1cdd5317"
     },
     "tts_4829e3102f04": {
       "text": "まんしつ",
@@ -3569,7 +4177,9 @@
       ],
       "altTexts": [
         "満室"
-      ]
+      ],
+      "synthText": "まんしつ",
+      "synthSignature": "04a00a14510e"
     },
     "tts_b19662b70811": {
       "text": "みなみぐち",
@@ -3582,7 +4192,9 @@
       ],
       "altTexts": [
         "南口"
-      ]
+      ],
+      "synthText": "みなみぐち",
+      "synthSignature": "3d877ad4a2d2"
     },
     "tts_d4a9d9ef26f0": {
       "text": "むりょう",
@@ -3595,7 +4207,9 @@
       ],
       "altTexts": [
         "無料"
-      ]
+      ],
+      "synthText": "むりょう",
+      "synthSignature": "118099b1afaf"
     },
     "tts_0baffcd85e68": {
       "text": "むりょうWi-Fi",
@@ -3608,7 +4222,9 @@
       ],
       "altTexts": [
         "無料Wi-Fi"
-      ]
+      ],
+      "synthText": "むりょうWi-Fi",
+      "synthSignature": "b70cfeeb7636"
     },
     "tts_86ae0d89c5b9": {
       "text": "ランチ",
@@ -3621,7 +4237,9 @@
       ],
       "altTexts": [
         "ランチ"
-      ]
+      ],
+      "synthText": "ランチ",
+      "synthSignature": "d3a87939a9fd"
     },
     "tts_6e2d1ad8f812": {
       "text": "りょうがえ",
@@ -3634,7 +4252,9 @@
       ],
       "altTexts": [
         "両替"
-      ]
+      ],
+      "synthText": "りょうがえ",
+      "synthSignature": "af0473ef9308"
     },
     "tts_14230c31486d": {
       "text": "わりびき",
@@ -3647,7 +4267,9 @@
       ],
       "altTexts": [
         "割引"
-      ]
+      ],
+      "synthText": "わりびき",
+      "synthSignature": "5e8b384fbbe6"
     },
     "tts_ebb323c6fe75": {
       "text": "お持ち帰り",
@@ -3660,7 +4282,9 @@
       ],
       "altTexts": [
         "おもちかえり"
-      ]
+      ],
+      "synthText": "お持ち帰り",
+      "synthSignature": "c4abe291ca6b"
     },
     "tts_73e6684ff80e": {
       "text": "お手洗い",
@@ -3673,7 +4297,9 @@
       ],
       "altTexts": [
         "おてあらい"
-      ]
+      ],
+      "synthText": "お手洗い",
+      "synthSignature": "af587446cece"
     },
     "tts_0e1ebb0f5c19": {
       "text": "お静かに",
@@ -3686,7 +4312,9 @@
       ],
       "altTexts": [
         "おしずかに"
-      ]
+      ],
+      "synthText": "お静かに",
+      "synthSignature": "0fbeb277b502"
     },
     "tts_ab32cfca34b7": {
       "text": "カード対応",
@@ -3699,7 +4327,9 @@
       ],
       "altTexts": [
         "カードたいおう"
-      ]
+      ],
+      "synthText": "カード対応",
+      "synthSignature": "dbd6931749eb"
     },
     "tts_9f57e6792e87": {
       "text": "つり銭",
@@ -3712,7 +4342,9 @@
       ],
       "altTexts": [
         "つりせん"
-      ]
+      ],
+      "synthText": "つり銭",
+      "synthSignature": "401ea0439778"
     },
     "tts_c09cb5acee9e": {
       "text": "案内",
@@ -3725,7 +4357,9 @@
       ],
       "altTexts": [
         "あんない"
-      ]
+      ],
+      "synthText": "案内",
+      "synthSignature": "fdb74565369b"
     },
     "tts_21941967f1cf": {
       "text": "一時停止",
@@ -3738,7 +4372,9 @@
       ],
       "altTexts": [
         "いちじていし"
-      ]
+      ],
+      "synthText": "一時停止",
+      "synthSignature": "ec2999f6303f"
     },
     "tts_7a8a08a87847": {
       "text": "引",
@@ -3751,7 +4387,9 @@
       ],
       "altTexts": [
         "ひく"
-      ]
+      ],
+      "synthText": "引",
+      "synthSignature": "e9c7e7aeb5a5"
     },
     "tts_f13952ac0063": {
       "text": "飲み放題",
@@ -3764,7 +4402,9 @@
       ],
       "altTexts": [
         "のみほうだい"
-      ]
+      ],
+      "synthText": "飲み放題",
+      "synthSignature": "143cc65c0598"
     },
     "tts_de70b7fbff7d": {
       "text": "営業時間",
@@ -3777,7 +4417,9 @@
       ],
       "altTexts": [
         "えいぎょうじかん"
-      ]
+      ],
+      "synthText": "営業時間",
+      "synthSignature": "eb8b7d644076"
     },
     "tts_44f4dc039bb1": {
       "text": "営業中",
@@ -3790,7 +4432,9 @@
       ],
       "altTexts": [
         "えいぎょうちゅう"
-      ]
+      ],
+      "synthText": "営業中",
+      "synthSignature": "d36ed48341fd"
     },
     "tts_a59b01a704e2": {
       "text": "押",
@@ -3803,7 +4447,9 @@
       ],
       "altTexts": [
         "おす"
-      ]
+      ],
+      "synthText": "押",
+      "synthSignature": "af5da9ff0164"
     },
     "tts_2aaaffaf75b8": {
       "text": "温かい",
@@ -3816,7 +4462,9 @@
       ],
       "altTexts": [
         "あたたかい"
-      ]
+      ],
+      "synthText": "温かい",
+      "synthSignature": "54ba352c0116"
     },
     "tts_bb3cfa59d2e8": {
       "text": "改札口",
@@ -3829,7 +4477,9 @@
       ],
       "altTexts": [
         "かいさつぐち"
-      ]
+      ],
+      "synthText": "改札口",
+      "synthSignature": "83ed09356b3f"
     },
     "tts_7e9d116b4531": {
       "text": "各駅停車",
@@ -3842,7 +4492,9 @@
       ],
       "altTexts": [
         "かくえきていしゃ"
-      ]
+      ],
+      "synthText": "各駅停車",
+      "synthSignature": "a138d02bf959"
     },
     "tts_a99917e86228": {
       "text": "割引",
@@ -3855,7 +4507,9 @@
       ],
       "altTexts": [
         "わりびき"
-      ]
+      ],
+      "synthText": "割引",
+      "synthSignature": "8c1611c4f7a0"
     },
     "tts_f966cf45097b": {
       "text": "甘口",
@@ -3868,7 +4522,9 @@
       ],
       "altTexts": [
         "あまくち"
-      ]
+      ],
+      "synthText": "甘口",
+      "synthSignature": "7a36cda5d7d0"
     },
     "tts_d8a5678c1db1": {
       "text": "関係者以外立入禁止",
@@ -3881,7 +4537,9 @@
       ],
       "altTexts": [
         "かんけいしゃいがいたちいりきんし"
-      ]
+      ],
+      "synthText": "関係者以外立入禁止",
+      "synthSignature": "674933890d4b"
     },
     "tts_265af6914f6b": {
       "text": "危険",
@@ -3894,7 +4552,9 @@
       ],
       "altTexts": [
         "きけん"
-      ]
+      ],
+      "synthText": "危険",
+      "synthSignature": "3b1d111616c9"
     },
     "tts_a8bb8cbb2df2": {
       "text": "期間限定",
@@ -3907,7 +4567,9 @@
       ],
       "altTexts": [
         "きかんげんてい"
-      ]
+      ],
+      "synthText": "期間限定",
+      "synthSignature": "9db20c222919"
     },
     "tts_954df4424486": {
       "text": "急行",
@@ -3920,7 +4582,9 @@
       ],
       "altTexts": [
         "きゅうこう"
-      ]
+      ],
+      "synthText": "急行",
+      "synthSignature": "b393e0d3254b"
     },
     "tts_375c1e1161f0": {
       "text": "禁煙",
@@ -3933,7 +4597,9 @@
       ],
       "altTexts": [
         "きんえん"
-      ]
+      ],
+      "synthText": "禁煙",
+      "synthSignature": "879c8c9a603a"
     },
     "tts_6de5e7f369c2": {
       "text": "空室",
@@ -3946,7 +4612,9 @@
       ],
       "altTexts": [
         "くうしつ"
-      ]
+      ],
+      "synthText": "空室",
+      "synthSignature": "a511ec97fd1e"
     },
     "tts_e3ca5905c270": {
       "text": "現金",
@@ -3959,7 +4627,9 @@
       ],
       "altTexts": [
         "げんきん"
-      ]
+      ],
+      "synthText": "現金",
+      "synthSignature": "0eb137a39da1"
     },
     "tts_e66ac9ef8731": {
       "text": "故障中",
@@ -3972,7 +4642,9 @@
       ],
       "altTexts": [
         "こしょうちゅう"
-      ]
+      ],
+      "synthText": "故障中",
+      "synthSignature": "48eda03c6b63"
     },
     "tts_bd6fbd4f01f9": {
       "text": "交通系IC",
@@ -3985,7 +4657,9 @@
       ],
       "altTexts": [
         "こうつうけいアイシー"
-      ]
+      ],
+      "synthText": "交通系IC",
+      "synthSignature": "8f9cb1e6cfd4"
     },
     "tts_d8aa2258c01a": {
       "text": "工事中",
@@ -3998,7 +4672,9 @@
       ],
       "altTexts": [
         "こうじちゅう"
-      ]
+      ],
+      "synthText": "工事中",
+      "synthSignature": "63b1a6952048"
     },
     "tts_5c4e286f3d9a": {
       "text": "撮影禁止",
@@ -4011,7 +4687,9 @@
       ],
       "altTexts": [
         "さつえいきんし"
-      ]
+      ],
+      "synthText": "撮影禁止",
+      "synthSignature": "e5ddcf3fb37d"
     },
     "tts_312b15da556c": {
       "text": "受付",
@@ -4024,7 +4702,9 @@
       ],
       "altTexts": [
         "うけつけ"
-      ]
+      ],
+      "synthText": "受付",
+      "synthSignature": "0020b7c12fa2"
     },
     "tts_dd877ebcea7c": {
       "text": "出口",
@@ -4037,7 +4717,9 @@
       ],
       "altTexts": [
         "でぐち"
-      ]
+      ],
+      "synthText": "出口",
+      "synthSignature": "3838a491dc07"
     },
     "tts_69683a901b7d": {
       "text": "準備中",
@@ -4050,7 +4732,9 @@
       ],
       "altTexts": [
         "じゅんびちゅう"
-      ]
+      ],
+      "synthText": "準備中",
+      "synthSignature": "e4cf354f3664"
     },
     "tts_e33ba9c65056": {
       "text": "食べ放題",
@@ -4063,7 +4747,9 @@
       ],
       "altTexts": [
         "たべほうだい"
-      ]
+      ],
+      "synthText": "食べ放題",
+      "synthSignature": "bb427cc7b36a"
     },
     "tts_f12955f3b5c9": {
       "text": "新発売",
@@ -4076,7 +4762,9 @@
       ],
       "altTexts": [
         "しんはつばい"
-      ]
+      ],
+      "synthText": "新発売",
+      "synthSignature": "f3fd06c6b4ba"
     },
     "tts_3c4a45690fb1": {
       "text": "辛口",
@@ -4089,7 +4777,9 @@
       ],
       "altTexts": [
         "からくち"
-      ]
+      ],
+      "synthText": "辛口",
+      "synthSignature": "50561c27a9b3"
     },
     "tts_625612e2e5d4": {
       "text": "数量限定",
@@ -4102,7 +4792,9 @@
       ],
       "altTexts": [
         "すうりょうげんてい"
-      ]
+      ],
+      "synthText": "数量限定",
+      "synthSignature": "5276a2136f32"
     },
     "tts_883518371afb": {
       "text": "西口",
@@ -4115,7 +4807,9 @@
       ],
       "altTexts": [
         "にしぐち"
-      ]
+      ],
+      "synthText": "西口",
+      "synthSignature": "99cb30e2bf16"
     },
     "tts_1cbfe63e1994": {
       "text": "税込",
@@ -4128,7 +4822,9 @@
       ],
       "altTexts": [
         "ぜいこみ"
-      ]
+      ],
+      "synthText": "税込",
+      "synthSignature": "15e2a7defbab"
     },
     "tts_6befd2370848": {
       "text": "全品",
@@ -4141,7 +4837,9 @@
       ],
       "altTexts": [
         "ぜんぴん"
-      ]
+      ],
+      "synthText": "全品",
+      "synthSignature": "7ab57541b419"
     },
     "tts_53b75a47175a": {
       "text": "足元注意",
@@ -4154,7 +4852,9 @@
       ],
       "altTexts": [
         "あしもとちゅうい"
-      ]
+      ],
+      "synthText": "足元注意",
+      "synthSignature": "be60280032e0"
     },
     "tts_06e899c3f983": {
       "text": "大盛り",
@@ -4167,7 +4867,9 @@
       ],
       "altTexts": [
         "おおもり"
-      ]
+      ],
+      "synthText": "大盛り",
+      "synthSignature": "891bfa336ecb"
     },
     "tts_2a345e41e969": {
       "text": "単品",
@@ -4180,7 +4882,9 @@
       ],
       "altTexts": [
         "たんぴん"
-      ]
+      ],
+      "synthText": "単品",
+      "synthSignature": "9522d702d7e2"
     },
     "tts_f08b55c42cfa": {
       "text": "注意",
@@ -4193,7 +4897,9 @@
       ],
       "altTexts": [
         "ちゅうい"
-      ]
+      ],
+      "synthText": "注意",
+      "synthSignature": "ff44c2586ffe"
     },
     "tts_fef3ad6a1bd4": {
       "text": "定休日",
@@ -4206,7 +4912,9 @@
       ],
       "altTexts": [
         "ていきゅうび"
-      ]
+      ],
+      "synthText": "定休日",
+      "synthSignature": "99eb71362a8f"
     },
     "tts_c89c95bdcba2": {
       "text": "定食",
@@ -4219,7 +4927,9 @@
       ],
       "altTexts": [
         "ていしょく"
-      ]
+      ],
+      "synthText": "定食",
+      "synthSignature": "26bd408f094f"
     },
     "tts_53dcb0fe0927": {
       "text": "東口",
@@ -4232,7 +4942,9 @@
       ],
       "altTexts": [
         "ひがしぐち"
-      ]
+      ],
+      "synthText": "東口",
+      "synthSignature": "da593acfdb76"
     },
     "tts_4c80d67f1adb": {
       "text": "特急",
@@ -4245,7 +4957,9 @@
       ],
       "altTexts": [
         "とっきゅう"
-      ]
+      ],
+      "synthText": "特急",
+      "synthSignature": "d2129e34d333"
     },
     "tts_268d6b3096cb": {
       "text": "南口",
@@ -4258,7 +4972,9 @@
       ],
       "altTexts": [
         "みなみぐち"
-      ]
+      ],
+      "synthText": "南口",
+      "synthSignature": "8637c3db918c"
     },
     "tts_38e9cd1ffb95": {
       "text": "入口",
@@ -4271,7 +4987,9 @@
       ],
       "altTexts": [
         "いりぐち"
-      ]
+      ],
+      "synthText": "入口",
+      "synthSignature": "298b14d2cf59"
     },
     "tts_dd74f606abc0": {
       "text": "売り切れ",
@@ -4284,7 +5002,9 @@
       ],
       "altTexts": [
         "うりきれ"
-      ]
+      ],
+      "synthText": "売り切れ",
+      "synthSignature": "4bcf706eb675"
     },
     "tts_cb365f543bc8": {
       "text": "売店",
@@ -4297,7 +5017,9 @@
       ],
       "altTexts": [
         "ばいてん"
-      ]
+      ],
+      "synthText": "売店",
+      "synthSignature": "2ebe5d79f5a2"
     },
     "tts_d84accc4d4cc": {
       "text": "半額",
@@ -4310,7 +5032,9 @@
       ],
       "altTexts": [
         "はんがく"
-      ]
+      ],
+      "synthText": "半額",
+      "synthSignature": "ca2f714ed72e"
     },
     "tts_e907e460b7bb": {
       "text": "非常口",
@@ -4323,7 +5047,9 @@
       ],
       "altTexts": [
         "ひじょうぐち"
-      ]
+      ],
+      "synthText": "非常口",
+      "synthSignature": "ffde3f1982f6"
     },
     "tts_9e0b645acb8c": {
       "text": "北口",
@@ -4336,7 +5062,9 @@
       ],
       "altTexts": [
         "きたぐち"
-      ]
+      ],
+      "synthText": "北口",
+      "synthSignature": "fcd684069b7f"
     },
     "tts_ebb72f98b8c5": {
       "text": "本日",
@@ -4349,7 +5077,9 @@
       ],
       "altTexts": [
         "ほんじつ"
-      ]
+      ],
+      "synthText": "本日",
+      "synthSignature": "c88caa933a6c"
     },
     "tts_b358db5a50d0": {
       "text": "満室",
@@ -4362,7 +5092,9 @@
       ],
       "altTexts": [
         "まんしつ"
-      ]
+      ],
+      "synthText": "満室",
+      "synthSignature": "18ebedb0bac5"
     },
     "tts_501451d6eb67": {
       "text": "無料",
@@ -4375,7 +5107,9 @@
       ],
       "altTexts": [
         "むりょう"
-      ]
+      ],
+      "synthText": "無料",
+      "synthSignature": "d63ba6cfb2a4"
     },
     "tts_fd0a1c6abd72": {
       "text": "無料Wi-Fi",
@@ -4388,7 +5122,9 @@
       ],
       "altTexts": [
         "むりょうWi-Fi"
-      ]
+      ],
+      "synthText": "無料Wi-Fi",
+      "synthSignature": "09332365e0a7"
     },
     "tts_0f887d746198": {
       "text": "立入禁止",
@@ -4401,7 +5137,9 @@
       ],
       "altTexts": [
         "たちいりきんし"
-      ]
+      ],
+      "synthText": "立入禁止",
+      "synthSignature": "675c383b2b27"
     },
     "tts_0b87bc8eea28": {
       "text": "両替",
@@ -4414,7 +5152,9 @@
       ],
       "altTexts": [
         "りょうがえ"
-      ]
+      ],
+      "synthText": "両替",
+      "synthSignature": "133d3ae0d50e"
     },
     "tts_e546e7d633e6": {
       "text": "冷たい",
@@ -4427,7 +5167,9 @@
       ],
       "altTexts": [
         "つめたい"
-      ]
+      ],
+      "synthText": "冷たい",
+      "synthSignature": "c52a53fbfb5f"
     },
     "tts_cfa65d3cfe88": {
       "text": "あたためてください",
@@ -4441,8 +5183,10 @@
         "あたためてください",
         "温めてください"
       ],
-      "reusedFrom": "kana-master:scv_1",
-      "path": "/audio/nanami/tts_cfa65d3cfe88.mp3"
+      "path": "/audio/nanami/tts_cfa65d3cfe88.mp3",
+      "synthText": "温めてください",
+      "speechPhoneme": "アタタメテクダサイ",
+      "synthSignature": "9fd89258c893"
     },
     "tts_a127fe9a0aca": {
       "text": "あたためますか？",
@@ -4457,7 +5201,9 @@
         "あたためますか",
         "温めますか"
       ],
-      "path": "/audio/nanami/tts_a127fe9a0aca.mp3"
+      "path": "/audio/nanami/tts_a127fe9a0aca.mp3",
+      "synthText": "温めますか",
+      "synthSignature": "6b602a6e687e"
     },
     "tts_d9309e5d6186": {
       "text": "あたまが、いたいです",
@@ -4472,7 +5218,9 @@
         "あたまがいたいです",
         "頭が痛いです"
       ],
-      "path": "/audio/nanami/tts_d9309e5d6186.mp3"
+      "path": "/audio/nanami/tts_d9309e5d6186.mp3",
+      "synthText": "頭が痛いです",
+      "synthSignature": "2e3c3875844b"
     },
     "tts_ab600f5cfa60": {
       "text": "いっしゅうかんです",
@@ -4486,7 +5234,9 @@
         "いっしゅうかんです",
         "一週間です"
       ],
-      "path": "/audio/nanami/tts_ab600f5cfa60.mp3"
+      "path": "/audio/nanami/tts_ab600f5cfa60.mp3",
+      "synthText": "一週間です",
+      "synthSignature": "fa5403b58da6"
     },
     "tts_f4500e268d48": {
       "text": "いりません",
@@ -4500,7 +5250,9 @@
         "いりません",
         "要りません"
       ],
-      "path": "/audio/nanami/tts_f4500e268d48.mp3"
+      "path": "/audio/nanami/tts_f4500e268d48.mp3",
+      "synthText": "要りません",
+      "synthSignature": "296e45e71b42"
     },
     "tts_602992b00d21": {
       "text": "えいごで、だいじょうぶですか？",
@@ -4515,7 +5267,9 @@
         "えいごでだいじょうぶですか",
         "英語で大丈夫ですか"
       ],
-      "path": "/audio/nanami/tts_602992b00d21.mp3"
+      "path": "/audio/nanami/tts_602992b00d21.mp3",
+      "synthText": "英語で大丈夫ですか",
+      "synthSignature": "2df5db5ee857"
     },
     "tts_cae176c04f5f": {
       "text": "おおもり、できますか？",
@@ -4530,7 +5284,9 @@
         "おおもりできますか",
         "大盛りできますか"
       ],
-      "path": "/audio/nanami/tts_cae176c04f5f.mp3"
+      "path": "/audio/nanami/tts_cae176c04f5f.mp3",
+      "synthText": "大盛りできますか",
+      "synthSignature": "a6f20bd4dd7a"
     },
     "tts_8a2b78d90fcd": {
       "text": "おかいけい、おねがいします",
@@ -4545,8 +5301,10 @@
         "おかいけいおねがいします",
         "お会計お願いします"
       ],
-      "reusedFrom": "kana-master:res_okaikei",
-      "path": "/audio/nanami/tts_8a2b78d90fcd.mp3"
+      "reusedFrom": "kana-master:so_7",
+      "path": "/audio/nanami/tts_8a2b78d90fcd.mp3",
+      "synthText": "お会計お願いします",
+      "synthSignature": "1f43df458671"
     },
     "tts_4e07437ae2a7": {
       "text": "おしはらいほうほうは？",
@@ -4561,7 +5319,9 @@
         "おしはらいほうほうは",
         "お支払い方法は"
       ],
-      "path": "/audio/nanami/tts_4e07437ae2a7.mp3"
+      "path": "/audio/nanami/tts_4e07437ae2a7.mp3",
+      "synthText": "お支払い方法は",
+      "synthSignature": "af6aaf455fad"
     },
     "tts_0a3684212954": {
       "text": "おすすめは、なんですか？",
@@ -4577,7 +5337,9 @@
         "お勧めは何ですか"
       ],
       "reusedFrom": "kana-master:cafe_osusume2",
-      "path": "/audio/nanami/tts_0a3684212954.mp3"
+      "path": "/audio/nanami/tts_0a3684212954.mp3",
+      "synthText": "お勧めは何ですか",
+      "synthSignature": "e73ca94fdb19"
     },
     "tts_04d2702039af": {
       "text": "おなかが、いたいです",
@@ -4592,7 +5354,9 @@
         "おなかがいたいです",
         "お腹が痛いです"
       ],
-      "path": "/audio/nanami/tts_04d2702039af.mp3"
+      "path": "/audio/nanami/tts_04d2702039af.mp3",
+      "synthText": "お腹が痛いです",
+      "synthSignature": "fac5eb797fe8"
     },
     "tts_7eb703e402b6": {
       "text": "おなまえは？",
@@ -4607,7 +5371,9 @@
         "おなまえは",
         "お名前は"
       ],
-      "path": "/audio/nanami/tts_7eb703e402b6.mp3"
+      "path": "/audio/nanami/tts_7eb703e402b6.mp3",
+      "synthText": "お名前は",
+      "synthSignature": "4fa122d050dd"
     },
     "tts_e3275e917a4f": {
       "text": "おのみものは？",
@@ -4622,7 +5388,9 @@
         "おのみものは",
         "お飲み物は"
       ],
-      "path": "/audio/nanami/tts_e3275e917a4f.mp3"
+      "path": "/audio/nanami/tts_e3275e917a4f.mp3",
+      "synthText": "お飲み物は",
+      "synthSignature": "ca13f7540de4"
     },
     "tts_4d5a5dccfedc": {
       "text": "カードは、つかえますか？",
@@ -4637,7 +5405,9 @@
         "カードはつかえますか",
         "カードは使えますか"
       ],
-      "path": "/audio/nanami/tts_4d5a5dccfedc.mp3"
+      "path": "/audio/nanami/tts_4d5a5dccfedc.mp3",
+      "synthText": "カードは使えますか",
+      "synthSignature": "356637548ae4"
     },
     "tts_9b50f3c802d7": {
       "text": "かいさつは、どこですか？",
@@ -4652,7 +5422,9 @@
         "かいさつはどこですか",
         "改札はどこですか"
       ],
-      "path": "/audio/nanami/tts_9b50f3c802d7.mp3"
+      "path": "/audio/nanami/tts_9b50f3c802d7.mp3",
+      "synthText": "改札はどこですか",
+      "synthSignature": "abf3edc33578"
     },
     "tts_c38feb3fad05": {
       "text": "かえだま、おねがいします",
@@ -4667,7 +5439,9 @@
         "かえだまおねがいします",
         "替え玉お願いします"
       ],
-      "path": "/audio/nanami/tts_c38feb3fad05.mp3"
+      "path": "/audio/nanami/tts_c38feb3fad05.mp3",
+      "synthText": "替え玉お願いします",
+      "synthSignature": "a9a2825648dd"
     },
     "tts_aa2db19d8e59": {
       "text": "かぎです",
@@ -4681,7 +5455,9 @@
         "かぎです",
         "鍵です"
       ],
-      "path": "/audio/nanami/tts_aa2db19d8e59.mp3"
+      "path": "/audio/nanami/tts_aa2db19d8e59.mp3",
+      "synthText": "鍵です",
+      "synthSignature": "d11061b0e210"
     },
     "tts_b5e9a15e901f": {
       "text": "かぜです",
@@ -4695,7 +5471,9 @@
         "かぜです",
         "風邪です"
       ],
-      "path": "/audio/nanami/tts_b5e9a15e901f.mp3"
+      "path": "/audio/nanami/tts_b5e9a15e901f.mp3",
+      "synthText": "風邪です",
+      "synthSignature": "273472b0625b"
     },
     "tts_4004e3bc511d": {
       "text": "からいですか？",
@@ -4710,7 +5488,9 @@
         "からいですか",
         "辛いですか"
       ],
-      "path": "/audio/nanami/tts_4004e3bc511d.mp3"
+      "path": "/audio/nanami/tts_4004e3bc511d.mp3",
+      "synthText": "辛いですか",
+      "synthSignature": "dec088af3d0e"
     },
     "tts_a4fba5f80f1a": {
       "text": "かんこうです",
@@ -4724,7 +5504,9 @@
         "かんこうです",
         "観光です"
       ],
-      "path": "/audio/nanami/tts_a4fba5f80f1a.mp3"
+      "path": "/audio/nanami/tts_a4fba5f80f1a.mp3",
+      "synthText": "観光です",
+      "synthSignature": "fef42ea50b98"
     },
     "tts_8bf0c6c4bdc4": {
       "text": "きっぷをください",
@@ -4738,7 +5520,9 @@
         "きっぷをください",
         "切符をください"
       ],
-      "path": "/audio/nanami/tts_8bf0c6c4bdc4.mp3"
+      "path": "/audio/nanami/tts_8bf0c6c4bdc4.mp3",
+      "synthText": "切符をください",
+      "synthSignature": "23164ff58bd0"
     },
     "tts_0b37f18b7e48": {
       "text": "くすりをください",
@@ -4752,7 +5536,9 @@
         "くすりをください",
         "薬をください"
       ],
-      "path": "/audio/nanami/tts_0b37f18b7e48.mp3"
+      "path": "/audio/nanami/tts_0b37f18b7e48.mp3",
+      "synthText": "薬をください",
+      "synthSignature": "bed9b95d3231"
     },
     "tts_b908eb4aaa0c": {
       "text": "げんきんで",
@@ -4766,7 +5552,9 @@
         "げんきんで",
         "現金で"
       ],
-      "path": "/audio/nanami/tts_b908eb4aaa0c.mp3"
+      "path": "/audio/nanami/tts_b908eb4aaa0c.mp3",
+      "synthText": "現金で",
+      "synthSignature": "ea5b0facc945"
     },
     "tts_7ac34be0e49d": {
       "text": "けんばいきは、どこですか？",
@@ -4781,7 +5569,9 @@
         "けんばいきはどこですか",
         "券売機はどこですか"
       ],
-      "path": "/audio/nanami/tts_7ac34be0e49d.mp3"
+      "path": "/audio/nanami/tts_7ac34be0e49d.mp3",
+      "synthText": "券売機はどこですか",
+      "synthSignature": "b6b088be010c"
     },
     "tts_ba9f429bda7f": {
       "text": "ごうけい、せんえんです。",
@@ -4796,7 +5586,9 @@
         "ごうけいせんえんです",
         "合計千円です"
       ],
-      "path": "/audio/nanami/tts_ba9f429bda7f.mp3"
+      "path": "/audio/nanami/tts_ba9f429bda7f.mp3",
+      "synthText": "合計千円です",
+      "synthSignature": "d031a5cade93"
     },
     "tts_4862b8347b88": {
       "text": "ここで、とめてください",
@@ -4811,7 +5603,9 @@
         "ここでとめてください",
         "ここで止めてください"
       ],
-      "path": "/audio/nanami/tts_4862b8347b88.mp3"
+      "path": "/audio/nanami/tts_4862b8347b88.mp3",
+      "synthText": "ここで止めてください",
+      "synthSignature": "4488135433c4"
     },
     "tts_d67afe5e4ef9": {
       "text": "ごちゅうもんは、おきまりですか？",
@@ -4826,7 +5620,9 @@
         "ごちゅうもんはおきまりですか",
         "ご注文はお決まりですか"
       ],
-      "path": "/audio/nanami/tts_d67afe5e4ef9.mp3"
+      "path": "/audio/nanami/tts_d67afe5e4ef9.mp3",
+      "synthText": "ご注文はお決まりですか",
+      "synthSignature": "755526a55780"
     },
     "tts_db63d46323db": {
       "text": "このくすりは、なんですか？",
@@ -4841,7 +5637,9 @@
         "このくすりはなんですか",
         "この薬は何ですか"
       ],
-      "path": "/audio/nanami/tts_db63d46323db.mp3"
+      "path": "/audio/nanami/tts_db63d46323db.mp3",
+      "synthText": "この薬は何ですか",
+      "synthSignature": "3503a1567fed"
     },
     "tts_54df7afd1881": {
       "text": "こまかくしてください",
@@ -4855,7 +5653,9 @@
         "こまかくしてください",
         "細かくしてください"
       ],
-      "path": "/audio/nanami/tts_54df7afd1881.mp3"
+      "path": "/audio/nanami/tts_54df7afd1881.mp3",
+      "synthText": "細かくしてください",
+      "synthSignature": "9be20e24c608"
     },
     "tts_d5d6713db93c": {
       "text": "これください",
@@ -4869,7 +5669,9 @@
         "これください",
         "これ下さい"
       ],
-      "path": "/audio/nanami/tts_d5d6713db93c.mp3"
+      "path": "/audio/nanami/tts_d5d6713db93c.mp3",
+      "synthText": "これ下さい",
+      "synthSignature": "3e2194521274"
     },
     "tts_184b2910bf0a": {
       "text": "これは、いくらですか？",
@@ -4884,7 +5686,9 @@
         "これはいくらですか"
       ],
       "reusedFrom": "kana-master:ss_1",
-      "path": "/audio/nanami/tts_184b2910bf0a.mp3"
+      "path": "/audio/nanami/tts_184b2910bf0a.mp3",
+      "synthText": "これはいくらですか",
+      "synthSignature": "1d5ba12c4ba6"
     },
     "tts_f349e263f511": {
       "text": "これを、おくりたいです",
@@ -4899,7 +5703,9 @@
         "これをおくりたいです",
         "これを送りたいです"
       ],
-      "path": "/audio/nanami/tts_f349e263f511.mp3"
+      "path": "/audio/nanami/tts_f349e263f511.mp3",
+      "synthText": "これを送りたいです",
+      "synthSignature": "28976c54ad4a"
     },
     "tts_c4ceef243a1f": {
       "text": "これをぬいてください",
@@ -4913,7 +5719,9 @@
         "これをぬいてください",
         "これを抜いてください"
       ],
-      "path": "/audio/nanami/tts_c4ceef243a1f.mp3"
+      "path": "/audio/nanami/tts_c4ceef243a1f.mp3",
+      "synthText": "これを抜いてください",
+      "synthSignature": "d81f3dc205f4"
     },
     "tts_84a47c1b126e": {
       "text": "しごとです",
@@ -4927,7 +5735,9 @@
         "しごとです",
         "仕事です"
       ],
-      "path": "/audio/nanami/tts_84a47c1b126e.mp3"
+      "path": "/audio/nanami/tts_84a47c1b126e.mp3",
+      "synthText": "仕事です",
+      "synthSignature": "d775d82e9501"
     },
     "tts_9b12e8a20156": {
       "text": "しちゃく、してもいいですか？",
@@ -4943,7 +5753,9 @@
         "試着してもいいですか"
       ],
       "reusedFrom": "kana-master:ss_3",
-      "path": "/audio/nanami/tts_9b12e8a20156.mp3"
+      "path": "/audio/nanami/tts_9b12e8a20156.mp3",
+      "synthText": "試着してもいいですか",
+      "synthSignature": "f92e1b1d4278"
     },
     "tts_1a011aee287e": {
       "text": "しゃしん、おねがいします",
@@ -4958,7 +5770,9 @@
         "しゃしんおねがいします",
         "写真お願いします"
       ],
-      "path": "/audio/nanami/tts_1a011aee287e.mp3"
+      "path": "/audio/nanami/tts_1a011aee287e.mp3",
+      "synthText": "写真お願いします",
+      "synthSignature": "5c2b8c0f6bb9"
     },
     "tts_a5fcb2940da5": {
       "text": "しゃしん、とってもいいですか？",
@@ -4973,7 +5787,9 @@
         "しゃしんとってもいいですか",
         "写真撮ってもいいですか"
       ],
-      "path": "/audio/nanami/tts_a5fcb2940da5.mp3"
+      "path": "/audio/nanami/tts_a5fcb2940da5.mp3",
+      "synthText": "写真撮ってもいいですか",
+      "synthSignature": "3235f865007a"
     },
     "tts_cbba581823f4": {
       "text": "しんじゅくえきは、どこですか？",
@@ -4988,7 +5804,9 @@
         "しんじゅくえきはどこですか",
         "新宿駅はどこですか"
       ],
-      "path": "/audio/nanami/tts_cbba581823f4.mp3"
+      "path": "/audio/nanami/tts_cbba581823f4.mp3",
+      "synthText": "新宿駅はどこですか",
+      "synthSignature": "980977debeb3"
     },
     "tts_54640dc1d65f": {
       "text": "だいじょうぶ",
@@ -5002,7 +5820,9 @@
         "だいじょうぶ",
         "大丈夫"
       ],
-      "path": "/audio/nanami/tts_54640dc1d65f.mp3"
+      "path": "/audio/nanami/tts_54640dc1d65f.mp3",
+      "synthText": "大丈夫",
+      "synthSignature": "ae2b4b4ce7a9"
     },
     "tts_8356b8d53ee4": {
       "text": "タクシー、おねがいします",
@@ -5017,7 +5837,9 @@
         "タクシーおねがいします",
         "タクシーお願いします"
       ],
-      "path": "/audio/nanami/tts_8356b8d53ee4.mp3"
+      "path": "/audio/nanami/tts_8356b8d53ee4.mp3",
+      "synthText": "タクシーお願いします",
+      "synthSignature": "064800d48454"
     },
     "tts_1546cc0f76e8": {
       "text": "たすけてください",
@@ -5032,7 +5854,9 @@
         "助けてください"
       ],
       "reusedFrom": "kana-master:emg_tasuke",
-      "path": "/audio/nanami/tts_1546cc0f76e8.mp3"
+      "path": "/audio/nanami/tts_1546cc0f76e8.mp3",
+      "synthText": "助けてください",
+      "synthSignature": "df5c65bcb399"
     },
     "tts_4d1191b33b22": {
       "text": "たっきゅうびん、おねがいします",
@@ -5047,7 +5871,9 @@
         "たっきゅうびんおねがいします",
         "宅急便お願いします"
       ],
-      "path": "/audio/nanami/tts_4d1191b33b22.mp3"
+      "path": "/audio/nanami/tts_4d1191b33b22.mp3",
+      "synthText": "宅急便お願いします",
+      "synthSignature": "9e1fecb7e0b2"
     },
     "tts_b8422219fa15": {
       "text": "チェックイン、おねがいします",
@@ -5063,7 +5889,9 @@
         "チェックインお願いします"
       ],
       "reusedFrom": "kana-master:sci_1",
-      "path": "/audio/nanami/tts_b8422219fa15.mp3"
+      "path": "/audio/nanami/tts_b8422219fa15.mp3",
+      "synthText": "チェックインお願いします",
+      "synthSignature": "9ddbd0c5f0a6"
     },
     "tts_8d4586142ea0": {
       "text": "チャージ、おねがいします",
@@ -5078,7 +5906,9 @@
         "チャージおねがいします",
         "チャージお願いします"
       ],
-      "path": "/audio/nanami/tts_8d4586142ea0.mp3"
+      "path": "/audio/nanami/tts_8d4586142ea0.mp3",
+      "synthText": "チャージお願いします",
+      "synthSignature": "ae44409f4e84"
     },
     "tts_52c2c1f647e7": {
       "text": "ちょうしょくは？",
@@ -5093,7 +5923,9 @@
         "ちょうしょくは",
         "朝食は"
       ],
-      "path": "/audio/nanami/tts_52c2c1f647e7.mp3"
+      "path": "/audio/nanami/tts_52c2c1f647e7.mp3",
+      "synthText": "朝食は",
+      "synthSignature": "7e84711a0a2b"
     },
     "tts_40283dd0d10f": {
       "text": "ちょっと、まってください",
@@ -5109,7 +5941,9 @@
         "ちょっと待ってください"
       ],
       "reusedFrom": "kana-master:s1_chotto",
-      "path": "/audio/nanami/tts_40283dd0d10f.mp3"
+      "path": "/audio/nanami/tts_40283dd0d10f.mp3",
+      "synthText": "ちょっと待ってください",
+      "synthSignature": "68c1cf1eb311"
     },
     "tts_5e97f28023cc": {
       "text": "つかいかたをおしえてください",
@@ -5123,7 +5957,9 @@
         "つかいかたをおしえてください",
         "使い方を教えてください"
       ],
-      "path": "/audio/nanami/tts_5e97f28023cc.mp3"
+      "path": "/audio/nanami/tts_5e97f28023cc.mp3",
+      "synthText": "使い方を教えてください",
+      "synthSignature": "a64ad378d99a"
     },
     "tts_26a559241e04": {
       "text": "つぎのえきで、のりかえてください",
@@ -5138,7 +5974,9 @@
         "つぎのえきでのりかえてください",
         "次の駅で乗り換えてください"
       ],
-      "path": "/audio/nanami/tts_26a559241e04.mp3"
+      "path": "/audio/nanami/tts_26a559241e04.mp3",
+      "synthText": "次の駅で乗り換えてください",
+      "synthSignature": "49d8fd19405a"
     },
     "tts_e466ccd38274": {
       "text": "つぎは、しぶやですか？",
@@ -5153,7 +5991,9 @@
         "つぎはしぶやですか",
         "次は渋谷ですか"
       ],
-      "path": "/audio/nanami/tts_e466ccd38274.mp3"
+      "path": "/audio/nanami/tts_e466ccd38274.mp3",
+      "synthText": "次は渋谷ですか",
+      "synthSignature": "a08cb3114042"
     },
     "tts_11085928d967": {
       "text": "どこに、とまりますか？",
@@ -5168,7 +6008,9 @@
         "どこにとまりますか",
         "どこに泊まりますか"
       ],
-      "path": "/audio/nanami/tts_11085928d967.mp3"
+      "path": "/audio/nanami/tts_11085928d967.mp3",
+      "synthText": "どこに泊まりますか",
+      "synthSignature": "c87535a1aa72"
     },
     "tts_2f9d7ae96a77": {
       "text": "なんばんせんですか？",
@@ -5183,7 +6025,9 @@
         "なんばんせんですか",
         "何番線ですか"
       ],
-      "path": "/audio/nanami/tts_2f9d7ae96a77.mp3"
+      "path": "/audio/nanami/tts_2f9d7ae96a77.mp3",
+      "synthText": "何番線ですか",
+      "synthSignature": "8ff47e34e9f1"
     },
     "tts_e0bca0bec72f": {
       "text": "なんめいさまですか？",
@@ -5198,7 +6042,9 @@
         "なんめいさまですか",
         "何名様ですか"
       ],
-      "path": "/audio/nanami/tts_e0bca0bec72f.mp3"
+      "path": "/audio/nanami/tts_e0bca0bec72f.mp3",
+      "synthText": "何名様ですか",
+      "synthSignature": "ea2b3107562b"
     },
     "tts_b11e9da800cf": {
       "text": "はしは、いりますか？",
@@ -5213,7 +6059,9 @@
         "はしはいりますか",
         "箸は要りますか"
       ],
-      "path": "/audio/nanami/tts_b11e9da800cf.mp3"
+      "path": "/audio/nanami/tts_b11e9da800cf.mp3",
+      "synthText": "箸は要りますか",
+      "synthSignature": "371ee4978bf2"
     },
     "tts_c2dbfdd662e2": {
       "text": "はしをください",
@@ -5227,7 +6075,9 @@
         "はしをください",
         "箸をください"
       ],
-      "path": "/audio/nanami/tts_c2dbfdd662e2.mp3"
+      "path": "/audio/nanami/tts_c2dbfdd662e2.mp3",
+      "synthText": "箸をください",
+      "synthSignature": "710d02f7667b"
     },
     "tts_e67240d955f5": {
       "text": "パスポート、おねがいします",
@@ -5242,7 +6092,9 @@
         "パスポートおねがいします",
         "パスポートお願いします"
       ],
-      "path": "/audio/nanami/tts_e67240d955f5.mp3"
+      "path": "/audio/nanami/tts_e67240d955f5.mp3",
+      "synthText": "パスポートお願いします",
+      "synthSignature": "60003641cefe"
     },
     "tts_413fc1a0db9e": {
       "text": "ひとつください",
@@ -5257,7 +6109,9 @@
         "一つください"
       ],
       "reusedFrom": "kana-master:res_hitotsu",
-      "path": "/audio/nanami/tts_413fc1a0db9e.mp3"
+      "path": "/audio/nanami/tts_413fc1a0db9e.mp3",
+      "synthText": "一つください",
+      "synthSignature": "dc2dda67d9dc"
     },
     "tts_667fb57c2401": {
       "text": "ひとりです",
@@ -5271,7 +6125,9 @@
         "ひとりです",
         "一人です"
       ],
-      "path": "/audio/nanami/tts_667fb57c2401.mp3"
+      "path": "/audio/nanami/tts_667fb57c2401.mp3",
+      "synthText": "一人です",
+      "synthSignature": "6b9aae95e12c"
     },
     "tts_6b5cc830234d": {
       "text": "ふくろは、いりますか？",
@@ -5286,7 +6142,9 @@
         "ふくろはいりますか",
         "袋は要りますか"
       ],
-      "path": "/audio/nanami/tts_6b5cc830234d.mp3"
+      "path": "/audio/nanami/tts_6b5cc830234d.mp3",
+      "synthText": "袋は要りますか",
+      "synthSignature": "d5410805075c"
     },
     "tts_b64e8eed48d9": {
       "text": "ふくろはいりません",
@@ -5300,7 +6158,9 @@
         "ふくろはいりません",
         "袋は要りません"
       ],
-      "path": "/audio/nanami/tts_b64e8eed48d9.mp3"
+      "path": "/audio/nanami/tts_b64e8eed48d9.mp3",
+      "synthText": "袋は要りません",
+      "synthSignature": "2b55802152b7"
     },
     "tts_35d8c77df121": {
       "text": "ふたつください",
@@ -5314,7 +6174,9 @@
         "ふたつください",
         "二つください"
       ],
-      "path": "/audio/nanami/tts_35d8c77df121.mp3"
+      "path": "/audio/nanami/tts_35d8c77df121.mp3",
+      "synthText": "二つください",
+      "synthSignature": "94379bf7486d"
     },
     "tts_7ae4c6298918": {
       "text": "ふたりです",
@@ -5329,7 +6191,9 @@
         "二人です"
       ],
       "reusedFrom": "kana-master:res_futari",
-      "path": "/audio/nanami/tts_7ae4c6298918.mp3"
+      "path": "/audio/nanami/tts_7ae4c6298918.mp3",
+      "synthText": "二人です",
+      "synthSignature": "52b9b3d33f6b"
     },
     "tts_7a40827a2c89": {
       "text": "べつべつで",
@@ -5343,7 +6207,9 @@
         "べつべつで",
         "別々で"
       ],
-      "path": "/audio/nanami/tts_7a40827a2c89.mp3"
+      "path": "/audio/nanami/tts_7a40827a2c89.mp3",
+      "synthText": "別々で",
+      "synthSignature": "5c37889d2782"
     },
     "tts_305d469154df": {
       "text": "へやは、どこですか？",
@@ -5358,7 +6224,9 @@
         "へやはどこですか",
         "部屋はどこですか"
       ],
-      "path": "/audio/nanami/tts_305d469154df.mp3"
+      "path": "/audio/nanami/tts_305d469154df.mp3",
+      "synthText": "部屋はどこですか",
+      "synthSignature": "6570ce79535e"
     },
     "tts_03581d472f33": {
       "text": "ポイントカードは、ありますか？",
@@ -5372,7 +6240,9 @@
         "ポイントカードは、ありますか？",
         "ポイントカードはありますか"
       ],
-      "path": "/audio/nanami/tts_03581d472f33.mp3"
+      "path": "/audio/nanami/tts_03581d472f33.mp3",
+      "synthText": "ポイントカードはありますか",
+      "synthSignature": "30866b6e6738"
     },
     "tts_696fd8563f94": {
       "text": "までおねがいします",
@@ -5387,7 +6257,9 @@
         "までお願いします"
       ],
       "reusedFrom": "kana-master:dir_made",
-      "path": "/audio/nanami/tts_696fd8563f94.mp3"
+      "path": "/audio/nanami/tts_696fd8563f94.mp3",
+      "synthText": "までお願いします",
+      "synthSignature": "abd710d79450"
     },
     "tts_c8f566cdc6e6": {
       "text": "みずをください",
@@ -5401,7 +6273,9 @@
         "みずをください",
         "水をください"
       ],
-      "path": "/audio/nanami/tts_c8f566cdc6e6.mp3"
+      "path": "/audio/nanami/tts_c8f566cdc6e6.mp3",
+      "synthText": "水をください",
+      "synthSignature": "0e3b8742585d"
     },
     "tts_f954674c5406": {
       "text": "みちをおしえてください",
@@ -5415,7 +6289,9 @@
         "みちをおしえてください",
         "道を教えてください"
       ],
-      "path": "/audio/nanami/tts_f954674c5406.mp3"
+      "path": "/audio/nanami/tts_f954674c5406.mp3",
+      "synthText": "道を教えてください",
+      "synthSignature": "9358f7d72142"
     },
     "tts_7f219a01b0ac": {
       "text": "みっかです",
@@ -5429,7 +6305,9 @@
         "みっかです",
         "三日です"
       ],
-      "path": "/audio/nanami/tts_7f219a01b0ac.mp3"
+      "path": "/audio/nanami/tts_7f219a01b0ac.mp3",
+      "synthText": "三日です",
+      "synthSignature": "36bdd005b9e1"
     },
     "tts_aa0295460798": {
       "text": "メニューを、みせてください",
@@ -5444,7 +6322,9 @@
         "メニューをみせてください",
         "メニューを見せてください"
       ],
-      "path": "/audio/nanami/tts_aa0295460798.mp3"
+      "path": "/audio/nanami/tts_aa0295460798.mp3",
+      "synthText": "メニューを見せてください",
+      "synthSignature": "3467a5f0ac75"
     },
     "tts_6cdbec1c4b2b": {
       "text": "めんぜい、できますか？",
@@ -5459,7 +6339,9 @@
         "めんぜいできますか",
         "免税できますか"
       ],
-      "path": "/audio/nanami/tts_6cdbec1c4b2b.mp3"
+      "path": "/audio/nanami/tts_6cdbec1c4b2b.mp3",
+      "synthText": "免税できますか",
+      "synthSignature": "5dd35c804dad"
     },
     "tts_f021225d38e4": {
       "text": "もういちど、おねがいします",
@@ -5475,7 +6357,9 @@
         "もう一度お願いします"
       ],
       "reusedFrom": "kana-master:sph_2",
-      "path": "/audio/nanami/tts_f021225d38e4.mp3"
+      "path": "/audio/nanami/tts_f021225d38e4.mp3",
+      "synthText": "もう一度お願いします",
+      "synthSignature": "b2da663fa493"
     },
     "tts_a2352f91e4bd": {
       "text": "やさしいにほんごで、おねがいします",
@@ -5490,7 +6374,9 @@
         "やさしいにほんごでおねがいします",
         "やさしい日本語でお願いします"
       ],
-      "path": "/audio/nanami/tts_a2352f91e4bd.mp3"
+      "path": "/audio/nanami/tts_a2352f91e4bd.mp3",
+      "synthText": "やさしい日本語でお願いします",
+      "synthSignature": "e0682d53f12c"
     },
     "tts_1c95b34b5b39": {
       "text": "ゆっくり、おねがいします",
@@ -5505,7 +6391,9 @@
         "ゆっくりおねがいします",
         "ゆっくりお願いします"
       ],
-      "path": "/audio/nanami/tts_1c95b34b5b39.mp3"
+      "path": "/audio/nanami/tts_1c95b34b5b39.mp3",
+      "synthText": "ゆっくりお願いします",
+      "synthSignature": "d77375c29e80"
     },
     "tts_958d7a5f3eec": {
       "text": "よやくしています",
@@ -5519,7 +6407,9 @@
         "よやくしています",
         "予約しています"
       ],
-      "path": "/audio/nanami/tts_958d7a5f3eec.mp3"
+      "path": "/audio/nanami/tts_958d7a5f3eec.mp3",
+      "synthText": "予約しています",
+      "synthSignature": "f83f81f32e87"
     },
     "tts_e0a453ace596": {
       "text": "りょうがえ、おねがいします",
@@ -5534,7 +6424,9 @@
         "りょうがえおねがいします",
         "両替お願いします"
       ],
-      "path": "/audio/nanami/tts_e0a453ace596.mp3"
+      "path": "/audio/nanami/tts_e0a453ace596.mp3",
+      "synthText": "両替お願いします",
+      "synthSignature": "ff7402d5ac44"
     },
     "tts_e984ebbc6809": {
       "text": "りょうしゅうしょをください",
@@ -5549,7 +6441,9 @@
         "領収書をください"
       ],
       "reusedFrom": "kana-master:stx_7",
-      "path": "/audio/nanami/tts_e984ebbc6809.mp3"
+      "path": "/audio/nanami/tts_e984ebbc6809.mp3",
+      "synthText": "領収書をください",
+      "synthSignature": "263af1bb9bff"
     },
     "tts_c1a83434bff9": {
       "text": "ワイファイは、ありますか？",
@@ -5565,7 +6459,9 @@
         "Wi-Fiはありますか"
       ],
       "reusedFrom": "kana-master:cafe_wifi",
-      "path": "/audio/nanami/tts_c1a83434bff9.mp3"
+      "path": "/audio/nanami/tts_c1a83434bff9.mp3",
+      "synthText": "Wi-Fiはありますか",
+      "synthSignature": "2e448fbca70a"
     },
     "tts_e373802575c2": {
       "text": "わかりました",
@@ -5580,7 +6476,9 @@
         "分かりました"
       ],
       "reusedFrom": "kana-master:w1_wakarimashita",
-      "path": "/audio/nanami/tts_e373802575c2.mp3"
+      "path": "/audio/nanami/tts_e373802575c2.mp3",
+      "synthText": "分かりました",
+      "synthSignature": "d4937611ebaf"
     },
     "tts_6dcfc9b79bdb": {
       "text": "わかりません",
@@ -5595,7 +6493,9 @@
         "分かりません"
       ],
       "reusedFrom": "kana-master:par_wakaranai",
-      "path": "/audio/nanami/tts_6dcfc9b79bdb.mp3"
+      "path": "/audio/nanami/tts_6dcfc9b79bdb.mp3",
+      "synthText": "分かりません",
+      "synthSignature": "c11a4f6df30b"
     },
     "tts_befde6ff346a": {
       "text": "いちまんえん",
@@ -5609,7 +6509,9 @@
         "いちまんえん",
         "一万円"
       ],
-      "path": "/audio/nanami/tts_befde6ff346a.mp3"
+      "path": "/audio/nanami/tts_befde6ff346a.mp3",
+      "synthText": "一万円",
+      "synthSignature": "637a68b7fc17"
     },
     "tts_1f819272ac2b": {
       "text": "えき",
@@ -5624,7 +6526,9 @@
         "駅"
       ],
       "reusedFrom": "kana-master:tr_eki",
-      "path": "/audio/nanami/tts_1f819272ac2b.mp3"
+      "path": "/audio/nanami/tts_1f819272ac2b.mp3",
+      "synthText": "駅",
+      "synthSignature": "440405608188"
     },
     "tts_eab3d932d73e": {
       "text": "おねがいします",
@@ -5639,7 +6543,9 @@
         "お願いします"
       ],
       "reusedFrom": "kana-master:gr_onegai",
-      "path": "/audio/nanami/tts_eab3d932d73e.mp3"
+      "path": "/audio/nanami/tts_eab3d932d73e.mp3",
+      "synthText": "お願いします",
+      "synthSignature": "001003ca779e"
     },
     "tts_ccc8768f787a": {
       "text": "かいさつ",
@@ -5653,7 +6559,9 @@
         "かいさつ",
         "改札"
       ],
-      "path": "/audio/nanami/tts_ccc8768f787a.mp3"
+      "path": "/audio/nanami/tts_ccc8768f787a.mp3",
+      "synthText": "改札",
+      "synthSignature": "77d3623e2b8a"
     },
     "tts_635a52a3cb17": {
       "text": "きっぷ",
@@ -5668,7 +6576,9 @@
         "切符"
       ],
       "reusedFrom": "kana-master:td_kippu",
-      "path": "/audio/nanami/tts_635a52a3cb17.mp3"
+      "path": "/audio/nanami/tts_635a52a3cb17.mp3",
+      "synthText": "切符",
+      "synthSignature": "c4c9c68fa723"
     },
     "tts_0a9df535248b": {
       "text": "ごせんえん",
@@ -5682,7 +6592,9 @@
         "ごせんえん",
         "五千円"
       ],
-      "path": "/audio/nanami/tts_0a9df535248b.mp3"
+      "path": "/audio/nanami/tts_0a9df535248b.mp3",
+      "synthText": "五千円",
+      "synthSignature": "79814be22090"
     },
     "tts_b5b5e1a7a83e": {
       "text": "ごひゃくえん",
@@ -5696,7 +6608,9 @@
         "ごひゃくえん",
         "五百円"
       ],
-      "path": "/audio/nanami/tts_b5b5e1a7a83e.mp3"
+      "path": "/audio/nanami/tts_b5b5e1a7a83e.mp3",
+      "synthText": "五百円",
+      "synthSignature": "e8765ccb9314"
     },
     "tts_138b1161d515": {
       "text": "これでおねがいします",
@@ -5710,7 +6624,9 @@
         "これでおねがいします",
         "これでお願いします"
       ],
-      "path": "/audio/nanami/tts_138b1161d515.mp3"
+      "path": "/audio/nanami/tts_138b1161d515.mp3",
+      "synthText": "これでお願いします",
+      "synthSignature": "61706b6c1cf2"
     },
     "tts_8a4823cfe522": {
       "text": "せんえん",
@@ -5724,7 +6640,9 @@
         "せんえん",
         "千円"
       ],
-      "path": "/audio/nanami/tts_8a4823cfe522.mp3"
+      "path": "/audio/nanami/tts_8a4823cfe522.mp3",
+      "synthText": "千円",
+      "synthSignature": "2bff62bace74"
     },
     "tts_bf20af317908": {
       "text": "だいじょうぶです",
@@ -5739,7 +6657,9 @@
         "大丈夫です"
       ],
       "reusedFrom": "kana-master:w1_daijoubu",
-      "path": "/audio/nanami/tts_bf20af317908.mp3"
+      "path": "/audio/nanami/tts_bf20af317908.mp3",
+      "synthText": "大丈夫です",
+      "synthSignature": "63d927523ddf"
     },
     "tts_51b6202eee41": {
       "text": "たべます",
@@ -5753,7 +6673,9 @@
         "たべます",
         "食べます"
       ],
-      "path": "/audio/nanami/tts_51b6202eee41.mp3"
+      "path": "/audio/nanami/tts_51b6202eee41.mp3",
+      "synthText": "食べます",
+      "synthSignature": "0b055811d9b4"
     },
     "tts_119d14bc8e17": {
       "text": "にせんえん",
@@ -5767,7 +6689,9 @@
         "にせんえん",
         "二千円"
       ],
-      "path": "/audio/nanami/tts_119d14bc8e17.mp3"
+      "path": "/audio/nanami/tts_119d14bc8e17.mp3",
+      "synthText": "二千円",
+      "synthSignature": "89ae698dfa48"
     },
     "tts_db8abbce5b0b": {
       "text": "ひゃくえん",
@@ -5781,7 +6705,9 @@
         "ひゃくえん",
         "百円"
       ],
-      "path": "/audio/nanami/tts_db8abbce5b0b.mp3"
+      "path": "/audio/nanami/tts_db8abbce5b0b.mp3",
+      "synthText": "百円",
+      "synthSignature": "9a1cfa3bb1e0"
     },
     "tts_f2f25ae7dce8": {
       "text": "もうだいじょうぶです",
@@ -5795,7 +6721,9 @@
         "もうだいじょうぶです",
         "もう大丈夫です"
       ],
-      "path": "/audio/nanami/tts_f2f25ae7dce8.mp3"
+      "path": "/audio/nanami/tts_f2f25ae7dce8.mp3",
+      "synthText": "もう大丈夫です",
+      "synthSignature": "595312a50466"
     },
     "tts_2edf9cf768e3": {
       "text": "わかりました、ありがとうございます",
@@ -5810,7 +6738,9 @@
         "わかりましたありがとうございます",
         "分かりました、ありがとうございます"
       ],
-      "path": "/audio/nanami/tts_2edf9cf768e3.mp3"
+      "path": "/audio/nanami/tts_2edf9cf768e3.mp3",
+      "synthText": "分かりました、ありがとうございます",
+      "synthSignature": "0702941f50f3"
     }
   },
   "textIndex": {
@@ -6058,7 +6988,7 @@
     "そうです": "tts_f7df6ac2474a",
     "ちょっと": "tts_f7b0201b3f0e",
     "ほしいです": "tts_97a411a26ee3",
-    "乗り換え": "tts_455ec8daabaa",
+    "乗り換え": "tts_015adc4a3380",
     "あしもとちゅうい": "tts_53b75a47175a",
     "あたたかい": "tts_2aaaffaf75b8",
     "あまくち": "tts_f966cf45097b",
@@ -6110,7 +7040,7 @@
     "とっきゅう": "tts_4c80d67f1adb",
     "にしぐち": "tts_883518371afb",
     "のみほうだい": "tts_f13952ac0063",
-    "のりかえ": "tts_455ec8daabaa",
+    "のりかえ": "tts_015adc4a3380",
     "のりば": "tts_b1172e31d4d0",
     "ばいてん": "tts_cb365f543bc8",
     "はんがく": "tts_d84accc4d4cc",
@@ -6185,14 +7115,12 @@
     "立入禁止": "tts_0f887d746198",
     "両替": "tts_0b87bc8eea28",
     "冷たい": "tts_e546e7d633e6",
-    "あたためてください": "tts_cfa65d3cfe88",
     "温めてください": "tts_cfa65d3cfe88",
     "アレルギーがあります": "tts_953ff70fbc08",
     "いくらですか": "tts_201c28585903",
     "おかいけい、おねがいします": "tts_8a2b78d90fcd",
     "おかいけいおねがいします": "tts_8a2b78d90fcd",
     "お会計お願いします": "tts_8a2b78d90fcd",
-    "おすすめは、なんですか？": "tts_0a3684212954",
     "おすすめはなんですか": "tts_0a3684212954",
     "お勧めは何ですか": "tts_0a3684212954",
     "コインロッカーはどこですか": "tts_df5c2a6b5120",
@@ -6202,12 +7130,10 @@
     "しちゃくしてもいいですか": "tts_9b12e8a20156",
     "試着してもいいですか": "tts_9b12e8a20156",
     "たいざいは": "tts_274595ef5da3",
-    "たすけてください": "tts_1546cc0f76e8",
     "助けてください": "tts_1546cc0f76e8",
     "チェックイン、おねがいします": "tts_b8422219fa15",
     "チェックインおねがいします": "tts_b8422219fa15",
     "チェックインお願いします": "tts_b8422219fa15",
-    "ちょっと、まってください": "tts_40283dd0d10f",
     "ちょっとまってください": "tts_40283dd0d10f",
     "ちょっと待ってください": "tts_40283dd0d10f",
     "トイレはどこですか": "tts_cefcb6266096",
@@ -6216,11 +7142,8 @@
     "どこまでですか": "tts_2812f9721cb7",
     "どちらですか": "tts_89d6e45b8498",
     "パスポートはこちらです": "tts_e06edf599f89",
-    "ひとつください": "tts_413fc1a0db9e",
     "一つください": "tts_413fc1a0db9e",
-    "ふたりです": "tts_7ae4c6298918",
     "二人です": "tts_7ae4c6298918",
-    "までおねがいします": "tts_696fd8563f94",
     "までお願いします": "tts_696fd8563f94",
     "もういちど、おねがいします": "tts_f021225d38e4",
     "もういちどおねがいします": "tts_f021225d38e4",
@@ -6228,208 +7151,215 @@
     "もくてきは": "tts_0b46aa740d09",
     "りょうしゅうしょをください": "tts_e984ebbc6809",
     "領収書をください": "tts_e984ebbc6809",
-    "ワイファイは、ありますか？": "tts_c1a83434bff9",
     "ワイファイはありますか": "tts_c1a83434bff9",
     "Wi-Fiはありますか": "tts_c1a83434bff9",
-    "わかりました": "tts_e373802575c2",
     "分かりました": "tts_e373802575c2",
-    "わかりません": "tts_6dcfc9b79bdb",
     "分かりません": "tts_6dcfc9b79bdb",
-    "えき": "tts_1f819272ac2b",
     "駅": "tts_1f819272ac2b",
-    "おねがいします": "tts_eab3d932d73e",
     "お願いします": "tts_eab3d932d73e",
-    "きっぷ": "tts_635a52a3cb17",
     "切符": "tts_635a52a3cb17",
-    "だいじょうぶです": "tts_bf20af317908",
     "大丈夫です": "tts_bf20af317908",
-    "あたためますか？": "tts_a127fe9a0aca",
     "あたためますか": "tts_a127fe9a0aca",
     "温めますか": "tts_a127fe9a0aca",
-    "あたまが、いたいです": "tts_d9309e5d6186",
     "あたまがいたいです": "tts_d9309e5d6186",
     "頭が痛いです": "tts_d9309e5d6186",
-    "いっしゅうかんです": "tts_ab600f5cfa60",
     "一週間です": "tts_ab600f5cfa60",
-    "いりません": "tts_f4500e268d48",
     "要りません": "tts_f4500e268d48",
-    "えいごで、だいじょうぶですか？": "tts_602992b00d21",
     "えいごでだいじょうぶですか": "tts_602992b00d21",
     "英語で大丈夫ですか": "tts_602992b00d21",
-    "おおもり、できますか？": "tts_cae176c04f5f",
     "おおもりできますか": "tts_cae176c04f5f",
     "大盛りできますか": "tts_cae176c04f5f",
-    "おしはらいほうほうは？": "tts_4e07437ae2a7",
     "おしはらいほうほうは": "tts_4e07437ae2a7",
     "お支払い方法は": "tts_4e07437ae2a7",
-    "おなかが、いたいです": "tts_04d2702039af",
     "おなかがいたいです": "tts_04d2702039af",
     "お腹が痛いです": "tts_04d2702039af",
-    "おなまえは？": "tts_7eb703e402b6",
     "おなまえは": "tts_7eb703e402b6",
     "お名前は": "tts_7eb703e402b6",
-    "おのみものは？": "tts_e3275e917a4f",
     "おのみものは": "tts_e3275e917a4f",
     "お飲み物は": "tts_e3275e917a4f",
-    "カードは、つかえますか？": "tts_4d5a5dccfedc",
     "カードはつかえますか": "tts_4d5a5dccfedc",
     "カードは使えますか": "tts_4d5a5dccfedc",
-    "かいさつは、どこですか？": "tts_9b50f3c802d7",
     "かいさつはどこですか": "tts_9b50f3c802d7",
     "改札はどこですか": "tts_9b50f3c802d7",
-    "かえだま、おねがいします": "tts_c38feb3fad05",
     "かえだまおねがいします": "tts_c38feb3fad05",
     "替え玉お願いします": "tts_c38feb3fad05",
-    "かぎです": "tts_aa2db19d8e59",
     "鍵です": "tts_aa2db19d8e59",
-    "かぜです": "tts_b5e9a15e901f",
     "風邪です": "tts_b5e9a15e901f",
-    "からいですか？": "tts_4004e3bc511d",
     "からいですか": "tts_4004e3bc511d",
     "辛いですか": "tts_4004e3bc511d",
-    "かんこうです": "tts_a4fba5f80f1a",
     "観光です": "tts_a4fba5f80f1a",
-    "きっぷをください": "tts_8bf0c6c4bdc4",
     "切符をください": "tts_8bf0c6c4bdc4",
-    "くすりをください": "tts_0b37f18b7e48",
     "薬をください": "tts_0b37f18b7e48",
-    "げんきんで": "tts_b908eb4aaa0c",
     "現金で": "tts_b908eb4aaa0c",
-    "けんばいきは、どこですか？": "tts_7ac34be0e49d",
     "けんばいきはどこですか": "tts_7ac34be0e49d",
     "券売機はどこですか": "tts_7ac34be0e49d",
-    "ごうけい、せんえんです。": "tts_ba9f429bda7f",
     "ごうけいせんえんです": "tts_ba9f429bda7f",
     "合計千円です": "tts_ba9f429bda7f",
-    "ここで、とめてください": "tts_4862b8347b88",
     "ここでとめてください": "tts_4862b8347b88",
     "ここで止めてください": "tts_4862b8347b88",
-    "ごちゅうもんは、おきまりですか？": "tts_d67afe5e4ef9",
     "ごちゅうもんはおきまりですか": "tts_d67afe5e4ef9",
     "ご注文はお決まりですか": "tts_d67afe5e4ef9",
-    "このくすりは、なんですか？": "tts_db63d46323db",
     "このくすりはなんですか": "tts_db63d46323db",
     "この薬は何ですか": "tts_db63d46323db",
-    "こまかくしてください": "tts_54df7afd1881",
     "細かくしてください": "tts_54df7afd1881",
-    "これください": "tts_d5d6713db93c",
     "これ下さい": "tts_d5d6713db93c",
-    "これを、おくりたいです": "tts_f349e263f511",
     "これをおくりたいです": "tts_f349e263f511",
     "これを送りたいです": "tts_f349e263f511",
-    "これをぬいてください": "tts_c4ceef243a1f",
     "これを抜いてください": "tts_c4ceef243a1f",
-    "しごとです": "tts_84a47c1b126e",
     "仕事です": "tts_84a47c1b126e",
-    "しゃしん、おねがいします": "tts_1a011aee287e",
     "しゃしんおねがいします": "tts_1a011aee287e",
     "写真お願いします": "tts_1a011aee287e",
-    "しゃしん、とってもいいですか？": "tts_a5fcb2940da5",
     "しゃしんとってもいいですか": "tts_a5fcb2940da5",
     "写真撮ってもいいですか": "tts_a5fcb2940da5",
-    "しんじゅくえきは、どこですか？": "tts_cbba581823f4",
     "しんじゅくえきはどこですか": "tts_cbba581823f4",
     "新宿駅はどこですか": "tts_cbba581823f4",
-    "だいじょうぶ": "tts_54640dc1d65f",
     "大丈夫": "tts_54640dc1d65f",
-    "タクシー、おねがいします": "tts_8356b8d53ee4",
     "タクシーおねがいします": "tts_8356b8d53ee4",
     "タクシーお願いします": "tts_8356b8d53ee4",
-    "たっきゅうびん、おねがいします": "tts_4d1191b33b22",
     "たっきゅうびんおねがいします": "tts_4d1191b33b22",
     "宅急便お願いします": "tts_4d1191b33b22",
-    "チャージ、おねがいします": "tts_8d4586142ea0",
     "チャージおねがいします": "tts_8d4586142ea0",
     "チャージお願いします": "tts_8d4586142ea0",
-    "ちょうしょくは？": "tts_52c2c1f647e7",
     "ちょうしょくは": "tts_52c2c1f647e7",
     "朝食は": "tts_52c2c1f647e7",
-    "つかいかたをおしえてください": "tts_5e97f28023cc",
     "使い方を教えてください": "tts_5e97f28023cc",
-    "つぎのえきで、のりかえてください": "tts_26a559241e04",
     "つぎのえきでのりかえてください": "tts_26a559241e04",
     "次の駅で乗り換えてください": "tts_26a559241e04",
-    "つぎは、しぶやですか？": "tts_e466ccd38274",
     "つぎはしぶやですか": "tts_e466ccd38274",
     "次は渋谷ですか": "tts_e466ccd38274",
-    "どこに、とまりますか？": "tts_11085928d967",
     "どこにとまりますか": "tts_11085928d967",
     "どこに泊まりますか": "tts_11085928d967",
-    "なんばんせんですか？": "tts_2f9d7ae96a77",
     "なんばんせんですか": "tts_2f9d7ae96a77",
     "何番線ですか": "tts_2f9d7ae96a77",
-    "なんめいさまですか？": "tts_e0bca0bec72f",
     "なんめいさまですか": "tts_e0bca0bec72f",
     "何名様ですか": "tts_e0bca0bec72f",
-    "はしは、いりますか？": "tts_b11e9da800cf",
     "はしはいりますか": "tts_b11e9da800cf",
     "箸は要りますか": "tts_b11e9da800cf",
-    "はしをください": "tts_c2dbfdd662e2",
     "箸をください": "tts_c2dbfdd662e2",
-    "パスポート、おねがいします": "tts_e67240d955f5",
     "パスポートおねがいします": "tts_e67240d955f5",
     "パスポートお願いします": "tts_e67240d955f5",
-    "ひとりです": "tts_667fb57c2401",
     "一人です": "tts_667fb57c2401",
-    "ふくろは、いりますか？": "tts_6b5cc830234d",
     "ふくろはいりますか": "tts_6b5cc830234d",
     "袋は要りますか": "tts_6b5cc830234d",
-    "ふくろはいりません": "tts_b64e8eed48d9",
     "袋は要りません": "tts_b64e8eed48d9",
-    "ふたつください": "tts_35d8c77df121",
     "二つください": "tts_35d8c77df121",
-    "べつべつで": "tts_7a40827a2c89",
     "別々で": "tts_7a40827a2c89",
-    "へやは、どこですか？": "tts_305d469154df",
     "へやはどこですか": "tts_305d469154df",
     "部屋はどこですか": "tts_305d469154df",
-    "ポイントカードは、ありますか？": "tts_03581d472f33",
     "ポイントカードはありますか": "tts_03581d472f33",
-    "みずをください": "tts_c8f566cdc6e6",
     "水をください": "tts_c8f566cdc6e6",
-    "みちをおしえてください": "tts_f954674c5406",
     "道を教えてください": "tts_f954674c5406",
-    "みっかです": "tts_7f219a01b0ac",
     "三日です": "tts_7f219a01b0ac",
-    "メニューを、みせてください": "tts_aa0295460798",
     "メニューをみせてください": "tts_aa0295460798",
     "メニューを見せてください": "tts_aa0295460798",
-    "めんぜい、できますか？": "tts_6cdbec1c4b2b",
     "めんぜいできますか": "tts_6cdbec1c4b2b",
     "免税できますか": "tts_6cdbec1c4b2b",
-    "やさしいにほんごで、おねがいします": "tts_a2352f91e4bd",
     "やさしいにほんごでおねがいします": "tts_a2352f91e4bd",
     "やさしい日本語でお願いします": "tts_a2352f91e4bd",
-    "ゆっくり、おねがいします": "tts_1c95b34b5b39",
     "ゆっくりおねがいします": "tts_1c95b34b5b39",
     "ゆっくりお願いします": "tts_1c95b34b5b39",
-    "よやくしています": "tts_958d7a5f3eec",
     "予約しています": "tts_958d7a5f3eec",
-    "りょうがえ、おねがいします": "tts_e0a453ace596",
     "りょうがえおねがいします": "tts_e0a453ace596",
     "両替お願いします": "tts_e0a453ace596",
-    "いちまんえん": "tts_befde6ff346a",
     "一万円": "tts_befde6ff346a",
-    "かいさつ": "tts_ccc8768f787a",
     "改札": "tts_ccc8768f787a",
-    "ごせんえん": "tts_0a9df535248b",
     "五千円": "tts_0a9df535248b",
-    "ごひゃくえん": "tts_b5b5e1a7a83e",
     "五百円": "tts_b5b5e1a7a83e",
-    "これでおねがいします": "tts_138b1161d515",
     "これでお願いします": "tts_138b1161d515",
-    "せんえん": "tts_8a4823cfe522",
     "千円": "tts_8a4823cfe522",
-    "たべます": "tts_51b6202eee41",
     "食べます": "tts_51b6202eee41",
-    "にせんえん": "tts_119d14bc8e17",
     "二千円": "tts_119d14bc8e17",
-    "ひゃくえん": "tts_db8abbce5b0b",
     "百円": "tts_db8abbce5b0b",
-    "もうだいじょうぶです": "tts_f2f25ae7dce8",
     "もう大丈夫です": "tts_f2f25ae7dce8",
-    "わかりました、ありがとうございます": "tts_2edf9cf768e3",
     "わかりましたありがとうございます": "tts_2edf9cf768e3",
-    "分かりました、ありがとうございます": "tts_2edf9cf768e3"
+    "分かりました、ありがとうございます": "tts_2edf9cf768e3",
+    "あたためますか？": "tts_a127fe9a0aca",
+    "あたまが、いたいです": "tts_d9309e5d6186",
+    "いっしゅうかんです": "tts_ab600f5cfa60",
+    "いりません": "tts_f4500e268d48",
+    "えいごで、だいじょうぶですか？": "tts_602992b00d21",
+    "おおもり、できますか？": "tts_cae176c04f5f",
+    "おしはらいほうほうは？": "tts_4e07437ae2a7",
+    "おすすめは、なんですか？": "tts_0a3684212954",
+    "おなかが、いたいです": "tts_04d2702039af",
+    "おなまえは？": "tts_7eb703e402b6",
+    "おのみものは？": "tts_e3275e917a4f",
+    "カードは、つかえますか？": "tts_4d5a5dccfedc",
+    "かいさつは、どこですか？": "tts_9b50f3c802d7",
+    "かえだま、おねがいします": "tts_c38feb3fad05",
+    "かぎです": "tts_aa2db19d8e59",
+    "かぜです": "tts_b5e9a15e901f",
+    "からいですか？": "tts_4004e3bc511d",
+    "かんこうです": "tts_a4fba5f80f1a",
+    "きっぷをください": "tts_8bf0c6c4bdc4",
+    "くすりをください": "tts_0b37f18b7e48",
+    "げんきんで": "tts_b908eb4aaa0c",
+    "けんばいきは、どこですか？": "tts_7ac34be0e49d",
+    "ごうけい、せんえんです。": "tts_ba9f429bda7f",
+    "ここで、とめてください": "tts_4862b8347b88",
+    "ごちゅうもんは、おきまりですか？": "tts_d67afe5e4ef9",
+    "このくすりは、なんですか？": "tts_db63d46323db",
+    "こまかくしてください": "tts_54df7afd1881",
+    "これください": "tts_d5d6713db93c",
+    "これを、おくりたいです": "tts_f349e263f511",
+    "これをぬいてください": "tts_c4ceef243a1f",
+    "しごとです": "tts_84a47c1b126e",
+    "しゃしん、おねがいします": "tts_1a011aee287e",
+    "しゃしん、とってもいいですか？": "tts_a5fcb2940da5",
+    "しんじゅくえきは、どこですか？": "tts_cbba581823f4",
+    "だいじょうぶ": "tts_54640dc1d65f",
+    "タクシー、おねがいします": "tts_8356b8d53ee4",
+    "たすけてください": "tts_1546cc0f76e8",
+    "たっきゅうびん、おねがいします": "tts_4d1191b33b22",
+    "チャージ、おねがいします": "tts_8d4586142ea0",
+    "ちょうしょくは？": "tts_52c2c1f647e7",
+    "ちょっと、まってください": "tts_40283dd0d10f",
+    "つかいかたをおしえてください": "tts_5e97f28023cc",
+    "つぎのえきで、のりかえてください": "tts_26a559241e04",
+    "つぎは、しぶやですか？": "tts_e466ccd38274",
+    "どこに、とまりますか？": "tts_11085928d967",
+    "なんばんせんですか？": "tts_2f9d7ae96a77",
+    "なんめいさまですか？": "tts_e0bca0bec72f",
+    "はしは、いりますか？": "tts_b11e9da800cf",
+    "はしをください": "tts_c2dbfdd662e2",
+    "パスポート、おねがいします": "tts_e67240d955f5",
+    "ひとつください": "tts_413fc1a0db9e",
+    "ひとりです": "tts_667fb57c2401",
+    "ふくろは、いりますか？": "tts_6b5cc830234d",
+    "ふくろはいりません": "tts_b64e8eed48d9",
+    "ふたつください": "tts_35d8c77df121",
+    "ふたりです": "tts_7ae4c6298918",
+    "べつべつで": "tts_7a40827a2c89",
+    "へやは、どこですか？": "tts_305d469154df",
+    "ポイントカードは、ありますか？": "tts_03581d472f33",
+    "までおねがいします": "tts_696fd8563f94",
+    "みずをください": "tts_c8f566cdc6e6",
+    "みちをおしえてください": "tts_f954674c5406",
+    "みっかです": "tts_7f219a01b0ac",
+    "メニューを、みせてください": "tts_aa0295460798",
+    "めんぜい、できますか？": "tts_6cdbec1c4b2b",
+    "やさしいにほんごで、おねがいします": "tts_a2352f91e4bd",
+    "ゆっくり、おねがいします": "tts_1c95b34b5b39",
+    "よやくしています": "tts_958d7a5f3eec",
+    "りょうがえ、おねがいします": "tts_e0a453ace596",
+    "ワイファイは、ありますか？": "tts_c1a83434bff9",
+    "わかりました": "tts_e373802575c2",
+    "わかりません": "tts_6dcfc9b79bdb",
+    "いちまんえん": "tts_befde6ff346a",
+    "えき": "tts_1f819272ac2b",
+    "おねがいします": "tts_eab3d932d73e",
+    "かいさつ": "tts_ccc8768f787a",
+    "きっぷ": "tts_635a52a3cb17",
+    "ごせんえん": "tts_0a9df535248b",
+    "ごひゃくえん": "tts_b5b5e1a7a83e",
+    "これでおねがいします": "tts_138b1161d515",
+    "せんえん": "tts_8a4823cfe522",
+    "だいじょうぶです": "tts_bf20af317908",
+    "たべます": "tts_51b6202eee41",
+    "にせんえん": "tts_119d14bc8e17",
+    "ひゃくえん": "tts_db8abbce5b0b",
+    "もうだいじょうぶです": "tts_f2f25ae7dce8",
+    "わかりました、ありがとうございます": "tts_2edf9cf768e3",
+    "あたためてください": "tts_cfa65d3cfe88"
   }
 }

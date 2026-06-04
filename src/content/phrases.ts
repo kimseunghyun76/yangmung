@@ -45,7 +45,7 @@ export const phrases: Phrase[] = [
   { id: 'p_arimasen', kana: 'ありません', korean: '없어요', register: 'both' },
   { id: 'p_reshiito_kudasai', kana: 'レシートをください', kanji: 'レシートをください', korean: '영수증 주세요', register: 'productive' },
   { id: 'p_fukuro_iranai', kana: 'ふくろはいりません', kanji: '袋は要りません', korean: '봉투는 필요 없어요', register: 'productive' },
-  { id: 'p_atatamete', kana: 'あたためてください', kanji: '温めてください', korean: '데워 주세요', register: 'productive' },
+  { id: 'p_atatamete', kana: 'あたためてください', kanji: '温めてください', korean: '데워 주세요', register: 'productive', speechPhoneme: 'アタタメテクダサイ' },
 
   // ── C안: B0/B1 narrow 보강 (친구 권고 — C1/C2가 끌어쓰는 답변 다양화) ──
   { id: 'p_wakarimasen', kana: 'わかりません', kanji: '分かりません', korean: '모르겠어요', register: 'productive', tip: '솔직한 의사표현이지만, 막혔을 때는 「ゆっくりお願いします」가 더 생산적' },

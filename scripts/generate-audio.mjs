@@ -23,6 +23,7 @@ const args = process.argv.slice(2);
 const dryRun = args.includes('--dry');
 const force = args.includes('--force');
 const only = valueArg('--only'); // kana | phrases | signs | core
+const sourceIdFilter = valueArg('--source-id'); // 특정 Phrase/Kana/Sign id만 재생성
 const limit = Number(valueArg('--limit') || '0');
 const reuseRoot = valueArg('--reuse-root') || path.resolve(ROOT, '..', 'kana-master', 'public', 'audio');
 const UNSPEAKABLE_TEXTS = new Set(['ー']);
@@ -47,10 +48,17 @@ function displayText(p) {
   return normalizeText(p.displayKana ?? p.kana);
 }
 
-function addItem(items, seen, source, sourceId, text, priority = 50, altTexts = []) {
+function synthesisText(p) {
+  return normalizeText(p.kanji ?? p.displayKana ?? p.kana);
+}
+
+function addItem(items, seen, source, sourceId, text, priority = 50, altTexts = [], synthText = text, speechPhoneme = undefined) {
   const clean = normalizeText(text);
   if (!clean) return;
   if (UNSPEAKABLE_TEXTS.has(clean)) return;
+  const cleanSynthText = normalizeText(synthText) || clean;
+  const cleanPhoneme = normalizeText(speechPhoneme);
+  const synthSignature = hashText(JSON.stringify([cleanSynthText, cleanPhoneme || null]));
   const key = clean;
   if (seen.has(key)) {
     const prev = seen.get(key);
@@ -61,7 +69,7 @@ function addItem(items, seen, source, sourceId, text, priority = 50, altTexts = 
     return;
   }
   const id = `tts_${hashText(clean)}`;
-  const item = { id, text: clean, altTexts: [...new Set(altTexts.map(normalizeText).filter(Boolean))], source, sourceId, sources: [`${source}:${sourceId}`], priority };
+  const item = { id, text: clean, synthText: cleanSynthText, speechPhoneme: cleanPhoneme || undefined, synthSignature, altTexts: [...new Set(altTexts.map(normalizeText).filter(Boolean))], source, sourceId, sources: [`${source}:${sourceId}`], priority };
   seen.set(key, item);
   items.push(item);
 }
@@ -90,7 +98,7 @@ function collectItems() {
     for (const p of CONTENT.phrases) {
       const inMission = corePhraseIds.has(p.id);
       if (only === 'core' && !inMission && !p.recoveryType) continue;
-      addItem(items, seen, 'phrase', p.id, displayText(p), inMission ? 15 : 35, [p.displayKana, p.kana, p.kanji].filter(Boolean));
+      addItem(items, seen, 'phrase', p.id, displayText(p), inMission ? 15 : 35, [p.displayKana, p.kana, p.kanji].filter(Boolean), synthesisText(p), p.speechPhoneme);
     }
   }
   if (!only || only === 'signs') {
@@ -101,7 +109,8 @@ function collectItems() {
   }
 
   items.sort((a, b) => a.priority - b.priority || a.text.localeCompare(b.text, 'ja'));
-  return limit > 0 ? items.slice(0, limit) : items;
+  const filtered = sourceIdFilter ? items.filter((item) => item.sourceId === sourceIdFilter) : items;
+  return limit > 0 ? filtered.slice(0, limit) : filtered;
 }
 
 function escapeXml(text) {
@@ -112,15 +121,18 @@ function escapeXml(text) {
     .replace(/"/g, '&quot;');
 }
 
-function buildSSML(text) {
+function buildSSML(item) {
+  const body = item.speechPhoneme
+    ? `<phoneme alphabet="sapi" ph="${escapeXml(item.speechPhoneme)}">${escapeXml(item.synthText)}</phoneme>`
+    : escapeXml(item.synthText);
   return `<speak version="1.0" xml:lang="${VOICE.lang}" xmlns="http://www.w3.org/2001/10/synthesis">
   <voice name="${VOICE.name}">
-    <prosody rate="-5%">${escapeXml(text)}</prosody>
+    <prosody rate="-5%">${body}</prosody>
   </voice>
 </speak>`;
 }
 
-async function synth(text, attempt = 1) {
+async function synth(item, attempt = 1) {
   const url = `https://${REGION}.tts.speech.microsoft.com/cognitiveservices/v1`;
   const res = await fetch(url, {
     method: 'POST',
@@ -130,14 +142,14 @@ async function synth(text, attempt = 1) {
       'X-Microsoft-OutputFormat': 'audio-24khz-48kbitrate-mono-mp3',
       'User-Agent': 'yangmung-tts',
     },
-    body: buildSSML(text),
+    body: buildSSML(item),
   });
   if (res.status === 429 && attempt <= 10) {
     const retryAfter = Number(res.headers.get('retry-after') || '0');
     const wait = retryAfter > 0 ? retryAfter * 1000 : Math.min(90000, 5000 * Math.pow(1.5, attempt - 1));
     console.log(`429 rate limited; waiting ${Math.round(wait / 1000)}s`);
     await new Promise((r) => setTimeout(r, wait));
-    return synth(text, attempt + 1);
+    return synth(item, attempt + 1);
   }
   if (!res.ok) {
     const body = await res.text().catch(() => '');
@@ -163,17 +175,6 @@ function loadManifest(manifestPath) {
   }
 }
 
-function textCandidates(item) {
-  const texts = [item.text, ...(item.altTexts ?? [])];
-  const out = [];
-  for (const text of texts) {
-    const clean = normalizeText(text);
-    const noPunct = normalizeText(clean.replace(/[、。！？!?]/g, ''));
-    out.push(clean, noPunct);
-  }
-  return [...new Set(out.filter(Boolean))];
-}
-
 function audioFileReady(filePath) {
   try {
     return fs.existsSync(filePath) && fs.statSync(filePath).size > 0;
@@ -194,19 +195,18 @@ function copyReusableAudio(items, manifest, voiceDir) {
   let copied = 0;
   fs.mkdirSync(voiceDir, { recursive: true });
   for (const item of items) {
+    // 명시 발음 교정 항목은 외부 파일을 재사용하지 않고 현재 SSML로 다시 만든다.
+    if (item.speechPhoneme) continue;
     const outPath = path.join(voiceDir, `${item.id}.mp3`);
-    if (!force && audioFileReady(outPath)) continue;
-    let sourceId = '';
-    for (const candidate of textCandidates(item)) {
-      sourceId = source.textIndex?.[candidate];
-      if (sourceId) break;
-    }
+    if (!force && !needsGeneration(item, manifest, voiceDir)) continue;
+    const sourceId = source.textIndex?.[item.synthText];
     if (!sourceId) continue;
     const sourcePath = path.join(reuseRoot, VOICE_KEY, `${sourceId}.mp3`);
     if (!audioFileReady(sourcePath)) continue;
     fs.copyFileSync(sourcePath, outPath);
     const cur = manifest.items[item.id] ?? {};
     manifest.items[item.id] = { ...cur, reusedFrom: `kana-master:${sourceId}` };
+    markAvailable(manifest, item);
     copied++;
   }
   return copied;
@@ -221,6 +221,9 @@ function markAvailable(manifest, item) {
   manifest.items[item.id] = {
     ...(manifest.items[item.id] ?? {}),
     text: item.text,
+    synthText: item.synthText,
+    speechPhoneme: item.speechPhoneme,
+    synthSignature: item.synthSignature,
     altTexts: item.altTexts,
     path: `/audio/${VOICE_KEY}/${item.id}.mp3`,
     voice: VOICE_KEY,
@@ -230,9 +233,17 @@ function markAvailable(manifest, item) {
   };
 }
 
+function needsGeneration(item, manifest, voiceDir) {
+  if (force) return true;
+  if (!audioFileReady(path.join(voiceDir, `${item.id}.mp3`))) return true;
+  const current = manifest.items[item.id];
+  const pronunciationSensitive = item.synthText !== item.text || !!item.speechPhoneme;
+  return pronunciationSensitive && current?.synthSignature !== item.synthSignature;
+}
+
 function syncAvailableManifest(items, manifest, voiceDir) {
   for (const item of items) {
-    if (audioFileReady(path.join(voiceDir, `${item.id}.mp3`))) markAvailable(manifest, item);
+    if (!needsGeneration(item, manifest, voiceDir)) markAvailable(manifest, item);
     else if (manifest.textIndex[item.text] === item.id) delete manifest.textIndex[item.text];
   }
 }
@@ -250,17 +261,20 @@ async function main() {
   const voiceDir = path.join(OUT_DIR, VOICE_KEY);
   const manifest = loadManifest(manifestPath);
   const currentIds = new Set(items.map((item) => item.id));
+  const fullCollection = !only && !sourceIdFilter && limit <= 0;
 
-  for (const text of UNSPEAKABLE_TEXTS) {
-    const id = manifest.textIndex[text] ?? `tts_${hashText(text)}`;
-    delete manifest.textIndex[text];
-    delete manifest.items[id];
-  }
-  for (const id of Object.keys(manifest.items)) {
-    if (!currentIds.has(id)) delete manifest.items[id];
-  }
-  for (const [text, id] of Object.entries(manifest.textIndex)) {
-    if (!currentIds.has(id)) delete manifest.textIndex[text];
+  if (fullCollection) {
+    for (const text of UNSPEAKABLE_TEXTS) {
+      const id = manifest.textIndex[text] ?? `tts_${hashText(text)}`;
+      delete manifest.textIndex[text];
+      delete manifest.items[id];
+    }
+    for (const id of Object.keys(manifest.items)) {
+      if (!currentIds.has(id)) delete manifest.items[id];
+    }
+    for (const [text, id] of Object.entries(manifest.textIndex)) {
+      if (!currentIds.has(id)) delete manifest.textIndex[text];
+    }
   }
 
   manifest.voices[VOICE_KEY] = VOICE;
@@ -274,6 +288,9 @@ async function main() {
       sourceId: item.sourceId,
       sources: item.sources,
       altTexts: item.altTexts,
+      synthText: item.synthText,
+      speechPhoneme: item.speechPhoneme,
+      synthSignature: cur.synthSignature,
     };
   }
 
@@ -282,7 +299,7 @@ async function main() {
     syncAvailableManifest(items, manifest, voiceDir);
     writeManifest(manifestPath, manifest);
   }
-  const jobs = items.filter((item) => force || !audioFileReady(path.join(voiceDir, `${item.id}.mp3`)));
+  const jobs = items.filter((item) => needsGeneration(item, manifest, voiceDir));
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log(`voice     : ${VOICE_KEY} (${VOICE.name})`);
   console.log(`region    : ${REGION}`);
@@ -315,9 +332,10 @@ async function main() {
       const wait = Math.max(0, lastCallAt + RATE_GAP_MS - Date.now());
       if (wait > 0) await new Promise((r) => setTimeout(r, wait));
       lastCallAt = Date.now();
-      const buf = await synth(job.text);
+      const buf = await synth(job);
       if (buf.length === 0) throw new Error('empty audio response');
       fs.writeFileSync(path.join(voiceDir, `${job.id}.mp3`), buf);
+      delete manifest.items[job.id]?.reusedFrom;
       markAvailable(manifest, job);
       done++;
       if (done % 20 === 0 || done === jobs.length) console.log(`  [${done}/${jobs.length}] ${job.text}`);
