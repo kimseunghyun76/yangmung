@@ -477,6 +477,18 @@ export function selectDictationCards(allCards: Card[], progress: ProgressMap, cu
   return [...due, ...fresh].slice(0, limit);
 }
 
+// 속도전 플래시 — 이미 본(복습) 객관식 카드를 무작위로. 빠른 즉답 게임용(SRS 영향 최소).
+export function selectFlashCards(allCards: Card[], progress: ProgressMap, limit = 12): Card[] {
+  const seen: Card[] = [], rest: Card[] = [];
+  for (const c of allCards) {
+    if (c.kind !== 'quiz' || c.choices.length < 2) continue; // 객관식만(즉답 가능)
+    if (c.reviewTarget?.type === 'mission' && c.promptPhrase) continue; // 긴 상황 프롬프트는 속도전 제외
+    (progress[c.id] ? seen : rest).push(c);
+  }
+  const pool = seen.length >= limit ? seen : [...seen, ...rest];
+  return shuffleKana(pool).slice(0, limit);
+}
+
 // 한→일 작문 전용 덱 — 한국어 보고 가나 타일로 일본어 조립(산출 강화).
 export function selectComposeCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit = 12): Card[] {
   const due: Card[] = [], fresh: Card[] = [];

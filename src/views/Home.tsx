@@ -30,11 +30,12 @@ interface Props {
   onPracticeSigns: () => void;
   onPracticeDictation: () => void;
   onPracticeCompose: () => void;
+  onPracticeFlash: () => void;
 }
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' };
 
-export function Home({ nav, allCards, progress, session, sessionConfig, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation, onPracticeCompose }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation, onPracticeCompose, onPracticeFlash }: Props) {
   const upcomingId = nextSessionId(session);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
   const planned = plan.size;
@@ -142,6 +143,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
               <button className="ym-press" style={pill} onClick={onPracticeSigns}>간판·메뉴</button>
               <button className="ym-press" style={pill} onClick={onPracticeDictation}>받아쓰기</button>
               <button className="ym-press" style={pill} onClick={onPracticeCompose}>한→일 작문</button>
+              <button className="ym-press" style={pill} onClick={onPracticeFlash}>⚡ 속도전</button>
             </div>
 
             {/* 여행 루트 */}

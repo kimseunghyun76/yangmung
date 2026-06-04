@@ -30,13 +30,14 @@ interface Props {
   onDictation?: () => void;
   onCompose?: () => void;
   onSigns?: () => void;
+  onFlash?: () => void;
   onHome: () => void;
 }
 
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place
   ?? CONTENT.missions.find((m) => m.id === id)?.scenario ?? id;
 
-export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, showGacha = true, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, onRetryWeak, onContinue, onReview, onDictation, onCompose, onSigns, onHome }: Props) {
+export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, showGacha = true, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, onRetryWeak, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onHome }: Props) {
   const stars = quizSeen ? Math.max(1, Math.round((score / quizSeen) * 3)) : 0;
   const s = summarize(progress);
   const sr = sessionResult(progress, sessionId);
@@ -113,6 +114,10 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
           {onSigns && signCount > 0 && (
             <NextStep icon="sign" accent="var(--accent)" title="거리 읽기"
               sub="간판·메뉴·안내 읽기" onClick={onSigns} />
+          )}
+          {onFlash && (
+            <NextStep icon="fast" accent="var(--accent)" title="속도전 플래시"
+              sub="제한시간 안에 빠르게 복습" onClick={onFlash} />
           )}
         </div>
         <button className="ym-press" style={{ ...glassBtn, marginTop: 12 }} onClick={onHome}>
