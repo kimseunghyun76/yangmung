@@ -256,6 +256,27 @@ function BurstParticles({ color }: { color: string }) {
   );
 }
 
+// 도감 표현 1개 — 듣기 → 따라 말하기(섀도잉) 루프. 채점 없이 연습만(speak practiced 패턴).
+function DeckSentenceRow({ ja, korean }: { ja: string; korean: string }) {
+  const [shadowed, setShadowed] = useState(false);
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '12px 13px', borderRadius: 14, border: `1px solid ${shadowed ? 'var(--ok)' : 'var(--glass-border)'}`, background: shadowed ? 'var(--ok-soft)' : 'var(--glass-bg-strong)', color: 'var(--ink)' }}>
+      <span style={{ flex: 1, minWidth: 0 }}>
+        <span lang="ja" style={{ display: 'block', fontSize: 16, fontWeight: 850 }}>{ja}</span>
+        <span style={{ display: 'block', marginTop: 3, fontSize: 12, color: 'var(--ink-soft)', fontWeight: 650 }}>{korean}</span>
+      </span>
+      <button className="ym-press" onClick={() => speak(ja)} disabled={!ttsSupported()} aria-label="듣기"
+        style={{ flex: '0 0 auto', width: 38, height: 38, borderRadius: 11, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--accent)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Icon name="listen" size={18} />
+      </button>
+      <button className="ym-press" onClick={() => { speak(ja); setShadowed(true); }} disabled={!ttsSupported()}
+        style={{ flex: '0 0 auto', padding: '0 12px', height: 38, borderRadius: 11, border: `1px solid ${shadowed ? 'var(--ok)' : 'var(--accent)'}`, background: shadowed ? 'var(--ok-soft)' : 'var(--accent-soft)', color: shadowed ? 'var(--ok)' : 'var(--accent)', fontWeight: 800, fontSize: 12.5, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
+        <Icon name={shadowed ? 'check' : 'speak'} size={15} /> {shadowed ? '잘했어요' : '따라 말하기'}
+      </button>
+    </div>
+  );
+}
+
 // ── 도감 모달 ──────────────────────────────────────
 export function DeckModal({ onClose }: { onClose: () => void }) {
   const c: Collection = loadCollection();
@@ -269,13 +290,7 @@ export function DeckModal({ onClose }: { onClose: () => void }) {
         <p style={{ margin: '0 0 14px', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>모은 표현 {rows.length}/30</p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
           {rows.map((row) => (
-            <button key={row.id} className="ym-press" onClick={() => speak(row.kanji ?? row.kana)} disabled={!ttsSupported()} style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%', padding: '12px 13px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', cursor: 'pointer', textAlign: 'left' }}>
-              <span style={{ flex: 1, minWidth: 0 }}>
-                <span lang="ja" style={{ display: 'block', fontSize: 16, fontWeight: 850 }}>{row.kanji ?? row.kana}</span>
-                <span style={{ display: 'block', marginTop: 3, fontSize: 12, color: 'var(--ink-soft)', fontWeight: 650 }}>{row.korean}</span>
-              </span>
-              <Icon name="listen" size={18} style={{ color: 'var(--accent)' }} />
-            </button>
+            <DeckSentenceRow key={row.id} ja={row.kanji ?? row.kana} korean={row.korean} />
           ))}
         </div>
       </Modal>
