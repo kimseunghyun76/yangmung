@@ -336,33 +336,38 @@ export function buildCards(): Card[] {
     }
   }
 
-  // 받아쓰기 카드 (듣고 가나 타일로 문장 완성)
-  for (const id of DICTATION_IDS) {
-    const p = phrases.find((x) => x.id === id);
-    if (!p) continue;
-    const answer = toReadingUnits(p.kana).map((u) => u.text).filter((t) => t.trim());
-    const distractors = shuffle(DICTATION_DISTRACTORS.filter((d) => !answer.includes(d))).slice(0, 3);
-    cards.push({
-      kind: 'dictation', id: `dictation:${id}`, tag: '받아쓰기',
-      ja: ttsText(p) ?? p.kana, answer, korean: p.korean,
-      tiles: shuffle([...answer, ...distractors]),
-      reviewTarget: { type: 'phrase', id },
-    });
-  }
+  // 받아쓰기/작문 대상 — 큐레이트 입문 표현(DICTATION_IDS)을 앞에, 그다음 읽기단위 2~8인 모든 표현을
+  // 자동 편입(기존 콘텐츠를 활용해 풀을 15 → 70여 개로 확장, 매번 같은 12개 반복 해소).
+  const dictationTargetIds: string[] = (() => {
+    const fitLen = (p: typeof phrases[number]) => {
+      const n = toReadingUnits(p.kana).map((u) => u.text).filter((t) => t.trim()).length;
+      return n >= 2 && n <= 8;
+    };
+    const curated = DICTATION_IDS.filter((id) => phrases.some((p) => p.id === id));
+    const seen = new Set(curated);
+    const extra = phrases.filter((p) => p.kana && !seen.has(p.id) && fitLen(p)).map((p) => p.id);
+    return [...curated, ...extra];
+  })();
 
-  // 한→일 작문 카드 (한국어 뜻 보고 가나 타일로 일본어 조립) — 산출 강화. dictation UI 재사용.
-  for (const id of DICTATION_IDS) {
+  const pushTileCard = (id: string, kind: 'dictation' | 'compose') => {
     const p = phrases.find((x) => x.id === id);
-    if (!p) continue;
+    if (!p) return;
     const answer = toReadingUnits(p.kana).map((u) => u.text).filter((t) => t.trim());
     const distractors = shuffle(DICTATION_DISTRACTORS.filter((d) => !answer.includes(d))).slice(0, 3);
     cards.push({
-      kind: 'dictation', id: `compose:${id}`, tag: '작문', promptKind: 'korean',
+      kind: 'dictation',
+      id: `${kind}:${id}`,
+      tag: kind === 'compose' ? '작문' : '받아쓰기',
+      ...(kind === 'compose' ? { promptKind: 'korean' as const } : {}),
       ja: ttsText(p) ?? p.kana, answer, korean: p.korean,
       tiles: shuffle([...answer, ...distractors]),
       reviewTarget: { type: 'phrase', id },
     });
-  }
+  };
+
+  // 받아쓰기(듣고 쓰기) + 한→일 작문(뜻 보고 조립) — 같은 풀, dictation UI 재사용
+  for (const id of dictationTargetIds) pushTileCard(id, 'dictation');
+  for (const id of dictationTargetIds) pushTileCard(id, 'compose');
 
   // 거리 읽기 — 간판·메뉴·안내·교통 표기 보고 뜻 맞히기 (실제 일본에서 눈에 띄는 것)
   for (const sg of signs) {
