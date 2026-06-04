@@ -21,12 +21,14 @@ import type { PickMap } from './views/OrderCard';
 import { Done } from './views/Done';
 import { Map } from './views/Map';
 import { Flash } from './views/Flash';
+import { KanaWrite } from './views/KanaWrite';
 import { Review } from './views/Review';
+import type { KanaItem } from './content/types';
 import { Guide } from './views/Guide';
 import { SettingsModal } from './views/SettingsModal';
 import { MascotEmpty } from './views/mascot';
 
-type View = 'home' | 'map' | 'review' | 'intro' | 'session' | 'done' | 'flash';
+type View = 'home' | 'map' | 'review' | 'intro' | 'session' | 'done' | 'flash' | 'write';
 
 export function App() {
   const allCards = useMemo<Card[]>(buildCards, []);
@@ -43,6 +45,7 @@ export function App() {
   const [picks, setPicks] = useState<PickMap>({}); // 미션 스텝별 내가 고른 답변 (대화 리캡용)
   const [gachaEligible, setGachaEligible] = useState(true); // 약점 재도전 세션은 보석함 제외
   const [flashCards, setFlashCards] = useState<Card[]>([]); // 속도전 플래시(세션 SRS와 분리)
+  const [writeItems, setWriteItems] = useState<KanaItem[]>([]); // 가나 쓰기(따라쓰기)
   const [seenKana, setSeenKana] = useState<SeenKana>(() => loadSeenKana());
   const [discovered, setDiscovered] = useState<string[]>(() => loadDiscovered());
   const [settings, setSettings] = useState<Settings>(() => loadSettings());
@@ -208,6 +211,16 @@ export function App() {
     setFlashCards(cards);
     setView('flash');
   }
+  // 가나 쓰기(따라쓰기) — 히라/가타 섞어 무작위 10자(유추 방지). 세션/SRS와 분리.
+  function startKanaWrite() {
+    const pool = CONTENT.kana.filter((k) => (k.script === 'hiragana' || k.script === 'katakana') && k.char.length === 1);
+    const a = [...pool];
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    const items = a.slice(0, 10);
+    if (items.length === 0) return;
+    setWriteItems(items);
+    setView('write');
+  }
   function retryWeakSession() {
     const weakIds = new Set(sessionLog.filter((r) => r.result !== 'correct').map((r) => r.id));
     const weak = sessionCards.filter((c) => c.kind === 'quiz' && weakIds.has(c.id));
@@ -344,6 +357,9 @@ export function App() {
     if (view === 'flash') {
       return <Flash cards={flashCards} onExit={() => setView('home')} onReplay={startFlashSession} />;
     }
+    if (view === 'write') {
+      return <KanaWrite items={writeItems} onExit={() => setView('home')} onReplay={startKanaWrite} />;
+    }
     if (view === 'intro') {
       const missions = missionsFromCards(sessionCards, progress, sessionId);
       const hasKana = sessionCards.some((c) => c.kind === 'quiz' && c.reviewTarget?.type === 'kana');
@@ -403,7 +419,7 @@ export function App() {
         allCards={allCards} progress={progress} session={session} sessionConfig={sessionConfig}
         diagnosis={diag}
         modeLabel={MODE_PRESETS[settings.mode].label}
-        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession} onPracticeCompose={startComposeSession} onPracticeFlash={startFlashSession}
+        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession} onPracticeCompose={startComposeSession} onPracticeFlash={startFlashSession} onPracticeWrite={startKanaWrite}
       />
     );
   }
