@@ -359,7 +359,10 @@ export function App() {
       return <Flash cards={flashCards} unlockedSceneIds={unlockedSceneIds} onExit={() => setView('home')} onReplay={startFlashSession} />;
     }
     if (view === 'write') {
-      return <KanaWrite items={writeItems} onExit={() => setView('home')} onReplay={startKanaWrite} />;
+      return <KanaWrite items={writeItems} onExit={() => setView('home')} onReplay={startKanaWrite}
+        onKanaWritten={(item, score) => {
+          if (score >= 55 && item.char) setSeenKana((prev) => { const nx = markKanaSeen(prev, [item.char]); saveSeenKana(nx); return nx; });
+        }} />;
     }
     if (view === 'intro') {
       const missions = missionsFromCards(sessionCards, progress, sessionId);

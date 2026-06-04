@@ -18,6 +18,23 @@ const BACKDROPS: Record<string, string> = {
   C11: '/scenes/generated/c11-locker-bg.webp',
   C12: '/scenes/generated/c12-delivery-bg.webp',
   C13: '/scenes/generated/c13-ramen-bg.webp',
+  C14: '/scenes/generated/c14-cafe-bg.webp',
+  C15: '/scenes/generated/c15-bakery-bg.webp',
+  C16: '/scenes/generated/c16-izakaya-bg.webp',
+  C17: '/scenes/generated/c17-sushi-bg.webp',
+  C18: '/scenes/generated/c18-tourist-info-bg.webp',
+  C19: '/scenes/generated/c19-shrine-bg.webp',
+  C20: '/scenes/generated/c20-onsen-bg.webp',
+  C21: '/scenes/generated/c21-ryokan-bg.webp',
+  C22: '/scenes/generated/c22-bus-bg.webp',
+  C23: '/scenes/generated/c23-shinkansen-bg.webp',
+  C24: '/scenes/generated/c24-rental-car-bg.webp',
+  C25: '/scenes/generated/c25-hospital-bg.webp',
+  C26: '/scenes/generated/c26-police-bg.webp',
+  C27: '/scenes/generated/c27-emergency-bg.webp',
+  C28: '/scenes/generated/c28-telecom-bg.webp',
+  C29: '/scenes/generated/c29-laundromat-bg.webp',
+  C30: '/scenes/generated/c30-festival-bg.webp',
 };
 
 const BY_PLACE: Record<string, SceneVisual> = {
