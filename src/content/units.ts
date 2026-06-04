@@ -113,6 +113,15 @@ export const units: Unit[] = [
     newPhraseIds: ['p_kenbaiki', 'p_oomori', 'p_kaedama'],
   },
   {
+    id: 'u_b1_more_scene_core', track: 'lang', stage: 'B1', mode: 'action',
+    canDo: '사용자는 카페·관광·교통·긴급 장면에서 새로 필요한 짧은 응답을 말할 수 있다',
+    newPhraseIds: [
+      'p_tennai_de', 'p_mochikaeri_de', 'p_esu_saizu_de', 'p_emu_saizu_de',
+      'p_kippu_nimai_kudasai', 'p_sumimasen_koko_doko', 'p_nihon_go_muzukashii',
+      'p_nihongo_sukoshi_dake',
+    ],
+  },
+  {
     id: 'u_b4_recovery_plus', track: 'lang', stage: 'B4', mode: 'recovery',
     canDo: '사용자는 정중하게 감사·이해·괜찮음·우회(쉬운 일본어·영어) 요청을 표현할 수 있다',
     newPhraseIds: ['p_yasashii_nihongo', 'p_arigatou_gozaimasu', 'p_daijoubu_desu', 'p_wakarimashita', 'p_eigo_de', 'p_wakarimashita_arigatou'],
