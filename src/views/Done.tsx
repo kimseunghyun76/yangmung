@@ -19,6 +19,7 @@ interface Props {
   canContinue: boolean;
   clearedSceneIds: string[];
   nextSceneId?: string;
+  showGacha?: boolean;
   onRetryWeak: () => void;
   onContinue: () => void;
   onHome: () => void;
@@ -27,7 +28,7 @@ interface Props {
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place
   ?? CONTENT.missions.find((m) => m.id === id)?.scenario ?? id;
 
-export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, onRetryWeak, onContinue, onHome }: Props) {
+export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, showGacha = true, onRetryWeak, onContinue, onHome }: Props) {
   const stars = quizSeen ? Math.max(1, Math.round((score / quizSeen) * 3)) : 0;
   const s = summarize(progress);
   const sr = sessionResult(progress, sessionId);
@@ -70,8 +71,8 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
         </p>
       )}
 
-      {/* 가챠 보석함 — 성과 등급별 조각 적립 (학습 로직과 분리) */}
-      <GachaBox sessionId={sessionId} sceneIds={clearedSceneIds} grade={boxGrade(stars, recoveryUsed)} />
+      {/* 가챠 보석함 — 성과 등급별 조각 적립 (학습 로직과 분리). 약점 재도전 세션 제외 */}
+      {showGacha && <GachaBox sessionId={sessionId} sceneIds={clearedSceneIds} grade={boxGrade(stars, recoveryUsed)} />}
 
       {/* 다음 장면 예고 */}
       {nextSceneId && (

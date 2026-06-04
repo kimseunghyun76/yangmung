@@ -72,14 +72,18 @@ const reduceMotion = () => typeof window !== 'undefined' && !!window.matchMedia?
 
 // ── 보석함 (완료 화면) ──────────────────────────────
 export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: number; sceneIds: string[]; grade?: BoxGrade }) {
-  const [phase, setPhase] = useState<'closed' | 'opening' | 'revealed'>('closed');
+  const [phase, setPhase] = useState<'closed' | 'open' | 'revealed'>('closed');
   const [results, setResults] = useState<DropResult[]>([]);
+  const [taps, setTaps] = useState(0);
+  const [burst, setBurst] = useState(false);
+  const [revealed, setRevealed] = useState(0); // 하나씩 공개된 아이템 수
   const [deck, setDeck] = useState(false);
   if (sceneIds.length === 0) return null;
   const box = BOX[grade];
+  const TAPS = 3; // 상자를 터뜨리기까지 필요한 탭 수
   const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 800, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase', margin: '0 0 12px', textAlign: 'center' };
 
-  function open() {
+  function doClaim(): DropResult[] {
     const res = claim(loadCollection(), sessionId, sceneIds, box.shards);
     saveCollection(res.collection);
     let r = res.results;
@@ -88,15 +92,30 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
       r = sceneIds.map((id) => ({ sceneId: id, isNew: false, leveledTo: null, tier: c.cards[id]?.tier ?? 1, shards: c.cards[id]?.shards ?? 0 }));
     }
     setResults(r);
-    setPhase(reduceMotion() ? 'revealed' : 'opening');
+    return r;
   }
+  function start() {
+    if (reduceMotion()) { doClaim(); setPhase('revealed'); return; }
+    setTaps(0); setBurst(false); setRevealed(0); setPhase('open');
+  }
+  // 오버레이 탭: 상자 깨기(여러 번) → 터지면 아이템 하나씩 공개
+  function overlayTap() {
+    if (!burst) {
+      const n = taps + 1;
+      setTaps(n);
+      if (n >= TAPS) { doClaim(); setBurst(true); setRevealed(0); }
+    } else if (revealed < results.length) {
+      setRevealed((v) => v + 1);
+    }
+  }
+  const complete = burst && revealed >= results.length;
 
   return (
     <div className="ym-rise" style={{ marginTop: 22 }}>
       <p style={labelStyle}>오늘의 보석함</p>
 
       {phase === 'closed' && (
-        <button className="ym-press" onClick={open}
+        <button className="ym-press" onClick={start}
           style={{ width: '100%', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: '18px 20px 20px', borderRadius: 22, border: '1px solid var(--glass-border)', background: `radial-gradient(circle at 50% 26%, ${box.colors[1]}2e, transparent 42%), var(--glass-bg-strong)`, cursor: 'pointer', color: 'var(--ink)' }}>
           <GachaGlow color={box.colors[1]} />
           <BoxArt grade={grade} size={112} className="ym-listening" />
@@ -116,23 +135,61 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
         </div>
       )}
 
-      {/* 개봉 오버레이 — 풀스크린 드라마 (body 포털, 탭하면 닫힘) */}
-      {phase === 'opening' && typeof document !== 'undefined' && createPortal(
-        <div onClick={() => setPhase('revealed')}
-          style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, padding: 24, background: 'radial-gradient(circle at 50% 34%, rgba(255,255,255,0.18), transparent 24%), rgba(0,0,0,0.68)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
-          <div className="ym-confetti" aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-            {['✦', '★', '✦', '✧', '★', '✦', '✧', '★'].map((e, i) => (
-              <span key={i} style={{ left: `${8 + i * 11}%`, color: i % 2 ? box.colors[1] : 'var(--accent)', animationDelay: `${0.7 + i * 0.06}s` }}>{e}</span>
-            ))}
-          </div>
-          <BurstParticles color={box.colors[1]} />
-          <div style={{ position: 'relative', width: 220, height: 178, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span className="ym-gacha-rays" aria-hidden style={{ position: 'absolute', inset: -54, color: box.colors[1], opacity: 0.8 }} />
-            <span className="ym-glow" aria-hidden style={{ position: 'absolute', inset: -18, borderRadius: '50%', background: `radial-gradient(circle, ${box.colors[1]}cc, ${box.colors[1]}44 36%, transparent 68%)` }} />
-            <BoxArt grade={grade} size={150} className="ym-chest" />
-          </div>
-          <RevealCards results={results} shards={box.shards} animate />
-          <button className="ym-card-in" style={{ animationDelay: '1.1s', marginTop: 6, padding: '12px 28px', borderRadius: 14, border: 'none', background: 'var(--accent)', color: 'var(--accent-ink)', fontWeight: 800, fontSize: 15, cursor: 'pointer', boxShadow: '0 8px 22px rgba(185,56,46,0.4)' }}>좋아요</button>
+      {/* 개봉 오버레이 — 여러 번 탭해 상자 깨기 → 아이템 하나씩 → 전체 (body 포털) */}
+      {phase === 'open' && typeof document !== 'undefined' && createPortal(
+        <div onClick={overlayTap}
+          style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18, padding: 24, background: 'radial-gradient(circle at 50% 34%, rgba(255,255,255,0.16), transparent 24%), rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
+          {burst && (
+            <>
+              <div className="ym-confetti" aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+                {['✦', '★', '✦', '✧', '★', '✦', '✧', '★'].map((e, i) => (
+                  <span key={i} style={{ left: `${8 + i * 11}%`, color: i % 2 ? box.colors[1] : 'var(--accent)', animationDelay: `${i * 0.06}s` }}>{e}</span>
+                ))}
+              </div>
+              <BurstParticles color={box.colors[1]} />
+            </>
+          )}
+
+          {!burst ? (
+            <>
+              <div style={{ position: 'relative', width: 220, height: 178, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span className="ym-glow" aria-hidden style={{ position: 'absolute', inset: -18, borderRadius: '50%', background: `radial-gradient(circle, ${box.colors[1]}aa, ${box.colors[1]}33 40%, transparent 70%)` }} />
+                <div key={taps} className={taps > 0 ? 'ym-wrong' : undefined} style={{ transform: `scale(${1 + taps * 0.08})`, transition: 'transform .12s' }}>
+                  <BoxArt grade={grade} size={150} />
+                </div>
+              </div>
+              <p style={{ color: '#fff', fontWeight: 800, fontSize: 16, textShadow: '0 1px 8px rgba(0,0,0,.5)' }}>탭해서 상자 깨기</p>
+              <div style={{ display: 'flex', gap: 8 }}>
+                {Array.from({ length: TAPS }, (_, i) => (
+                  <span key={i} style={{ width: 12, height: 12, borderRadius: 99, background: i < taps ? box.colors[1] : 'rgba(255,255,255,0.3)', boxShadow: i < taps ? `0 0 10px ${box.colors[1]}` : 'none' }} />
+                ))}
+              </div>
+            </>
+          ) : !complete ? (
+            <>
+              <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+                {results.map((r, i) => i < revealed ? (
+                  <div key={r.sceneId} className="ym-card-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, minWidth: 86, position: 'relative', zIndex: 2 }}>
+                    <DeckCardFace sceneId={r.sceneId} tier={r.tier} size={72} />
+                    <span style={{ fontSize: 13, fontWeight: 800, color: '#fff' }}>{placeOf(r.sceneId)}</span>
+                    <TierRibbon tier={r.tier} />
+                    <span style={{ fontSize: 11, fontWeight: 800, color: r.leveledTo ? 'var(--ok)' : r.isNew ? box.colors[1] : 'rgba(255,255,255,0.7)' }}>
+                      {r.leveledTo ? `${tierMeta(r.leveledTo).label} 승급!` : r.isNew ? 'NEW' : `조각 +${box.shards}`}
+                    </span>
+                  </div>
+                ) : (
+                  <div key={r.sceneId} style={{ width: 72, height: 72, borderRadius: 18, border: '1.5px dashed rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30, fontWeight: 800, color: 'rgba(255,255,255,0.6)', background: 'rgba(255,255,255,0.06)', position: 'relative', zIndex: 2 }}>?</div>
+                ))}
+              </div>
+              <p style={{ color: '#fff', fontWeight: 800, fontSize: 15, textShadow: '0 1px 8px rgba(0,0,0,.5)' }}>탭해서 아이템 받기 · {revealed}/{results.length}</p>
+            </>
+          ) : (
+            <>
+              <p style={{ color: '#fff', fontWeight: 800, fontSize: 16, position: 'relative', zIndex: 2 }}>오늘 얻은 아이템</p>
+              <div style={{ position: 'relative', zIndex: 2 }}><RevealCards results={results} shards={box.shards} animate /></div>
+              <button onClick={(e) => { e.stopPropagation(); setPhase('revealed'); }} className="ym-card-in" style={{ animationDelay: '0.3s', marginTop: 6, padding: '12px 28px', borderRadius: 14, border: 'none', background: 'var(--accent)', color: 'var(--accent-ink)', fontWeight: 800, fontSize: 15, cursor: 'pointer', boxShadow: '0 8px 22px rgba(185,56,46,0.4)', position: 'relative', zIndex: 2 }}>좋아요</button>
+            </>
+          )}
         </div>,
         document.body,
       )}
