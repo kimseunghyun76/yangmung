@@ -1,7 +1,7 @@
 // 속도전 — 제한시간 안에 빠르게 푸는 대결형 복습 게임. 콤보·점수, 높은 점수면 보석함 보상.
 import { useEffect, useRef, useState } from 'react';
 import type { Card } from '../learn/cards';
-import { speak, ttsSupported } from '../tts';
+import { speak, stopSpeaking, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
 import { PrimaryAction } from './shell';
@@ -61,6 +61,7 @@ export function Flash({ cards, unlockedSceneIds, onExit, onReplay }: Props) {
   function cleanup() {
     if (tickRef.current) { window.clearInterval(tickRef.current); tickRef.current = null; }
     if (advRef.current) { window.clearTimeout(advRef.current); advRef.current = null; }
+    stopSpeaking();
   }
 
   function finishGame() {

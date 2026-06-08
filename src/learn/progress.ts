@@ -24,6 +24,54 @@ const PROGRESS_KEY = 'yangmung:progress:v1';
 const SESSION_KEY = 'yangmung:session:v1';
 const SEENKANA_KEY = 'yangmung:seenkana:v1';
 const DISCOVERED_KEY = 'yangmung:discovered:v1';
+const DEFERRED_SAVE_MS = 160;
+
+const pendingWrites = new Map<string, unknown>();
+const pendingTimers = new Map<string, number>();
+
+function flushStorageKey(key: string): void {
+  if (typeof window === 'undefined') return;
+  const value = pendingWrites.get(key);
+  if (value === undefined) return;
+  pendingWrites.delete(key);
+  const timer = pendingTimers.get(key);
+  if (timer) {
+    window.clearTimeout(timer);
+    pendingTimers.delete(key);
+  }
+  try { window.localStorage.setItem(key, JSON.stringify(value)); } catch {}
+}
+
+function flushPendingStorage(): void {
+  for (const key of [...pendingWrites.keys()]) flushStorageKey(key);
+}
+
+function saveDeferred(key: string, value: unknown): void {
+  if (typeof window === 'undefined') return;
+  pendingWrites.set(key, value);
+  if (pendingTimers.has(key)) return;
+  const timer = window.setTimeout(() => flushStorageKey(key), DEFERRED_SAVE_MS);
+  pendingTimers.set(key, timer);
+}
+
+function saveImmediate(key: string, value: unknown): void {
+  if (typeof window === 'undefined') return;
+  pendingWrites.delete(key);
+  const timer = pendingTimers.get(key);
+  if (timer) {
+    window.clearTimeout(timer);
+    pendingTimers.delete(key);
+  }
+  try { window.localStorage.setItem(key, JSON.stringify(value)); } catch {}
+}
+
+if (typeof window !== 'undefined' && !(window as Window & { __yangmungStorageFlushBound?: boolean }).__yangmungStorageFlushBound) {
+  (window as Window & { __yangmungStorageFlushBound?: boolean }).__yangmungStorageFlushBound = true;
+  window.addEventListener('pagehide', flushPendingStorage);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') flushPendingStorage();
+  });
+}
 
 // 발견(이제 읽을 수 있는 표현)으로 이미 축하한 id 모음
 export function loadDiscovered(): string[] {
@@ -32,7 +80,7 @@ export function loadDiscovered(): string[] {
 }
 export function saveDiscovered(ids: string[]): void {
   if (typeof window === 'undefined') return;
-  try { window.localStorage.setItem(DISCOVERED_KEY, JSON.stringify(ids)); } catch {}
+  saveImmediate(DISCOVERED_KEY, ids);
 }
 
 export function loadProgress(): ProgressMap {
@@ -45,7 +93,7 @@ export function loadProgress(): ProgressMap {
 
 export function saveProgress(p: ProgressMap): void {
   if (typeof window === 'undefined') return;
-  try { window.localStorage.setItem(PROGRESS_KEY, JSON.stringify(p)); } catch {}
+  saveDeferred(PROGRESS_KEY, p);
 }
 
 export function clearProgress(): void {
@@ -55,6 +103,9 @@ export function clearProgress(): void {
     window.localStorage.removeItem(SESSION_KEY);
     window.localStorage.removeItem(SEENKANA_KEY);
     window.localStorage.removeItem(DISCOVERED_KEY);
+    pendingWrites.clear();
+    for (const t of pendingTimers.values()) window.clearTimeout(t);
+    pendingTimers.clear();
   } catch {}
 }
 
@@ -73,7 +124,7 @@ export function loadSeenKana(): SeenKana {
 
 export function saveSeenKana(s: SeenKana): void {
   if (typeof window === 'undefined') return;
-  try { window.localStorage.setItem(SEENKANA_KEY, JSON.stringify(s)); } catch {}
+  saveDeferred(SEENKANA_KEY, s);
 }
 
 export function markKanaSeen(seen: SeenKana, chars: string[]): SeenKana {
@@ -113,7 +164,7 @@ export function loadSession(): SessionState {
 
 export function saveSession(s: SessionState): void {
   if (typeof window === 'undefined') return;
-  try { window.localStorage.setItem(SESSION_KEY, JSON.stringify(s)); } catch {}
+  saveImmediate(SESSION_KEY, s);
 }
 
 // 세션 시작 = 이전 완료 + 1
