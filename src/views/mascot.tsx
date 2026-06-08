@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 
 export type Who = 'yang' | 'mung' | 'duo';
-export type MascotMood = 'default' | 'tip' | 'recovery';
+export type MascotMood = 'default' | 'tip' | 'recovery' | 'correct' | 'wrong' | 'done' | 'loading';
 
 const FACE: Record<Who, string> = {
   yang: '/mascots/yang-cat-face.webp',   // 설명·정확성 코치
@@ -12,8 +12,9 @@ const FACE: Record<Who, string> = {
   duo: '/mascots/yangmung-duo-logo.webp', // 홈·완료·특별 보상만
 };
 const MOOD_FACE: Partial<Record<Who, Partial<Record<MascotMood, string>>>> = {
-  yang: { tip: '/mascots/yang-tip.webp' },
-  mung: { recovery: '/mascots/mung-recovery.webp' },
+  yang: { tip: '/mascots/yang-tip.webp', loading: '/mascots/yang-loading.webp' },
+  mung: { correct: '/mascots/mung-correct.webp', wrong: '/mascots/mung-wrong.webp', recovery: '/mascots/mung-recovery.webp' },
+  duo: { done: '/mascots/yangmung-duo-done.webp' },
 };
 
 // 얼굴만 (빈 상태·로딩·인라인). 장식이므로 aria-hidden.
@@ -46,8 +47,9 @@ export function MascotBubble({ who, children, mood = 'default', size = 40, tone 
 }
 
 // 빈 상태·로딩용. 학습 흐름을 방해하지 않게 얼굴 중심으로 작게만 노출.
-export function MascotEmpty({ who = 'yang', title, children, size = 58, style }: {
+export function MascotEmpty({ who = 'yang', mood = 'default', title, children, size = 58, style }: {
   who?: Who;
+  mood?: MascotMood;
   title?: ReactNode;
   children: ReactNode;
   size?: number;
@@ -65,7 +67,7 @@ export function MascotEmpty({ who = 'yang', title, children, size = 58, style }:
       color: 'var(--ink-soft)',
       ...style,
     }}>
-      <MascotFace who={who} size={size} style={{ filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.14))' }} />
+      <MascotFace who={who} mood={mood} size={size} style={{ filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.14))' }} />
       {title && <strong style={{ color: 'var(--ink)', fontSize: 15, lineHeight: 1.35 }}>{title}</strong>}
       <p style={{ color: 'var(--ink-faint)', fontSize: 13, lineHeight: 1.5, margin: 0, maxWidth: 260 }}>{children}</p>
     </div>
@@ -117,6 +119,12 @@ export function MascotLine({ copyKey, who, place, size = 36, style }: {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const text = useMemo(() => mascotCopy(copyKey, place ? { place } : undefined), []);
   const actual = who ?? mascotWho(copyKey);
-  const mood: MascotMood = copyKey === 'tip' || copyKey === 'introducePhrase' ? 'tip' : copyKey === 'wrong' || copyKey === 'recovery' ? 'recovery' : 'default';
+  const mood: MascotMood =
+    copyKey === 'tip' || copyKey === 'introducePhrase' ? 'tip'
+    : copyKey === 'correct' ? 'correct'
+    : copyKey === 'wrong' ? 'wrong'
+    : copyKey === 'recovery' ? 'recovery'
+    : copyKey === 'doneDuo' ? 'done'
+    : 'default';
   return <MascotBubble who={actual} mood={mood} size={size} style={style}>{text}</MascotBubble>;
 }

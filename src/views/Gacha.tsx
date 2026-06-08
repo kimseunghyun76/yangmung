@@ -198,7 +198,7 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
       {phase === 'revealed' && (
         <div style={{ position: 'relative', overflow: 'hidden', padding: 18, borderRadius: 22, border: '1px solid var(--glass-border)', background: `radial-gradient(circle at 50% 18%, ${box.colors[1]}24, transparent 50%), var(--glass-bg-strong)` }}>
           <GachaGlow color={box.colors[1]} strong />
-          <MascotBubble who="duo" size={42} style={{ marginBottom: 14 }}>오늘 모은 장면과 표현이 여행 도감에 들어갔어요.</MascotBubble>
+          <MascotBubble who="duo" mood="done" size={42} style={{ marginBottom: 14 }}>오늘 모은 장면과 표현이 여행 도감에 들어갔어요.</MascotBubble>
           <RevealCards results={results} shards={box.shards} />
           <button className="ym-press" onClick={() => setDeck(true)}
             style={{ width: '100%', marginTop: 16, padding: '12px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)', fontWeight: 700, fontSize: 14, cursor: 'pointer' }}>
