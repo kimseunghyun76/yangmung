@@ -108,7 +108,7 @@ export function Flash({ cards, unlockedSceneIds, onExit, onReplay }: Props) {
           </div>
           <h1 style={{ margin: '14px 0 0', fontSize: 26 }}>{win ? '대결 승리!' : '속도전 끝!'}</h1>
           <p style={{ margin: '8px 0 0', fontSize: 42, fontWeight: 900, color: 'var(--accent)', fontVariantNumeric: 'tabular-nums' }}>{score}<span style={{ fontSize: 20, color: 'var(--ink-faint)' }}> / {cards.length}</span></p>
-          <p style={{ margin: '6px 0 0', color: 'var(--ink-soft)', fontWeight: 700 }}>정답률 {pct}% · 최고 콤보 {best}🔥</p>
+          <p style={{ margin: '6px 0 0', color: 'var(--ink-soft)', fontWeight: 700 }}>정답률 {pct}% · 최고 콤보 {best}</p>
         </div>
 
         {reward
@@ -135,25 +135,27 @@ export function Flash({ cards, unlockedSceneIds, onExit, onReplay }: Props) {
   const hot = combo >= 3;
   const promptText = card.listen ? null : (card.bannerJa || card.banner);
   const cardFx = callout === 'miss' ? 'ym-speed-card is-miss' : callout ? `ym-speed-card is-${callout}` : `ym-speed-card${hot ? ' is-hot' : ''}`;
+  const timeLeft = Math.max(0, Math.ceil(left / 1000));
 
   return (
     <main className={`ym-flash-arena ${hot ? 'is-hot' : ''} ${low ? 'is-low' : ''}`} style={{ ...WRAP, position: 'relative', overflow: 'hidden' }}>
       <span className="ym-speed-lines" aria-hidden />
-      {/* 상단 — 그만 / 진행 / 점수 */}
-      <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 }}>
-        <button onClick={onExit} className="ym-press" style={{ border: 0, background: 'transparent', color: 'var(--ink-soft)', fontWeight: 800, cursor: 'pointer', padding: 4 }}>← 그만</button>
-        <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--ink-soft)', fontVariantNumeric: 'tabular-nums' }}>{idx + 1} / {cards.length}</span>
-        <span style={{ fontSize: 13, fontWeight: 850, color: 'var(--ink-soft)', fontVariantNumeric: 'tabular-nums' }}>점수 {score}</span>
+      {/* 상단 HUD — 점수와 시간만 또렷하게 */}
+      <div className="ym-speed-hud">
+        <button onClick={onExit} className="ym-speed-exit">← 그만</button>
+        <span className="ym-speed-pill">{idx + 1}<b>/</b>{cards.length}</span>
+        <span className="ym-speed-pill is-score">SCORE {score}</span>
       </div>
 
       {/* 콤보 미터 */}
-      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', height: 36, marginTop: 6 }}>
-        {hot && <span className="ym-combo-badge" key={combo}>🔥 {combo} COMBO</span>}
+      <div className="ym-speed-combo-row">
+        {hot ? <span className="ym-combo-badge" key={combo}>COMBO ×{combo}</span> : <span className="ym-speed-ready">FAST QUIZ</span>}
       </div>
 
       {/* 에너지(타이머) 게이지 */}
-      <div className={`ym-speed-timer ${low ? 'is-low' : ''}`} style={{ position: 'relative', zIndex: 1 }}>
+      <div className={`ym-speed-timer ${low ? 'is-low' : ''}`}>
         <div className="ym-speed-timer-fill" style={{ width: `${ratio * 100}%`, background: `linear-gradient(90deg, ${barColor}, ${barColor}cc)` }} />
+        <span className="ym-speed-time">{timeLeft}s</span>
       </div>
 
       {/* 문제 카드 — 콤보 높으면 달아오름 */}
@@ -166,7 +168,7 @@ export function Flash({ cards, unlockedSceneIds, onExit, onReplay }: Props) {
         {/* 콜아웃 */}
         {callout && (
           <span className={`ym-speed-callout is-${callout}`}>
-            {callout === 'perfect' ? 'PERFECT! ✨' : callout === 'good' ? 'GOOD!' : 'MISS'}
+            {callout === 'perfect' ? 'PERFECT' : callout === 'good' ? 'HIT' : 'MISS'}
           </span>
         )}
         {callout && <FlashHitFx tone={callout} />}
@@ -205,12 +207,13 @@ export function Flash({ cards, unlockedSceneIds, onExit, onReplay }: Props) {
 
 function FlashHitFx({ tone }: { tone: Exclude<Callout, null> }) {
   const color = tone === 'miss' ? '#e0564a' : tone === 'perfect' ? '#f0b43f' : '#4cae79';
+  const count = tone === 'perfect' ? 10 : 6;
   return (
     <span aria-hidden className={`ym-speed-hitfx is-${tone}`}>
-      {Array.from({ length: tone === 'perfect' ? 14 : 9 }).map((_, i) => (
+      {Array.from({ length: count }).map((_, i) => (
         <i key={i} style={{
           ['--fx-color' as string]: color,
-          ['--fx-rot' as string]: `${i * (360 / (tone === 'perfect' ? 14 : 9))}deg`,
+          ['--fx-rot' as string]: `${i * (360 / count)}deg`,
           animationDelay: `${i * 0.012}s`,
         }} />
       ))}
