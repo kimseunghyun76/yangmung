@@ -1,9 +1,9 @@
 import { SCENE_SENTENCES } from './sceneSentences';
 import type { CLevel } from './types';
 
-const scenes: CLevel[] = Array.from({ length: 31 }, (_, i) => `C${i}` as CLevel);
+const scenes: CLevel[] = Array.from({ length: 41 }, (_, i) => `C${i}` as CLevel);
 const kanaOnly = /^[\u3040-\u309f\u30a0-\u30ffー]+$/u;
-const idPattern = /^ss_c(?:[1-9]|[12][0-9]|30)_\d{2}$/;
+const idPattern = /^ss_c(?:[1-9]|[1-3][0-9]|40)_\d{2}$/;
 const ids = new Set<string>();
 const errors: string[] = [];
 const warnings: string[] = [];
@@ -11,7 +11,7 @@ const warnings: string[] = [];
 for (const scene of scenes) {
   const rows = SCENE_SENTENCES[scene];
   const sceneNo = Number(scene.slice(1));
-  const expected = sceneNo >= 1 && sceneNo <= 13 ? 30 : sceneNo >= 14 && sceneNo <= 30 ? 26 : 0;
+  const expected = sceneNo >= 1 && sceneNo <= 13 ? 30 : sceneNo >= 14 && sceneNo <= 40 ? 26 : 0;
   if (rows.length !== expected) errors.push(`${scene}: expected ${expected}, got ${rows.length}`);
 
   const speakers = { clerk: 0, me: 0 };
