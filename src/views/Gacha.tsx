@@ -15,6 +15,22 @@ const SCENES = CONTENT.missions.filter((m) => m.id !== 'C0');
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place ?? id;
 const sentenceOf = (sceneId: string, sentenceId: string) => SCENE_SENTENCES[sceneId as keyof typeof SCENE_SENTENCES]?.find((s) => s.id === sentenceId);
 type RewardItem = { result: DropResult; sentenceId?: string };
+type RewardArt = 'scene-shard' | 'new-expression-card' | 'level-up-token';
+
+function rewardArt(item: RewardItem): { kind: RewardArt; src: string; label: string } {
+  if (item.result.leveledTo) return { kind: 'level-up-token', src: '/gacha/item/level-up-token.webp', label: '승급 토큰' };
+  if (item.sentenceId) return { kind: 'new-expression-card', src: '/gacha/item/new-expression-card.webp', label: '새 표현 카드' };
+  return { kind: 'scene-shard', src: '/gacha/item/scene-shard.webp', label: '장면 조각' };
+}
+
+function RewardArtImage({ item, size = 112 }: { item: RewardItem; size?: number }) {
+  const art = rewardArt(item);
+  return (
+    <span className={`ym-gacha-item-art is-${art.kind}`} style={{ width: size, height: size }}>
+      <img src={art.src} alt="" aria-hidden width={size} height={size} />
+    </span>
+  );
+}
 
 // 단계 색 링에 장면 아이콘. 실사 보상 대신 게임 아이템 카드처럼 보이게 구성한다.
 function DeckCardFace({ sceneId, tier, size = 56 }: { sceneId: string; tier: number; size?: number }) {
@@ -87,6 +103,7 @@ function RevealCards({ results, shards, animate }: { results: DropResult[]; shar
 
 function RewardPopCard({ item, color, index, total }: { item: RewardItem; color: string; index: number; total: number }) {
   const sentence = item.sentenceId ? sentenceOf(item.result.sceneId, item.sentenceId) : undefined;
+  const art = rewardArt(item);
   return (
     <div
       key={`${item.result.sceneId}:${item.sentenceId ?? index}`}
@@ -97,17 +114,18 @@ function RewardPopCard({ item, color, index, total }: { item: RewardItem; color:
       }}
     >
       <span className="ym-gacha-reward-badge">GET {index}/{total}</span>
-      <DeckCardFace sceneId={item.result.sceneId} tier={item.result.tier} size={90} />
+      <RewardArtImage item={item} size={104} />
       <span className="ym-gacha-reward-place">{placeOf(item.result.sceneId)}</span>
       {sentence ? (
         <>
-          <span className="ym-gacha-reward-type">NEW EXPRESSION</span>
+          <span className="ym-gacha-reward-type">{art.label}</span>
           <span lang="ja" className="ym-gacha-reward-ja">{sentence.kanji ?? sentence.kana}</span>
           <span className="ym-gacha-reward-ko">{sentence.korean}</span>
         </>
       ) : (
         <>
-          <span className="ym-gacha-reward-type">SCENE SHARD</span>
+          <span className="ym-gacha-reward-type">{art.label}</span>
+          <DeckCardFace sceneId={item.result.sceneId} tier={item.result.tier} size={54} />
           <TierRibbon tier={item.result.tier} />
         </>
       )}
@@ -231,7 +249,7 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
                     <RewardPopCard item={currentReward} color={box.colors[1]} index={revealed} total={rewardItems.length} />
                   </div>
                 ) : (
-                  <img className="ym-listening" src="/gacha/item/mystery-sentence.webp" alt="상자에서 나올 표현 카드" width={94} height={120} style={{ position: 'absolute', left: '50%', top: '36%', transform: 'translate(-50%, -50%)', objectFit: 'contain', zIndex: 3, filter: `drop-shadow(0 0 24px ${box.colors[1]}cc)` }} />
+                  <img className="ym-listening" src="/gacha/item/new-expression-card.webp" alt="상자에서 나올 표현 카드" width={112} height={112} style={{ position: 'absolute', left: '50%', top: '36%', transform: 'translate(-50%, -50%)', objectFit: 'contain', zIndex: 3, filter: `drop-shadow(0 0 24px ${box.colors[1]}cc)` }} />
                 )}
               </div>
               <p style={{ color: '#fff', fontWeight: 800, fontSize: 15, textShadow: '0 1px 8px rgba(0,0,0,.5)' }}>
