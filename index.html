@@ -157,11 +157,11 @@
       @keyframes ym-game-card-pop { 0%{opacity:0; transform:perspective(600px) translateY(116px) rotateX(68deg) scale(.34)} 46%{opacity:1; transform:perspective(600px) translateY(-24px) rotateX(-10deg) scale(1.12)} 70%{transform:perspective(600px) translateY(6px) rotateX(4deg) scale(.98)} 100%{opacity:1; transform:perspective(600px) translateY(0) rotateX(0) scale(1)} }
       @keyframes ym-game-card-shine { from{transform:translateX(-130%) rotate(18deg)} to{transform:translateX(155%) rotate(18deg)} }
       @keyframes ym-game-card-float { 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-4px) rotate(1deg)} }
-      @keyframes ym-speed-lines { from{transform:translateY(-30px); opacity:.42} to{transform:translateY(30px); opacity:.78} }
-      @keyframes ym-speed-card-good { 0%{transform:scale(1)} 38%{transform:scale(1.035)} 100%{transform:scale(1)} }
-      @keyframes ym-speed-card-perfect { 0%{transform:scale(.99)} 40%{transform:scale(1.05) rotate(-.8deg)} 68%{transform:scale(.992) rotate(.4deg)} 100%{transform:scale(1)} }
-      @keyframes ym-speed-callout { 0%{opacity:0; transform:translate(-50%,-10px) scale(.55) rotate(-7deg)} 42%{opacity:1; transform:translate(-50%,-22px) scale(1.18) rotate(3deg)} 100%{opacity:1; transform:translate(-50%,-18px) scale(1) rotate(0)} }
-      @keyframes ym-speed-spark { 0%{opacity:0; transform:translate(-50%,-50%) rotate(var(--fx-rot)) translateX(12px) scale(.2)} 25%{opacity:1} 100%{opacity:0; transform:translate(-50%,-50%) rotate(var(--fx-rot)) translateX(120px) scale(1.1)} }
+      @keyframes ym-speed-lines { from{transform:translate3d(-20px,-18px,0); opacity:.12} to{transform:translate3d(20px,18px,0); opacity:.2} }
+      @keyframes ym-speed-card-good { 0%{transform:scale(1)} 42%{transform:scale(1.018)} 100%{transform:scale(1)} }
+      @keyframes ym-speed-card-perfect { 0%{transform:scale(.995)} 34%{transform:scale(1.035)} 66%{transform:scale(.996)} 100%{transform:scale(1)} }
+      @keyframes ym-speed-callout { 0%{opacity:0; transform:translate(-50%,-2px) scale(.82)} 36%{opacity:1; transform:translate(-50%,-16px) scale(1.08)} 100%{opacity:1; transform:translate(-50%,-13px) scale(1)} }
+      @keyframes ym-speed-spark { 0%{opacity:0; transform:translate(-50%,-50%) rotate(var(--fx-rot)) translateX(20px) scaleX(.4)} 22%{opacity:1} 100%{opacity:0; transform:translate(-50%,-50%) rotate(var(--fx-rot)) translateX(92px) scaleX(1)} }
       @keyframes ym-answer-correct { 0%{transform:scale(1)} 34%{transform:scale(1.045)} 100%{transform:scale(1)} }
       @keyframes ym-answer-wrong { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)} 40%{transform:translateX(5px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
       @keyframes ym-timer-shine { from{transform:translateX(-120%)} to{transform:translateX(190%)} }
@@ -258,59 +258,84 @@
       .ym-gacha-reward-ja { max-width: 210px; font-size: 20px; line-height: 1.35; font-weight: 950; text-align: center; text-shadow: 0 2px 12px rgba(0,0,0,.42); }
       .ym-gacha-reward-ko { max-width: 210px; font-size: 12px; line-height: 1.4; font-weight: 750; color: rgba(255,255,255,.72); text-align: center; }
       .ym-flash-arena::before {
-        content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .68;
-        background: radial-gradient(circle at 50% 24%, rgba(240,162,58,.16), transparent 28%), radial-gradient(circle at 80% 12%, rgba(226,101,90,.14), transparent 20%);
-      }
-      .ym-flash-arena.is-hot::before { opacity: .95; }
-      .ym-speed-lines {
-        position: absolute; inset: -80px -30px; pointer-events: none; opacity: .22;
+        content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .72;
         background:
-          repeating-linear-gradient(102deg, transparent 0 18px, rgba(255,255,255,.16) 18px 20px, transparent 20px 44px),
-          repeating-linear-gradient(78deg, transparent 0 26px, rgba(226,101,90,.18) 26px 28px, transparent 28px 58px);
-        animation: ym-speed-lines .62s linear infinite;
+          radial-gradient(circle at 50% 18%, rgba(240,162,58,.14), transparent 30%),
+          radial-gradient(circle at 82% 6%, rgba(185,56,46,.12), transparent 22%),
+          linear-gradient(180deg, transparent 0 58%, color-mix(in srgb, var(--accent), transparent 94%) 100%);
       }
-      .ym-flash-arena.is-low .ym-speed-lines { opacity: .45; }
+      .ym-flash-arena.is-hot::before { opacity: .9; }
+      .ym-speed-lines {
+        position: absolute; inset: -80px -30px; pointer-events: none; opacity: .16;
+        background:
+          repeating-linear-gradient(112deg, transparent 0 22px, rgba(255,255,255,.12) 22px 24px, transparent 24px 58px),
+          repeating-linear-gradient(78deg, transparent 0 34px, color-mix(in srgb, var(--accent), transparent 86%) 34px 36px, transparent 36px 76px);
+        animation: ym-speed-lines 1.1s linear infinite;
+        will-change: transform, opacity;
+      }
+      .ym-flash-arena.is-low .ym-speed-lines { opacity: .34; }
+      .ym-speed-hud {
+        position: relative; z-index: 1; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; margin-top: 8px;
+      }
+      .ym-speed-exit {
+        justify-self: start; border: 0; background: transparent; color: var(--ink-soft); font-weight: 850; cursor: pointer; padding: 5px 4px;
+      }
+      .ym-speed-pill {
+        display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-width: 68px; height: 31px; padding: 0 12px;
+        border-radius: 999px; background: var(--glass-bg-strong); border: 1px solid var(--glass-border);
+        color: var(--ink-soft); box-shadow: var(--glass-shadow); font-size: 12px; font-weight: 950; letter-spacing: .04em; font-variant-numeric: tabular-nums;
+      }
+      .ym-speed-pill b { color: var(--ink-faint); font-weight: 900; }
+      .ym-speed-pill.is-score { justify-self: end; color: var(--accent); }
+      .ym-speed-combo-row { position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; height: 34px; margin-top: 7px; }
+      .ym-speed-ready {
+        font-size: 11px; font-weight: 950; letter-spacing: .18em; color: var(--ink-faint);
+      }
       .ym-combo-badge {
-        display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 15px; border-radius: 999px;
-        background: linear-gradient(135deg, #f0a23a, var(--accent)); color: #fff; border: 1px solid rgba(255,255,255,.34);
-        font-size: 16px; font-weight: 950; letter-spacing: .04em; text-shadow: 0 1px 8px rgba(0,0,0,.3);
-        box-shadow: 0 0 22px rgba(240,162,58,.45), inset 0 1px 0 rgba(255,255,255,.34);
-        animation: ym-burst .42s cubic-bezier(.2,.7,.3,1.2) both;
+        display: inline-flex; align-items: center; justify-content: center; height: 30px; padding: 0 14px; border-radius: 999px;
+        background: linear-gradient(135deg, color-mix(in srgb, #f0a23a, #fff 6%), var(--accent)); color: #fff; border: 1px solid rgba(255,255,255,.32);
+        font-size: 13px; font-weight: 950; letter-spacing: .08em; text-shadow: 0 1px 8px rgba(0,0,0,.28);
+        box-shadow: 0 0 20px color-mix(in srgb, #f0a23a, transparent 58%), inset 0 1px 0 rgba(255,255,255,.34);
+        animation: ym-speed-callout .34s cubic-bezier(.2,.7,.3,1.1) both;
       }
-      .ym-speed-timer { height: 13px; border-radius: 999px; background: rgba(255,255,255,.22); overflow: hidden; box-shadow: inset 0 0 0 1px var(--glass-border), 0 0 18px rgba(0,0,0,.08); }
-      .ym-speed-timer.is-low { box-shadow: inset 0 0 0 1px rgba(224,86,74,.5), 0 0 20px rgba(224,86,74,.45); }
+      .ym-speed-timer { position: relative; z-index: 1; height: 18px; border-radius: 999px; background: color-mix(in srgb, var(--glass-bg-strong), transparent 12%); overflow: hidden; box-shadow: inset 0 0 0 1px var(--glass-border), 0 10px 24px rgba(0,0,0,.08); }
+      .ym-speed-timer.is-low { box-shadow: inset 0 0 0 1px rgba(224,86,74,.58), 0 0 24px rgba(224,86,74,.34); }
       .ym-speed-timer-fill { position: relative; height: 100%; border-radius: 999px; transition: width .07s linear; overflow: hidden; }
       .ym-speed-timer-fill::after {
-        content: ''; position: absolute; top: 0; bottom: 0; width: 42%; left: 0;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,.7), transparent);
-        animation: ym-timer-shine .9s linear infinite;
+        content: ''; position: absolute; top: 0; bottom: 0; width: 34%; left: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+        animation: ym-timer-shine 1.1s linear infinite;
       }
-      .ym-speed-card { z-index: 1; overflow: hidden; }
+      .ym-speed-time {
+        position: absolute; right: 9px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,.92);
+        font-size: 11px; font-weight: 950; letter-spacing: .06em; text-shadow: 0 1px 6px rgba(0,0,0,.32); font-variant-numeric: tabular-nums;
+      }
+      .ym-speed-card { z-index: 1; overflow: hidden; transform-origin: center; }
       .ym-speed-card.is-good { animation: ym-speed-card-good .34s ease both; }
-      .ym-speed-card.is-perfect { animation: ym-speed-card-perfect .46s cubic-bezier(.2,.9,.3,1.2) both; }
-      .ym-speed-card.is-miss { animation: ym-shake .36s ease both; }
+      .ym-speed-card.is-perfect { animation: ym-speed-card-perfect .42s cubic-bezier(.2,.9,.3,1.12) both; }
+      .ym-speed-card.is-miss { animation: ym-shake .3s ease both; }
       .ym-speed-card.is-hot::before, .ym-speed-card.is-perfect::before {
-        content: ''; position: absolute; inset: -30%; pointer-events: none; opacity: .22;
-        background: conic-gradient(from 90deg, transparent 0 20deg, rgba(240,162,58,.8) 20deg 24deg, transparent 24deg 48deg);
-        animation: ym-gacha-rays .9s ease both;
+        content: ''; position: absolute; inset: -20%; pointer-events: none; opacity: .2;
+        background: linear-gradient(112deg, transparent 0 42%, rgba(255,255,255,.42) 48%, transparent 56%);
+        animation: ym-game-card-shine .68s ease both;
       }
       .ym-speed-callout {
-        position: absolute; top: 4px; left: 50%; z-index: 3; padding: 4px 11px; border-radius: 999px;
-        color: #fff; font-size: 15px; font-weight: 950; letter-spacing: .04em; text-shadow: 0 1px 8px rgba(0,0,0,.4);
-        animation: ym-speed-callout .48s cubic-bezier(.2,.7,.3,1.2) both;
+        position: absolute; top: 2px; left: 50%; z-index: 3; padding: 4px 12px; border-radius: 999px;
+        color: #fff; font-size: 12px; font-weight: 950; letter-spacing: .12em; text-shadow: 0 1px 8px rgba(0,0,0,.36);
+        animation: ym-speed-callout .38s cubic-bezier(.2,.7,.3,1.1) both;
       }
-      .ym-speed-callout.is-perfect { background: linear-gradient(135deg, #f8d25a, #f0a23a); box-shadow: 0 0 22px rgba(240,162,58,.58); }
-      .ym-speed-callout.is-good { background: linear-gradient(135deg, #55c48b, #2f7d4f); box-shadow: 0 0 18px rgba(76,174,121,.48); }
-      .ym-speed-callout.is-miss { background: linear-gradient(135deg, #e2655a, #b9382e); box-shadow: 0 0 18px rgba(226,101,90,.52); }
+      .ym-speed-callout.is-perfect { background: linear-gradient(135deg, #f8d25a, #d98522); box-shadow: 0 0 20px rgba(240,162,58,.48); }
+      .ym-speed-callout.is-good { background: linear-gradient(135deg, #55c48b, #2f7d4f); box-shadow: 0 0 16px rgba(76,174,121,.36); }
+      .ym-speed-callout.is-miss { background: linear-gradient(135deg, #e2655a, #b9382e); box-shadow: 0 0 16px rgba(226,101,90,.4); }
       .ym-speed-hitfx { position: absolute; inset: 0; pointer-events: none; overflow: visible; z-index: 2; }
       .ym-speed-hitfx i {
-        position: absolute; left: 50%; top: 48%; width: 9px; height: 9px; border-radius: 999px;
-        background: var(--fx-color, #f0a23a); box-shadow: 0 0 16px var(--fx-color, #f0a23a);
-        animation: ym-speed-spark .48s ease-out both;
+        position: absolute; left: 50%; top: 48%; width: 26px; height: 3px; border-radius: 999px;
+        background: linear-gradient(90deg, transparent, var(--fx-color, #f0a23a), transparent); box-shadow: 0 0 12px var(--fx-color, #f0a23a);
+        animation: ym-speed-spark .42s ease-out both;
       }
-      .ym-speed-hitfx.is-miss i { width: 18px; height: 4px; border-radius: 3px; }
-      .ym-answer-correct { animation: ym-answer-correct .32s cubic-bezier(.2,.9,.3,1.2) both; box-shadow: 0 0 18px rgba(76,174,121,.28); }
-      .ym-answer-wrong { animation: ym-answer-wrong .32s ease both; }
+      .ym-speed-hitfx.is-miss i { width: 22px; height: 3px; background: var(--fx-color, #e0564a); }
+      .ym-answer-correct { animation: ym-answer-correct .28s cubic-bezier(.2,.9,.3,1.1) both; box-shadow: 0 0 16px rgba(76,174,121,.24); }
+      .ym-answer-wrong { animation: ym-answer-wrong .28s ease both; }
       .ym-correct { animation: ym-pop 0.32s ease; }
       .ym-wrong { animation: ym-shake 0.36s ease; }
       .ym-reveal { animation: ym-fade-in 0.28s ease both; }
