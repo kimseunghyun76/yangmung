@@ -7,7 +7,7 @@ export const c13: Mission = {
   place: '라멘',
   canDo: '사용자는 식권기 위치·사용법을 묻고, 곱빼기·면 추가를 요청하며, 막히면 다시·천천히·영어를 청할 수 있다',
   unlockAfter: ['C2'],
-  sequence: ['식권기 찾기', '면 추가·곱빼기'],
+  sequence: ['식권기 찾기', '음료 확인', '면 추가·곱빼기'],
   speakPhraseIds: ['p_kenbaiki', 'p_oomori', 'p_kaedama'],
   steps: [
     {
@@ -19,6 +19,17 @@ export const c13: Mission = {
         { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: true },
         { text: '표 주세요', phraseId: 'p_kippu_kudasai', correct: false, feedback: '역에서 쓰는 말이에요 — 라멘집은 식권기(券売機)예요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
+      ],
+    },
+    {
+      situationKo: '자리에 앉자 직원이 음료를 묻는다',
+      speaker: '점원',
+      promptPhraseId: 'p_nomimono',
+      choices: [
+        { text: '물 주세요', phraseId: 'p_mizu_kudasai', correct: true },
+        { text: '괜찮습니다', phraseId: 'p_daijoubu_desu', correct: true },
+        { text: '환전해 주세요', phraseId: 'p_ryougae', correct: false, feedback: '여긴 라멘집이에요 — 환전소 표현이에요' },
+        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
       ],
     },
     {

@@ -7,7 +7,7 @@ export const c12: Mission = {
   place: '택배',
   canDo: '사용자는 편의점에서 물건을 부치겠다고 말하고 요금을 물으며, 직원 안내를 못 알아들으면 다시·천천히·영어를 청할 수 있다',
   unlockAfter: ['C1'],
-  sequence: ['부치기 요청', '안내 듣기'],
+  sequence: ['부치기 요청', '이름 확인', '영수증 확인'],
   speakPhraseIds: ['p_okuritai', 'p_takkyubin'],
   steps: [
     {
@@ -22,13 +22,25 @@ export const c12: Mission = {
       ],
     },
     {
-      situationKo: '직원이 주소·크기를 빠르게 묻는다',
+      situationKo: '직원이 보내는 사람 이름을 묻는다',
       speaker: '점원',
+      promptPhraseId: 'p_onamae_wa',
       choices: [
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
         { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true },
+      ],
+    },
+    {
+      situationKo: '직원이 영수증이 필요한지 묻는다',
+      speaker: '점원',
+      promptPhraseId: 'p_reshiito_irimasu_ka',
+      choices: [
+        { text: '영수증 주세요', phraseId: 'p_reshiito_kudasai', correct: true },
+        { text: '필요 없어요', phraseId: 'p_irimasen', correct: true },
+        { text: '데워 주세요', phraseId: 'p_atatamete', correct: false, feedback: '택배 영수증 상황과 안 맞아요 — 편의점 데우기 표현' },
+        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
       ],
     },
   ],

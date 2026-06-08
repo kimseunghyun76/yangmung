@@ -110,10 +110,12 @@ export const phrases: Phrase[] = [
   // ── C11 코인로커 ──
   { id: 'p_koinrokkaa', kana: 'コインロッカーはどこですか', displayKana: 'コインロッカーは、どこですか？', korean: '코인로커 어디예요?', register: 'productive', grammarRefs: ['g_masuka'] },
   { id: 'p_tsukaikata', kana: 'つかいかたをおしえてください', kanji: '使い方を教えてください', korean: '사용법 알려 주세요', register: 'productive' },
+  { id: 'p_kono_botan_oshite', kana: 'このボタンをおしてください', kanji: 'このボタンを押してください', displayKana: 'このボタンを、おしてください', korean: '이 버튼을 눌러 주세요', register: 'receptive' },
 
   // ── C12 편의점 택배(택큐빈) ──
   { id: 'p_okuritai', kana: 'これをおくりたいです', kanji: 'これを送りたいです', displayKana: 'これを、おくりたいです', korean: '이거 보내고 싶어요', register: 'productive' },
   { id: 'p_takkyubin', kana: 'たっきゅうびんおねがいします', kanji: '宅急便お願いします', displayKana: 'たっきゅうびん、おねがいします', korean: '택배 부탁해요', register: 'productive' },
+  { id: 'p_reshiito_irimasu_ka', kana: 'レシートはいりますか', displayKana: 'レシートは、いりますか？', korean: '영수증 필요하세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
 
   // ── C13 라멘 식권기 ──
   { id: 'p_kenbaiki', kana: 'けんばいきはどこですか', kanji: '券売機はどこですか', displayKana: 'けんばいきは、どこですか？', korean: '식권기 어디예요?', register: 'productive', grammarRefs: ['g_masuka'] },
