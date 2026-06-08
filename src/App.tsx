@@ -12,7 +12,7 @@ import { adaptSessionConfig, diagnose } from './learn/adaptive';
 import { extractKanaChars } from './learn/kanaReading';
 import { loadSettings, MODE_PRESETS, saveSettings, type Settings } from './learn/settings';
 import { sessionGoalText } from './views/goal';
-import { speak, ttsSupported } from './tts';
+import { speak, stopSpeaking, ttsSupported } from './tts';
 import { WRAP } from './ui/styles';
 import type { PickMap } from './views/OrderCard';
 import type { KanaItem } from './content/types';
@@ -88,6 +88,12 @@ export function App() {
   );
   const sessionConfig = settings.mode === 'review' ? baseConfig : adaptSessionConfig(baseConfig, diag).config;
 
+  function clearAdvanceTimers() {
+    if (advanceTimerRef.current) { clearTimeout(advanceTimerRef.current); advanceTimerRef.current = null; }
+    if (safetyTimerRef.current) { clearTimeout(safetyTimerRef.current); safetyTimerRef.current = null; }
+    pendingAdvanceKeyRef.current = null;
+  }
+
   // 카드에서 "본 가나"로 적립할 가나 문자 — 깔끔한 가나 필드가 있는 카드만.
   function creditKana(c: Card) {
     const chars = cardKanaChars(c);
@@ -113,7 +119,7 @@ export function App() {
     else if (card.kind === 'dictation' && card.promptKind !== 'korean') ja = card.ja; // 작문(한국어 프롬프트)은 자동재생 X
     if (!ja) return;
     const t = window.setTimeout(() => speak(ja, { rate: settings.slowListening ? 0.6 : 0.95 }), 120);
-    return () => clearTimeout(t);
+    return () => { clearTimeout(t); stopSpeaking(); };
   }, [i, view, card, settings.slowListening]);
 
   // 주간/야간 테마를 <html data-theme>에 반영
@@ -123,8 +129,8 @@ export function App() {
   useEffect(() => {
     cardStartRef.current = Date.now();
     currentCardKeyRef.current = card ? `${i}:${card.id}` : '';
-    pendingAdvanceKeyRef.current = null;
-    return () => { if (advanceTimerRef.current) { clearTimeout(advanceTimerRef.current); advanceTimerRef.current = null; } };
+    clearAdvanceTimers();
+    return clearAdvanceTimers;
   }, [i, view, card]);
 
   // 세션 중 카드 소진되면 done으로 (render 중 setState 금지)
@@ -257,9 +263,7 @@ export function App() {
     setSeenKana((prev) => { const nx = markKanaKnown(prev, chars); saveSeenKana(nx); return nx; });
   }
   function next() {
-    if (advanceTimerRef.current) { clearTimeout(advanceTimerRef.current); advanceTimerRef.current = null; }
-    if (safetyTimerRef.current) { clearTimeout(safetyTimerRef.current); safetyTimerRef.current = null; }
-    pendingAdvanceKeyRef.current = null;
+    clearAdvanceTimers();
     // 팁 카드는 점수 없이 "본 적 있음"만 기록 → 다음 세션엔 다른 팁이 회전해 나옴
     if (card?.kind === 'tip') {
       const updated = recordAttempt(progress, card.id, { correct: true, usedRecovery: false, sessionId });

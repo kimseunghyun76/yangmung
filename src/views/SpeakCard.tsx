@@ -29,9 +29,12 @@ export function SpeakCardView({ card, isKanaFamiliar, onPracticed, onNext }: Pro
   const chunksRef = useRef<Blob[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
   const urlRef = useRef<string | null>(null);
+  const playbackRef = useRef<HTMLAudioElement | null>(null);
 
   // 정리 — 스트림 정지 + objectURL 해제
   useEffect(() => () => {
+    playbackRef.current?.pause();
+    playbackRef.current = null;
     streamRef.current?.getTracks().forEach((t) => t.stop());
     if (urlRef.current) URL.revokeObjectURL(urlRef.current);
   }, []);
@@ -66,7 +69,15 @@ export function SpeakCardView({ card, isKanaFamiliar, onPracticed, onNext }: Pro
     }
   }
   function stopRec() { mrRef.current?.stop(); }
-  function playMine() { if (urlRef.current) { new Audio(urlRef.current).play().catch(() => {}); } }
+  function playMine() {
+    if (!urlRef.current) return;
+    playbackRef.current?.pause();
+    const audio = new Audio(urlRef.current);
+    playbackRef.current = audio;
+    audio.onended = () => { if (playbackRef.current === audio) playbackRef.current = null; };
+    audio.onerror = () => { if (playbackRef.current === audio) playbackRef.current = null; };
+    audio.play().catch(() => { if (playbackRef.current === audio) playbackRef.current = null; });
+  }
 
   return (
     <div>
