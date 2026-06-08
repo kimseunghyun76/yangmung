@@ -1,5 +1,5 @@
 // 상태·라우팅 허브 — 화면 렌더링은 src/views/* 에 위임.
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { buildCards, type Card, type Choice, type DiscoverCard } from './learn/cards';
 import { CONTENT } from './content';
 import {
@@ -14,21 +14,26 @@ import { loadSettings, MODE_PRESETS, saveSettings, type Settings } from './learn
 import { sessionGoalText } from './views/goal';
 import { speak, ttsSupported } from './tts';
 import { WRAP } from './ui/styles';
-import { Home } from './views/Home';
-import { Intro } from './views/Intro';
-import { Session } from './views/Session';
 import type { PickMap } from './views/OrderCard';
-import { Done } from './views/Done';
-import { Map } from './views/Map';
-import { Flash } from './views/Flash';
-import { KanaWrite } from './views/KanaWrite';
-import { Review } from './views/Review';
 import type { KanaItem } from './content/types';
-import { Guide } from './views/Guide';
-import { SettingsModal } from './views/SettingsModal';
 import { MascotEmpty } from './views/mascot';
 
 type View = 'home' | 'map' | 'review' | 'intro' | 'session' | 'done' | 'flash' | 'write';
+
+const Home = lazy(() => import('./views/Home').then((m) => ({ default: m.Home })));
+const Intro = lazy(() => import('./views/Intro').then((m) => ({ default: m.Intro })));
+const Session = lazy(() => import('./views/Session').then((m) => ({ default: m.Session })));
+const Done = lazy(() => import('./views/Done').then((m) => ({ default: m.Done })));
+const MapView = lazy(() => import('./views/Map').then((m) => ({ default: m.Map })));
+const Flash = lazy(() => import('./views/Flash').then((m) => ({ default: m.Flash })));
+const KanaWrite = lazy(() => import('./views/KanaWrite').then((m) => ({ default: m.KanaWrite })));
+const Review = lazy(() => import('./views/Review').then((m) => ({ default: m.Review })));
+const Guide = lazy(() => import('./views/Guide').then((m) => ({ default: m.Guide })));
+const SettingsModal = lazy(() => import('./views/SettingsModal').then((m) => ({ default: m.SettingsModal })));
+
+function AppFallback() {
+  return <main style={WRAP}><MascotEmpty who="yang" title="화면을 준비하고 있어요">잠시만 기다려 주세요.</MascotEmpty></main>;
+}
 
 export function App() {
   const allCards = useMemo<Card[]>(buildCards, []);
@@ -349,7 +354,7 @@ export function App() {
 
   function renderView() {
     if (view === 'map') {
-      return <Map nav={{ ...nav, current: 'map' }} allCards={allCards} progress={progress} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
+      return <MapView nav={{ ...nav, current: 'map' }} allCards={allCards} progress={progress} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
     }
     if (view === 'review') {
       return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} onBack={() => setView('home')} />;
@@ -434,12 +439,12 @@ export function App() {
   }
 
   return (
-    <>
+    <Suspense fallback={<AppFallback />}>
       {renderView()}
       {showGuide && <Guide onClose={() => setShowGuide(false)} />}
       {showSettings && (
         <SettingsModal settings={settings} onChange={updateSettings} onSelectMode={selectMode} onMarkKanaKnown={markAllKanaKnown} onReset={resetAll} onClose={() => setShowSettings(false)} />
       )}
-    </>
+    </Suspense>
   );
 }
