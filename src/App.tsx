@@ -32,7 +32,7 @@ const Guide = lazy(() => import('./views/Guide').then((m) => ({ default: m.Guide
 const SettingsModal = lazy(() => import('./views/SettingsModal').then((m) => ({ default: m.SettingsModal })));
 
 function AppFallback() {
-  return <main style={WRAP}><MascotEmpty who="yang" title="화면을 준비하고 있어요">잠시만 기다려 주세요.</MascotEmpty></main>;
+  return <main style={WRAP}><MascotEmpty who="yang" mood="loading" title="화면을 준비하고 있어요">잠시만 기다려 주세요.</MascotEmpty></main>;
 }
 
 export function App() {
@@ -411,7 +411,7 @@ export function App() {
       );
     }
     if (view === 'session') {
-      if (!card) return <main style={WRAP}><MascotEmpty who="mung" title="장면을 준비하고 있어요">잠시만 기다려 주세요.</MascotEmpty></main>;
+      if (!card) return <main style={WRAP}><MascotEmpty who="yang" mood="loading" title="장면을 준비하고 있어요">잠시만 기다려 주세요.</MascotEmpty></main>;
       return (
         <Session
           card={card}
