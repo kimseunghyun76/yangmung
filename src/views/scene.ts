@@ -68,6 +68,16 @@ const BY_PLACE: Record<string, SceneVisual> = {
   통신매장: { emoji: '信', icon: 'scene-shopping', bg: '#f5f3ff', accent: '#7c3aed' },
   코인세탁: { emoji: '洗', icon: 'scene-store', bg: '#ecfeff', accent: '#0891b2' },
   축제: { emoji: '祭', icon: 'scene-street', bg: '#fff7ed', accent: '#ea580c' },
+  회전초밥: { emoji: '鮨', icon: 'scene-restaurant', bg: '#ecfeff', accent: '#0891b2' },
+  편집샵피팅: { emoji: '服', icon: 'scene-shopping', bg: '#fdf4ff', accent: '#c026d3' },
+  호텔우산: { emoji: '傘', icon: 'scene-hotel', bg: '#eff6ff', accent: '#2563eb' },
+  호텔방변경: { emoji: '室', icon: 'scene-hotel', bg: '#f3f0ff', accent: '#7c3aed' },
+  나리타역: { emoji: '券', icon: 'scene-train', bg: '#eff6ff', accent: '#1d4ed8' },
+  공항수하물: { emoji: '荷', icon: 'scene-airport', bg: '#f1f5f9', accent: '#475569' },
+  조식뷔페: { emoji: '朝', icon: 'scene-restaurant', bg: '#fff7ed', accent: '#d97706' },
+  스시추가: { emoji: '魚', icon: 'scene-restaurant', bg: '#ecfeff', accent: '#0e7490' },
+  파스타: { emoji: '麺', icon: 'scene-restaurant', bg: '#fff4ec', accent: '#ea580c' },
+  편집샵계산: { emoji: '税', icon: 'scene-shopping', bg: '#fdf4ff', accent: '#c026d3' },
   가게: { emoji: '店', icon: 'scene-store', bg: '#fdf2f8', accent: '#db2777' },
 };
 

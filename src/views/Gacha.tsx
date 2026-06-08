@@ -49,14 +49,22 @@ function TierRibbon({ tier }: { tier: number }) {
   return <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.06em', color: meta.color, border: `1.5px solid ${meta.color}`, borderRadius: 6, padding: '1px 6px' }}>{meta.label}</span>;
 }
 
-// 등급 박스 비주얼 — 이미지 있으면 사용, 없으면 이모지+그라데이션 폴백.
+// 등급 박스 비주얼 — 중국풍 보물상자 대신 일본 만화풍 캡슐 오르골 박스를 사용.
 function BoxArt({ grade, size = 64, className, open = false }: { grade: BoxGrade; size?: number; className?: string; open?: boolean }) {
   const [failed, setFailed] = useState(false);
   const box = BOX[grade];
   if (failed) {
-    return <span className={className} style={{ width: size, height: size, borderRadius: Math.round(size * 0.28), display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: Math.round(size * 0.5), background: `linear-gradient(160deg, ${box.colors[0]}, ${box.colors[1]})`, boxShadow: `0 10px 26px ${box.colors[0]}66` }}>🎁</span>;
+    return <span className={className} style={{ width: size, height: size, borderRadius: Math.round(size * 0.28), display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: Math.round(size * 0.5), background: `linear-gradient(160deg, ${box.colors[0]}, ${box.colors[1]})`, boxShadow: `0 10px 26px ${box.colors[0]}66` }}>✦</span>;
   }
-  return <img className={className} src={`/gacha/box/${grade}${open ? '-open' : ''}.webp`} alt="" aria-hidden width={size} height={size} onError={() => setFailed(true)} style={{ objectFit: 'contain', filter: `drop-shadow(0 14px 24px ${box.colors[0]}66)` }} />;
+  return (
+    <span className={`ym-yumebox ${open ? 'is-open' : 'is-closed'} ${className ?? ''}`} style={{
+      ['--box-grade' as string]: box.colors[1],
+      width: size,
+      height: size,
+    }}>
+      <img src={`/gacha/box/${open ? 'yumebox' : 'yumebox-closed'}.png`} alt="" aria-hidden width={size} height={size} onError={() => setFailed(true)} />
+    </span>
+  );
 }
 
 function RevealCards({ results, shards, animate }: { results: DropResult[]; shards: number; animate?: boolean }) {

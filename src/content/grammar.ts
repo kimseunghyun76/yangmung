@@ -35,6 +35,13 @@ export const grammar: GrammarPoint[] = [
   { id: 'g_translate', category: '여행', label: '막히면 번역앱 카메라', tipKo: '메뉴·간판이 안 읽히면 번역앱 카메라로 비추면 돼요. 그래도 인사·숫자는 입으로 해보는 게 빨라요.' },
   { id: 'g_toilet', category: '여행', label: '화장실은 깨끗하고 많아요', tipKo: '편의점·역·백화점 화장실이 깨끗해요. 비데 버튼은 おしり(엉덩이)·とめる(정지). 급하면 トイレはどこですか.' },
 
+  // ── 회화 학습법 ──
+  { id: 'g_conversation_shadowing', category: '회화법', label: '듣고 바로 따라 말하기', tipKo: '회화는 눈으로 아는 문장을 입으로 꺼내는 훈련이 핵심입니다. 원음을 듣고 1초 안에 같은 속도로 따라 말하세요.', action: '세션의 듣기 버튼을 누른 뒤 화면을 보지 않고 한 번 더 따라 말해 보세요.' },
+  { id: 'g_conversation_chunk', category: '회화법', label: '단어보다 덩어리로 외우기', tipKo: '실전에서는 문법을 조립할 시간이 없습니다. 「〜お願いします」「〜ありますか」처럼 바로 붙여 쓰는 덩어리로 저장하세요.', exampleJa: 'Mサイズはありますか', exampleKo: 'M 사이즈 있나요?', action: '명사만 바꿔 같은 틀로 세 번 말해 보세요.' },
+  { id: 'g_conversation_roleplay', category: '회화법', label: '혼잣말보다 역할극', tipKo: '혼자 문장을 읽는 것보다 상대 질문을 듣고 바로 답하는 연습이 회화에 더 가깝습니다.', commonMistake: '내가 말할 문장만 외우면 실제 질문을 못 알아듣고 멈추기 쉬워요.', action: '대화 다시보기에서 상대 일본어 질문까지 소리 내어 읽어 보세요.' },
+  { id: 'g_conversation_recovery', category: '회화법', label: '막히면 복구문부터', tipKo: '잘하는 사람도 못 알아듣는 순간이 있습니다. 중요한 건 멈추지 않고 다시 말하기·천천히·쉬운 일본어로 우회하는 것입니다.', exampleJa: 'ゆっくりお願いします', exampleKo: '천천히 부탁합니다.', action: '오답이 나와도 복구 선택지를 한 번 눌러 입으로 다시 말하세요.' },
+  { id: 'g_conversation_my_case', category: '회화법', label: '내 여행 상황으로 바꾸기', tipKo: '회화 실력은 내 상황을 말할 때 늘어납니다. 앱 문장을 그대로 끝내지 말고 내 호텔·역·가게 이름으로 바꿔 보세요.', action: '오늘 실제로 갈 장소 하나를 넣어 「〜までお願いします」를 만들어 보세요.' },
+
   // ── 확장 장면 실전 팁 ──
   { id: 'g_cafe', category: '장면', label: '카페 주문은 크기부터', tipKo: '체인 카페에서는 음료 뒤에 크기와 뜨거움·차가움을 연달아 물을 수 있어요.', exampleJa: 'これを一つお願いします', exampleKo: '이거 하나 부탁합니다.', action: '못 들으면 질문마다 はい 또는 ゆっくりお願いします로 끊어 답하세요.' },
   { id: 'g_bakery', category: '장면', label: '빵집은 트레이와 집게', tipKo: '대부분 직접 담은 뒤 계산대로 가져갑니다.', exampleJa: 'これとこれをお願いします', exampleKo: '이거와 이거 부탁합니다.', action: '빵 이름을 몰라도 가리키며 개수를 말하면 충분해요.' },

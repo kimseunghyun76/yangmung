@@ -15,5 +15,6 @@ import { c11 } from './c11-locker';
 import { c12 } from './c12-delivery';
 import { c13 } from './c13-ramen';
 import { moreMissions } from './c14-c30-more';
+import { frictionMissions } from './c31-c40-travel-friction';
 
-export const missions: Mission[] = [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, ...moreMissions];
+export const missions: Mission[] = [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, ...moreMissions, ...frictionMissions];
