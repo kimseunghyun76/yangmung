@@ -5,14 +5,16 @@ const scenes: CLevel[] = Array.from({ length: 41 }, (_, i) => `C${i}` as CLevel)
 const kanaOnly = /^[\u3040-\u309f\u30a0-\u30ffー]+$/u;
 const idPattern = /^ss_c(?:[1-9]|[1-3][0-9]|40)_\d{2}$/;
 const ids = new Set<string>();
+const allKana = new Map<string, string>(); // 전역 kana → 최초 등장 장면 (장면 간 중복 금지)
 const errors: string[] = [];
 const warnings: string[] = [];
 
 for (const scene of scenes) {
   const rows = SCENE_SENTENCES[scene];
   const sceneNo = Number(scene.slice(1));
-  const expected = sceneNo >= 1 && sceneNo <= 13 ? 30 : sceneNo >= 14 && sceneNo <= 40 ? 26 : 0;
-  if (rows.length !== expected) errors.push(`${scene}: expected ${expected}, got ${rows.length}`);
+  // 정책: 장면당 최대 10개. 10개 초과는 에러, 미만은 경고(콘텐츠 보충 필요).
+  if (rows.length > 10) errors.push(`${scene}: ${rows.length}개 — 최대 10개 초과`);
+  if (sceneNo >= 1 && sceneNo <= 40 && rows.length < 10) warnings.push(`${scene}: ${rows.length}개 (10개 미만 — 보충 필요)`);
 
   const speakers = { clerk: 0, me: 0 };
   const tiers = { 1: 0, 2: 0, 3: 0 };
@@ -25,6 +27,9 @@ for (const scene of scenes) {
     if (!kanaOnly.test(row.kana)) errors.push(`${row.id}: kana contains unsupported characters: ${row.kana}`);
     if (kanaInScene.has(row.kana)) errors.push(`${row.id}: duplicate kana in ${scene}: ${row.kana}`);
     kanaInScene.add(row.kana);
+    const prevScene = allKana.get(row.kana);
+    if (prevScene && prevScene !== scene) errors.push(`${row.id}: 장면 간 중복 (${scene} ↔ ${prevScene}): ${row.kana}`);
+    else allKana.set(row.kana, scene);
     if (!row.romaji.trim()) errors.push(`${row.id}: romaji is empty`);
     if (!row.korean.trim()) errors.push(`${row.id}: korean is empty`);
     if (row.speaker === 'clerk' && row.register === 'productive') errors.push(`${row.id}: clerk cannot be productive`);
@@ -34,10 +39,7 @@ for (const scene of scenes) {
     if ((row.tip?.length ?? 0) > 40) warnings.push(`${row.id}: tip exceeds 40 characters`);
   }
 
-  if (expected > 0) {
-    if (speakers.clerk < 8 || speakers.me < 16) warnings.push(`${scene}: speaker balance clerk/me=${speakers.clerk}/${speakers.me}`);
-    if (tiers[1] < 12 || tiers[2] < 8 || tiers[3] < 4) warnings.push(`${scene}: tier balance=${tiers[1]}/${tiers[2]}/${tiers[3]}`);
-  }
+  void speakers; void tiers; // 균형 경고는 10개 정책에서 비활성
 }
 
 console.log(`scene sentences: ${ids.size} items, ${errors.length} errors, ${warnings.length} warnings`);
