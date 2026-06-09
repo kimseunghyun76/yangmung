@@ -56,17 +56,18 @@ export function Admin() {
     edit((o) => { (o.sentences ??= {})[sid] ??= {}; o.sentences[sid][key] = val; });
   }
 
-  // 한국어로 입력 → 일본어 자동 번역(서버리스 /api/translate · AI Gateway) → 일/한 모두 반영
+  // 한국어로 입력 → 일본어 자동 번역(MyMemory · 무료·키 불필요·CORS 허용, 브라우저 직접 호출) → 일/한 반영
   async function translateInto(sid: string) {
     const ko = window.prompt('한국어로 입력하면 일본어로 번역해서 채울게요:');
     if (!ko) return;
     try {
-      const r = await fetch('/api/translate', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ko }) });
+      const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(ko)}&langpair=ko|ja`);
       const d = await r.json();
-      if (!r.ok || !d.ja) { alert('번역 실패: ' + (d.error ?? r.status) + '\n(배포 + AI_GATEWAY_API_KEY 설정 필요)'); return; }
-      edit((o) => { (o.sentences ??= {})[sid] ??= {}; o.sentences[sid].kanji = d.ja; o.sentences[sid].korean = ko; });
+      const jaText: string | undefined = d?.responseData?.translatedText;
+      if (!jaText || /MYMEMORY WARNING|INVALID/i.test(jaText)) { alert('번역 실패: ' + (jaText ?? d?.responseStatus ?? '알 수 없음')); return; }
+      edit((o) => { (o.sentences ??= {})[sid] ??= {}; o.sentences[sid].kanji = jaText.trim(); o.sentences[sid].korean = ko; });
     } catch (e) {
-      alert('번역 호출 실패: ' + String(e) + '\n(로컬 dev에선 /api 미동작 — 배포본에서 사용)');
+      alert('번역 호출 실패: ' + String(e));
     }
   }
 
@@ -92,7 +93,7 @@ export function Admin() {
       <p style={{ fontSize: 13, color: '#666', margin: '6px 0 14px' }}>
         장면 {scenes.length}개 · 검증 경고 {totalFlags}건 · 편집 항목 {editedCount}개 ·
         편집은 이 기기에 즉시 반영(localStorage), 소스 영구반영은 <b>내보내기</b>.
-        문장 도감의 <b>🌐 한→일</b>: 한국어로 입력하면 일본어로 자동 번역(배포본 + AI Gateway 키 필요).
+        문장 도감의 <b>🌐 한→일</b>: 한국어로 입력하면 일본어로 자동 번역(무료 MyMemory, 키 불필요).
       </p>
 
       <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
