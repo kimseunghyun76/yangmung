@@ -78,7 +78,7 @@ function BoxArt({ grade, size = 64, className, open = false }: { grade: BoxGrade
       width: size,
       height: size,
     }}>
-      <img src={`/gacha/box/${open ? 'yumebox' : 'yumebox-closed'}.png`} alt="" aria-hidden width={size} height={size} onError={() => setFailed(true)} />
+      <img src={`/gacha/box/${open ? 'yumebox-manga' : 'yumebox-closed-manga'}.webp`} alt="" aria-hidden width={size} height={size} onError={() => setFailed(true)} />
     </span>
   );
 }
