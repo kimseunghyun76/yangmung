@@ -14,7 +14,7 @@ type Mission = typeof CONTENT.missions[number];
 function flagsFor(m: Mission): string[] {
   const f: string[] = [];
   if (m.steps.length < 3) f.push(`스텝 ${m.steps.length}개(<3)`);
-  const clerkNoPrompt = m.steps.filter((s) => s.speaker && s.speaker !== '나' && !s.promptPhraseId).length;
+  const clerkNoPrompt = m.steps.filter((s) => s.speaker && s.speaker !== '나' && !s.promptPhraseId && !s.recapPromptJa).length;
   if (clerkNoPrompt) f.push(`상대 대사 없음 ×${clerkNoPrompt}`);
   const fb = m.steps.reduce((a, s) => a + s.choices.filter((c) => c.feedback).length, 0);
   if (fb === 0) f.push('오답 피드백 0');
@@ -193,7 +193,9 @@ export function Admin() {
                     스텝 {si + 1} · 화자: <b>{s.speaker ?? '—'}</b>
                     {s.promptPhraseId
                       ? <> · 상대 대사: <span lang="ja">{ja(s.promptPhraseId)}</span> <span style={{ color: '#aaa' }}>({ko(s.promptPhraseId)})</span></>
-                      : (s.speaker && s.speaker !== '나' ? <span style={{ color: '#b9382e' }}> · ⚠️ 상대 대사 없음(복습 시 기본 문구로 대체)</span> : <span style={{ color: '#bbb' }}> · (사용자 주도)</span>)}
+                      : s.recapPromptJa
+                        ? <> · 상대 대사: <span lang="ja">{s.recapPromptJa}</span> <span style={{ color: '#aaa' }}>({s.recapPromptKo ?? s.situationKo})</span></>
+                        : (s.speaker && s.speaker !== '나' ? <span style={{ color: '#b9382e' }}> · ⚠️ 상대 대사 없음(복습 시 기본 문구로 대체)</span> : <span style={{ color: '#bbb' }}> · (사용자 주도)</span>)}
                   </div>
                   <Field label="상황(situationKo)" value={s.situationKo} onSave={(v) => setStep(m.id, si, v)} />
                   <div style={{ marginTop: 6 }}>

@@ -41,6 +41,11 @@ export interface QuizCard {
   sub: string;
   promptPhrase?: ChoicePhrase;
   choices: Choice[];
+  choicePools?: {
+    correct: Choice[];
+    wrong: Choice[];
+    recovery: Choice[];
+  };
   listen?: boolean;
   reviewTarget?: ReviewTarget; // SRS 대상 (없으면 추적 X)
 }
@@ -140,9 +145,23 @@ function shuffle<T>(a: T[]): T[] {
   return r;
 }
 
-// 미션 스텝 → 퀴즈 선택지. 단일 정답 강제: 비복구 정답이 2개 이상이면 첫 정답만 정답으로 두고
-// 나머지(유효하지만)는 '이번 정답 아님'으로 강등(테스트 결론: 정답이 여러 개면 변별이 안 됨). + 위치 셔플.
-function buildStepChoices(stepChoices: MissionStep['choices'], byPhrase: (id: string) => Phrase): Choice[] {
+function materializeChoicePools(pools: NonNullable<QuizCard['choicePools']>): Choice[] {
+  const correct = shuffle(pools.correct).slice(0, 1);
+  const recovery = shuffle(pools.recovery).slice(0, 1);
+  const wrong = shuffle(pools.wrong).slice(0, 3);
+  return shuffle([...correct, ...wrong, ...recovery].map((c) => ({ ...c })));
+}
+
+export function materializeQuizCard(card: Card): Card {
+  if (card.kind !== 'quiz' || !card.choicePools) return card;
+  return { ...card, choices: materializeChoicePools(card.choicePools) };
+}
+
+const fallbackRecoveryIds = ['p_mou_ichido', 'p_yukkuri', 'p_yasashii_nihongo', 'p_eigo_de'];
+
+// 미션 스텝 → 퀴즈 선택지 풀.
+// 정책: 정답 후보 중 1개만 노출 + 오답 3개 + 복구 1개. 세션 시작 때마다 다시 뽑아 새 문제처럼 보이게 한다.
+function buildStepChoicePools(stepChoices: MissionStep['choices'], byPhrase: (id: string) => Phrase, allPhrases: Phrase[]): NonNullable<QuizCard['choicePools']> {
   const built: Choice[] = stepChoices.map((c) => ({
     label: c.text,
     correct: c.correct,
@@ -151,15 +170,57 @@ function buildStepChoices(stepChoices: MissionStep['choices'], byPhrase: (id: st
     feedback: c.feedback,
     phrase: c.phraseId ? phraseInfo(byPhrase(c.phraseId)) : undefined,
   }));
-  const corrects = built.filter((c) => c.correct && !c.recovery);
-  if (corrects.length > 1) {
-    const answer = corrects[0];
-    for (const c of corrects.slice(1)) {
-      c.correct = false;
-      if (!c.feedback) c.feedback = `이번 카드의 정답은 「${answer.label}」 하나예요 — 이 선택지는 오답으로 처리됩니다`;
+  const usedPhraseIds = new Set(stepChoices.map((c) => c.phraseId).filter(Boolean));
+  const usedLabels = new Set(built.map((c) => c.label));
+  const correct = built.filter((c) => c.correct && !c.recovery);
+  const recovery = built.filter((c) => c.recovery);
+  const wrong = built.filter((c) => !c.correct && !c.recovery);
+
+  // 작성 데이터가 아직 3개 정답 후보를 모두 갖추지 못한 장면도 있다.
+  // 새 정답을 억지로 창작하면 맥락 오류가 생기므로, 검증된 기존 정답을 복제해 "3개 후보 중 1개 노출" 규칙만 보장한다.
+  while (correct.length > 0 && correct.length < 3) {
+    const src = correct[correct.length % Math.max(1, correct.length)];
+    correct.push({ ...src });
+  }
+
+  if (recovery.length === 0) {
+    const p = fallbackRecoveryIds.map((id) => allPhrases.find((x) => x.id === id)).find((x): x is Phrase => !!x && !usedPhraseIds.has(x.id));
+    if (p) {
+      recovery.push({
+        label: p.korean,
+        correct: true,
+        recovery: true,
+        ja: ttsText(p),
+        phrase: phraseInfo(p),
+        feedback: '못 알아들었을 때는 복구 표현으로 다시 요청하면 됩니다.',
+      });
+      usedPhraseIds.add(p.id);
+      usedLabels.add(p.korean);
     }
   }
-  return shuffle(built);
+
+  if (wrong.length < 3) {
+    const distractors = shuffle(allPhrases.filter((p) =>
+      !usedPhraseIds.has(p.id)
+      && !usedLabels.has(p.korean)
+      && p.korean.length <= 18
+      && !fallbackRecoveryIds.includes(p.id),
+    ));
+    for (const p of distractors) {
+      if (wrong.length >= 3) break;
+      wrong.push({
+        label: p.korean,
+        correct: false,
+        ja: ttsText(p),
+        phrase: phraseInfo(p),
+        feedback: '이번 상황에서 요구된 답은 아니에요.',
+      });
+      usedPhraseIds.add(p.id);
+      usedLabels.add(p.korean);
+    }
+  }
+
+  return { correct, wrong, recovery };
 }
 
 // 한 드릴 Unit(예: K1, K2)의 가나 카드 3종 생성 — read 전체 → listen 전체 → confuse 전체.
@@ -314,16 +375,21 @@ export function buildCards(): Card[] {
 
     m.steps.forEach((step, idx) => {
       const prompt = step.promptPhraseId ? byPhrase(step.promptPhraseId) : undefined;
+      const recapPrompt = !prompt && step.recapPromptJa
+        ? { kana: step.recapPromptJa, kanji: step.recapPromptJa, korean: step.recapPromptKo ?? step.situationKo }
+        : undefined;
+      const choicePools = buildStepChoicePools(step.choices, byPhrase, phrases);
       cards.push({
         kind: 'quiz', id: `mission:${m.id}:${idx}`, tag: `${m.id} 미션`,
         scenario: m.scenario,
         banner: step.situationKo,
-        bannerJa: ttsText(prompt),
+        bannerJa: ttsText(prompt) ?? step.recapPromptJa,
         // prompt이 있으면 kana는 promptPhrase로 분리(발음 보조 렌더). sub엔 화자만.
         sub: step.speaker ?? '',
-        promptPhrase: phraseInfo(prompt),
+        promptPhrase: phraseInfo(prompt) ?? recapPrompt,
         reviewTarget: { type: 'mission', id: m.id as CLevel },
-        choices: buildStepChoices(step.choices, byPhrase),
+        choicePools,
+        choices: materializeChoicePools(choicePools),
       });
     });
 

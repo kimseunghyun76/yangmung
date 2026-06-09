@@ -174,6 +174,60 @@ const backfillByMission: Partial<Record<string, BackfillStep[]>> = {
   ],
 };
 
+type RecapCue = {
+  speaker: string;
+  ja: string;
+  ko: string;
+};
+
+const recapCueByStep: Record<string, Record<number, RecapCue>> = {
+  C2: {
+    4: { speaker: '점원', ja: 'ご注文は以上でよろしいですか', ko: '주문은 이상으로 괜찮으세요?' },
+    5: { speaker: '점원', ja: '苦手なものやアレルギーはありますか', ko: '못 드시는 것이나 알레르기가 있나요?' },
+  },
+  C3: {
+    1: { speaker: '역무원', ja: 'どちらまで行きたいですか', ko: '어디까지 가고 싶으세요?' },
+    2: { speaker: '역무원', ja: '切符ですかチャージですか', ko: '표인가요, 충전인가요?' },
+    3: { speaker: '역무원', ja: '改札はあちらです', ko: '개찰구는 저쪽입니다' },
+    4: { speaker: '역무원', ja: '何番線か確認しますか', ko: '몇 번 선인지 확인할까요?' },
+  },
+  C4: {
+    1: { speaker: '프런트', ja: 'チェックインですか', ko: '체크인이신가요?' },
+    5: { speaker: '프런트', ja: 'ほかにご不明な点はありますか', ko: '그 밖에 궁금한 점이 있으신가요?' },
+  },
+  C5: {
+    1: { speaker: '상대', ja: 'どうしましたか', ko: '무슨 일이세요?' },
+    2: { speaker: '상대', ja: '写真ですか', ko: '사진인가요?' },
+    3: { speaker: '상대', ja: '大丈夫ですか', ko: '괜찮으세요?' },
+  },
+  C6: {
+    2: { speaker: '약사', ja: 'どんな薬をお探しですか', ko: '어떤 약을 찾고 계세요?' },
+  },
+  C7: {
+    1: { speaker: '직원', ja: '何かお探しですか', ko: '무엇을 찾고 계세요?' },
+    2: { speaker: '직원', ja: '免税をご利用ですか', ko: '면세를 이용하시나요?' },
+    3: { speaker: '직원', ja: 'お支払いはどうしますか', ko: '결제는 어떻게 하시겠어요?' },
+  },
+  C8: {
+    1: { speaker: '기사', ja: 'どちらまで行きますか', ko: '어디까지 가시나요?' },
+    3: { speaker: '기사', ja: 'この辺りでよろしいですか', ko: '이 근처면 괜찮으세요?' },
+  },
+  C10: {
+    1: { speaker: '직원', ja: 'いくら両替しますか', ko: '얼마를 환전하시겠어요?' },
+    3: { speaker: '직원', ja: '細かいお札も必要ですか', ko: '잔돈 지폐도 필요하세요?' },
+  },
+  C11: {
+    1: { speaker: '직원', ja: 'お荷物を預けますか', ko: '짐을 맡기시나요?' },
+  },
+  C12: {
+    1: { speaker: '직원', ja: 'どちらまで送りますか', ko: '어디까지 보내시나요?' },
+  },
+  C13: {
+    1: { speaker: '직원', ja: '食券を先に買ってください', ko: '식권을 먼저 사 주세요' },
+    3: { speaker: '직원', ja: '麺の量はどうしますか', ko: '면 양은 어떻게 하시겠어요?' },
+  },
+};
+
 const fillerStep = (mission: Mission, index: number): MissionStep => ({
   situationKo: backfillByMission[mission.id]?.[index - 1]?.situationKo ?? `${mission.scenario} 마무리 확인 ${index}`,
   speaker: '상황',
@@ -198,7 +252,20 @@ const normalizeMissionSteps = (mission: Mission): Mission => {
   if (mission.id === 'C0') return mission;
   const steps = mission.steps.slice(0, 5);
   while (steps.length < 5) steps.push(fillerStep(mission, steps.length - mission.steps.length + 1));
-  return { ...mission, steps };
+  return {
+    ...mission,
+    steps: steps.map((step, i) => {
+      if (step.promptPhraseId || step.recapPromptJa) return step;
+      const cue = recapCueByStep[mission.id]?.[i + 1];
+      if (!cue) return step;
+      return {
+        ...step,
+        speaker: cue.speaker,
+        recapPromptJa: cue.ja,
+        recapPromptKo: cue.ko,
+      };
+    }),
+  };
 };
 
 export const missions: Mission[] = rawMissions.map(normalizeMissionSteps);
