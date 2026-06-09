@@ -1,98 +1,204 @@
-// 가챠 덱 컬렉션 — 자체 localStorage(기존 progress/SRS와 완전 분리, 학습 로직 영향 0).
-// 장면(미션) 카드를 모아 5단계(기본→동→은→금→다이아)로 키운다.
+// 가챠 컬렉션 — 학습 로직과 분리된 수집 보상.
+// 장면별 카드를 모으고, 낮은 등급 카드를 병합해 상위 등급과 명예 트로피를 만든다.
 import { SCENE_SENTENCES } from '../content/sceneSentences';
 import type { CLevel } from '../content/types';
 
-export interface DeckCard { tier: number; shards: number } // tier 1~5, shards = 다음 단계 진척
+export type Rarity = 'basic' | 'bronze' | 'silver' | 'gold' | 'diamond';
+export type TrophyKey = 'honor';
+export type BoxGrade = 'wood' | 'silver' | 'gold';
+
+export type ItemCounts = Partial<Record<Rarity, number>>;
+
+export interface DeckCard {
+  items: ItemCounts;
+  // v1 마이그레이션용. 저장 시 제거하지 않아도 무해하게 읽는다.
+  tier?: number;
+  shards?: number;
+}
+
 export interface Collection {
   cards: Record<string, DeckCard>;      // key = 미션 id (C1…)
   sentences: Record<string, string[]>;  // key = 미션 id, value = 획득한 SceneSentence id
+  trophies: Partial<Record<TrophyKey, number>>;
   lastClaimedSessionId: number;          // 같은 세션 중복 보상 방지
 }
 
 const KEY = 'yangmung:collection:v1';
-const EMPTY: Collection = { cards: {}, sentences: {}, lastClaimedSessionId: 0 };
+const EMPTY: Collection = { cards: {}, sentences: {}, trophies: {}, lastClaimedSessionId: 0 };
 
-// 단계 진행에 필요한 조각 수 (현재 tier → 다음). 5단계는 최종.
-const NEED: Record<number, number> = { 1: 2, 2: 3, 3: 5, 4: 8, 5: Infinity };
-export const tierNeed = (tier: number) => NEED[tier] ?? Infinity;
+export const RARITIES: { key: Rarity; label: string; color: string; weight: number }[] = [
+  { key: 'basic', label: '기본', color: 'var(--ink-faint)', weight: 50 },
+  { key: 'bronze', label: '동', color: '#a9743b', weight: 30 },
+  { key: 'silver', label: '은', color: '#9aa3ad', weight: 13 },
+  { key: 'gold', label: '금', color: '#d9a531', weight: 7 },
+  { key: 'diamond', label: '다이아', color: '#5bc7e0', weight: 1 },
+];
+
+export const DRAW_COUNT = 10;
+export const MERGE_NEED: Record<Rarity, number> = {
+  basic: 30,
+  bronze: 30,
+  silver: 20,
+  gold: 10,
+  diamond: 100,
+};
+
+export const NEXT_RARITY: Partial<Record<Rarity, Rarity>> = {
+  basic: 'bronze',
+  bronze: 'silver',
+  silver: 'gold',
+  gold: 'diamond',
+};
+
+export const rarityMeta = (rarity: Rarity) => RARITIES.find((r) => r.key === rarity) ?? RARITIES[0];
+export const tierMeta = (tier: number) => RARITIES[Math.min(Math.max(tier, 1), 5) - 1];
+export const rarityToTier = (rarity: Rarity) => RARITIES.findIndex((r) => r.key === rarity) + 1;
+export const tierToRarity = (tier: number): Rarity => RARITIES[Math.min(Math.max(tier, 1), 5) - 1].key;
+export const tierNeed = (tier: number) => MERGE_NEED[tierToRarity(tier)] ?? Infinity;
 export const MAX_TIER = 5;
 
-export const TIERS: { tier: number; label: string; color: string }[] = [
-  { tier: 1, label: '기본', color: 'var(--ink-faint)' },
-  { tier: 2, label: '동', color: '#a9743b' },
-  { tier: 3, label: '은', color: '#9aa3ad' },
-  { tier: 4, label: '금', color: '#d9a531' },
-  { tier: 5, label: '다이아', color: '#5bc7e0' },
-];
-export const tierMeta = (tier: number) => TIERS[Math.min(Math.max(tier, 1), 5) - 1];
+export const BOX: Record<BoxGrade, { label: string; draws: number; colors: [string, string] }> = {
+  wood: { label: '가챠 박스', draws: DRAW_COUNT, colors: ['#c56f62', '#d78f73'] },
+  silver: { label: '빛나는 가챠 박스', draws: DRAW_COUNT, colors: ['#7f8794', '#c7ccd4'] },
+  gold: { label: '특별 가챠 박스', draws: DRAW_COUNT, colors: ['#c8951f', '#e8c45a'] },
+};
+
+export interface DropResult {
+  sceneId: string;
+  rarity: Rarity;
+  count: number;
+  isNew: boolean;
+  sentenceIds: string[];
+  // 구 API 호환용 표시 필드.
+  tier: number;
+  shards: number;
+  leveledTo: number | null;
+}
+
+function emptyItems(): Record<Rarity, number> {
+  return { basic: 0, bronze: 0, silver: 0, gold: 0, diamond: 0 };
+}
+
+export function itemsOf(card?: DeckCard): Record<Rarity, number> {
+  const items = { ...emptyItems(), ...(card?.items ?? {}) };
+  if (card && !card.items && card.tier) {
+    const migrated = tierToRarity(card.tier);
+    items[migrated] = Math.max(items[migrated], 1);
+    if (card.shards && card.tier < MAX_TIER) items[tierToRarity(card.tier)] += card.shards;
+  }
+  return items;
+}
+
+function normalizeCard(card?: DeckCard): DeckCard {
+  return { items: itemsOf(card) };
+}
+
+function normalizeCollection(c: Partial<Collection>): Collection {
+  const cards = Object.fromEntries(Object.entries(c.cards ?? {}).map(([id, card]) => [id, normalizeCard(card)]));
+  return {
+    cards,
+    sentences: c.sentences ?? {},
+    trophies: c.trophies ?? {},
+    lastClaimedSessionId: c.lastClaimedSessionId ?? 0,
+  };
+}
 
 export function loadCollection(): Collection {
   if (typeof window === 'undefined') return { ...EMPTY };
   try {
     const raw = window.localStorage.getItem(KEY);
     if (!raw) return { ...EMPTY };
-    const c = JSON.parse(raw) as Collection;
-    return { cards: c.cards ?? {}, sentences: c.sentences ?? {}, lastClaimedSessionId: c.lastClaimedSessionId ?? 0 };
+    return normalizeCollection(JSON.parse(raw) as Partial<Collection>);
   } catch { return { ...EMPTY }; }
 }
 
 export function saveCollection(c: Collection): void {
   if (typeof window === 'undefined') return;
-  try { window.localStorage.setItem(KEY, JSON.stringify(c)); } catch {}
+  try { window.localStorage.setItem(KEY, JSON.stringify(normalizeCollection(c))); } catch {}
 }
 
-export interface DropResult { sceneId: string; isNew: boolean; leveledTo: number | null; tier: number; shards: number; sentenceIds: string[] }
-
-// 세션 보상 적립 — sceneIds 각각 조각 +1(중복 보상 1세션 1회). 결과 + 갱신 컬렉션 반환.
-export function claim(prev: Collection, sessionId: number, sceneIds: string[], perScene = 1): { collection: Collection; results: DropResult[] } {
-  if (sessionId > 0 && prev.lastClaimedSessionId === sessionId) return { collection: prev, results: [] };
-  if (sceneIds.length === 0) return { collection: prev, results: [] };
-  const cards = { ...prev.cards };
-  const sentences = Object.fromEntries(Object.entries(prev.sentences ?? {}).map(([id, rows]) => [id, [...rows]]));
-  const results: DropResult[] = [];
-  for (const id of sceneIds) {
-    const existed = !!cards[id];
-    const cur: DeckCard = existed ? { ...cards[id] } : { tier: 1, shards: 0 };
-    let leveledTo: number | null = null;
-    for (let n = 0; n < perScene; n++) {
-      if (cur.tier >= MAX_TIER) break;
-      cur.shards += 1;
-      while (cur.tier < MAX_TIER && cur.shards >= tierNeed(cur.tier)) {
-        cur.shards -= tierNeed(cur.tier);
-        cur.tier += 1;
-        leveledTo = cur.tier;
-      }
-    }
-    cards[id] = cur;
-    const owned = new Set(sentences[id] ?? []);
-    const sentenceIds = pickNewSentenceIds(id, owned, perScene);
-    sentences[id] = [...owned, ...sentenceIds];
-    results.push({ sceneId: id, isNew: !existed, leveledTo, tier: cur.tier, shards: cur.shards, sentenceIds });
+function weightedRarity(): Rarity {
+  const total = RARITIES.reduce((sum, r) => sum + r.weight, 0);
+  let roll = Math.random() * total;
+  for (const r of RARITIES) {
+    roll -= r.weight;
+    if (roll <= 0) return r.key;
   }
-  return { collection: { cards, sentences, lastClaimedSessionId: sessionId }, results };
+  return 'basic';
+}
+
+function pickScene(sceneIds: string[]): string {
+  return sceneIds[Math.floor(Math.random() * sceneIds.length)];
+}
+
+// 세션 보상 — 해당 세션 장면에서만 10장 드롭. 기본/동/은/금/다이아는 가중치 50/30/13/7/1.
+export function claim(prev: Collection, sessionId: number, sceneIds: string[], draws = DRAW_COUNT): { collection: Collection; results: DropResult[] } {
+  const normalized = normalizeCollection(prev);
+  if (sessionId > 0 && normalized.lastClaimedSessionId === sessionId) return { collection: normalized, results: [] };
+  if (sceneIds.length === 0) return { collection: normalized, results: [] };
+  const cards = { ...normalized.cards };
+  const sentences = Object.fromEntries(Object.entries(normalized.sentences ?? {}).map(([id, rows]) => [id, [...rows]]));
+  const results: DropResult[] = [];
+
+  for (let i = 0; i < draws; i++) {
+    const sceneId = pickScene(sceneIds);
+    const rarity = weightedRarity();
+    const before = cards[sceneId];
+    const isNew = !before || totalItems(before) === 0;
+    const item = normalizeCard(before);
+    const items = itemsOf(item);
+    items[rarity] += 1;
+    cards[sceneId] = { items };
+
+    const owned = new Set(sentences[sceneId] ?? []);
+    const sentenceIds = pickNewSentenceIds(sceneId, owned, rarity === 'basic' ? 0 : 1);
+    sentences[sceneId] = [...owned, ...sentenceIds];
+    results.push({ sceneId, rarity, count: 1, isNew, sentenceIds, tier: rarityToTier(rarity), shards: items[rarity], leveledTo: null });
+  }
+
+  return { collection: { cards, sentences, trophies: normalized.trophies, lastClaimedSessionId: sessionId }, results };
+}
+
+export function mergeScene(prev: Collection, sceneId: string, rarity: Rarity): Collection {
+  const c = normalizeCollection(prev);
+  const need = MERGE_NEED[rarity];
+  const cards = { ...c.cards };
+  const card = normalizeCard(cards[sceneId]);
+  const items = itemsOf(card);
+  if ((items[rarity] ?? 0) < need) return c;
+  items[rarity] -= need;
+  const next = NEXT_RARITY[rarity];
+  const trophies = { ...c.trophies };
+  if (next) items[next] += 1;
+  else trophies.honor = (trophies.honor ?? 0) + 1;
+  cards[sceneId] = { items };
+  return { ...c, cards, trophies };
+}
+
+export function bestRarity(card?: DeckCard): Rarity {
+  const items = itemsOf(card);
+  for (const r of [...RARITIES].reverse()) if (items[r.key] > 0) return r.key;
+  return 'basic';
+}
+
+export function totalItems(card?: DeckCard): number {
+  const items = itemsOf(card);
+  return RARITIES.reduce((sum, r) => sum + items[r.key], 0);
 }
 
 function pickNewSentenceIds(sceneId: string, owned: Set<string>, count: number): string[] {
-  // 장면 문장 풀이 있는 장면만 문장 카드를 지급한다. 신규 장면은 장면 카드부터 모으고 문장은 후속 확장한다.
+  if (count <= 0) return [];
   const candidates = (SCENE_SENTENCES[sceneId as CLevel] ?? []).map((row) => row.id).filter((id) => !owned.has(id));
-  return candidates.slice(0, Math.max(1, count));
+  return candidates.slice(0, count);
 }
 
-// 상자 등급 — 세션 성과로 결정. 등급이 높을수록 장면당 조각 더.
-export type BoxGrade = 'wood' | 'silver' | 'gold';
-export const BOX: Record<BoxGrade, { label: string; shards: number; colors: [string, string] }> = {
-  wood: { label: '기본 캡슐 박스', shards: 1, colors: ['#c56f62', '#d78f73'] },
-  silver: { label: '은빛 캡슐 박스', shards: 2, colors: ['#7f8794', '#c7ccd4'] },
-  gold: { label: '금빛 캡슐 박스', shards: 3, colors: ['#c8951f', '#e8c45a'] },
-};
-// 별점·복구로 등급 산정 (별3·무복구=금, 별2이상=은, 그 외=나무)
 export function boxGrade(stars: number, recoveryUsed: number): BoxGrade {
   if (stars >= 3 && recoveryUsed === 0) return 'gold';
   if (stars >= 2) return 'silver';
   return 'wood';
 }
 
-export const ownedCount = (c: Collection) => Object.keys(c.cards).length;
-export const diamondCount = (c: Collection) => Object.values(c.cards).filter((x) => x.tier >= MAX_TIER).length;
+export const ownedCount = (c: Collection) => Object.values(normalizeCollection(c).cards).filter((x) => totalItems(x) > 0).length;
+export const diamondCount = (c: Collection) => Object.values(normalizeCollection(c).cards).reduce((sum, card) => sum + itemsOf(card).diamond, 0);
 export const sentenceCount = (c: Collection) => Object.values(c.sentences ?? {}).reduce((sum, rows) => sum + rows.length, 0);
+export const honorTrophyCount = (c: Collection) => normalizeCollection(c).trophies.honor ?? 0;
