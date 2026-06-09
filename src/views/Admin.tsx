@@ -28,6 +28,7 @@ function flagsFor(m: Mission): string[] {
 export function Admin() {
   const [version, setVersion] = useState(0);
   const [q, setQ] = useState('');
+  const [busy, setBusy] = useState<string | null>(null);
   const overrides = useMemo<Overrides>(() => loadOverrides(), [version]);
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
   const editedCount = useMemo(() => JSON.stringify(overrides).length > 2 ? Object.keys(overrides.missions ?? {}).length + Object.keys(overrides.sentences ?? {}).length : 0, [overrides]);
@@ -56,19 +57,32 @@ export function Admin() {
     edit((o) => { (o.sentences ??= {})[sid] ??= {}; o.sentences[sid][key] = val; });
   }
 
-  // 한국어로 입력 → 일본어 자동 번역(MyMemory · 무료·키 불필요·CORS 허용, 브라우저 직접 호출) → 일/한 반영
-  async function translateInto(sid: string) {
-    const ko = window.prompt('한국어로 입력하면 일본어로 번역해서 채울게요:');
-    if (!ko) return;
+  // 무료 한→일 번역 — 구글(비공식·CORS 허용) 우선, 실패 시 MyMemory 폴백. 키·서버 불필요.
+  async function translateText(ko: string): Promise<string | null> {
+    try {
+      const r = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=ko&tl=ja&dt=t&q=${encodeURIComponent(ko)}`);
+      if (r.ok) {
+        const d = await r.json() as [Array<[string]>];
+        const t = (d?.[0] ?? []).map((s) => s?.[0] ?? '').join('').trim();
+        if (t) return t;
+      }
+    } catch { /* 폴백으로 */ }
     try {
       const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(ko)}&langpair=ko|ja`);
       const d = await r.json();
-      const jaText: string | undefined = d?.responseData?.translatedText;
-      if (!jaText || /MYMEMORY WARNING|INVALID/i.test(jaText)) { alert('번역 실패: ' + (jaText ?? d?.responseStatus ?? '알 수 없음')); return; }
-      edit((o) => { (o.sentences ??= {})[sid] ??= {}; o.sentences[sid].kanji = jaText.trim(); o.sentences[sid].korean = ko; });
-    } catch (e) {
-      alert('번역 호출 실패: ' + String(e));
-    }
+      const t: string | undefined = d?.responseData?.translatedText;
+      if (t && !/MYMEMORY WARNING|INVALID|NO QUERY/i.test(t)) return t.trim();
+    } catch { /* noop */ }
+    return null;
+  }
+  // 행의 한국어를 번역해 일본어 칸을 채움(prompt 없이 — iPhone 호환). 한국어 칸을 먼저 수정해 두면 됨.
+  async function onTranslate(sid: string, ko: string) {
+    if (!ko.trim()) { alert('먼저 한국어 칸을 채운 뒤 번역하세요.'); return; }
+    setBusy(sid);
+    const jaText = await translateText(ko);
+    setBusy(null);
+    if (!jaText) { alert('번역 실패 — 네트워크 또는 일일 한도일 수 있어요. 잠시 후 다시 시도해 주세요.'); return; }
+    edit((o) => { (o.sentences ??= {})[sid] ??= {}; o.sentences[sid].kanji = jaText; });
   }
 
   function exportJson() {
@@ -93,7 +107,7 @@ export function Admin() {
       <p style={{ fontSize: 13, color: '#666', margin: '6px 0 14px' }}>
         장면 {scenes.length}개 · 검증 경고 {totalFlags}건 · 편집 항목 {editedCount}개 ·
         편집은 이 기기에 즉시 반영(localStorage), 소스 영구반영은 <b>내보내기</b>.
-        문장 도감의 <b>🌐 한→일</b>: 한국어로 입력하면 일본어로 자동 번역(무료 MyMemory, 키 불필요).
+        문장 도감의 <b>🌐 한→일</b>: 한국어 칸을 고친 뒤 누르면 무료로 일본어 번역(구글·MyMemory, 키 불필요).
       </p>
 
       <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
@@ -159,7 +173,7 @@ export function Admin() {
                       <Field label="일본어" value={row.kanji ?? row.kana} onSave={(v) => setSentence(row.id, 'kanji', v)} small />
                       <Field label="한국어" value={row.korean} onSave={(v) => setSentence(row.id, 'korean', v)} small />
                     </div>
-                    <button onClick={() => translateInto(row.id)} title="한국어로 입력 → 일본어 자동 번역" style={{ flex: '0 0 auto', alignSelf: 'center', border: '1px solid #4456c7', color: '#4456c7', background: '#eef2ff', borderRadius: 6, padding: '4px 7px', fontSize: 11, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}>🌐 한→일</button>
+                    <button onClick={() => onTranslate(row.id, row.korean)} disabled={busy === row.id} title="한국어 칸을 일본어로 자동 번역" style={{ flex: '0 0 auto', alignSelf: 'center', border: '1px solid #4456c7', color: busy === row.id ? '#aaa' : '#4456c7', background: '#eef2ff', borderRadius: 6, padding: '4px 7px', fontSize: 11, fontWeight: 700, cursor: busy === row.id ? 'wait' : 'pointer', whiteSpace: 'nowrap' }}>{busy === row.id ? '번역 중…' : '🌐 한→일'}</button>
                   </div>
                 ))}
               </details>
