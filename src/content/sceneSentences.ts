@@ -1,6 +1,9 @@
 // 가챠로 모으는 장면별 문장. 기존 Phrase/SRS와 분리해 수집·복습용으로 사용한다.
 import type { CLevel, Register } from './types';
 import { toReadingUnits } from '../learn/kanaReading';
+import { missions } from './missions';
+import { phrases } from './phrases';
+import { extraTravelPhrases } from './extraTravelPhrases';
 
 export interface SceneSentence {
   id: string;
@@ -44,27 +47,26 @@ const sentence = (scene: string, n: number, [kana, kanji, korean, speaker, tier 
   register: speaker === 'clerk' ? 'receptive' : 'productive', speaker, tier, tip,
 });
 
-// 어느 장면에서도 가장 자주 필요한 반응·복구 표현. 장면별 도감에 반복 노출해 자동화한다.
-const COMMON: Seed[] = [
-  ['はいおねがいします','はい、お願いします','네, 부탁합니다','me',1],
-  ['だいじょうぶです','大丈夫です','괜찮습니다','me',1],
-  ['ありがとうございます','ありがとうございます','감사합니다','me',1],
-  ['すみません','すみません','저기요 / 죄송합니다','me',1],
-  ['もういちどおねがいします','もう一度お願いします','다시 한 번 부탁합니다','me',1],
-  ['ゆっくりおねがいします','ゆっくりお願いします','천천히 부탁합니다','me',1],
-  ['わかりました','分かりました','알겠습니다','me',1],
-  ['わかりません','分かりません','모르겠습니다','me',1],
-  ['これでおねがいします','これでお願いします','이걸로 부탁합니다','me',1],
-  ['いくらですか','いくらですか','얼마예요?','me',1],
-  ['どこですか','どこですか','어디예요?','me',1],
-  ['えいごでもいいですか','英語でもいいですか','영어로 해도 될까요?','me',2],
-  ['みせてください','見せてください','보여 주세요','me',2],
-  ['かいてください','書いてください','적어 주세요','me',2],
-  ['こちらでよろしいですか','こちらでよろしいですか','이쪽으로 괜찮으세요?','clerk',2],
-  ['しょうしょうおまちください','少々お待ちください','잠시만 기다려 주세요','clerk',2],
-  ['おてつだいしましょうか','お手伝いしましょうか','도와드릴까요?','clerk',3],
-  ['たすかりました','助かりました','덕분에 살았어요','me',3],
-];
+// 미션 대화에서 그 장면 전용 문장을 추출(상대 대사 + 사용자 비복구 답변 + 따라말하기).
+// 공통 베이스(COMMON) 제거 — 도감은 각 장면 고유 내용만, 전역 중복 없이 채운다.
+const phraseById = new Map([...phrases, ...extraTravelPhrases].map((p) => [p.id, p]));
+function missionSeeds(scene: SentenceScene): Seed[] {
+  const m = missions.find((x) => x.id === scene);
+  if (!m) return [];
+  const out: Seed[] = [];
+  const add = (id?: string) => {
+    if (!id) return;
+    const p = phraseById.get(id);
+    if (!p) return;
+    out.push([p.kana, p.kanji ?? p.kana, p.korean, p.register === 'receptive' ? 'clerk' : 'me', 1]);
+  };
+  for (const s of m.steps) {
+    add(s.promptPhraseId);
+    for (const c of s.choices) if (!c.recoveryType) add(c.phraseId);
+  }
+  for (const id of m.speakPhraseIds ?? []) add(id);
+  return out;
+}
 
 const SPECIFIC: Record<SentenceScene, Seed[]> = {
   C1: [
@@ -335,8 +337,18 @@ const SPECIFIC: Record<SentenceScene, Seed[]> = {
   ],
 };
 
-const buildScene = (scene: SentenceScene): SceneSentence[] =>
-  [...COMMON, ...SPECIFIC[scene]].map((seed, i) => sentence(scene, i + 1, seed));
+// 전역 중복 없는 장면 전용 도감 — 장면별 최대 10개. C1→C40 순서대로 선점(앞 장면이 공유 문장 차지).
+const usedKana = new Set<string>();
+const buildScene = (scene: SentenceScene): SceneSentence[] => {
+  const out: SceneSentence[] = [];
+  for (const seed of [...SPECIFIC[scene], ...missionSeeds(scene)]) {
+    if (usedKana.has(seed[0])) continue;
+    usedKana.add(seed[0]);
+    out.push(sentence(scene, out.length + 1, seed));
+    if (out.length >= 10) break;
+  }
+  return out;
+};
 
 export const SCENE_SENTENCES: Record<CLevel, SceneSentence[]> = {
   C0: [],
