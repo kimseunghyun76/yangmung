@@ -1,7 +1,7 @@
 // 학습 카드 생성기 — Unit/Mission 데이터에서 Card[] 생성.
 // 친구 4차 권고: App.tsx 하드코딩 분리, SRS 도입 전제 조건.
 import { CONTENT } from '../content';
-import type { CLevel, KanaItem, ReviewTarget } from '../content/types';
+import type { CLevel, KanaItem, ReviewTarget, Phrase, MissionStep } from '../content/types';
 import { signs } from '../content/signs';
 import { toReadingUnits } from './kanaReading';
 
@@ -138,6 +138,28 @@ function shuffle<T>(a: T[]): T[] {
     [r[i], r[j]] = [r[j], r[i]];
   }
   return r;
+}
+
+// 미션 스텝 → 퀴즈 선택지. 단일 정답 강제: 비복구 정답이 2개 이상이면 첫 정답만 정답으로 두고
+// 나머지(유효하지만)는 '이번 정답 아님'으로 강등(테스트 결론: 정답이 여러 개면 변별이 안 됨). + 위치 셔플.
+function buildStepChoices(stepChoices: MissionStep['choices'], byPhrase: (id: string) => Phrase): Choice[] {
+  const built: Choice[] = stepChoices.map((c) => ({
+    label: c.text,
+    correct: c.correct,
+    ja: c.phraseId ? ttsText(byPhrase(c.phraseId)) : undefined,
+    recovery: !!c.recoveryType,
+    feedback: c.feedback,
+    phrase: c.phraseId ? phraseInfo(byPhrase(c.phraseId)) : undefined,
+  }));
+  const corrects = built.filter((c) => c.correct && !c.recovery);
+  if (corrects.length > 1) {
+    const answer = corrects[0];
+    for (const c of corrects.slice(1)) {
+      c.correct = false;
+      if (!c.feedback) c.feedback = `이번 정답은 「${answer.label}」예요 — 이 답도 자연스럽지만 지금은 정답으로 치지 않아요`;
+    }
+  }
+  return shuffle(built);
 }
 
 // 한 드릴 Unit(예: K1, K2)의 가나 카드 3종 생성 — read 전체 → listen 전체 → confuse 전체.
@@ -301,13 +323,7 @@ export function buildCards(): Card[] {
         sub: step.speaker ?? '',
         promptPhrase: phraseInfo(prompt),
         reviewTarget: { type: 'mission', id: m.id as CLevel },
-        choices: step.choices.map((c) => ({
-          label: c.text, correct: c.correct,
-          ja: c.phraseId ? ttsText(byPhrase(c.phraseId)) : undefined,
-          recovery: !!c.recoveryType,
-          feedback: c.feedback,
-          phrase: c.phraseId ? phraseInfo(byPhrase(c.phraseId)) : undefined,
-        })),
+        choices: buildStepChoices(step.choices, byPhrase),
       });
     });
 
