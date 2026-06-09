@@ -1,6 +1,6 @@
 // 상태·라우팅 허브 — 화면 렌더링은 src/views/* 에 위임.
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { buildCards, type Card, type Choice, type DiscoverCard } from './learn/cards';
+import { buildCards, materializeQuizCard, type Card, type Choice, type DiscoverCard } from './learn/cards';
 import { CONTENT } from './content';
 import {
   classifyCard, clearProgress, isKanaFamiliar, isMissionUnlocked, loadDiscovered, loadProgress, loadSeenKana, loadSession,
@@ -144,8 +144,9 @@ export function App() {
   // ── 액션 ─────────────────────────────────────────
   // showIntro: 새 "한 판"이면 인트로부터(목표↔첫 카드 정렬), 약점 재출제는 바로 세션.
   function beginSession(id: number, cards: Card[], showIntro: boolean, gacha = true) {
+    const materialized = cards.map(materializeQuizCard);
     setSessionId(id);
-    setSessionCards(cards);
+    setSessionCards(materialized);
     setI(0); setPicked(null); setScore(0); setQuizSeen(0); setSessionLog([]); setPicks({});
     setGachaEligible(gacha);
     setView(showIntro ? 'intro' : 'session');
