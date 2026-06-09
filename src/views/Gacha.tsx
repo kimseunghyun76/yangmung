@@ -65,10 +65,8 @@ function BoxArt({ grade, size = 64, className, open = false }: { grade: BoxGrade
 
 function CardBack({ size = 82 }: { size?: number }) {
   return (
-    <span style={{
+    <span className="ym-gacha-card-back" style={{
       width: size, height: Math.round(size * 1.28), borderRadius: 14, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-      background: 'linear-gradient(145deg, #ffefe4, #e55c4f 58%, #8b2b35)', color: '#fff',
-      border: '2px solid rgba(255,255,255,.72)', boxShadow: '0 12px 24px rgba(0,0,0,.28), inset 0 2px 0 rgba(255,255,255,.5)',
       fontWeight: 950, fontSize: 20,
     }}>?</span>
   );
@@ -78,10 +76,11 @@ function DrawCard({ item, flipped, onFlip, index }: { item: DropResult; flipped:
   const meta = rarityMeta(item.rarity);
   return (
     <button
-      className={flipped ? 'ym-card-in' : 'ym-press'}
+      className={`ym-gacha-draw-card ${flipped ? `is-flipped is-${item.rarity}` : 'ym-press'}`}
       onClick={(e) => { e.stopPropagation(); onFlip(); }}
       disabled={flipped}
       style={{
+        ['--rarity-color' as string]: meta.color,
         animationDelay: flipped ? `${index * 0.035}s` : undefined,
         width: 88, minHeight: 132, border: 0, background: 'transparent', color: '#fff', cursor: flipped ? 'default' : 'pointer',
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, padding: 0,
@@ -306,7 +305,14 @@ function DeckSentenceRow({ ja, korean }: { ja: string; korean: string }) {
 export function DeckModal({ onClose }: { onClose: () => void }) {
   const [collection, setCollection] = useState<Collection>(() => loadCollection());
   const [selected, setSelected] = useState<string>();
+  const [merging, setMerging] = useState<string | null>(null);
   const refresh = (next: Collection) => { saveCollection(next); setCollection(next); };
+  function mergeWithFx(sceneId: string, rarity: Rarity) {
+    const key = `${sceneId}:${rarity}`;
+    setMerging(key);
+    refresh(mergeScene(collection, sceneId, rarity));
+    window.setTimeout(() => setMerging((cur) => (cur === key ? null : cur)), 900);
+  }
 
   if (selected) {
     const ownedIds = collection.sentences[selected] ?? [];
@@ -350,7 +356,8 @@ export function DeckModal({ onClose }: { onClose: () => void }) {
             );
           }
           return (
-            <div key={m.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, padding: '12px 8px', borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)' }}>
+            <div key={m.id} className={merging?.startsWith(`${m.id}:`) ? 'ym-gacha-merge-host is-merging' : 'ym-gacha-merge-host'} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, padding: '12px 8px', borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', position: 'relative', overflow: 'hidden' }}>
+              {merging?.startsWith(`${m.id}:`) && <span className="ym-gacha-merge-burst" aria-hidden />}
               <button className="ym-press" onClick={() => setSelected(m.id)} style={{ border: 0, background: 'transparent', color: 'var(--ink)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: 0 }}>
                 <DeckCardFace sceneId={m.id} rarity={rarity} />
                 <span style={{ fontSize: 12, fontWeight: 850 }}>{placeOf(m.id)}</span>
@@ -364,7 +371,7 @@ export function DeckModal({ onClose }: { onClose: () => void }) {
                   const can = items[r.key] >= need;
                   const next = NEXT_RARITY[r.key] ? rarityMeta(NEXT_RARITY[r.key]!).label : '트로피';
                   return (
-                    <button key={r.key} className="ym-press" disabled={!can} onClick={() => refresh(mergeScene(collection, m.id, r.key))}
+                    <button key={r.key} className={can ? 'ym-press ym-gacha-merge-btn' : 'ym-press'} disabled={!can} onClick={() => mergeWithFx(m.id, r.key)}
                       style={{ padding: '5px 7px', borderRadius: 8, border: '1px solid var(--glass-border)', background: can ? 'var(--accent-soft)' : 'var(--glass-bg)', color: can ? 'var(--accent)' : 'var(--ink-faint)', fontSize: 10.5, fontWeight: 850, cursor: can ? 'pointer' : 'default', opacity: can ? 1 : 0.55 }}>
                       {r.label} {need}→{next}
                     </button>
