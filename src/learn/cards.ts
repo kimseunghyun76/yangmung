@@ -156,7 +156,7 @@ function buildStepChoices(stepChoices: MissionStep['choices'], byPhrase: (id: st
     const answer = corrects[0];
     for (const c of corrects.slice(1)) {
       c.correct = false;
-      if (!c.feedback) c.feedback = `이번 정답은 「${answer.label}」예요 — 이 답도 자연스럽지만 지금은 정답으로 치지 않아요`;
+      if (!c.feedback) c.feedback = `이번 카드의 정답은 「${answer.label}」 하나예요 — 이 선택지는 오답으로 처리됩니다`;
     }
   }
   return shuffle(built);
