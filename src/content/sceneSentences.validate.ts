@@ -12,9 +12,8 @@ const warnings: string[] = [];
 for (const scene of scenes) {
   const rows = SCENE_SENTENCES[scene];
   const sceneNo = Number(scene.slice(1));
-  // 정책: 장면당 최대 10개. 10개 초과는 에러, 미만은 경고(콘텐츠 보충 필요).
-  if (rows.length > 10) errors.push(`${scene}: ${rows.length}개 — 최대 10개 초과`);
-  if (sceneNo >= 1 && sceneNo <= 40 && rows.length < 10) warnings.push(`${scene}: ${rows.length}개 (10개 미만 — 보충 필요)`);
+  // 정책: C1~C40 장면당 정확히 20개.
+  if (sceneNo >= 1 && sceneNo <= 40 && rows.length !== 20) errors.push(`${scene}: ${rows.length}개 — 정확히 20개 필요`);
 
   const speakers = { clerk: 0, me: 0 };
   const tiers = { 1: 0, 2: 0, 3: 0 };

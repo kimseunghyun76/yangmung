@@ -20,9 +20,29 @@ function flagsFor(m: Mission): string[] {
   if (fb === 0) f.push('오답 피드백 0');
   const broken = m.steps.flatMap((s) => [s.promptPhraseId, ...s.choices.map((c) => c.phraseId)]).filter((id) => id && !phraseById[id!]);
   if (broken.length) f.push(`깨진 참조 ${broken.length}`);
-  const sent = (SCENE_SENTENCES as Record<string, unknown[]>)[m.id]?.length ?? 0;
-  if (sent < 12) f.push(`문장 ${sent}개(<12)`);
-  return f;
+  return f; // 문장 도감 개수·중복은 상단 대시보드에서 점검
+}
+
+// 문장 도감 전역 점검 — 장면 간 중복(같은 kana가 2개 장면+) + 장면별 개수
+function sentenceAudit() {
+  const kanaToScenes = new Map<string, Set<string>>();
+  const counts: Record<string, number> = {};
+  let total = 0;
+  for (const [scene, arr] of Object.entries(SCENE_SENTENCES)) {
+    if (scene === 'C0') continue;
+    const a = arr as { kana: string }[];
+    counts[scene] = a.length;
+    total += a.length;
+    for (const s of a) {
+      if (!kanaToScenes.has(s.kana)) kanaToScenes.set(s.kana, new Set());
+      kanaToScenes.get(s.kana)!.add(scene);
+    }
+  }
+  const dups = [...kanaToScenes.entries()]
+    .filter(([, set]) => set.size > 1)
+    .map(([kana, set]) => ({ kana, scenes: [...set] }));
+  const max = Math.max(0, ...Object.values(counts));
+  return { total, counts, dups, max };
 }
 
 export function Admin() {
@@ -109,6 +129,35 @@ export function Admin() {
         편집은 이 기기에 즉시 반영(localStorage), 소스 영구반영은 <b>내보내기</b>.
         문장 도감의 <b>🌐 한→일</b>: 한국어 칸을 고친 뒤 누르면 무료로 일본어 번역(구글·MyMemory, 키 불필요).
       </p>
+
+      {/* 문장 도감 검증 대시보드 — 장면 간 중복·개수 한눈에 */}
+      {(() => {
+        const a = sentenceAudit();
+        const short = Object.entries(a.counts).filter(([, n]) => n < a.max);
+        return (
+          <div style={{ border: '1px solid #ddd', borderRadius: 10, padding: '12px 14px', marginBottom: 16, background: a.dups.length ? '#fff7f6' : '#f4faf6' }}>
+            <p style={{ margin: 0, fontWeight: 800, fontSize: 14 }}>
+              문장 도감 점검 — 총 {a.total}개 · 장면 간 중복 <b style={{ color: a.dups.length ? '#b9382e' : '#1a8f4c' }}>{a.dups.length}건</b> · 개수 미달 {short.length}개 장면
+            </p>
+            {a.dups.length > 0 && (
+              <div style={{ marginTop: 8, fontSize: 12.5 }}>
+                <span style={{ color: '#b9382e', fontWeight: 700 }}>⚠️ 장면 간 중복(다른 세션끼리 같은 문장):</span>
+                <ul style={{ margin: '4px 0 0', paddingLeft: 18 }}>
+                  {a.dups.slice(0, 20).map((d) => (
+                    <li key={d.kana} lang="ja">{d.kana} <span style={{ color: '#888' }}>— {d.scenes.join(', ')}</span></li>
+                  ))}
+                  {a.dups.length > 20 && <li style={{ color: '#888' }}>…외 {a.dups.length - 20}건</li>}
+                </ul>
+              </div>
+            )}
+            {short.length > 0 && (
+              <p style={{ margin: '8px 0 0', fontSize: 12.5, color: '#a06000' }}>
+                개수 미달({a.max}개 기준): {short.map(([id, n]) => `${id}(${n})`).join(', ')}
+              </p>
+            )}
+          </div>
+        );
+      })()}
 
       <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="장면 검색 (id·장소)" style={inp} />
