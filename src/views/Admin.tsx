@@ -56,6 +56,20 @@ export function Admin() {
     edit((o) => { (o.sentences ??= {})[sid] ??= {}; o.sentences[sid][key] = val; });
   }
 
+  // 한국어로 입력 → 일본어 자동 번역(서버리스 /api/translate · AI Gateway) → 일/한 모두 반영
+  async function translateInto(sid: string) {
+    const ko = window.prompt('한국어로 입력하면 일본어로 번역해서 채울게요:');
+    if (!ko) return;
+    try {
+      const r = await fetch('/api/translate', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ko }) });
+      const d = await r.json();
+      if (!r.ok || !d.ja) { alert('번역 실패: ' + (d.error ?? r.status) + '\n(배포 + AI_GATEWAY_API_KEY 설정 필요)'); return; }
+      edit((o) => { (o.sentences ??= {})[sid] ??= {}; o.sentences[sid].kanji = d.ja; o.sentences[sid].korean = ko; });
+    } catch (e) {
+      alert('번역 호출 실패: ' + String(e) + '\n(로컬 dev에선 /api 미동작 — 배포본에서 사용)');
+    }
+  }
+
   function exportJson() {
     const text = JSON.stringify(loadOverrides(), null, 2);
     navigator.clipboard?.writeText(text).then(
@@ -78,6 +92,7 @@ export function Admin() {
       <p style={{ fontSize: 13, color: '#666', margin: '6px 0 14px' }}>
         장면 {scenes.length}개 · 검증 경고 {totalFlags}건 · 편집 항목 {editedCount}개 ·
         편집은 이 기기에 즉시 반영(localStorage), 소스 영구반영은 <b>내보내기</b>.
+        문장 도감의 <b>🌐 한→일</b>: 한국어로 입력하면 일본어로 자동 번역(배포본 + AI Gateway 키 필요).
       </p>
 
       <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
@@ -143,6 +158,7 @@ export function Admin() {
                       <Field label="일본어" value={row.kanji ?? row.kana} onSave={(v) => setSentence(row.id, 'kanji', v)} small />
                       <Field label="한국어" value={row.korean} onSave={(v) => setSentence(row.id, 'korean', v)} small />
                     </div>
+                    <button onClick={() => translateInto(row.id)} title="한국어로 입력 → 일본어 자동 번역" style={{ flex: '0 0 auto', alignSelf: 'center', border: '1px solid #4456c7', color: '#4456c7', background: '#eef2ff', borderRadius: 6, padding: '4px 7px', fontSize: 11, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}>🌐 한→일</button>
                   </div>
                 ))}
               </details>
