@@ -81,7 +81,7 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
         </p>
       )}
 
-      {/* 가챠 보석함 — 성과 등급별 조각 적립 (학습 로직과 분리). 약점 재도전 세션 제외 */}
+      {/* 가챠 박스 — 세션 장면별 카드 10장 드롭 (학습 로직과 분리). 약점 재도전 세션 제외 */}
       {/* 장면 세션은 클리어 장면으로 보상. 연습 세션(장면 없음)은 별 2개↑일 때만 보상(점수 기준). */}
       {showGacha && <GachaBox sessionId={sessionId} sceneIds={clearedSceneIds.length ? clearedSceneIds : (stars >= 2 ? fallbackSceneIds : [])} grade={boxGrade(stars, recoveryUsed)} />}
 
