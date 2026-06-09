@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-04T14:48:27.616Z",
+  "generatedAt": "2026-06-09T21:26:16.619Z",
   "voices": {
     "nanami": {
       "name": "ja-JP-NanamiNeural",
@@ -5227,7 +5227,8 @@
       ],
       "path": "/audio/nanami/tts_a127fe9a0aca.mp3",
       "synthText": "温めますか",
-      "synthSignature": "6b602a6e687e"
+      "synthSignature": "eab91d1e633e",
+      "speechPhoneme": "アタタメマスカ"
     },
     "tts_d9309e5d6186": {
       "text": "あたまが、いたいです",
@@ -10133,8 +10134,8 @@
     "お願いします": "tts_eab3d932d73e",
     "切符": "tts_635a52a3cb17",
     "大丈夫です": "tts_bf20af317908",
-    "あたためますか": "tts_0e122fec5c05",
-    "温めますか": "tts_0e122fec5c05",
+    "あたためますか": "tts_a127fe9a0aca",
+    "温めますか": "tts_a127fe9a0aca",
     "あたまがいたいです": "tts_92c56a64f17e",
     "頭が痛いです": "tts_92c56a64f17e",
     "一週間です": "tts_ab600f5cfa60",
@@ -10247,7 +10248,6 @@
     "もう大丈夫です": "tts_f2f25ae7dce8",
     "わかりましたありがとうございます": "tts_2edf9cf768e3",
     "分かりました、ありがとうございます": "tts_2edf9cf768e3",
-    "あたためますか？": "tts_a127fe9a0aca",
     "あたまが、いたいです": "tts_d9309e5d6186",
     "いっしゅうかんです": "tts_ab600f5cfa60",
     "いりません": "tts_f4500e268d48",
@@ -10622,6 +10622,7 @@
     "ごよやくはありますか": "tts_39bf5b9de31e",
     "どちらへいきますか": "tts_b3e160fe6bde",
     "なにをおさがしですか": "tts_160faa9fd6cf",
-    "ほかになにかありますか": "tts_88f80bae2567"
+    "ほかになにかありますか": "tts_88f80bae2567",
+    "あたためますか？": "tts_a127fe9a0aca"
   }
 }

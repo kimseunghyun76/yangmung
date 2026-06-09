@@ -168,7 +168,7 @@ export const phrases: Phrase[] = [
   { id: 'p_wakarimashita_arigatou', kana: 'わかりましたありがとうございます', kanji: '分かりました、ありがとうございます', displayKana: 'わかりました、ありがとうございます', korean: '알겠습니다, 감사합니다', register: 'productive', tip: '이해+감사를 한 번에 — 안내를 받은 뒤 자연스러운 마무리' },
 
   // ── C1 편의점 실사용 보강: 데우기 ──
-  { id: 'p_atatamemasu_ka', kana: 'あたためますか', kanji: '温めますか', displayKana: 'あたためますか？', korean: '데워드릴까요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  { id: 'p_atatamemasu_ka', kana: 'あたためますか', kanji: '温めますか', displayKana: 'あたためますか？', korean: '데워드릴까요?', register: 'receptive', grammarRefs: ['g_masuka'], speechPhoneme: 'アタタメマスカ' },
 
   // ── C2 식당 실사용 보강: 자리 안내 + 계산 마무리 ──
   { id: 'p_nanmeisama', kana: 'なんめいさまですか', kanji: '何名様ですか', displayKana: 'なんめいさまですか？', korean: '몇 분이세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
