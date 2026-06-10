@@ -451,6 +451,27 @@ export function buildCards(): Card[] {
   for (const id of dictationTargetIds) pushTileCard(id, 'dictation');
   for (const id of dictationTargetIds) pushTileCard(id, 'compose');
 
+  // 한→일 고르기 — 한국어 뜻을 보고 알맞은 일본어 보기를 고르기(역방향 인식). 표현 변형으로 회전 출제.
+  const jaShort = (q: Phrase) => q.displayKana ?? q.kana;
+  for (const id of dictationTargetIds) {
+    const p = phrases.find((x) => x.id === id);
+    if (!p) continue;
+    const distract = shuffle(dictationTargetIds
+      .filter((d) => d !== id)
+      .map((d) => phrases.find((x) => x.id === d))
+      .filter((x): x is Phrase => !!x && x.korean !== p.korean && jaShort(x) !== jaShort(p)))
+      .slice(0, 3);
+    cards.push({
+      kind: 'quiz', id: `ko2ja:${id}`, tag: '한→일',
+      banner: p.korean, sub: '뜻에 맞는 일본어를 고르세요',
+      reviewTarget: { type: 'phrase', id },
+      choices: shuffle([
+        { label: jaShort(p), correct: true, ja: ttsText(p) },
+        ...distract.map((d) => ({ label: jaShort(d), correct: false, ja: ttsText(d) })),
+      ]),
+    });
+  }
+
   // 거리 읽기 — 간판·메뉴·안내·교통 표기 보고 뜻 맞히기 (실제 일본에서 눈에 띄는 것)
   for (const sg of signs) {
     const pool = signs.filter((x) => x.category === sg.category && x.korean !== sg.korean);
