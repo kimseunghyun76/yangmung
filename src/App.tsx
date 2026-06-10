@@ -387,7 +387,7 @@ export function App() {
       return <MapView nav={{ ...nav, current: 'map' }} allCards={allCards} progress={progress} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
     }
     if (view === 'review') {
-      return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} onBack={() => setView('home')} />;
+      return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} onStartReview={startReviewSession} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
     }
     if (view === 'flash') {
       const unlockedSceneIds = CONTENT.missions.filter((m) => m.id !== 'C0' && isMissionUnlocked(m.id, progress)).map((m) => m.id);
