@@ -18,7 +18,7 @@ import type { PickMap } from './views/OrderCard';
 import type { KanaItem } from './content/types';
 import { MascotEmpty } from './views/mascot';
 
-type View = 'home' | 'map' | 'review' | 'intro' | 'session' | 'done' | 'flash' | 'write';
+type View = 'home' | 'map' | 'review' | 'intro' | 'session' | 'done' | 'flash' | 'write' | 'placement';
 
 const Home = lazy(() => import('./views/Home').then((m) => ({ default: m.Home })));
 const Intro = lazy(() => import('./views/Intro').then((m) => ({ default: m.Intro })));
@@ -27,6 +27,7 @@ const Done = lazy(() => import('./views/Done').then((m) => ({ default: m.Done })
 const MapView = lazy(() => import('./views/Map').then((m) => ({ default: m.Map })));
 const Flash = lazy(() => import('./views/Flash').then((m) => ({ default: m.Flash })));
 const KanaWrite = lazy(() => import('./views/KanaWrite').then((m) => ({ default: m.KanaWrite })));
+const Placement = lazy(() => import('./views/Placement').then((m) => ({ default: m.Placement })));
 const Review = lazy(() => import('./views/Review').then((m) => ({ default: m.Review })));
 const Guide = lazy(() => import('./views/Guide').then((m) => ({ default: m.Guide })));
 const SettingsModal = lazy(() => import('./views/SettingsModal').then((m) => ({ default: m.SettingsModal })));
@@ -51,6 +52,7 @@ export function App() {
   const [gachaEligible, setGachaEligible] = useState(true); // 약점 재도전 세션은 보석함 제외
   const [flashCards, setFlashCards] = useState<Card[]>([]); // 속도전 플래시(세션 SRS와 분리)
   const [writeItems, setWriteItems] = useState<KanaItem[]>([]); // 가나 쓰기(따라쓰기)
+  const [placementCards, setPlacementCards] = useState<Card[]>([]); // 수준 진단(배치) 문항
   const [seenKana, setSeenKana] = useState<SeenKana>(() => loadSeenKana());
   const [discovered, setDiscovered] = useState<string[]>(() => loadDiscovered());
   const [settings, setSettings] = useState<Settings>(() => loadSettings());
@@ -233,6 +235,27 @@ export function App() {
     setWriteItems(items);
     setView('write');
   }
+  // 수준 진단(배치) — 가나 읽기 + 표현 듣기 혼합 10문항. 결과로 시작 난이도를 추천·적용.
+  function startPlacement() {
+    const spread = (arr: Card[], n: number): Card[] => {
+      if (arr.length <= n) return arr;
+      const out: Card[] = [];
+      for (let k = 0; k < n; k++) out.push(arr[Math.round((k * (arr.length - 1)) / (n - 1))]);
+      return [...new Set(out)];
+    };
+    const kana = allCards.filter((c) => c.kind === 'quiz' && /^kana:.*:read$/.test(c.id) && c.choices.length >= 2);
+    const phrase = allCards.filter((c) => c.kind === 'quiz' && /^listen:/.test(c.id) && c.choices.length >= 2);
+    const cards = [...spread(kana, 6), ...spread(phrase, 4)];
+    if (cards.length === 0) return;
+    setPlacementCards(cards);
+    setView('placement');
+  }
+  function finishPlacement(mode: Settings['mode'], markKana: boolean) {
+    selectMode(mode);
+    if (markKana) markAllKanaKnown();
+    try { localStorage.setItem('yangmung:placement:v1', '1'); } catch { /* noop */ }
+    setView('home');
+  }
   function retryWeakSession() {
     const weakIds = new Set(sessionLog.filter((r) => r.result !== 'correct').map((r) => r.id));
     const weak = sessionCards.filter((c) => c.kind === 'quiz' && weakIds.has(c.id));
@@ -370,6 +393,9 @@ export function App() {
       const unlockedSceneIds = CONTENT.missions.filter((m) => m.id !== 'C0' && isMissionUnlocked(m.id, progress)).map((m) => m.id);
       return <Flash cards={flashCards} unlockedSceneIds={unlockedSceneIds} onExit={() => setView('home')} onReplay={startFlashSession} />;
     }
+    if (view === 'placement') {
+      return <Placement cards={placementCards} onDone={finishPlacement} onSkip={() => setView('home')} />;
+    }
     if (view === 'write') {
       return <KanaWrite items={writeItems} onExit={() => setView('home')} onReplay={startKanaWrite}
         onKanaWritten={(item, score) => {
@@ -440,7 +466,7 @@ export function App() {
         allCards={allCards} progress={progress} session={session} sessionConfig={sessionConfig}
         diagnosis={diag}
         modeLabel={MODE_PRESETS[settings.mode].label}
-        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession} onPracticeCompose={startComposeSession} onPracticeFlash={startFlashSession} onPracticeWrite={startKanaWrite}
+        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession} onPracticeCompose={startComposeSession} onPracticeFlash={startFlashSession} onPracticeWrite={startKanaWrite} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
       />
     );
   }
