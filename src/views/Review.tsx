@@ -20,6 +20,8 @@ interface Props {
   allCards: Card[];
   progress: ProgressMap;
   seenKana: SeenKana;
+  onStartReview?: () => void;
+  onPracticeScene?: (missionId: string) => void;
   onBack: () => void;
 }
 
@@ -27,7 +29,7 @@ type Tab = '가나' | '표현' | '장면별' | '약점';
 const TABS: Tab[] = ['가나', '표현', '장면별', '약점'];
 const kicker: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase', margin: 0 };
 
-export function Review({ nav, allCards, progress, seenKana }: Props) {
+export function Review({ nav, allCards, progress, seenKana, onStartReview, onPracticeScene }: Props) {
   const [tab, setTab] = useState<Tab>('가나');
   const phraseSeen = useMemo(() => collectSeenPhraseIds(allCards, progress), [allCards, progress]);
   const lastSeen = useMemo(() => phraseLastSeenMap(allCards, progress), [allCards, progress]);
@@ -98,15 +100,23 @@ export function Review({ nav, allCards, progress, seenKana }: Props) {
                     {diag.weakScenes.map((w) => {
                       const sv = sceneVisualByPlace(w.label);
                       return (
-                        <span key={w.key} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '8px 13px', borderRadius: 999, border: '1px solid var(--glass-border)', background: hexA(sv.accent, 0.12), color: 'var(--ink)', fontSize: 14, fontWeight: 600 }}>
+                        <button key={w.key} className="ym-press" onClick={() => onPracticeScene?.(w.key)} disabled={!onPracticeScene}
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '8px 13px', borderRadius: 999, border: '1px solid var(--glass-border)', background: hexA(sv.accent, 0.12), color: 'var(--ink)', fontSize: 14, fontWeight: 600, cursor: onPracticeScene ? 'pointer' : 'default' }}>
                           <span style={{ color: sv.accent, display: 'inline-flex' }}><Icon name={sv.icon} size={16} /></span>{w.label}
-                        </span>
+                          {onPracticeScene && <Icon name="flow" size={14} style={{ color: 'var(--ink-faint)' }} />}
+                        </button>
                       );
                     })}
                   </div>
+                  <p style={{ margin: '8px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>장면을 누르면 그 장면을 바로 연습해요.</p>
                 </div>
               )}
-              <p style={{ margin: '14px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>홈에서 시작하면 약점이 우선 출제돼요.</p>
+              {onStartReview && (
+                <button className="ym-press" onClick={onStartReview}
+                  style={{ width: '100%', marginTop: 16, padding: '14px 16px', borderRadius: 16, border: 'none', background: 'var(--accent)', color: 'var(--accent-ink)', fontWeight: 800, fontSize: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                  <Icon name="recovery" size={18} /> 약점 복습 한 판 시작
+                </button>
+              )}
             </>
           )}
         </GlassPanel>
