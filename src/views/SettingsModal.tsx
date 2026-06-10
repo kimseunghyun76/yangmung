@@ -18,7 +18,7 @@ const AID_OPTIONS: { v: ReadingAidMode; label: string }[] = [
   { v: 'always', label: '항상' },
   { v: 'off', label: '끄기' },
 ];
-const MODE_ORDER: LearnMode[] = ['beginner', 'default', 'express', 'review', 'kana'];
+const MODE_ORDER: LearnMode[] = ['beginner', 'default', 'express', 'advanced', 'review', 'kana'];
 const CHOICE_OPTIONS: { v: ChoiceMode; label: string }[] = [
   { v: 'kana_ko', label: '일본어+한글' },
   { v: 'kana', label: '일본어만' },

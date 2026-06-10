@@ -1,6 +1,6 @@
 // 수준 진단(배치) 테스트 — 첫 사용자가 가나·표현 몇 문제를 풀면 시작 난이도(모드)를 추천·적용.
 // SRS/진척에 기록하지 않는 1회성 진단.
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Card, Choice } from '../learn/cards';
 import type { LearnMode } from '../learn/settings';
 import { speak, ttsSupported } from '../tts';
@@ -16,9 +16,10 @@ interface Props {
 
 type Reco = { mode: LearnMode; markKana: boolean; title: string; desc: string };
 function recommend(pct: number): Reco {
-  if (pct < 0.4) return { mode: 'beginner', markKana: false, title: '처음부터 차근차근', desc: '가나와 기초 표현부터 천천히 — 발음 보조를 항상 켜고 시작해요.' };
-  if (pct < 0.75) return { mode: 'default', markKana: false, title: '기본 코스', desc: '모르는 가나만 보조하며 장면 학습을 균형 있게 진행해요.' };
-  return { mode: 'express', markKana: true, title: '여행 급행', desc: '기본기가 탄탄해요! 가나는 익힌 것으로 두고 장면 미션 위주로 빠르게.' };
+  if (pct < 0.4) return { mode: 'beginner', markKana: false, title: '입문', desc: '가나와 기초 표현부터 천천히 — 발음 보조 항상, 일본어+한글 보기로 시작해요.' };
+  if (pct < 0.65) return { mode: 'default', markKana: false, title: '기본', desc: '모르는 가나만 보조하며 장면 학습을 균형 있게 진행해요(일본어+한글 보기).' };
+  if (pct < 0.85) return { mode: 'express', markKana: true, title: '중급', desc: '기본기가 탄탄해요! 가나는 익힌 것으로 두고, 일본어(가나) 보기·장면 위주로.' };
+  return { mode: 'advanced', markKana: true, title: '고급', desc: '아주 잘해요! 한자 보기·보조 끔으로 실전처럼 빠르게 진행해요.' };
 }
 
 export function Placement({ cards, onDone, onSkip }: Props) {
@@ -27,6 +28,17 @@ export function Placement({ cards, onDone, onSkip }: Props) {
   const [picked, setPicked] = useState<number | null>(null);
   const [done, setDone] = useState(cards.length === 0);
   const card = cards[idx];
+
+  // 듣기 문항은 화면에 뜨면 소리가 바로 나오게(진단도 본 세션과 동일 경험).
+  useEffect(() => {
+    if (done) return;
+    const c = cards[idx];
+    if (c?.kind === 'quiz' && c.listen && c.bannerJa) {
+      const t = window.setTimeout(() => speak(c.bannerJa!), 200);
+      return () => window.clearTimeout(t);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idx, done]);
 
   function pick(i: number, c: Choice) {
     if (picked !== null) return;
