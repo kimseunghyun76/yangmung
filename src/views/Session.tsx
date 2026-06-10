@@ -3,6 +3,7 @@
 import type { Card, Choice } from '../learn/cards';
 import type { CardStatus } from '../learn/progress';
 import type { GrammarPoint } from '../content/types';
+import { loadSettings } from '../learn/settings';
 import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { IntroduceCardView } from './IntroduceCard';
@@ -124,6 +125,20 @@ function TipBody({ card, onNext }: { card: Extract<Card, { kind: 'tip' }>; onNex
 function TipDetail({ label, text, tone }: { label: string; text: string; tone: string }) {
   return <div style={{ marginTop: 10, padding: '11px 13px', borderRadius: 13, borderLeft: `3px solid ${tone}`, background: 'var(--surface-2)' }}><strong style={{ display: 'block', fontSize: 12, color: tone }}>{label}</strong><span style={{ display: 'block', marginTop: 3, fontSize: 13.5, lineHeight: 1.5, color: 'var(--ink-soft)' }}>{text}</span></div>;
 }
+// 보기 텍스트 — 가나 퀴즈는 소리(한글) 그대로, 표현/미션 보기는 난이도별 일본어 표기.
+function ChoiceText({ c, mode, kanaQuiz }: { c: Choice; mode: 'kana_ko' | 'kana' | 'kanji'; kanaQuiz: boolean }) {
+  const p = c.phrase;
+  if (kanaQuiz || !p) return <span style={{ flex: 1 }}>{c.label}</span>;
+  const primary = mode === 'kanji' ? (p.kanji ?? p.kana) : p.kana;
+  const showKo = mode === 'kana_ko';
+  return (
+    <span style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 2 }}>
+      <span lang="ja" style={{ fontWeight: 750, lineHeight: 1.2 }}>{primary}</span>
+      {showKo && <span style={{ fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 600 }}>{c.label}</span>}
+    </span>
+  );
+}
+
 // 진행 스텝 도트 + 진척 카운트(현재/전체 · 남은 개수)
 function Dots({ i, total, onScene }: { i: number; total: number; onScene: boolean }) {
   const n = Math.min(total, 16);
@@ -153,6 +168,9 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
 }) {
   const reveal = picked !== null;
   const big = card.tag.startsWith('K') ? 68 : 30;
+  // 보기 표시 난이도: 가나 퀴즈는 소리(한글) 유지, 표현/미션 보기는 일본어로(한글병기→가나만→한자).
+  const choiceMode = loadSettings().choiceMode;
+  const isKanaQuiz = card.reviewTarget?.type === 'kana';
   return (
     <>
       {/* 1. 일본어 (주인공) */}
@@ -200,7 +218,7 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
           const anim = state === 'correct' ? 'ym-correct' : state === 'wrong' ? 'ym-wrong' : '';
           return (
             <button key={idx} className={`${anim} ym-press`} disabled={reveal} onClick={() => onChoose(idx, c)} style={choiceStyle(state)}>
-              <span>{c.label}</span>
+              <ChoiceText c={c} mode={choiceMode} kanaQuiz={isKanaQuiz} />
               {reveal && c.recovery && <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--warn)' }}>복구</span>}
               {reveal && c.correct && <Icon name="check" size={18} style={{ color: 'var(--ok)' }} />}
             </button>
