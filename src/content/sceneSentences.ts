@@ -14,11 +14,13 @@ export interface SceneSentence {
   korean: string;
   register: Register;
   speaker: 'clerk' | 'me';
-  tier?: 1 | 2 | 3;
+  level: 1 | 2 | 3 | 4;
+  skills: SceneSentenceSkill[];
   tip?: string;
 }
 
-type Seed = [kana: string, kanji: string, korean: string, speaker: 'clerk' | 'me', tier?: 1 | 2 | 3, tip?: string];
+export type SceneSentenceSkill = 'read' | 'listen' | 'speak' | 'write';
+type Seed = [kana: string, kanji: string, korean: string, speaker: 'clerk' | 'me', level?: 1 | 2 | 3 | 4, tip?: string];
 type SentenceScene = Exclude<CLevel, 'C0'>;
 
 const romaji = (kana: string) => {
@@ -41,11 +43,26 @@ const romaji = (kana: string) => {
   }
   return out;
 };
-const sentence = (scene: string, n: number, [kana, kanji, korean, speaker, tier = 1, tip]: Seed): SceneSentence => ({
+const normalizeLevel = (raw: 1 | 2 | 3 | 4 = 1, kana: string): 1 | 2 | 3 | 4 => {
+  if (raw >= 3) return 4;
+  if (raw === 2 && kana.length >= 16) return 3;
+  return raw;
+};
+
+const inferSkills = (speaker: 'clerk' | 'me', level: 1 | 2 | 3 | 4): SceneSentenceSkill[] => {
+  if (speaker === 'clerk') return level >= 3 ? ['listen', 'read', 'write'] : ['listen', 'read'];
+  if (level >= 3) return ['speak', 'listen', 'read', 'write'];
+  return level >= 2 ? ['speak', 'listen', 'read'] : ['speak', 'read'];
+};
+
+const sentence = (scene: string, n: number, [kana, kanji, korean, speaker, rawLevel = 1, tip]: Seed): SceneSentence => {
+  const level = normalizeLevel(rawLevel, kana);
+  return {
   id: `ss_${scene.toLowerCase()}_${String(n).padStart(2, '0')}`,
   kana, kanji: kanji === kana ? undefined : kanji, romaji: romaji(kana), korean,
-  register: speaker === 'clerk' ? 'receptive' : 'productive', speaker, tier, tip,
-});
+  register: speaker === 'clerk' ? 'receptive' : 'productive', speaker, level, skills: inferSkills(speaker, level), tip,
+  };
+};
 
 // 미션 대화에서 그 장면 전용 문장을 추출(상대 대사 + 사용자 비복구 답변 + 따라말하기).
 // 공통 베이스(COMMON) 제거 — 도감은 각 장면 고유 내용만, 전역 중복 없이 채운다.
