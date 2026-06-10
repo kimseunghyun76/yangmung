@@ -236,7 +236,7 @@ function buildKanaCards(stage: string, kanaIds: string[], lk: KanaLookup): QuizC
   // (A) 글자 → 소리
   for (const id of kanaIds) {
     const k = lk.byKana(id);
-    const distract = shuffle(lk.kana.filter((x) => x.id !== id && x.koreanSound !== k.koreanSound)).slice(0, 2);
+    const distract = shuffle(lk.kana.filter((x) => x.id !== id && x.koreanSound !== k.koreanSound)).slice(0, 3);
     out.push({
       kind: 'quiz', id: `kana:${id}:read`, tag: `${stage} 가나 · 읽기`,
       banner: k.char, bannerJa: k.char, sub: '이 글자의 소리는?',
@@ -251,7 +251,7 @@ function buildKanaCards(stage: string, kanaIds: string[], lk: KanaLookup): QuizC
   // (B) 소리 → 글자
   for (const id of kanaIds) {
     const k = lk.byKana(id);
-    const distract = shuffle(lk.kana.filter((x) => x.id !== id && x.char !== k.char && x.script === k.script)).slice(0, 2);
+    const distract = shuffle(lk.kana.filter((x) => x.id !== id && x.char !== k.char && x.script === k.script)).slice(0, 3);
     out.push({
       kind: 'quiz', id: `kana:${id}:listen`, tag: `${stage} 가나 · 듣기`,
       banner: '듣기', bannerJa: k.char, sub: '듣고 글자를 고르세요',
@@ -268,7 +268,13 @@ function buildKanaCards(stage: string, kanaIds: string[], lk: KanaLookup): QuizC
   for (const id of kanaIds) {
     const k = lk.byKana(id);
     if (!k.confusables || k.confusables.length === 0) continue;
-    const distract = k.confusables.slice(0, 2).map((ch) => {
+    const distractChars = [...k.confusables];
+    // 보기 4개(정답+3) 보장: confusables가 부족하면 같은 스크립트 가나로 채움
+    for (const x of shuffle(lk.kana.filter((q) => q.char !== k.char && q.script === k.script))) {
+      if (distractChars.length >= 3) break;
+      if (!distractChars.includes(x.char)) distractChars.push(x.char);
+    }
+    const distract = distractChars.slice(0, 3).map((ch) => {
       const found = lk.byKanaChar(ch);
       return { label: ch, correct: false, ja: ch, phrase: { kana: ch, korean: found?.koreanSound ?? '?' } };
     });
@@ -316,7 +322,7 @@ export function buildCards(): Card[] {
     if (!p) continue;
     // 헷갈리게 — 같은 점원 대사끼리 묶어 의미를 진짜 들어야 구분되게 (없으면 일반 표현)
     const pool = phrases.filter((x) => x.id !== id && x.korean !== p.korean && LISTEN_IDS.includes(x.id));
-    const distractPhrases = shuffle(pool.length >= 2 ? pool : phrases.filter((x) => x.id !== id && x.korean !== p.korean)).slice(0, 2);
+    const distractPhrases = shuffle(pool.length >= 3 ? pool : phrases.filter((x) => x.id !== id && x.korean !== p.korean)).slice(0, 3);
     cards.push({
       kind: 'quiz', id: `listen:${id}`, tag: '듣기',
       banner: '듣기', bannerJa: ttsText(p), sub: '듣고 의미를 고르세요',
