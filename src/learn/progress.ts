@@ -2,6 +2,7 @@
 // 친구 5차 권고 단순화: SM-2 X, "틀린 것/복구 사용 = 다음 세션 앞쪽, 2회 연속 정답 = 잠시 제외"
 
 import type { Card, DictationCard, IntroduceCard, QuizCard, SpeakCard } from './cards';
+import { routePosition } from '../content/routes';
 
 // ── 진척 데이터 ─────────────────────────────────────
 export interface CardProgress {
@@ -333,23 +334,21 @@ function pickFreshestVariant(variants: ReviewableCard[], progress: ProgressMap):
 
 // C3(전철)은 C1·C2를 충분히 경험한 뒤에만 열림 — 새 장면이 너무 일찍 나오지 않게.
 // 식당(C2)을 "한 번 본 수준"이 아니라 마무리(계산)까지 반복하도록 조건을 늦춤.
-export const C3_UNLOCK = { c1: 5, c2: 4 } as const;
-export const C4_UNLOCK = { c3: 4 } as const;
+export const SCENE_UNLOCK_THRESHOLD = 3; // 루트 안에서 앞 장면을 이만큼 익히면 다음이 열림
 export function missionExperiencedCount(progress: ProgressMap, missionId: string): number {
   const prefix = `mission:${missionId}:`;
   let n = 0;
   for (const k in progress) if (k.startsWith(prefix)) n++;
   return n;
 }
+// 루트별 순차 잠금 — 각 루트 첫 장면은 열림, 안에서 앞 장면을 일정량 익히면 다음 장면이 열린다.
 export function isMissionUnlocked(missionId: string, progress: ProgressMap): boolean {
-  if (missionId === 'C3') {
-    return missionExperiencedCount(progress, 'C1') >= C3_UNLOCK.c1
-      && missionExperiencedCount(progress, 'C2') >= C3_UNLOCK.c2;
-  }
-  if (missionId === 'C4') {
-    return missionExperiencedCount(progress, 'C3') >= C4_UNLOCK.c3;
-  }
-  return true; // C0·C1·C2는 항상 열림 (진행 순서로 자연스레 노출)
+  if (missionId === 'C0') return true;
+  const pos = routePosition(missionId);
+  if (!pos) return true;            // 루트에 없는 장면은 열림(안전)
+  if (pos.index === 0) return true; // 각 루트의 첫 장면은 항상 열림
+  const prev = pos.route.ids[pos.index - 1];
+  return missionExperiencedCount(progress, prev) >= SCENE_UNLOCK_THRESHOLD;
 }
 
 function interleave<T>(...arrs: T[][]): T[] {

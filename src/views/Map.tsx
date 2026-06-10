@@ -2,6 +2,7 @@
 import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
 import { isMissionUnlocked, kanaReadMastery, missionProgress, type ProgressMap } from '../learn/progress';
+import { ROUTES, routePosition } from '../content/routes';
 import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
@@ -30,20 +31,15 @@ interface Props {
 const kicker: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase', margin: 0 };
 
 function lockHint(missionId: string): string {
-  if (missionId === 'C3') return '편의점·식당을 더 익히면 열려요';
-  if (missionId === 'C4') return '전철을 더 익히면 열려요';
+  const pos = routePosition(missionId);
+  if (pos && pos.index > 0) {
+    const prev = CONTENT.missions.find((m) => m.id === pos.route.ids[pos.index - 1]);
+    return `${prev?.place ?? prev?.scenario ?? '앞 장면'}을(를) 더 익히면 열려요`;
+  }
   return '앞 장면을 더 익히면 열려요';
 }
 
 interface SceneItem { m: typeof CONTENT.missions[number]; sv: SceneVisual; unlocked: boolean; done: boolean; started: boolean; mastered: number; total: number }
-const ROUTES = [
-  { label: '첫 여행 생존', ids: ['C1','C2','C3','C4','C5','C6','C7','C8','C9'] },
-  { label: '먹고 즐기기', ids: ['C13','C14','C15','C16','C17','C30','C31','C37','C38','C39'] },
-  { label: '이동과 관광', ids: ['C18','C19','C22','C23','C24','C35','C36'] },
-  { label: '숙박과 생활', ids: ['C10','C11','C12','C20','C21','C28','C29','C33','C34'] },
-  { label: '쇼핑·패션', ids: ['C32','C40'] },
-  { label: '문제 해결', ids: ['C25','C26','C27'] },
-] as const;
 
 export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props) {
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
