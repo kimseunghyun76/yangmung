@@ -58,3 +58,10 @@ export const MODE_PRESETS: Record<LearnMode, ModePreset> = {
   review: { label: '복습', desc: '틀린 것 · 오래 안 본 것 우선', readingAid: 'auto', choiceMode: 'kana_ko', slowListening: false, quotas: { K: 5, B: 4, C: 5, tip: 1 }, minFresh: { K: 0, B: 0, C: 0 } },
   kana: { label: '가나만', desc: '히라가나·가타카나만 집중 (미션 X)', readingAid: 'auto', choiceMode: 'kana_ko', slowListening: false, quotas: { K: 12, B: 0, C: 0, tip: 0 }, minFresh: { K: 4, B: 0, C: 0 } },
 };
+
+export const sceneSentenceLevelForMode = (mode: LearnMode): 1 | 2 | 3 | 4 => {
+  if (mode === 'beginner' || mode === 'kana') return 1;
+  if (mode === 'default' || mode === 'review') return 2;
+  if (mode === 'express') return 3;
+  return 4;
+};
