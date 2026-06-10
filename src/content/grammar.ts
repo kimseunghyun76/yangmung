@@ -60,4 +60,13 @@ export const grammar: GrammarPoint[] = [
   { id: 'g_sim', category: '장면', label: '유심은 호환성 확인', tipKo: '구매 전에 휴대폰 잠금 해제 여부와 지원 주파수를 확인해야 합니다.', action: '개통 확인 후 매장을 나가세요.' },
   { id: 'g_laundry', category: '장면', label: '세제 자동 투입 확인', tipKo: '코인세탁기는 세제가 자동 투입되는 기계가 많습니다.', commonMistake: '세제를 중복으로 넣으면 거품이 과해질 수 있어요.', action: '洗剤自動投入 표시를 먼저 찾으세요.' },
   { id: 'g_festival', category: '장면', label: '축제는 현금이 편해요', tipKo: '노점은 현금만 받는 곳이 많고 쓰레기통이 적을 수 있습니다.', action: '동전과 작은 봉투를 준비하면 편해요.' },
+  { id: 'g_kaiten_sushi_panel', category: '장면', label: '회전초밥은 패널부터', tipKo: '회전초밥집은 터치패널 주문, 접시 색상별 가격, 마지막 계산 버튼을 차례로 확인하면 덜 당황합니다.', exampleJa: '使い方を教えてください', exampleKo: '사용법을 알려 주세요.', action: '입장하면 먼저 언어 설정과 계산 버튼 위치를 봐 두세요.' },
+  { id: 'g_fitting_room', category: '장면', label: '피팅룸은 한마디 먼저', tipKo: '일본 옷가게는 피팅룸 전용 안내가 있을 수 있어요. 입어보기 전 試着してもいいですか 한마디가 안전합니다.', exampleJa: '試着してもいいですか', exampleKo: '입어 봐도 돼요?', action: '직원에게 사이즈와 색상을 함께 물어보세요.' },
+  { id: 'g_hotel_umbrella', category: '장면', label: '호텔 우산은 프런트에', tipKo: '비 오는 날 호텔 프런트에서 우산을 빌릴 수 있는 경우가 많습니다. 반납 위치와 시간만 확인하면 됩니다.', exampleJa: '傘を借りられますか', exampleKo: '우산을 빌릴 수 있나요?', action: '외출 전 프런트에서 傘ありますか라고 물어보세요.' },
+  { id: 'g_room_change', category: '장면', label: '객실 변경은 이유를 짧게', tipKo: '냄새·소음·침대 타입 문제는 길게 설명하지 말고 이유와 원하는 방을 짧게 말하면 처리하기 쉽습니다.', exampleJa: '部屋を変えられますか', exampleKo: '방을 바꿀 수 있나요?', action: '담배 냄새, 큰 방, 트윈 침대처럼 핵심 단어를 먼저 말하세요.' },
+  { id: 'g_narita_ticket', category: '장면', label: '공항역 표 교환은 창구로', tipKo: '오픈 티켓이나 교환권은 자동발매기보다 창구에서 날짜·시간·좌석을 함께 확인하는 편이 안전합니다.', exampleJa: 'このチケットを使いたいです', exampleKo: '이 티켓을 사용하고 싶어요.', action: '목적지와 원하는 출발 시간을 화면에 보여주세요.' },
+  { id: 'g_baggage_weight', category: '장면', label: '수하물 초과는 무게부터', tipKo: '공항에서 무게 초과가 나오면 추가요금, 짐 재정리, 기내 반입 가능 여부를 순서대로 확인하세요.', exampleJa: '荷物を出してもいいですか', exampleKo: '짐을 꺼내도 되나요?', action: '카운터 옆에서 정리해도 되는지 먼저 물어보세요.' },
+  { id: 'g_buffet_refill', category: '장면', label: '뷔페 리필 요청은 구체적으로', tipKo: '조식 뷔페에서 음식이 떨어졌을 때는 음식 이름이나 손짓으로 가리키며 ありますか라고 물으면 자연스럽습니다.', exampleJa: 'これ、もうありますか', exampleKo: '이거 더 있나요?', action: '빈 트레이를 가리키며 직원에게 짧게 물어보세요.' },
+  { id: 'g_pasta_options', category: '장면', label: '파스타 옵션은 하나씩 확인', tipKo: '소스·면 종류·세트·음료처럼 선택지가 많을 때는 한 번에 다 이해하려 하지 말고 하나씩 확인하세요.', exampleJa: 'おすすめはどれですか', exampleKo: '추천은 어느 건가요?', action: '못 들은 옵션은 もう一度お願いします로 다시 끊어 물어보세요.' },
+  { id: 'g_tax_free_checkout', category: '장면', label: '편집샵 계산은 면세 조건 확인', tipKo: '의류 매장 면세는 여권, 금액 조건, 개봉 금지 안내가 따라올 수 있습니다. 계산 전에 면세 가능 여부를 먼저 물어보세요.', exampleJa: '免税できますか', exampleKo: '면세 되나요?', action: '여권을 바로 꺼낼 수 있게 준비해 두세요.' },
 ];
