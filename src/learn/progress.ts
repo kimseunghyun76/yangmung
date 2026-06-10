@@ -309,6 +309,7 @@ function conceptKey(c: ReviewableCard): string {
   if (id.startsWith('kana:')) { const p = id.split(':'); return `kana:${p[1]}`; }
   if (id.startsWith('listen:')) return `phrase:${id.slice(7)}`;
   if (id.startsWith('dictation:')) return `phrase:${id.slice(10)}`;
+  if (id.startsWith('ko2ja:')) return `phrase:${id.slice(6)}`; // 한→일 고르기 = 같은 표현의 한 형태(변주 회전)
   return id; // 미션 스텝·소개·말하기·흐름은 묶지 않음
 }
 
@@ -316,8 +317,9 @@ function conceptKey(c: ReviewableCard): string {
 function formRank(id: string): number {
   if (id.endsWith(':read')) return 0;
   if (id.startsWith('listen:') || id.endsWith(':listen')) return 1;
-  if (id.startsWith('dictation:')) return 2;
-  if (id.endsWith(':confuse')) return 3;
+  if (id.startsWith('ko2ja:')) return 2;   // 한→일 고르기 — 듣기 다음 난이도
+  if (id.startsWith('dictation:')) return 3;
+  if (id.endsWith(':confuse')) return 4;
   return 1;
 }
 
