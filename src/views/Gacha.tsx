@@ -9,6 +9,7 @@ import {
   ownedCount, rarityMeta, rarityToTier, saveCollection, sentenceCount, totalItems,
   type BoxGrade, type Collection, type DropResult, type Rarity,
 } from '../learn/collection';
+import { gachaItemForPlace } from '../learn/gachaItems';
 import { loadProgress } from '../learn/progress';
 import { Icon } from '../ui/Icon';
 import { speak, ttsSupported } from '../tts';
@@ -22,6 +23,8 @@ const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place
 function DeckCardFace({ sceneId, rarity, size = 56 }: { sceneId: string; rarity: Rarity; size?: number }) {
   const sv = sceneVisualByMission(sceneId);
   const meta = rarityMeta(rarity);
+  const place = placeOf(sceneId);
+  const item = gachaItemForPlace(place, rarity);
   const diamond = rarity === 'diamond';
   const shine = diamond
     ? 'linear-gradient(135deg, rgba(255,255,255,0.9), rgba(91,199,224,0.32), rgba(226,101,90,0.2), rgba(255,255,255,0.68))'
@@ -30,17 +33,18 @@ function DeckCardFace({ sceneId, rarity, size = 56 }: { sceneId: string; rarity:
     <span className="ym-game-item-face" data-tier={rarityToTier(rarity)} style={{
       ['--tier-color' as string]: meta.color,
       ['--scene-accent' as string]: sv.accent,
-      width: size, height: size, flex: `0 0 ${size}px`, borderRadius: Math.round(size * 0.27),
+      width: size, height: Math.round(size * 1.18), flex: `0 0 ${Math.round(size * 1.18)}px`, borderRadius: Math.round(size * 0.22),
       position: 'relative', overflow: 'hidden',
-      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+      display: 'inline-flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       color: sv.accent,
       background: shine,
       border: `${Math.max(2, Math.round(size * 0.045))}px solid ${meta.color}`,
       boxShadow: diamond ? `0 0 20px ${meta.color}aa, inset 0 1px 0 rgba(255,255,255,0.8)` : `0 8px 18px ${meta.color}33, inset 0 1px 0 rgba(255,255,255,0.62)`,
     }}>
-      <span aria-hidden style={{ position: 'absolute', inset: '13%', borderRadius: Math.round(size * 0.18), background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)' }} />
+      <span aria-hidden className={`ym-gacha-item-illustration is-${item.motif}`} style={{ ['--scene-accent' as string]: sv.accent }} />
       <span aria-hidden style={{ position: 'absolute', top: '-35%', left: '-60%', width: '55%', height: '160%', transform: 'rotate(28deg)', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.56), transparent)' }} />
-      <Icon name={sv.icon} size={Math.round(size * 0.48)} style={{ position: 'relative', filter: diamond ? `drop-shadow(0 0 8px ${meta.color})` : undefined }} />
+      <span style={{ position: 'relative', zIndex: 2, width: '82%', marginTop: Math.round(size * 0.33), textAlign: 'center', fontSize: Math.max(8, Math.round(size * 0.16)), fontWeight: 950, lineHeight: 1.08, color: '#fff', textShadow: '0 1px 7px rgba(0,0,0,.55)' }}>{item.title}</span>
+      <span style={{ position: 'relative', zIndex: 2, marginTop: 3, maxWidth: '82%', padding: '1px 5px', borderRadius: 99, background: 'rgba(0,0,0,.24)', color: 'rgba(255,255,255,.78)', fontSize: Math.max(6, Math.round(size * 0.1)), fontWeight: 900, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.sub}</span>
       <span aria-hidden className="ym-game-item-star" style={{ right: Math.round(size * 0.12), top: Math.round(size * 0.09), fontSize: Math.max(9, Math.round(size * 0.17)) }}>✦</span>
     </span>
   );
@@ -75,21 +79,21 @@ function CardBack({ rarity = 'basic', size = 82 }: { rarity?: Rarity; size?: num
   );
 }
 
-function DrawCard({ item, flipped, onFlip, index }: { item: DropResult; flipped: boolean; onFlip: () => void; index: number }) {
+function DrawCard({ item, flipped, onFlip, index, active = true, large = false }: { item: DropResult; flipped: boolean; onFlip: () => void; index: number; active?: boolean; large?: boolean }) {
   const meta = rarityMeta(item.rarity);
   return (
     <button
-      className={`ym-gacha-draw-card ${flipped ? `is-flipped is-${item.rarity}` : 'ym-press'}`}
+      className={`ym-gacha-draw-card ${flipped ? `is-flipped is-${item.rarity}` : 'ym-press'} ${active ? 'is-active' : ''} ${large ? 'is-large' : ''}`}
       onClick={(e) => { e.stopPropagation(); onFlip(); }}
-      disabled={flipped}
+      disabled={flipped || !active}
       style={{
         ['--rarity-color' as string]: meta.color,
         animationDelay: flipped ? `${index * 0.035}s` : undefined,
-        width: 88, minHeight: 132, border: 0, background: 'transparent', color: '#fff', cursor: flipped ? 'default' : 'pointer',
+        width: large ? 128 : 88, minHeight: large ? 176 : 132, border: 0, background: 'transparent', color: '#fff', cursor: flipped || !active ? 'default' : 'pointer',
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, padding: 0,
       }}
     >
-      {flipped ? <DeckCardFace sceneId={item.sceneId} rarity={item.rarity} size={76} /> : <CardBack rarity={item.rarity} />}
+      {flipped ? <DeckCardFace sceneId={item.sceneId} rarity={item.rarity} size={large ? 118 : 76} /> : <CardBack rarity={item.rarity} size={large ? 112 : 82} />}
       {flipped && (
         <>
           <span style={{ fontSize: 11, fontWeight: 900, color: meta.color }}>{meta.label}</span>
@@ -136,12 +140,19 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
   const [burst, setBurst] = useState(false);
   const [flipped, setFlipped] = useState<Set<number>>(new Set());
   const [visibleCount, setVisibleCount] = useState(1);
+  const [spotlightIndex, setSpotlightIndex] = useState<number | null>(null);
+  const [bulkOpening, setBulkOpening] = useState(false);
   const [deck, setDeck] = useState(false);
   const openedRef = useRef(false);
+  const rareQueueRef = useRef<number[]>([]);
   const box = BOX[grade];
   const TAPS = 10;
   const allFlipped = results.length > 0 && flipped.size >= results.length;
   const visibleResults = results.slice(0, visibleCount);
+  const activeIndex = Math.min(Math.max(visibleCount - 1, 0), Math.max(results.length - 1, 0));
+  const activeResult = results[activeIndex];
+  const openedResults = results.filter((_, i) => flipped.has(i));
+  const hitSpeed = Math.max(0.38, 1.08 - taps * 0.07);
   const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 850, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase', margin: '0 0 12px', textAlign: 'center' };
 
   useEffect(() => {
@@ -163,7 +174,8 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
   function start() {
     if (reduceMotion()) { doClaim(); setPhase('revealed'); return; }
     openedRef.current = false;
-    setTaps(0); setBurst(false); setFlipped(new Set()); setResults([]); setVisibleCount(1); setPhase('open');
+    rareQueueRef.current = [];
+    setTaps(0); setBurst(false); setFlipped(new Set()); setResults([]); setVisibleCount(1); setSpotlightIndex(null); setBulkOpening(false); setPhase('open');
   }
   function openBox() {
     if (openedRef.current) return;
@@ -182,13 +194,44 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
   function flip(i: number) {
     setFlipped((prev) => new Set(prev).add(i));
     if (i === visibleCount - 1 && visibleCount < results.length) {
-      window.setTimeout(() => setVisibleCount((n) => Math.min(results.length, n + 1)), 260);
+      const pause = results[i]?.rarity === 'gold' || results[i]?.rarity === 'diamond' ? 980 : results[i]?.rarity === 'silver' ? 560 : 260;
+      window.setTimeout(() => setVisibleCount((n) => Math.min(results.length, n + 1)), pause);
     }
+  }
+  function revealBulkRest() {
+    setSpotlightIndex(null);
+    setVisibleCount(results.length);
+    window.setTimeout(() => {
+      setBulkOpening(true);
+      setFlipped(new Set(results.map((_, i) => i)));
+      window.setTimeout(() => setBulkOpening(false), 1100);
+    }, 120);
+  }
+  function showNextRare() {
+    const next = rareQueueRef.current.shift();
+    if (next === undefined) {
+      revealBulkRest();
+      return;
+    }
+    setVisibleCount(results.length);
+    setSpotlightIndex(next);
+    window.setTimeout(() => {
+      setFlipped((prev) => new Set(prev).add(next));
+      window.setTimeout(showNextRare, results[next]?.rarity === 'diamond' ? 1500 : 1150);
+    }, results[next]?.rarity === 'diamond' ? 1550 : 1250);
   }
   function flipAll(e: React.MouseEvent) {
     e.stopPropagation();
-    setVisibleCount(results.length);
-    window.setTimeout(() => setFlipped(new Set(results.map((_, i) => i))), 80);
+    const rare = results
+      .map((r, i) => ({ r, i }))
+      .filter(({ r, i }) => !flipped.has(i) && (r.rarity === 'gold' || r.rarity === 'diamond'))
+      .map(({ i }) => i);
+    if (rare.length > 0) {
+      rareQueueRef.current = rare;
+      showNextRare();
+      return;
+    }
+    revealBulkRest();
   }
 
   return (
@@ -229,7 +272,7 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
             <>
               <div style={{ position: 'relative', width: 220, height: 178, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <span className="ym-glow" aria-hidden style={{ position: 'absolute', inset: -18, borderRadius: '50%', background: `radial-gradient(circle, ${box.colors[1]}aa, ${box.colors[1]}33 40%, transparent 70%)` }} />
-                <div key={taps} className={taps > 0 ? 'ym-gacha-box-hit' : undefined} style={{ transform: `scale(${1 + taps * 0.08})`, transition: 'transform .12s' }}>
+                <div key={taps} className={taps > 0 ? 'ym-gacha-box-hit' : 'ym-gacha-box-ready'} style={{ ['--hit-speed' as string]: `${hitSpeed}s`, ['--hit-rotate' as string]: `${taps * 34}deg`, transform: `scale(${1 + taps * 0.045}) rotate(${taps * 11}deg)`, transition: 'transform .12s' }}>
                   <BoxArt grade={grade} size={150} />
                 </div>
               </div>
@@ -241,6 +284,13 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
             </>
           ) : (
             <>
+              {spotlightIndex !== null && results[spotlightIndex] && (
+                <div className={`ym-gacha-spotlight is-${results[spotlightIndex].rarity}`} style={{ ['--rarity-color' as string]: rarityMeta(results[spotlightIndex].rarity).color }}>
+                  <span className="ym-gacha-rays" aria-hidden style={{ position: 'absolute', width: 420, height: 420, color: rarityMeta(results[spotlightIndex].rarity).color, opacity: 0.72 }} />
+                  <DrawCard item={results[spotlightIndex]} index={spotlightIndex} flipped={flipped.has(spotlightIndex)} active large onFlip={() => {}} />
+                  <p style={{ margin: 0, color: '#fff', fontSize: 16, fontWeight: 950, textShadow: '0 2px 14px rgba(0,0,0,.55)' }}>{rarityMeta(results[spotlightIndex].rarity).label} 카드!</p>
+                </div>
+              )}
               <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: 10 }}>
                 <BoxArt grade={grade} size={74} open />
                 <div>
@@ -248,11 +298,30 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
                   <p style={{ margin: '4px 0 0', color: 'rgba(255,255,255,.72)', fontWeight: 750, fontSize: 12 }}>하나씩 뒤집거나 한 번에 공개하세요</p>
                 </div>
               </div>
-              <div style={{ position: 'relative', zIndex: 2, display: 'grid', gridTemplateColumns: 'repeat(5, minmax(62px, 88px))', gap: 10, justifyContent: 'center', maxWidth: 520, width: '100%' }}>
-                {visibleResults.map((r, i) => <DrawCard key={`${i}:${r.sceneId}:${r.rarity}`} item={r} index={i} flipped={flipped.has(i)} onFlip={() => flip(i)} />)}
+              {!bulkOpening && spotlightIndex === null && (
+                <div className="ym-gacha-pile-zone" style={{ position: 'relative', zIndex: 2 }}>
+                  <div className="ym-gacha-card-pile">
+                    {results.slice(activeIndex + 1, Math.min(results.length, activeIndex + 5)).map((r, offset) => (
+                      <span key={`pile:${activeIndex}:${offset}`} className="ym-gacha-pile-back" style={{ ['--pile-offset' as string]: offset + 1 }}>
+                        <CardBack rarity={r.rarity} />
+                      </span>
+                    ))}
+                    {activeResult && (
+                      <DrawCard key={`active:${activeIndex}:${activeResult.sceneId}:${activeResult.rarity}:${flipped.has(activeIndex) ? 'on' : 'off'}`} item={activeResult} index={activeIndex} flipped={flipped.has(activeIndex)} active onFlip={() => flip(activeIndex)} />
+                    )}
+                  </div>
+                  {openedResults.length > 0 && (
+                    <div className="ym-gacha-opened-strip">
+                      {openedResults.slice(-6).map((r, i) => <DeckCardFace key={`opened:${i}:${r.sceneId}:${r.rarity}`} sceneId={r.sceneId} rarity={r.rarity} size={44} />)}
+                    </div>
+                  )}
+                </div>
+              )}
+              <div className={bulkOpening ? 'ym-gacha-draw-grid is-bulk-opening' : 'ym-gacha-draw-grid'} style={{ position: 'relative', zIndex: 2, display: bulkOpening ? 'grid' : 'none', gridTemplateColumns: 'repeat(5, minmax(62px, 88px))', gap: 10, justifyContent: 'center', maxWidth: 520, width: '100%' }}>
+                {visibleResults.map((r, i) => <DrawCard key={`${i}:${r.sceneId}:${r.rarity}`} item={r} index={i} flipped={flipped.has(i)} active onFlip={() => flip(i)} />)}
               </div>
               <div style={{ display: 'flex', gap: 10, position: 'relative', zIndex: 2 }}>
-                {!allFlipped && <button onClick={flipAll} style={overlayBtn}>한번에 보기</button>}
+                {!allFlipped && spotlightIndex === null && <button onClick={flipAll} style={overlayBtn}>한번에 보기</button>}
                 {allFlipped && <button onClick={(e) => { e.stopPropagation(); setPhase('revealed'); }} className="ym-card-in" style={overlayBtn}>오늘 얻은 카드 보기</button>}
               </div>
             </>
