@@ -1,6 +1,6 @@
 // 설정 — 글래스 하단 시트. 학습 모드·발음 보조·듣기 속도·자동 진행·초기화.
 import type { CSSProperties } from 'react';
-import { MODE_PRESETS, type LearnMode, type ReadingAidMode, type Settings } from '../learn/settings';
+import { MODE_PRESETS, type ChoiceMode, type LearnMode, type ReadingAidMode, type Settings } from '../learn/settings';
 import { Modal } from './Modal';
 import { Icon } from '../ui/Icon';
 
@@ -19,6 +19,11 @@ const AID_OPTIONS: { v: ReadingAidMode; label: string }[] = [
   { v: 'off', label: '끄기' },
 ];
 const MODE_ORDER: LearnMode[] = ['beginner', 'default', 'express', 'review', 'kana'];
+const CHOICE_OPTIONS: { v: ChoiceMode; label: string }[] = [
+  { v: 'kana_ko', label: '일본어+한글' },
+  { v: 'kana', label: '일본어만' },
+  { v: 'kanji', label: '한자' },
+];
 
 const gbtn: CSSProperties = { borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', cursor: 'pointer', fontWeight: 600, fontSize: 14, padding: '12px 14px', textAlign: 'left' };
 const head: CSSProperties = { margin: '0 0 8px', fontWeight: 700, fontSize: 14, display: 'flex', alignItems: 'center', gap: 7 };
@@ -53,6 +58,14 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
           <button key={o.v} className="ym-press" style={seg(settings.readingAid === o.v)} onClick={() => onChange({ ...settings, readingAid: o.v })}>{o.label}</button>
         ))}
       </div>
+
+      <p style={{ ...head, marginTop: 18 }}><Icon name="listen" size={16} /> 퀴즈 보기 표시</p>
+      <div style={{ display: 'flex', gap: 8 }}>
+        {CHOICE_OPTIONS.map((o) => (
+          <button key={o.v} className="ym-press" style={seg(settings.choiceMode === o.v)} onClick={() => onChange({ ...settings, choiceMode: o.v })}>{o.label}</button>
+        ))}
+      </div>
+      <p style={{ margin: '6px 2px 0', fontSize: 11.5, color: 'var(--ink-faint)' }}>난이도가 오를수록 한글을 떼고(일본어만), 최고 난이도는 한자로 — 가나 퀴즈는 그대로예요.</p>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 18 }}>
         <span style={head}><Icon name="listen" size={16} /> 듣기 느리게 재생</span>

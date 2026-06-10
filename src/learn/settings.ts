@@ -1,18 +1,21 @@
 // 사용자 설정 — LocalStorage. 학습 모드(난이도 프로필) + 세부 토글.
 export type ReadingAidMode = 'auto' | 'always' | 'off';
 export type LearnMode = 'beginner' | 'default' | 'express' | 'review' | 'kana';
+// 퀴즈 보기 표시: 일본어+한글 / 일본어(가나)만 / 한자 — 난이도가 오를수록 한글을 떼고 한자로.
+export type ChoiceMode = 'kana_ko' | 'kana' | 'kanji';
 
 export type Theme = 'light' | 'dark';
 export interface Settings {
   mode: LearnMode;
   readingAid: ReadingAidMode; // auto=익히면 사라짐, always=항상, off=끔
+  choiceMode: ChoiceMode;     // 퀴즈 보기를 일본어로(난이도별)
   slowListening: boolean;     // 듣기 자동 재생을 느리게
   fastForward: boolean;       // 정답이면 자동으로 다음 카드 (빠른 진행)
   theme: Theme;               // 주간/야간
 }
 
 const KEY = 'yangmung:settings:v1';
-const DEFAULTS: Settings = { mode: 'default', readingAid: 'auto', slowListening: false, fastForward: true, theme: 'light' };
+const DEFAULTS: Settings = { mode: 'default', readingAid: 'auto', choiceMode: 'kana_ko', slowListening: false, fastForward: true, theme: 'light' };
 
 // 첫 실행이면 시스템 외형(라이트/다크)을 따른다 (Apple HIG: 시스템 appearance 존중).
 function systemTheme(): Theme {
@@ -40,15 +43,16 @@ export interface ModePreset {
   label: string;
   desc: string;
   readingAid: ReadingAidMode;
+  choiceMode: ChoiceMode;
   slowListening: boolean;
   quotas: { K: number; B: number; C: number; tip: number };
   minFresh: { K: number; B: number; C: number };
 }
 
 export const MODE_PRESETS: Record<LearnMode, ModePreset> = {
-  beginner: { label: '처음부터', desc: '발음 보조 항상 · 천천히 · 가나 위주', readingAid: 'always', slowListening: true, quotas: { K: 7, B: 3, C: 3, tip: 1 }, minFresh: { K: 2, B: 1, C: 1 } },
-  default: { label: '기본', desc: '모르는 가나만 보조 · 일반 속도', readingAid: 'auto', slowListening: false, quotas: { K: 6, B: 3, C: 5, tip: 1 }, minFresh: { K: 2, B: 1, C: 2 } },
-  express: { label: '여행 급행', desc: '보조 최소 · 장면 미션 우선', readingAid: 'off', slowListening: false, quotas: { K: 2, B: 2, C: 9, tip: 1 }, minFresh: { K: 1, B: 1, C: 3 } },
-  review: { label: '복습', desc: '틀린 것 · 오래 안 본 것 우선', readingAid: 'auto', slowListening: false, quotas: { K: 5, B: 4, C: 5, tip: 1 }, minFresh: { K: 0, B: 0, C: 0 } },
-  kana: { label: '가나만', desc: '히라가나·가타카나만 집중 (미션 X)', readingAid: 'auto', slowListening: false, quotas: { K: 12, B: 0, C: 0, tip: 0 }, minFresh: { K: 4, B: 0, C: 0 } },
+  beginner: { label: '처음부터', desc: '발음 보조 항상 · 천천히 · 가나 위주', readingAid: 'always', choiceMode: 'kana_ko', slowListening: true, quotas: { K: 7, B: 3, C: 3, tip: 1 }, minFresh: { K: 2, B: 1, C: 1 } },
+  default: { label: '기본', desc: '모르는 가나만 보조 · 일반 속도', readingAid: 'auto', choiceMode: 'kana_ko', slowListening: false, quotas: { K: 6, B: 3, C: 5, tip: 1 }, minFresh: { K: 2, B: 1, C: 2 } },
+  express: { label: '여행 급행', desc: '보조 최소 · 일본어 보기 · 장면 미션 우선', readingAid: 'off', choiceMode: 'kana', slowListening: false, quotas: { K: 2, B: 2, C: 9, tip: 1 }, minFresh: { K: 1, B: 1, C: 3 } },
+  review: { label: '복습', desc: '틀린 것 · 오래 안 본 것 우선', readingAid: 'auto', choiceMode: 'kana_ko', slowListening: false, quotas: { K: 5, B: 4, C: 5, tip: 1 }, minFresh: { K: 0, B: 0, C: 0 } },
+  kana: { label: '가나만', desc: '히라가나·가타카나만 집중 (미션 X)', readingAid: 'auto', choiceMode: 'kana_ko', slowListening: false, quotas: { K: 12, B: 0, C: 0, tip: 0 }, minFresh: { K: 4, B: 0, C: 0 } },
 };

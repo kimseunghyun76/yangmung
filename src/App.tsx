@@ -77,7 +77,7 @@ export function App() {
   // 모드 선택 = 프리셋 적용(보조·속도) + 세션 구성 변경. readingAid/속도는 이후 개별 미세조정 가능.
   function selectMode(mode: Settings['mode']) {
     const p = MODE_PRESETS[mode];
-    updateSettings({ ...settings, mode, readingAid: p.readingAid, slowListening: p.slowListening });
+    updateSettings({ ...settings, mode, readingAid: p.readingAid, choiceMode: p.choiceMode, slowListening: p.slowListening });
   }
   // 적응형: 진척을 진단해 약점·난이도를 판단하고, 세션 신규/복습 비율을 동적으로 조정.
   // (복습 모드는 사용자가 명시적으로 고른 것이라 적응 조정 제외 — 의도 존중)
