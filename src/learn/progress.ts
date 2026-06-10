@@ -421,6 +421,7 @@ export function selectSessionCards(
     if (c.kind === 'tip') { tips.push(c); continue; }
     if (c.kind === 'order' || c.kind === 'discover') continue; // 흐름/발견 카드는 SRS 대상 아님
     if (c.kind === 'quiz' && c.id.startsWith('sign:')) continue; // 거리 읽기는 전용 세션에서만
+    if (c.kind === 'introduce' && progress[c.id]) continue; // 새 표현 소개는 1회만 — 본 것은 제외(다른 새 표현으로)
     if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
     const key = conceptKey(c);
     const arr = byConcept.get(key);
