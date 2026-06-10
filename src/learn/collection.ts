@@ -151,7 +151,7 @@ export function claim(prev: Collection, sessionId: number, sceneIds: string[], d
     cards[sceneId] = { items };
 
     const owned = new Set(sentences[sceneId] ?? []);
-    const sentenceIds = pickNewSentenceIds(sceneId, owned, rarity === 'basic' ? 0 : 1);
+    const sentenceIds = pickNewSentenceIds(sceneId, owned, rarity === 'basic' ? 0 : 1, rarity);
     sentences[sceneId] = [...owned, ...sentenceIds];
     results.push({ sceneId, rarity, count: 1, isNew, sentenceIds, tier: rarityToTier(rarity), shards: items[rarity], leveledTo: null });
   }
@@ -186,9 +186,13 @@ export function totalItems(card?: DeckCard): number {
   return RARITIES.reduce((sum, r) => sum + items[r.key], 0);
 }
 
-function pickNewSentenceIds(sceneId: string, owned: Set<string>, count: number): string[] {
+function pickNewSentenceIds(sceneId: string, owned: Set<string>, count: number, rarity: Rarity): string[] {
   if (count <= 0) return [];
-  const candidates = (SCENE_SENTENCES[sceneId as CLevel] ?? []).map((row) => row.id).filter((id) => !owned.has(id));
+  const targetLevel: Record<Rarity, number> = { basic: 1, bronze: 1, silver: 2, gold: 3, diamond: 4 };
+  const candidates = (SCENE_SENTENCES[sceneId as CLevel] ?? [])
+    .filter((row) => !owned.has(row.id))
+    .sort((a, b) => Math.abs(a.level - targetLevel[rarity]) - Math.abs(b.level - targetLevel[rarity]) || a.level - b.level || a.id.localeCompare(b.id))
+    .map((row) => row.id);
   return candidates.slice(0, count);
 }
 

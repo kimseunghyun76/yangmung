@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CONTENT } from '../content';
 import { SCENE_SENTENCES } from '../content/sceneSentences';
+import type { SceneSentence } from '../content/sceneSentences';
 import {
   BOX, DRAW_COUNT, MERGE_NEED, NEXT_RARITY, RARITIES,
   bestRarity, claim, diamondCount, honorTrophyCount, itemsOf, loadCollection, mergeScene,
@@ -19,6 +20,7 @@ import { MascotBubble } from './mascot';
 
 const SCENES = CONTENT.missions.filter((m) => m.id !== 'C0');
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place ?? id;
+const totalSceneSentences = () => SCENES.reduce((sum, m) => sum + SCENE_SENTENCES[m.id].length, 0);
 
 function DeckCardFace({ sceneId, rarity, size = 56 }: { sceneId: string; rarity: Rarity; size?: number }) {
   const sv = sceneVisualByMission(sceneId);
@@ -375,13 +377,23 @@ function BurstParticles({ color }: { color: string }) {
   );
 }
 
-function DeckSentenceRow({ ja, korean }: { ja: string; korean: string }) {
+const LEVEL_LABEL: Record<SceneSentence['level'], string> = { 1: '입문', 2: '기본', 3: '중급', 4: '고급' };
+const SKILL_LABEL: Record<SceneSentence['skills'][number], string> = { read: '읽기', listen: '듣기', speak: '말하기', write: '쓰기' };
+
+function DeckSentenceRow({ row }: { row: SceneSentence }) {
   const [shadowed, setShadowed] = useState(false);
+  const ja = row.kanji ?? row.kana;
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '12px 13px', borderRadius: 14, border: `1px solid ${shadowed ? 'var(--ok)' : 'var(--glass-border)'}`, background: shadowed ? 'var(--ok-soft)' : 'var(--glass-bg-strong)', color: 'var(--ink)' }}>
       <span style={{ flex: 1, minWidth: 0 }}>
         <span lang="ja" style={{ display: 'block', fontSize: 16, fontWeight: 850 }}>{ja}</span>
-        <span style={{ display: 'block', marginTop: 3, fontSize: 12, color: 'var(--ink-soft)', fontWeight: 650 }}>{korean}</span>
+        <span style={{ display: 'block', marginTop: 3, fontSize: 12, color: 'var(--ink-soft)', fontWeight: 650 }}>{row.korean}</span>
+        <span style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginTop: 8 }}>
+          <span style={{ padding: '2px 7px', borderRadius: 999, background: 'var(--accent-soft)', color: 'var(--accent)', fontSize: 10.5, fontWeight: 900 }}>{LEVEL_LABEL[row.level]}</span>
+          {row.skills.map((skill) => (
+            <span key={skill} style={{ padding: '2px 7px', borderRadius: 999, background: 'var(--glass-bg)', color: 'var(--ink-faint)', fontSize: 10.5, fontWeight: 850 }}>{SKILL_LABEL[skill]}</span>
+          ))}
+        </span>
       </span>
       <button className="ym-press" onClick={() => speak(ja)} disabled={!ttsSupported()} aria-label="듣기"
         style={{ flex: '0 0 auto', width: 38, height: 38, borderRadius: 11, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--accent)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -442,13 +454,14 @@ export function DeckModal({ onClose }: { onClose: () => void }) {
 
   if (selected) {
     const ownedIds = collection.sentences[selected] ?? [];
-    const rows = SCENE_SENTENCES[selected as keyof typeof SCENE_SENTENCES].filter((row) => ownedIds.includes(row.id));
+    const allRows = SCENE_SENTENCES[selected as keyof typeof SCENE_SENTENCES];
+    const rows = allRows.filter((row) => ownedIds.includes(row.id));
     return (
       <Modal title={`${placeOf(selected)} 표현`} onClose={onClose}>
         <button className="ym-press" onClick={() => setSelected(undefined)} style={{ border: 0, background: 'transparent', color: 'var(--ink-soft)', fontWeight: 800, padding: '4px 0 12px', cursor: 'pointer' }}>← 도감으로</button>
-        <p style={{ margin: '0 0 14px', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>모은 표현 {rows.length}/30</p>
+        <p style={{ margin: '0 0 14px', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>모은 표현 {rows.length}/{allRows.length}</p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
-          {rows.map((row) => <DeckSentenceRow key={row.id} ja={row.kanji ?? row.kana} korean={row.korean} />)}
+          {rows.map((row) => <DeckSentenceRow key={row.id} row={row} />)}
         </div>
       </Modal>
     );
@@ -460,7 +473,7 @@ export function DeckModal({ onClose }: { onClose: () => void }) {
         모은 장면 <strong style={{ color: 'var(--ink)' }}>{ownedCount(collection)}</strong>/{SCENES.length}
         {' · '}다이아 <strong style={{ color: '#5bc7e0' }}>{diamondCount(collection)}</strong>
         {' · '}명예 트로피 <strong style={{ color: 'var(--accent)' }}>{honorTrophyCount(collection)}</strong>
-        {' · '}표현 <strong style={{ color: 'var(--accent)' }}>{sentenceCount(collection)}</strong>/390
+        {' · '}표현 <strong style={{ color: 'var(--accent)' }}>{sentenceCount(collection)}</strong>/{totalSceneSentences()}
       </p>
       <p style={{ margin: '0 0 14px', fontSize: 12, color: 'var(--ink-faint)', lineHeight: 1.5 }}>
         각 장면 수업에서만 그 장면 카드가 나와요. 기본 30→동 1, 동 30→은 1, 은 20→금 1, 금 10→다이아 1, 다이아 100→명예 트로피 1.
