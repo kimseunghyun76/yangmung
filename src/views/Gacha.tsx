@@ -14,6 +14,7 @@ import { gachaItemForPlace } from '../learn/gachaItems';
 import { loadProgress } from '../learn/progress';
 import { Icon } from '../ui/Icon';
 import { speak, ttsSupported } from '../tts';
+import { loadSettings, sceneSentenceLevelForMode } from '../learn/settings';
 import { Modal } from './Modal';
 import { sceneVisualByMission } from './scene';
 import { MascotBubble } from './mascot';
@@ -166,7 +167,8 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
   if (sceneIds.length === 0) return null;
 
   function doClaim(): DropResult[] {
-    const res = claim(loadCollection(), sessionId, sceneIds, box.draws);
+    const preferredLevel = sceneSentenceLevelForMode(loadSettings().mode);
+    const res = claim(loadCollection(), sessionId, sceneIds, box.draws, preferredLevel);
     saveCollection(res.collection);
     let r = res.results;
     if (r.length === 0) r = [];

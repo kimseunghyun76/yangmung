@@ -132,7 +132,7 @@ function pickScene(sceneIds: string[]): string {
 }
 
 // 세션 보상 — 해당 세션 장면에서만 10장 드롭. 기본/동/은/금/다이아는 가중치 50/30/13/7/1.
-export function claim(prev: Collection, sessionId: number, sceneIds: string[], draws = DRAW_COUNT): { collection: Collection; results: DropResult[] } {
+export function claim(prev: Collection, sessionId: number, sceneIds: string[], draws = DRAW_COUNT, preferredLevel?: 1 | 2 | 3 | 4): { collection: Collection; results: DropResult[] } {
   const normalized = normalizeCollection(prev);
   if (sessionId > 0 && normalized.lastClaimedSessionId === sessionId) return { collection: normalized, results: [] };
   if (sceneIds.length === 0) return { collection: normalized, results: [] };
@@ -151,7 +151,7 @@ export function claim(prev: Collection, sessionId: number, sceneIds: string[], d
     cards[sceneId] = { items };
 
     const owned = new Set(sentences[sceneId] ?? []);
-    const sentenceIds = pickNewSentenceIds(sceneId, owned, rarity === 'basic' ? 0 : 1, rarity);
+    const sentenceIds = pickNewSentenceIds(sceneId, owned, rarity === 'basic' ? 0 : 1, rarity, preferredLevel);
     sentences[sceneId] = [...owned, ...sentenceIds];
     results.push({ sceneId, rarity, count: 1, isNew, sentenceIds, tier: rarityToTier(rarity), shards: items[rarity], leveledTo: null });
   }
@@ -186,12 +186,13 @@ export function totalItems(card?: DeckCard): number {
   return RARITIES.reduce((sum, r) => sum + items[r.key], 0);
 }
 
-function pickNewSentenceIds(sceneId: string, owned: Set<string>, count: number, rarity: Rarity): string[] {
+function pickNewSentenceIds(sceneId: string, owned: Set<string>, count: number, rarity: Rarity, preferredLevel?: 1 | 2 | 3 | 4): string[] {
   if (count <= 0) return [];
   const targetLevel: Record<Rarity, number> = { basic: 1, bronze: 1, silver: 2, gold: 3, diamond: 4 };
+  const level = preferredLevel ?? targetLevel[rarity];
   const candidates = (SCENE_SENTENCES[sceneId as CLevel] ?? [])
     .filter((row) => !owned.has(row.id))
-    .sort((a, b) => Math.abs(a.level - targetLevel[rarity]) - Math.abs(b.level - targetLevel[rarity]) || a.level - b.level || a.id.localeCompare(b.id))
+    .sort((a, b) => Math.abs(a.level - level) - Math.abs(b.level - level) || Math.abs(a.level - targetLevel[rarity]) - Math.abs(b.level - targetLevel[rarity]) || a.level - b.level || a.id.localeCompare(b.id))
     .map((row) => row.id);
   return candidates.slice(0, count);
 }
