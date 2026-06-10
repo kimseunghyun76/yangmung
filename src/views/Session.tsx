@@ -124,16 +124,24 @@ function TipBody({ card, onNext }: { card: Extract<Card, { kind: 'tip' }>; onNex
 function TipDetail({ label, text, tone }: { label: string; text: string; tone: string }) {
   return <div style={{ marginTop: 10, padding: '11px 13px', borderRadius: 13, borderLeft: `3px solid ${tone}`, background: 'var(--surface-2)' }}><strong style={{ display: 'block', fontSize: 12, color: tone }}>{label}</strong><span style={{ display: 'block', marginTop: 3, fontSize: 13.5, lineHeight: 1.5, color: 'var(--ink-soft)' }}>{text}</span></div>;
 }
-// 진행 스텝 도트
+// 진행 스텝 도트 + 진척 카운트(현재/전체 · 남은 개수)
 function Dots({ i, total, onScene }: { i: number; total: number; onScene: boolean }) {
   const n = Math.min(total, 16);
   const on = onScene ? '#fff' : 'var(--accent)';
   const off = onScene ? 'rgba(255,255,255,0.38)' : 'var(--glass-border)';
+  const cur = Math.min(i + 1, total);
+  const left = Math.max(0, total - cur);
+  const textColor = onScene ? '#fff' : 'var(--ink-soft)';
   return (
-    <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
-      {Array.from({ length: n }, (_, k) => (
-        <span key={k} style={{ width: k === i ? 18 : 7, height: 7, borderRadius: 9, background: k <= i ? on : off, transition: 'width .25s' }} />
-      ))}
+    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+      <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+        {Array.from({ length: n }, (_, k) => (
+          <span key={k} style={{ width: k === i ? 18 : 7, height: 7, borderRadius: 9, background: k <= i ? on : off, transition: 'width .25s' }} />
+        ))}
+      </div>
+      <span style={{ fontSize: 12, fontWeight: 800, color: textColor, fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
+        {cur}/{total}{left > 0 ? ` · ${left}개 남음` : ' · 마지막'}
+      </span>
     </div>
   );
 }

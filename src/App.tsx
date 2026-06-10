@@ -308,9 +308,9 @@ export function App() {
     };
     const willAuto = c.correct && !c.recovery && settings.fastForward;
     pendingAdvanceKeyRef.current = willAuto ? advanceKey : null;
-    // 정답이면 화면에 재노출되는 표현을 읽어주고 → "다 읽은 뒤 0.5초"에 넘어감.
-    // 미션 질문 카드에서는 선택지 답변보다 점원이 말한 prompt가 피드백의 주 문장이다.
-    const feedbackJa = card.bannerJa ?? c.ja;
+    // 정답을 고르면 그 정답의 음성을, 오답이면 올바른 정답의 음성을 들려준다(→ "다 읽은 뒤 0.5초"에 넘어감).
+    const correctChoice = card.choices.find((x) => x.correct && !x.recovery);
+    const feedbackJa = (c.correct && !c.recovery ? c.ja : correctChoice?.ja) ?? card.bannerJa ?? c.ja;
     if (feedbackJa && ttsSupported()) {
       speak(feedbackJa, willAuto ? { onEnd: armNext } : {});
       // 안전망: onend가 안 오는 브라우저 대비 (읽기 길이+여유)
