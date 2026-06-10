@@ -32,11 +32,13 @@ interface Props {
   onPracticeCompose: () => void;
   onPracticeFlash: () => void;
   onPracticeWrite: () => void;
+  onPlacement: () => void;
+  placementDone: boolean;
 }
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' };
 
-export function Home({ nav, allCards, progress, session, sessionConfig, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation, onPracticeCompose, onPracticeFlash, onPracticeWrite }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation, onPracticeCompose, onPracticeFlash, onPracticeWrite, onPlacement, placementDone }: Props) {
   const upcomingId = nextSessionId(session);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
   const planned = plan.size;
@@ -63,13 +65,29 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
     <main style={WRAP}>
       <NavBar {...nav} />
 
-      {/* 슬림 헤더 — 모드 칩만(듀오는 오늘의 장면 안 여행 안내자로 이동) */}
+      {/* 슬림 헤더 — 난이도 칩(누르면 수준 진단으로 재조정) */}
       <div className="ym-rise" style={{ display: 'flex', justifyContent: 'flex-end', margin: '0 0 12px' }}>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '7px 12px', borderRadius: 999, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontSize: 12.5, fontWeight: 750 }}>
+        <button className="ym-press" onClick={onPlacement} title="수준 진단으로 난이도 재조정" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '7px 12px', borderRadius: 999, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontSize: 12.5, fontWeight: 750, cursor: 'pointer' }}>
           <span style={{ width: 7, height: 7, borderRadius: 99, background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)' }} />
-          {modeLabel}
-        </span>
+          {modeLabel} · 진단
+        </button>
       </div>
+
+      {/* 첫 실행: 수준 진단 권유 배너 */}
+      {!placementDone && (
+        <button className="ym-rise ym-press" onClick={onPlacement} style={{
+          width: '100%', textAlign: 'left', cursor: 'pointer', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 13,
+          padding: '14px 16px', borderRadius: 18, border: '1px solid var(--accent)', color: 'var(--ink)',
+          background: 'linear-gradient(135deg, var(--accent-soft), var(--glass-bg-strong))',
+        }}>
+          <span style={{ fontSize: 28 }}>🎯</span>
+          <span style={{ flex: 1 }}>
+            <span style={{ display: 'block', fontSize: 15, fontWeight: 800 }}>내 수준 진단하고 시작하기</span>
+            <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 2 }}>10문제로 난이도를 추천받아요 (1분 · 언제든 설정에서 변경)</span>
+          </span>
+          <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)' }} />
+        </button>
+      )}
 
       {/* ① 오늘의 장면 — 듀오 여행 안내자 + 히어로 + 시작 CTA */}
       <div className="ym-rise" style={{ animationDelay: '.04s' }}>
