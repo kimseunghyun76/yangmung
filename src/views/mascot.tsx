@@ -21,7 +21,7 @@ const MOOD_FACE: Partial<Record<Who, Partial<Record<MascotMood, string>>>> = {
 export function MascotFace({ who, mood = 'default', size = 32, style }: { who: Who; mood?: MascotMood; size?: number; style?: CSSProperties }) {
   return (
     <img src={MOOD_FACE[who]?.[mood] ?? FACE[who]} alt="" aria-hidden width={size} height={size} loading="lazy"
-      style={{ objectFit: 'contain', flex: `0 0 ${size}px`, ...style }} />
+      style={{ objectFit: 'contain', flex: `0 0 ${size}px`, filter: 'saturate(.78) brightness(1.08) contrast(.96) drop-shadow(0 8px 16px rgba(0,0,0,.1))', ...style }} />
   );
 }
 

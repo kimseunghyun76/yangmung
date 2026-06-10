@@ -54,7 +54,7 @@ export function Intro({ cards, goal, onStart, onBack }: { cards: Card[]; goal: s
         boxShadow: 'var(--glass-shadow)',
         color: backdrop ? '#fff' : 'var(--ink)',
       }}>
-        {backdrop && <img src={backdrop} alt="" aria-hidden style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'saturate(0.92) contrast(1.05)' }} />}
+        {backdrop && <img src={backdrop} alt="" aria-hidden style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'saturate(.82) contrast(.96) brightness(1.08)' }} />}
         {backdrop && <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.16), rgba(0,0,0,0.7))' }} />}
         <div style={{ position: 'relative' }}>
           <span style={{

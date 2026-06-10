@@ -134,6 +134,7 @@ export function Flash({ cards, unlockedSceneIds, onExit, onReplay }: Props) {
   const barColor = ratio > 0.5 ? '#3fb27f' : ratio > 0.25 ? '#e0a23a' : '#e0564a';
   const hot = combo >= 3;
   const promptText = card.listen ? null : (card.bannerJa || card.banner);
+  const signCard = card.id.startsWith('sign:');
   const cardFx = callout === 'miss' ? 'ym-speed-card is-miss' : callout ? `ym-speed-card is-${callout}` : `ym-speed-card${hot ? ' is-hot' : ''}`;
   const timeLeft = Math.max(0, Math.ceil(left / 1000));
 
@@ -172,7 +173,9 @@ export function Flash({ cards, unlockedSceneIds, onExit, onReplay }: Props) {
           </span>
         )}
         {callout && <FlashHitFx tone={callout} />}
-        {card.listen ? (
+        {signCard ? (
+          <SignPromptBoard text={card.bannerJa || card.banner} category={card.tag.replace(' 읽기', '')} />
+        ) : card.listen ? (
           <button className="ym-press" onClick={() => card.bannerJa && speak(card.bannerJa)} disabled={!ttsSupported()}
             style={{ width: 84, height: 84, borderRadius: 99, border: '1px solid var(--glass-border)', background: 'var(--accent-soft)', color: 'var(--accent)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
             <Icon name="listen" size={40} />
@@ -205,16 +208,30 @@ export function Flash({ cards, unlockedSceneIds, onExit, onReplay }: Props) {
   );
 }
 
+function SignPromptBoard({ text, category }: { text: string; category: string }) {
+  const menu = category === '메뉴';
+  const traffic = category === '교통';
+  const caution = category === '주의';
+  return (
+    <div className={`ym-local-sign ${menu ? 'is-menu' : traffic ? 'is-traffic' : caution ? 'is-caution' : ''}`}>
+      <span className="ym-local-sign-pin" aria-hidden />
+      <span className="ym-local-sign-category">{category}</span>
+      <span lang="ja" className="ym-local-sign-text">{text}</span>
+      <span className="ym-local-sign-sub">{menu ? '本日のおすすめ' : traffic ? '駅構内案内' : caution ? 'ご注意ください' : 'まちの表示'}</span>
+    </div>
+  );
+}
+
 function FlashHitFx({ tone }: { tone: Exclude<Callout, null> }) {
   const color = tone === 'miss' ? '#e0564a' : tone === 'perfect' ? '#f0b43f' : '#4cae79';
-  const count = tone === 'perfect' ? 10 : 6;
+  const count = tone === 'perfect' ? 24 : tone === 'good' ? 18 : 12;
   return (
-    <span aria-hidden className={`ym-speed-hitfx is-${tone}`}>
+    <span aria-hidden className={`ym-speed-hitfx is-${tone}`} style={{ ['--fx-color' as string]: color }}>
       {Array.from({ length: count }).map((_, i) => (
         <i key={i} style={{
           ['--fx-color' as string]: color,
           ['--fx-rot' as string]: `${i * (360 / count)}deg`,
-          animationDelay: `${i * 0.012}s`,
+          animationDelay: `${i * 0.01}s`,
         }} />
       ))}
     </span>
