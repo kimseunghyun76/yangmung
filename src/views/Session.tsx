@@ -53,7 +53,7 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
         position: 'relative', overflow: 'hidden', paddingTop: 'max(16px, env(safe-area-inset-top))',
         background: sv ? `linear-gradient(165deg, ${hexA(accent, 0.18)}, ${hexA(accent, 0.34)})` : 'var(--surface-2)',
       }}>
-        {(sv?.backdrop ?? sv?.hero) && <img src={sv?.backdrop ?? sv?.hero} alt="" aria-hidden style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: sv?.backdrop ? 0.82 : 0.9 }} />}
+        {(sv?.backdrop ?? sv?.hero) && <img src={sv?.backdrop ?? sv?.hero} alt="" aria-hidden style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: sv?.backdrop ? 0.9 : 0.92, filter: 'saturate(.82) contrast(.96) brightness(1.08)' }} />}
         {sv && <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.5))' }} />}
         <div style={{ position: 'relative', padding: '0 16px 16px', color: sv ? '#fff' : 'var(--ink)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 40 }}>

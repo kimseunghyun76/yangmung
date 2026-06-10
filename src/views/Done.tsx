@@ -88,10 +88,10 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
       {/* 다음 단계 추천 — 매번 같은 다음 장면 대신 신규·복습·다른 연습을 골라가며 */}
       <div className="ym-rise" style={{ animationDelay: '.16s', marginTop: 24 }}>
         <p style={{ ...kicker, textAlign: 'center', marginBottom: 12 }}>다음엔 무엇을 할까요?</p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div className="ym-next-action-board" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {weak > 0 && (
             <NextStep icon="target" accent="var(--accent)" title="약점만 다시 풀기"
-              sub={`이번에 막힌 ${weak}개 집중`} onClick={onRetryWeak} />
+              sub={`이번에 막힌 ${weak}개 집중`} primary={!canContinue} onClick={onRetryWeak} />
           )}
           {canContinue && (
             <NextStep
@@ -169,20 +169,28 @@ function NextStep({ icon, accent, title, sub, primary, onClick }: {
   icon: React.ComponentProps<typeof Icon>['name']; accent: string; title: string; sub: string; primary?: boolean; onClick: () => void;
 }) {
   return (
-    <button className="ym-press" onClick={onClick} style={{
-      width: '100%', display: 'flex', alignItems: 'center', gap: 14, textAlign: 'left',
-      padding: '14px 16px', borderRadius: 16, cursor: 'pointer',
-      border: `${primary ? 2 : 1}px solid ${primary ? accent : 'var(--glass-border)'}`,
-      background: primary ? hexA(accent, 0.1) : 'var(--glass-bg-strong)', color: 'var(--ink)',
+    <button className={`ym-press ym-next-step${primary ? ' is-primary' : ''}`} onClick={onClick} style={{
+      ['--next-accent' as string]: accent,
+      ['--next-soft' as string]: hexA(accent, primary ? 0.18 : 0.11),
+      width: '100%', display: 'flex', alignItems: 'center', gap: primary ? 15 : 12, textAlign: 'left',
+      padding: primary ? '17px 17px 18px' : '12px 13px', borderRadius: primary ? 22 : 17, cursor: 'pointer',
+      border: `1px solid ${primary ? hexA(accent, 0.46) : 'var(--glass-border)'}`,
+      background: primary
+        ? `radial-gradient(circle at 12% 10%, ${hexA(accent, 0.3)}, transparent 32%), linear-gradient(135deg, ${hexA(accent, 0.14)}, var(--glass-bg-strong))`
+        : 'var(--glass-bg-strong)',
+      color: 'var(--ink)', boxShadow: primary ? `0 16px 42px ${hexA(accent, 0.2)}` : undefined,
+      position: 'relative', overflow: 'hidden',
     }}>
-      <span style={{ width: 44, height: 44, flex: '0 0 44px', borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: hexA(accent, 0.16), color: accent }}>
+      <span className="ym-next-step-icon" style={{ width: primary ? 52 : 42, height: primary ? 52 : 42, flex: `0 0 ${primary ? 52 : 42}px`, borderRadius: primary ? 17 : 14, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: hexA(accent, primary ? 0.2 : 0.13), color: accent }}>
         <Icon name={icon} size={24} />
       </span>
       <span style={{ flex: 1 }}>
-        <span style={{ display: 'block', fontSize: 16, fontWeight: 700 }}>{title}</span>
-        <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 2 }}>{sub}</span>
+        <span style={{ display: 'block', fontSize: primary ? 17 : 15, fontWeight: 850 }}>{title}</span>
+        <span style={{ display: 'block', fontSize: primary ? 13 : 12.2, color: 'var(--ink-soft)', marginTop: 3, lineHeight: 1.35 }}>{sub}</span>
       </span>
-      <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)' }} />
+      <span className="ym-next-step-arrow" style={{ width: 30, height: 30, borderRadius: 999, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: primary ? hexA(accent, 0.16) : 'var(--glass-bg)', color: primary ? accent : 'var(--ink-faint)' }}>
+        <Icon name="flow" size={17} />
+      </span>
     </button>
   );
 }
