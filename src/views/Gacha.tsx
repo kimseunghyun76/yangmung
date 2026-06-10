@@ -1,5 +1,5 @@
 // 가챠 카드 도감 — 세션별 아이템 카드 수집 + 병합.
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CONTENT } from '../content';
 import { SCENE_SENTENCES } from '../content/sceneSentences';
@@ -9,6 +9,7 @@ import {
   ownedCount, rarityMeta, rarityToTier, saveCollection, sentenceCount, totalItems,
   type BoxGrade, type Collection, type DropResult, type Rarity,
 } from '../learn/collection';
+import { loadProgress } from '../learn/progress';
 import { Icon } from '../ui/Icon';
 import { speak, ttsSupported } from '../tts';
 import { Modal } from './Modal';
@@ -63,9 +64,11 @@ function BoxArt({ grade, size = 64, className, open = false }: { grade: BoxGrade
   );
 }
 
-function CardBack({ size = 82 }: { size?: number }) {
+function CardBack({ rarity = 'basic', size = 82 }: { rarity?: Rarity; size?: number }) {
+  const meta = rarityMeta(rarity);
   return (
-    <span className="ym-gacha-card-back" style={{
+    <span className={`ym-gacha-card-back is-${rarity}`} style={{
+      ['--rarity-color' as string]: meta.color,
       width: size, height: Math.round(size * 1.28), borderRadius: 14, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
       fontWeight: 950, fontSize: 20,
     }}>?</span>
@@ -86,7 +89,7 @@ function DrawCard({ item, flipped, onFlip, index }: { item: DropResult; flipped:
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, padding: 0,
       }}
     >
-      {flipped ? <DeckCardFace sceneId={item.sceneId} rarity={item.rarity} size={76} /> : <CardBack />}
+      {flipped ? <DeckCardFace sceneId={item.sceneId} rarity={item.rarity} size={76} /> : <CardBack rarity={item.rarity} />}
       {flipped && (
         <>
           <span style={{ fontSize: 11, fontWeight: 900, color: meta.color }}>{meta.label}</span>
@@ -132,12 +135,22 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
   const [taps, setTaps] = useState(0);
   const [burst, setBurst] = useState(false);
   const [flipped, setFlipped] = useState<Set<number>>(new Set());
+  const [visibleCount, setVisibleCount] = useState(1);
   const [deck, setDeck] = useState(false);
-  if (sceneIds.length === 0) return null;
+  const openedRef = useRef(false);
   const box = BOX[grade];
-  const TAPS = 3;
+  const TAPS = 10;
   const allFlipped = results.length > 0 && flipped.size >= results.length;
+  const visibleResults = results.slice(0, visibleCount);
   const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 850, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase', margin: '0 0 12px', textAlign: 'center' };
+
+  useEffect(() => {
+    if (phase !== 'open' || burst) return undefined;
+    const t = window.setTimeout(() => openBox(), 5000);
+    return () => window.clearTimeout(t);
+  }, [phase, burst]);
+
+  if (sceneIds.length === 0) return null;
 
   function doClaim(): DropResult[] {
     const res = claim(loadCollection(), sessionId, sceneIds, box.draws);
@@ -149,21 +162,33 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
   }
   function start() {
     if (reduceMotion()) { doClaim(); setPhase('revealed'); return; }
-    setTaps(0); setBurst(false); setFlipped(new Set()); setResults([]); setPhase('open');
+    openedRef.current = false;
+    setTaps(0); setBurst(false); setFlipped(new Set()); setResults([]); setVisibleCount(1); setPhase('open');
+  }
+  function openBox() {
+    if (openedRef.current) return;
+    openedRef.current = true;
+    const r = doClaim();
+    setVisibleCount(r.length > 0 ? 1 : 0);
+    setBurst(true);
   }
   function overlayTap() {
     if (!burst) {
       const n = taps + 1;
       setTaps(n);
-      if (n >= TAPS) { doClaim(); setBurst(true); }
+      if (n >= TAPS) openBox();
     }
   }
   function flip(i: number) {
     setFlipped((prev) => new Set(prev).add(i));
+    if (i === visibleCount - 1 && visibleCount < results.length) {
+      window.setTimeout(() => setVisibleCount((n) => Math.min(results.length, n + 1)), 260);
+    }
   }
   function flipAll(e: React.MouseEvent) {
     e.stopPropagation();
-    setFlipped(new Set(results.map((_, i) => i)));
+    setVisibleCount(results.length);
+    window.setTimeout(() => setFlipped(new Set(results.map((_, i) => i))), 80);
   }
 
   return (
@@ -208,12 +233,11 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
                   <BoxArt grade={grade} size={150} />
                 </div>
               </div>
-              <p style={{ color: '#fff', fontWeight: 850, fontSize: 16, textShadow: '0 1px 8px rgba(0,0,0,.5)' }}>탭해서 박스 열기</p>
-              <div style={{ display: 'flex', gap: 8 }}>
-                {Array.from({ length: TAPS }, (_, i) => (
-                  <span key={i} style={{ width: 12, height: 12, borderRadius: 99, background: i < taps ? box.colors[1] : 'rgba(255,255,255,0.3)', boxShadow: i < taps ? `0 0 10px ${box.colors[1]}` : 'none' }} />
-                ))}
+              <p style={{ color: '#fff', fontWeight: 850, fontSize: 16, textShadow: '0 1px 8px rgba(0,0,0,.5)' }}>5초 안에 10번 두드리면 바로 열려요</p>
+              <div style={{ width: 190, height: 12, borderRadius: 999, overflow: 'hidden', background: 'rgba(255,255,255,.24)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,.2)' }}>
+                <span style={{ display: 'block', height: '100%', width: `${Math.min(100, (taps / TAPS) * 100)}%`, background: `linear-gradient(90deg, #fff, ${box.colors[1]})`, boxShadow: `0 0 18px ${box.colors[1]}`, transition: 'width .12s' }} />
               </div>
+              <span style={{ color: 'rgba(255,255,255,.76)', fontSize: 12, fontWeight: 800 }}>{taps}/{TAPS} HIT · 기다리면 자동 개봉</span>
             </>
           ) : (
             <>
@@ -225,10 +249,10 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
                 </div>
               </div>
               <div style={{ position: 'relative', zIndex: 2, display: 'grid', gridTemplateColumns: 'repeat(5, minmax(62px, 88px))', gap: 10, justifyContent: 'center', maxWidth: 520, width: '100%' }}>
-                {results.map((r, i) => <DrawCard key={`${i}:${r.sceneId}:${r.rarity}`} item={r} index={i} flipped={flipped.has(i)} onFlip={() => flip(i)} />)}
+                {visibleResults.map((r, i) => <DrawCard key={`${i}:${r.sceneId}:${r.rarity}`} item={r} index={i} flipped={flipped.has(i)} onFlip={() => flip(i)} />)}
               </div>
               <div style={{ display: 'flex', gap: 10, position: 'relative', zIndex: 2 }}>
-                {!allFlipped && <button onClick={flipAll} style={overlayBtn}>한번에 뒤집기</button>}
+                {!allFlipped && <button onClick={flipAll} style={overlayBtn}>한번에 보기</button>}
                 {allFlipped && <button onClick={(e) => { e.stopPropagation(); setPhase('revealed'); }} className="ym-card-in" style={overlayBtn}>오늘 얻은 카드 보기</button>}
               </div>
             </>
@@ -302,11 +326,44 @@ function DeckSentenceRow({ ja, korean }: { ja: string; korean: string }) {
   );
 }
 
+const RANKS = ['이등병', '일병', '상병', '병장', '하사', '중사', '상사', '원사', '소위', '중위', '대위', '소령', '중령', '대령', '준장', '소장', '중장', '대장', '원수'];
+function storageSizeKb(): number {
+  if (typeof window === 'undefined') return 0;
+  let n = 0;
+  for (let i = 0; i < window.localStorage.length; i++) {
+    const k = window.localStorage.key(i) ?? '';
+    if (!k.startsWith('yangmung:')) continue;
+    n += k.length + (window.localStorage.getItem(k)?.length ?? 0);
+  }
+  return Math.round((n * 2) / 1024);
+}
+function useLearningStats(collection: Collection) {
+  return useMemo(() => {
+    const progress = loadProgress();
+    const attempts = Object.values(progress).reduce((sum, p) => sum + p.attempts, 0);
+    const correct = Object.values(progress).reduce((sum, p) => sum + p.correct, 0);
+    const dayCounts = Object.values(progress).reduce<Record<string, number>>((acc, p) => {
+      const d = p.lastSeenAt?.slice(0, 10);
+      if (d) acc[d] = (acc[d] ?? 0) + p.attempts;
+      return acc;
+    }, {});
+    const dates = Object.keys(dayCounts).sort();
+    const rankScore = attempts + totalItemsAll(collection) * 3 + sentenceCount(collection) * 2 + honorTrophyCount(collection) * 100;
+    const rankIndex = Math.min(RANKS.length - 1, Math.floor(rankScore / 120));
+    const nextAt = (rankIndex + 1) * 120;
+    return { attempts, correct, dates, dayCounts, rank: RANKS[rankIndex], rankScore, nextAt, storageKb: storageSizeKb() };
+  }, [collection]);
+}
+function totalItemsAll(c: Collection): number {
+  return Object.values(c.cards).reduce((sum, card) => sum + totalItems(card), 0);
+}
+
 export function DeckModal({ onClose }: { onClose: () => void }) {
   const [collection, setCollection] = useState<Collection>(() => loadCollection());
   const [selected, setSelected] = useState<string>();
   const [merging, setMerging] = useState<string | null>(null);
   const refresh = (next: Collection) => { saveCollection(next); setCollection(next); };
+  const stats = useLearningStats(collection);
   function mergeWithFx(sceneId: string, rarity: Rarity) {
     const key = `${sceneId}:${rarity}`;
     setMerging(key);
@@ -339,6 +396,12 @@ export function DeckModal({ onClose }: { onClose: () => void }) {
       <p style={{ margin: '0 0 14px', fontSize: 12, color: 'var(--ink-faint)', lineHeight: 1.5 }}>
         각 장면 수업에서만 그 장면 카드가 나와요. 기본 30→동 1, 동 30→은 1, 은 20→금 1, 금 10→다이아 1, 다이아 100→명예 트로피 1.
       </p>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8, marginBottom: 14 }}>
+        <StatTile label="나의 계급" value={stats.rank} sub={`${stats.rankScore}/${stats.nextAt}`} />
+        <StatTile label="학습일" value={`${stats.dates.length}일`} sub={stats.dates.slice(-7).join(' · ') || '아직 없음'} />
+        <StatTile label="저장 용량" value={`${stats.storageKb}KB`} sub={`정답 ${stats.correct}/${stats.attempts}`} />
+      </div>
+      <LearningHeatmap dayCounts={stats.dayCounts} />
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 12 }}>
         {SCENES.map((m) => {
           const card = collection.cards[m.id];
@@ -386,6 +449,47 @@ export function DeckModal({ onClose }: { onClose: () => void }) {
         })}
       </div>
     </Modal>
+  );
+}
+
+function StatTile({ label, value, sub }: { label: string; value: string; sub: string }) {
+  return (
+    <div style={{ border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', borderRadius: 14, padding: '10px 9px', minWidth: 0 }}>
+      <span style={{ display: 'block', fontSize: 10.5, fontWeight: 850, color: 'var(--ink-faint)' }}>{label}</span>
+      <strong style={{ display: 'block', marginTop: 3, fontSize: 15, color: 'var(--ink)' }}>{value}</strong>
+      <span style={{ display: 'block', marginTop: 3, fontSize: 10.5, color: 'var(--ink-soft)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{sub}</span>
+    </div>
+  );
+}
+
+function LearningHeatmap({ dayCounts }: { dayCounts: Record<string, number> }) {
+  const days = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return Array.from({ length: 28 }, (_, i) => {
+      const d = new Date(today);
+      d.setDate(today.getDate() - (27 - i));
+      const key = d.toISOString().slice(0, 10);
+      const n = dayCounts[key] ?? 0;
+      return { key, n };
+    });
+  }, [dayCounts]);
+  return (
+    <div style={{ margin: '0 0 14px', padding: 12, borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 9 }}>
+        <span style={{ fontSize: 12, fontWeight: 900, color: 'var(--ink)' }}>최근 4주 학습 진도</span>
+        <span style={{ fontSize: 10.5, fontWeight: 800, color: 'var(--ink-faint)' }}>진할수록 많이 복습</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(14, minmax(0, 1fr))', gap: 4 }}>
+        {days.map((d) => {
+          const alpha = d.n >= 12 ? 0.95 : d.n >= 6 ? 0.72 : d.n >= 2 ? 0.48 : d.n > 0 ? 0.28 : 0;
+          return (
+            <span key={d.key} title={`${d.key} · ${d.n}회`} aria-label={`${d.key} ${d.n}회`}
+              style={{ aspectRatio: '1', borderRadius: 4, background: alpha ? `rgba(185,56,46,${alpha})` : 'rgba(127,127,127,.14)', boxShadow: alpha >= 0.72 ? '0 0 10px rgba(185,56,46,.28)' : undefined }} />
+          );
+        })}
+      </div>
+    </div>
   );
 }
 

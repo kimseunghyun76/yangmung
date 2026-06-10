@@ -159,6 +159,9 @@
       @keyframes ym-game-card-float { 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-4px) rotate(1deg)} }
       @keyframes ym-gacha-flip { 0%{opacity:.55; transform:perspective(760px) rotateY(0) scale(.96)} 42%{opacity:1; transform:perspective(760px) rotateY(88deg) scale(1.04)} 56%{transform:perspective(760px) rotateY(92deg) scale(1.08)} 100%{opacity:1; transform:perspective(760px) rotateY(0) scale(1)} }
       @keyframes ym-gacha-rare-aura { 0%,100%{opacity:.48; transform:scale(.92) rotate(0)} 50%{opacity:.95; transform:scale(1.1) rotate(8deg)} }
+      @keyframes ym-gacha-rare-back { 0%,100%{filter:brightness(1) saturate(1); transform:translateY(0) rotate(-.4deg)} 50%{filter:brightness(1.32) saturate(1.35); transform:translateY(-2px) rotate(.5deg)} }
+      @keyframes ym-gacha-back-rainbow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+      @keyframes ym-gacha-starfall { 0%{opacity:0; transform:translateY(-20px) scale(.4) rotate(0)} 20%{opacity:1} 100%{opacity:0; transform:translateY(80px) scale(1.05) rotate(160deg)} }
       @keyframes ym-gacha-merge-burst { 0%{opacity:0; transform:translate(-50%,-50%) scale(.28) rotate(-18deg)} 18%{opacity:1} 70%{opacity:.82; transform:translate(-50%,-50%) scale(1.02) rotate(8deg)} 100%{opacity:0; transform:translate(-50%,-50%) scale(1.28) rotate(18deg)} }
       @keyframes ym-gacha-merge-host { 0%{transform:scale(1)} 30%{transform:scale(1.025)} 100%{transform:scale(1)} }
       @keyframes ym-gacha-merge-btn { 0%,100%{box-shadow:0 0 0 rgba(185,56,46,0)} 50%{box-shadow:0 0 18px rgba(185,56,46,.34)} }
@@ -224,7 +227,10 @@
       }
       .ym-game-item-face::before {
         content: ''; position: absolute; inset: -16%; border-radius: inherit;
-        background: radial-gradient(circle at 30% 22%, rgba(255,255,255,.84), transparent 22%), linear-gradient(135deg, transparent 20%, rgba(255,255,255,.36), transparent 42%);
+        background:
+          radial-gradient(circle at 30% 22%, rgba(255,255,255,.84), transparent 22%),
+          linear-gradient(135deg, transparent 20%, rgba(255,255,255,.36), transparent 42%),
+          conic-gradient(from 20deg, transparent 0 16%, color-mix(in srgb, var(--tier-color, #f0a23a), #fff 36%) 18%, transparent 22% 44%, rgba(255,255,255,.38) 48%, transparent 52% 100%);
         mix-blend-mode: screen; pointer-events: none;
       }
       .ym-game-item-face::after {
@@ -234,6 +240,19 @@
         pointer-events: none;
       }
       .ym-game-item-star { position: absolute; color: var(--tier-color, #f0a23a); text-shadow: 0 0 10px currentColor; z-index: 2; }
+      .ym-game-item-face[data-tier="3"],
+      .ym-game-item-face[data-tier="4"],
+      .ym-game-item-face[data-tier="5"] {
+        box-shadow:
+          0 0 0 3px color-mix(in srgb, var(--tier-color, #f0a23a), #fff 22%),
+          0 0 28px color-mix(in srgb, var(--tier-color, #f0a23a), transparent 18%),
+          inset 0 1px 0 rgba(255,255,255,.82);
+      }
+      .ym-game-item-face[data-tier="4"]::after,
+      .ym-game-item-face[data-tier="5"]::after {
+        border-style: solid;
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,.52), 0 0 16px color-mix(in srgb, var(--tier-color, #f0a23a), transparent 20%);
+      }
       .ym-gacha-reward-card {
         position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 226px; max-width: 248px;
         padding: 21px 17px 17px; border-radius: 24px; color: #fff; overflow: hidden;
@@ -305,6 +324,51 @@
         content: ''; position: absolute; top: -30%; bottom: -30%; width: 38%; left: -48%;
         background: linear-gradient(90deg, transparent, rgba(255,255,255,.38), transparent);
         transform: rotate(18deg); animation: ym-game-card-shine 1.65s ease-in-out infinite;
+      }
+      .ym-gacha-card-back.is-silver,
+      .ym-gacha-card-back.is-gold,
+      .ym-gacha-card-back.is-diamond {
+        color: #fff;
+        border-color: color-mix(in srgb, var(--rarity-color, #f0a23a), #fff 42%);
+        background:
+          radial-gradient(circle at 50% 30%, rgba(255,255,255,.78), transparent 22%),
+          radial-gradient(circle at 30% 70%, color-mix(in srgb, var(--rarity-color, #f0a23a), #fff 18%), transparent 34%),
+          linear-gradient(145deg, #fff4e8, var(--rarity-color, #f0a23a) 52%, #3b2443);
+        box-shadow:
+          0 0 0 2px rgba(255,255,255,.28),
+          0 0 26px color-mix(in srgb, var(--rarity-color, #f0a23a), transparent 18%),
+          0 16px 34px rgba(0,0,0,.42),
+          inset 0 2px 0 rgba(255,255,255,.72);
+        animation: ym-gacha-rare-back 1.05s ease-in-out infinite;
+      }
+      .ym-gacha-card-back.is-gold::before,
+      .ym-gacha-card-back.is-diamond::before {
+        border-style: solid;
+        box-shadow: 0 0 16px var(--rarity-color, #f0a23a), inset 0 0 14px rgba(255,255,255,.24);
+      }
+      .ym-gacha-card-back.is-diamond {
+        background:
+          radial-gradient(circle at 50% 24%, rgba(255,255,255,.92), transparent 18%),
+          linear-gradient(120deg, #eaffff, #5bc7e0, #ad8cff, #fff0a8, #5bc7e0);
+        background-size: 240% 240%;
+        animation: ym-gacha-rare-back .86s ease-in-out infinite, ym-gacha-back-rainbow 2s ease-in-out infinite;
+      }
+      .ym-gacha-card-back.is-silver::before,
+      .ym-gacha-card-back.is-gold::before,
+      .ym-gacha-card-back.is-diamond::before {
+        content: '✦ ✧ ✦'; display: flex; align-items: center; justify-content: center;
+        font-size: 12px; letter-spacing: 4px; color: rgba(255,255,255,.88);
+      }
+      .ym-gacha-draw-card:not(.is-flipped) .ym-gacha-card-back.is-silver,
+      .ym-gacha-draw-card:not(.is-flipped) .ym-gacha-card-back.is-gold,
+      .ym-gacha-draw-card:not(.is-flipped) .ym-gacha-card-back.is-diamond {
+        transform: translateZ(0);
+      }
+      .ym-gacha-draw-card:not(.is-flipped) .ym-gacha-card-back.is-gold::after,
+      .ym-gacha-draw-card:not(.is-flipped) .ym-gacha-card-back.is-diamond::after {
+        width: 48%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,.72), transparent);
+        animation: ym-game-card-shine .88s ease-in-out infinite;
       }
       .ym-gacha-merge-host.is-merging { animation: ym-gacha-merge-host .56s cubic-bezier(.2,.8,.2,1.12) both; }
       .ym-gacha-merge-host.is-merging::after {
