@@ -215,35 +215,33 @@ public/gacha/items/ramen-rarity-reference.png
 - 금/다이아는 단독 공개 시 더 길고 화려한 spotlight 연출
 - 한번에 보기에서는 골드/다이아 spotlight를 먼저 보여준 뒤 나머지를 펼치는 흐름
 
-### 박스 연출
+### 박스 연출 (2026-06 개편 — 가챠폰 머신)
+
+> 이전 "유메박스(상자) 두드리기 + 가로 회전" 연출은 사용자 피드백("중국스럽다",
+> "박스가 가로로 도는 게 이상하다")으로 **폐기**했다. 이미지(yumebox webp) 의존도 제거.
 
 구현:
 
-- `GachaBox`
-- `BoxArt`
-- CSS class:
-  - `.ym-gacha-stage`
-  - `.ym-yumebox`
-  - `.ym-gacha-box-hit`
-  - `.ym-gacha-box-ready`
-  - `.ym-gacha-shockwave`
-  - `.ym-gacha-rays`
-  - `.ym-gacha-runes`
+- `GachaBox`, `GachaMachine`, `Capsule` (모두 `src/views/Gacha.tsx`)
+- CSS class (index.html):
+  - 머신: `.ym-gpn-machine` `.ym-gpn-dome` `.ym-gpn-ball` `.ym-gpn-body` `.ym-gpn-crank` `.ym-gpn-chute`
+  - 캡슐: `.ym-gpn-capsule` (`is-drop`/`is-wobble`/`is-pop`) `.ym-gpn-cap-half`
+  - 망가 연출: `.ym-manga-lines`(집중선) `.ym-manga-sfx`(의성어) `.ym-gpn-spill`(카드 분출)
 
-동작:
+동작 (일본 ガチャガチャ 본연의 리듬):
 
-1. 완료 화면에서 가챠 박스가 등장한다.
-2. 사용자가 박스를 연속 탭할 수 있다.
-3. 탭할 때마다 박스가 회전/흔들림.
-4. 연속으로 많이 누르면 더 빠르게 열리는 느낌을 준다.
-5. 5초가 지나면 자동으로 열린다.
-6. 열린 뒤 카드 더미가 나온다.
+1. 완료 화면에 CSS 셀셰이딩 **가챠폰 머신**이 등장한다(투명 돔 + 캡슐 볼 8개 + 크랭크).
+2. 탭할 때마다 **크랭크가 90°** 돌고, 돔 안의 **볼들이 들썩인다**(머신 전체는 돌지 않음).
+3. 레버 4탭(또는 5초 자동)이면 볼들이 빠르게 **궤도 회전**(コロコロ…) 후 캡슐 1개가 배출.
+4. 캡슐이 통통 떨어지고(ゴトンッ!) 흔들리다가, 탭(또는 자동)하면 **빠캉! 상하 반쪽 분리**
+   — 집중선(集中線) + パカッ‼ 의성어와 함께 카드들이 분출되어 더미로 쌓인다.
+5. 이후 카드 더미 공개 흐름(아래 §카드 공개 방식)으로 이어진다.
 
 의도:
 
-- “탭해서 바로 받기”가 아니라, 상자를 때려서 열어내는 게임적 리듬.
-- 짧아야 한다. 학습 흐름을 방해하면 안 된다.
-- `prefers-reduced-motion`이면 즉시 공개로 폴백한다.
+- "상자를 때리는" 게 아니라 **레버를 돌려 캡슐을 뽑는** 일본 가챠폰 경험.
+- 모든 비주얼은 CSS 셀셰이딩(굵은 잉크 외곽선 #20242f + 크림 #fff8ec + 플랫 색) — 중국풍 금장 원천 차단.
+- 짧아야 한다(자동 진행 타이머 내장). `prefers-reduced-motion`이면 즉시 공개로 폴백한다.
 
 ### 카드 공개 방식
 
@@ -288,8 +286,11 @@ public/gacha/items/ramen-rarity-reference.png
   - `.ym-game-item-face`
   - `.ym-gacha-item-illustration`
 
-현재 방식:
+현재 방식 (2026-06 — 망가 트레카):
 
+- 카드 앞면(`DeckCardFace`)은 **망가 트레이딩 카드** 스타일: 크림 종이(`.ym-mcard`) + 굵은 잉크
+  외곽선 + 등급색 상단 밴드 + 별 등급(★1~5) + 하프톤 도트. 금/다이아는 홀로그래픽(`is-holo`).
+- 카드 뒷면(`CardBack`)은 인디고 + 집중선 + ？(`.ym-mback`). 은 이상은 뒷면부터 번쩍인다.
 - 장면명과 rarity를 받아 `gachaItemForPlace(place, rarity)`가 카드 아이템 메타를 반환한다.
 - 카드 안의 그림은 CSS motif로 만든다.
 - motif:
