@@ -250,8 +250,10 @@ export function App() {
     setPlacementCards(cards);
     setView('placement');
   }
-  function finishPlacement(mode: Settings['mode'], markKana: boolean) {
-    selectMode(mode);
+  function finishPlacement(mode: Settings['mode'], markKana: boolean, overrides?: { readingAid?: Settings['readingAid'] }) {
+    // 프로필 차등: 듣기 강·읽기 약(애니파)은 중급이어도 발음 보조를 유지(프리셋 off를 덮어씀)
+    const p = MODE_PRESETS[mode];
+    updateSettings({ ...settings, mode, readingAid: overrides?.readingAid ?? p.readingAid, choiceMode: p.choiceMode, slowListening: p.slowListening });
     if (markKana) markAllKanaKnown();
     try { localStorage.setItem('yangmung:placement:v1', '1'); } catch { /* noop */ }
     setView('home');

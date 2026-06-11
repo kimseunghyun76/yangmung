@@ -39,6 +39,29 @@ export function saveSettings(s: Settings): void {
   try { window.localStorage.setItem(KEY, JSON.stringify(s)); } catch {}
 }
 
+// ── 스킬 프로필 — 수준 진단이 채점한 스킬별 강·약 (학습 난이도와 별개, 콘텐츠 선택 힌트) ──
+// 예: 애니·드라마를 많이 봐서 듣기는 강한데 가나 읽기는 약한 사람 → 듣기 콘텐츠 비중↑ + 읽기 보조 유지.
+export interface SkillProfile {
+  read: number;    // 0..1 — 가나/문장 읽기 정답률
+  listen: number;  // 0..1 — 듣고 이해 정답률
+  at: string;      // 진단 시각(ISO)
+}
+
+const SKILL_KEY = 'yangmung:skillprofile:v1';
+
+export function loadSkillProfile(): SkillProfile | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.localStorage.getItem(SKILL_KEY);
+    return raw ? (JSON.parse(raw) as SkillProfile) : null;
+  } catch { return null; }
+}
+
+export function saveSkillProfile(p: SkillProfile): void {
+  if (typeof window === 'undefined') return;
+  try { window.localStorage.setItem(SKILL_KEY, JSON.stringify(p)); } catch {}
+}
+
 // 모드 프리셋 — 같은 콘텐츠를 사람마다 다르게: 보조·속도·세션 구성을 한 번에.
 export interface ModePreset {
   label: string;
