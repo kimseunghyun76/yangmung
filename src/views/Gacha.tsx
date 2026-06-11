@@ -23,32 +23,25 @@ const SCENES = CONTENT.missions.filter((m) => m.id !== 'C0');
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place ?? id;
 const totalSceneSentences = () => SCENES.reduce((sum, m) => sum + SCENE_SENTENCES[m.id].length, 0);
 
+// 망가 트레카 — 크림 종이 + 잉크 외곽선 + 등급 별 + 하프톤. (일본 만화책 카드 톤, 중국풍 금장 금지)
 function DeckCardFace({ sceneId, rarity, size = 56 }: { sceneId: string; rarity: Rarity; size?: number }) {
   const sv = sceneVisualByMission(sceneId);
   const meta = rarityMeta(rarity);
-  const place = placeOf(sceneId);
-  const item = gachaItemForPlace(place, rarity);
-  const diamond = rarity === 'diamond';
-  const shine = diamond
-    ? 'linear-gradient(135deg, rgba(255,255,255,0.9), rgba(91,199,224,0.32), rgba(226,101,90,0.2), rgba(255,255,255,0.68))'
-    : `linear-gradient(145deg, rgba(255,255,255,0.52), ${meta.color}28 46%, rgba(0,0,0,0.1))`;
+  const item = gachaItemForPlace(placeOf(sceneId), rarity);
+  const stars = rarityToTier(rarity);
+  const holo = rarity === 'gold' || rarity === 'diamond';
   return (
-    <span className="ym-game-item-face" data-tier={rarityToTier(rarity)} style={{
-      ['--tier-color' as string]: meta.color,
-      ['--scene-accent' as string]: sv.accent,
-      width: size, height: Math.round(size * 1.18), flex: `0 0 ${Math.round(size * 1.18)}px`, borderRadius: Math.round(size * 0.22),
-      position: 'relative', overflow: 'hidden',
-      display: 'inline-flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-      color: sv.accent,
-      background: shine,
-      border: `${Math.max(2, Math.round(size * 0.045))}px solid ${meta.color}`,
-      boxShadow: diamond ? `0 0 20px ${meta.color}aa, inset 0 1px 0 rgba(255,255,255,0.8)` : `0 8px 18px ${meta.color}33, inset 0 1px 0 rgba(255,255,255,0.62)`,
+    <span className={`ym-mcard ${holo ? 'is-holo' : ''}`} style={{
+      ['--rarity-color' as string]: meta.color,
+      width: size, height: Math.round(size * 1.18), flex: `0 0 ${size}px`,
+      borderRadius: Math.round(size * 0.15),
     }}>
-      <span aria-hidden className={`ym-gacha-item-illustration is-${item.motif}`} style={{ ['--scene-accent' as string]: sv.accent }} />
-      <span aria-hidden style={{ position: 'absolute', top: '-35%', left: '-60%', width: '55%', height: '160%', transform: 'rotate(28deg)', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.56), transparent)' }} />
-      <span style={{ position: 'relative', zIndex: 2, width: '82%', marginTop: Math.round(size * 0.33), textAlign: 'center', fontSize: Math.max(8, Math.round(size * 0.16)), fontWeight: 950, lineHeight: 1.08, color: '#fff', textShadow: '0 1px 7px rgba(0,0,0,.55)' }}>{item.title}</span>
-      <span style={{ position: 'relative', zIndex: 2, marginTop: 3, maxWidth: '82%', padding: '1px 5px', borderRadius: 99, background: 'rgba(0,0,0,.24)', color: 'rgba(255,255,255,.78)', fontSize: Math.max(6, Math.round(size * 0.1)), fontWeight: 900, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.sub}</span>
-      <span aria-hidden className="ym-game-item-star" style={{ right: Math.round(size * 0.12), top: Math.round(size * 0.09), fontSize: Math.max(9, Math.round(size * 0.17)) }}>✦</span>
+      <span aria-hidden className="ym-mcard-stars" style={{ marginTop: Math.round(size * 0.035), fontSize: Math.max(7, Math.round(size * 0.105)) }}>{'★'.repeat(stars)}</span>
+      <span aria-hidden className="ym-mcard-art" style={{ width: Math.round(size * 0.55), height: Math.round(size * 0.55), marginTop: Math.round(size * 0.07) }}>
+        <span className={`ym-gacha-item-illustration is-${item.motif}`} style={{ ['--scene-accent' as string]: sv.accent, position: 'relative', left: 'auto', top: 'auto', transform: 'none', width: '78%' }} />
+      </span>
+      <span className="ym-mcard-title" style={{ fontSize: Math.max(8, Math.round(size * 0.145)), width: '88%', marginTop: Math.round(size * 0.045) }}>{item.title}</span>
+      <span className="ym-mcard-sub" style={{ fontSize: Math.max(6, Math.round(size * 0.095)), padding: '1px 6px', marginTop: 3, maxWidth: '84%' }}>{meta.label}·{item.sub}</span>
     </span>
   );
 }
@@ -58,27 +51,61 @@ function TierRibbon({ rarity }: { rarity: Rarity }) {
   return <span style={{ fontSize: 10, fontWeight: 850, letterSpacing: '0.04em', color: meta.color, border: `1.5px solid ${meta.color}`, borderRadius: 6, padding: '1px 6px' }}>{meta.label}</span>;
 }
 
-function BoxArt({ grade, size = 64, className, open = false }: { grade: BoxGrade; size?: number; className?: string; open?: boolean }) {
-  const [failed, setFailed] = useState(false);
-  const box = BOX[grade];
-  if (failed) {
-    return <span className={className} style={{ width: size, height: size, borderRadius: Math.round(size * 0.28), display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: Math.round(size * 0.5), background: `linear-gradient(160deg, ${box.colors[0]}, ${box.colors[1]})`, boxShadow: `0 10px 26px ${box.colors[0]}66` }}>✦</span>;
-  }
+// 가챠폰 머신(ガチャガチャ) — CSS 셀셰이딩. 돔 안에서 캡슐 볼들이 구르고, 크랭크는 탭마다 90°.
+const CAPSULE_COLORS = ['#e8554d', '#3f7cd6', '#f2b63c', '#58b66e', '#f08bb2', '#8a6fd1', '#e8554d', '#3f7cd6'];
+const BALL_POS = [
+  { l: 8, t: 50 }, { l: 30, t: 60 }, { l: 54, t: 56 }, { l: 76, t: 50 },
+  { l: 18, t: 26 }, { l: 44, t: 20 }, { l: 66, t: 28 }, { l: 86, t: 24 },
+];
+function GachaMachine({ grade, taps, spinning, mini = false }: { grade: BoxGrade; taps: number; spinning?: boolean; mini?: boolean }) {
+  const domeState = spinning ? 'is-spin' : taps > 0 ? 'is-jolt' : '';
   return (
-    <span className={`ym-yumebox ${open ? 'is-open' : 'is-closed'} ${className ?? ''}`} style={{ ['--box-grade' as string]: box.colors[1], width: size, height: size }}>
-      <img src={`/gacha/box/${open ? 'yumebox-manga' : 'yumebox-closed-manga'}.webp`} alt="" aria-hidden width={size} height={size} onError={() => setFailed(true)} />
-    </span>
+    <div className={`ym-gpn-machine ${taps > 0 && !spinning ? 'is-jolt' : ''}`} key={`m:${taps}:${spinning ? 's' : ''}`}
+      style={mini ? { transform: 'scale(0.62)', transformOrigin: 'center bottom', margin: '-28px 0 -14px' } : undefined}>
+      <div className={`ym-gpn-dome ${domeState}`}>
+        {BALL_POS.map((p, i) => (
+          <span key={i} className="ym-gpn-ball" aria-hidden style={{
+            left: `${p.l}%`, top: `${p.t}%`,
+            ['--cap' as string]: CAPSULE_COLORS[i],
+            ['--jx' as string]: `${(i % 2 === 0 ? 1 : -1) * (4 + (i % 3) * 4)}px`,
+            ['--jy' as string]: `${-8 - (i % 4) * 5}px`,
+            ['--d' as string]: `${i * 0.03}s`,
+            ['--ang' as string]: `${i * 45}deg`,
+            ['--orbit' as string]: `${22 + (i % 3) * 14}px`,
+            ['--spd' as string]: `${0.5 + (i % 3) * 0.12}s`,
+          }} />
+        ))}
+      </div>
+      <div className={`ym-gpn-body is-${grade}`}>
+        <span className="ym-gpn-label">ガチャ</span>
+        <div className={`ym-gpn-crank ${taps === 0 && !spinning ? 'is-idle' : ''}`} style={{ transform: `rotate(${taps * 90}deg)` }} aria-hidden />
+        <div className="ym-gpn-chute" aria-hidden />
+      </div>
+    </div>
   );
 }
 
+// 배출된 캡슐 — 떨어지고(ゴトンッ) → 흔들리고 → 빠캉! 반으로 갈라짐(パカッ‼)
+function Capsule({ grade, state }: { grade: BoxGrade; state: 'drop' | 'wobble' | 'pop' }) {
+  const box = BOX[grade];
+  return (
+    <div className={`ym-gpn-capsule is-${state}`} style={{ ['--cap' as string]: box.colors[1] }}>
+      <span className="ym-gpn-cap-half ym-gpn-cap-top" aria-hidden />
+      <span className="ym-gpn-cap-half ym-gpn-cap-bottom" aria-hidden />
+    </div>
+  );
+}
+
+// 망가 카드 뒷면 — 인디고 + 집중선 + ？
 function CardBack({ rarity = 'basic', size = 82 }: { rarity?: Rarity; size?: number }) {
   const meta = rarityMeta(rarity);
   return (
-    <span className={`ym-gacha-card-back is-${rarity}`} style={{
+    <span className={`ym-mback is-${rarity}`} style={{
       ['--rarity-color' as string]: meta.color,
-      width: size, height: Math.round(size * 1.28), borderRadius: 14, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-      fontWeight: 950, fontSize: 20,
-    }}>?</span>
+      width: size, height: Math.round(size * 1.28), borderRadius: Math.round(size * 0.17),
+    }}>
+      <span className="ym-mback-q" style={{ fontSize: Math.round(size * 0.42) }}>？</span>
+    </span>
   );
 }
 
@@ -138,61 +165,95 @@ const reduceMotion = () => typeof window !== 'undefined' && !!window.matchMedia?
 
 export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: number; sceneIds: string[]; grade?: BoxGrade }) {
   const [phase, setPhase] = useState<'closed' | 'open' | 'revealed'>('closed');
+  const [stage, setStage] = useState<'crank' | 'capsule' | 'cards'>('crank');
+  const [capState, setCapState] = useState<'drop' | 'wobble' | 'pop'>('drop');
+  const [spinning, setSpinning] = useState(false);
+  const [sfx, setSfx] = useState<{ text: string; size: number; key: number } | null>(null);
   const [results, setResults] = useState<DropResult[]>([]);
   const [taps, setTaps] = useState(0);
-  const [burst, setBurst] = useState(false);
   const [flipped, setFlipped] = useState<Set<number>>(new Set());
   const [visibleCount, setVisibleCount] = useState(1);
   const [spotlightIndex, setSpotlightIndex] = useState<number | null>(null);
   const [bulkOpening, setBulkOpening] = useState(false);
   const [deck, setDeck] = useState(false);
   const openedRef = useRef(false);
+  const dispenseRef = useRef(false);
   const rareQueueRef = useRef<number[]>([]);
+  const timersRef = useRef<number[]>([]);
   const box = BOX[grade];
-  const TAPS = 10;
+  const TAPS = 4; // 크랭크 한 바퀴(90°×4)면 캡슐 배출
   const allFlipped = results.length > 0 && flipped.size >= results.length;
   const visibleResults = results.slice(0, visibleCount);
   const activeIndex = Math.min(Math.max(visibleCount - 1, 0), Math.max(results.length - 1, 0));
   const activeResult = results[activeIndex];
   const openedResults = results.filter((_, i) => flipped.has(i));
-  const hitSpeed = Math.max(0.38, 1.08 - taps * 0.07);
   const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 850, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase', margin: '0 0 12px', textAlign: 'center' };
 
+  // 기다리면 자동 배출(학습 흐름을 막지 않기) + 타이머 정리
   useEffect(() => {
-    if (phase !== 'open' || burst) return undefined;
-    const t = window.setTimeout(() => openBox(), 5000);
+    if (phase !== 'open' || stage !== 'crank') return undefined;
+    const t = window.setTimeout(() => beginDispense(), 5000);
     return () => window.clearTimeout(t);
-  }, [phase, burst]);
+  }, [phase, stage]);
+  useEffect(() => () => { timersRef.current.forEach((t) => window.clearTimeout(t)); }, []);
 
   if (sceneIds.length === 0) return null;
+
+  const after = (ms: number, fn: () => void) => { timersRef.current.push(window.setTimeout(fn, ms)); };
+  const playSfx = (text: string, size = 30) => setSfx({ text, size, key: Date.now() });
 
   function doClaim(): DropResult[] {
     const preferredLevel = sceneSentenceLevelForMode(loadSettings().mode);
     const res = claim(loadCollection(), sessionId, sceneIds, box.draws, preferredLevel);
     saveCollection(res.collection);
-    let r = res.results;
-    if (r.length === 0) r = [];
+    const r = res.results;
     setResults(r);
     return r;
   }
   function start() {
     if (reduceMotion()) { doClaim(); setPhase('revealed'); return; }
     openedRef.current = false;
+    dispenseRef.current = false;
     rareQueueRef.current = [];
-    setTaps(0); setBurst(false); setFlipped(new Set()); setResults([]); setVisibleCount(1); setSpotlightIndex(null); setBulkOpening(false); setPhase('open');
+    setTaps(0); setStage('crank'); setCapState('drop'); setSpinning(false); setSfx(null);
+    setFlipped(new Set()); setResults([]); setVisibleCount(1); setSpotlightIndex(null); setBulkOpening(false); setPhase('open');
   }
-  function openBox() {
+  // 크랭크 다 돌림 → 볼들이 빠르게 돌고 → 캡슐이 굴러떨어짐
+  function beginDispense() {
+    if (dispenseRef.current) return;
+    dispenseRef.current = true;
+    setSpinning(true);
+    playSfx('コロコロ…', 22);
+    after(900, () => {
+      setSpinning(false);
+      setStage('capsule');
+      setCapState('drop');
+      playSfx('ゴトンッ!', 26);
+      after(850, () => setCapState('wobble'));
+      after(2400, () => popCapsule()); // 안 눌러도 자동으로 빠캉
+    });
+  }
+  // 캡슐 빠캉! → 카드 분출
+  function popCapsule() {
     if (openedRef.current) return;
     openedRef.current = true;
     const r = doClaim();
-    setVisibleCount(r.length > 0 ? 1 : 0);
-    setBurst(true);
+    setCapState('pop');
+    playSfx('パカッ‼', 40);
+    after(560, () => {
+      setStage('cards');
+      setVisibleCount(r.length > 0 ? 1 : 0);
+    });
   }
   function overlayTap() {
-    if (!burst) {
+    if (stage === 'crank') {
+      if (dispenseRef.current) return;
       const n = taps + 1;
       setTaps(n);
-      if (n >= TAPS) openBox();
+      playSfx('ガチャッ', 22);
+      if (n >= TAPS) beginDispense();
+    } else if (stage === 'capsule' && capState === 'wobble') {
+      popCapsule();
     }
   }
   function flip(i: number) {
@@ -246,8 +307,8 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
         <button className="ym-press" onClick={start}
           style={{ width: '100%', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: '18px 20px 20px', borderRadius: 22, border: '1px solid var(--glass-border)', background: `radial-gradient(circle at 50% 26%, ${box.colors[1]}2e, transparent 42%), var(--glass-bg-strong)`, cursor: 'pointer', color: 'var(--ink)' }}>
           <GachaGlow color={box.colors[1]} />
-          <BoxArt grade={grade} size={112} className="ym-listening" />
-          <span style={{ fontWeight: 850, fontSize: 16 }}>{box.label} 열기</span>
+          <GachaMachine grade={grade} taps={0} mini />
+          <span style={{ fontWeight: 850, fontSize: 16 }}>{box.label} 가챠 돌리기</span>
           <span style={{ fontSize: 12, color: 'var(--ink-faint)', fontWeight: 750 }}>카드 {DRAW_COUNT}장 · 기본/동/은/금/다이아</span>
         </button>
       )}
@@ -265,26 +326,37 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
       )}
 
       {phase === 'open' && typeof document !== 'undefined' && createPortal(
-        <div onClick={overlayTap} className={`ym-gacha-stage ${burst ? 'is-burst' : ''}`}
+        <div onClick={overlayTap} className={`ym-gacha-stage ${stage === 'cards' ? 'is-burst' : ''}`}
           style={{ ['--gacha-color' as string]: box.colors[1], position: 'fixed', inset: 0, zIndex: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18, padding: 18, background: 'radial-gradient(circle at 50% 34%, rgba(255,255,255,0.16), transparent 24%), rgba(0,0,0,0.72)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
           <span className="ym-gacha-runes" aria-hidden />
-          {burst && <span className="ym-gacha-shockwave" aria-hidden />}
-          {burst && <span className="ym-gacha-rays" aria-hidden style={{ position: 'absolute', width: 360, height: 360, color: box.colors[1], opacity: 0.55 }} />}
-          {burst && <BurstParticles color={box.colors[1]} />}
+          {capState === 'pop' && stage !== 'crank' && <span className="ym-manga-lines" aria-hidden />}
+          {stage === 'cards' && <BurstParticles color={box.colors[1]} />}
+          {sfx && (
+            <span key={sfx.key} className="ym-manga-sfx" aria-hidden style={{ fontSize: sfx.size, top: stage === 'crank' ? '30%' : '42%' }}>{sfx.text}</span>
+          )}
 
-          {!burst ? (
+          {stage === 'crank' ? (
             <>
-              <div style={{ position: 'relative', width: 220, height: 178, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span className="ym-glow" aria-hidden style={{ position: 'absolute', inset: -18, borderRadius: '50%', background: `radial-gradient(circle, ${box.colors[1]}aa, ${box.colors[1]}33 40%, transparent 70%)` }} />
-                <div key={taps} className={taps > 0 ? 'ym-gacha-box-hit' : 'ym-gacha-box-ready'} style={{ ['--hit-speed' as string]: `${hitSpeed}s`, ['--hit-rotate' as string]: `${taps * 34}deg`, transform: `scale(${1 + taps * 0.045}) rotate(${taps * 11}deg)`, transition: 'transform .12s' }}>
-                  <BoxArt grade={grade} size={150} />
-                </div>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span className="ym-glow" aria-hidden style={{ position: 'absolute', inset: -26, borderRadius: '50%', background: `radial-gradient(circle, ${box.colors[1]}66, ${box.colors[1]}22 44%, transparent 72%)` }} />
+                <GachaMachine grade={grade} taps={taps} spinning={spinning} />
               </div>
-              <p style={{ color: '#fff', fontWeight: 850, fontSize: 16, textShadow: '0 1px 8px rgba(0,0,0,.5)' }}>5초 안에 10번 두드리면 바로 열려요</p>
-              <div style={{ width: 190, height: 12, borderRadius: 999, overflow: 'hidden', background: 'rgba(255,255,255,.24)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,.2)' }}>
-                <span style={{ display: 'block', height: '100%', width: `${Math.min(100, (taps / TAPS) * 100)}%`, background: `linear-gradient(90deg, #fff, ${box.colors[1]})`, boxShadow: `0 0 18px ${box.colors[1]}`, transition: 'width .12s' }} />
+              <p style={{ color: '#fff', fontWeight: 850, fontSize: 16, textShadow: '0 1px 8px rgba(0,0,0,.5)' }}>
+                {spinning ? '캡슐이 굴러가는 중…' : '탭해서 레버를 돌려요!'}
+              </p>
+              <div style={{ display: 'flex', gap: 7 }}>
+                {Array.from({ length: TAPS }, (_, k) => (
+                  <span key={k} style={{ width: 13, height: 13, borderRadius: 99, border: '2.5px solid rgba(255,255,255,.7)', background: k < taps ? box.colors[1] : 'transparent', boxShadow: k < taps ? `0 0 12px ${box.colors[1]}` : 'none', transition: 'all .15s' }} />
+                ))}
               </div>
-              <span style={{ color: 'rgba(255,255,255,.76)', fontSize: 12, fontWeight: 800 }}>{taps}/{TAPS} HIT · 기다리면 자동 개봉</span>
+              <span style={{ color: 'rgba(255,255,255,.76)', fontSize: 12, fontWeight: 800 }}>레버 {taps}/{TAPS} · 기다리면 자동으로 나와요</span>
+            </>
+          ) : stage === 'capsule' ? (
+            <>
+              <Capsule grade={grade} state={capState} />
+              <p style={{ color: '#fff', fontWeight: 850, fontSize: 16, textShadow: '0 1px 8px rgba(0,0,0,.5)' }}>
+                {capState === 'wobble' ? '탭해서 캡슐 열기!' : '…'}
+              </p>
             </>
           ) : (
             <>
@@ -295,15 +367,12 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
                   <p style={{ margin: 0, color: '#fff', fontSize: 16, fontWeight: 950, textShadow: '0 2px 14px rgba(0,0,0,.55)' }}>{rarityMeta(results[spotlightIndex].rarity).label} 카드!</p>
                 </div>
               )}
-              <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: 10 }}>
-                <BoxArt grade={grade} size={74} open />
-                <div>
-                  <p style={{ margin: 0, color: '#fff', fontWeight: 900, fontSize: 18 }}>카드 {DRAW_COUNT}장 획득</p>
-                  <p style={{ margin: '4px 0 0', color: 'rgba(255,255,255,.72)', fontWeight: 750, fontSize: 12 }}>하나씩 뒤집거나 한 번에 공개하세요</p>
-                </div>
+              <div className="ym-gpn-spill" style={{ position: 'relative', zIndex: 2, textAlign: 'center' }}>
+                <p style={{ margin: 0, color: '#fff', fontWeight: 950, fontSize: 19, textShadow: '2px 2px 0 #20242f' }}>카드 {DRAW_COUNT}장 획득!</p>
+                <p style={{ margin: '4px 0 0', color: 'rgba(255,255,255,.72)', fontWeight: 750, fontSize: 12 }}>하나씩 뒤집거나 한 번에 공개하세요</p>
               </div>
               {!bulkOpening && spotlightIndex === null && (
-                <div className="ym-gacha-pile-zone" style={{ position: 'relative', zIndex: 2 }}>
+                <div className="ym-gacha-pile-zone ym-gpn-spill" style={{ position: 'relative', zIndex: 2, ['--spill-d' as string]: '.08s' }}>
                   <div className="ym-gacha-card-pile">
                     {results.slice(activeIndex + 1, Math.min(results.length, activeIndex + 5)).map((r, offset) => (
                       <span key={`pile:${activeIndex}:${offset}`} className="ym-gacha-pile-back" style={{ ['--pile-offset' as string]: offset + 1 }}>
