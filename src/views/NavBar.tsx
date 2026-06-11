@@ -1,6 +1,6 @@
 // 상단 네비게이션 — 에디토리얼: 텍스트 탭 + 朱 언더라인, 모노 컨트롤.
 import { Icon } from '../ui/Icon';
-type NavView = 'home' | 'map' | 'review';
+type NavView = 'home' | 'map' | 'review' | 'gacha';
 
 export interface NavBarProps {
   current: NavView;
@@ -16,6 +16,7 @@ const items: { key: NavView; label: string }[] = [
   { key: 'home', label: '홈' },
   { key: 'map', label: '지도' },
   { key: 'review', label: '복습' },
+  { key: 'gacha', label: '가챠' },
 ];
 
 export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings, theme, onToggleTheme }: Props) {

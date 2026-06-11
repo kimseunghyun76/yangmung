@@ -18,13 +18,14 @@ import type { PickMap } from './views/OrderCard';
 import type { KanaItem } from './content/types';
 import { MascotEmpty } from './views/mascot';
 
-type View = 'home' | 'map' | 'review' | 'intro' | 'session' | 'done' | 'flash' | 'write' | 'placement';
+type View = 'home' | 'map' | 'review' | 'gacha' | 'intro' | 'session' | 'done' | 'flash' | 'write' | 'placement';
 
 const Home = lazy(() => import('./views/Home').then((m) => ({ default: m.Home })));
 const Intro = lazy(() => import('./views/Intro').then((m) => ({ default: m.Intro })));
 const Session = lazy(() => import('./views/Session').then((m) => ({ default: m.Session })));
 const Done = lazy(() => import('./views/Done').then((m) => ({ default: m.Done })));
 const MapView = lazy(() => import('./views/Map').then((m) => ({ default: m.Map })));
+const GachaPage = lazy(() => import('./views/GachaPage').then((m) => ({ default: m.GachaPage })));
 const Flash = lazy(() => import('./views/Flash').then((m) => ({ default: m.Flash })));
 const KanaWrite = lazy(() => import('./views/KanaWrite').then((m) => ({ default: m.KanaWrite })));
 const Placement = lazy(() => import('./views/Placement').then((m) => ({ default: m.Placement })));
@@ -377,7 +378,7 @@ export function App() {
   // ── 라우팅 ───────────────────────────────────────
   // 허브 화면(홈·지도·복습)엔 상단 네비게이션 — 자유 이동 + 가이드/설정.
   const nav = {
-    onNavigate: (v: 'home' | 'map' | 'review') => setView(v),
+    onNavigate: (v: 'home' | 'map' | 'review' | 'gacha') => setView(v),
     onOpenGuide: () => setShowGuide(true),
     onOpenSettings: () => setShowSettings(true),
     theme: settings.theme,
@@ -390,6 +391,9 @@ export function App() {
     }
     if (view === 'review') {
       return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} onStartReview={startReviewSession} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
+    }
+    if (view === 'gacha') {
+      return <GachaPage nav={{ ...nav, current: 'gacha' }} progress={progress} />;
     }
     if (view === 'flash') {
       const unlockedSceneIds = CONTENT.missions.filter((m) => m.id !== 'C0' && isMissionUnlocked(m.id, progress)).map((m) => m.id);

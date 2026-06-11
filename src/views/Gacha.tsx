@@ -163,7 +163,13 @@ function groupResults(results: DropResult[]): DropResult[] {
 
 const reduceMotion = () => typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
-export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: number; sceneIds: string[]; grade?: BoxGrade }) {
+export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘의 가챠', onClaimed }: {
+  sessionId: number;
+  sceneIds: string[];
+  grade?: BoxGrade;
+  label?: string;
+  onClaimed?: (results: DropResult[]) => void;
+}) {
   const [phase, setPhase] = useState<'closed' | 'open' | 'revealed'>('closed');
   const [stage, setStage] = useState<'crank' | 'capsule' | 'cards'>('crank');
   const [capState, setCapState] = useState<'drop' | 'wobble' | 'pop'>('drop');
@@ -208,6 +214,7 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
     saveCollection(res.collection);
     const r = res.results;
     setResults(r);
+    onClaimed?.(r);
     return r;
   }
   function start() {
@@ -301,7 +308,7 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood' }: { sessionId: n
 
   return (
     <div className="ym-rise" style={{ marginTop: 22 }}>
-      <p style={labelStyle}>오늘의 가챠</p>
+      <p style={labelStyle}>{label}</p>
 
       {phase === 'closed' && (
         <button className="ym-press" onClick={start}
@@ -510,7 +517,7 @@ function totalItemsAll(c: Collection): number {
   return Object.values(c.cards).reduce((sum, card) => sum + totalItems(card), 0);
 }
 
-export function DeckModal({ onClose }: { onClose: () => void }) {
+export function DeckBrowser() {
   const [collection, setCollection] = useState<Collection>(() => loadCollection());
   const [selected, setSelected] = useState<string>();
   const [merging, setMerging] = useState<string | null>(null);
@@ -528,18 +535,18 @@ export function DeckModal({ onClose }: { onClose: () => void }) {
     const allRows = SCENE_SENTENCES[selected as keyof typeof SCENE_SENTENCES];
     const rows = allRows.filter((row) => ownedIds.includes(row.id));
     return (
-      <Modal title={`${placeOf(selected)} 표현`} onClose={onClose}>
+      <>
         <button className="ym-press" onClick={() => setSelected(undefined)} style={{ border: 0, background: 'transparent', color: 'var(--ink-soft)', fontWeight: 800, padding: '4px 0 12px', cursor: 'pointer' }}>← 도감으로</button>
         <p style={{ margin: '0 0 14px', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>모은 표현 {rows.length}/{allRows.length}</p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
           {rows.map((row) => <DeckSentenceRow key={row.id} row={row} />)}
         </div>
-      </Modal>
+      </>
     );
   }
 
   return (
-    <Modal title="내 여행 도감" onClose={onClose}>
+    <>
       <p style={{ margin: '0 0 14px', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 650 }}>
         모은 장면 <strong style={{ color: 'var(--ink)' }}>{ownedCount(collection)}</strong>/{SCENES.length}
         {' · '}다이아 <strong style={{ color: '#5bc7e0' }}>{diamondCount(collection)}</strong>
@@ -601,6 +608,14 @@ export function DeckModal({ onClose }: { onClose: () => void }) {
           );
         })}
       </div>
+    </>
+  );
+}
+
+export function DeckModal({ onClose }: { onClose: () => void }) {
+  return (
+    <Modal title="내 여행 도감" onClose={onClose}>
+      <DeckBrowser />
     </Modal>
   );
 }
