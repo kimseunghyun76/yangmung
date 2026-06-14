@@ -87,4 +87,65 @@ export const signs: Sign[] = [
   { id: 'amakuchi', ja: '甘口', kana: 'あまくち', korean: '순한맛', category: '메뉴' },
   { id: 'tsumetai', ja: '冷たい', kana: 'つめたい', korean: '차가운', category: '메뉴' },
   { id: 'atatakai', ja: '温かい', kana: 'あたたかい', korean: '따뜻한', category: '메뉴' },
+
+  // ── 메뉴·음식 추가 ──
+  { id: 'niku_menu', ja: '肉', kana: 'にく', korean: '고기', category: '메뉴' },
+  { id: 'sakana_menu', ja: '魚', kana: 'さかな', korean: '생선', category: '메뉴' },
+  { id: 'yasai_menu', ja: '野菜', kana: 'やさい', korean: '채소', category: '메뉴' },
+  { id: 'nashi_menu', ja: 'なし', kana: 'なし', korean: '없음(재료 제외)', category: '메뉴' },
+  { id: 'allergy', ja: 'アレルギー', kana: 'アレルギー', korean: '알레르기', category: '메뉴' },
+  { id: 'vege', ja: 'ベジタリアン', kana: 'ベジタリアン', korean: '채식', category: '메뉴' },
+  { id: 'halal', ja: 'ハラール', kana: 'ハラール', korean: '할랄', category: '메뉴' },
+  { id: 'refill', ja: 'おかわり自由', kana: 'おかわりじゆう', korean: '리필 자유', category: '메뉴' },
+  { id: 'last_order', ja: 'ラストオーダー', kana: 'ラストオーダー', korean: '라스트 오더', category: '메뉴' },
+  { id: 'tsugi_no_kata', ja: '次の方どうぞ', kana: 'つぎのかたどうぞ', korean: '다음 분 오세요', category: '안내' },
+
+  // ── 표지·시설 추가 ──
+  { id: 'men_toilet', ja: '男性', kana: 'だんせい', korean: '남성(화장실)', category: '표지' },
+  { id: 'women_toilet', ja: '女性', kana: 'じょせい', korean: '여성(화장실)', category: '표지' },
+  { id: 'danshi', ja: '男', kana: 'おとこ', korean: '남(남자)', category: '표지' },
+  { id: 'josei', ja: '女', kana: 'おんな', korean: '여(여자)', category: '표지' },
+  { id: 'shokuji', ja: '食事', kana: 'しょくじ', korean: '식사', category: '표지' },
+  { id: 'kaigi', ja: '会議室', kana: 'かいぎしつ', korean: '회의실', category: '표지' },
+  { id: 'locker_sign', ja: 'コインロッカー', kana: 'コインロッカー', korean: '코인로커', category: '표지' },
+  { id: 'kintsuen', ja: '喫煙所', kana: 'きつえんじょ', korean: '흡연 구역', category: '표지' },
+  { id: 'floor_sign', ja: '〜階', kana: 'かい', korean: '~층', category: '표지' },
+  { id: 'chikashitsu', ja: '地下', kana: 'ちか', korean: '지하', category: '표지' },
+  { id: 'exit_floor', ja: '出口', kana: 'でぐち', korean: '출구(층)', category: '표지' },
+
+  // ── 교통 추가 ──
+  { id: 'terminal', ja: '終点', kana: 'しゅうてん', korean: '종착역', category: '교통' },
+  { id: 'jikoku', ja: '時刻表', kana: 'じこくひょう', korean: '시각표', category: '교통' },
+  { id: 'unchin', ja: '運賃', kana: 'うんちん', korean: '운임(교통 요금)', category: '교통' },
+  { id: 'jiyuuseki', ja: '自由席', kana: 'じゆうせき', korean: '자유석', category: '교통' },
+  { id: 'shitei_seki', ja: '指定席', kana: 'していせき', korean: '지정석', category: '교통' },
+  { id: 'green_sha', ja: 'グリーン車', kana: 'グリーンしゃ', korean: '그린카(일등칸)', category: '교통' },
+  { id: 'kinkyu_teishi', ja: '緊急停止', kana: 'きんきゅうていし', korean: '긴급 정지', category: '교통' },
+  { id: 'chien', ja: '遅延', kana: 'ちえん', korean: '지연', category: '교통' },
+  { id: 'untenkeshi', ja: '運転見合わせ', kana: 'うんてんみあわせ', korean: '운행 중단', category: '교통' },
+
+  // ── 결제·쇼핑 추가 ──
+  { id: 'menzei', ja: '免税', kana: 'めんぜい', korean: '면세', category: '결제' },
+  { id: 'shohizei', ja: '消費税', kana: 'しょうひぜい', korean: '소비세(소비자 세금)', category: '결제' },
+  { id: 'pointcard', ja: 'ポイントカード', kana: 'ポイントカード', korean: '포인트 카드', category: '결제' },
+  { id: 'fukuro_yoru', ja: '袋', kana: 'ふくろ', korean: '봉투', category: '결제' },
+  { id: 'receipt', ja: 'レシート', kana: 'レシート', korean: '영수증', category: '결제' },
+  { id: 'nouki', ja: 'お会計', kana: 'おかいけい', korean: '계산(식당에서)', category: '결제' },
+
+  // ── 주의·경고 추가 ──
+  { id: 'nohumi', ja: '踏まないでください', kana: 'ふまないでください', korean: '밟지 마세요', category: '주의' },
+  { id: 'nosmoke_area', ja: '禁煙エリア', kana: 'きんえんエリア', korean: '금연 구역', category: '주의' },
+  { id: 'setsubi', ja: '工事中につき', kana: 'こうじちゅうにつき', korean: '공사 중으로 인해', category: '주의' },
+  { id: 'kiken_takaatsu', ja: '高電圧危険', kana: 'こうでんあつきけん', korean: '고전압 위험', category: '주의' },
+  { id: 'hizashi', ja: '日差しに注意', kana: 'ひざしにちゅうい', korean: '햇볕 주의', category: '주의' },
+  { id: 'kinshi_shinnyu', ja: '立入厳禁', kana: 'たちいりげんきん', korean: '출입 엄금', category: '주의' },
+
+  // ── 안내 추가 ──
+  { id: 'info_here', ja: 'こちら', kana: 'こちら', korean: '이쪽', category: '안내' },
+  { id: 'info_acchi', ja: 'あちら', kana: 'あちら', korean: '저쪽', category: '안내' },
+  { id: 'mannaka', ja: '中央', kana: 'ちゅうおう', korean: '중앙', category: '안내' },
+  { id: 'kami', ja: '上', kana: 'うえ', korean: '위', category: '안내' },
+  { id: 'shita', ja: '下', kana: 'した', korean: '아래', category: '안내' },
+  { id: 'toiu_koto', ja: 'ただいま混雑中', kana: 'ただいまこんざつちゅう', korean: '지금 혼잡 중', category: '안내' },
+  { id: 'go_annai', ja: 'ご案内', kana: 'ごあんない', korean: '안내해 드립니다', category: '안내' },
 ];

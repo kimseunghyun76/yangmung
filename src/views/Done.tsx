@@ -46,6 +46,31 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
   const wrongCount = sessionLog.filter((r) => r.result === 'wrong').length;
   const weak = new Set(sessionLog.filter((r) => r.result !== 'correct').map((r) => r.id)).size;
   const stamps = clearedSceneIds.slice(0, 3);
+  const nextActions: NextAction[] = [
+    ...(weak > 0 ? [{
+      icon: 'target' as const,
+      accent: 'var(--accent)',
+      title: '약점만 다시 풀기',
+      sub: `이번에 막힌 ${weak}개 집중`,
+      onClick: onRetryWeak,
+      preferred: !canContinue,
+    }] : []),
+    ...(canContinue ? [{
+      icon: nextSceneId ? sceneVisualByMission(nextSceneId).icon : 'flow' as const,
+      accent: nextSceneId ? sceneVisualByMission(nextSceneId).accent : 'var(--accent)',
+      title: '새 장면 학습',
+      sub: nextSceneId ? `다음 장면 · ${placeOf(nextSceneId)}` : '새로운 표현 익히기',
+      onClick: onContinue,
+      preferred: true,
+    }] : []),
+    ...(onReview && reviewCount > 0 ? [{ icon: 'recovery' as const, accent: 'var(--ok)', title: '복습하기', sub: `익힌 것·오래된 것 ${reviewCount}개 다시`, onClick: onReview }] : []),
+    ...(onDictation && dictationCount > 0 ? [{ icon: 'dictation' as const, accent: 'var(--warn)', title: '받아쓰기', sub: '듣고 가나 타일로 쓰기', onClick: onDictation }] : []),
+    ...(onCompose && composeCount > 0 ? [{ icon: 'speak' as const, accent: 'var(--accent)', title: '한→일 작문', sub: '뜻을 보고 일본어로 만들기', onClick: onCompose }] : []),
+    ...(onSigns && signCount > 0 ? [{ icon: 'sign' as const, accent: 'var(--accent)', title: '거리 읽기', sub: '간판·메뉴·안내 읽기', onClick: onSigns }] : []),
+    ...(onFlash ? [{ icon: 'fast' as const, accent: 'var(--accent)', title: '속도전 플래시', sub: '제한시간 안에 빠르게 복습', onClick: onFlash }] : []),
+  ];
+  const primaryNext = nextActions.find((a) => a.preferred) ?? nextActions[0];
+  const secondaryNext = nextActions.filter((a) => a !== primaryNext);
 
   return (
     <main style={{ ...WRAP }}>
@@ -87,39 +112,16 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
 
       {/* 다음 단계 추천 — 매번 같은 다음 장면 대신 신규·복습·다른 연습을 골라가며 */}
       <div className="ym-rise" style={{ animationDelay: '.16s', marginTop: 24 }}>
-        <p style={{ ...kicker, textAlign: 'center', marginBottom: 12 }}>다음엔 무엇을 할까요?</p>
-        <div className="ym-next-action-board" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {weak > 0 && (
-            <NextStep icon="target" accent="var(--accent)" title="약점만 다시 풀기"
-              sub={`이번에 막힌 ${weak}개 집중`} primary={!canContinue} onClick={onRetryWeak} />
-          )}
-          {canContinue && (
-            <NextStep
-              icon={nextSceneId ? sceneVisualByMission(nextSceneId).icon : 'flow'}
-              accent={nextSceneId ? sceneVisualByMission(nextSceneId).accent : 'var(--accent)'}
-              title="새 장면 학습" primary
-              sub={nextSceneId ? `다음 장면 · ${placeOf(nextSceneId)}` : '새로운 표현 익히기'}
-              onClick={onContinue} />
-          )}
-          {onReview && reviewCount > 0 && (
-            <NextStep icon="recovery" accent="var(--ok)" title="복습하기"
-              sub={`익힌 것·오래된 것 ${reviewCount}개 다시`} onClick={onReview} />
-          )}
-          {onDictation && dictationCount > 0 && (
-            <NextStep icon="dictation" accent="var(--warn)" title="받아쓰기"
-              sub="듣고 가나 타일로 쓰기" onClick={onDictation} />
-          )}
-          {onCompose && composeCount > 0 && (
-            <NextStep icon="speak" accent="var(--accent)" title="한→일 작문"
-              sub="뜻을 보고 일본어로 만들기" onClick={onCompose} />
-          )}
-          {onSigns && signCount > 0 && (
-            <NextStep icon="sign" accent="var(--accent)" title="거리 읽기"
-              sub="간판·메뉴·안내 읽기" onClick={onSigns} />
-          )}
-          {onFlash && (
-            <NextStep icon="fast" accent="var(--accent)" title="속도전 플래시"
-              sub="제한시간 안에 빠르게 복습" onClick={onFlash} />
+        <div className="ym-next-action-head">
+          <p style={{ ...kicker, margin: 0 }}>다음엔 무엇을 할까요?</p>
+          <span>{weak > 0 ? '막힌 곳을 먼저 잡거나, 바로 다음 장면으로 갈 수 있어요.' : '흐름을 끊지 않고 바로 이어갈 추천이에요.'}</span>
+        </div>
+        <div className="ym-next-action-board">
+          {primaryNext && <NextStep {...primaryNext} primary />}
+          {secondaryNext.length > 0 && (
+            <div className="ym-next-action-grid">
+              {secondaryNext.map((action) => <NextStep key={`${action.title}:${action.sub}`} {...action} compact />)}
+            </div>
           )}
         </div>
         <button className="ym-press" style={{ ...glassBtn, marginTop: 12 }} onClick={onHome}>
@@ -151,6 +153,15 @@ const glassBtn: React.CSSProperties = {
   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
 };
 
+type NextAction = {
+  icon: React.ComponentProps<typeof Icon>['name'];
+  accent: string;
+  title: string;
+  sub: string;
+  preferred?: boolean;
+  onClick: () => void;
+};
+
 // 여권 스탬프 — 장면 클리어 도장
 function Stamp({ id, idx }: { id: string; idx: number }) {
   const sv = sceneVisualByMission(id);
@@ -165,15 +176,13 @@ function Stamp({ id, idx }: { id: string; idx: number }) {
 }
 
 // 다음 단계 선택지 — 큰 탭 타깃 + 무엇/왜를 한눈에. primary는 강조 테두리.
-function NextStep({ icon, accent, title, sub, primary, onClick }: {
-  icon: React.ComponentProps<typeof Icon>['name']; accent: string; title: string; sub: string; primary?: boolean; onClick: () => void;
-}) {
+function NextStep({ icon, accent, title, sub, primary, compact, onClick }: NextAction & { primary?: boolean; compact?: boolean }) {
   return (
-    <button className={`ym-press ym-next-step${primary ? ' is-primary' : ''}`} onClick={onClick} style={{
+    <button className={`ym-press ym-next-step${primary ? ' is-primary' : ''}${compact ? ' is-compact' : ''}`} onClick={onClick} style={{
       ['--next-accent' as string]: accent,
       ['--next-soft' as string]: hexA(accent, primary ? 0.18 : 0.11),
-      width: '100%', display: 'flex', alignItems: 'center', gap: primary ? 15 : 12, textAlign: 'left',
-      padding: primary ? '17px 17px 18px' : '12px 13px', borderRadius: primary ? 22 : 17, cursor: 'pointer',
+      width: '100%', display: 'flex', alignItems: 'center', gap: primary ? 15 : 10, textAlign: 'left',
+      padding: primary ? '17px 17px 18px' : compact ? '11px 10px' : '12px 13px', borderRadius: primary ? 22 : 16, cursor: 'pointer',
       border: `1px solid ${primary ? hexA(accent, 0.46) : 'var(--glass-border)'}`,
       background: primary
         ? `radial-gradient(circle at 12% 10%, ${hexA(accent, 0.3)}, transparent 32%), linear-gradient(135deg, ${hexA(accent, 0.14)}, var(--glass-bg-strong))`
@@ -181,14 +190,14 @@ function NextStep({ icon, accent, title, sub, primary, onClick }: {
       color: 'var(--ink)', boxShadow: primary ? `0 16px 42px ${hexA(accent, 0.2)}` : undefined,
       position: 'relative', overflow: 'hidden',
     }}>
-      <span className="ym-next-step-icon" style={{ width: primary ? 52 : 42, height: primary ? 52 : 42, flex: `0 0 ${primary ? 52 : 42}px`, borderRadius: primary ? 17 : 14, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: hexA(accent, primary ? 0.2 : 0.13), color: accent }}>
-        <Icon name={icon} size={24} />
+      <span className="ym-next-step-icon" style={{ width: primary ? 52 : 36, height: primary ? 52 : 36, flex: `0 0 ${primary ? 52 : 36}px`, borderRadius: primary ? 17 : 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: hexA(accent, primary ? 0.2 : 0.13), color: accent }}>
+        <Icon name={icon} size={primary ? 24 : 19} />
       </span>
-      <span style={{ flex: 1 }}>
-        <span style={{ display: 'block', fontSize: primary ? 17 : 15, fontWeight: 850 }}>{title}</span>
-        <span style={{ display: 'block', fontSize: primary ? 13 : 12.2, color: 'var(--ink-soft)', marginTop: 3, lineHeight: 1.35 }}>{sub}</span>
+      <span style={{ flex: 1, minWidth: 0 }}>
+        <span style={{ display: 'block', fontSize: primary ? 17 : 13.5, fontWeight: 850, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: compact ? 'nowrap' : 'normal' }}>{title}</span>
+        <span style={{ display: 'block', fontSize: primary ? 13 : 11.2, color: 'var(--ink-soft)', marginTop: 3, lineHeight: 1.35, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: compact ? 'nowrap' : 'normal' }}>{sub}</span>
       </span>
-      <span className="ym-next-step-arrow" style={{ width: 30, height: 30, borderRadius: 999, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: primary ? hexA(accent, 0.16) : 'var(--glass-bg)', color: primary ? accent : 'var(--ink-faint)' }}>
+      <span className="ym-next-step-arrow" style={{ width: primary ? 30 : 26, height: primary ? 30 : 26, flex: `0 0 ${primary ? 30 : 26}px`, borderRadius: 999, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: primary ? hexA(accent, 0.16) : 'var(--glass-bg)', color: primary ? accent : 'var(--ink-faint)' }}>
         <Icon name="flow" size={17} />
       </span>
     </button>

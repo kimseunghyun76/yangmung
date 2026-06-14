@@ -45,6 +45,16 @@ const BACKDROPS: Record<string, string> = {
   C38: '/scenes/generated/c38-sushi-extra-bg.webp',
   C39: '/scenes/generated/c39-pasta-options-bg.webp',
   C40: '/scenes/generated/c40-fashion-checkout-bg.webp',
+  C41: '/scenes/generated/c41-refund-exchange-bg.webp',
+  C42: '/scenes/generated/c42-vending-machine-bg.webp',
+  C43: '/scenes/generated/c43-atm-bg.webp',
+  C44: '/scenes/generated/c44-copy-machine-bg.webp',
+  C45: '/scenes/generated/c45-mobile-pickup-bg.webp',
+  C46: '/scenes/generated/c46-stadium-bg.webp',
+  C47: '/scenes/generated/c47-mall-info-bg.webp',
+  C48: '/scenes/generated/c48-prescription-pharmacy-bg.webp',
+  C49: '/scenes/generated/c49-omakase-sushi-bg.webp',
+  C50: '/scenes/generated/c50-lost-street-bg.webp',
 };
 
 const BY_PLACE: Record<string, SceneVisual> = {
@@ -88,6 +98,15 @@ const BY_PLACE: Record<string, SceneVisual> = {
   스시추가: { emoji: '魚', icon: 'scene-restaurant', bg: '#ecfeff', accent: '#0e7490' },
   파스타: { emoji: '麺', icon: 'scene-restaurant', bg: '#fff4ec', accent: '#ea580c' },
   편집샵계산: { emoji: '税', icon: 'scene-shopping', bg: '#fdf4ff', accent: '#c026d3' },
+  '쇼핑몰 서비스 데스크': { emoji: '換', icon: 'scene-shopping', bg: '#fdf4ff', accent: '#c026d3' },
+  자판기: { emoji: '飲', icon: 'scene-store', bg: '#eff6ff', accent: '#2563eb' },
+  '편의점 ATM': { emoji: '円', icon: 'scene-exchange', bg: '#f7fee7', accent: '#65a30d' },
+  '편의점 복합기': { emoji: '印', icon: 'scene-store', bg: '#f1f5f9', accent: '#475569' },
+  '카페·레스토랑 픽업 카운터': { emoji: '受', icon: 'scene-restaurant', bg: '#fff7ed', accent: '#b45309' },
+  '야구장·스타디움': { emoji: '球', icon: 'scene-store', bg: '#eff6ff', accent: '#2563eb' },
+  복합쇼핑몰: { emoji: '案', icon: 'scene-shopping', bg: '#fdf4ff', accent: '#c026d3' },
+  '스시 오마카세': { emoji: '鮨', icon: 'scene-restaurant', bg: '#ecfeff', accent: '#0e7490' },
+  길거리: { emoji: '道', icon: 'scene-street', bg: '#f0fdfa', accent: '#0d9488' },
   가게: { emoji: '店', icon: 'scene-store', bg: '#fdf2f8', accent: '#db2777' },
 };
 

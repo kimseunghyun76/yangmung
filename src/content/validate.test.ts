@@ -23,9 +23,10 @@ console.log('=== 정상 데이터셋 ===');
   const f = issues.filter((i) => i.sev === 'fail');
   const w = issues.filter((i) => i.sev === 'warn');
   console.log(`하드 실패 ${f.length} / 경고 ${w.length}`);
-  // 정상셋: 하드 실패 0. 경고는 C0 면제(V9) 1건만 허용.
-  const warnsOk = w.every((x) => x.rule === 'V9');
-  total++; if (f.length === 0 && warnsOk) { pass++; console.log('  PASS 정상셋 클린 (하드 0, 경고는 C0 면제만)'); }
+  // 정상셋: 하드 실패 0.
+  // 허용 경고: V9(C0 면제), V13(receptive 학습 목적 wrong choice — 정답이 아닌 쪽에 사용 가능).
+  const warnsOk = w.every((x) => x.rule === 'V9' || x.rule === 'V13');
+  total++; if (f.length === 0 && warnsOk) { pass++; console.log('  PASS 정상셋 클린 (하드 0, 허용 경고만)'); }
   else console.log('  FAIL 정상셋에 예상 밖 이슈');
 }
 

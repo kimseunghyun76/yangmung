@@ -2,11 +2,13 @@
 import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
 import { isMissionUnlocked, kanaReadMastery, missionProgress, type ProgressMap } from '../learn/progress';
+import { bestRarity, loadCollection, totalItems } from '../learn/collection';
+import { gachaItemForPlace } from '../learn/gachaItems';
 import { ROUTES, routePosition } from '../content/routes';
 import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
-import { sceneVisualByPlace, type SceneVisual } from './scene';
+import { sceneVisualByMission, type SceneVisual } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
 import { PageHead, SceneImageThumb } from './ui';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
@@ -43,13 +45,14 @@ interface SceneItem { m: typeof CONTENT.missions[number]; sv: SceneVisual; unloc
 
 export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props) {
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
+  const collection = loadCollection();
   const hira = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'hiragana').map((k) => k.id));
   const kata = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'katakana').map((k) => k.id));
 
   const items: SceneItem[] = scenes.map((m) => {
     const unlocked = isMissionUnlocked(m.id, progress);
     const p = missionProgress(allCards, progress, m.id);
-    return { m, sv: sceneVisualByPlace(m.place), unlocked, done: unlocked && p.total > 0 && p.mastered === p.total, started: p.started, mastered: p.mastered, total: p.total };
+    return { m, sv: sceneVisualByMission(m.id), unlocked, done: unlocked && p.total > 0 && p.mastered === p.total, started: p.started, mastered: p.mastered, total: p.total };
   });
   const open = items.filter((x) => x.unlocked);
   // 추천: 진행 중(미완료) 우선 → 시작 전 → (없으면) 첫 열린 장면
@@ -103,12 +106,23 @@ export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props)
           <GlassPanel style={{ padding: 10 }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8 }}>
               {route.items.map((x) => (
-                <button key={x.m.id} className="ym-press" disabled={!x.unlocked} onClick={() => onPracticeScene(x.m.id)}
-                  style={{ minWidth: 0, padding: '10px 6px', borderRadius: 14, border: x.unlocked ? '1px solid var(--glass-border)' : '1px dashed var(--glass-border)', background: x.unlocked ? 'var(--glass-bg-strong)' : 'transparent', color: 'var(--ink)', cursor: x.unlocked ? 'pointer' : 'default', opacity: x.unlocked ? 1 : 0.58 }}>
-                  <SceneImageThumb src={x.sv.backdrop ?? x.sv.thumb} icon={x.sv.icon} accent={x.sv.accent} size={42} muted={!x.unlocked} />
-                  <span style={{ display: 'block', marginTop: 6, fontSize: 12.5, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{x.m.place ?? x.m.scenario}</span>
-                  <span title={x.unlocked ? undefined : lockHint(x.m.id)} style={{ display: 'block', marginTop: 3, fontSize: 10.5, color: x.done ? 'var(--ok)' : 'var(--ink-faint)', fontWeight: 700 }}>{x.done ? '완료' : x.unlocked ? `${x.mastered}/${x.total}` : '🔒 잠김'}</span>
-                </button>
+                (() => {
+                  const card = collection.cards[x.m.id];
+                  const owned = totalItems(card);
+                  const rarity = bestRarity(card);
+                  const reward = gachaItemForPlace(x.m.place, rarity);
+                  return (
+                    <button key={x.m.id} className="ym-press" disabled={!x.unlocked} onClick={() => onPracticeScene(x.m.id)}
+                      style={{ minWidth: 0, padding: '10px 6px', borderRadius: 14, border: x.unlocked ? '1px solid var(--glass-border)' : '1px dashed var(--glass-border)', background: x.unlocked ? 'var(--glass-bg-strong)' : 'transparent', color: 'var(--ink)', cursor: x.unlocked ? 'pointer' : 'default', opacity: x.unlocked ? 1 : 0.58 }}>
+                      <SceneImageThumb src={x.sv.backdrop ?? x.sv.thumb} icon={x.sv.icon} accent={x.sv.accent} size={42} muted={!x.unlocked} />
+                      <span style={{ display: 'block', marginTop: 6, fontSize: 12.5, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{x.m.place ?? x.m.scenario}</span>
+                      <span title={x.unlocked ? undefined : lockHint(x.m.id)} style={{ display: 'block', marginTop: 3, fontSize: 10.5, color: x.done ? 'var(--ok)' : 'var(--ink-faint)', fontWeight: 700 }}>{x.done ? '완료' : x.unlocked ? `${x.mastered}/${x.total}` : '🔒 잠김'}</span>
+                      <span style={{ display: 'block', marginTop: 6, padding: '4px 5px', borderRadius: 8, background: owned ? 'var(--accent-soft)' : 'var(--glass-bg)', color: owned ? 'var(--accent)' : 'var(--ink-faint)', fontSize: 10, fontWeight: 850, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {reward.title}
+                      </span>
+                    </button>
+                  );
+                })()
               ))}
             </div>
           </GlassPanel>

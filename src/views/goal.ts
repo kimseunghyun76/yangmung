@@ -25,10 +25,11 @@ function joinPlaces(places: string[]): string {
   return places.join('·'); // 3개 이상이면 가운뎃점 (조사 회피)
 }
 
-export function sessionGoalText(missions: SessionMission[], hasKana: boolean): string {
+export function sessionGoalText(missions: SessionMission[], hasKana: boolean, hasBasics = false): string {
   // 튜토리얼(C0)은 장면 카피에서 제외 — 가게 인사는 편의점 등의 도입부로 흡수.
   const scenes = missions.filter((m) => m.id !== 'C0');
   if (scenes.length === 0) {
+    if (hasBasics) return '숫자·순서·요일·시간 익히기';
     if (missions.length > 0) return `${stripParen(missions[0].scenario)}까지 해보기`;
     return hasKana ? '히라가나부터 차근차근 시작하기' : '오늘 한 판 가볍게';
   }

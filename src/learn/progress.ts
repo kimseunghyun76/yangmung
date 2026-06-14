@@ -276,13 +276,13 @@ export function classifyCard(_c: Card, p: CardProgress | undefined, currentSessi
   return 'due'; // 진척 있고 미숙 → 재출제 대상
 }
 
-// 세션 구성: 타입별 quota (K↔B↔C 왕복 + 끝에 Tip)
-// 의도: K가 앞을 다 잡아먹지 않게, 한 세션 안에 가나·표현·미션이 모두 등장
-export const SESSION_QUOTAS = { K: 6, B: 3, C: 5, tip: 1 } as const;
+// 세션 구성: 타입별 quota (B=단어·P=발음구분·C=장면미션·tip)
+// 의도: 한 세션 안에 단어·발음·장면이 모두 등장해 다양성 확보.
+export const SESSION_QUOTAS = { K: 0, B: 3, C: 9, P: 2, tip: 1 } as const;
 
 // 세션 구성 설정 — 학습 모드별로 quota·최소 fresh를 바꾸기 위한 주입 지점.
 export interface SessionConfig {
-  quotas: { K: number; B: number; C: number; tip: number };
+  quotas: { K: number; B: number; C: number; P: number; tip: number };
   minFresh: { K: number; B: number; C: number };
 }
 
@@ -291,6 +291,27 @@ export interface SessionConfig {
 export const SESSION_MIN_FRESH = { K: 2, B: 1, C: 2 } as const;
 
 export const DEFAULT_SESSION_CONFIG: SessionConfig = { quotas: SESSION_QUOTAS, minFresh: SESSION_MIN_FRESH };
+
+// 발음 구분(P) 카드 SRS — pair: 프리픽스, 같은 쌍 연속 금지, due→fresh 순
+function pickPairCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit: number): Card[] {
+  if (limit <= 0) return [];
+  const due: Card[] = [], fresh: Card[] = [];
+  for (const c of allCards) {
+    if (c.kind !== 'quiz' || !c.id.startsWith('pair:')) continue;
+    if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
+    (progress[c.id] ? due : fresh).push(c);
+  }
+  const ordered = [...shuffleKana(due), ...shuffleKana(fresh)];
+  const pairKey = (c: Card) => c.id.split(':').slice(0, 2).join(':');
+  const out: Card[] = [];
+  const rest = [...ordered];
+  while (rest.length && out.length < limit) {
+    const prev = out[out.length - 1];
+    const idx = rest.findIndex((c) => !prev || pairKey(c) !== pairKey(prev));
+    out.push(rest.splice(idx >= 0 ? idx : 0, 1)[0]);
+  }
+  return out;
+}
 
 type Bucket = 'K' | 'B' | 'C';
 type ReviewableCard = QuizCard | IntroduceCard | SpeakCard | DictationCard; // reviewTarget을 가진 카드(=SRS 대상)
@@ -310,6 +331,10 @@ function conceptKey(c: ReviewableCard): string {
   if (id.startsWith('listen:')) return `phrase:${id.slice(7)}`;
   if (id.startsWith('dictation:')) return `phrase:${id.slice(10)}`;
   if (id.startsWith('ko2ja:')) return `phrase:${id.slice(6)}`; // 한→일 고르기 = 같은 표현의 한 형태(변주 회전)
+  if (id.startsWith('basic:')) {
+    const p = id.split(':');
+    return `basic:${p.slice(2).join(':')}`;
+  }
   return id; // 미션 스텝·소개·말하기·흐름은 묶지 않음
 }
 
@@ -422,7 +447,9 @@ export function selectSessionCards(
   for (const c of allCards) {
     if (c.kind === 'tip') { tips.push(c); continue; }
     if (c.kind === 'order' || c.kind === 'discover') continue; // 흐름/발견 카드는 SRS 대상 아님
-    if (c.kind === 'quiz' && c.id.startsWith('sign:')) continue; // 거리 읽기는 전용 세션에서만
+    if (c.kind === 'quiz' && c.id.startsWith('sign:')) continue;  // 거리 읽기는 전용 세션에서만
+    if (c.kind === 'quiz' && c.id.startsWith('basic:')) continue; // 생활 기초는 전용 세션에서만
+    if (c.kind === 'quiz' && c.id.startsWith('pair:')) continue;  // 발음 구분은 P 버킷으로 분리
     if (c.kind === 'introduce' && progress[c.id]) continue; // 새 표현 소개는 1회만 — 본 것은 제외(다른 새 표현으로)
     if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
     const key = conceptKey(c);
@@ -446,13 +473,14 @@ export function selectSessionCards(
   }
   const kSel = pickPool(k, config.quotas.K, config.minFresh.K, progress);
   const bSel = pickPool(b, config.quotas.B, config.minFresh.B, progress);
+  const pSel = pickPairCards(allCards, progress, currentSessionId, config.quotas.P ?? 0);
   const scene = pickScene(cByMission, config.quotas.C, progress, currentSessionId);
   // 팁: 안 본 것/오래된 것부터 1개씩 회전 (매번 같은 팁 X)
   const tipsSel = [...tips]
     .sort((a, b2) => (progress[a.id]?.lastSeenAt ?? '') < (progress[b2.id]?.lastSeenAt ?? '') ? -1 : 1)
     .slice(0, config.quotas.tip);
-  // 흐름: 가나·표현으로 몸풀기(K↔B 왕복) → 미션 한 장면 통째로 → 팁
-  return [...interleave(kSel, bSel), ...scene, ...tipsSel];
+  // 흐름: 단어(B)↔발음(P) 워밍업 → 장면 미션(C) 통째로 → 가나(K, 가나 모드용) → 팁
+  return [...interleave(kSel, interleave(bSel, pSel)), ...scene, ...tipsSel];
 }
 
 // 홈에서 "시작 버튼이 정확히 몇 카드 시작인지" 표시용 (Done의 "한 세션 더" 가능 여부 판단에도 사용)
@@ -465,7 +493,7 @@ export function plannedSessionSize(
   return selectSessionCards(allCards, progress, currentSessionId, config).length;
 }
 
-export interface SessionBreakdown { K: number; B: number; C: number; tip: number }
+export interface SessionBreakdown { K: number; B: number; C: number; P: number; tip: number }
 // isReview: 이번 세션에 이 미션의 신규(new) 카드가 없고 전부 복습(due)일 때 true → "복습하기" 카피.
 export interface SessionMission { id: string; scenario: string; isReview: boolean }
 
@@ -502,11 +530,12 @@ export function planSession(
   config: SessionConfig = DEFAULT_SESSION_CONFIG,
 ): SessionPlan {
   const cards = selectSessionCards(allCards, progress, currentSessionId, config);
-  const breakdown: SessionBreakdown = { K: 0, B: 0, C: 0, tip: 0 };
+  const breakdown: SessionBreakdown = { K: 0, B: 0, C: 0, P: 0, tip: 0 };
   for (const c of cards) {
     if (c.kind === 'tip') { breakdown.tip++; continue; }
     if (c.kind === 'order') { breakdown.C++; continue; }
     if (c.kind === 'discover') continue;
+    if (c.kind === 'quiz' && c.id.startsWith('pair:')) { breakdown.P++; continue; }
     const b = bucketOf(c);
     if (b === 'K') breakdown.K++;
     else if (b === 'B') breakdown.B++;
@@ -523,6 +552,55 @@ export function selectMissionCards(allCards: Card[], missionId: string): Card[] 
   );
 }
 
+// 발음 구분 전용 덱 — 최소 페어(듣고 둘 중 고르기)만, 약점/안 본 것 먼저. (직접 진입)
+// 같은 쌍의 a/b 카드가 연속되지 않도록 쌍 id 기준으로 한 장씩 교차 선발.
+export function selectPairCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit = 12): Card[] {
+  const due: Card[] = [], fresh: Card[] = [];
+  for (const c of allCards) {
+    if (c.kind !== 'quiz' || !c.id.startsWith('pair:')) continue;
+    if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
+    (progress[c.id] ? due : fresh).push(c);
+  }
+  const ordered = [...shuffleKana(due), ...shuffleKana(fresh)];
+  // 같은 쌍 연속 금지 (LEARNING_METHODS_PLAN §2): 인접 카드가 같은 pair id면 뒤로 민다.
+  const pairKey = (c: Card) => c.id.split(':').slice(0, 2).join(':');
+  const out: Card[] = [];
+  const rest = [...ordered];
+  while (rest.length && out.length < limit) {
+    const prev = out[out.length - 1];
+    const idx = rest.findIndex((c) => !prev || pairKey(c) !== pairKey(prev));
+    out.push(rest.splice(idx >= 0 ? idx : 0, 1)[0]);
+  }
+  return out;
+}
+
+// 주제별 어휘 전용 덱 — vocab:groupId:* 카드, 그룹 필터 가능. limit = 24.
+export function selectVocabCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, groupId?: string, limit = 24): Card[] {
+  const prefix = groupId ? `vocab:${groupId}:` : 'vocab:';
+  const byConcept = new Map<string, ReviewableCard[]>();
+  for (const c of allCards) {
+    if (c.kind !== 'quiz' || !c.id.startsWith(prefix)) continue;
+    if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
+    // 개념 키 = vocab:groupId:itemId (변형 3종을 하나로 묶음)
+    const parts = c.id.split(':');
+    const key = parts.slice(0, 2).concat(parts[3] ?? parts[2]).join(':');
+    const arr = byConcept.get(key);
+    if (arr) arr.push(c); else byConcept.set(key, [c]);
+  }
+  const due: ReviewableCard[] = [];
+  const fresh: ReviewableCard[] = [];
+  for (const variants of byConcept.values()) {
+    const rep = pickFreshestVariant(variants, progress);
+    (progress[rep.id] ? due : fresh).push(rep);
+  }
+  return [...sortWeakFirst(due, progress), ...shuffleKana(fresh)].slice(0, limit);
+}
+
+// 기본 인사 전용 덱 — vocab:greetings:* 카드만.
+export function selectGreetingCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit = 18): Card[] {
+  return selectVocabCards(allCards, progress, currentSessionId, 'greetings', limit);
+}
+
 // 거리 읽기 전용 덱 — 간판·메뉴 카드만, 약점/안 본 것 먼저. (직접 진입)
 export function selectSignCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit = 12): Card[] {
   const due: Card[] = [], fresh: Card[] = [];
@@ -533,6 +611,25 @@ export function selectSignCards(allCards: Card[], progress: ProgressMap, current
   }
   // 약점 먼저(due) 유지하되 각 그룹 내부는 셔플 — 풀이 커도 매번 같은 앞 12개만 나오지 않게.
   return [...shuffleKana(due), ...shuffleKana(fresh)].slice(0, limit);
+}
+
+// 생활 기초 전용 덱 — 숫자·순서·요일·달력·시간·금액. 같은 개념의 읽기/듣기/뜻→일본어를 회전.
+export function selectBasicLifeCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit = 24): Card[] {
+  const byConcept = new Map<string, ReviewableCard[]>();
+  for (const c of allCards) {
+    if (c.kind !== 'quiz' || !c.id.startsWith('basic:')) continue;
+    if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
+    const key = conceptKey(c);
+    const arr = byConcept.get(key);
+    if (arr) arr.push(c); else byConcept.set(key, [c]);
+  }
+  const due: ReviewableCard[] = [];
+  const fresh: ReviewableCard[] = [];
+  for (const variants of byConcept.values()) {
+    const rep = pickFreshestVariant(variants, progress);
+    (progress[rep.id] ? due : fresh).push(rep);
+  }
+  return [...sortWeakFirst(due, progress), ...shuffleKana(fresh)].slice(0, limit);
 }
 
 // 받아쓰기 전용 덱 — 받아쓰기 카드만, 약점/안 본 것 먼저. (직접 진입)
@@ -546,16 +643,59 @@ export function selectDictationCards(allCards: Card[], progress: ProgressMap, cu
   return [...shuffleKana(due), ...shuffleKana(fresh)].slice(0, limit);
 }
 
-// 속도전 플래시 — 이미 본(복습) 객관식 카드를 무작위로. 빠른 즉답 게임용(SRS 영향 최소).
-export function selectFlashCards(allCards: Card[], progress: ProgressMap, limit = 12): Card[] {
-  const seen: Card[] = [], rest: Card[] = [];
+// 속도전 플래시 — 레벨별 카드 풀 선택.
+// mode: 'kana'(가나 읽기), 'expression'(표현 듣기·의미), 'situation'(장면 대화), 'blitz'(전체 혼합)
+export type FlashMode = 'kana' | 'expression' | 'situation' | 'blitz';
+
+export function selectFlashCardsByMode(
+  allCards: Card[],
+  progress: ProgressMap,
+  mode: FlashMode,
+  limit = 12,
+): Card[] {
+  const seen: Card[] = [], fresh: Card[] = [];
+
+  const isKana = (c: Card) => c.kind === 'quiz' && (
+    c.id.endsWith(':read') || c.id.endsWith(':listen') || c.id.endsWith(':confuse') || c.id.startsWith('pair:')
+  );
+  const isExpression = (c: Card) => c.kind === 'quiz' && (
+    c.id.startsWith('listen:') || c.id.startsWith('ko2ja:') || c.id.startsWith('sign:') ||
+    (c.id.startsWith('basic:') && !c.id.includes(':read:')) ||
+    c.id.startsWith('vocab:')
+  );
+  const isSituation = (c: Card) => c.kind === 'quiz' &&
+    c.reviewTarget?.type === 'mission' &&
+    !c.promptPhrase; // 상황 프롬프트(긴 점원 발화)는 제외 — 제한시간 내 읽기 불가
+
+  const accept = (c: Card): boolean => {
+    if (c.kind !== 'quiz' || c.choices.length < 2) return false;
+    switch (mode) {
+      case 'kana': return isKana(c);
+      case 'expression': return isExpression(c);
+      case 'situation': return isSituation(c);
+      case 'blitz': return isKana(c) || isExpression(c) || isSituation(c);
+    }
+  };
+
   for (const c of allCards) {
-    if (c.kind !== 'quiz' || c.choices.length < 2) continue; // 객관식만(즉답 가능)
-    if (c.reviewTarget?.type === 'mission' && c.promptPhrase) continue; // 긴 상황 프롬프트는 속도전 제외
-    (progress[c.id] ? seen : rest).push(c);
+    if (!accept(c)) continue;
+    (progress[c.id] ? seen : fresh).push(c);
   }
-  const pool = seen.length >= limit ? seen : [...seen, ...rest];
-  return shuffleKana(pool).slice(0, limit);
+
+  // 복습 우선, 부족하면 신규로 채움. 약점(틀린 것) 먼저.
+  const sortWeak = (arr: Card[]) =>
+    [...arr].sort((a, b) => itemMastery(progress[a.id]) - itemMastery(progress[b.id]));
+
+  const pool = seen.length >= limit
+    ? sortWeak(seen)
+    : [...sortWeak(seen), ...shuffleKana(fresh)];
+
+  return shuffleKana(pool.slice(0, Math.max(limit, 8))).slice(0, limit);
+}
+
+// 하위 호환 — 기존 호출부(블리츠 모드로 동작)
+export function selectFlashCards(allCards: Card[], progress: ProgressMap, limit = 12): Card[] {
+  return selectFlashCardsByMode(allCards, progress, 'blitz', limit);
 }
 
 // 한→일 작문 전용 덱 — 한국어 보고 가나 타일로 일본어 조립(산출 강화).
