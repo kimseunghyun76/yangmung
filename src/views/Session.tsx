@@ -12,7 +12,7 @@ import { SpeakCardView } from './SpeakCard';
 import { DictationCardView } from './DictationCard';
 import { DiscoverCardView } from './DiscoverCard';
 import { ReadingAid } from './ReadingAid';
-import { sceneVisualByMission } from './scene';
+import { sceneVisualByMission, sceneBackdropForCard } from './scene';
 import { Icon } from '../ui/Icon';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
 import { MascotLine, mascotShows } from './mascot';
@@ -37,8 +37,11 @@ interface Props {
 }
 
 export function Session({ card, index, total, picked, onChoose, onIntroduceSeen, onSpeakPracticed, onDictationResult, isKanaFamiliar, onNext, onPrev, onExit, onKnown, picks }: Props) {
-  const sv = card.kind !== 'tip' && card.kind !== 'discover' && card.reviewTarget?.type === 'mission'
-    ? sceneVisualByMission(String(card.reviewTarget.id)) : null;
+  const missionId = card.kind !== 'tip' && card.kind !== 'discover' && card.reviewTarget?.type === 'mission'
+    ? String(card.reviewTarget.id) : undefined;
+  const sv = missionId ? sceneVisualByMission(missionId) : null;
+  // 배경 컷은 카드(화면) 전환마다 회전 — 같은 장면이라도 카드마다 다른 컷이 보인다.
+  const cardBackdrop = sv ? (sv.backdrop ? sceneBackdropForCard(missionId, index) : sv.hero) : undefined;
   const accent = sv?.accent ?? '#b9382e';
   const isMissionStep = card.kind === 'quiz' && !!card.promptPhrase;
   const speaker = isMissionStep ? card.sub : '';
@@ -51,24 +54,10 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
 
   return (
     <main style={{ ...WRAP, minHeight: '100dvh', display: 'flex', flexDirection: 'column', padding: 0 }}>
-      {/* ── 1. 배경 이미지 전체 표시 (오버레이 없음) ── */}
-      {sv && (sv.backdrop ?? sv.hero) && (
-        <div key={sceneKey} className="ym-scene-bg" style={{
-          position: 'relative', overflow: 'hidden', flexShrink: 0,
-          height: 'clamp(160px, 40vw, 210px)',
-          background: `linear-gradient(165deg, ${hexA(accent, 0.18)}, ${hexA(accent, 0.34)})`,
-        }}>
-          <img src={sv.backdrop ?? sv.hero} alt="" aria-hidden style={{
-            position: 'absolute', inset: 0, width: '100%', height: '100%',
-            objectFit: 'cover', opacity: 0.95, filter: 'saturate(.85) contrast(.96)',
-          }} />
-        </div>
-      )}
-
-      {/* ── 2. 내비게이션 바 (이미지 아래) ── */}
+      {/* ── 1. 내비게이션 바 (배경 이미지는 질문 문장 위로 이동) ── */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0,
-        padding: sv ? '10px 16px 8px' : 'max(14px, env(safe-area-inset-top)) 16px 8px',
+        padding: 'max(14px, env(safe-area-inset-top)) 16px 8px',
         background: 'var(--surface-2)',
       }}>
         <button onClick={exit} aria-label="나가기" style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 15, fontWeight: 600, color: 'var(--ink)', display: 'flex', alignItems: 'center', gap: 4, padding: 4 }}>
@@ -105,6 +94,20 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
         padding: '20px max(20px, env(safe-area-inset-left)) max(24px, calc(env(safe-area-inset-bottom) + 16px))',
       }}>
         <div key={sceneKey} className="ym-sheet-up" style={{ maxWidth: 540, margin: '0 auto' }}>
+          {/* 장면 배경 — 질문 문장 바로 위. 잘리지 않게 전체 표시(contain), 여백은 테마색이 채운다.
+              key={cardBackdrop}로 카드 전환마다 등장 애니를 재생해 컷이 바뀌는 게 보이게 한다. */}
+          {cardBackdrop && (
+            <div key={cardBackdrop} className="ym-scene-bg" style={{
+              position: 'relative', overflow: 'hidden', width: '100%',
+              height: 'clamp(150px, 46vw, 186px)', borderRadius: 16,
+              background: 'var(--surface-2)', marginBottom: 18,
+            }}>
+              <img src={cardBackdrop} alt="" aria-hidden style={{
+                position: 'absolute', inset: 0, width: '100%', height: '100%',
+                objectFit: 'contain', filter: 'saturate(.85) contrast(.96)',
+              }} />
+            </div>
+          )}
           {card.kind === 'tip' ? (
             <TipBody card={card} onNext={onNext} />
           ) : card.kind === 'introduce' ? (

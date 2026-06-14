@@ -13,6 +13,7 @@ import { adaptSessionConfig, diagnose } from './learn/adaptive';
 import { extractKanaChars } from './learn/kanaReading';
 import { loadSettings, MODE_PRESETS, saveSettings, type Settings } from './learn/settings';
 import { sessionGoalText } from './views/goal';
+import { resetMangaBackdrops } from './views/scene';
 import { speak, stopSpeaking, ttsSupported } from './tts';
 import { WRAP } from './ui/styles';
 import type { PickMap } from './views/OrderCard';
@@ -163,6 +164,7 @@ export function App() {
   // ── 액션 ─────────────────────────────────────────
   // showIntro: 새 "한 판"이면 인트로부터(목표↔첫 카드 정렬), 약점 재출제는 바로 세션.
   function beginSession(id: number, cards: Card[], showIntro: boolean, gacha = true) {
+    resetMangaBackdrops(); // 세션마다 장면 배경을 3컷 중 새 랜덤으로
     const materialized = cards.map(materializeQuizCard);
     setSessionId(id);
     setSessionCards(materialized);
@@ -512,7 +514,7 @@ export function App() {
       const missions = missionsFromCards(sessionCards, progress, sessionId);
       const hasKana = sessionCards.some((c) => c.kind === 'quiz' && c.reviewTarget?.type === 'kana');
       const hasBasics = sessionCards.some((c) => c.kind === 'quiz' && c.id.startsWith('basic:'));
-      return <Intro cards={sessionCards} goal={sessionGoalText(missions, hasKana, hasBasics)} onStart={() => setView('session')} onBack={() => setView('home')} />;
+      return <Intro cards={sessionCards} allCards={allCards} progress={progress} goal={sessionGoalText(missions, hasKana, hasBasics)} onStart={() => setView('session')} onBack={() => setView('home')} />;
     }
     if (view === 'done') {
       const nextId = nextSessionId(session);
