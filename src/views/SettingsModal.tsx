@@ -68,11 +68,6 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
       <p style={{ margin: '6px 2px 0', fontSize: 11.5, color: 'var(--ink-faint)' }}>난이도가 오를수록 한글을 떼고(일본어만), 최고 난이도는 한자로 — 가나 퀴즈는 그대로예요.</p>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 18 }}>
-        <span style={head}><Icon name="listen" size={16} /> 듣기 느리게 재생</span>
-        <button className="ym-press" style={toggle(settings.slowListening)} onClick={() => onChange({ ...settings, slowListening: !settings.slowListening })}>{settings.slowListening ? '켜짐' : '꺼짐'}</button>
-      </div>
-
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 14 }}>
         <span style={head}><Icon name="fast" size={16} /> 정답이면 자동으로 다음</span>
         <button className="ym-press" style={toggle(settings.fastForward)} onClick={() => onChange({ ...settings, fastForward: !settings.fastForward })}>{settings.fastForward ? '켜짐' : '꺼짐'}</button>
       </div>

@@ -30,18 +30,20 @@ interface Props {
   onDictationResult: (correct: boolean) => void;
   isKanaFamiliar: (char: string) => boolean;
   onNext: () => void;
+  onPrev?: () => void;
   onExit: () => void;
   onKnown: () => void;
   picks: PickMap;
 }
 
-export function Session({ card, index, total, picked, onChoose, onIntroduceSeen, onSpeakPracticed, onDictationResult, isKanaFamiliar, onNext, onExit, onKnown, picks }: Props) {
+export function Session({ card, index, total, picked, onChoose, onIntroduceSeen, onSpeakPracticed, onDictationResult, isKanaFamiliar, onNext, onPrev, onExit, onKnown, picks }: Props) {
   const sv = card.kind !== 'tip' && card.kind !== 'discover' && card.reviewTarget?.type === 'mission'
     ? sceneVisualByMission(String(card.reviewTarget.id)) : null;
   const accent = sv?.accent ?? '#b9382e';
   const isMissionStep = card.kind === 'quiz' && !!card.promptPhrase;
   const speaker = isMissionStep ? card.sub : '';
   const scenario = 'scenario' in card ? card.scenario : undefined;
+  const plainTag = !sv && card.kind !== 'tip' && card.kind !== 'discover' ? card.tag : '';
   // 장면 진입 모션 키 — 같은 장면(미션) 안에서는 유지, 새 장면으로 바뀔 때만 재생.
   const sceneKey = sv && 'reviewTarget' in card && card.reviewTarget ? `sc-${String(card.reviewTarget.id)}` : 'plain';
 
@@ -49,34 +51,57 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
 
   return (
     <main style={{ ...WRAP, minHeight: '100dvh', display: 'flex', flexDirection: 'column', padding: 0 }}>
-      {/* ── 상단: 장면 헤더 (배경, 주인공 아님) ── */}
-      <div key={sceneKey} className="ym-scene-bg" style={{
-        position: 'relative', overflow: 'hidden', paddingTop: 'max(16px, env(safe-area-inset-top))',
-        background: sv ? `linear-gradient(165deg, ${hexA(accent, 0.18)}, ${hexA(accent, 0.34)})` : 'var(--surface-2)',
-      }}>
-        {(sv?.backdrop ?? sv?.hero) && <img src={sv?.backdrop ?? sv?.hero} alt="" aria-hidden style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: sv?.backdrop ? 0.9 : 0.92, filter: 'saturate(.82) contrast(.96) brightness(1.08)' }} />}
-        {sv && <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.5))' }} />}
-        <div style={{ position: 'relative', padding: '0 16px 16px', color: sv ? '#fff' : 'var(--ink)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 40 }}>
-            <button onClick={exit} aria-label="나가기" style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 15, fontWeight: 600, color: 'inherit', display: 'flex', alignItems: 'center', gap: 4, padding: 4 }}>
-              <Icon name="back" size={18} /> 나가기
-            </button>
-            <Dots i={index} total={total} onScene={!!sv} />
-          </div>
-          <div style={{ minHeight: sv ? 56 : 8, display: 'flex', alignItems: 'flex-end', gap: 8 }}>
-            {sv && (scenario || speaker) && (
-              <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                {scenario && <span style={{ padding: '4px 11px', borderRadius: 999, fontSize: 12, fontWeight: 700, background: hexA(accent, 0.9), color: '#fff' }}>{scenario}</span>}
-                {speaker && <span style={{ padding: '4px 10px', borderRadius: 999, fontSize: 12, fontWeight: 700, background: 'rgba(255,255,255,0.22)', color: '#fff', backdropFilter: 'blur(6px)' }}>{speaker}</span>}
-              </div>
-            )}
-          </div>
+      {/* ── 1. 배경 이미지 전체 표시 (오버레이 없음) ── */}
+      {sv && (sv.backdrop ?? sv.hero) && (
+        <div key={sceneKey} className="ym-scene-bg" style={{
+          position: 'relative', overflow: 'hidden', flexShrink: 0,
+          height: 'clamp(160px, 40vw, 210px)',
+          background: `linear-gradient(165deg, ${hexA(accent, 0.18)}, ${hexA(accent, 0.34)})`,
+        }}>
+          <img src={sv.backdrop ?? sv.hero} alt="" aria-hidden style={{
+            position: 'absolute', inset: 0, width: '100%', height: '100%',
+            objectFit: 'cover', opacity: 0.95, filter: 'saturate(.85) contrast(.96)',
+          }} />
         </div>
+      )}
+
+      {/* ── 2. 내비게이션 바 (이미지 아래) ── */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0,
+        padding: sv ? '10px 16px 8px' : 'max(14px, env(safe-area-inset-top)) 16px 8px',
+        background: 'var(--surface-2)',
+      }}>
+        <button onClick={exit} aria-label="나가기" style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 15, fontWeight: 600, color: 'var(--ink)', display: 'flex', alignItems: 'center', gap: 4, padding: 4 }}>
+          <Icon name="back" size={18} /> 나가기
+        </button>
+        <Dots i={index} total={total} onScene={false} />
+        <button
+          onClick={onPrev}
+          disabled={index === 0 || !onPrev}
+          aria-label="이전 카드"
+          style={{
+            border: 'none', background: 'none', cursor: index > 0 ? 'pointer' : 'default',
+            fontSize: 14, fontWeight: 600, color: index > 0 ? 'var(--ink)' : 'transparent',
+            display: 'flex', alignItems: 'center', gap: 3, padding: 4,
+            pointerEvents: index > 0 ? 'auto' : 'none',
+          }}
+        >
+          ← 이전
+        </button>
       </div>
 
-      {/* ── 하단: 글래스 학습 시트 (flex로 끝까지 채우고, 길면 내부 스크롤) ── */}
+      {/* ── 3. 장면·화자 배지 ── */}
+      {(sv ? (scenario || speaker) : !!plainTag) && (
+        <div style={{ padding: '0 16px 10px', display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap', background: 'var(--surface-2)', flexShrink: 0 }}>
+          {sv && scenario && <span style={{ padding: '4px 11px', borderRadius: 999, fontSize: 12, fontWeight: 700, background: hexA(accent, 0.9), color: '#fff' }}>{scenario}</span>}
+          {sv && speaker && <span style={{ padding: '4px 10px', borderRadius: 999, fontSize: 12, fontWeight: 700, background: 'var(--accent-soft)', color: 'var(--accent)' }}>{speaker}</span>}
+          {!sv && plainTag && <span style={{ padding: '5px 11px', borderRadius: 999, fontSize: 12, fontWeight: 800, background: 'var(--accent-soft)', color: 'var(--accent)' }}>{plainTag}</span>}
+        </div>
+      )}
+
+      {/* ── 4. 글래스 학습 시트 (flex로 끝까지 채우고, 길면 내부 스크롤) ── */}
       <GlassPanel style={{
-        flex: 1, minHeight: 0, overflowY: 'auto', marginTop: -20, borderRadius: '24px 24px 0 0', borderBottom: 'none',
+        flex: 1, minHeight: 0, overflowY: 'auto', borderRadius: '24px 24px 0 0', borderBottom: 'none',
         padding: '20px max(20px, env(safe-area-inset-left)) max(24px, calc(env(safe-area-inset-bottom) + 16px))',
       }}>
         <div key={sceneKey} className="ym-sheet-up" style={{ maxWidth: 540, margin: '0 auto' }}>
@@ -101,10 +126,21 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
   );
 }
 
+const CATEGORY_COLORS: Record<string, string> = {
+  '문법': '#4c6ef5', '문화': '#e67700', '발음': '#0ca678', '여행': '#b9382e', '회화법': '#6741d9', '장면': '#1971c2',
+};
+
 function TipBody({ card, onNext }: { card: Extract<Card, { kind: 'tip' }>; onNext: () => void }) {
   const detail = CONTENT.grammar.find((g) => `tip:${g.id}` === card.id);
+  const cat = detail?.category;
+  const catColor = cat ? (CATEGORY_COLORS[cat] ?? 'var(--accent)') : 'var(--accent)';
   return (
     <>
+              {cat && (
+                <div style={{ marginBottom: 8 }}>
+                  <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 999, fontSize: 11, fontWeight: 800, background: catColor, color: '#fff', letterSpacing: 0.3 }}>{cat}</span>
+                </div>
+              )}
               <h2 style={{ marginTop: 4, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="tip" size={22} /> {card.label}</h2>
               <p style={{ fontSize: 17, lineHeight: 1.6, color: 'var(--ink-soft)' }}>{card.tipKo}</p>
               {detail?.exampleJa && (
@@ -116,6 +152,11 @@ function TipBody({ card, onNext }: { card: Extract<Card, { kind: 'tip' }>; onNex
               )}
               {detail?.commonMistake && <TipDetail label="흔한 실수" text={detail.commonMistake} tone="var(--warn)" />}
               {detail?.action && <TipDetail label="바로 해보기" text={detail.action} tone="var(--ok)" />}
+              {detail?.n5Refs && detail.n5Refs.length > 0 && (
+                <div style={{ marginTop: 10, fontSize: 12, color: 'var(--ink-faint)' }}>
+                  JLPT N5 참고: {detail.n5Refs.join(' · ')}
+                </div>
+              )}
               <MascotLine key={`${card.id}:tip`} copyKey="tip" style={{ marginTop: 14 }} />
               <PrimaryAction onClick={onNext} style={{ marginTop: 16 }}>다음</PrimaryAction>
     </>

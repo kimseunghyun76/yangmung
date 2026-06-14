@@ -1,9 +1,9 @@
 import { SCENE_SENTENCES } from './sceneSentences';
 import type { CLevel } from './types';
 
-const scenes: CLevel[] = Array.from({ length: 41 }, (_, i) => `C${i}` as CLevel);
+const scenes: CLevel[] = Array.from({ length: 51 }, (_, i) => `C${i}` as CLevel);
 const kanaOnly = /^[\u3040-\u309f\u30a0-\u30ffー]+$/u;
-const idPattern = /^ss_c(?:[1-9]|[1-3][0-9]|40)_\d{2}$/;
+const idPattern = /^ss_c(?:[1-9]|[1-3][0-9]|4[0-9]|50)_\d{2}$/;
 const ids = new Set<string>();
 const allKana = new Map<string, string>(); // 전역 kana → 최초 등장 장면 (장면 간 중복 금지)
 const errors: string[] = [];
@@ -13,8 +13,8 @@ const validSkills = new Set(['read', 'listen', 'speak', 'write']);
 for (const scene of scenes) {
   const rows = SCENE_SENTENCES[scene];
   const sceneNo = Number(scene.slice(1));
-  // 정책: C1~C40 장면당 정확히 20개.
-  if (sceneNo >= 1 && sceneNo <= 40 && rows.length !== 20) errors.push(`${scene}: ${rows.length}개 — 정확히 20개 필요`);
+  // 정책: C1~C50 장면당 정확히 20개.
+  if (sceneNo >= 1 && sceneNo <= 50 && rows.length !== 20) errors.push(`${scene}: ${rows.length}개 — 정확히 20개 필요`);
 
   const speakers = { clerk: 0, me: 0 };
   const levels = { 1: 0, 2: 0, 3: 0, 4: 0 };

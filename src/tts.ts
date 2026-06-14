@@ -20,6 +20,7 @@ interface AudioManifest {
 
 let jaVoice: SpeechSynthesisVoice | null = null;
 let manifestPromise: Promise<AudioManifest | null> | null = null;
+let cachedManifest: AudioManifest | null | undefined; // undefined = 아직 미로드
 let currentAudio: HTMLAudioElement | null = null;
 let speakToken = 0;
 
@@ -60,7 +61,8 @@ function loadManifest(): Promise<AudioManifest | null> {
   if (!manifestPromise) {
     manifestPromise = fetch('/audio/manifest.json', { cache: 'no-store' })
       .then((res) => (res.ok ? res.json() as Promise<AudioManifest> : null))
-      .catch(() => null);
+      .catch(() => null)
+      .then((data) => { cachedManifest = data; return data; });
   }
   return manifestPromise;
 }
@@ -118,7 +120,7 @@ export function speak(text: string, opts: SpeakOpts = {}): void {
   stopAudioOnly();
   if (webSpeechSupported()) window.speechSynthesis.cancel();
 
-  void loadManifest().then((manifest) => {
+  function withManifest(manifest: AudioManifest | null) {
     if (token !== speakToken) return;
     const voiceId = opts.voice ? manifest?.voiceTextIndex?.[opts.voice]?.[clean] : undefined;
     const id = opts.audioId ?? voiceId ?? manifest?.textIndex[clean];
@@ -150,7 +152,15 @@ export function speak(text: string, opts: SpeakOpts = {}): void {
       if (currentAudio === audio) currentAudio = null;
       speakWeb(clean, opts, token);
     });
-  });
+  }
+
+  // manifest 캐시가 준비됐으면 동기(synchronous) 처리 — iOS에서 user gesture context 유지
+  // (async .then() 콜백에선 Web Speech API 가 blocked 되는 문제 해결)
+  if (cachedManifest !== undefined) {
+    withManifest(cachedManifest);
+  } else {
+    void loadManifest().then(withManifest);
+  }
 }
 
 // 여러 문장을 순서대로 이어 읽기. 각 문장마다 mp3 우선 → Web Speech 폴백.

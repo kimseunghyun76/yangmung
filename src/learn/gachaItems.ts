@@ -4,8 +4,96 @@ export type ItemMotif = 'food' | 'drink' | 'ticket' | 'stay' | 'shopping' | 'ser
 
 export interface GachaItemArt {
   title: string;
+  jaTitle?: string;
   sub: string;
   motif: ItemMotif;
+  image?: string;
+}
+
+const JA_TITLE: Record<string, string> = {
+  여행메모: '旅メモ',
+  실전쿠폰: '実戦クーポン',
+  로컬패스: 'ローカルパス',
+  마스터키트: 'マスターキット',
+  명예배지: '名誉バッジ',
+  삼각김밥: 'おにぎり',
+  핫스낵: 'ホットスナック',
+  도시락세트: '弁当セット',
+  프리미엄벤토: '特製弁当',
+  심야콤보: '深夜セット',
+  물컵: '水グラス',
+  정식메뉴: '定食メニュー',
+  추천세트: 'おすすめセット',
+  셰프플레이트: 'シェフ皿',
+  오마카세코스: 'おまかせコース',
+  승차권: '乗車券',
+  교통카드: '交通カード',
+  급행패스: '急行パス',
+  지정석권: '指定席券',
+  여행레일패스: '旅レールパス',
+  룸키: 'ルームキー',
+  어메니티: 'アメニティ',
+  조식권: '朝食券',
+  스위트키: 'スイートキー',
+  컨시어지패스: 'コンシェルジュパス',
+  지도조각: '地図のかけら',
+  골목표지: '路地サイン',
+  동네지도: '町の地図',
+  로컬루트: 'ローカルルート',
+  도시탐험가: '街の探検家',
+  마스크: 'マスク',
+  목캔디: 'のど飴',
+  상비약: '常備薬',
+  약사추천세트: '薬剤師セット',
+  안심키트: '安心キット',
+  쇼핑백: 'ショッピングバッグ',
+  사이즈태그: 'サイズタグ',
+  피팅티켓: '試着チケット',
+  셀렉트재킷: 'セレクトジャケット',
+  한정판코디: '限定コーデ',
+  컵라멘: 'カップラーメン',
+  쇼유라멘: '醤油ラーメン',
+  미소버터라멘: '味噌バターラーメン',
+  돈코츠차슈라멘: '豚骨チャーシューメン',
+  특상해산물라멘: '特上海鮮ラーメン',
+  아이스커피: 'アイスコーヒー',
+  라떼: 'ラテ',
+  말차라떼: '抹茶ラテ',
+  스페셜블렌드: 'スペシャルブレンド',
+  바리스타시그니처: 'バリスタシグネチャー',
+  단팥빵: 'あんパン',
+  멜론빵: 'メロンパン',
+  카레빵: 'カレーパン',
+  갓구운식빵: '焼きたて食パン',
+  파티시에박스: 'パティシエボックス',
+  오토시: 'お通し',
+  생맥주: '生ビール',
+  야키토리: '焼き鳥',
+  사시미모둠: '刺身盛り',
+  대장추천코스: '大将おすすめコース',
+  계란초밥: '玉子寿司',
+  참치초밥: 'まぐろ寿司',
+  연어뱃살: 'サーモン腹身',
+  오토로: '大トロ',
+  장인오마카세: '職人おまかせ',
+  접시토큰: '皿トークン',
+  레일초밥: 'レーン寿司',
+  터치패널세트: 'タッチパネルセット',
+  특선네타: '特選ネタ',
+  대어플레이트: '大漁プレート',
+  토마토파스타: 'トマトパスタ',
+  크림파스타: 'クリームパスタ',
+  해산물파스타: '海鮮パスタ',
+  트러플파스타: 'トリュフパスタ',
+  셰프스페셜파스타: 'シェフ特製パスタ',
+};
+
+function compactTitle(title: string): string {
+  return title.replace(/\s+/g, '');
+}
+
+function withJa(item: GachaItemArt): GachaItemArt {
+  return { ...item, jaTitle: item.jaTitle ?? JA_TITLE[compactTitle(item.title)] ?? item.title };
 }
 
 const GENERIC: Record<Rarity, GachaItemArt> = {
@@ -16,27 +104,42 @@ const GENERIC: Record<Rarity, GachaItemArt> = {
   diamond: { title: '명예 배지', sub: '다이아', motif: 'festival' },
 };
 
+const MOTIF_IMAGE: Record<ItemMotif, string> = {
+  food: '/gacha/items/motif/motif-food.webp',
+  drink: '/gacha/items/motif/motif-drink.webp',
+  ticket: '/gacha/items/motif/motif-ticket.webp',
+  stay: '/gacha/items/motif/motif-stay.webp',
+  shopping: '/gacha/items/motif/motif-shopping.webp',
+  service: '/gacha/items/motif/motif-service.webp',
+  safety: '/gacha/items/motif/motif-safety.webp',
+  festival: '/gacha/items/motif/motif-festival.webp',
+};
+
+function withMotifImage(item: GachaItemArt): GachaItemArt {
+  return { ...item, image: item.image ?? MOTIF_IMAGE[item.motif] };
+}
+
 const BY_PLACE: Record<string, Partial<Record<Rarity, GachaItemArt>>> = {
   편의점: {
-    basic: { title: '삼각김밥', sub: '입문', motif: 'food' },
-    bronze: { title: '핫스낵', sub: '계산대', motif: 'food' },
-    silver: { title: '도시락 세트', sub: '데우기', motif: 'food' },
-    gold: { title: '프리미엄 벤토', sub: '완벽 주문', motif: 'food' },
-    diamond: { title: '심야 콤보', sub: '로컬 고수', motif: 'food' },
+    basic: { title: '삼각김밥', sub: '입문', motif: 'food', image: '/gacha/items/generated/onigiri.png' },
+    bronze: { title: '핫스낵', sub: '계산대', motif: 'food', image: '/gacha/items/generated/hot-snack.png' },
+    silver: { title: '도시락 세트', sub: '데우기', motif: 'food', image: '/gacha/items/generated/bento-box.png' },
+    gold: { title: '프리미엄 벤토', sub: '완벽 주문', motif: 'food', image: '/gacha/items/generated/premium-bento.png' },
+    diamond: { title: '심야 콤보', sub: '로컬 고수', motif: 'food', image: '/gacha/items/generated/late-night-combo.png' },
   },
   식당: {
-    basic: { title: '물컵', sub: '착석', motif: 'drink' },
-    bronze: { title: '정식 메뉴', sub: '주문', motif: 'food' },
-    silver: { title: '추천 세트', sub: '응대', motif: 'food' },
-    gold: { title: '셰프 플레이트', sub: '자연 주문', motif: 'food' },
-    diamond: { title: '오마카세 코스', sub: '완전 적응', motif: 'food' },
+    basic: { title: '물컵', sub: '착석', motif: 'drink', image: '/gacha/items/generated/water-glass.png' },
+    bronze: { title: '정식 메뉴', sub: '주문', motif: 'food', image: '/gacha/items/generated/teishoku-menu.png' },
+    silver: { title: '추천 세트', sub: '응대', motif: 'food', image: '/gacha/items/generated/recommended-set.png' },
+    gold: { title: '셰프 플레이트', sub: '자연 주문', motif: 'food', image: '/gacha/items/generated/chef-plate.png' },
+    diamond: { title: '오마카세 코스', sub: '완전 적응', motif: 'food', image: '/gacha/items/generated/omakase-course.png' },
   },
   전철: {
-    basic: { title: '승차권', sub: '기본', motif: 'ticket' },
-    bronze: { title: '교통카드', sub: '개찰', motif: 'ticket' },
-    silver: { title: '급행 패스', sub: '환승', motif: 'ticket' },
-    gold: { title: '지정석권', sub: '정확 이동', motif: 'ticket' },
-    diamond: { title: '여행 레일패스', sub: '마스터', motif: 'ticket' },
+    basic: { title: '승차권', sub: '기본', motif: 'ticket', image: '/gacha/items/generated/train-ticket.png' },
+    bronze: { title: '교통카드', sub: '개찰', motif: 'ticket', image: '/gacha/items/generated/ic-card.png' },
+    silver: { title: '급행 패스', sub: '환승', motif: 'ticket', image: '/gacha/items/generated/express-pass.png' },
+    gold: { title: '지정석권', sub: '정확 이동', motif: 'ticket', image: '/gacha/items/generated/reserved-seat-ticket.png' },
+    diamond: { title: '여행 레일패스', sub: '마스터', motif: 'ticket', image: '/gacha/items/generated/rail-pass.png' },
   },
   호텔: {
     basic: { title: '룸키', sub: '체크인', motif: 'stay' },
@@ -67,11 +170,11 @@ const BY_PLACE: Record<string, Partial<Record<Rarity, GachaItemArt>>> = {
     diamond: { title: '한정판 코디', sub: '쇼핑 고수', motif: 'shopping' },
   },
   라멘: {
-    basic: { title: '컵라멘', sub: '기본', motif: 'food' },
-    bronze: { title: '쇼유라멘', sub: '동', motif: 'food' },
-    silver: { title: '미소버터라멘', sub: '은', motif: 'food' },
-    gold: { title: '돈코츠 차슈라멘', sub: '금', motif: 'food' },
-    diamond: { title: '특상 해산물라멘', sub: '다이아', motif: 'food' },
+    basic: { title: '컵라멘', sub: '기본', motif: 'food', image: '/gacha/items/ramen/ramen-basic.webp' },
+    bronze: { title: '쇼유라멘', sub: '동', motif: 'food', image: '/gacha/items/ramen/ramen-bronze.webp' },
+    silver: { title: '미소버터라멘', sub: '은', motif: 'food', image: '/gacha/items/ramen/ramen-silver.webp' },
+    gold: { title: '돈코츠 차슈라멘', sub: '금', motif: 'food', image: '/gacha/items/ramen/ramen-gold.webp' },
+    diamond: { title: '특상 해산물라멘', sub: '다이아', motif: 'food', image: '/gacha/items/ramen/ramen-diamond.webp' },
   },
   카페: {
     basic: { title: '아이스커피', sub: '기본', motif: 'drink' },
@@ -148,5 +251,5 @@ const PLACE_ALIAS: Record<string, string> = {
 
 export function gachaItemForPlace(place: string | undefined, rarity: Rarity): GachaItemArt {
   const key = place && (BY_PLACE[place] ? place : PLACE_ALIAS[place]);
-  return (key && BY_PLACE[key]?.[rarity]) || GENERIC[rarity];
+  return withJa(withMotifImage((key && BY_PLACE[key]?.[rarity]) || GENERIC[rarity]));
 }

@@ -16,6 +16,7 @@ interface Props {
 }
 
 const DAILY_KEY = 'yangmung:gacha:daily:v1';
+const DAILY_FREE_LIMIT = 100;
 
 function todayKey(): string {
   const d = new Date();
@@ -25,24 +26,36 @@ function todayKey(): string {
   return `${y}-${m}-${day}`;
 }
 
-function dailySessionId(key: string): number {
-  return -Number(key.replace(/-/g, ''));
+function dailySessionId(key: string, ordinal: number): number {
+  return -Number(`${key.replace(/-/g, '')}${String(ordinal).padStart(3, '0')}`);
 }
 
-function loadDailyClaimed(key: string): boolean {
-  if (typeof window === 'undefined') return false;
-  try { return window.localStorage.getItem(DAILY_KEY) === key; } catch { return false; }
+function loadDailyClaimCount(key: string): number {
+  if (typeof window === 'undefined') return 0;
+  try {
+    const raw = window.localStorage.getItem(DAILY_KEY);
+    if (!raw) return 0;
+    if (raw === key) return 1;
+    const parsed = JSON.parse(raw) as { date?: string; count?: number };
+    if (parsed.date !== key) return 0;
+    return Math.min(DAILY_FREE_LIMIT, Math.max(0, parsed.count ?? 0));
+  } catch { return 0; }
 }
 
-function saveDailyClaimed(key: string): void {
+function saveDailyClaimCount(key: string, count: number): void {
   if (typeof window === 'undefined') return;
-  try { window.localStorage.setItem(DAILY_KEY, key); } catch { /* noop */ }
+  try { window.localStorage.setItem(DAILY_KEY, JSON.stringify({ date: key, count })); } catch { /* noop */ }
 }
 
 export function GachaPage({ nav, progress }: Props) {
   const key = todayKey();
-  const [claimed, setClaimed] = useState(() => loadDailyClaimed(key));
+  const [claimedCount, setClaimedCount] = useState(() => loadDailyClaimCount(key));
+  const [dailyRun, setDailyRun] = useState(0);
+  const [showLastDailyResult, setShowLastDailyResult] = useState(false);
   const [deckVersion, setDeckVersion] = useState(0);
+  const remainingFree = Math.max(0, DAILY_FREE_LIMIT - claimedCount);
+  const claimed = remainingFree <= 0 && !showLastDailyResult;
+  const nextFreeOrdinal = Math.min(DAILY_FREE_LIMIT, claimedCount + 1);
   const unlockedSceneIds = useMemo(() => {
     const ids = CONTENT.missions
       .filter((m) => m.id !== 'C0' && isMissionUnlocked(m.id, progress))
@@ -60,7 +73,7 @@ export function GachaPage({ nav, progress }: Props) {
       <PageHead title="가챠 도감" sub="수업 보상으로 여행 카드를 모으고, 부족한 장면은 다시 연습해요" />
 
       <MascotBubble who="mung" mood="correct" size={46} style={{ marginBottom: 14 }}>
-        가챠는 학습 보상이에요. 현금 뽑기 없이 하루 1회 무료와 수업 완료 보상만 있어요.
+        가챠는 학습 보상이에요. 현금 뽑기 없이 하루 100회 무료와 수업 완료 보상만 있어요.
       </MascotBubble>
 
       <GlassPanel strong style={{ position: 'relative', overflow: 'hidden', marginBottom: 18 }}>
@@ -82,21 +95,35 @@ export function GachaPage({ nav, progress }: Props) {
               <span style={{ padding: '6px 9px', borderRadius: 999, background: 'var(--glass-bg)', color: 'var(--ink-faint)', fontSize: 12, fontWeight: 800 }}>+{unlockedSceneIds.length - previewScenes.length}</span>
             )}
           </div>
+          <p style={{ margin: claimed ? '14px 0 0' : '14px 0 0', fontSize: 13, color: 'var(--ink)', fontWeight: 850 }}>
+            오늘 남은 무료 가챠 {remainingFree}/{DAILY_FREE_LIMIT}
+          </p>
           {claimed ? (
             <div style={{ marginTop: 16, padding: 14, borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)' }}>
-              <strong style={{ display: 'block', fontSize: 16 }}>오늘 무료 가챠는 받았어요.</strong>
+              <strong style={{ display: 'block', fontSize: 16 }}>오늘 무료 가챠 100회를 모두 받았어요.</strong>
               <span style={{ display: 'block', marginTop: 5, fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 700 }}>내일 다시 열리고, 수업 완료 보상은 계속 받을 수 있어요.</span>
             </div>
           ) : (
             <GachaBox
-              sessionId={dailySessionId(key)}
+              key={dailyRun}
+              sessionId={dailySessionId(key, nextFreeOrdinal)}
               sceneIds={unlockedSceneIds}
               grade="wood"
-              label="무료 1회"
+              label={`무료 가챠 ${nextFreeOrdinal}/${DAILY_FREE_LIMIT}`}
+              randomDrawCount
+              afterRevealLabel={claimedCount < DAILY_FREE_LIMIT ? `다음 무료 가챠 (${DAILY_FREE_LIMIT - claimedCount}회 남음)` : undefined}
+              onAfterReveal={() => {
+                setShowLastDailyResult(false);
+                setDailyRun((n) => n + 1);
+              }}
               onClaimed={(results) => {
                 if (results.length > 0) {
-                  saveDailyClaimed(key);
-                  setClaimed(true);
+                  setShowLastDailyResult(true);
+                  setClaimedCount((prev) => {
+                    const next = Math.min(DAILY_FREE_LIMIT, prev + 1);
+                    saveDailyClaimCount(key, next);
+                    return next;
+                  });
                   setDeckVersion((n) => n + 1);
                 }
               }}

@@ -5,8 +5,9 @@ import { CONTENT } from './content';
 import {
   classifyCard, clearProgress, isKanaFamiliar, isMissionUnlocked, loadDiscovered, loadProgress, loadSeenKana, loadSession,
   markKanaKnown, markKanaSeen, missionsFromCards, nextSessionId, planSession, plannedSessionSize, recordAttempt, recordKnown,
-  saveDiscovered, saveProgress, saveSeenKana, saveSession, selectComposeCards, selectDictationCards, selectFlashCards, selectMissionCards, selectScriptKanaCards, selectSessionCards, selectSignCards,
-  type SeenKana, type SessionLogEntry,
+  saveDiscovered, saveProgress, saveSeenKana, saveSession, selectBasicLifeCards, selectComposeCards, selectDictationCards,
+  selectFlashCardsByMode, selectGreetingCards, selectMissionCards, selectPairCards, selectScriptKanaCards, selectSessionCards, selectSignCards, selectVocabCards,
+  type FlashMode, type SeenKana, type SessionLogEntry,
 } from './learn/progress';
 import { adaptSessionConfig, diagnose } from './learn/adaptive';
 import { extractKanaChars } from './learn/kanaReading';
@@ -18,7 +19,7 @@ import type { PickMap } from './views/OrderCard';
 import type { KanaItem } from './content/types';
 import { MascotEmpty } from './views/mascot';
 
-type View = 'home' | 'map' | 'review' | 'gacha' | 'intro' | 'session' | 'done' | 'flash' | 'write' | 'placement';
+type View = 'home' | 'map' | 'review' | 'gacha' | 'intro' | 'session' | 'done' | 'flash' | 'write' | 'placement' | 'vocab';
 
 const Home = lazy(() => import('./views/Home').then((m) => ({ default: m.Home })));
 const Intro = lazy(() => import('./views/Intro').then((m) => ({ default: m.Intro })));
@@ -32,6 +33,7 @@ const Placement = lazy(() => import('./views/Placement').then((m) => ({ default:
 const Review = lazy(() => import('./views/Review').then((m) => ({ default: m.Review })));
 const Guide = lazy(() => import('./views/Guide').then((m) => ({ default: m.Guide })));
 const SettingsModal = lazy(() => import('./views/SettingsModal').then((m) => ({ default: m.SettingsModal })));
+const VocabMenu = lazy(() => import('./views/VocabMenu').then((m) => ({ default: m.VocabMenu })));
 
 function AppFallback() {
   return <main style={WRAP}><MascotEmpty who="yang" mood="loading" title="화면을 준비하고 있어요">잠시만 기다려 주세요.</MascotEmpty></main>;
@@ -78,11 +80,25 @@ export function App() {
   // 모드 선택 = 프리셋 적용(보조·속도) + 세션 구성 변경. readingAid/속도는 이후 개별 미세조정 가능.
   function selectMode(mode: Settings['mode']) {
     const p = MODE_PRESETS[mode];
-    updateSettings({ ...settings, mode, readingAid: p.readingAid, choiceMode: p.choiceMode, slowListening: p.slowListening });
+    updateSettings({ ...settings, mode, readingAid: p.readingAid, choiceMode: p.choiceMode });
   }
   // 적응형: 진척을 진단해 약점·난이도를 판단하고, 세션 신규/복습 비율을 동적으로 조정.
   // (복습 모드는 사용자가 명시적으로 고른 것이라 적응 조정 제외 — 의도 존중)
-  const baseConfig = { quotas: MODE_PRESETS[settings.mode].quotas, minFresh: MODE_PRESETS[settings.mode].minFresh };
+  // 미션 티어 기반 팁 쿼터: 입문(1)=3개, 기본(2)=2개, 실용·심화(3·4)=1개, 고급심화(5)=0개
+  const userMissionTier = useMemo(() => {
+    const seenMissions = new Set<string>();
+    for (const k of Object.keys(progress)) {
+      const m = k.match(/^mission:(C\d+):/);
+      if (m) seenMissions.add(m[1]);
+    }
+    let maxTier: 1 | 2 | 3 | 4 | 5 = 1;
+    for (const m of CONTENT.missions) {
+      if (m.tier && seenMissions.has(m.id) && m.tier > maxTier) maxTier = m.tier as 1 | 2 | 3 | 4 | 5;
+    }
+    return maxTier;
+  }, [progress]);
+  const tierTipQuota = userMissionTier <= 1 ? 3 : userMissionTier === 2 ? 2 : userMissionTier >= 5 ? 0 : 1;
+  const baseConfig = { quotas: { ...MODE_PRESETS[settings.mode].quotas, tip: tierTipQuota }, minFresh: MODE_PRESETS[settings.mode].minFresh };
   // 복습 전용 구성(신규 0 · 틀린·오래된 것 우선) — Done 화면 "복습하기" 제안용. 현재 모드와 무관.
   const reviewConfig = { quotas: MODE_PRESETS.review.quotas, minFresh: MODE_PRESETS.review.minFresh };
   const diag = useMemo(
@@ -121,9 +137,9 @@ export function App() {
     else if (card.kind === 'introduce' || card.kind === 'speak' || card.kind === 'discover') ja = card.ja;
     else if (card.kind === 'dictation' && card.promptKind !== 'korean') ja = card.ja; // 작문(한국어 프롬프트)은 자동재생 X
     if (!ja) return;
-    const t = window.setTimeout(() => speak(ja, { rate: settings.slowListening ? 0.6 : 0.95 }), 120);
+    const t = window.setTimeout(() => speak(ja, { rate: 0.95 }), 120);
     return () => { clearTimeout(t); stopSpeaking(); };
-  }, [i, view, card, settings.slowListening]);
+  }, [i, view, card]);
 
   // 주간/야간 테마를 <html data-theme>에 반영
   useEffect(() => { document.documentElement.dataset.theme = settings.theme; }, [settings.theme]);
@@ -201,6 +217,12 @@ export function App() {
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true);
   }
+  // 발음 구분 — 최소 페어 듣고 둘 중 고르기 (つ/す·장음·촉음·청탁)
+  function startPairSession() {
+    const cards = selectPairCards(allCards, progress, nextSessionId(session));
+    if (cards.length === 0) return;
+    beginSession(nextSessionId(session), cards, true);
+  }
   // 거리 읽기 — 간판·메뉴·안내·교통 표기 읽기 연습
   function startSignSession() {
     const cards = selectSignCards(allCards, progress, nextSessionId(session));
@@ -219,12 +241,30 @@ export function App() {
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true);
   }
-  // 속도전 플래시 — 제한시간 즉답 게임(세션/SRS와 분리). 매번 새로 섞음.
-  function startFlashSession() {
-    const cards = selectFlashCards(allCards, progress, 12);
-    if (cards.length === 0) return;
+  // 속도전 플래시 — 모드별 카드 풀 선택 + 제한시간 즉답 게임(세션/SRS와 분리).
+  function startFlashSession(mode: FlashMode = 'blitz', count = 15) {
+    const cards = selectFlashCardsByMode(allCards, progress, mode, count);
     setFlashCards(cards);
     setView('flash');
+    return cards;
+  }
+  function startBasicsSession() {
+    const cards = selectBasicLifeCards(allCards, progress, nextSessionId(session), 24);
+    if (cards.length === 0) return startSignSession();
+    beginSession(nextSessionId(session), cards, true);
+  }
+  // 어휘 커리큘럼 — 그룹별 또는 전체 어휘 세션
+  function startVocabSession(groupId: string) {
+    const gid = groupId === 'all' ? undefined : groupId;
+    const cards = selectVocabCards(allCards, progress, nextSessionId(session), gid, 24);
+    if (cards.length === 0) return;
+    beginSession(nextSessionId(session), cards, true);
+  }
+  // 기본 인사 전용 세션
+  function startGreetingSession() {
+    const cards = selectGreetingCards(allCards, progress, nextSessionId(session), 18);
+    if (cards.length === 0) return;
+    beginSession(nextSessionId(session), cards, true);
   }
   // 가나 쓰기(따라쓰기) — 히라/가타 섞어 무작위 10자(유추 방지). 세션/SRS와 분리.
   function startKanaWrite() {
@@ -236,17 +276,72 @@ export function App() {
     setWriteItems(items);
     setView('write');
   }
-  // 수준 진단(배치) — 가나 읽기 + 표현 듣기 혼합 10문항. 결과로 시작 난이도를 추천·적용.
+  // 수준 진단(배치) — 3축(읽기·듣기·상황) 16문항 무작위 난이도 분산 진단.
+  // ① 읽기 6문 / ② 듣기 5문 / ③ 상황 5문.
+  // 상황 선택지는 한글 대신 일본어(가나)로 표시 — 실제 일본어 능력을 측정.
   function startPlacement() {
-    const spread = (arr: Card[], n: number): Card[] => {
-      if (arr.length <= n) return arr;
-      const out: Card[] = [];
-      for (let k = 0; k < n; k++) out.push(arr[Math.round((k * (arr.length - 1)) / (n - 1))]);
-      return [...new Set(out)];
-    };
-    const kana = allCards.filter((c) => c.kind === 'quiz' && /^kana:.*:read$/.test(c.id) && c.choices.length >= 2);
-    const phrase = allCards.filter((c) => c.kind === 'quiz' && /^listen:/.test(c.id) && c.choices.length >= 2);
-    const cards = [...spread(kana, 6), ...spread(phrase, 4)];
+    // Fisher-Yates 셔플 (매 실행마다 무작위)
+    function rng<T>(arr: T[]): T[] {
+      const r = [...arr];
+      for (let i = r.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [r[i], r[j]] = [r[j], r[i]];
+      }
+      return r;
+    }
+    // 난이도 구간별 무작위 선발 — 초급/중급/고급 각 1/3씩
+    function pickTiered(pool: Card[], n: number): Card[] {
+      if (pool.length === 0) return [];
+      const third = Math.floor(pool.length / 3);
+      const low = rng(pool.slice(0, Math.max(third, 1)));
+      const mid = rng(pool.slice(third, Math.max(third * 2, third + 1)));
+      const hi  = rng(pool.slice(third * 2));
+      const each = Math.floor(n / 3);
+      const rem  = n - each * 3;
+      return [
+        ...low.slice(0, each + (rem > 0 ? 1 : 0)),
+        ...mid.slice(0, each + (rem > 1 ? 1 : 0)),
+        ...hi.slice(0, each),
+      ];
+    }
+    // 상황 카드: 선택지 레이블을 일본어(가나)로 교체 — 한글 선택지 금지
+    function toJaLabels(card: Card): Card {
+      if (card.kind !== 'quiz') return card;
+      return {
+        ...card,
+        choices: card.choices.map((c) => ({
+          ...c,
+          label: c.ja ?? c.phrase?.kana ?? c.label,
+        })),
+      };
+    }
+
+    // ① 읽기 축 — 가나 글자 → 소리 (히라가나 먼저, 가타카나 나중)
+    const kanaPool = allCards.filter((c) =>
+      c.kind === 'quiz' && /^kana:.*:read$/.test(c.id) && c.choices.length >= 2,
+    );
+
+    // ② 듣기 축 — 일본어 음성 → 한국어 뜻 (표현·금액·기초 생활어)
+    const listenPool = allCards.filter((c) =>
+      c.kind === 'quiz' && /^listen:/.test(c.id) && c.choices.length >= 2,
+    );
+
+    // ③ 상황 축 — 미션 장면 (tier 1→5 순서 유지하며 무작위 선발)
+    //   promptPhrase 있는 카드 포함: 점원 일본어 발화 있으면 더 실전적 진단
+    //   c.ja가 있는 선택지만 포함 — 일본어로 변환 가능한 카드만 사용
+    const situationPool = allCards.filter((c) =>
+      c.kind === 'quiz' &&
+      c.reviewTarget?.type === 'mission' &&
+      c.choices.length >= 2 &&
+      c.choices.some((ch) => ch.ja),
+    );
+
+    const kana      = pickTiered(kanaPool, 6);                      // 읽기 6문
+    const listen    = pickTiered(listenPool, 5);                     // 듣기 5문
+    const situation = pickTiered(situationPool, 5).map(toJaLabels);  // 상황 5문 (일본어 선택지)
+
+    // 순서: 읽기 → 듣기 → 상황 (단계적 심화)
+    const cards = [...kana, ...listen, ...situation];
     if (cards.length === 0) return;
     setPlacementCards(cards);
     setView('placement');
@@ -254,7 +349,7 @@ export function App() {
   function finishPlacement(mode: Settings['mode'], markKana: boolean, overrides?: { readingAid?: Settings['readingAid'] }) {
     // 프로필 차등: 듣기 강·읽기 약(애니파)은 중급이어도 발음 보조를 유지(프리셋 off를 덮어씀)
     const p = MODE_PRESETS[mode];
-    updateSettings({ ...settings, mode, readingAid: overrides?.readingAid ?? p.readingAid, choiceMode: p.choiceMode, slowListening: p.slowListening });
+    updateSettings({ ...settings, mode, readingAid: overrides?.readingAid ?? p.readingAid, choiceMode: p.choiceMode });
     if (markKana) markAllKanaKnown();
     try { localStorage.setItem('yangmung:placement:v1', '1'); } catch { /* noop */ }
     setView('home');
@@ -299,6 +394,11 @@ export function App() {
     }
     setPicked(null);
     setI((n) => n + 1);
+  }
+  function prev() {
+    clearAdvanceTimers();
+    setPicked(null);
+    setI((n) => Math.max(0, n - 1));
   }
   // 카드 1장 결과 기록 (퀴즈·순서 카드 공용)
   function recordCardResult(cardId: string, correct: boolean, recovery: boolean, fast: boolean) {
@@ -397,7 +497,7 @@ export function App() {
     }
     if (view === 'flash') {
       const unlockedSceneIds = CONTENT.missions.filter((m) => m.id !== 'C0' && isMissionUnlocked(m.id, progress)).map((m) => m.id);
-      return <Flash cards={flashCards} unlockedSceneIds={unlockedSceneIds} onExit={() => setView('home')} onReplay={startFlashSession} />;
+      return <Flash cards={flashCards} unlockedSceneIds={unlockedSceneIds} onExit={() => setView('home')} onReplay={(mode, count) => startFlashSession(mode, count)} />;
     }
     if (view === 'placement') {
       return <Placement cards={placementCards} onDone={finishPlacement} onSkip={() => setView('home')} />;
@@ -411,7 +511,8 @@ export function App() {
     if (view === 'intro') {
       const missions = missionsFromCards(sessionCards, progress, sessionId);
       const hasKana = sessionCards.some((c) => c.kind === 'quiz' && c.reviewTarget?.type === 'kana');
-      return <Intro cards={sessionCards} goal={sessionGoalText(missions, hasKana)} onStart={() => setView('session')} onBack={() => setView('home')} />;
+      const hasBasics = sessionCards.some((c) => c.kind === 'quiz' && c.id.startsWith('basic:'));
+      return <Intro cards={sessionCards} goal={sessionGoalText(missions, hasKana, hasBasics)} onStart={() => setView('session')} onBack={() => setView('home')} />;
     }
     if (view === 'done') {
       const nextId = nextSessionId(session);
@@ -445,6 +546,17 @@ export function App() {
         />
       );
     }
+    if (view === 'vocab') {
+      return (
+        <VocabMenu
+          nav={{ ...nav, current: 'home' }}
+          allCards={allCards}
+          progress={progress}
+          onSelectGroup={(groupId) => { startVocabSession(groupId); }}
+          onBack={() => setView('home')}
+        />
+      );
+    }
     if (view === 'session') {
       if (!card) return <main style={WRAP}><MascotEmpty who="yang" mood="loading" title="장면을 준비하고 있어요">잠시만 기다려 주세요.</MascotEmpty></main>;
       return (
@@ -461,6 +573,7 @@ export function App() {
           onDictationResult={dictationResult}
           isKanaFamiliar={kanaFamiliar}
           onNext={next}
+          onPrev={prev}
           onExit={() => setView('home')}
           onKnown={markKnown}
         />
@@ -472,7 +585,7 @@ export function App() {
         allCards={allCards} progress={progress} session={session} sessionConfig={sessionConfig}
         diagnosis={diag}
         modeLabel={MODE_PRESETS[settings.mode].label}
-        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession} onPracticeCompose={startComposeSession} onPracticeFlash={startFlashSession} onPracticeWrite={startKanaWrite} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
+        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession} onPracticeCompose={startComposeSession} onPracticeFlash={startFlashSession} onPracticeBasics={startBasicsSession} onPracticeWrite={startKanaWrite} onPracticePairs={startPairSession} onPracticeVocab={() => setView('vocab')} onPracticeGreetings={startGreetingSession} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
       />
     );
   }

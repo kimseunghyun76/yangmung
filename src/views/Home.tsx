@@ -7,6 +7,8 @@ import {
   isMissionUnlocked, kanaReadMastery, missionProgress, nextSessionId, planSession,
   type ProgressMap, type SessionConfig, type SessionState,
 } from '../learn/progress';
+import { bestRarity, loadCollection, totalItems } from '../learn/collection';
+import { gachaItemForPlace } from '../learn/gachaItems';
 import { ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { sceneVisualByMission, sceneVisualByPlace } from './scene';
@@ -31,14 +33,18 @@ interface Props {
   onPracticeDictation: () => void;
   onPracticeCompose: () => void;
   onPracticeFlash: () => void;
+  onPracticeBasics: () => void;
   onPracticeWrite: () => void;
+  onPracticePairs: () => void;
+  onPracticeVocab: () => void;
+  onPracticeGreetings: () => void;
   onPlacement: () => void;
   placementDone: boolean;
 }
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' };
 
-export function Home({ nav, allCards, progress, session, sessionConfig, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation, onPracticeCompose, onPracticeFlash, onPracticeWrite, onPlacement, placementDone }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation, onPracticeCompose, onPracticeFlash, onPracticeBasics, onPracticeWrite, onPracticePairs, onPracticeVocab, onPracticeGreetings, onPlacement, placementDone }: Props) {
   const upcomingId = nextSessionId(session);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
   const planned = plan.size;
@@ -49,6 +55,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
   const kanaPct = Math.round(((hira.mastered + kata.mastered) / Math.max(1, hira.total + kata.total)) * 100);
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
   const routeScenes = scenes.filter((m) => isMissionUnlocked(m.id, progress)).slice(0, 3);
+  const collection = loadCollection();
 
   // 오늘의 장면 = goal과 동일 기준(튜토리얼 C0 제외한 첫 장면). 없으면 가나 위주의 날.
   const primary = plan.missions.find((m) => m.id !== 'C0') ?? plan.missions[0];
@@ -153,10 +160,14 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
             {([
               { label: '히라가나', sub: '46자 읽기', icon: 'kana', onClick: () => onPracticeKana('hiragana') },
               { label: '가타카나', sub: '46자 읽기', icon: 'kana', onClick: () => onPracticeKana('katakana') },
-              { label: '간판·메뉴', sub: '실전 읽기 66', icon: 'sign', onClick: onPracticeSigns },
+              { label: '기본 인사', sub: 'こんにちは·ありがとう', icon: 'speak', onClick: onPracticeGreetings },
+              { label: '어휘 커리큘럼', sub: '주제별 필수 단어', icon: 'target', onClick: onPracticeVocab },
+              { label: '간판·메뉴', sub: '실전 읽기', icon: 'sign', onClick: onPracticeSigns },
               { label: '받아쓰기', sub: '듣고 가나 쓰기', icon: 'dictation', onClick: onPracticeDictation },
               { label: '한→일 작문', sub: '뜻 보고 작문', icon: 'speak', onClick: onPracticeCompose },
+              { label: '생활 기초', sub: '숫자·요일·시간', icon: 'target', onClick: onPracticeBasics },
               { label: '가나 쓰기', sub: '따라쓰기', icon: 'dictation', onClick: onPracticeWrite },
+              { label: '발음 구분', sub: 'つ/す·장음·촉음', icon: 'listen', onClick: onPracticePairs },
             ] as { label: string; sub: string; icon: IconName; onClick: () => void }[]).map((t) => (
               <button key={t.label} className="ym-press" onClick={t.onClick} style={{
                 display: 'flex', alignItems: 'center', gap: 11, textAlign: 'left', minWidth: 0,
@@ -209,9 +220,13 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8, marginTop: 12 }}>
             {routeScenes.map((m) => {
-              const sv = sceneVisualByPlace(m.place);
+              const sv = sceneVisualByMission(m.id);
               const p = missionProgress(allCards, progress, m.id);
               const done = p.total > 0 && p.mastered === p.total;
+              const card = collection.cards[m.id];
+              const owned = totalItems(card);
+              const rarity = bestRarity(card);
+              const reward = gachaItemForPlace(m.place, rarity);
               return (
                 <button key={m.id} className="ym-press" onClick={() => onPracticeScene(m.id)} style={{
                   minWidth: 0, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)',
@@ -220,6 +235,9 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
                   <SceneImageThumb src={sv.backdrop ?? sv.thumb} icon={sv.icon} accent={sv.accent} size={42} />
                   <span style={{ display: 'block', marginTop: 7, fontSize: 13, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.place ?? m.scenario}</span>
                   <span style={{ display: 'block', marginTop: 3, fontSize: 11, color: done ? 'var(--ok)' : 'var(--ink-faint)', fontWeight: 750 }}>{done ? '완료' : `${p.mastered}/${p.total}`}</span>
+                  <span style={{ display: 'block', marginTop: 6, padding: '4px 6px', borderRadius: 8, background: owned ? 'var(--accent-soft)' : 'var(--glass-bg)', color: owned ? 'var(--accent)' : 'var(--ink-faint)', fontSize: 10.5, fontWeight: 850, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {owned ? reward.title : `선물: ${reward.title}`}
+                  </span>
                 </button>
               );
             })}
@@ -318,17 +336,6 @@ function HomeSceneCard({ hero, accent, kicker, title, chips, planned, guideLine,
           `,
         }} />
       )}
-      <div aria-hidden style={{
-        position: 'absolute',
-        right: 18,
-        top: 18,
-        width: 96,
-        height: 96,
-        borderRadius: 28,
-        border: `1px solid ${hexA(accent, 0.24)}`,
-        background: generatedBackdrop ? 'rgba(255,255,255,0.1)' : hexA(accent, 0.12),
-        boxShadow: `0 18px 46px ${hexA(accent, 0.16)}`,
-      }} />
       <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', minHeight: 212 }}>
         <p style={{ ...label, color: kickerColor, margin: 0 }}>{kicker}</p>
         <h2 style={{
@@ -482,6 +489,16 @@ function homeGoal(mission?: { id: string; place?: string; scenario: string; canD
     C38: '스시집에서 맥주와 추가 주문하기',
     C39: '파스타 메뉴 옵션을 하나씩 고르기',
     C40: '편집샵 계산대에서 면세와 영수증 처리하기',
+    C41: '서비스 데스크에서 교환·환불 요청하기',
+    C42: '자판기에서 음료 사고 잔돈 수령하기',
+    C43: 'ATM에서 외국 카드로 엔화 인출하기',
+    C44: '편의점 복합기에서 복사·출력 마치기',
+    C45: '앱 사전 주문을 카운터에서 픽업하기',
+    C46: '스타디움 입장하고 스탠드 음식 주문하기',
+    C47: '쇼핑몰 안내소에서 매장 위치 찾기',
+    C48: '약국에서 처방전 내고 복약 지도 받기',
+    C49: '오마카세 카운터에서 셰프와 대화하기',
+    C50: '낯선 거리에서 길 잃었을 때 대처하기',
   };
   return goals[mission.id] ?? `${mission.place ?? mission.scenario}에서 필요한 말 익히기`;
 }

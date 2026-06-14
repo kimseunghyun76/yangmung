@@ -10,7 +10,8 @@ export type CLevel =
   | 'C0' | 'C1' | 'C2' | 'C3' | 'C4' | 'C5' | 'C6' | 'C7' | 'C8' | 'C9'
   | 'C10' | 'C11' | 'C12' | 'C13' | 'C14' | 'C15' | 'C16' | 'C17' | 'C18' | 'C19'
   | 'C20' | 'C21' | 'C22' | 'C23' | 'C24' | 'C25' | 'C26' | 'C27' | 'C28' | 'C29' | 'C30'
-  | 'C31' | 'C32' | 'C33' | 'C34' | 'C35' | 'C36' | 'C37' | 'C38' | 'C39' | 'C40'; // C0 = 튜토리얼 미니미션
+  | 'C31' | 'C32' | 'C33' | 'C34' | 'C35' | 'C36' | 'C37' | 'C38' | 'C39' | 'C40'
+  | 'C41' | 'C42' | 'C43' | 'C44' | 'C45' | 'C46' | 'C47' | 'C48' | 'C49' | 'C50'; // C0 = 튜토리얼 미니미션
 
 export type EvalMode =
   | 'drill' | 'match' | 'cloze' | 'reaction' | 'action' | 'recovery' | 'branch';
@@ -82,6 +83,8 @@ export interface MissionVisual {
 export interface Mission {
   id: CLevel;
   scenario: string;
+  /** 난이도 단계 (1 입문 ~ 5 고급심화) — 단계별 10개씩. C0 튜토리얼은 없음 */
+  tier?: 1 | 2 | 3 | 4 | 5;
   place?: string;        // 짧은 장소 라벨 (편의점·식당·전철) — 목표 카피·잠금 힌트용
   visual?: MissionVisual; // 장면 비주얼 슬롯 — 지금은 이모지, 나중에 image/video로 갈아끼움
   sequence?: string[];   // 장면의 일어나는 순서(짧은 라벨) — "순서 맞추기" 카드 생성용

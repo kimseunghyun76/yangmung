@@ -37,9 +37,9 @@ export function Review({ nav, allCards, progress, seenKana, onStartReview, onPra
   const byId = useMemo(() => Object.fromEntries(CONTENT.phrases.map((p) => [p.id, p])), []);
   const diag = useMemo(() => diagnose(allCards, progress, 0), [allCards, progress]);
 
-  const hira = CONTENT.kana.filter((k) => k.script === 'hiragana');
-  const kata = CONTENT.kana.filter((k) => k.script === 'katakana' || k.script === 'common');
-  // 전체 표현 — 본 것(최근순) 먼저, 그다음 예정. 검색/필터는 PhraseTab에서.
+  const hira = useMemo(() => CONTENT.kana.filter((k) => k.script === 'hiragana' && !!(progress[`kana:${k.id}:read`] || progress[`kana:${k.id}:listen`] || progress[`kana:${k.id}:confuse`])), [progress]);
+  const kata = useMemo(() => CONTENT.kana.filter((k) => (k.script === 'katakana' || k.script === 'common') && !!(progress[`kana:${k.id}:read`] || progress[`kana:${k.id}:listen`] || progress[`kana:${k.id}:confuse`])), [progress]);
+  // 진도 나간 표현만. 검색/필터는 PhraseTab에서.
   const allSorted = useMemo(() => [...CONTENT.phrases].sort((a, b) => {
     const sa = phraseSeen.has(a.id), sb = phraseSeen.has(b.id);
     if (sa !== sb) return sa ? -1 : 1;
@@ -65,10 +65,14 @@ export function Review({ nav, allCards, progress, seenKana, onStartReview, onPra
       </div>
 
       {tab === '가나' && (
-        <>
-          <GlassPanel style={{ marginBottom: 14 }}><p style={{ ...kicker, marginBottom: 8 }}>히라가나</p><KanaGrid items={hira} progress={progress} /></GlassPanel>
-          <GlassPanel><p style={{ ...kicker, marginBottom: 8 }}>가타카나 · 특수</p><KanaGrid items={kata} progress={progress} /></GlassPanel>
-        </>
+        hira.length === 0 && kata.length === 0 ? (
+          <GlassPanel><Empty>아직 학습한 가나가 없어요. 학습을 시작하면 여기에 나타나요.</Empty></GlassPanel>
+        ) : (
+          <>
+            {hira.length > 0 && <GlassPanel style={{ marginBottom: 14 }}><p style={{ ...kicker, marginBottom: 8 }}>히라가나 ({hira.length}자 학습)</p><KanaGrid items={hira} progress={progress} /></GlassPanel>}
+            {kata.length > 0 && <GlassPanel><p style={{ ...kicker, marginBottom: 8 }}>가타카나 · 특수 ({kata.length}자 학습)</p><KanaGrid items={kata} progress={progress} /></GlassPanel>}
+          </>
+        )
       )}
 
       {tab === '표현' && <PhraseTab phrases={allSorted} phraseSeen={phraseSeen} />}
@@ -131,7 +135,7 @@ const PFILTERS: PFilter[] = ['전체', '본 적 있음', '예정', '복구'];
 // 표현 탭 — 검색 + 필터(전체/본 적 있음/예정/복구).
 function PhraseTab({ phrases, phraseSeen }: { phrases: Phrase[]; phraseSeen: Set<string> }) {
   const [q, setQ] = useState('');
-  const [pf, setPf] = useState<PFilter>('전체');
+  const [pf, setPf] = useState<PFilter>('본 적 있음');
   const nq = q.trim().toLowerCase();
   const list = phrases.filter((p) => {
     if (pf === '본 적 있음' && !phraseSeen.has(p.id)) return false;
@@ -177,36 +181,71 @@ function PhraseTab({ phrases, phraseSeen }: { phrases: Phrase[]; phraseSeen: Set
 }
 
 function SceneSheets({ places, byId, phraseSeen }: { places: { place: string; phraseIds: string[] }[]; byId: Record<string, Phrase>; phraseSeen: Set<string> }) {
-  const [sel, setSel] = useState(places[0]?.place ?? '');
-  const cur = places.find((p) => p.place === sel);
+  // 진도 나간 장면만 표시
+  const studiedPlaces = places.filter((p) => p.phraseIds.some((id) => phraseSeen.has(id)));
+  const [sel, setSel] = useState(studiedPlaces[0]?.place ?? '');
+  const cur = studiedPlaces.find((p) => p.place === sel);
+  if (studiedPlaces.length === 0) {
+    return <GlassPanel><Empty>아직 학습한 장면이 없어요. 미션을 진행하면 여기에 나타나요.</Empty></GlassPanel>;
+  }
   return (
     <>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 14 }}>
-        {places.map((p) => {
-          const sv = sceneVisualByPlace(p.place); const on = sel === p.place;
+      {/* 2열 장면 카드 그리드 (진도 나간 것만) */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 16 }}>
+        {studiedPlaces.map((p) => {
+          const sv = sceneVisualByPlace(p.place);
+          const on = sel === p.place;
+          const seenCount = p.phraseIds.filter((id) => phraseSeen.has(id)).length;
           return (
             <button key={p.place} className="ym-press" onClick={() => setSel(p.place)}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 13px', borderRadius: 999, border: `1px solid ${on ? 'var(--ink)' : 'var(--glass-border)'}`, background: on ? hexA(sv.accent, 0.9) : 'var(--glass-bg-strong)', color: on ? '#fff' : 'var(--ink)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>
-              <span style={{ display: 'inline-flex', color: on ? '#fff' : sv.accent }}><Icon name={sv.icon} size={15} /></span>{p.place}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 9, padding: '10px 11px',
+                borderRadius: 14, border: `1.5px solid ${on ? sv.accent : 'var(--glass-border)'}`,
+                background: on ? hexA(sv.accent, 0.12) : 'var(--glass-bg-strong)',
+                color: 'var(--ink)', cursor: 'pointer', textAlign: 'left',
+              }}>
+              <span style={{ color: on ? sv.accent : 'var(--ink-faint)', display: 'inline-flex', flex: '0 0 auto' }}>
+                <Icon name={sv.icon} size={20} />
+              </span>
+              <span style={{ minWidth: 0, flex: 1 }}>
+                <span style={{ display: 'block', fontWeight: 700, fontSize: 13, lineHeight: 1.25, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: on ? 'var(--ink)' : 'var(--ink-soft)' }}>
+                  {p.place}
+                </span>
+                <span style={{ display: 'block', fontSize: 11, fontWeight: 600, marginTop: 2, color: on ? sv.accent : 'var(--ink-faint)' }}>
+                  {seenCount}/{p.phraseIds.length} 표현
+                </span>
+              </span>
             </button>
           );
         })}
       </div>
-      <GlassPanel>
-        {(() => {
-          const sv = sceneVisualByPlace(sel);
-          return (
+
+      {/* 선택된 장면 표현 패널 */}
+      {cur && (() => {
+        const sv = sceneVisualByPlace(sel);
+        const seenCount = cur.phraseIds.filter((id) => phraseSeen.has(id)).length;
+        const total = cur.phraseIds.length;
+        const pct = total ? Math.round((seenCount / total) * 100) : 0;
+        return (
+          <GlassPanel>
+            {/* 헤더 */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-              <SceneImageThumb src={sv.backdrop ?? sv.thumb} icon={sv.icon} accent={sv.accent} size={58} />
-              <div>
-                <p style={{ ...kicker, marginBottom: 4 }}>{sel}에서 쓰는 표현</p>
-                <p style={{ margin: 0, fontSize: 13, color: 'var(--ink-soft)', fontWeight: 650 }}>장면을 떠올리면서 다시 들어보세요.</p>
+              <SceneImageThumb src={sv.backdrop ?? sv.thumb} icon={sv.icon} accent={sv.accent} size={52} />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ ...kicker, marginBottom: 3 }}>{sel}</p>
+                <p style={{ margin: 0, fontSize: 13, color: 'var(--ink-soft)', fontWeight: 600 }}>
+                  {seenCount}/{total} 완료 · {pct}%
+                </p>
+                {/* 진행률 바 */}
+                <div style={{ marginTop: 6, height: 4, borderRadius: 99, background: 'var(--glass-border)', overflow: 'hidden' }}>
+                  <div style={{ height: '100%', borderRadius: 99, background: sv.accent, width: `${pct}%` }} />
+                </div>
               </div>
             </div>
-          );
-        })()}
-        <PhraseList phrases={(cur?.phraseIds ?? []).map((id) => byId[id]).filter(Boolean)} phraseSeen={phraseSeen} />
-      </GlassPanel>
+            <PhraseList phrases={cur.phraseIds.filter((id) => phraseSeen.has(id)).map((id) => byId[id]).filter(Boolean)} phraseSeen={phraseSeen} />
+          </GlassPanel>
+        );
+      })()}
     </>
   );
 }

@@ -22,7 +22,7 @@ function mk(o: Partial<CardProgress>): CardProgress {
 
 const readCard = cards.find((c): c is QuizC => c.kind === 'quiz' && c.reviewTarget?.type === 'kana' && c.id.endsWith(':read'))!;
 const missionQuiz = cards.find((c): c is QuizC => c.kind === 'quiz' && c.reviewTarget?.type === 'mission')!;
-const base: SessionConfig = { quotas: { K: 6, B: 3, C: 5, tip: 1 }, minFresh: { K: 2, B: 1, C: 2 } };
+const base: SessionConfig = { quotas: { K: 6, B: 3, C: 5, P: 2, tip: 1 }, minFresh: { K: 2, B: 1, C: 2 } };
 
 console.log('=== itemMastery 단조성 ===');
 check('미시도=0', itemMastery(undefined) === 0 && itemMastery(mk({ attempts: 0 })) === 0);

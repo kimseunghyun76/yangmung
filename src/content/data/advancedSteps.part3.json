@@ -1,0 +1,262 @@
+{
+  "C17": [
+    {
+      "situationKo": "셰프가 오늘의 추천을 권하며 만들어 줄지 묻는다 (응용)",
+      "speaker": "셰프",
+      "recapPromptJa": "本日は鯵がおすすめです。お握りしましょうか",
+      "recapPromptKo": "오늘은 전갱이가 추천입니다. 만들어 드릴까요?",
+      "choices": [
+        { "text": "네", "phraseId": "p_hai", "correct": true },
+        { "text": "아지는 뭐예요?", "phraseId": "p_aji_wa_nan_desu_ka", "correct": true, "feedback": "모르는 생선은 바로 물어봐요. 셰프와의 대화가 스시집의 묘미!" },
+        { "text": "참치 주세요", "phraseId": "p_maguro_kudasai", "correct": false, "feedback": "추천을 권하는 중이에요. 먼저 답하고 나서 다른 주문을 해요" },
+        { "text": "계산 부탁드립니다", "phraseId": "p_okaikei", "correct": false, "feedback": "아직 식사 중이에요" }
+      ]
+    },
+    {
+      "situationKo": "셰프가 못 먹는 재료와 코스 가능 여부를 한 번에 묻는다 (종합)",
+      "speaker": "셰프",
+      "recapPromptJa": "苦手なネタはありますか。おまかせコースもできますよ",
+      "recapPromptKo": "못 드시는 재료 있나요? 오마카세 코스도 가능해요",
+      "choices": [
+        { "text": "알레르기가 있어요", "phraseId": "p_arerugi", "correct": true, "feedback": "코스를 시키기 전에 알레르기를 먼저 말하는 게 안전해요" },
+        { "text": "없어요", "phraseId": "p_arimasen", "correct": true },
+        { "text": "이거 빼 주세요", "phraseId": "p_kore_nuite", "correct": true },
+        { "text": "잘 먹었습니다", "phraseId": "p_gochisousama", "correct": false, "feedback": "아직 주문 단계예요. 식사 후 인사는 마지막에!" }
+      ]
+    }
+  ],
+  "C19": [
+    {
+      "situationKo": "직원이 참배 예법을 자세히 알려준다 (응용)",
+      "speaker": "신사 직원",
+      "recapPromptJa": "お参りは二礼二拍手一礼ですよ",
+      "recapPromptKo": "참배는 두 번 절, 두 번 박수, 한 번 절이에요",
+      "choices": [
+        { "text": "알겠습니다, 감사합니다", "phraseId": "p_wakarimashita_arigatou", "correct": true },
+        { "text": "다시 한 번 부탁합니다", "phraseId": "p_mou_ichido", "correct": true, "feedback": "예법은 한 번에 외우기 어려우니 되물어도 좋아요" },
+        { "text": "사진 찍어도 돼요?", "phraseId": "p_shashin_ii", "correct": false, "feedback": "참배 예법을 듣는 중이에요. 먼저 확인 응답을 해요" },
+        { "text": "이거 주세요", "phraseId": "p_kore_kudasai", "correct": false, "feedback": "부적 구매는 다음 단계예요" }
+      ]
+    },
+    {
+      "situationKo": "고슈인(참배 도장)을 안내받는다 — 가격과 시간까지 (종합)",
+      "speaker": "신사 직원",
+      "recapPromptJa": "御朱印は一つ500円です。少し時間がかかります",
+      "recapPromptKo": "고슈인은 하나에 500엔입니다. 시간이 조금 걸려요",
+      "choices": [
+        { "text": "하나 주세요", "phraseId": "p_hitotsu_kudasai", "correct": true },
+        { "text": "알겠습니다", "phraseId": "p_wakarimashita", "correct": true },
+        { "text": "괜찮습니다 (사양)", "phraseId": "p_daijoubu_desu", "correct": true },
+        { "text": "얼마예요?", "phraseId": "p_ikura_desu_ka", "correct": false, "feedback": "500엔이라고 방금 들었어요" }
+      ]
+    }
+  ],
+  "C20": [
+    {
+      "situationKo": "직원이 탕 온도와 시설을 길게 설명한다 (응용)",
+      "speaker": "접수 직원",
+      "recapPromptJa": "お湯は熱めです。サウナと露天風呂もございます",
+      "recapPromptKo": "탕은 뜨거운 편입니다. 사우나와 노천탕도 있습니다",
+      "choices": [
+        { "text": "알겠습니다, 감사합니다", "phraseId": "p_wakarimashita_arigatou", "correct": true },
+        { "text": "어느 쪽이에요?", "phraseId": "p_dochira_desu_ka", "correct": true, "feedback": "노천탕 방향을 이어서 물으면 자연스러워요" },
+        { "text": "화장실 어디예요?", "phraseId": "p_toire_doko", "correct": false, "feedback": "시설 설명을 듣는 중이에요. 먼저 확인 응답을 해요" },
+        { "text": "얼마예요?", "phraseId": "p_ikura_desu_ka", "correct": false, "feedback": "입욕료는 이미 계산했어요" }
+      ]
+    },
+    {
+      "situationKo": "로커 열쇠 사용법을 안내받으며 마무리 (종합)",
+      "speaker": "접수 직원",
+      "recapPromptJa": "ロッカーの鍵は腕に着けてください。お風呂は二階です",
+      "recapPromptKo": "로커 열쇠는 팔에 차 주세요. 탕은 2층입니다",
+      "choices": [
+        { "text": "알겠습니다", "phraseId": "p_wakarimashita", "correct": true },
+        { "text": "알겠습니다, 감사합니다", "phraseId": "p_wakarimashita_arigatou", "correct": true },
+        { "text": "사용법 알려 주세요", "phraseId": "p_tsukaikata", "correct": false, "feedback": "방금 사용법을 들었어요. 못 들었다면 もう一度로 청해요" },
+        { "text": "우산을 빌릴 수 있나요?", "phraseId": "p_kasa_kariremasu_ka", "correct": false, "feedback": "온천 안내 중이에요" }
+      ]
+    }
+  ],
+  "C21": [
+    {
+      "situationKo": "직원이 저녁 식사 준비 시간을 알려준다 (응용)",
+      "speaker": "프런트 직원",
+      "recapPromptJa": "お夕食は六時にお部屋にご用意いたします",
+      "recapPromptKo": "저녁 식사는 6시에 방으로 준비해 드리겠습니다",
+      "choices": [
+        { "text": "알겠습니다, 감사합니다", "phraseId": "p_wakarimashita_arigatou", "correct": true },
+        { "text": "조식은요?", "phraseId": "p_choushoku_wa", "correct": true, "feedback": "저녁 안내를 들었으니 아침 식사도 이어서 확인해요" },
+        { "text": "계산 부탁드립니다", "phraseId": "p_okaikei", "correct": false, "feedback": "료칸은 체크아웃 때 정산해요" },
+        { "text": "물 주세요", "phraseId": "p_mizu_kudasai", "correct": false, "feedback": "식사 시간 안내에 먼저 답해요" }
+      ]
+    },
+    {
+      "situationKo": "이불을 식사 중에 깔아 둔다는 안내 — 료칸 특유의 서비스 (종합)",
+      "speaker": "객실 담당",
+      "recapPromptJa": "お布団は夕食の間に敷かせていただきます",
+      "recapPromptKo": "이불은 저녁 식사 동안에 깔아 드리겠습니다",
+      "choices": [
+        { "text": "알겠습니다, 감사합니다", "phraseId": "p_wakarimashita_arigatou", "correct": true },
+        { "text": "감사합니다", "phraseId": "p_arigatou_gozaimasu", "correct": true },
+        { "text": "방은 어디예요?", "phraseId": "p_heya_doko", "correct": false, "feedback": "이미 방에 안내받았어요" },
+        { "text": "필요 없어요", "phraseId": "p_irimasen", "correct": false, "feedback": "이불 깔기는 료칸의 기본 서비스예요. 감사히 받아요" }
+      ]
+    }
+  ],
+  "C23": [
+    {
+      "situationKo": "역무원이 자유석 혼잡을 알리며 다음 열차를 권한다 (응용)",
+      "speaker": "역무원",
+      "recapPromptJa": "次の列車は自由席が混んでいます。一本後なら座れますよ",
+      "recapPromptKo": "다음 열차는 자유석이 붐빕니다. 한 대 뒤라면 앉을 수 있어요",
+      "choices": [
+        { "text": "시간을 바꾸고 싶어요", "phraseId": "p_jikan_kaetai", "correct": true, "feedback": "권유를 받아들여 한 대 뒤로 바꾸는 자연스러운 응답이에요" },
+        { "text": "알겠습니다", "phraseId": "p_wakarimashita", "correct": true, "feedback": "그대로 타든 바꾸든, 먼저 알겠다고 답해요" },
+        { "text": "몇 번 선이에요?", "phraseId": "p_nanbansen", "correct": false, "feedback": "좌석 혼잡 안내에 먼저 답한 뒤 승강장을 물어요" },
+        { "text": "표 주세요", "phraseId": "p_kippu_kudasai", "correct": false, "feedback": "표는 이미 샀어요" }
+      ]
+    },
+    {
+      "situationKo": "차내 판매원이 도시락과 음료를 권한다 (종합)",
+      "speaker": "판매원",
+      "recapPromptJa": "お弁当、お飲み物はいかがですかー",
+      "recapPromptKo": "도시락, 음료 어떠세요~",
+      "choices": [
+        { "text": "이거 주세요", "phraseId": "p_kore_kudasai", "correct": true },
+        { "text": "얼마예요?", "phraseId": "p_ikura_desu_ka", "correct": true },
+        { "text": "괜찮습니다 (사양)", "phraseId": "p_daijoubu_desu", "correct": true },
+        { "text": "메뉴 좀 보여 주세요", "phraseId": "p_menu_misete", "correct": false, "feedback": "차내 판매는 카트에 보이는 것이 전부예요. 가리키며 주문해요" }
+      ]
+    }
+  ],
+  "C31": [
+    {
+      "situationKo": "주문한 접시가 특급 레인으로 온다는 안내를 듣는다 (응용)",
+      "speaker": "점원",
+      "recapPromptJa": "ご注文の品は新幹線レーンで届きます",
+      "recapPromptKo": "주문하신 음식은 신칸센 레인으로 도착합니다",
+      "choices": [
+        { "text": "알겠습니다, 감사합니다", "phraseId": "p_wakarimashita_arigatou", "correct": true },
+        { "text": "접시를 가져가도 되나요?", "phraseId": "p_osara_tottemo_ii", "correct": true, "feedback": "회전 레인의 접시는 자유롭게, 주문품은 신칸센 레인으로 — 좋은 질문이에요" },
+        { "text": "참치 주세요", "phraseId": "p_maguro_kudasai", "correct": false, "feedback": "추가 주문은 터치패널로 해요" },
+        { "text": "계산 부탁드립니다", "phraseId": "p_okaikei", "correct": false, "feedback": "아직 먹는 중이에요" }
+      ]
+    },
+    {
+      "situationKo": "계산은 자리 버튼을 누르고 전표를 가져가라는 안내 (종합)",
+      "speaker": "점원",
+      "recapPromptJa": "お会計は席のボタンを押して、伝票をレジへお持ちください",
+      "recapPromptKo": "계산은 자리 버튼을 누르고 전표를 계산대로 가져가 주세요",
+      "choices": [
+        { "text": "알겠습니다", "phraseId": "p_wakarimashita", "correct": true },
+        { "text": "알겠습니다, 감사합니다", "phraseId": "p_wakarimashita_arigatou", "correct": true },
+        { "text": "맥주 한 잔 더 주세요", "phraseId": "p_biiru_mou_ippai", "correct": false, "feedback": "계산 안내를 듣는 중이에요. 추가 주문은 그 전에!" },
+        { "text": "카드 돼요?", "phraseId": "p_card_tsukaemasu_ka", "correct": false, "feedback": "결제 수단은 계산대에서 물어요. 지금은 안내에 답해요" }
+      ]
+    }
+  ],
+  "C32": [
+    {
+      "situationKo": "직원이 수선(기장 줄임) 서비스를 제안한다 (응용)",
+      "speaker": "점원",
+      "recapPromptJa": "そちらはお直しもできますよ。丈を詰めましょうか",
+      "recapPromptKo": "그 옷은 수선도 가능해요. 기장을 줄여 드릴까요?",
+      "choices": [
+        { "text": "네, 부탁합니다", "phraseId": "p_hai", "correct": true },
+        { "text": "괜찮습니다 (사양)", "phraseId": "p_daijoubu_desu", "correct": true },
+        { "text": "다른 색 있나요?", "phraseId": "p_hoka_no_iro_arimasu_ka", "correct": false, "feedback": "수선 제안에 먼저 답한 뒤 다른 색을 물어요" },
+        { "text": "포장으로요", "phraseId": "p_mochikaeri_de", "correct": false, "feedback": "카페 표현이에요" }
+      ]
+    },
+    {
+      "situationKo": "시착 한도와 바구니 사용 안내를 듣는다 (종합)",
+      "speaker": "점원",
+      "recapPromptJa": "ご試着は三点までです。こちらのカゴをお使いください",
+      "recapPromptKo": "시착은 세 벌까지입니다. 이 바구니를 사용해 주세요",
+      "choices": [
+        { "text": "알겠습니다, 감사합니다", "phraseId": "p_wakarimashita_arigatou", "correct": true },
+        { "text": "M 사이즈 있나요?", "phraseId": "p_emu_saizu_arimasu_ka", "correct": true, "feedback": "안내를 들은 뒤 원하는 사이즈를 이어 물으면 자연스러워요" },
+        { "text": "입어 봐도 돼요?", "phraseId": "p_shichaku", "correct": false, "feedback": "이미 시착 안내를 받았어요" },
+        { "text": "이걸로 할게요", "phraseId": "p_kore_kudasai_shop", "correct": false, "feedback": "아직 입어보기 전이에요" }
+      ]
+    }
+  ],
+  "C33": [
+    {
+      "situationKo": "우산은 두 개까지 대여 가능하다고 안내받는다 (응용)",
+      "speaker": "프런트 직원",
+      "recapPromptJa": "傘は二本までお貸しできますよ",
+      "recapPromptKo": "우산은 두 개까지 빌려드릴 수 있어요",
+      "choices": [
+        { "text": "두 개 주세요", "phraseId": "p_futatsu_kudasai", "correct": true, "feedback": "일행 몫까지 빌릴 수 있어요" },
+        { "text": "하나 주세요", "phraseId": "p_hitotsu_kudasai", "correct": true },
+        { "text": "우산을 반납하겠습니다", "phraseId": "p_kasa_wo_kaeshimasu", "correct": false, "feedback": "아직 빌리기 전이에요" },
+        { "text": "얼마예요?", "phraseId": "p_ikura_desu_ka", "correct": false, "feedback": "호텔 우산 대여는 보통 무료예요. 개수를 답해요" }
+      ]
+    },
+    {
+      "situationKo": "외출에서 돌아와 프런트에 우산을 반납한다 (종합)",
+      "speaker": "프런트 직원",
+      "recapPromptJa": "おかえりなさいませ",
+      "recapPromptKo": "어서 오세요 (잘 다녀오셨어요?)",
+      "choices": [
+        { "text": "우산을 반납하겠습니다", "phraseId": "p_kasa_wo_kaeshimasu", "correct": true },
+        { "text": "감사합니다", "phraseId": "p_arigatou_gozaimasu", "correct": true, "feedback": "반납하며 감사 인사를 더하면 완벽해요" },
+        { "text": "우산을 빌릴 수 있나요?", "phraseId": "p_kasa_kariremasu_ka", "correct": false, "feedback": "이미 빌려서 돌아왔어요. 이제 반납할 차례예요" },
+        { "text": "체크인 부탁드립니다", "phraseId": "p_checkin_onegai", "correct": false, "feedback": "체크인은 이미 했어요" }
+      ]
+    }
+  ],
+  "C37": [
+    {
+      "situationKo": "라이브 키친에서 오믈렛을 즉석으로 만들어 준다고 한다 (응용)",
+      "speaker": "셰프",
+      "recapPromptJa": "卵料理はその場でお作りします。オムレツはいかがですか",
+      "recapPromptKo": "계란 요리는 즉석에서 만들어 드립니다. 오믈렛 어떠세요?",
+      "choices": [
+        { "text": "네, 부탁합니다", "phraseId": "p_hai", "correct": true },
+        { "text": "괜찮습니다 (사양)", "phraseId": "p_daijoubu_desu", "correct": true },
+        { "text": "음식이 부족합니다", "phraseId": "p_ryouri_sukunai", "correct": false, "feedback": "보충 요청은 이미 했어요. 지금은 오믈렛 권유에 답해요" },
+        { "text": "계산 부탁드립니다", "phraseId": "p_okaikei", "correct": false, "feedback": "조식은 숙박에 포함이라 계산이 없어요" }
+      ]
+    },
+    {
+      "situationKo": "직원이 자리로 음료를 가져다주겠다고 제안한다 (종합)",
+      "speaker": "직원",
+      "recapPromptJa": "お席にお飲み物をお持ちしましょうか",
+      "recapPromptKo": "자리로 음료를 가져다 드릴까요?",
+      "choices": [
+        { "text": "네, 부탁합니다", "phraseId": "p_hai", "correct": true },
+        { "text": "물 주세요", "phraseId": "p_mizu_kudasai", "correct": true },
+        { "text": "괜찮습니다 (사양)", "phraseId": "p_daijoubu_desu", "correct": true },
+        { "text": "커피는 어디예요?", "phraseId": "p_koohii_wa_doko", "correct": false, "feedback": "가져다준다고 제안했어요. 원하는 음료를 말하면 돼요" }
+      ]
+    }
+  ],
+  "C39": [
+    {
+      "situationKo": "곱빼기 무료와 수프 추가를 한 번에 권한다 (응용)",
+      "speaker": "점원",
+      "recapPromptJa": "大盛りは無料です。スープもお付けしますか",
+      "recapPromptKo": "곱빼기는 무료입니다. 수프도 드릴까요?",
+      "choices": [
+        { "text": "네, 부탁합니다", "phraseId": "p_hai", "correct": true },
+        { "text": "괜찮습니다 (사양)", "phraseId": "p_daijoubu_desu", "correct": true },
+        { "text": "곱빼기 되나요?", "phraseId": "p_oomori", "correct": false, "feedback": "곱빼기가 무료라고 이미 안내했어요. 네/괜찮아요로 답해요" },
+        { "text": "물 주세요", "phraseId": "p_mizu_kudasai", "correct": false, "feedback": "수프 제안에 먼저 답해요" }
+      ]
+    },
+    {
+      "situationKo": "마무리로 치즈를 뿌릴지 묻는다 (종합)",
+      "speaker": "점원",
+      "recapPromptJa": "仕上げにチーズをおかけしますか",
+      "recapPromptKo": "마무리로 치즈를 뿌려 드릴까요?",
+      "choices": [
+        { "text": "치즈를 추가해 주세요", "phraseId": "p_chiizu_tsuika", "correct": true },
+        { "text": "네", "phraseId": "p_hai", "correct": true },
+        { "text": "괜찮습니다 (사양)", "phraseId": "p_daijoubu_desu", "correct": true },
+        { "text": "마늘 빼고 부탁합니다", "phraseId": "p_ninniku_nuki", "correct": false, "feedback": "재료 제외는 조리 전에 말해야 해요. 지금은 치즈 질문에 답해요" }
+      ]
+    }
+  ]
+}
