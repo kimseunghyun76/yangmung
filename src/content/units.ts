@@ -49,7 +49,13 @@ export const units: Unit[] = [
   {
     id: 'u_b1_shop_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 편의점 계산대에서 봉투·결제·포인트카드·영수증·젓가락·데우기 요청에 적절히 응답할 수 있다',
-    newPhraseIds: ['p_fukuro_iranai', 'p_genkin_de', 'p_card_de', 'p_kore_de', 'p_arimasu', 'p_arimasen', 'p_reshiito_kudasai', 'p_wakarimasen', 'p_atatamete', 'p_hashi_kudasai', 'p_sono_mama_de', 'p_betsubetsu_de', 'p_suica_de', 'p_mou_daijoubu_desu'],
+    newPhraseIds: [
+      'p_hai_onegai', 'p_iie_kekkou', 'p_hai_arimasu', 'p_iie_arimasen', 'p_iie_irimasen',
+      'p_hai_wakarimashita', 'p_hai_sou_desu', 'p_hai_atatamete', 'p_iie_nanimoarimasen',
+      'p_fukuro_iranai', 'p_genkin_de', 'p_card_de', 'p_kore_de', 'p_arimasu', 'p_arimasen',
+      'p_reshiito_kudasai', 'p_wakarimasen', 'p_atatamete', 'p_hashi_kudasai', 'p_sono_mama_de',
+      'p_betsubetsu_de', 'p_suica_de', 'p_mou_daijoubu_desu',
+    ],
     reviewPhraseIds: ['p_hai', 'p_iie'],
   },
   {
