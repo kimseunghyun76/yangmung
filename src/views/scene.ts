@@ -56,6 +56,105 @@ const BACKDROPS: Record<string, string> = {
   C49: '/scenes/generated/c49-omakase-sushi-bg.webp',
   C50: '/scenes/generated/c50-lost-street-bg.webp',
 };
+const LEGACY_SCENE_SVGS = new Set(['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12', 'C13']);
+
+const MANGA_BACKDROPS = {
+  shop: [
+    '/scenes/manga-variants/solo-shop-01.webp',
+    '/scenes/manga-variants/ff-shop-01.webp',
+    '/scenes/manga-variants/mf-shop-01.webp',
+  ],
+  restaurant: [
+    '/scenes/manga-variants/solo-restaurant-02.webp',
+    '/scenes/manga-variants/ff-restaurant-02.webp',
+    '/scenes/manga-variants/mf-restaurant-02.webp',
+  ],
+  street: [
+    '/scenes/manga-variants/solo-street-03.webp',
+    '/scenes/manga-variants/ff-street-03.webp',
+    '/scenes/manga-variants/mf-street-03.webp',
+  ],
+} as const;
+
+const SESSION_MANGA_IDS = new Set(['C1', 'C2', 'C3']);
+const SESSION_MANGA_NAMES = [
+  'solo-shop-01.webp',
+  'solo-restaurant-02.webp',
+  'solo-street-03.webp',
+  'ff-shop-01.webp',
+  'ff-restaurant-02.webp',
+  'ff-street-03.webp',
+  'mf-shop-01.webp',
+  'mf-restaurant-02.webp',
+  'mf-street-03.webp',
+];
+
+type MangaBackdropGroup = keyof typeof MANGA_BACKDROPS;
+
+const SHOP_PLACES = new Set([
+  '편의점', '쇼핑', '약국', '환전', '통신매장', '편집샵피팅', '편집샵계산',
+  '쇼핑몰 서비스 데스크', '자판기', '편의점 ATM', '편의점 복합기', '복합쇼핑몰',
+]);
+const RESTAURANT_PLACES = new Set([
+  '식당', '라멘', '카페', '빵집', '이자카야', '스시집', '회전초밥',
+  '조식뷔페', '스시추가', '파스타', '스시 오마카세', '카페·레스토랑 픽업 카운터',
+]);
+const mangaBackdropCache = new Map<string, string>();
+
+function mangaBackdropGroup(place?: string): MangaBackdropGroup {
+  if (place && SHOP_PLACES.has(place)) return 'shop';
+  if (place && RESTAURANT_PLACES.has(place)) return 'restaurant';
+  return 'street';
+}
+
+function hashIndex(key: string, size: number): number {
+  let h = 2166136261;
+  for (let i = 0; i < key.length; i++) h = Math.imul(h ^ key.charCodeAt(i), 16777619);
+  return Math.abs(h) % size;
+}
+
+// 장면에 맞는 3컷(solo·ff·mf) 풀. C1~C3는 미션 전용 폴더, 그 외는 장소 그룹 공용.
+function mangaBackdropPool(missionId: string, place?: string): readonly string[] {
+  const group = mangaBackdropGroup(place);
+  if (SESSION_MANGA_IDS.has(missionId)) {
+    return SESSION_MANGA_NAMES
+      .filter((name) => name.includes(`-${group}-`))
+      .map((name) => `/scenes/session-variants/${missionId}/${name}`);
+  }
+  return MANGA_BACKDROPS[group];
+}
+
+function mangaBackdropFor(missionId?: string, place?: string): string | undefined {
+  if (!missionId) return undefined;
+  const pool = mangaBackdropPool(missionId, place);
+  if (!pool.length) return undefined;
+  const key = `${missionId}:${mangaBackdropGroup(place)}`;
+  const cached = mangaBackdropCache.get(key);
+  if (cached) return cached;
+  const idx = typeof window === 'undefined' ? hashIndex(key, pool.length) : Math.floor(Math.random() * pool.length);
+  const picked = pool[idx];
+  mangaBackdropCache.set(key, picked);
+  return picked;
+}
+
+// 세션마다 바뀌는 랜덤 시작 오프셋. 카드 인덱스와 더해 컷을 "회전"시킨다.
+let backdropSeed = Math.floor(Math.random() * 997);
+
+// 세션 시작마다 호출 → 캐시를 비우고 시드를 새로 뽑아, 컷 순서를 매 세션 다르게 한다.
+export function resetMangaBackdrops(): void {
+  mangaBackdropCache.clear();
+  backdropSeed = Math.floor(Math.random() * 997);
+}
+
+// 카드(화면) 전환마다 다른 컷을 노출. (시드+인덱스) 회전이라 연속 카드는 반드시 다른 컷이 되고,
+// 같은 카드를 다시 그릴 때(정답 클릭 등)는 인덱스가 같아 깜빡이지 않는다.
+export function sceneBackdropForCard(missionId?: string, cardIndex = 0): string | undefined {
+  if (!missionId) return undefined;
+  const m = CONTENT.missions.find((x) => x.id === missionId);
+  const pool = mangaBackdropPool(missionId, m?.place);
+  if (!pool.length) return BACKDROPS[missionId];
+  return pool[(backdropSeed + cardIndex) % pool.length] ?? BACKDROPS[missionId];
+}
 
 const BY_PLACE: Record<string, SceneVisual> = {
   편의점: { emoji: '店', icon: 'scene-conbini', bg: '#eef6ff', accent: '#2563eb' },
@@ -117,11 +216,14 @@ export function sceneVisualByPlace(place?: string): SceneVisual {
   const mission = place ? CONTENT.missions.find((m) => m.place === place && BACKDROPS[m.id]) : undefined;
   if (!mission) return base;
   const key = mission.id.toLowerCase();
-  return {
-    ...base,
+  const legacy = LEGACY_SCENE_SVGS.has(mission.id) ? {
     thumb: `/scenes/${key}-thumb.svg`,
     hero: `/scenes/${key}-hero.svg`,
-    backdrop: BACKDROPS[mission.id],
+  } : {};
+  return {
+    ...base,
+    ...legacy,
+    backdrop: mangaBackdropFor(mission.id, mission.place) ?? BACKDROPS[mission.id],
   };
 }
 
@@ -131,12 +233,14 @@ export function sceneVisualByMission(missionId?: string): SceneVisual {
   const base = sceneVisualByPlace(m?.place);
   const v = m?.visual;
   const key = missionId?.toLowerCase();
-  const hasGeneratedAsset = missionId === 'C0' || !!BACKDROPS[missionId ?? ''];
-  const generated = key && hasGeneratedAsset ? {
-    thumb: `/scenes/${key}-thumb.svg`,
-    hero: `/scenes/${key}-hero.svg`,
-    backdrop: BACKDROPS[missionId ?? ''],
-  } : {};
+  const hasLegacySvg = !!missionId && !!key && LEGACY_SCENE_SVGS.has(missionId);
+  const generated = {
+    ...(hasLegacySvg ? {
+      thumb: `/scenes/${key}-thumb.svg`,
+      hero: `/scenes/${key}-hero.svg`,
+    } : {}),
+    ...(missionId && BACKDROPS[missionId] ? { backdrop: mangaBackdropFor(missionId, m?.place) ?? BACKDROPS[missionId] } : {}),
+  };
   if (!v) return { ...base, ...generated };
   return {
     emoji: v.emoji ?? base.emoji,
