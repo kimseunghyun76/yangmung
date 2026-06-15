@@ -112,7 +112,8 @@ function TraceCanvas({ char, onComplete }: { char: string; onComplete: (score: n
   const inkRef = useRef<HTMLCanvasElement | null>(null);
   const maskRef = useRef<ReturnType<typeof buildMask> | null>(null);
   const drawingRef = useRef(false);
-  const hasInkRef = useRef(false);
+  // 잉크 유무는 state로 — ref면 그려도 리렌더가 안 돼 '채점' 버튼이 계속 disabled로 남는다.
+  const [hasInk, setHasInk] = useState(false);
   const [checked, setChecked] = useState<number | null>(null);
 
   useEffect(() => {
@@ -121,7 +122,7 @@ function TraceCanvas({ char, onComplete }: { char: string; onComplete: (score: n
     const ink = document.createElement('canvas'); ink.width = SIZE; ink.height = SIZE;
     inkRef.current = ink;
     maskRef.current = buildMask(char);
-    hasInkRef.current = false;
+    setHasInk(false);
     setChecked(null);
     redraw();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -148,7 +149,7 @@ function TraceCanvas({ char, onComplete }: { char: string; onComplete: (score: n
     const p = pos(e);
     ink.lineWidth = INK_WIDTH; ink.lineCap = 'round'; ink.lineJoin = 'round'; ink.strokeStyle = '#b9382e';
     ink.beginPath(); ink.moveTo(p.x, p.y); ink.lineTo(p.x + 0.1, p.y + 0.1); ink.stroke();
-    hasInkRef.current = true;
+    setHasInk(true);
     redraw();
   }
   function move(e: React.PointerEvent) {
@@ -164,7 +165,7 @@ function TraceCanvas({ char, onComplete }: { char: string; onComplete: (score: n
   function clear() {
     const ink = inkRef.current?.getContext('2d'); if (!ink) return;
     ink.clearRect(0, 0, SIZE, SIZE);
-    hasInkRef.current = false;
+    setHasInk(false);
     setChecked(null);
     redraw();
   }
@@ -200,7 +201,7 @@ function TraceCanvas({ char, onComplete }: { char: string; onComplete: (score: n
       {checked === null ? (
         <div style={{ display: 'flex', gap: 8, marginTop: 14, width: 'min(86vw, 300px)' }}>
           <button className="ym-press" onClick={clear} style={{ flex: 1, padding: '13px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 700, cursor: 'pointer' }}>⌫ 지우기</button>
-          <button className="ym-press" onClick={check} disabled={!hasInkRef.current} style={{ flex: 2, padding: '13px', borderRadius: 14, border: 'none', background: 'var(--accent)', color: 'var(--accent-ink)', fontWeight: 800, fontSize: 16, cursor: 'pointer', opacity: hasInkRef.current ? 1 : 0.5 }}>채점</button>
+          <button className="ym-press" onClick={check} disabled={!hasInk} style={{ flex: 2, padding: '13px', borderRadius: 14, border: 'none', background: 'var(--accent)', color: 'var(--accent-ink)', fontWeight: 800, fontSize: 16, cursor: hasInk ? 'pointer' : 'default', opacity: hasInk ? 1 : 0.5 }}>채점</button>
         </div>
       ) : (
         <div className="ym-reveal" style={{ marginTop: 14, width: 'min(86vw, 300px)' }}>
