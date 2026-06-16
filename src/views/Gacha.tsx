@@ -208,7 +208,7 @@ function DrawCard({ item, flipped, onFlip, index, active = true, large = false }
 function RevealCards({ results, animate }: { results: DropResult[]; animate?: boolean }) {
   const grouped = groupResults(results);
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(104px, 1fr))', gap: 14, justifyItems: 'center' }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 14 }}>
       {grouped.map((r, i) => (
         <div key={`${r.sceneId}:${r.rarity}`} className={animate ? 'ym-card-in' : undefined} style={{ animationDelay: animate ? `${0.3 + i * 0.08}s` : undefined, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, minWidth: 104, position: 'relative', zIndex: 2 }}>
           <DeckCardFace sceneId={r.sceneId} rarity={r.rarity} size={animate ? 104 : 92} />
