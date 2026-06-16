@@ -270,8 +270,8 @@ export function sceneVisualByMission(missionId?: string): SceneVisual {
 }
 
 // 장면(장소)별로 그 미션이 쓰는 표현 id 모음 — 복습장 "장면별 필터"·여행 치트시트용.
-export function phraseIdsByPlace(): { place: string; phraseIds: string[] }[] {
-  const out: { place: string; phraseIds: string[] }[] = [];
+export function phraseIdsByPlace(): { id: string; place: string; tier: number; phraseIds: string[] }[] {
+  const out: { id: string; place: string; tier: number; phraseIds: string[] }[] = [];
   for (const m of CONTENT.missions) {
     if (!m.place || m.id === 'C0') continue; // 튜토리얼 제외
     const ids = new Set<string>();
@@ -280,7 +280,7 @@ export function phraseIdsByPlace(): { place: string; phraseIds: string[] }[] {
       for (const c of step.choices) if (c.phraseId) ids.add(c.phraseId);
     }
     for (const pid of m.speakPhraseIds ?? []) ids.add(pid);
-    out.push({ place: m.place, phraseIds: [...ids] });
+    out.push({ id: m.id, place: m.place, tier: m.tier ?? 1, phraseIds: [...ids] });
   }
   return out;
 }

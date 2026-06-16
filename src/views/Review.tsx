@@ -4,6 +4,8 @@ import { CONTENT } from '../content';
 import type { KanaItem, Phrase } from '../content';
 import type { Card } from '../learn/cards';
 import { countSeenKana, isKanaReadStable, type ProgressMap, type SeenKana } from '../learn/progress';
+import { loadCollection, totalItems, unlockCost } from '../learn/collection';
+import { isSceneOpen } from '../learn/unlocks';
 import { diagnose } from '../learn/adaptive';
 import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
@@ -20,6 +22,9 @@ interface Props {
   allCards: Card[];
   progress: ProgressMap;
   seenKana: SeenKana;
+  cardUnlocks: string[];
+  devUnlockAll: boolean;
+  onUnlockScene: (missionId: string) => boolean;
   onStartReview?: () => void;
   onPracticeScene?: (missionId: string) => void;
   onBack: () => void;
@@ -29,7 +34,7 @@ type Tab = '가나' | '표현' | '장면별' | '약점';
 const TABS: Tab[] = ['가나', '표현', '장면별', '약점'];
 const kicker: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase', margin: 0 };
 
-export function Review({ nav, allCards, progress, seenKana, onStartReview, onPracticeScene }: Props) {
+export function Review({ nav, allCards, progress, seenKana, cardUnlocks, devUnlockAll, onUnlockScene, onStartReview, onPracticeScene }: Props) {
   const [tab, setTab] = useState<Tab>('가나');
   const phraseSeen = useMemo(() => collectSeenPhraseIds(allCards, progress), [allCards, progress]);
   const lastSeen = useMemo(() => phraseLastSeenMap(allCards, progress), [allCards, progress]);
@@ -77,7 +82,7 @@ export function Review({ nav, allCards, progress, seenKana, onStartReview, onPra
 
       {tab === '표현' && <PhraseTab phrases={allSorted} phraseSeen={phraseSeen} />}
 
-      {tab === '장면별' && <SceneSheets places={places} byId={byId} phraseSeen={phraseSeen} />}
+      {tab === '장면별' && <SceneSheets places={places} byId={byId} phraseSeen={phraseSeen} progress={progress} cardUnlocks={cardUnlocks} devUnlockAll={devUnlockAll} onUnlockScene={onUnlockScene} />}
 
       {tab === '약점' && (
         <GlassPanel>
@@ -180,69 +185,86 @@ function PhraseTab({ phrases, phraseSeen }: { phrases: Phrase[]; phraseSeen: Set
   );
 }
 
-function SceneSheets({ places, byId, phraseSeen }: { places: { place: string; phraseIds: string[] }[]; byId: Record<string, Phrase>; phraseSeen: Set<string> }) {
-  // 진도 나간 장면만 표시
-  const studiedPlaces = places.filter((p) => p.phraseIds.some((id) => phraseSeen.has(id)));
-  const [sel, setSel] = useState(studiedPlaces[0]?.place ?? '');
-  const cur = studiedPlaces.find((p) => p.place === sel);
-  if (studiedPlaces.length === 0) {
-    return <GlassPanel><Empty>아직 학습한 장면이 없어요. 미션을 진행하면 여기에 나타나요.</Empty></GlassPanel>;
+function SceneSheets({ places, byId, phraseSeen, progress, cardUnlocks, devUnlockAll, onUnlockScene }: {
+  places: { id: string; place: string; tier: number; phraseIds: string[] }[];
+  byId: Record<string, Phrase>;
+  phraseSeen: Set<string>;
+  progress: ProgressMap;
+  cardUnlocks: string[];
+  devUnlockAll: boolean;
+  onUnlockScene: (missionId: string) => boolean;
+}) {
+  const isOpen = (id: string) => isSceneOpen(id, progress, cardUnlocks, devUnlockAll);
+  const firstOpen = places.find((p) => isOpen(p.id))?.id;
+  const [sel, setSel] = useState(firstOpen ?? places[0]?.id ?? '');
+  const collection = loadCollection();
+  if (places.length === 0) {
+    return <GlassPanel><Empty>아직 장면이 없어요.</Empty></GlassPanel>;
   }
+  const cur = places.find((p) => p.id === sel) ?? places[0];
+  const curOpen = isOpen(cur.id);
+  const openCount = places.filter((p) => isOpen(p.id)).length;
+
   return (
     <>
-      {/* 2열 장면 카드 그리드 (진도 나간 것만) */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 16 }}>
-        {studiedPlaces.map((p) => {
-          const sv = sceneVisualByPlace(p.place);
-          const on = sel === p.place;
-          const seenCount = p.phraseIds.filter((id) => phraseSeen.has(id)).length;
-          return (
-            <button key={p.place} className="ym-press" onClick={() => setSel(p.place)}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 9, padding: '10px 11px',
-                borderRadius: 14, border: `1.5px solid ${on ? sv.accent : 'var(--glass-border)'}`,
-                background: on ? hexA(sv.accent, 0.12) : 'var(--glass-bg-strong)',
-                color: 'var(--ink)', cursor: 'pointer', textAlign: 'left',
-              }}>
-              <span style={{ color: on ? sv.accent : 'var(--ink-faint)', display: 'inline-flex', flex: '0 0 auto' }}>
-                <Icon name={sv.icon} size={20} />
-              </span>
-              <span style={{ minWidth: 0, flex: 1 }}>
-                <span style={{ display: 'block', fontWeight: 700, fontSize: 13, lineHeight: 1.25, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: on ? 'var(--ink)' : 'var(--ink-soft)' }}>
-                  {p.place}
-                </span>
-                <span style={{ display: 'block', fontSize: 11, fontWeight: 600, marginTop: 2, color: on ? sv.accent : 'var(--ink-faint)' }}>
-                  {seenCount}/{p.phraseIds.length} 표현
-                </span>
-              </span>
-            </button>
-          );
-        })}
+      {/* 셀렉트박스 — 장소 선택 (잠긴 곳은 ??? 신비 처리) */}
+      <div style={{ marginBottom: 14 }}>
+        <label style={{ ...kicker, display: 'block', marginBottom: 8 }}>장면 선택 · {openCount}/{places.length} 개방</label>
+        <div style={{ position: 'relative' }}>
+          <select value={sel} onChange={(e) => setSel(e.target.value)}
+            style={{ width: '100%', appearance: 'none', WebkitAppearance: 'none', padding: '13px 40px 13px 14px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontSize: 15, fontWeight: 700, fontFamily: 'inherit', cursor: 'pointer' }}>
+            {places.map((p, i) => {
+              const open = isOpen(p.id);
+              const seenCount = p.phraseIds.filter((id) => phraseSeen.has(id)).length;
+              return <option key={p.id} value={p.id}>{open ? `${p.place} (${seenCount}/${p.phraseIds.length})` : `🔒 미개방 ${i + 1}`}</option>;
+            })}
+          </select>
+          <Icon name="flow" size={18} style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--ink-faint)', pointerEvents: 'none' }} />
+        </div>
       </div>
 
-      {/* 선택된 장면 표현 패널 */}
-      {cur && (() => {
-        const sv = sceneVisualByPlace(sel);
+      {/* 열린 장면: 표현 패널 / 잠긴 장면: 카드 해제 패널 */}
+      {curOpen ? (() => {
+        const sv = sceneVisualByPlace(cur.place);
         const seenCount = cur.phraseIds.filter((id) => phraseSeen.has(id)).length;
         const total = cur.phraseIds.length;
         const pct = total ? Math.round((seenCount / total) * 100) : 0;
+        const seenPhrases = cur.phraseIds.filter((id) => phraseSeen.has(id)).map((id) => byId[id]).filter(Boolean);
         return (
           <GlassPanel>
-            {/* 헤더 */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
               <SceneImageThumb src={sv.backdrop ?? sv.thumb} icon={sv.icon} accent={sv.accent} size={52} />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ ...kicker, marginBottom: 3 }}>{sel}</p>
-                <p style={{ margin: 0, fontSize: 13, color: 'var(--ink-soft)', fontWeight: 600 }}>
-                  {seenCount}/{total} 완료 · {pct}%
-                </p>
-                {/* 진행률 바 */}
+                <p style={{ ...kicker, marginBottom: 3 }}>{cur.place}</p>
+                <p style={{ margin: 0, fontSize: 13, color: 'var(--ink-soft)', fontWeight: 600 }}>{seenCount}/{total} 완료 · {pct}%</p>
                 <div style={{ marginTop: 6, height: 4, borderRadius: 99, background: 'var(--glass-border)', overflow: 'hidden' }}>
                   <div style={{ height: '100%', borderRadius: 99, background: sv.accent, width: `${pct}%` }} />
                 </div>
               </div>
             </div>
-            <PhraseList phrases={cur.phraseIds.filter((id) => phraseSeen.has(id)).map((id) => byId[id]).filter(Boolean)} phraseSeen={phraseSeen} />
+            {seenPhrases.length
+              ? <PhraseList phrases={seenPhrases} phraseSeen={phraseSeen} />
+              : <Empty>이 장면은 열렸지만 아직 학습한 표현이 없어요. 지도에서 연습해보세요.</Empty>}
+          </GlassPanel>
+        );
+      })() : (() => {
+        const sv = sceneVisualByPlace(cur.place);
+        const owned = totalItems(collection.cards[cur.id]);
+        const need = unlockCost(cur.tier);
+        const canUnlock = owned >= need;
+        return (
+          <GlassPanel>
+            <div style={{ textAlign: 'center', padding: '14px 6px' }}>
+              <div style={{ fontSize: 42 }}>🔒</div>
+              <p style={{ margin: '10px 0 0', fontWeight: 800, fontSize: 16 }}>아직 열리지 않은 장면</p>
+              <p style={{ margin: '6px 0 0', color: 'var(--ink-soft)', fontSize: 13, lineHeight: 1.5 }}>이 장면의 가챠 카드를 모으면 열려요.<br />무엇이 숨어 있을까요?</p>
+              <p style={{ margin: '14px 0 0', fontWeight: 850, color: canUnlock ? sv.accent : 'var(--ink-faint)', fontSize: 15 }}>카드 {owned}/{need}</p>
+              <button className="ym-press" disabled={!canUnlock}
+                onClick={() => { if (confirm(`카드 ${need}장으로 이 장면을 열까요? (보유 ${owned}장)`) && !onUnlockScene(cur.id)) alert('카드가 부족해요.'); }}
+                style={{ marginTop: 12, padding: '12px 24px', borderRadius: 14, border: 'none', background: canUnlock ? 'var(--accent)' : 'var(--glass-bg-strong)', color: canUnlock ? 'var(--accent-ink)' : 'var(--ink-faint)', fontWeight: 800, fontSize: 15, cursor: canUnlock ? 'pointer' : 'default', opacity: canUnlock ? 1 : 0.6 }}>
+                {canUnlock ? '카드로 열기' : '카드 부족'}
+              </button>
+            </div>
           </GlassPanel>
         );
       })()}
