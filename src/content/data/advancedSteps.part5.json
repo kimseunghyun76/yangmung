@@ -369,7 +369,7 @@
         },
         {
           "text": "이 티켓이요",
-          "phraseId": "p_chiketto_wa_kochira_desu",
+          "actionText": "이 티켓이요",
           "correct": false,
           "feedback": "이미 입장한 후 구역 안내를 받는 상황 — 티켓 제시는 시기가 지났어요"
         }

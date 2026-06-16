@@ -165,7 +165,7 @@ export const c17: Mission = {
       speaker: '점원',
       promptPhraseId: 'p_nigate_na_mono_arimasu_ka',
       choices: [
-        { text: '알레르기가 있어요', phraseId: 'p_arerugi', correct: true, feedback: '「アレルギーがあります」— 안전 직결 정보. 스시는 생선·갑각류가 많으니 미리 알려요. 카드로 메모해두면 더 확실해요' },
+        { text: '메밀·땅콩 알레르기가 있어요', phraseId: 'p_arerugi', correct: true, feedback: '「そばとピーナッツアレルギーがあります」— 구체적인 알레르기 원인을 말해야 안전하게 대응해줘요. 스시에서는 えび(새우)·かに(게) 알레르기도 미리 전달하는 게 중요해요' },
         { text: '이거 빼 주세요', phraseId: 'p_kore_nuite', correct: true, feedback: '「これを抜(ぬ)いてください」— 손가락으로 재료를 가리키며 말하면 더 정확하게 전달돼요' },
         { text: '곱빼기 되나요?', phraseId: 'p_oomori', correct: false, feedback: '스시에서는 곱빼기가 없어요 — 못 먹는 재료나 알레르기를 말해야 해요' },
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
@@ -196,15 +196,15 @@ export const c18: Mission = {
   speakPhraseIds: ['p_osusume_wa', 'p_michi_oshiete', 'p_doko_desu_ka'],
   steps: [
     {
-      // 관광안내소 첫 마디 — 원하는 정보(추천·길)를 먼저 말한다
-      situationKo: '안내 직원이 무엇을 찾는지 묻는다',
+      // 관광안내소 첫 마디 — 원하는 정보(추천·길)를 직원에게 말한다
+      situationKo: '관광안내소에 들어서자 직원이 환영한다. 먼저 원하는 정보를 말한다',
       speaker: '안내 직원',
-      promptPhraseId: 'p_nanika_osagashi_desu_ka',
+      promptPhraseId: 'p_irasshai',
       choices: [
-        { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: true, feedback: '「おすすめは何(なに)ですか」— 직원의 현지 지식을 바로 활용하는 가장 효율적인 첫 마디. 맛집·명소 추천과 함께 지도·팸플릿도 받을 수 있어요' },
-        { text: '길을 가르쳐 주세요', phraseId: 'p_michi_oshiete', correct: true, feedback: '「道(みち)を教(おし)えてください」— 걸어갈 수 있는 거리라면 직접 길 설명을 부탁하면 지도보다 빠를 수 있어요' },
-        { text: '표 주세요', phraseId: 'p_kippu_kudasai', correct: false, feedback: '관광안내소는 교통표를 파는 곳이 아니에요. 정보나 지도를 먼저 요청해요' },
-        { text: '데워 주세요', phraseId: 'p_atatamete', correct: false, feedback: '편의점 표현이라 관광안내소에서는 전혀 맞지 않아요' },
+        { text: '근처 관광지 추천해 주세요', phraseId: 'p_osusume_wa', correct: true, feedback: '「おすすめは何(なに)ですか」— 직원에게 먼저 추천을 요청하는 가장 효율적인 첫 마디. 지도·팸플릿·교통 방법까지 한꺼번에 안내받을 수 있어요' },
+        { text: '아사쿠사 가는 길 알려주세요', phraseId: 'p_michi_oshiete', correct: true, feedback: '「道(みち)を教(おし)えてください」— 목적지가 정해졌을 때 바로 길을 물어봐요. 지도 위에 경로를 직접 표시해달라고 하면 더 확실해요' },
+        { text: '표 주세요', phraseId: 'p_kippu_kudasai', correct: false, feedback: '관광안내소는 교통표를 파는 곳이 아니에요. 역 창구나 자동발매기를 이용해요' },
+        { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
       ],
     },

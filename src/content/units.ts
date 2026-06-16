@@ -106,7 +106,7 @@ export const units: Unit[] = [
   {
     id: 'u_b1_locker_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 코인로커 위치와 사용법을 물을 수 있다',
-    newPhraseIds: ['p_koinrokkaa', 'p_tsukaikata'],
+    newPhraseIds: ['p_koinrokkaa', 'p_tsukaikata', 'p_kono_botan_oshite'],
   },
   {
     id: 'u_b1_delivery_core', track: 'lang', stage: 'B1', mode: 'action',
@@ -124,7 +124,7 @@ export const units: Unit[] = [
     newPhraseIds: [
       'p_tennai_de', 'p_mochikaeri_de', 'p_esu_saizu_de', 'p_emu_saizu_de',
       'p_kippu_nimai_kudasai', 'p_sumimasen_koko_doko', 'p_nihon_go_muzukashii',
-      'p_nihongo_sukoshi_dake',
+      'p_nihongo_sukoshi_dake', 'p_chiketto_wa_kochira_desu', 'p_basho_o_oshiete_kudasai',
     ],
   },
   {

@@ -17,6 +17,7 @@ interface Props {
 const SIZE = 300;        // 캔버스 내부 해상도
 const PASS = 55;         // 합격 커버리지(%)
 const INK_WIDTH = 17;    // 펜 굵기
+const DILATE_R = 11;     // 채점 시 잉크를 부풀리는 반경(px) — 가는 펜으로 두꺼운 글자를 따라가도 공정하게
 
 export function KanaWrite({ items, onExit, onReplay, onKanaWritten }: Props) {
   const [idx, setIdx] = useState(0);
@@ -171,20 +172,28 @@ function TraceCanvas({ char, onComplete }: { char: string; onComplete: (score: n
   }
 
   function check() {
-    const mask = maskRef.current, ink = inkRef.current?.getContext('2d');
-    if (!mask || !ink) return;
-    const data = ink.getImageData(0, 0, SIZE, SIZE).data;
-    let coreHit = 0, inkCount = 0, inkOnBand = 0;
+    const mask = maskRef.current, inkCanvas = inkRef.current;
+    if (!mask || !inkCanvas) return;
+    const inkData = inkCanvas.getContext('2d')!.getImageData(0, 0, SIZE, SIZE).data;
+
+    // 펜은 가늘고 글자(core)는 두껍다 → 잉크를 펜 굵기만큼 부풀려(dilate) "지나간 영역"으로
+    // 글자 커버리지를 잰다. 중심선만 또박또박 따라가도 글자를 덮은 것으로 인정.
+    const dil = document.createElement('canvas'); dil.width = SIZE; dil.height = SIZE;
+    const dctx = dil.getContext('2d')!;
+    for (let a = 0; a < 16; a++) dctx.drawImage(inkCanvas, Math.cos((a / 16) * Math.PI * 2) * DILATE_R, Math.sin((a / 16) * Math.PI * 2) * DILATE_R);
+    dctx.drawImage(inkCanvas, 0, 0);
+    const dilData = dctx.getImageData(0, 0, SIZE, SIZE).data;
+
+    let coreCovered = 0, inkCount = 0, inkOnBand = 0;
     for (let i = 0; i < SIZE * SIZE; i += 2) { // 2px 간격 샘플(속도)
-      const inked = data[i * 4 + 3] > 30;
-      if (inked) { inkCount++; if (mask.band[i]) inkOnBand++; }
-      if (mask.core[i] && inked) coreHit++;
+      if (inkData[i * 4 + 3] > 30) { inkCount++; if (mask.band[i]) inkOnBand++; }
+      if (mask.core[i] && dilData[i * 4 + 3] > 30) coreCovered++;
     }
     const coreSampled = Math.max(1, mask.coreCount / 2);
-    const coverage = Math.min(1, coreHit / coreSampled);
-    const overflow = inkCount ? (inkCount - inkOnBand) / inkCount : 1;
+    const coverage = Math.min(1, coreCovered / coreSampled);          // 글자를 따라간 정도(공정)
+    const overflow = inkCount ? (inkCount - inkOnBand) / inkCount : 1; // 글자 밖으로 삐져나간 비율
     // 정확도 = 커버리지에서 삐져나간 비율만큼 감점
-    const score = Math.max(0, Math.round(coverage * 100 - overflow * 35));
+    const score = Math.max(0, Math.round(coverage * 100 - overflow * 30));
     setChecked(score);
   }
 

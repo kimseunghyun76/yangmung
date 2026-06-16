@@ -9,13 +9,17 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "assets:generate": "node scripts/generate-scene-assets.mjs",
+    "assets:variants": "tsx scripts/generate-session-variants.mjs",
     "audio": "tsx scripts/generate-audio.mjs",
     "audio:dry": "tsx scripts/generate-audio.mjs --dry",
     "typecheck": "tsc --noEmit",
     "lint:content": "tsx src/content/validate.ts",
     "lint:sentences": "tsx src/content/sceneSentences.validate.ts",
     "test:content": "tsx src/content/validate.test.ts",
-    "test:adaptive": "tsx src/learn/adaptive.test.ts"
+    "test:adaptive": "tsx src/learn/adaptive.test.ts",
+    "test:progress": "tsx src/learn/progress.test.ts",
+    "test:cards": "tsx src/learn/cards.test.ts",
+    "test": "npm run test:content && npm run test:adaptive && npm run test:progress && npm run test:cards"
   },
   "dependencies": {
     "react": "^18.3.1",

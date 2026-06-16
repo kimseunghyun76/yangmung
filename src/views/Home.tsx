@@ -11,7 +11,7 @@ import { bestRarity, loadCollection, totalItems } from '../learn/collection';
 import { gachaItemForPlace } from '../learn/gachaItems';
 import { ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
-import { sceneVisualByMission, sceneVisualByPlace } from './scene';
+import { isMangaSceneImage, sceneVisualByMission, sceneVisualByPlace } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
 import { SceneImageThumb } from './ui';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
@@ -283,7 +283,8 @@ function HomeSceneCard({ hero, accent, kicker, title, chips, planned, guideLine,
   guideLine?: string;
   onStart: () => void;
 }) {
-  const generatedBackdrop = hero?.includes('/generated/');
+  const showFullBackdrop = isMangaSceneImage(hero);
+  const generatedBackdrop = hero?.includes('/generated/') || showFullBackdrop;
   const foreground = generatedBackdrop ? '#fff' : 'var(--ink)';
   const kickerColor = generatedBackdrop ? 'rgba(255,255,255,0.86)' : accent;
   return (
@@ -307,24 +308,44 @@ function HomeSceneCard({ hero, accent, kicker, title, chips, planned, guideLine,
         opacity: 0.8,
       }} />
       {hero && (
-        <img
-          src={hero}
-          alt=""
-          aria-hidden
-          style={{
-            position: 'absolute',
-            right: generatedBackdrop ? -68 : -180,
-            top: generatedBackdrop ? 0 : 18,
-            width: generatedBackdrop ? 'calc(100% + 92px)' : 560,
-            height: generatedBackdrop ? '100%' : 230,
-            objectFit: 'cover',
-            opacity: generatedBackdrop ? 1 : 0.22,
-            filter: generatedBackdrop ? 'saturate(0.92) contrast(1.05)' : 'saturate(0.9) contrast(1.08)',
-            transform: generatedBackdrop ? 'none' : 'rotate(-3deg)',
-            borderRadius: generatedBackdrop ? 0 : 34,
-            pointerEvents: 'none',
-          }}
-        />
+        <>
+          {showFullBackdrop && (
+            <img
+              src={hero}
+              alt=""
+              aria-hidden
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                opacity: 0.28,
+                filter: 'blur(16px) saturate(0.92) contrast(1.05)',
+                pointerEvents: 'none',
+              }}
+            />
+          )}
+          <img
+            src={hero}
+            alt=""
+            aria-hidden
+            style={{
+              position: 'absolute',
+              right: showFullBackdrop ? 0 : generatedBackdrop ? -68 : -180,
+              top: showFullBackdrop ? 0 : generatedBackdrop ? 0 : 18,
+              width: showFullBackdrop ? '100%' : generatedBackdrop ? 'calc(100% + 92px)' : 560,
+              height: showFullBackdrop ? '100%' : generatedBackdrop ? '100%' : 230,
+              objectFit: showFullBackdrop ? 'contain' : 'cover',
+              objectPosition: 'center',
+              opacity: generatedBackdrop ? 1 : 0.22,
+              filter: generatedBackdrop ? 'saturate(0.92) contrast(1.05)' : 'saturate(0.9) contrast(1.08)',
+              transform: generatedBackdrop ? 'none' : 'rotate(-3deg)',
+              borderRadius: generatedBackdrop ? 0 : 34,
+              pointerEvents: 'none',
+            }}
+          />
+        </>
       )}
       {generatedBackdrop && (
         <div aria-hidden style={{

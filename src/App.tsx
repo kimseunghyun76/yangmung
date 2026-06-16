@@ -99,7 +99,18 @@ export function App() {
     return maxTier;
   }, [progress]);
   const tierTipQuota = userMissionTier <= 1 ? 3 : userMissionTier === 2 ? 2 : userMissionTier >= 5 ? 0 : 1;
-  const baseConfig = { quotas: { ...MODE_PRESETS[settings.mode].quotas, tip: tierTipQuota }, minFresh: MODE_PRESETS[settings.mode].minFresh };
+  // 미션 티어 맵 — 레벨 필터용 (CONTENT.missions의 tier 값 사용)
+  const missionTierMap = useMemo<Map<string, number>>(
+    () => new Map(CONTENT.missions.map((m) => [m.id as string, m.tier ?? 1])),
+    [],
+  );
+  // 현재 모드의 tierRange에 맞는 미션만 세션에 포함 (폴백: 해당 티어 미션 없으면 전체)
+  const { tierRange } = MODE_PRESETS[settings.mode];
+  const missionTierFilter = (mid: string) => {
+    const t = missionTierMap.get(mid) ?? 1;
+    return t >= tierRange[0] && t <= tierRange[1];
+  };
+  const baseConfig = { quotas: { ...MODE_PRESETS[settings.mode].quotas, tip: tierTipQuota }, minFresh: MODE_PRESETS[settings.mode].minFresh, missionTierFilter };
   // 복습 전용 구성(신규 0 · 틀린·오래된 것 우선) — Done 화면 "복습하기" 제안용. 현재 모드와 무관.
   const reviewConfig = { quotas: MODE_PRESETS.review.quotas, minFresh: MODE_PRESETS.review.minFresh };
   const diag = useMemo(

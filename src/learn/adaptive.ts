@@ -146,5 +146,5 @@ export function adaptSessionConfig(base: SessionConfig, diag: Diagnosis): { conf
     minFresh.C = base.minFresh.C + 1;
     changed = true;
   }
-  return { config: { quotas: base.quotas, minFresh }, changed };
+  return { config: { quotas: base.quotas, minFresh, missionTierFilter: base.missionTierFilter }, changed };
 }
