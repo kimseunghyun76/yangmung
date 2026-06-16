@@ -526,7 +526,7 @@ export function App() {
       return <MapView nav={{ ...nav, current: 'map' }} allCards={allCards} progress={progress} cardUnlocks={cardUnlocks} devUnlockAll={!!settings.devUnlockAll} onUnlockScene={unlockScene} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
     }
     if (view === 'review') {
-      return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} onStartReview={startReviewSession} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
+      return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} cardUnlocks={cardUnlocks} devUnlockAll={!!settings.devUnlockAll} onUnlockScene={unlockScene} onStartReview={startReviewSession} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
     }
     if (view === 'gacha') {
       return <GachaPage nav={{ ...nav, current: 'gacha' }} progress={progress} />;
