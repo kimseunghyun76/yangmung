@@ -231,6 +231,38 @@ export function mergeScene(prev: Collection, sceneId: string, rarity: Rarity): C
   return { ...c, cards, trophies };
 }
 
+// ── 장면 lock 해제 (그 장면의 수집 카드 소모) ──────────────
+// tier별 필요한 "그 장면" 카드 수. 레벨이 높을수록 더 많이.
+export const UNLOCK_COST: Record<number, number> = { 1: 3, 2: 5, 3: 8, 4: 10, 5: 12 };
+export const unlockCost = (tier = 1): number => UNLOCK_COST[Math.min(5, Math.max(1, Math.round(tier)))] ?? 5;
+
+// 그 장면 카드를 n장 소모(낮은 등급부터 — 희귀 카드는 보존). 부족하면 null.
+export function spendSceneCards(prev: Collection, sceneId: string, n: number): Collection | null {
+  const c = normalizeCollection(prev);
+  const items = itemsOf(c.cards[sceneId]);
+  if (RARITIES.reduce((s, r) => s + items[r.key], 0) < n) return null;
+  let remaining = n;
+  for (const r of RARITIES) {
+    if (remaining <= 0) break;
+    const take = Math.min(items[r.key], remaining);
+    items[r.key] -= take; remaining -= take;
+  }
+  return { ...c, cards: { ...c.cards, [sceneId]: { items } } };
+}
+
+// 개발용: 각 장면에 카드를 등급 분배로 채운다(테스트 편의 — 해제·병합 확인용).
+export function fillDevCards(prev: Collection, sceneIds: string[]): Collection {
+  const c = normalizeCollection(prev);
+  const cards = { ...c.cards };
+  const dist: [Rarity, number][] = [['basic', 14], ['bronze', 8], ['silver', 5], ['gold', 2], ['diamond', 1]]; // 합 30
+  for (const id of sceneIds) {
+    const items = itemsOf(cards[id]);
+    for (const [r, add] of dist) items[r] += add;
+    cards[id] = { items };
+  }
+  return { ...c, cards };
+}
+
 export function bestRarity(card?: DeckCard): Rarity {
   const items = itemsOf(card);
   for (const r of [...RARITIES].reverse()) if (items[r.key] > 0) return r.key;

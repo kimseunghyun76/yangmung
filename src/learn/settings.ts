@@ -12,10 +12,11 @@ export interface Settings {
   choiceMode: ChoiceMode;     // 퀴즈 보기를 일본어로(난이도별)
   fastForward: boolean;       // 정답이면 자동으로 다음 카드 (빠른 진행)
   theme: Theme;               // 주간/야간
+  devUnlockAll?: boolean;     // 개발용 — 모든 장면 lock 무시
 }
 
 const KEY = 'yangmung:settings:v1';
-const DEFAULTS: Settings = { mode: 'default', readingAid: 'auto', choiceMode: 'kana_ko', fastForward: true, theme: 'light' };
+const DEFAULTS: Settings = { mode: 'default', readingAid: 'auto', choiceMode: 'kana_ko', fastForward: true, theme: 'light', devUnlockAll: false };
 
 // 첫 실행이면 시스템 외형(라이트/다크)을 따른다 (Apple HIG: 시스템 appearance 존중).
 function systemTheme(): Theme {
