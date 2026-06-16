@@ -222,7 +222,7 @@ export const c45: Mission = {
       recapPromptKo: '모바일 주문 고객이신가요?',
       choices: [
         { text: '예약했어요', phraseId: 'p_yoyaku_shiteimasu', correct: true, feedback: '「予約(よやく)しています」— 모바일 주문 픽업 시 첫 마디. QR코드나 주문번호 화면을 미리 열어두면 더 빠르게 처리돼요' },
-        { text: '이름은요?', phraseId: 'p_onamae_wa', correct: false, feedback: '지금 직원이 당신의 이름을 묻는 상황 — 내가 먼저 물어볼 필요가 없어요' },
+        { text: '이름은요?', actionText: '이름은요?', correct: false, feedback: '지금 직원이 당신의 이름을 묻는 상황 — 내가 먼저 물어볼 필요가 없어요' },
         { text: '이걸로 부탁드려요', phraseId: 'p_kore_de', correct: false, feedback: '픽업 상황에서는 이미 주문 완료 — 추가 선택이 아닙니다' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
@@ -293,7 +293,7 @@ export const c46: Mission = {
       speaker: '직원',
       promptPhraseId: 'p_gochuumon',
       choices: [
-        { text: '이거 하나로 괜찮으세요?', phraseId: 'p_kore_hitotsu_de_yoroshii_desu_ka', correct: false, feedback: '직원이 나한테 묻는 말 — 내가 직원에게 쓰는 표현이 아니에요' },
+        { text: '이거 하나로 괜찮으세요?', actionText: '이거 하나로 괜찮으세요?', correct: false, feedback: '직원이 나한테 묻는 말 — 내가 직원에게 쓰는 표현이 아니에요' },
         { text: '이거 주세요', phraseId: 'p_kore_kudasai', correct: true, feedback: '「これください」— 스탠드 메뉴를 가리키며 주문하는 가장 실용적인 표현. 야구장 스탠드는 기다리는 줄이 짧을 때 빠르게 주문하는 게 포인트예요' },
         { text: '맥주 한 잔 더 주세요', phraseId: 'p_biiru_mou_ippai', correct: true, feedback: '「ビールもう一杯(いっぱい)ください」— 추가 주문 표현. もう一杯는 "한 잔 더". 야구장 비어걸(ビールの売(う)り子(こ))이 돌아다니니 손을 들어 부르세요' },
         { text: '하나 주세요', phraseId: 'p_hitotsu_kudasai', correct: true, feedback: '「一(ひと)つください」— 수량 지정 주문. 야구장 명물 음식 도시락(球場弁当/きゅうじょうべんとう)도 꼭 먹어봐요!' },
@@ -370,7 +370,7 @@ export const c48: Mission = {
       choices: [
         { text: '아니요, 없어요 (약 수첩 미소지)', phraseId: 'p_iie_arimasen', correct: true, feedback: '「いいえ、ありません」— 처음 방문이라면 없는 것이 자연스러워요. 薬(くすり)手帳(てちょう)は継続的に薬を飲む방에게 있는 건강 관리 수첩이에요' },
         { text: '네, 있어요 (약 수첩 소지)', phraseId: 'p_hai_arimasu', correct: true, feedback: '「はい、あります」— 약 수첩이 있을 때. 手帳(てちょう)を差(さ)し出(だ)しながら말하면 OK. 처방 이력 관리에 중요한 역할을 해요' },
-        { text: '보험증이 있나요?', phraseId: 'p_hokenshou_wa_arimasu_ka', correct: false, feedback: '약사가 먼저 물어보는 상황 — 내가 되묻는 건 맥락과 맞지 않아요' },
+        { text: '보험증이 있나요?', actionText: '보험증이 있나요?', correct: false, feedback: '약사가 먼저 물어보는 상황 — 내가 되묻는 건 맥락과 맞지 않아요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
@@ -382,8 +382,8 @@ export const c48: Mission = {
       choices: [
         { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 대기 안내를 이해하고 승낙할 때. 약국 근처를 散歩(さんぽ)하거나 스마트폰을 보며 기다리면 돼요. 呼(よ)ばれたら窓口(まどぐち)へ!' },
         { text: '괜찮아요', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 30분 대기도 문제없을 때. 일본 약국은 薬歴管理(やくれきかんり)를 철저히 하기 때문에 조제에 시간이 걸려요' },
-        { text: '완료까지 30분입니다', phraseId: 'p_kanryou_made_sanjuppun_desu', correct: false, feedback: '약사가 이미 말한 내용 — 내가 반복할 필요가 없어요' },
-        { text: '전화번호를 적어 주세요', phraseId: 'p_renrakusaki_o_kaite_kudasai', correct: false, feedback: '약국 대기 상황에서 연락처 요청은 맥락과 다릅니다' },
+        { text: '완료까지 30분입니다', actionText: '완료까지 30분입니다', correct: false, feedback: '약사가 이미 말한 내용 — 내가 반복할 필요가 없어요' },
+        { text: '전화번호를 적어 주세요', actionText: '전화번호를 적어 주세요', correct: false, feedback: '약국 대기 상황에서 연락처 요청은 맥락과 다릅니다' },
       ],
     },
     {
@@ -416,10 +416,10 @@ export const c49: Mission = {
       speaker: '셰프',
       promptPhraseId: 'p_nigate_na_mono_arimasu_ka',
       choices: [
-        { text: '알레르기가 있어요', phraseId: 'p_arerugi', correct: true, feedback: '「アレルギーがあります」— 오마카세에서 반드시 미리 전달해야 하는 표현. えび(새우)·かに(게)·そば(메밀) 등 알레르기 원인을 구체적으로 말하면 더 좋아요' },
+        { text: '메밀·땅콩 알레르기가 있어요', phraseId: 'p_arerugi', correct: true, feedback: '「そばとピーナッツアレルギーがあります」— 오마카세에서 알레르기를 구체적으로 말하면 셰프가 코스 전체를 배려해줘요. えび(새우)·かに(게) 등 추가 원인도 함께 전달하는 게 안전해요' },
         { text: '이거 빼 주세요', phraseId: 'p_kore_nuite', correct: true, feedback: '「これを抜(ぬ)いてください」— 특정 재료를 제외해달라고 직접 요청. 재료를 가리키거나 말하면 셰프가 배려해줘요. 오마카세는 대화가 요리의 일부예요' },
         { text: '아니요, 아무것도 없어요 (못 드시는 것 없음)', phraseId: 'p_iie_nanimoarimasen', correct: true, feedback: '「いいえ、何(なに)もありません」— 먹지 못하는 것이 없다는 명확한 답변. これで 安心(あんしん)して셰프가 코스를 진행할 수 있어요' },
-        { text: '와사비 괜찮으세요?', phraseId: 'p_sabi_wa_daijoubu_desu_ka', correct: false, feedback: '셰프가 묻는 역할 — 내가 되묻는 건 맥락이 바뀌어요' },
+        { text: '와사비 괜찮으세요?', actionText: '와사비 괜찮으세요?', correct: false, feedback: '셰프가 묻는 역할 — 내가 되묻는 건 맥락이 바뀌어요' },
       ],
     },
     {

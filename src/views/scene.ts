@@ -76,18 +76,31 @@ const MANGA_BACKDROPS = {
   ],
 } as const;
 
-const SESSION_MANGA_IDS = new Set(['C1', 'C2', 'C3']);
+const SESSION_MANGA_WEBP_IDS = new Set(['C1', 'C2', 'C3', 'C4']);
+const SESSION_MANGA_IDS = new Set(Array.from({ length: 50 }, (_, i) => `C${i + 1}`));
 const SESSION_MANGA_NAMES = [
-  'solo-shop-01.webp',
-  'solo-restaurant-02.webp',
-  'solo-street-03.webp',
-  'ff-shop-01.webp',
-  'ff-restaurant-02.webp',
-  'ff-street-03.webp',
-  'mf-shop-01.webp',
-  'mf-restaurant-02.webp',
-  'mf-street-03.webp',
+  'solo-shop-01',
+  'solo-restaurant-02',
+  'solo-street-03',
+  'ff-shop-01',
+  'ff-restaurant-02',
+  'ff-street-03',
+  'mf-shop-01',
+  'mf-restaurant-02',
+  'mf-street-03',
 ];
+
+export function isMangaSceneImage(src?: string): boolean {
+  return !!src && (
+    src.includes('/scenes/manga-variants/')
+    || src.includes('/scenes/session-variants/')
+    || src.includes('/scenes/quick-practice/')
+  );
+}
+
+export function quickPracticeBackdrop(kind: string): string {
+  return `/scenes/quick-practice/${kind}.svg`;
+}
 
 type MangaBackdropGroup = keyof typeof MANGA_BACKDROPS;
 
@@ -117,9 +130,10 @@ function hashIndex(key: string, size: number): number {
 function mangaBackdropPool(missionId: string, place?: string): readonly string[] {
   const group = mangaBackdropGroup(place);
   if (SESSION_MANGA_IDS.has(missionId)) {
+    const ext = SESSION_MANGA_WEBP_IDS.has(missionId) ? 'webp' : 'svg';
     return SESSION_MANGA_NAMES
       .filter((name) => name.includes(`-${group}-`))
-      .map((name) => `/scenes/session-variants/${missionId}/${name}`);
+      .map((name) => `/scenes/session-variants/${missionId}/${name}.${ext}`);
   }
   return MANGA_BACKDROPS[group];
 }

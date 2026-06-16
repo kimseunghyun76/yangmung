@@ -2,6 +2,7 @@
 import { useState, type CSSProperties, type ReactNode } from 'react';
 import { RADIUS, SHADOW } from '../ui/styles';
 import { Icon, type IconName } from '../ui/Icon';
+import { isMangaSceneImage } from './scene';
 
 // 장면 썸네일 — 테마 적응 모노 아이콘(currentColor=장면 색)을 중립 타일에. 라이트/다크 자동.
 export function SceneThumb({ icon, accent, size = 48, muted = false }: { icon: IconName; accent: string; size?: number; muted?: boolean }) {
@@ -28,6 +29,7 @@ export function SceneImageThumb({ src, icon, accent, size = 64, muted = false, s
 }) {
   const [failed, setFailed] = useState(false);
   if (!src || failed) return <SceneThumb icon={icon} accent={accent} size={size} muted={muted} />;
+  const showFullImage = isMangaSceneImage(src);
   return (
     <span style={{
       position: 'relative',
@@ -45,13 +47,37 @@ export function SceneImageThumb({ src, icon, accent, size = 64, muted = false, s
       boxShadow: muted ? undefined : `0 14px 34px ${accent}20`,
       ...style,
     }}>
+      {showFullImage && (
+        <img
+          src={src}
+          alt=""
+          aria-hidden
+          loading="lazy"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            opacity: 0.22,
+            filter: 'blur(10px) saturate(0.96) contrast(1.04)',
+          }}
+        />
+      )}
       <img
         src={src}
         alt=""
         aria-hidden
         loading="lazy"
         onError={() => setFailed(true)}
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'saturate(0.96) contrast(1.04)' }}
+        style={{
+          position: 'absolute',
+          inset: showFullImage ? 4 : 0,
+          width: showFullImage ? 'calc(100% - 8px)' : '100%',
+          height: showFullImage ? 'calc(100% - 8px)' : '100%',
+          objectFit: showFullImage ? 'contain' : 'cover',
+          filter: 'saturate(0.96) contrast(1.04)',
+        }}
       />
       <span aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.34))' }} />
       <span style={{ position: 'relative', color: '#fff', filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.42))', display: 'inline-flex' }}>

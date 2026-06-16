@@ -1,5 +1,6 @@
 // 세션 — Immersive Scene Coach v1. 상단 장면 헤더 + 하단 글래스 학습 시트.
 // 시각 위계: 일본어 > 듣기 > 행동(선택/말하기) > 한국어. (UI_REDESIGN_PROPOSAL.md §4-2)
+import { useState } from 'react';
 import type { Card, Choice } from '../learn/cards';
 import type { CardStatus } from '../learn/progress';
 import type { GrammarPoint } from '../content/types';
@@ -12,7 +13,7 @@ import { SpeakCardView } from './SpeakCard';
 import { DictationCardView } from './DictationCard';
 import { DiscoverCardView } from './DiscoverCard';
 import { ReadingAid } from './ReadingAid';
-import { sceneVisualByMission, sceneBackdropForCard } from './scene';
+import { isMangaSceneImage, sceneVisualByMission, sceneBackdropForCard } from './scene';
 import { Icon } from '../ui/Icon';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
 import { MascotLine, mascotShows } from './mascot';
@@ -42,6 +43,7 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
   const sv = missionId ? sceneVisualByMission(missionId) : null;
   // 배경 컷은 카드(화면) 전환마다 회전 — 같은 장면이라도 카드마다 다른 컷이 보인다.
   const cardBackdrop = sv ? (sv.backdrop ? sceneBackdropForCard(missionId, index) : sv.hero) : undefined;
+  const showFullBackdrop = isMangaSceneImage(cardBackdrop);
   const accent = sv?.accent ?? '#b9382e';
   const isMissionStep = card.kind === 'quiz' && !!card.promptPhrase;
   const speaker = isMissionStep ? card.sub : '';
@@ -100,11 +102,17 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
             <div key={cardBackdrop} className="ym-scene-bg" style={{
               position: 'relative', overflow: 'hidden', width: '100%',
               height: 'clamp(150px, 46vw, 186px)', borderRadius: 16,
-              background: 'var(--surface-2)', marginBottom: 18,
+              background: `linear-gradient(135deg, ${hexA(accent, 0.14)}, var(--surface-2))`, marginBottom: 18,
             }}>
+              {showFullBackdrop && (
+                <img src={cardBackdrop} alt="" aria-hidden style={{
+                  position: 'absolute', inset: 0, width: '100%', height: '100%',
+                  objectFit: 'contain', opacity: 0.24, filter: 'blur(12px) saturate(.85) contrast(.96)',
+                }} />
+              )}
               <img src={cardBackdrop} alt="" aria-hidden style={{
-                position: 'absolute', inset: 0, width: '100%', height: '100%',
-                objectFit: 'contain', filter: 'saturate(.85) contrast(.96)',
+                position: 'absolute', inset: showFullBackdrop ? 0 : 0, width: '100%', height: '100%',
+                objectFit: showFullBackdrop ? 'contain' : 'cover', objectPosition: 'center', filter: 'saturate(.85) contrast(.96)',
               }} />
             </div>
           )}
@@ -121,7 +129,7 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
           ) : card.kind === 'discover' ? (
             <DiscoverCardView key={card.id} card={card} onNext={onNext} />
           ) : (
-            <QuizBody card={card} index={index} picked={picked} isMissionStep={isMissionStep} isKanaFamiliar={isKanaFamiliar} onChoose={onChoose} onNext={onNext} onKnown={onKnown} />
+            <QuizBody key={card.id} card={card} index={index} picked={picked} isMissionStep={isMissionStep} isKanaFamiliar={isKanaFamiliar} onChoose={onChoose} onNext={onNext} onKnown={onKnown} />
           )}
         </div>
       </GlassPanel>
@@ -215,6 +223,13 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
   // 보기 표시 난이도: 가나 퀴즈는 소리(한글) 유지, 표현/미션 보기는 일본어로(한글병기→가나만→한자).
   const choiceMode = loadSettings().choiceMode;
   const isKanaQuiz = card.reviewTarget?.type === 'kana';
+  // 힌트: 답하기 전에 눌러 내 속도로 읽는다(정답 자동 넘김과 무관).
+  // 1순위 문법 규칙, 없으면 정답 표현의 설명(tip/feedback)으로 폴백 — 가나 퀴즈는 제외.
+  const [hintOpen, setHintOpen] = useState(false);
+  const hintGrammar = relatedGrammar(card);
+  const correctChoice = card.choices.find((x) => x.correct && !x.recovery) ?? card.choices.find((x) => x.correct);
+  const hintFallback = !isKanaQuiz && !hintGrammar ? buildHintFallback(card, correctChoice) : undefined;
+  const hasHint = !!hintGrammar || !!hintFallback;
   return (
     <>
       {/* 1. 일본어 (주인공) */}
@@ -236,18 +251,28 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
         <div style={{ fontSize: big, fontWeight: 700, textAlign: 'center', margin: '4px 0' }}>{card.banner}</div>
       )}
 
-      {/* 2. 듣기 / 천천히 (1급 액션) */}
+      {/* 2. 듣기 / 천천히 / 힌트 (1급 액션) */}
       {card.bannerJa && !card.listen && (
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 6 }}>
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 6, flexWrap: 'wrap' }}>
           <ListenBtn onClick={() => speak(card.bannerJa!)}><Icon name="listen" size={17} /> 듣기</ListenBtn>
           <ListenBtn onClick={() => speak(card.bannerJa!, { rate: 0.6 })}>천천히</ListenBtn>
+          {hasHint && !reveal && <HintBtn open={hintOpen} onClick={() => setHintOpen((o) => !o)} />}
         </div>
       )}
       {card.listen && (
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 4, flexWrap: 'wrap' }}>
           <ListenBtn onClick={() => speak(card.bannerJa!, { rate: 0.6 })}>천천히 다시</ListenBtn>
+          {hasHint && !reveal && <HintBtn open={hintOpen} onClick={() => setHintOpen((o) => !o)} />}
         </div>
       )}
+      {/* 듣기 행이 없는 카드(예: 음성 없는 미션 스텝)도 힌트는 노출 */}
+      {hasHint && !reveal && !card.bannerJa && !card.listen && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 6 }}>
+          <HintBtn open={hintOpen} onClick={() => setHintOpen((o) => !o)} />
+        </div>
+      )}
+      {/* 힌트 ON → 문법 규칙(있으면) 또는 정답 표현의 설명. 답하면 닫히고 결과 피드백으로 대체. */}
+      {hintOpen && !reveal && (hintGrammar ? <WrongTip g={hintGrammar} /> : hintFallback ? <HintExplain {...hintFallback} /> : null)}
 
       {/* 3. 한국어 (보조) — 질문/뜻 */}
       {isMissionStep
@@ -283,6 +308,16 @@ function ListenBtn({ onClick, children }: { onClick: () => void; children: React
     <button className="ym-press" onClick={onClick} disabled={!ttsSupported()}
       style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 18px', borderRadius: 999, border: '1px solid var(--glass-border)', background: 'var(--accent-soft)', color: 'var(--accent)', fontWeight: 700, fontSize: 15, cursor: 'pointer' }}>
       {children}
+    </button>
+  );
+}
+
+// 힌트 버튼 — 듣기·천천히 옆. 열리면 정답 표현의 문법 규칙을 보여준다.
+function HintBtn({ open, onClick }: { open: boolean; onClick: () => void }) {
+  return (
+    <button className="ym-press" onClick={onClick} aria-expanded={open}
+      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 18px', borderRadius: 999, border: `1px solid ${open ? 'var(--accent)' : 'var(--glass-border)'}`, background: open ? 'var(--accent)' : 'var(--glass-bg-strong)', color: open ? 'var(--accent-ink)' : 'var(--ink)', fontWeight: 700, fontSize: 15, cursor: 'pointer' }}>
+      <Icon name="tip" size={16} /> 힌트
     </button>
   );
 }
@@ -361,6 +396,39 @@ function relatedGrammar(card: Extract<Card, { kind: 'quiz' }>): GrammarPoint | u
   const gid = p?.grammarRefs?.[0];
   if (!gid) return undefined;
   return CONTENT.grammar.find((g) => g.id === gid);
+}
+
+interface HintExplainProps { ja?: string; korean?: string; tip?: string; feedback?: string }
+
+// 문법 규칙이 없을 때의 힌트 폴백 — 정답 표현의 설명(tip/feedback).
+// tip은 CONTENT의 phrase에서 id로 조회(선택지에 안 실려도 잡힘). 설명이 없으면 힌트를 띄우지 않는다.
+function buildHintFallback(card: Extract<Card, { kind: 'quiz' }>, c?: Choice): HintExplainProps | undefined {
+  if (!c) return undefined;
+  const phraseId = c.phrase?.id ?? (card.reviewTarget?.type === 'phrase' ? String(card.reviewTarget.id) : undefined);
+  const p = phraseId ? CONTENT.phrases.find((x) => x.id === phraseId) : undefined;
+  const tip = p?.tip ?? c.phrase?.tip;
+  const feedback = c.feedback;
+  if (!tip && !feedback) return undefined;
+  const ja = c.phrase ? (c.phrase.kanji ?? c.phrase.kana) : (p ? (p.kanji ?? p.kana) : c.ja);
+  const korean = c.phrase?.korean ?? p?.korean;
+  return { ja, korean, tip, feedback };
+}
+
+function HintExplain({ ja, korean, tip, feedback }: HintExplainProps) {
+  return (
+    <div style={{ marginTop: 10, padding: 12, borderRadius: 12, background: 'var(--surface-2)', border: '1px solid var(--glass-border)' }}>
+      <p style={{ margin: 0, fontSize: 12, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.03em', display: 'flex', alignItems: 'center', gap: 5 }}>
+        <Icon name="tip" size={14} /> 힌트
+      </p>
+      {tip && <p style={{ margin: '6px 0 0', fontSize: 13.5, lineHeight: 1.55, color: 'var(--ink-soft)' }}>{tip}</p>}
+      {feedback && feedback !== tip && <p style={{ margin: '6px 0 0', fontSize: 13.5, lineHeight: 1.55, color: 'var(--ink-soft)' }}>{feedback}</p>}
+      {ja && (
+        <p style={{ margin: '8px 0 0', fontSize: 14 }}>
+          <strong lang="ja">{ja}</strong>{korean ? <span style={{ color: 'var(--ink-soft)' }}> — {korean}</span> : null}
+        </p>
+      )}
+    </div>
+  );
 }
 
 // 오답 시 즉시 노출되는 관련 팁 — 규칙 한 줄 + 예문 듣기. (전체 팁 카드보다 가벼움)

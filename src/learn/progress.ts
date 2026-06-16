@@ -284,6 +284,8 @@ export const SESSION_QUOTAS = { K: 0, B: 3, C: 9, P: 2, tip: 1 } as const;
 export interface SessionConfig {
   quotas: { K: number; B: number; C: number; P: number; tip: number };
   minFresh: { K: number; B: number; C: number };
+  /** 미션 ID → 해당 세션에 포함 여부. undefined면 전체 포함. */
+  missionTierFilter?: (missionId: string) => boolean;
 }
 
 // 각 버킷에서 보장하는 최소 fresh(신규) 수 — due 복습이 quota를 다 채워서
@@ -471,10 +473,18 @@ export function selectSessionCards(
       pushByStatus(cByMission.get(mid)!, rep, status);
     }
   }
+  // 레벨 필터 적용 — 지정한 티어 범위 밖의 미션은 제외.
+  // 폴백: 필터 적용 후 미션이 부족하면(0개) 필터 없이 전체 사용.
+  let filteredByMission = cByMission;
+  if (config.missionTierFilter) {
+    const filtered = new Map([...cByMission.entries()].filter(([mid]) => config.missionTierFilter!(mid)));
+    if (filtered.size > 0) filteredByMission = filtered;
+    // filtered.size === 0 이면 해당 티어 미션이 아직 잠금/미경험 → 전체 폴백
+  }
   const kSel = pickPool(k, config.quotas.K, config.minFresh.K, progress);
   const bSel = pickPool(b, config.quotas.B, config.minFresh.B, progress);
   const pSel = pickPairCards(allCards, progress, currentSessionId, config.quotas.P ?? 0);
-  const scene = pickScene(cByMission, config.quotas.C, progress, currentSessionId);
+  const scene = pickScene(filteredByMission, config.quotas.C, progress, currentSessionId);
   // 팁: 안 본 것/오래된 것부터 1개씩 회전 (매번 같은 팁 X)
   const tipsSel = [...tips]
     .sort((a, b2) => (progress[a.id]?.lastSeenAt ?? '') < (progress[b2.id]?.lastSeenAt ?? '') ? -1 : 1)

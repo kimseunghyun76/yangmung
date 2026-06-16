@@ -3,8 +3,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CONTENT } from '../content';
 import {
-  BOX, MERGE_NEED, NEXT_RARITY, RARITIES,
-  bestRarity, claim, diamondCount, honorTrophyCount, itemsOf, loadCollection, mergeScene,
+  BOX, MERGE_NEED, RARITIES,
+  bestRarity, claim, diamondCount, honorTrophyCount, itemsOf, loadCollection,
   ownedCount, rarityMeta, rarityToTier, saveCollection, totalItems,
   type BoxGrade, type Collection, type DropResult, type Rarity,
 } from '../learn/collection';
@@ -205,30 +205,6 @@ function DrawCard({ item, flipped, onFlip, index, active = true, large = false }
   );
 }
 
-function CardDetailOverlay({ item, canAdvance, onClose, onAdvance }: { item: DropResult; canAdvance: boolean; onClose: () => void; onAdvance: () => void }) {
-  const meta = rarityMeta(item.rarity);
-  const gift = gachaItemForPlace(placeOf(item.sceneId), item.rarity);
-  const sv = sceneVisualByMission(item.sceneId);
-  return (
-    <div className="ym-gacha-detail-backdrop" onClick={(e) => { e.stopPropagation(); onClose(); }}>
-      <div className={`ym-gacha-detail is-${item.rarity}`} onClick={(e) => e.stopPropagation()} style={{ ['--rarity-color' as string]: meta.color, ['--scene-accent' as string]: sv.accent }}>
-        <DeckCardFace sceneId={item.sceneId} rarity={item.rarity} size={174} />
-        <div className="ym-gacha-detail-copy">
-          <span className="ym-gacha-detail-kicker">{rarityStars(item.rarity)} STAR · {placeOf(item.sceneId)}</span>
-          <h3 lang="ja">{gift.jaTitle ?? gift.title}</h3>
-          <strong>{gift.title}</strong>
-          <p>{itemKoreanDescription(placeOf(item.sceneId), gift.title, item.rarity)}</p>
-          <span className="ym-gacha-detail-count">이번 카드로 이 선물 {item.shards}장 보유</span>
-        </div>
-        <div className="ym-gacha-detail-actions">
-          <button className="ym-press" onClick={onClose}>계속 보기</button>
-          <button className="ym-press is-primary" onClick={onAdvance}>{canAdvance ? '스택에 넣고 다음 카드' : '상세 닫기'}</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function RevealCards({ results, animate }: { results: DropResult[]; animate?: boolean }) {
   const grouped = groupResults(results);
   return (
@@ -300,7 +276,6 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
   const [currentDraws, setCurrentDraws] = useState(drawCount ?? box.draws);
   const [spotlightIndex, setSpotlightIndex] = useState<number | null>(null);
   const [bulkOpening, setBulkOpening] = useState(false);
-  const [detailIndex, setDetailIndex] = useState<number | null>(null);
   const [rareBurst, setRareBurst] = useState<{ index: number; rarity: Rarity; key: number } | null>(null);
   const [deck, setDeck] = useState(false);
   const openedRef = useRef(false);
@@ -348,7 +323,7 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
     openedRef.current = false;
     dispenseRef.current = false;
     setTaps(0); setStage('crank'); setCapState('drop'); setSpinning(false); setSfx(null);
-    setFlipped(new Set()); setResults([]); setVisibleCount(1); setSpotlightIndex(null); setBulkOpening(false); setDetailIndex(null); setRareBurst(null); setPhase('open');
+    setFlipped(new Set()); setResults([]); setVisibleCount(1); setSpotlightIndex(null); setBulkOpening(false); setRareBurst(null); setPhase('open');
   }
   // 크랭크 다 돌림 → 볼들이 빠르게 돌고 → 캡슐이 굴러떨어짐
   function beginDispense() {
@@ -390,7 +365,7 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
   }
   function flip(i: number) {
     if (flipped.has(i)) {
-      setDetailIndex(i);
+      advanceCard(i);
       return;
     }
     setFlipped((prev) => new Set(prev).add(i));
@@ -401,7 +376,6 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
     }
   }
   function advanceCard(i: number) {
-    setDetailIndex(null);
     if (i === visibleCount - 1 && visibleCount < results.length) setVisibleCount((n) => Math.min(results.length, n + 1));
   }
   function revealBulkRest() {
@@ -462,13 +436,13 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
           {capState === 'pop' && stage !== 'crank' && <span className="ym-manga-lines" aria-hidden />}
           {stage === 'cards' && <BurstParticles color={box.colors[1]} />}
           {rareBurst && (
-            <div key={rareBurst.key} className={`ym-gacha-rare-burst is-${rareBurst.rarity}`} style={{ ['--rarity-color' as string]: rarityMeta(rareBurst.rarity).color }} aria-hidden>
+            <div key={`rare:${rareBurst.key}`} className={`ym-gacha-rare-burst is-${rareBurst.rarity}`} style={{ ['--rarity-color' as string]: rarityMeta(rareBurst.rarity).color }} aria-hidden>
               <span>{rareBurst.rarity === 'diamond' ? 'DIAMOND' : 'GOLD'}</span>
               <strong>{rarityStars(rareBurst.rarity)} STAR CARD</strong>
             </div>
           )}
           {sfx && (
-            <span key={sfx.key} className="ym-manga-sfx" aria-hidden style={{ fontSize: sfx.size, top: stage === 'crank' ? '30%' : '42%' }}>{sfx.text}</span>
+            <span key={`sfx:${sfx.key}`} className="ym-manga-sfx" aria-hidden style={{ fontSize: sfx.size, top: stage === 'crank' ? '30%' : '42%' }}>{sfx.text}</span>
           )}
 
           {stage === 'crank' ? (
@@ -506,7 +480,7 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
               )}
               <div className="ym-gpn-spill" style={{ position: 'relative', zIndex: 2, textAlign: 'center' }}>
                 <p style={{ margin: 0, color: '#fff', fontWeight: 950, fontSize: 20, textShadow: '2px 2px 0 #20242f' }}>카드 {results.length}장 발견!</p>
-                <p style={{ margin: '4px 0 0', color: 'rgba(255,255,255,.72)', fontWeight: 750, fontSize: 12 }}>첫 탭은 뒤집기, 다시 탭하면 상세 보기예요</p>
+                <p style={{ margin: '4px 0 0', color: 'rgba(255,255,255,.72)', fontWeight: 750, fontSize: 12 }}>첫 탭은 뒤집기, 다시 탭하면 다음 카드로 넘어가요</p>
               </div>
               {!bulkOpening && spotlightIndex === null && (
                 <div className="ym-gacha-pile-zone ym-gpn-spill" style={{ position: 'relative', zIndex: 2, ['--spill-d' as string]: '.08s' }}>
@@ -523,9 +497,9 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
                   {openedResults.length > 0 && (
                     <div className="ym-gacha-opened-stack" aria-label="앞서 뽑은 카드">
                       {openedResults.slice(-14).map((r, i) => (
-                        <button key={`opened:${i}:${r.sceneId}:${r.rarity}`} className="ym-gacha-opened-stack-card" onClick={(e) => { e.stopPropagation(); setDetailIndex(results.indexOf(r)); }}>
+                        <span key={`opened:${i}:${r.sceneId}:${r.rarity}`} className="ym-gacha-opened-stack-card">
                           <DeckCardFace sceneId={r.sceneId} rarity={r.rarity} size={154} />
-                        </button>
+                        </span>
                       ))}
                     </div>
                   )}
@@ -538,14 +512,6 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
                 {!allFlipped && spotlightIndex === null && <button onClick={flipAll} style={overlayBtn}>한번에 보기</button>}
                 {allFlipped && !bulkOpening && <button onClick={(e) => { e.stopPropagation(); setPhase('revealed'); }} className="ym-card-in" style={overlayBtn}>오늘 얻은 카드 보기</button>}
               </div>
-              {detailIndex !== null && results[detailIndex] && (
-                <CardDetailOverlay
-                  item={results[detailIndex]}
-                  canAdvance={detailIndex === visibleCount - 1 && visibleCount < results.length}
-                  onClose={() => setDetailIndex(null)}
-                  onAdvance={() => advanceCard(detailIndex)}
-                />
-              )}
             </>
           )}
         </div>,
@@ -597,30 +563,39 @@ function BurstParticles({ color }: { color: string }) {
   );
 }
 
-function GiftDialogueRow({ sceneId, rarity }: { sceneId: string; rarity: Rarity }) {
+function CollectionCardDetailModal({ sceneId, rarity, count, onClose }: { sceneId: string; rarity: Rarity; count: number; onClose: () => void }) {
   const item = gachaItemForPlace(placeOf(sceneId), rarity);
   const place = placeOf(sceneId);
   const dialogue = giftDialogue(place, item.title, rarity);
   const speakText = dialogue.lines.map((line) => line.ja).join('。');
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '12px 13px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)' }}>
-      <DeckCardFace sceneId={sceneId} rarity={rarity} size={76} />
-      <span style={{ flex: 1, minWidth: 0 }}>
-        <span lang="ja" style={{ display: 'block', fontSize: 15, color: rarityMeta(rarity).color, fontWeight: 950, lineHeight: 1.25 }}>{item.jaTitle ?? item.title}</span>
-        <span style={{ display: 'block', marginTop: 3, fontSize: 12, color: 'var(--ink-soft)', fontWeight: 750, lineHeight: 1.35 }}>{itemKoreanDescription(place, item.title, rarity)}</span>
-        <span style={{ display: 'block', marginTop: 5, fontSize: 11, color: 'var(--ink-faint)', fontWeight: 850 }}>{dialogue.title}</span>
+    <Modal title="카드 상세" onClose={onClose}>
+      <div style={{ display: 'grid', gridTemplateColumns: '132px minmax(0, 1fr)', gap: 14, alignItems: 'center' }}>
+        <DeckCardFace sceneId={sceneId} rarity={rarity} size={128} />
+        <div style={{ minWidth: 0 }}>
+          <p style={{ margin: 0, color: rarityMeta(rarity).color, fontSize: 12, fontWeight: 950, letterSpacing: '0.06em' }}>{rarityStars(rarity)} STAR · {place}</p>
+          <h3 lang="ja" style={{ margin: '6px 0 0', fontSize: 22, lineHeight: 1.15, color: 'var(--ink)' }}>{item.jaTitle ?? item.title}</h3>
+          <strong style={{ display: 'block', marginTop: 5, color: 'var(--ink)', fontSize: 15 }}>{item.title}</strong>
+          <p style={{ margin: '8px 0 0', color: 'var(--ink-soft)', fontSize: 13, lineHeight: 1.5 }}>{itemKoreanDescription(place, item.title, rarity)}</p>
+          <span style={{ display: 'inline-flex', marginTop: 9, padding: '5px 8px', borderRadius: 999, background: 'var(--accent-soft)', color: 'var(--accent)', fontSize: 11.5, fontWeight: 900 }}>보유 {count}장</span>
+        </div>
+      </div>
+      <section style={{ marginTop: 16, padding: 14, borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+          <strong style={{ color: 'var(--ink)', fontSize: 14 }}>{dialogue.title}</strong>
+          <button className="ym-press" onClick={() => speak(speakText)} disabled={!ttsSupported()} aria-label="일본어 문장 듣기"
+            style={{ flex: '0 0 auto', width: 38, height: 38, borderRadius: 11, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--accent)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name="listen" size={18} />
+          </button>
+        </div>
         {dialogue.lines.map((line, i) => (
-          <span key={i} style={{ display: 'block', marginTop: i === 0 ? 5 : 4 }}>
-            <span lang="ja" style={{ display: 'block', fontSize: 14.5, fontWeight: 850, lineHeight: 1.35 }}>{line.ja}</span>
-            <span style={{ display: 'block', marginTop: 2, fontSize: 11.5, color: 'var(--ink-soft)', fontWeight: 650, lineHeight: 1.35 }}>{line.ko}</span>
-          </span>
+          <div key={i} style={{ padding: i === 0 ? '0 0 10px' : '10px 0 0', borderTop: i === 0 ? 'none' : '1px solid var(--glass-border)' }}>
+            <p lang="ja" style={{ margin: 0, color: 'var(--ink)', fontSize: 18, lineHeight: 1.38, fontWeight: 900 }}>{line.ja}</p>
+            <p style={{ margin: '4px 0 0', color: 'var(--ink-soft)', fontSize: 13, lineHeight: 1.45, fontWeight: 700 }}>{line.ko}</p>
+          </div>
         ))}
-      </span>
-      <button className="ym-press" onClick={() => speak(speakText)} disabled={!ttsSupported()} aria-label="듣기"
-        style={{ flex: '0 0 auto', width: 38, height: 38, borderRadius: 11, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--accent)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Icon name="listen" size={18} />
-      </button>
-    </div>
+      </section>
+    </Modal>
   );
 }
 
@@ -703,17 +678,10 @@ function totalItemsAll(c: Collection): number {
 }
 
 export function DeckBrowser() {
-  const [collection, setCollection] = useState<Collection>(() => loadCollection());
+  const [collection] = useState<Collection>(() => loadCollection());
   const [selected, setSelected] = useState<string>();
-  const [merging, setMerging] = useState<string | null>(null);
-  const refresh = (next: Collection) => { saveCollection(next); setCollection(next); };
+  const [selectedDetail, setSelectedDetail] = useState<{ sceneId: string; rarity: Rarity } | null>(null);
   const stats = useLearningStats(collection);
-  function mergeWithFx(sceneId: string, rarity: Rarity) {
-    const key = `${sceneId}:${rarity}`;
-    setMerging(key);
-    refresh(mergeScene(collection, sceneId, rarity));
-    window.setTimeout(() => setMerging((cur) => (cur === key ? null : cur)), 900);
-  }
 
   if (selected) {
     const card = collection.cards[selected];
@@ -721,34 +689,47 @@ export function DeckBrowser() {
     const ownedRarities = RARITIES.filter((r) => items[r.key] > 0).map((r) => r.key);
     return (
       <>
-        <button className="ym-press" onClick={() => setSelected(undefined)} style={{ border: 0, background: 'transparent', color: 'var(--ink-soft)', fontWeight: 800, padding: '4px 0 12px', cursor: 'pointer' }}>← 도감으로</button>
+        <button className="ym-press" onClick={() => { setSelected(undefined); setSelectedDetail(null); }} style={{ border: 0, background: 'transparent', color: 'var(--ink-soft)', fontWeight: 800, padding: '4px 0 12px', cursor: 'pointer' }}>← 도감으로</button>
         <p style={{ margin: '0 0 14px', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>
-          {placeOf(selected)}에서 모은 선물 카드예요. 카드는 학습 해금이 아니라 여행 보상으로 쌓입니다.
+          {placeOf(selected)}에서 모은 선물 카드예요. 획득한 카드만 눌러 상세 문장을 볼 수 있습니다.
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10, marginBottom: 14 }}>
           {RARITIES.map((r) => {
             const count = items[r.key];
+            if (!count) {
+              return (
+                <div key={r.key} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, padding: 11, borderRadius: 16, border: '1px dashed var(--glass-border)', background: 'var(--glass-bg)', opacity: 0.62 }}>
+                  <span style={{ width: 94, height: 134, borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(145deg, rgba(120,120,120,.14), rgba(120,120,120,.05))', color: 'var(--ink-faint)', border: '1px solid var(--glass-border)', fontWeight: 950, fontSize: 24 }}>?</span>
+                  <span style={{ fontSize: 12, fontWeight: 900, color: 'var(--ink-faint)' }}>미획득 카드</span>
+                  <span style={{ fontSize: 11, fontWeight: 850, color: 'var(--ink-faint)' }}>정보 잠김</span>
+                </div>
+              );
+            }
             const item = gachaItemForPlace(placeOf(selected), r.key);
             return (
-              <div key={r.key} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: 11, borderRadius: 16, border: `1px solid ${count ? r.color : 'var(--glass-border)'}`, background: count ? 'var(--glass-bg-strong)' : 'var(--glass-bg)', opacity: count ? 1 : 0.48 }}>
+              <button key={r.key} className="ym-press" onClick={() => setSelectedDetail({ sceneId: selected, rarity: r.key })} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: 11, borderRadius: 16, border: `1px solid ${r.color}`, background: 'var(--glass-bg-strong)', color: 'var(--ink)', cursor: 'pointer' }}>
                 <DeckCardFace sceneId={selected} rarity={r.key} size={94} />
                 <span lang="ja" style={{ fontSize: 12, fontWeight: 950, color: r.color, textAlign: 'center' }}>{item.jaTitle ?? item.title}</span>
                 <span style={{ fontSize: 11, fontWeight: 850, color: 'var(--ink-soft)' }}>x{count}</span>
-              </div>
+              </button>
             );
           })}
         </div>
+        {selectedDetail && items[selectedDetail.rarity] > 0 && (
+          <CollectionCardDetailModal
+            sceneId={selectedDetail.sceneId}
+            rarity={selectedDetail.rarity}
+            count={items[selectedDetail.rarity]}
+            onClose={() => setSelectedDetail(null)}
+          />
+        )}
         <div style={{ padding: 14, borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', marginBottom: 12 }}>
           <strong style={{ display: 'block', color: 'var(--ink)', fontSize: 14 }}>최종 미션 카드</strong>
           <span style={{ display: 'block', marginTop: 5, color: 'var(--ink-soft)', fontSize: 12.5, lineHeight: 1.5, fontWeight: 700 }}>
             모든 여행 선물을 모으면 특별한 최종 카드가 열립니다. 관리자랑 데이트하기, 일본여행 같이 가기 같은 큰 선물이 숨어 있어요.
           </span>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
-          {ownedRarities.length
-            ? ownedRarities.map((r) => <GiftDialogueRow key={r} sceneId={selected} rarity={r} />)
-            : <p style={{ margin: 0, color: 'var(--ink-faint)', fontSize: 13, fontWeight: 700 }}>아직 이 장면의 선물 카드가 없어요.</p>}
-        </div>
+        {!ownedRarities.length && <p style={{ margin: 0, color: 'var(--ink-faint)', fontSize: 13, fontWeight: 700 }}>아직 이 장면의 선물 카드가 없어요.</p>}
       </>
     );
   }
@@ -763,7 +744,7 @@ export function DeckBrowser() {
         {' · '}최종 선물 <strong style={{ color: 'var(--accent)' }}>{finalGift.have}</strong>/{finalGift.total}
       </p>
       <p style={{ margin: '0 0 14px', fontSize: 12, color: 'var(--ink-faint)', lineHeight: 1.5 }}>
-        각 장면에서 같은 선물을 모으면 더 특별한 선물로 교환할 수 있어요. 마지막 선물은 명예 트로피로 이어집니다.
+        같은 별 카드를 50장 모으면 자동으로 상위 카드 1장으로 업그레이드돼요. 결과는 바로 위 70%, 두 단계 위 20%, 세 단계 위 10% 확률입니다.
       </p>
       <div style={{ margin: '0 0 14px', padding: 14, borderRadius: 16, border: `1px solid ${finalGift.ready ? 'var(--accent)' : 'var(--glass-border)'}`, background: finalGift.ready ? 'var(--accent-soft)' : 'var(--glass-bg-strong)', color: 'var(--ink)' }}>
         <strong style={{ display: 'block', fontSize: 15 }}>비밀 최종 미션 카드</strong>
@@ -794,31 +775,19 @@ export function DeckBrowser() {
             );
           }
           return (
-            <div key={m.id} className={merging?.startsWith(`${m.id}:`) ? 'ym-gacha-merge-host is-merging' : 'ym-gacha-merge-host'} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '14px 9px', borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', position: 'relative', overflow: 'hidden' }}>
-              {merging?.startsWith(`${m.id}:`) && <span className="ym-gacha-merge-burst" aria-hidden />}
+            <div key={m.id} className="ym-gacha-merge-host" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '14px 9px', borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', position: 'relative', overflow: 'hidden' }}>
               <button className="ym-press" onClick={() => setSelected(m.id)} style={{ border: 0, background: 'transparent', color: 'var(--ink)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: 0 }}>
                 <DeckCardFace sceneId={m.id} rarity={rarity} size={82} />
                 <span style={{ fontSize: 12, fontWeight: 850 }}>{placeOf(m.id)}</span>
               </button>
               <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}>
                 {RARITIES.map((r) => {
-                  const item = gachaItemForPlace(m.place, r.key);
-                  return <span key={r.key} style={{ fontSize: 10.5, fontWeight: 850, color: r.color, border: `1px solid ${r.color}`, borderRadius: 999, padding: '2px 5px' }}>{item.title} {items[r.key]}</span>;
+                  const count = items[r.key];
+                  const label = count > 0 ? `${gachaItemForPlace(m.place, r.key).title} ${count}` : '미획득';
+                  return <span key={r.key} style={{ fontSize: 10.5, fontWeight: 850, color: count > 0 ? r.color : 'var(--ink-faint)', border: `1px solid ${count > 0 ? r.color : 'var(--glass-border)'}`, borderRadius: 999, padding: '2px 5px' }}>{label}</span>;
                 })}
               </div>
-              <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', justifyContent: 'center' }}>
-                {RARITIES.map((r) => {
-                  const need = MERGE_NEED[r.key];
-                  const can = items[r.key] >= need;
-                  const next = NEXT_RARITY[r.key] ? gachaItemForPlace(m.place, NEXT_RARITY[r.key]!).title : '트로피';
-                  return (
-                    <button key={r.key} className={can ? 'ym-press ym-gacha-merge-btn' : 'ym-press'} disabled={!can} onClick={() => mergeWithFx(m.id, r.key)}
-                      style={{ padding: '5px 7px', borderRadius: 8, border: '1px solid var(--glass-border)', background: can ? 'var(--accent-soft)' : 'var(--glass-bg)', color: can ? 'var(--accent)' : 'var(--ink-faint)', fontSize: 10.5, fontWeight: 850, cursor: can ? 'pointer' : 'default', opacity: can ? 1 : 0.55 }}>
-                      {need}장→{next}
-                    </button>
-                  );
-                })}
-              </div>
+              <span style={{ fontSize: 10.5, color: 'var(--ink-faint)', fontWeight: 800 }}>같은 별 {MERGE_NEED.basic}장마다 자동 업그레이드</span>
               <span style={{ fontSize: 10, color: 'var(--ink-faint)', fontWeight: 750 }}>선물 카드 {totalItems(card)}장</span>
             </div>
           );

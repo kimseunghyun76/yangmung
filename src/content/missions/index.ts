@@ -64,7 +64,7 @@ type RecapCue = {
 
 const recapCueByStep: Record<string, Record<number, RecapCue>> = {
   C2: {
-    4: { speaker: '점원', ja: 'ご注文は以上でよろしいですか', ko: '주문은 이상으로 괜찮으세요?' },
+    4: { speaker: '점원', ja: 'おいくつにしますか', ko: '몇 개로 하시겠어요?' },
     5: { speaker: '점원', ja: '苦手なものやアレルギーはありますか', ko: '못 드시는 것이나 알레르기가 있나요?' },
   },
   C3: {

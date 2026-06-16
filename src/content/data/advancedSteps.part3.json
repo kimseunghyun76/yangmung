@@ -18,7 +18,7 @@
       "recapPromptJa": "苦手なネタはありますか。おまかせコースもできますよ",
       "recapPromptKo": "못 드시는 재료 있나요? 오마카세 코스도 가능해요",
       "choices": [
-        { "text": "알레르기가 있어요", "phraseId": "p_arerugi", "correct": true, "feedback": "코스를 시키기 전에 알레르기를 먼저 말하는 게 안전해요" },
+        { "text": "메밀·땅콩 알레르기가 있어요", "phraseId": "p_arerugi", "correct": true, "feedback": "「そばとピーナッツアレルギーがあります」— 오마카세 코스 전에 알레르기 원인을 구체적으로 말해야 셰프가 전 코스를 조율해줘요" },
         { "text": "없어요", "phraseId": "p_arimasen", "correct": true },
         { "text": "이거 빼 주세요", "phraseId": "p_kore_nuite", "correct": true },
         { "text": "잘 먹었습니다", "phraseId": "p_gochisousama", "correct": false, "feedback": "아직 주문 단계예요. 식사 후 인사는 마지막에!" }

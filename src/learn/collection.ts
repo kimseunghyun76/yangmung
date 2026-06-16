@@ -33,11 +33,11 @@ export const RARITIES: { key: Rarity; label: string; color: string; weight: numb
 
 export const DRAW_COUNT = 10;
 export const MERGE_NEED: Record<Rarity, number> = {
-  basic: 30,
-  bronze: 30,
-  silver: 20,
-  gold: 10,
-  diamond: 100,
+  basic: 50,
+  bronze: 50,
+  silver: 50,
+  gold: 50,
+  diamond: 50,
 };
 
 export const NEXT_RARITY: Partial<Record<Rarity, Rarity>> = {
@@ -114,22 +114,84 @@ export function saveCollection(c: Collection): void {
   try { window.localStorage.setItem(KEY, JSON.stringify(normalizeCollection(c))); } catch {}
 }
 
-function weightedRarity(): Rarity {
-  const total = RARITIES.reduce((sum, r) => sum + r.weight, 0);
+const rarityByStar = (star: 1 | 2 | 3 | 4 | 5): Rarity => RARITIES[star - 1].key;
+
+function weightedFromTable(table: { rarity: Rarity; weight: number }[]): Rarity {
+  const total = table.reduce((sum, r) => sum + r.weight, 0);
   let roll = Math.random() * total;
-  for (const r of RARITIES) {
+  for (const r of table) {
     roll -= r.weight;
-    if (roll <= 0) return r.key;
+    if (roll <= 0) return r.rarity;
   }
-  return 'basic';
+  return table[0]?.rarity ?? 'basic';
+}
+
+function weightedRarity(level: 1 | 2 | 3 | 4 = 2): Rarity {
+  if (level === 1) {
+    return weightedFromTable([
+      { rarity: rarityByStar(1), weight: 80 },
+      { rarity: rarityByStar(2), weight: 18 },
+      { rarity: rarityByStar(3), weight: 2 },
+    ]);
+  }
+  if (level === 3) {
+    return weightedFromTable([
+      { rarity: rarityByStar(2), weight: 80 },
+      { rarity: rarityByStar(3), weight: 16 },
+      { rarity: rarityByStar(4), weight: 4 },
+    ]);
+  }
+  if (level === 4) {
+    return weightedFromTable([
+      { rarity: rarityByStar(2), weight: 70 },
+      { rarity: rarityByStar(3), weight: 26 },
+      { rarity: rarityByStar(4), weight: 4 },
+    ]);
+  }
+  return weightedFromTable([
+    { rarity: rarityByStar(1), weight: 70 },
+    { rarity: rarityByStar(2), weight: 26 },
+    { rarity: rarityByStar(3), weight: 4 },
+  ]);
 }
 
 function pickScene(sceneIds: string[]): string {
   return sceneIds[Math.floor(Math.random() * sceneIds.length)];
 }
 
-// 세션 보상 — 해당 세션 장면에서만 10장 드롭. 기본/동/은/금/다이아는 가중치 50/30/13/7/1.
-export function claim(prev: Collection, sessionId: number, sceneIds: string[], draws = DRAW_COUNT, _preferredLevel?: 1 | 2 | 3 | 4): { collection: Collection; results: DropResult[] } {
+function upgradeTarget(rarity: Rarity): Rarity | TrophyKey {
+  if (rarity === 'diamond') return 'honor';
+  const base = rarityToTier(rarity);
+  const roll = Math.random() * 100;
+  const offset = roll < 70 ? 1 : roll < 90 ? 2 : 3;
+  return tierToRarity(Math.min(MAX_TIER, base + offset));
+}
+
+function autoUpgradeCollection(c: Collection): Collection {
+  const cards = { ...c.cards };
+  const trophies = { ...c.trophies };
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (const sceneId of Object.keys(cards)) {
+      const items = itemsOf(cards[sceneId]);
+      for (const rarity of RARITIES.map((r) => r.key)) {
+        const need = MERGE_NEED[rarity];
+        if ((items[rarity] ?? 0) < need) continue;
+        items[rarity] -= need;
+        const target = upgradeTarget(rarity);
+        if (target === 'honor') trophies.honor = (trophies.honor ?? 0) + 1;
+        else items[target] += 1;
+        cards[sceneId] = { items };
+        changed = true;
+      }
+    }
+  }
+  return { ...c, cards, trophies };
+}
+
+// 세션 보상 — 해당 세션 장면에서만 드롭. 별 등급 확률은 현재 학습 모드에 맞춘다.
+export function claim(prev: Collection, sessionId: number, sceneIds: string[], draws = DRAW_COUNT, preferredLevel: 1 | 2 | 3 | 4 = 2): { collection: Collection; results: DropResult[] } {
   const normalized = normalizeCollection(prev);
   if (sessionId > 0 && normalized.lastClaimedSessionId === sessionId) return { collection: normalized, results: [] };
   if (sceneIds.length === 0) return { collection: normalized, results: [] };
@@ -139,7 +201,7 @@ export function claim(prev: Collection, sessionId: number, sceneIds: string[], d
 
   for (let i = 0; i < draws; i++) {
     const sceneId = pickScene(sceneIds);
-    const rarity = weightedRarity();
+    const rarity = weightedRarity(preferredLevel);
     const before = cards[sceneId];
     const isNew = !before || totalItems(before) === 0;
     const item = normalizeCard(before);
@@ -150,7 +212,7 @@ export function claim(prev: Collection, sessionId: number, sceneIds: string[], d
     results.push({ sceneId, rarity, count: 1, isNew, sentenceIds: [], tier: rarityToTier(rarity), shards: items[rarity], leveledTo: null });
   }
 
-  return { collection: { cards, sentences, trophies: normalized.trophies, lastClaimedSessionId: sessionId }, results };
+  return { collection: autoUpgradeCollection({ cards, sentences, trophies: normalized.trophies, lastClaimedSessionId: sessionId }), results };
 }
 
 export function mergeScene(prev: Collection, sceneId: string, rarity: Rarity): Collection {
@@ -161,10 +223,10 @@ export function mergeScene(prev: Collection, sceneId: string, rarity: Rarity): C
   const items = itemsOf(card);
   if ((items[rarity] ?? 0) < need) return c;
   items[rarity] -= need;
-  const next = NEXT_RARITY[rarity];
   const trophies = { ...c.trophies };
-  if (next) items[next] += 1;
-  else trophies.honor = (trophies.honor ?? 0) + 1;
+  const target = upgradeTarget(rarity);
+  if (target === 'honor') trophies.honor = (trophies.honor ?? 0) + 1;
+  else items[target] += 1;
   cards[sceneId] = { items };
   return { ...c, cards, trophies };
 }

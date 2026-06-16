@@ -5,7 +5,7 @@ import { itemMastery, type ProgressMap } from '../learn/progress';
 import { CONTENT } from '../content';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
-import { sceneVisualByMission } from './scene';
+import { isMangaSceneImage, quickPracticeBackdrop, sceneVisualByMission } from './scene';
 import { PrimaryAction, hexA } from './shell';
 import { MascotBubble, MascotFace, MascotLine } from './mascot';
 
@@ -90,6 +90,26 @@ function quickPracticePoints(cards: Card[]): string[] {
   return ['오늘 필요한 표현만 짧게 모아 연습합니다.', '이미 본 카드는 더 빠르게, 약한 카드는 더 앞쪽에서 다시 만나요.', '끝까지 마치면 다음 여행 보상 흐름으로 이어집니다.'];
 }
 
+function quickPracticeKind(cards: Card[]): string {
+  const ids = cards.map((card) => card.id);
+  if (ids.some((id) => id.startsWith('basic:'))) return 'basics';
+  if (ids.some((id) => id.startsWith('sign:'))) return 'signs';
+  if (cards.some((card) => card.kind === 'dictation' && card.promptKind === 'korean')) return 'compose';
+  if (cards.some((card) => card.kind === 'dictation')) return 'dictation';
+  if (ids.some((id) => id.startsWith('pair:'))) return 'pairs';
+  if (ids.some((id) => id.startsWith('vocab:greetings:'))) return 'greetings';
+  if (ids.some((id) => id.startsWith('vocab:'))) return 'vocab';
+  const kanaIds = cards
+    .map((card) => ('reviewTarget' in card && card.reviewTarget?.type === 'kana') ? String(card.reviewTarget.id) : '')
+    .filter(Boolean);
+  if (kanaIds.length) {
+    const scripts = new Set(kanaIds.map((id) => CONTENT.kana.find((k) => k.id === id)?.script).filter(Boolean));
+    if (scripts.size === 1 && scripts.has('katakana')) return 'katakana';
+    return 'hiragana';
+  }
+  return 'flash';
+}
+
 export function Intro({ cards, allCards, progress, goal, onStart, onBack }: IntroProps) {
   let expressionCount = 0, missionCount = 0;
   let firstMissionId: string | undefined;
@@ -110,7 +130,8 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
     }
   }
   const sv = sceneVisualByMission(firstMissionId);
-  const backdrop = sv.backdrop ?? sv.hero;
+  const backdrop = firstMissionId ? (sv.backdrop ?? sv.hero) : quickPracticeBackdrop(quickPracticeKind(cards));
+  const showFullBackdrop = isMangaSceneImage(backdrop);
   const mission = firstMissionId ? CONTENT.missions.find((m) => m.id === firstMissionId) : undefined;
   const place = mission?.place;
   const { attempts, seen, weak } = introMissionStats(allCards, progress, firstMissionId);
@@ -134,7 +155,24 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
         boxShadow: 'var(--glass-shadow)',
         color: backdrop ? '#fff' : 'var(--ink)',
       }}>
-        {backdrop && <img src={backdrop} alt="" aria-hidden style={{ position: 'absolute', insetInline: 0, top: 0, width: '100%', objectFit: 'contain', filter: 'saturate(.82) contrast(.96) brightness(1.08)' }} />}
+        {backdrop && showFullBackdrop && <img src={backdrop} alt="" aria-hidden style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          opacity: 0.34,
+          filter: 'blur(16px) saturate(.82) contrast(.96) brightness(1.08)',
+        }} />}
+        {backdrop && <img src={backdrop} alt="" aria-hidden style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: showFullBackdrop ? 'contain' : 'cover',
+          objectPosition: 'center',
+          filter: 'saturate(.82) contrast(.96) brightness(1.08)',
+        }} />}
         {backdrop && <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.34) 42%, rgba(0,0,0,0.78))' }} />}
         {!backdrop && (
           <div aria-hidden style={{ position: 'absolute', right: -18, top: 18, width: 170, height: 170, borderRadius: 42, background: `radial-gradient(circle at 44% 38%, ${hexA(sv.accent, 0.22)}, transparent 64%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: 'rotate(5deg)' }}>

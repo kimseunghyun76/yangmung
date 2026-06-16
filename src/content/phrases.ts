@@ -121,7 +121,7 @@ export const phrases: Phrase[] = [
   // ── C11 코인로커 ──
   { id: 'p_koinrokkaa', kana: 'コインロッカーはどこですか', displayKana: 'コインロッカーは、どこですか？', korean: '코인로커 어디예요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '「コインロッカーはどこですか」— 대형 역에는 S·M·L 다양한 크기의 로커가 있어요. 가방을 맡기고 싶을 때 荷物(にもつ)を預(あず)けたいです라고도 할 수 있어요' },
   { id: 'p_tsukaikata', kana: 'つかいかたをおしえてください', kanji: '使い方を教えてください', korean: '사용법 알려 주세요', register: 'productive', tip: '「使(つか)い方(かた)を教(おし)えてください」— 기계·기구 사용법을 모를 때. 코인로커·자동판매기·식권기 등 어디서나 쓸 수 있는 유용한 표현이에요' },
-  { id: 'p_kono_botan_oshite', kana: 'このボタンをおしてください', kanji: 'このボタンを押してください', displayKana: 'このボタンを、おしてください', korean: '이 버튼을 눌러 주세요', register: 'receptive' },
+  { id: 'p_kono_botan_oshite', kana: 'このボタンをおしてください', kanji: 'このボタンを押してください', displayKana: 'このボタンを、おしてください', korean: '이 버튼을 눌러 주세요', register: 'both' },
 
   // ── C12 편의점 택배(택큐빈) ──
   { id: 'p_okuritai', kana: 'これをおくりたいです', kanji: 'これを送りたいです', displayKana: 'これを、おくりたいです', korean: '이거 보내고 싶어요', register: 'productive', tip: '「これを送(おく)りたいです」— 짐을 가리키며 말하면 OK. 호텔→공항 당일 배송 서비스(手荷物宅配/てにもつたくはい)도 있어요. 무거운 짐은 미리 보내는 게 편해요' },
@@ -152,13 +152,13 @@ export const phrases: Phrase[] = [
 
   // ── C8 택시 ──
   { id: 'p_takushi_onegai', kana: 'タクシーおねがいします', kanji: 'タクシーお願いします', displayKana: 'タクシー、おねがいします', korean: '택시 불러주세요', register: 'productive', tip: '「タクシーお願(ねが)いします」— 일본 택시는 자동문! 직접 열지 않아도 기사가 열어줘요. 목적지 주소나 지도를 보여주면 원활하게 소통할 수 있어요' },
-  { id: 'p_made_onegai', kana: 'までおねがいします', kanji: 'までお願いします', korean: '~까지 가주세요', register: 'productive', tip: '행선지 뒤에 붙여요: 「しぶやまでおねがいします」' },
+  { id: 'p_made_onegai', kana: 'しぶやまでおねがいします', kanji: '渋谷までお願いします', displayKana: 'しぶや、までおねがいします', korean: '시부야까지 가주세요', register: 'productive', tip: '「渋谷(しぶや)までお願(ねが)いします」— 目的地(もくてきち)+まで+お願いします 패턴으로 어디든 응용 가능. 스마트폰 지도 화면을 기사에게 보여줘도 OK예요' },
   { id: 'p_koko_de_tomete', kana: 'ここでとめてください', kanji: 'ここで止めてください', displayKana: 'ここで、とめてください', korean: '여기서 세워 주세요', register: 'productive', tip: '「ここで止(と)めてください」— 목적지 근처에서 내릴 때. あそこで止めてください(저기서요)나 교차로를 가리켜도 OK. 정차 후 요금이 올라가는 경우가 있으니 미터를 확인해요' },
   { id: 'p_doko_made', kana: 'どこまでですか', displayKana: 'どこまでですか？', korean: '어디까지 가세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_ryoushuusho', kana: 'りょうしゅうしょをください', kanji: '領収書をください', korean: '영수증 주세요', register: 'productive', tip: '「領収書(りょうしゅうしょ)をください」— 택시 영수증은 경비 처리용 공식 영수증. 가게의 レシートとは違って 회사명·금액이 정식으로 기재돼요. 출장 시 필수예요' },
 
   // ── 식당 안전·실용 (알레르기·빼달라기) ──
-  { id: 'p_arerugi', kana: 'アレルギーがあります', displayKana: 'アレルギーが、あります', korean: '알레르기가 있어요', register: 'productive', tip: '주문 전에 먼저 알리면 점원이 재료를 챙겨줘요' },
+  { id: 'p_arerugi', kana: 'そばとピーナッツアレルギーがあります', kanji: 'そばとピーナッツアレルギーがあります', displayKana: 'そばと、ピーナッツアレルギーが、あります', korean: '메밀·땅콩 알레르기가 있어요', register: 'productive', tip: '「アレルギーがあります」— 주문 전에 반드시 알리세요. 메밀(そば)·땅콩(ピーナッツ)·새우(えび)는 일본 식당에서 특히 주의 식재료예요. 중증 알레르기는 アレルギーカードを見せます라고 하면 점원이 더 신중하게 대응해요' },
   { id: 'p_kore_nuite', kana: 'これをぬいてください', kanji: 'これを抜いてください', korean: '이거 빼 주세요', register: 'productive', tip: '「これを抜(ぬ)いてください」— 특정 재료를 빼달라는 요청. 메뉴 사진에서 빼고 싶은 재료를 가리키며 쓰면 효과적이에요. 알레르기가 있을 때는 アレルギーがあります와 함께 써요' },
 
   // ── C5 거리·긴급 한마디 (여행 실전 — 화장실·사진·도움) ──
@@ -211,7 +211,7 @@ export const phrases: Phrase[] = [
   { id: 'p_nigate_na_mono_arimasu_ka', kana: 'にがてなものはありますか', kanji: '苦手なものはありますか', displayKana: 'にがてなものは、ありますか？', korean: '못 드시는 것이 있나요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_sabi_wa_daijoubu_desu_ka', kana: 'さびはだいじょうぶですか', kanji: 'さびは大丈夫ですか', displayKana: 'さびは、だいじょうぶですか？', korean: '와사비 괜찮으세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_nanika_osagashi_desu_ka', kana: 'なにかおさがしですか', kanji: '何かお探しですか', displayKana: 'なにか、おさがしですか？', korean: '무엇을 찾고 계세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
-  { id: 'p_chiketto_wa_kochira_desu', kana: 'チケットはこちらです', kanji: 'チケットはこちらです', korean: '티켓은 이쪽입니다', register: 'receptive' },
+  { id: 'p_chiketto_wa_kochira_desu', kana: 'チケットはこちらです', kanji: 'チケットはこちらです', korean: '티켓은 이쪽입니다', register: 'both' },
   { id: 'p_chizu_wa_irimasu_ka', kana: 'ちずはいりますか', kanji: '地図は要りますか', displayKana: 'ちずは、いりますか？', korean: '지도 필요하세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_dou_nasaimashita_ka', kana: 'どうなさいましたか', kanji: 'どうなさいましたか', displayKana: 'どうなさいましたか？', korean: '무슨 일이세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_shashin_wa_daijoubu_desu', kana: 'しゃしんはだいじょうぶです', kanji: '写真は大丈夫です', displayKana: 'しゃしんは、だいじょうぶです。', korean: '사진은 괜찮습니다', register: 'receptive' },
@@ -238,7 +238,7 @@ export const phrases: Phrase[] = [
   { id: 'p_renrakusaki_o_kaite_kudasai', kana: 'れんらくさきをかいてください', kanji: '連絡先を書いてください', displayKana: 'れんらくさきを、かいてください。', korean: '연락처를 적어 주세요', register: 'receptive' },
   { id: 'p_daijoubu_desu_ka', kana: 'だいじょうぶですか', kanji: '大丈夫ですか', displayKana: 'だいじょうぶですか？', korean: '괜찮으세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_kyuukyuusha_o_yobimasu', kana: 'きゅうきゅうしゃをよびます', kanji: '救急車を呼びます', korean: '구급차를 부르겠습니다', register: 'receptive' },
-  { id: 'p_basho_o_oshiete_kudasai', kana: 'ばしょをおしえてください', kanji: '場所を教えてください', displayKana: 'ばしょを、おしえてください。', korean: '장소를 알려 주세요', register: 'receptive' },
+  { id: 'p_basho_o_oshiete_kudasai', kana: 'ばしょをおしえてください', kanji: '場所を教えてください', displayKana: 'ばしょを、おしえてください。', korean: '장소를 알려 주세요', register: 'both' },
   { id: 'p_dono_puran_ni_shimasu_ka', kana: 'どのプランにしますか', kanji: 'どのプランにしますか', displayKana: 'どのプランにしますか？', korean: '어떤 요금제로 하시겠어요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_pasupooto_kakunin_shimasu', kana: 'パスポートをかくにんします', kanji: 'パスポートを確認します', korean: '여권을 확인하겠습니다', register: 'receptive' },
   { id: 'p_settei_o_tetsudaimasu', kana: 'せっていをてつだいます', kanji: '設定を手伝います', korean: '설정을 도와드리겠습니다', register: 'receptive' },
