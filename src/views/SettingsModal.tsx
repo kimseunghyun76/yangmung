@@ -10,6 +10,8 @@ interface Props {
   onSelectMode: (m: LearnMode) => void;
   onMarkKanaKnown: () => void;
   onReset: () => void;
+  onResetUnlocks: () => void;
+  onFillDevCards: () => void;
   onClose: () => void;
 }
 
@@ -29,7 +31,7 @@ const gbtn: CSSProperties = { borderRadius: 12, border: '1px solid var(--glass-b
 const head: CSSProperties = { margin: '0 0 8px', fontWeight: 700, fontSize: 14, display: 'flex', alignItems: 'center', gap: 7 };
 const toggle = (on: boolean): CSSProperties => ({ ...gbtn, padding: '8px 16px', borderRadius: 999, background: on ? 'var(--accent)' : 'var(--glass-bg-strong)', color: on ? 'var(--accent-ink)' : 'var(--ink-soft)', border: `1px solid ${on ? 'var(--ink)' : 'var(--glass-border)'}` });
 
-export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnown, onReset, onClose }: Props) {
+export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnown, onReset, onResetUnlocks, onFillDevCards, onClose }: Props) {
   const seg = (active: boolean): CSSProperties => ({
     ...gbtn, flex: 1, textAlign: 'center', fontSize: 13, padding: '9px 6px',
     background: active ? 'var(--accent)' : 'var(--glass-bg-strong)', color: active ? 'var(--accent-ink)' : 'var(--ink-soft)',
@@ -77,8 +79,23 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
         가나는 이미 알아요 (건너뛰기)
       </button>
       <button className="ym-press" style={{ ...gbtn, width: '100%', marginTop: 10, textAlign: 'center', color: 'var(--accent)' }}
-        onClick={() => { if (confirm('진척을 모두 지울까요? (가나·표현·세션 기록 초기화)')) { onReset(); onClose(); } }}>
+        onClick={() => { if (confirm('진척을 모두 지울까요? (가나·표현·세션 기록 + 장면 해제 초기화)')) { onReset(); onClose(); } }}>
         진척 모두 초기화
+      </button>
+
+      {/* ── 개발자 도구 (테스트용) ── */}
+      <p style={{ ...head, marginTop: 22, color: 'var(--ink-faint)' }}>🛠 개발자 도구</p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-soft)' }}>모든 장면 lock 해제</span>
+        <button className="ym-press" style={toggle(!!settings.devUnlockAll)} onClick={() => onChange({ ...settings, devUnlockAll: !settings.devUnlockAll })}>{settings.devUnlockAll ? '켜짐' : '꺼짐'}</button>
+      </div>
+      <button className="ym-press" style={{ ...gbtn, width: '100%', marginTop: 10, textAlign: 'center' }}
+        onClick={() => { onFillDevCards(); onClose(); }}>
+        가챠 카드 미션별 30장 채우기
+      </button>
+      <button className="ym-press" style={{ ...gbtn, width: '100%', marginTop: 10, textAlign: 'center', color: 'var(--ink-soft)' }}
+        onClick={() => { if (confirm('카드로 해제한 장면 lock을 초기화할까요? (진척은 유지)')) { onResetUnlocks(); } }}>
+        장면 lock만 초기화
       </button>
     </Modal>
   );

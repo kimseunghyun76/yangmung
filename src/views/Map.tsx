@@ -1,8 +1,9 @@
 // 학습 지도 — 추천 / 열린 장면 / 곧 열릴 여행지 3구획. (정보 밀도 정리)
 import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
-import { isMissionUnlocked, kanaReadMastery, missionProgress, type ProgressMap } from '../learn/progress';
-import { bestRarity, loadCollection, totalItems } from '../learn/collection';
+import { kanaReadMastery, missionProgress, type ProgressMap } from '../learn/progress';
+import { bestRarity, loadCollection, totalItems, unlockCost } from '../learn/collection';
+import { isSceneOpen } from '../learn/unlocks';
 import { gachaItemForPlace } from '../learn/gachaItems';
 import { ROUTES, routePosition } from '../content/routes';
 import { speak, ttsSupported } from '../tts';
@@ -26,6 +27,9 @@ interface Props {
   nav: NavBarProps;
   allCards: Card[];
   progress: ProgressMap;
+  cardUnlocks: string[];
+  devUnlockAll: boolean;
+  onUnlockScene: (missionId: string) => boolean;
   onPracticeScene: (missionId: string) => void;
   onBack: () => void;
 }
@@ -43,14 +47,14 @@ function lockHint(missionId: string): string {
 
 interface SceneItem { m: typeof CONTENT.missions[number]; sv: SceneVisual; unlocked: boolean; done: boolean; started: boolean; mastered: number; total: number }
 
-export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props) {
+export function Map({ nav, allCards, progress, cardUnlocks, devUnlockAll, onUnlockScene, onPracticeScene, onBack }: Props) {
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
   const collection = loadCollection();
   const hira = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'hiragana').map((k) => k.id));
   const kata = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'katakana').map((k) => k.id));
 
   const items: SceneItem[] = scenes.map((m) => {
-    const unlocked = isMissionUnlocked(m.id, progress);
+    const unlocked = isSceneOpen(m.id, progress, cardUnlocks, devUnlockAll);
     const p = missionProgress(allCards, progress, m.id);
     return { m, sv: sceneVisualByMission(m.id), unlocked, done: unlocked && p.total > 0 && p.mastered === p.total, started: p.started, mastered: p.mastered, total: p.total };
   });
@@ -111,14 +115,25 @@ export function Map({ nav, allCards, progress, onPracticeScene, onBack }: Props)
                   const owned = totalItems(card);
                   const rarity = bestRarity(card);
                   const reward = gachaItemForPlace(x.m.place, rarity);
+                  const need = unlockCost(x.m.tier ?? 1);
+                  const place = x.m.place ?? x.m.scenario ?? '이 장면';
+                  const canUnlock = !x.unlocked && owned >= need;
+                  const onTile = () => {
+                    if (x.unlocked) { onPracticeScene(x.m.id); return; }
+                    if (owned >= need) {
+                      if (confirm(`${place} 카드 ${need}장을 사용해 이 장면을 열까요? (보유 ${owned}장)`) && !onUnlockScene(x.m.id)) alert('카드가 부족해요.');
+                    } else {
+                      alert(`이 장면을 열려면 ${place} 카드 ${need}장이 필요해요. (보유 ${owned}장)\n가챠로 이 장면 카드를 더 모아보세요.`);
+                    }
+                  };
                   return (
-                    <button key={x.m.id} className="ym-press" disabled={!x.unlocked} onClick={() => onPracticeScene(x.m.id)}
-                      style={{ minWidth: 0, padding: '10px 6px', borderRadius: 14, border: x.unlocked ? '1px solid var(--glass-border)' : '1px dashed var(--glass-border)', background: x.unlocked ? 'var(--glass-bg-strong)' : 'transparent', color: 'var(--ink)', cursor: x.unlocked ? 'pointer' : 'default', opacity: x.unlocked ? 1 : 0.58 }}>
+                    <button key={x.m.id} className="ym-press" onClick={onTile}
+                      style={{ minWidth: 0, padding: '10px 6px', borderRadius: 14, border: x.unlocked ? '1px solid var(--glass-border)' : canUnlock ? `1px solid ${hexA(x.sv.accent, 0.6)}` : '1px dashed var(--glass-border)', background: x.unlocked ? 'var(--glass-bg-strong)' : canUnlock ? hexA(x.sv.accent, 0.1) : 'transparent', color: 'var(--ink)', cursor: 'pointer', opacity: x.unlocked || canUnlock ? 1 : 0.58 }}>
                       <SceneImageThumb src={x.sv.backdrop ?? x.sv.thumb} icon={x.sv.icon} accent={x.sv.accent} size={42} muted={!x.unlocked} />
-                      <span style={{ display: 'block', marginTop: 6, fontSize: 12.5, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{x.m.place ?? x.m.scenario}</span>
-                      <span title={x.unlocked ? undefined : lockHint(x.m.id)} style={{ display: 'block', marginTop: 3, fontSize: 10.5, color: x.done ? 'var(--ok)' : 'var(--ink-faint)', fontWeight: 700 }}>{x.done ? '완료' : x.unlocked ? `${x.mastered}/${x.total}` : '🔒 잠김'}</span>
-                      <span style={{ display: 'block', marginTop: 6, padding: '4px 5px', borderRadius: 8, background: owned ? 'var(--accent-soft)' : 'var(--glass-bg)', color: owned ? 'var(--accent)' : 'var(--ink-faint)', fontSize: 10, fontWeight: 850, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {reward.title}
+                      <span style={{ display: 'block', marginTop: 6, fontSize: 12.5, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{x.unlocked ? place : '🔒 ???'}</span>
+                      <span title={x.unlocked ? undefined : lockHint(x.m.id)} style={{ display: 'block', marginTop: 3, fontSize: 10.5, color: x.done ? 'var(--ok)' : canUnlock ? x.sv.accent : 'var(--ink-faint)', fontWeight: 700 }}>{x.done ? '완료' : x.unlocked ? `${x.mastered}/${x.total}` : `🔒 카드 ${owned}/${need}`}</span>
+                      <span style={{ display: 'block', marginTop: 6, padding: '4px 5px', borderRadius: 8, background: canUnlock ? 'var(--accent)' : owned ? 'var(--accent-soft)' : 'var(--glass-bg)', color: canUnlock ? 'var(--accent-ink)' : owned ? 'var(--accent)' : 'var(--ink-faint)', fontSize: 10, fontWeight: 850, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {x.unlocked ? reward.title : canUnlock ? '카드로 열기' : '미개방'}
                       </span>
                     </button>
                   );

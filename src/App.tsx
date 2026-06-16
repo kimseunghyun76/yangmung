@@ -3,12 +3,14 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { buildCards, materializeQuizCard, type Card, type Choice, type DiscoverCard } from './learn/cards';
 import { CONTENT } from './content';
 import {
-  classifyCard, clearProgress, isKanaFamiliar, isMissionUnlocked, loadDiscovered, loadProgress, loadSeenKana, loadSession,
+  classifyCard, clearProgress, isKanaFamiliar, loadDiscovered, loadProgress, loadSeenKana, loadSession,
   markKanaKnown, markKanaSeen, missionsFromCards, nextSessionId, planSession, plannedSessionSize, recordAttempt, recordKnown,
   saveDiscovered, saveProgress, saveSeenKana, saveSession, selectBasicLifeCards, selectComposeCards, selectDictationCards,
   selectFlashCardsByMode, selectGreetingCards, selectMissionCards, selectPairCards, selectScriptKanaCards, selectSessionCards, selectSignCards, selectVocabCards,
   type FlashMode, type SeenKana, type SessionLogEntry,
 } from './learn/progress';
+import { loadCollection, saveCollection, fillDevCards, spendSceneCards, unlockCost } from './learn/collection';
+import { loadCardUnlocks, saveCardUnlocks, addCardUnlock, resetCardUnlocks, isSceneOpen } from './learn/unlocks';
 import { adaptSessionConfig, diagnose } from './learn/adaptive';
 import { extractKanaChars } from './learn/kanaReading';
 import { loadSettings, MODE_PRESETS, saveSettings, type Settings } from './learn/settings';
@@ -59,6 +61,7 @@ export function App() {
   const [placementCards, setPlacementCards] = useState<Card[]>([]); // 수준 진단(배치) 문항
   const [seenKana, setSeenKana] = useState<SeenKana>(() => loadSeenKana());
   const [discovered, setDiscovered] = useState<string[]>(() => loadDiscovered());
+  const [cardUnlocks, setCardUnlocks] = useState<string[]>(() => loadCardUnlocks()); // 카드로 해제한 장면
   const [settings, setSettings] = useState<Settings>(() => loadSettings());
   const [showGuide, setShowGuide] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -486,6 +489,26 @@ export function App() {
     setSession({ lastCompletedSessionId: 0 });
     setSeenKana({});
     setDiscovered([]);
+    resetCardUnlocks();
+    setCardUnlocks([]);
+  }
+
+  // 카드로 장면 해제 — 그 장면 카드를 tier별 비용만큼 소모. 부족하면 false.
+  function unlockScene(id: string): boolean {
+    const need = unlockCost(missionTierMap.get(id) ?? 1);
+    const next = spendSceneCards(loadCollection(), id, need);
+    if (!next) return false;
+    saveCollection(next);
+    const u = addCardUnlock(cardUnlocks, id);
+    setCardUnlocks(u); saveCardUnlocks(u);
+    return true;
+  }
+  // lock만 초기화(진척은 유지) — 설정의 개발 도구.
+  function resetUnlocks() { resetCardUnlocks(); setCardUnlocks([]); }
+  // 개발용: 모든 미션 장면에 가챠 카드 30장씩 채움(테스트 편의).
+  function fillDevCardsAll() {
+    const ids = CONTENT.missions.filter((m) => m.id !== 'C0').map((m) => m.id);
+    saveCollection(fillDevCards(loadCollection(), ids));
   }
 
   // ── 라우팅 ───────────────────────────────────────
@@ -500,7 +523,7 @@ export function App() {
 
   function renderView() {
     if (view === 'map') {
-      return <MapView nav={{ ...nav, current: 'map' }} allCards={allCards} progress={progress} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
+      return <MapView nav={{ ...nav, current: 'map' }} allCards={allCards} progress={progress} cardUnlocks={cardUnlocks} devUnlockAll={!!settings.devUnlockAll} onUnlockScene={unlockScene} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
     }
     if (view === 'review') {
       return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} onStartReview={startReviewSession} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
@@ -509,7 +532,7 @@ export function App() {
       return <GachaPage nav={{ ...nav, current: 'gacha' }} progress={progress} />;
     }
     if (view === 'flash') {
-      const unlockedSceneIds = CONTENT.missions.filter((m) => m.id !== 'C0' && isMissionUnlocked(m.id, progress)).map((m) => m.id);
+      const unlockedSceneIds = CONTENT.missions.filter((m) => m.id !== 'C0' && isSceneOpen(m.id, progress, cardUnlocks, !!settings.devUnlockAll)).map((m) => m.id);
       return <Flash cards={flashCards} unlockedSceneIds={unlockedSceneIds} onExit={() => setView('home')} onReplay={(mode, count) => startFlashSession(mode, count)} />;
     }
     if (view === 'placement') {
@@ -537,7 +560,7 @@ export function App() {
       const nextSceneId = planSession(allCards, progress, nextId, sessionConfig)
         .missions.find((m) => m.id !== 'C0')?.id;
       // 연습 세션(장면 없음)용 보상 장면 — 해금 장면에서 세션 id로 결정적 선택(2개)
-      const unlockedForReward = CONTENT.missions.filter((m) => m.id !== 'C0' && isMissionUnlocked(m.id, progress)).map((m) => m.id);
+      const unlockedForReward = CONTENT.missions.filter((m) => m.id !== 'C0' && isSceneOpen(m.id, progress, cardUnlocks, !!settings.devUnlockAll)).map((m) => m.id);
       const fallbackSceneIds = unlockedForReward.length
         ? [...new Set([unlockedForReward[sessionId % unlockedForReward.length], unlockedForReward[(sessionId + 1) % unlockedForReward.length]])]
         : [];
@@ -608,7 +631,7 @@ export function App() {
       {renderView()}
       {showGuide && <Guide onClose={() => setShowGuide(false)} />}
       {showSettings && (
-        <SettingsModal settings={settings} onChange={updateSettings} onSelectMode={selectMode} onMarkKanaKnown={markAllKanaKnown} onReset={resetAll} onClose={() => setShowSettings(false)} />
+        <SettingsModal settings={settings} onChange={updateSettings} onSelectMode={selectMode} onMarkKanaKnown={markAllKanaKnown} onReset={resetAll} onResetUnlocks={resetUnlocks} onFillDevCards={fillDevCardsAll} onClose={() => setShowSettings(false)} />
       )}
     </Suspense>
   );
