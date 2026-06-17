@@ -11,7 +11,7 @@ import {
 import { gachaItemForPlace } from '../learn/gachaItems';
 import { loadProgress } from '../learn/progress';
 import { Icon } from '../ui/Icon';
-import { speak, ttsSupported } from '../tts';
+import { speakSequence, ttsSupported } from '../tts';
 import { loadSettings, sceneSentenceLevelForMode } from '../learn/settings';
 import { Modal } from './Modal';
 import { sceneVisualByMission } from './scene';
@@ -567,7 +567,8 @@ function CollectionCardDetailModal({ sceneId, rarity, count, onClose }: { sceneI
   const item = gachaItemForPlace(placeOf(sceneId), rarity);
   const place = placeOf(sceneId);
   const dialogue = giftDialogue(place, item.title, rarity);
-  const speakText = dialogue.lines.map((line) => line.ja).join('。');
+  // 줄 단위로 읽어 각 줄이 개별 mp3(Nanami)를 탈 수 있게 — 없으면 줄마다 Web Speech 폴백.
+  const speakLines = dialogue.lines.map((line) => line.ja);
   return (
     <Modal title="카드 상세" onClose={onClose}>
       <div style={{ display: 'grid', gridTemplateColumns: '132px minmax(0, 1fr)', gap: 14, alignItems: 'center' }}>
@@ -583,7 +584,7 @@ function CollectionCardDetailModal({ sceneId, rarity, count, onClose }: { sceneI
       <section style={{ marginTop: 16, padding: 14, borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, marginBottom: 10 }}>
           <strong style={{ color: 'var(--ink)', fontSize: 14 }}>{dialogue.title}</strong>
-          <button className="ym-press" onClick={() => speak(speakText)} disabled={!ttsSupported()} aria-label="일본어 문장 듣기"
+          <button className="ym-press" onClick={() => speakSequence(speakLines)} disabled={!ttsSupported()} aria-label="일본어 문장 듣기"
             style={{ flex: '0 0 auto', width: 38, height: 38, borderRadius: 11, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--accent)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
             <Icon name="listen" size={18} />
           </button>
