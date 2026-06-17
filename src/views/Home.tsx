@@ -38,13 +38,14 @@ interface Props {
   onPracticePairs: () => void;
   onPracticeVocab: () => void;
   onPracticeGreetings: () => void;
+  onPracticeVerbs: () => void;
   onPlacement: () => void;
   placementDone: boolean;
 }
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' };
 
-export function Home({ nav, allCards, progress, session, sessionConfig, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation, onPracticeCompose, onPracticeFlash, onPracticeBasics, onPracticeWrite, onPracticePairs, onPracticeVocab, onPracticeGreetings, onPlacement, placementDone }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation, onPracticeCompose, onPracticeFlash, onPracticeBasics, onPracticeWrite, onPracticePairs, onPracticeVocab, onPracticeGreetings, onPracticeVerbs, onPlacement, placementDone }: Props) {
   const upcomingId = nextSessionId(session);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
   const planned = plan.size;
@@ -168,6 +169,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
               { label: '생활 기초', sub: '숫자·요일·시간', icon: 'target', onClick: onPracticeBasics },
               { label: '가나 쓰기', sub: '따라쓰기', icon: 'dictation', onClick: onPracticeWrite },
               { label: '발음 구분', sub: 'つ/す·장음·촉음', icon: 'listen', onClick: onPracticePairs },
+              { label: '동사 형태', sub: 'ます·ながら·たい', icon: 'flow', onClick: onPracticeVerbs },
             ] as { label: string; sub: string; icon: IconName; onClick: () => void }[]).map((t) => (
               <button key={t.label} className="ym-press" onClick={t.onClick} style={{
                 display: 'flex', alignItems: 'center', gap: 11, textAlign: 'left', minWidth: 0,
