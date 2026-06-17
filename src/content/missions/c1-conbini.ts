@@ -7,7 +7,7 @@ export const c1: Mission = {
   tier: 1,
   scenario: '편의점 계산대',
   place: '편의점',
-  sequence: ['봉투', '데우기', '젓가락', '포인트카드', '합계', '결제'],
+  sequence: ['봉투', '데우기', '젓가락', '스푼', '포인트카드', '합계', '결제'],
   speakPhraseIds: ['p_card_de', 'p_suica_de', 'p_atatamete'],
   canDo: '사용자는 편의점 계산대에서 봉투·결제 방법·포인트카드·젓가락·데우기 여부를 듣고, 필요/불필요와 결제 수단을 문장으로 답할 수 있다',
   unlockAfter: ['u_b0_reaction', 'u_b4_recovery'],
@@ -46,6 +46,17 @@ export const c1: Mission = {
       ],
     },
     {
+      situationKo: '디저트(푸딩·아이스)를 보고 점원이 스푼이 필요한지 묻는다',
+      speaker: '점원',
+      promptPhraseId: 'p_supuun_otsuke',
+      choices: [
+        { text: '네, 부탁합니다 (스푼 필요)', phraseId: 'p_hai_onegai', correct: true, feedback: '「はい、お願(ねが)いします」— 푸딩·젤리·아이스 등 디저트를 사면 점원이 스푼을 물어봐요. 필요하면 이렇게 답해요' },
+        { text: '아니요, 괜찮습니다', phraseId: 'p_iie_kekkou', correct: true, feedback: '「いいえ、結構(けっこう)です」— 집에서 먹거나 내 수저가 있을 때 정중하게 거절해요' },
+        { text: '괜찮습니다 (불필요)', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 봉투·스푼·젓가락 모두 大丈夫です 한마디로 가볍게 거절돼요' },
+        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
+      ],
+    },
+    {
       situationKo: '물건을 다 담은 뒤 포인트카드가 있는지 묻는다',
       speaker: '점원',
       promptPhraseId: 'p_pointo_arimasu_ka',
@@ -73,7 +84,7 @@ export const c1: Mission = {
       promptPhraseId: 'p_shiharai_houhou',
       choices: [
         { text: '현금으로요', phraseId: 'p_genkin_de', correct: true, feedback: '「現金(げんきん)で」— 현금 결제. 점원이 금액을 화면에 보여주니 돈을 내면 돼요. 트레이에 올려놓는 게 일본 방식' },
-        { text: '카드로요', phraseId: 'p_card_de', correct: true, feedback: '「カードで」— 신용카드로 결제. 단말기에 tap 또는 삽입해요. コンビニ는 대부분 카드·IC카드 모두 OK' },
+        { text: '카드로요', phraseId: 'p_card_de', correct: true, feedback: '「カードで」— 카드 결제. 점원이 「こちらにタッチか差(さ)し込(こ)みをお願いします」(여기에 터치하거나 꽂아 주세요)라고 안내해요. タッチ=터치, 差し込み=카드 삽입' },
         { text: '스이카로요', phraseId: 'p_suica_de', correct: true, feedback: '교통카드(Suica)로 편의점 결제도 OK — 「ピッ」 하면 끝' },
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
       ],

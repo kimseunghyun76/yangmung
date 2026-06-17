@@ -84,6 +84,7 @@ export const phrases: Phrase[] = [
 
   // ── C1 편의점 보강: 젓가락/그대로/스이카/따로 ──
   { id: 'p_hashi_irimasu_ka', kana: 'はしはいりますか', kanji: '箸は要りますか', displayKana: 'はしは、いりますか？', korean: '젓가락 필요하세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  { id: 'p_supuun_otsuke', kana: 'スプーンはおつけしますか', kanji: 'スプーンはお付けしますか', displayKana: 'スプーンは、おつけしますか？', korean: '스푼 드릴까요?', register: 'receptive' },
   { id: 'p_hashi_kudasai', kana: 'はしをください', kanji: '箸をください', korean: '젓가락 주세요', register: 'productive', tip: '「箸(はし)をください」— 편의점에서는 젓가락을 자동으로 안 주는 경우가 많아요. 필요하면 직접 말해야 해요. スプーン(숟가락)도 필요하면 함께 요청하세요' },
   { id: 'p_sono_mama_de', kana: 'そのままで', korean: '그대로 주세요', register: 'productive', tip: '"별다른 처리 없이 그대로"의 의미. 데우기·봉투 거절 모두 통용' },
   { id: 'p_betsubetsu_de', kana: 'べつべつで', kanji: '別々で', korean: '따로따로요', register: 'productive', tip: '「別々(べつべつ)で」— 동행자와 각자 계산할 때. 일본 레스토랑에서는 사전에 말하면 영수증을 나눠줘요. 반대로 一緒(いっしょ)に(같이요)도 쓸 수 있어요' },
