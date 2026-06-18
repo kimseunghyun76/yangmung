@@ -1,6 +1,6 @@
-// 동사 형태 메뉴 — ます형·～ながら·～たい를 여행 빈출 동사로 학습(보기 + 듣기).
+// 동사 형태 메뉴 — ます형·～ながら·～たい. 보기(레퍼런스) + 연습(퀴즈) 두 모드.
 import { useState } from 'react';
-import { VERB_FORMS, VERB_FORM_INFO, VERB_FORM_KEYS, type VerbEntry, type VerbFormKey } from '../content/verbForms';
+import { VERB_FORMS, VERB_FORM_INFO, VERB_FORM_KEYS, type VerbConj, type VerbEntry, type VerbFormKey } from '../content/verbForms';
 import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
@@ -13,12 +13,13 @@ const FOCUS_TABS: { v: Focus; label: string }[] = [
   { v: 'nagara', label: '～ながら' },
   { v: 'tai', label: '～たい' },
 ];
-
 const GROUP_LABEL: Record<VerbEntry['group'], string> = { godan: '5단', ichidan: '1단', irregular: '불규칙' };
 
+const shuffle = <T,>(a: T[]): T[] => { const r = [...a]; for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
+const rand = (n: number) => Math.floor(Math.random() * n);
+
 export function VerbForms({ onExit }: { onExit: () => void }) {
-  const [focus, setFocus] = useState<Focus>('all');
-  const keys: VerbFormKey[] = focus === 'all' ? [...VERB_FORM_KEYS] : [focus];
+  const [mode, setMode] = useState<'browse' | 'quiz'>('browse');
 
   return (
     <main style={WRAP}>
@@ -30,6 +31,31 @@ export function VerbForms({ onExit }: { onExit: () => void }) {
       <h1 style={{ margin: '10px 0 2px', fontSize: 24 }}>동사 형태</h1>
       <p style={{ margin: '0 0 14px', color: 'var(--ink-soft)', fontSize: 13, fontWeight: 600 }}>여행 빈출 동사를 정중형·동시동작·희망표현으로</p>
 
+      {/* 모드 전환 */}
+      <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
+        {(['browse', 'quiz'] as const).map((m) => {
+          const on = mode === m;
+          return (
+            <button key={m} className="ym-press" onClick={() => setMode(m)}
+              style={{ flex: 1, padding: '11px 4px', borderRadius: 12, border: `1px solid ${on ? 'transparent' : 'var(--glass-border)'}`, background: on ? 'var(--accent)' : 'var(--glass-bg-strong)', color: on ? 'var(--accent-ink)' : 'var(--ink-soft)', fontWeight: 800, fontSize: 14, cursor: 'pointer' }}>
+              {m === 'browse' ? '보기' : '연습'}
+            </button>
+          );
+        })}
+      </div>
+
+      {mode === 'browse' ? <Browse /> : <Quiz />}
+
+      <PrimaryAction onClick={onExit} style={{ marginTop: 20 }}>홈으로</PrimaryAction>
+    </main>
+  );
+}
+
+function Browse() {
+  const [focus, setFocus] = useState<Focus>('all');
+  const keys: VerbFormKey[] = focus === 'all' ? [...VERB_FORM_KEYS] : [focus];
+  return (
+    <>
       {/* 형태 설명 */}
       <div style={{ display: 'grid', gap: 8, marginBottom: 14 }}>
         {VERB_FORM_KEYS.map((k) => (
@@ -84,8 +110,88 @@ export function VerbForms({ onExit }: { onExit: () => void }) {
           </div>
         ))}
       </div>
+    </>
+  );
+}
 
-      <PrimaryAction onClick={onExit} style={{ marginTop: 20 }}>홈으로</PrimaryAction>
-    </main>
+interface Question { verb: VerbEntry; formKey: VerbFormKey; choices: VerbConj[]; answer: VerbConj }
+
+function makeQuestion(): Question {
+  const verb = VERB_FORMS[rand(VERB_FORMS.length)];
+  const formKey = VERB_FORM_KEYS[rand(VERB_FORM_KEYS.length)];
+  const answer = verb[formKey];
+  const pool: VerbConj[] = [];
+  for (const k of VERB_FORM_KEYS) if (k !== formKey) pool.push(verb[k]); // 같은 동사 다른 형태
+  for (const v of shuffle(VERB_FORMS)) if (v.id !== verb.id) pool.push(v[formKey]); // 다른 동사 같은 형태
+  const seen = new Set([answer.ja]);
+  const distractors: VerbConj[] = [];
+  for (const c of pool) { if (distractors.length >= 3) break; if (!seen.has(c.ja)) { seen.add(c.ja); distractors.push(c); } }
+  return { verb, formKey, choices: shuffle([answer, ...distractors]), answer };
+}
+
+function Quiz() {
+  const [q, setQ] = useState<Question>(() => makeQuestion());
+  const [picked, setPicked] = useState<string | null>(null);
+  const [score, setScore] = useState({ ok: 0, total: 0 });
+  const info = VERB_FORM_INFO[q.formKey];
+  const reveal = picked !== null;
+
+  function choose(c: VerbConj) {
+    if (reveal) return;
+    setPicked(c.ja);
+    setScore((s) => ({ ok: s.ok + (c.ja === q.answer.ja ? 1 : 0), total: s.total + 1 }));
+  }
+  function next() { setPicked(null); setQ(makeQuestion()); }
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>
+        <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--ink-soft)', fontVariantNumeric: 'tabular-nums' }}>{score.ok} / {score.total}</span>
+      </div>
+
+      {/* 문제 */}
+      <div style={{ padding: 18, borderRadius: 18, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', textAlign: 'center' }}>
+        <span style={{ fontSize: 12, fontWeight: 800, color: 'var(--accent)' }} lang="ja">{info.label} <span style={{ color: 'var(--ink-faint)' }}>{info.sub}</span></span>
+        <p style={{ margin: '8px 0 0' }}>
+          <span lang="ja" style={{ fontSize: 26, fontWeight: 800 }}>{q.verb.dict.ja}</span>
+          <span style={{ fontSize: 15, color: 'var(--ink-soft)', fontWeight: 700, marginLeft: 8 }}>{q.verb.ko}</span>
+        </p>
+        <p style={{ margin: '4px 0 0', color: 'var(--ink-faint)', fontSize: 13 }} lang="ja">{q.verb.dict.kana}</p>
+        <button className="ym-press" onClick={() => speak(q.verb.dict.kana)} disabled={!ttsSupported()}
+          style={{ marginTop: 8, padding: '6px 14px', borderRadius: 999, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--accent)', fontWeight: 700, fontSize: 13, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <Icon name="listen" size={15} /> 기본형 듣기
+        </button>
+        <p style={{ margin: '12px 0 0', fontSize: 14, fontWeight: 700, color: 'var(--ink-soft)' }}>이 동사의 <strong lang="ja" style={{ color: 'var(--accent)' }}>{info.label}</strong>형은?</p>
+      </div>
+
+      {/* 보기 */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 9, marginTop: 14 }}>
+        {q.choices.map((c) => {
+          const isAnswer = c.ja === q.answer.ja;
+          const isPicked = c.ja === picked;
+          const bg = !reveal ? 'var(--glass-bg-strong)' : isAnswer ? 'var(--ok-soft)' : isPicked ? 'var(--accent-soft)' : 'var(--glass-bg)';
+          const bd = !reveal ? 'var(--glass-border)' : isAnswer ? 'var(--ok)' : isPicked ? 'var(--accent)' : 'var(--glass-border)';
+          return (
+            <button key={c.ja} className="ym-press" disabled={reveal} onClick={() => choose(c)}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, padding: '13px 14px', borderRadius: 14, border: `1px solid ${bd}`, background: bg, color: 'var(--ink)', cursor: reveal ? 'default' : 'pointer', textAlign: 'left' }}>
+              <span style={{ minWidth: 0 }}>
+                <span lang="ja" style={{ display: 'block', fontSize: 17, fontWeight: 700 }}>{c.ja}</span>
+                <span lang="ja" style={{ display: 'block', fontSize: 12, color: 'var(--ink-faint)' }}>{c.kana}</span>
+              </span>
+              {reveal && isAnswer && <Icon name="check" size={18} style={{ color: 'var(--ok)', flex: '0 0 auto' }} />}
+            </button>
+          );
+        })}
+      </div>
+
+      {reveal && (
+        <div className="ym-reveal" style={{ marginTop: 12 }}>
+          <p style={{ margin: 0, padding: 12, borderRadius: 12, fontWeight: 800, textAlign: 'center', background: picked === q.answer.ja ? 'var(--ok-soft)' : 'var(--warn-soft)', color: picked === q.answer.ja ? 'var(--ok)' : 'var(--warn)' }}>
+            {picked === q.answer.ja ? '정답!' : '아쉬워요'} <span lang="ja" style={{ fontWeight: 900 }}>{q.answer.ja}</span> <span style={{ fontWeight: 600 }}>({q.verb.ko} — {info.sub})</span>
+          </p>
+          <PrimaryAction onClick={next} style={{ marginTop: 10 }}>다음 문제</PrimaryAction>
+        </div>
+      )}
+    </div>
   );
 }
