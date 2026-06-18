@@ -55,6 +55,10 @@ export const units: Unit[] = [
       'p_fukuro_iranai', 'p_genkin_de', 'p_card_de', 'p_kore_de', 'p_arimasu', 'p_arimasen',
       'p_reshiito_kudasai', 'p_wakarimasen', 'p_atatamete', 'p_hashi_kudasai', 'p_sono_mama_de',
       'p_betsubetsu_de', 'p_suica_de', 'p_mou_daijoubu_desu',
+      // 실생활 확장 — 추가 구매·성인 인증·봉투 사이즈·수저·큰 돈·IC 충전
+      'p_oden_hitotsu', 'p_karaage_kudasai', 'p_ijou_desu', 'p_hatachi_ijou_desu',
+      'p_ookii_fukuro', 'p_supuun_kudasai', 'p_card_de_onegai', 'p_suica_de_onegai',
+      'p_ichiman_de', 'p_sen_en_chaaji',
     ],
     reviewPhraseIds: ['p_hai', 'p_iie'],
   },
@@ -75,8 +79,8 @@ export const units: Unit[] = [
   },
   {
     id: 'u_b1_street_core', track: 'lang', stage: 'B1', mode: 'action',
-    canDo: '사용자는 길에서 화장실·사진을 부탁하고 도움을 청할 수 있다',
-    newPhraseIds: ['p_toire_doko', 'p_shashin_ii', 'p_shashin_onegai', 'p_tasukete'],
+    canDo: '사용자는 길에서 목적지·방향·거리를 묻고, 화장실·사진을 부탁하고 도움을 청할 수 있다',
+    newPhraseIds: ['p_toire_doko', 'p_shashin_ii', 'p_shashin_onegai', 'p_tasukete', 'p_chikai_desu_ka', 'p_hidari_migi', 'p_aruite_nanpun'],
   },
   {
     id: 'u_b1_pharmacy_core', track: 'lang', stage: 'B1', mode: 'action',
@@ -116,13 +120,14 @@ export const units: Unit[] = [
   {
     id: 'u_b1_ramen_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 라멘집 식권기·면 추가·곱빼기를 묻고 요청할 수 있다',
-    newPhraseIds: ['p_kenbaiki', 'p_oomori', 'p_kaedama'],
+    newPhraseIds: ['p_kenbaiki', 'p_oomori', 'p_kaedama', 'p_men_katame', 'p_ajitama_tsuika', 'p_chaashuu_tsuika'],
   },
   {
     id: 'u_b1_more_scene_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 카페·관광·교통·긴급 장면에서 새로 필요한 짧은 응답을 말할 수 있다',
     newPhraseIds: [
       'p_tennai_de', 'p_mochikaeri_de', 'p_esu_saizu_de', 'p_emu_saizu_de',
+      'p_hotto_de', 'p_aisu_de', 'p_shotto_tsuika',
       'p_kippu_nimai_kudasai', 'p_sumimasen_koko_doko', 'p_nihon_go_muzukashii',
       'p_nihongo_sukoshi_dake', 'p_chiketto_wa_kochira_desu', 'p_basho_o_oshiete_kudasai',
     ],

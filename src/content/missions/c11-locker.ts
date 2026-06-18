@@ -18,7 +18,7 @@ export const c11: Mission = {
         { text: '코인로커 어디예요?', phraseId: 'p_koinrokkaa', correct: true, feedback: 'コインロッカーはどこですか — 대형 역 로커는 매진되기 쉬워요. 개찰구 안팎 모두 확인해보세요' },
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: true, feedback: '「使い方(つかいかた)を教えてください」— 낯선 기계 앞에서 쓰는 만능 표현. 직원이 직접 눌러줄 만큼 친절해요' },
         { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: true, feedback: '코인로커는 크기에 따라 300~700엔 정도. 최근엔 Suica 결제 가능한 곳도 많아요. 동전보다 편리해요' },
-        { text: '메뉴 보여 주세요', phraseId: 'p_menu_misete', correct: false, feedback: '식당 표현이에요 — 지금은 코인로커 상황' },
+        { text: '카드로요', phraseId: 'p_card_de', correct: false, feedback: '아직 로커를 찾는 중이에요 — 결제 수단은 요금을 확인한 뒤에 말해요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
@@ -40,7 +40,7 @@ export const c11: Mission = {
       choices: [
         { text: '카드로요', phraseId: 'p_card_de', correct: true, feedback: '「カードで」— IC카드(Suica·PASMO) 결제가 되는 로커가 늘고 있어요. 동전이 없을 때 특히 유용해요' },
         { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: false, feedback: '방금 요금을 들었어요. 들은 뒤에는 결제 수단을 말해요' },
-        { text: '봉투는 필요 없어요', phraseId: 'p_fukuro_iranai', correct: false, feedback: '편의점 표현이에요 — 지금은 로커 요금 상황' },
+        { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '사용법은 이미 안내받았어요 — 지금은 요금 결제 수단을 말해요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
       ],
     },

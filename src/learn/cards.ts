@@ -55,6 +55,8 @@ export interface QuizCard {
     recovery: Choice[];
   };
   listen?: boolean;
+  /** 레벨(난이도) 태그 — 미션 티어에서 유도. 세션 레벨 필터용. 없으면 모든 레벨에 노출. */
+  tier?: 1 | 2 | 3 | 4 | 5;
   reviewTarget?: ReviewTarget; // SRS 대상 (없으면 추적 X)
 }
 
@@ -128,6 +130,8 @@ export interface DictationCard {
   korean: string;
   tiles: string[];       // 섞인 타일(정답 + 방해)
   promptKind?: 'listen' | 'korean'; // listen: 듣고 쓰기(기본) · korean: 한국어 보고 작문(산출)
+  /** 레벨(난이도) 태그 — 미션 티어/표현 길이에서 유도. 세션 레벨 필터용. */
+  tier?: 1 | 2 | 3 | 4 | 5;
   reviewTarget?: ReviewTarget;
 }
 
@@ -545,6 +549,23 @@ export function buildCards(): Card[] {
   const byPhrase = (id: string) => phrases.find((p) => p.id === id)!;
   const cards: Card[] = [];
 
+  // ── 표현 → 레벨(티어) 맵 — 미션이 단일 출처. 한 표현이 여러 미션에 나오면 가장 낮은 티어로. ──
+  // 듣기·받아쓰기 카드의 난이도 태그에 사용. 점원/역무원 발화·선택지·핵심표현 모두 스캔.
+  const phraseTier = new Map<string, 1 | 2 | 3 | 4 | 5>();
+  const noteTier = (pid: string | undefined, tier: 1 | 2 | 3 | 4 | 5) => {
+    if (!pid) return;
+    const cur = phraseTier.get(pid);
+    if (cur === undefined || tier < cur) phraseTier.set(pid, tier);
+  };
+  for (const m of missions) {
+    const t = (m.tier ?? 1) as 1 | 2 | 3 | 4 | 5;
+    for (const pid of m.speakPhraseIds ?? []) noteTier(pid, t);
+    for (const step of m.steps) {
+      noteTier(step.promptPhraseId, t);
+      for (const ch of step.choices ?? []) noteTier(ch.phraseId, t);
+    }
+  }
+
   // 가나 드릴 — Unit 기반 자동 생성, 글자당 3종 (읽기 / 듣기 / 구분)
   // 단계(K1, K2, …) 드릴 Unit을 순서대로 처리. 각 Unit 안에서는
   // read 전체 → listen 전체 → confuse 전체 순 (한 글자에 3종이 몰리지 않게).
@@ -565,6 +586,7 @@ export function buildCards(): Card[] {
         kind: 'quiz', id: `pair:${mp.id}:${key}`, tag: '발음 구분',
         banner: '듣기', bannerJa: self.kana, sub: '듣고 들린 쪽을 고르세요',
         listen: true,
+        tier: mp.tier ?? 1,
         reviewTarget: { type: 'phrase', id: `pair:${mp.id}:${key}` },
         choices: shuffle([
           { label: self.kana, correct: true, ja: self.kana, phrase: { kana: self.kana, korean: self.korean, tip: mp.focus } },
@@ -574,35 +596,78 @@ export function buildCards(): Card[] {
     }
   }
 
-  // 듣기 — 듣고 의미 고르기. 여행에서 실제로 듣게 될 점원·역무원 대사(receptive) 중심.
-  const LISTEN_IDS = [
-    'p_arigatou', 'p_hai',
-    // 점원·역무원이 말하는 것 → 귀로 알아듣고 반응
-    'p_irasshai', 'p_fukuro', 'p_atatamemasu_ka', 'p_hashi_irimasu_ka', 'p_shiharai_houhou',
-    'p_pointo_arimasu_ka', 'p_gochuumon', 'p_nomimono', 'p_nanmeisama', 'p_norikae_kudasai',
-    'p_onamae_wa', 'p_passport_onegai', 'p_dou_shimashita', 'p_doko_made',
-    'p_price', 'p_mokuteki_wa', 'p_taizai_wa', 'p_doko_tomaru', 'p_kagi_desu',
-  ];
-  for (const id of LISTEN_IDS) {
+  // ── 듣기(receptive) — 미션에서 실제로 듣게 될 점원·역무원 대사 중심, 레벨별 자동 수집 ──
+  // 기존엔 하드코딩 ~22개로 모든 레벨이 같은 입문 표현만 반복("뺑뺑이")했다.
+  // 이제 각 미션의 상대 발화(promptPhraseId)를 그 미션의 티어로 태그해 듣기 풀을 만든다.
+  // → 세션에 포함된 내용과 일치 + 고급일수록 고급 대사를 듣게 됨.
+  const listenTargets = new Map<string, { p: Phrase; tier: 1 | 2 | 3 | 4 | 5 }>();
+  for (const m of missions) {
+    const t = (m.tier ?? 1) as 1 | 2 | 3 | 4 | 5;
+    for (const step of m.steps) {
+      if (!step.promptPhraseId) continue;
+      const p = phrases.find((x) => x.id === step.promptPhraseId);
+      if (!p) continue;
+      const cur = listenTargets.get(p.id);
+      if (!cur || t < cur.tier) listenTargets.set(p.id, { p, tier: t });
+    }
+  }
+  // 기초 인사는 입문 듣기로 항상 포함 (미션 프롬프트에 없어도)
+  for (const id of ['p_arigatou', 'p_hai']) {
     const p = phrases.find((x) => x.id === id);
-    if (!p) continue;
-    // 헷갈리게 — 같은 점원 대사끼리 묶어 의미를 진짜 들어야 구분되게 (없으면 일반 표현)
-    const pool = phrases.filter((x) => x.id !== id && x.korean !== p.korean && LISTEN_IDS.includes(x.id));
-    const distractPhrases = shuffle(pool.length >= 3 ? pool : phrases.filter((x) => x.id !== id && x.korean !== p.korean)).slice(0, 3);
+    if (p && !listenTargets.has(id)) listenTargets.set(id, { p, tier: 1 });
+  }
+  const listenArr = [...listenTargets.values()];
+  for (const { p, tier } of listenArr) {
+    // 같은 레벨의 다른 점원 대사를 오답으로 → 의미를 진짜 들어야 구분(부족하면 인접 레벨로 확장)
+    const sameTier = listenArr.filter((x) => x.p.id !== p.id && x.p.korean !== p.korean && x.tier === tier);
+    const pool = sameTier.length >= 3 ? sameTier : listenArr.filter((x) => x.p.id !== p.id && x.p.korean !== p.korean);
+    const distract = shuffle(pool).slice(0, 3).map((x) => x.p);
     cards.push({
-      kind: 'quiz', id: `listen:${id}`, tag: '듣기',
+      kind: 'quiz', id: `listen:${p.id}`, tag: '듣기',
       banner: '듣기', bannerJa: ttsText(p), sub: '듣고 의미를 고르세요',
       listen: true,
-      reviewTarget: { type: 'phrase', id },
+      tier,
+      reviewTarget: { type: 'phrase', id: p.id },
       choices: shuffle([
         { label: p.korean, correct: true, ja: ttsText(p), phrase: phraseInfo(p) },
-        ...distractPhrases.map((d) => ({ label: d.korean, correct: false, ja: ttsText(d), phrase: phraseInfo(d) })),
+        ...distract.map((d) => ({ label: d.korean, correct: false, ja: ttsText(d), phrase: phraseInfo(d) })),
       ]),
     });
   }
 
-  // 금액·숫자 듣기 — 듣고 금액 고르기 (계산대 실전). 오답도 금액이라 진짜 들어야 함.
-  const PRICE_IDS = ['p_num_hyakuen', 'p_num_gohyakuen', 'p_num_senen', 'p_num_nisenen', 'p_num_gosenen', 'p_num_ichimanen'];
+  // 고급 미션은 점원 대사를 recapPromptJa(원시 문장)로만 두는 경우가 많다 → 합성 듣기 카드로 편입.
+  // (promptPhraseId가 없는 스텝의 상대 발화) — 고급 레벨 듣기 풀을 두텁게.
+  type RecapListen = { mid: string; idx: number; ja: string; ko: string; tier: 1 | 2 | 3 | 4 | 5 };
+  const recapListens: RecapListen[] = [];
+  for (const m of missions) {
+    const t = (m.tier ?? 1) as 1 | 2 | 3 | 4 | 5;
+    m.steps.forEach((step, idx) => {
+      if (step.promptPhraseId || !step.recapPromptJa || !step.recapPromptKo) return;
+      recapListens.push({ mid: m.id, idx, ja: step.recapPromptJa, ko: step.recapPromptKo, tier: t });
+    });
+  }
+  for (const r of recapListens) {
+    const sameTier = recapListens.filter((x) => !(x.mid === r.mid && x.idx === r.idx) && x.ko !== r.ko && x.tier === r.tier);
+    const pool = sameTier.length >= 3 ? sameTier : recapListens.filter((x) => !(x.mid === r.mid && x.idx === r.idx) && x.ko !== r.ko);
+    const distract = shuffle(pool).slice(0, 3);
+    cards.push({
+      kind: 'quiz', id: `listen:recap:${r.mid}:${r.idx}`, tag: '듣기',
+      banner: '듣기', bannerJa: r.ja, sub: '듣고 의미를 고르세요',
+      listen: true,
+      tier: r.tier,
+      reviewTarget: { type: 'phrase', id: `recap:${r.mid}:${r.idx}` },
+      choices: shuffle([
+        { label: r.ko, correct: true, ja: r.ja },
+        ...distract.map((d) => ({ label: d.ko, correct: false, ja: d.ja })),
+      ]),
+    });
+  }
+
+  // 금액·숫자 듣기 — 듣고 금액 고르기 (계산대 실전). 오답도 금액이라 진짜 들어야 함. (입문~기본 레벨)
+  const PRICE_TIER: Record<string, 1 | 2> = {
+    p_num_hyakuen: 1, p_num_gohyakuen: 1, p_num_senen: 1, p_num_nisenen: 2, p_num_gosenen: 2, p_num_ichimanen: 2,
+  };
+  const PRICE_IDS = Object.keys(PRICE_TIER);
   for (const id of PRICE_IDS) {
     const p = phrases.find((x) => x.id === id);
     if (!p) continue;
@@ -611,6 +676,7 @@ export function buildCards(): Card[] {
       kind: 'quiz', id: `listen:${id}`, tag: '금액 듣기',
       banner: '듣기', bannerJa: ttsText(p), sub: '듣고 금액을 고르세요',
       listen: true,
+      tier: PRICE_TIER[id],
       reviewTarget: { type: 'phrase', id },
       choices: shuffle([
         { label: p.korean, correct: true, ja: ttsText(p), phrase: phraseInfo(p) },
@@ -623,8 +689,10 @@ export function buildCards(): Card[] {
   cards.push(...buildBasicLifeCards());
 
   // 미션 — 콘텐츠에 정의된 순서대로 전부 (새 장면 추가 시 자동 포함)
+  // introduced는 미션 전체에 걸쳐 전역 — 한 표현은 "처음 등장하는 미션·스텝"에서 딱 한 번만 새 표현으로 소개.
+  // (한번이라도 새 표현으로 본 문장은 다시 소개 카드로 나오지 않음)
+  const introduced = new Set<string>();
   for (const m of missions) {
-    const introduced = new Set<string>();
     const addIntroduce = (phraseId: string, note: string) => {
       if (introduced.has(phraseId)) return;
       introduced.add(phraseId);
@@ -653,6 +721,15 @@ export function buildCards(): Card[] {
       const recapPrompt = !prompt && step.recapPromptJa
         ? { kana: step.recapPromptJa, kanji: step.recapPromptJa, korean: step.recapPromptKo ?? step.situationKo }
         : undefined;
+      // 이 스텝에서 학습자가 고를 수 있는 표현(productive/both) 중 아직 소개 안 된 것을 먼저 새 표현으로.
+      // → 모든 답변 문장이 퀴즈 전에 한 번은 의미·소리와 함께 소개됨.
+      for (const ch of step.choices) {
+        if (!ch.phraseId) continue;
+        const reg = byPhrase(ch.phraseId).register;
+        if (reg === 'productive' || reg === 'both') {
+          addIntroduce(ch.phraseId, '이 장면에서 쓸 수 있는 표현이에요. 의미와 소리를 먼저 익혀둡니다.');
+        }
+      }
       const choicePools = buildStepChoicePools(step.choices, byPhrase, phrases);
       cards.push({
         kind: 'quiz', id: `mission:${m.id}:${idx}`, tag: `${m.id} 미션`,
@@ -706,6 +783,12 @@ export function buildCards(): Card[] {
     return [...curated, ...extra];
   })();
 
+  // 받아쓰기 레벨 — 미션에 쓰이는 표현이면 그 미션 티어, 아니면 길이로 추정(짧으면 입문).
+  const dictTier = (id: string, units: number): 1 | 2 | 3 | 4 | 5 => {
+    const mt = phraseTier.get(id);
+    if (mt) return mt;
+    return units <= 3 ? 1 : units <= 5 ? 2 : 3;
+  };
   const pushTileCard = (id: string, kind: 'dictation' | 'compose') => {
     const p = phrases.find((x) => x.id === id);
     if (!p) return;
@@ -718,6 +801,7 @@ export function buildCards(): Card[] {
       ...(kind === 'compose' ? { promptKind: 'korean' as const } : {}),
       ja: ttsText(p) ?? p.kana, answer, korean: p.korean,
       tiles: shuffle([...answer, ...distractors]),
+      tier: dictTier(id, answer.length),
       reviewTarget: { type: 'phrase', id },
     });
   };
