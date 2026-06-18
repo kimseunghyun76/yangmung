@@ -13,6 +13,8 @@ export interface MinimalPair {
   b: MinimalPairSide;
   /** 무엇이 다른지 10초 설명 (정답 후 노출) */
   focus: string;
+  /** 난이도(레벨) — 1=기초 청탁/つす, 2=장음·촉음 기초, 3=요음·어중, 4~5=어휘 맥락 변별. 세션 레벨 필터용. */
+  tier?: 1 | 2 | 3 | 4 | 5;
 }
 
 export const minimalPairs: MinimalPair[] = minimalPairsJson as MinimalPair[];

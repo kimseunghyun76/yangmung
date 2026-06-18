@@ -17,7 +17,7 @@ export const c31: Mission = {
       choices: [
         { text: '두 명이요', phraseId: 'p_futari_desu', correct: true, feedback: '「二人(ふたり)です」— 인원 표현은 ひとり(1명)・ふたり(2명)처럼 불규칙. 세 명부터는 〇人(にん): さんにん・よにん...' },
         { text: '카운터석으로 부탁합니다', phraseId: 'p_kauntaa_de_onegai', correct: true, feedback: '「カウンターでお願いします」— 회전 레일 바로 앞 자리. 장인이 직접 쥐는 스시를 바로 받는 묘미가 있어요' },
-        { text: '방을 바꿔 주세요', phraseId: 'p_heya_kaete_kudasai', correct: false, feedback: '초밥집 입장에서는 방 변경이 아니라 인원/좌석을 답해야 해요' },
+        { text: '참치 주세요', phraseId: 'p_maguro_kudasai', correct: false, feedback: '아직 자리 안내 중이에요 — 주문은 자리에 앉아 터치패널로 해요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
@@ -28,7 +28,7 @@ export const c31: Mission = {
       choices: [
         { text: '참치 주세요', phraseId: 'p_maguro_kudasai', correct: true, feedback: '「マグロください」— 참치는 회전초밥 인기 1위. 赤身(あかみ)=살코기, 中(ちゅう)トロ·大(おお)トロ=뱃살 부위도 알아두면 좋아요' },
         { text: '연어 주세요', phraseId: 'p_saamon_kudasai', correct: true, feedback: '「サーモンください」— 한국인이 가장 좋아하는 초밥 재료 중 하나. 터치패널에서 쉽게 선택할 수 있어요' },
-        { text: '우산을 빌릴 수 있나요?', phraseId: 'p_kasa_kariremasu_ka', correct: false, feedback: '초밥 주문 중에는 음식 이름을 말하는 게 자연스러워요' },
+        { text: '계산 부탁드려요', phraseId: 'p_okaikei', correct: false, feedback: '지금은 주문 단계예요 — 계산은 다 먹은 뒤 접시를 세며 해요' },
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
       ],
     },
@@ -39,7 +39,7 @@ export const c31: Mission = {
       choices: [
         { text: '계산 부탁드립니다', phraseId: 'p_okaikei', correct: true, feedback: '「お会計(かいけい)お願いします」— 회전초밥은 접시 수로 계산. 가게마다 단색 접시=100엔, 금색=500엔 등 규칙이 달라요' },
         { text: '맥주 한 잔 더 주세요', phraseId: 'p_biiru_mou_ippai', correct: false, feedback: '접시를 세며 계산하는 중이에요. 추가 주문은 계산 전에 해요' },
-        { text: '오픈 티켓을 교환하고 싶습니다', phraseId: 'p_open_ticket_koukan', correct: false, feedback: '티켓 교환은 역 창구 상황이에요' },
+        { text: '참치 주세요', phraseId: 'p_maguro_kudasai', correct: false, feedback: '접시를 세어 계산하는 중이에요 — 추가 주문은 계산 전에 해요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
       ],
     },
@@ -74,7 +74,7 @@ export const c32: Mission = {
       choices: [
         { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '피팅룸 안내에 대한 자연스러운 확인+감사 표현. わかりました+ありがとうございます를 한 묶음으로 써요' },
         { text: '이걸로 할게요', phraseId: 'p_kore_kudasai_shop', correct: false, feedback: '아직 입어보기 전이에요. 피팅룸 안내에는 확인 응답이 자연스러워요' },
-        { text: '맥주 한 잔 더 주세요', phraseId: 'p_biiru_mou_ippai', correct: false, feedback: '음식점 추가 주문 표현이에요' },
+        { text: '입어 봐도 돼요?', phraseId: 'p_shichaku', correct: false, feedback: '피팅룸 안내를 받는 중이에요 — 입어봐도 되는지는 이미 물었어요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
@@ -86,7 +86,7 @@ export const c32: Mission = {
       choices: [
         { text: '조금 작아요', phraseId: 'p_chotto_chiisai_desu', correct: true, feedback: '「ちょっと小さいです」— ちょっと(조금)를 붙이면 부드럽게 전달돼요. 이어서 「Lサイズはありますか」로 연결하면 완벽해요' },
         { text: '이걸로 할게요', phraseId: 'p_kore_kudasai_shop', correct: true, feedback: '마음에 들면 「これをください」로 구매 확정. 계산대로 들고 가거나 직원에게 전달해요' },
-        { text: '접시를 가져가도 되나요?', phraseId: 'p_osara_tottemo_ii', correct: false, feedback: '회전초밥집 표현이라 피팅 상황에는 맞지 않아요' },
+        { text: 'M 사이즈 있나요?', phraseId: 'p_emu_saizu_arimasu_ka', correct: false, feedback: '이미 입어본 뒤예요 — 지금은 사이즈가 맞는지 말해요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
       ],
     },
@@ -110,7 +110,7 @@ export const c33: Mission = {
       choices: [
         { text: '우산을 빌릴 수 있나요?', phraseId: 'p_kasa_kariremasu_ka', correct: true, feedback: '「傘(かさ)を借りられますか」— 대부분의 일본 호텔은 무료 우산 대여 서비스를 운영해요. 프런트 옆에 비치돼 있어요' },
         { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '비 소식을 알려준 직원에 대한 감사 표현. 확인+감사를 동시에 전달할 수 있어요' },
-        { text: '참치 주세요', phraseId: 'p_maguro_kudasai', correct: false, feedback: '호텔 프런트에서는 음식 주문이 아니라 우산 요청이 맞아요' },
+        { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: false, feedback: '아직 우산 대여를 말하기 전이에요 — 먼저 빌릴 수 있는지 물어봐요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
@@ -121,7 +121,7 @@ export const c33: Mission = {
       choices: [
         { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '우산 위치 안내에 대한 자연스러운 응답. 일본 호텔 서비스에 감사를 표하는 게 예의예요' },
         { text: '우산을 반납하겠습니다', phraseId: 'p_kasa_wo_kaeshimasu', correct: false, feedback: '지금은 빌리는 중이에요. 반납 표현은 돌아온 뒤에 써요' },
-        { text: '기내수하물로 하겠습니다', phraseId: 'p_kore_tebutsu_ni_shimasu', correct: false, feedback: '공항 수하물 표현이라 호텔 우산 상황에는 맞지 않아요' },
+        { text: '우산을 반납하겠습니다', phraseId: 'p_kasa_wo_kaeshimasu', correct: false, feedback: '지금 막 빌리는 중이에요 — 반납은 외출 후 돌아와서 해요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
       ],
     },
@@ -133,7 +133,7 @@ export const c33: Mission = {
       choices: [
         { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '반납 시점 안내를 이해했다는 표현. 외출 후 돌아왔을 때 반드시 프런트에 반납해요' },
         { text: '우산을 반납하겠습니다', phraseId: 'p_kasa_wo_kaeshimasu', correct: true, feedback: '「傘を返します」— 돌아와서 직접 반납할 때 쓰는 표현. 약속을 지키는 모습이 일본에서 큰 인상을 줘요' },
-        { text: '치즈를 추가해 주세요', phraseId: 'p_chiizu_tsuika', correct: false, feedback: '파스타 옵션 표현이라 호텔 프런트에서는 어색해요' },
+        { text: '우산을 빌릴 수 있나요?', phraseId: 'p_kasa_kariremasu_ka', correct: false, feedback: '우산은 이미 빌렸어요 — 지금은 반납 시점을 확인해요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
       ],
     },
@@ -157,7 +157,7 @@ export const c34: Mission = {
       choices: [
         { text: '담배 냄새가 납니다', phraseId: 'p_tabako_no_nioi', correct: true, feedback: '「タバコのにおいがします」— 금연 객실에 냄새가 나면 즉시 프런트에 말해요. 일본 호텔은 신속하게 대응해줘요' },
         { text: '방을 바꿔 주세요', phraseId: 'p_heya_kaete_kudasai', correct: true, feedback: '「部屋(へや)を変えてください」— 직접적인 방 변경 요청. 이유를 먼저 말하고 이 표현을 이어가면 더 자연스러워요' },
-        { text: '접시를 가져가도 되나요?', phraseId: 'p_osara_tottemo_ii', correct: false, feedback: '초밥집 표현이라 호텔 방 문제와 맞지 않아요' },
+        { text: '트윈 침대 방이 있나요?', phraseId: 'p_tsuin_no_heya_arimasu_ka', correct: false, feedback: '먼저 무슨 문제인지 말해요 — 다른 방 문의는 그다음에 해요' },
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
       ],
     },
@@ -168,7 +168,7 @@ export const c34: Mission = {
       choices: [
         { text: '트윈 침대 방이 있나요?', phraseId: 'p_tsuin_no_heya_arimasu_ka', correct: true, feedback: '「ツインの部屋はありますか」— 2인 여행이라면 더블보다 트윈이 더 편한 경우도 많아요. 요청하면 응해주는 경우가 많아요' },
         { text: '더 넓은 방이 있나요?', phraseId: 'p_motto_hiroi_heya', correct: true, feedback: '「もっと広(ひろ)い部屋はありますか」— 업그레이드를 요청하는 표현. 여유 객실이 있으면 동일 요금으로 바꿔주기도 해요' },
-        { text: '알덴테로 부탁합니다', phraseId: 'p_arudente_de', correct: false, feedback: '음식 주문 표현이라 방 변경에는 맞지 않아요' },
+        { text: '담배 냄새가 납니다', phraseId: 'p_tabako_no_nioi', correct: false, feedback: '문제는 이미 말했어요 — 지금은 다른 방이 있는지 물어요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
@@ -180,7 +180,7 @@ export const c34: Mission = {
       choices: [
         { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '새 방 준비 소식에 대한 감사 표현. 일본 호텔 스태프의 노고를 인정해주는 한 마디가 큰 인상을 남겨요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
-        { text: '연어 주세요', phraseId: 'p_saamon_kudasai', correct: false, feedback: '스시 주문 표현이라 호텔에서는 어색해요' },
+        { text: '방을 바꿔 주세요', phraseId: 'p_heya_kaete_kudasai', correct: false, feedback: '새 방을 안내받는 마무리예요 — 감사 인사로 답하면 돼요' },
       ],
     },
   ],
@@ -203,7 +203,7 @@ export const c35: Mission = {
       choices: [
         { text: '오픈 티켓을 교환하고 싶습니다', phraseId: 'p_open_ticket_koukan', correct: true, feedback: '「オープンチケットを交換(こうかん)したいです」— 날짜·시간이 열린 항공권을 특정 편으로 확정할 때 써요' },
         { text: '이 티켓 사용할 수 있나요?', phraseId: 'p_kono_chiketto_tsukaemasu_ka', correct: true, feedback: '「このチケット使えますか」— 갖고 있는 승차권·티켓이 해당 열차에 유효한지 확인하는 표현' },
-        { text: '우산을 빌릴 수 있나요?', phraseId: 'p_kasa_kariremasu_ka', correct: false, feedback: '역 창구에서는 티켓 교환을 말해야 해요' },
+        { text: '시간을 바꾸고 싶어요', phraseId: 'p_jikan_kaetai', correct: false, feedback: '먼저 오픈 티켓을 교환해요 — 시간 변경은 그다음 단계예요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
       ],
     },
@@ -215,7 +215,7 @@ export const c35: Mission = {
       choices: [
         { text: '나리타 익스프레스로 부탁합니다', phraseId: 'p_narita_ekisupuresu', correct: true, feedback: '成田エクスプレス(N\'EX)는 나리타↔도쿄역 약 60분. 좌석 지정이므로 현장 교환 또는 사전 예약이 필요해요' },
         { text: '시간을 바꾸고 싶어요', phraseId: 'p_jikan_kaetai', correct: true, feedback: '「時間(じかん)を変えたいです」— 출발 시간 변경 요청. 오픈 티켓이면 대부분 가능하지만 빈 좌석에 따라 달라요' },
-        { text: '담배 냄새가 납니다', phraseId: 'p_tabako_no_nioi', correct: false, feedback: '호텔 방 문제 표현이라 역 창구에서는 맞지 않아요' },
+        { text: '오픈 티켓을 교환하고 싶습니다', phraseId: 'p_open_ticket_koukan', correct: false, feedback: '교환은 이미 요청했어요 — 지금은 어느 열차로 할지 말해요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
@@ -226,7 +226,7 @@ export const c35: Mission = {
       choices: [
         { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '승강장 번호를 확인했다는 표현. 나리타 공항역은 승강장이 복잡하니 방향 표지도 함께 확인해요' },
         { text: '몇 번 선이에요?', phraseId: 'p_nanbansen', correct: false, feedback: '방금 12번선이라고 들었어요. 들은 정보를 다시 묻지 않아요' },
-        { text: '조금 작아요', phraseId: 'p_chotto_chiisai_desu', correct: false, feedback: '편집샵 피팅 표현이라 승강장 안내와 맞지 않아요' },
+        { text: '이 티켓 사용할 수 있나요?', phraseId: 'p_kono_chiketto_tsukaemasu_ka', correct: false, feedback: '승강장 안내를 들었어요 — 표 교환은 이미 끝났어요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
       ],
     },
@@ -250,7 +250,7 @@ export const c36: Mission = {
       choices: [
         { text: '추가 요금은 얼마인가요?', phraseId: 'p_tsui_ryoukin_ikura', correct: true, feedback: '「追加料金(ついかりょうきん)はいくらですか」— 초과 요금은 항공사마다 달라요. kg당 수천 엔이 되는 경우도 있으니 먼저 확인해요' },
         { text: '짐을 줄이겠습니다', phraseId: 'p_nimotsu_herashimasu', correct: true, feedback: '「荷物(にもつ)を減(へ)らします」— 추가 요금보다 현장에서 짐을 꺼내는 게 대부분 더 경제적이에요' },
-        { text: '조금 작아요', phraseId: 'p_chotto_chiisai_desu', correct: false, feedback: '공항 수하물 상황에서는 무게/요금을 말해야 해요' },
+        { text: '이걸 기내수하물로 하겠습니다', phraseId: 'p_kore_tebutsu_ni_shimasu', correct: false, feedback: '먼저 무게·요금을 확인해요 — 기내로 돌리는 건 그다음 단계예요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
@@ -261,7 +261,7 @@ export const c36: Mission = {
       choices: [
         { text: '이걸 기내수하물로 하겠습니다', phraseId: 'p_kore_tebutsu_ni_shimasu', correct: true, feedback: '「これを手荷物(てにもつ)にします」— 위탁 수하물에서 빼 기내에 들고 타겠다는 표현. 액체·예리한 물건은 기내 반입 규정을 먼저 확인해요' },
         { text: '잠시만 기다려 주세요', phraseId: 'p_chotto_matte', correct: true, feedback: '「ちょっと待ってください」— 가방을 열어 짐을 꺼내는 동안 시간을 버는 표현. 일본 직원은 기다려줘요' },
-        { text: '면세 부탁합니다', phraseId: 'p_menzei_onegai', correct: false, feedback: '면세 계산 표현이라 수하물 초과에는 맞지 않아요' },
+        { text: '추가 요금은 얼마인가요?', phraseId: 'p_tsui_ryoukin_ikura', correct: false, feedback: '요금은 이미 들었어요 — 지금은 짐을 어떻게 할지 정해요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
       ],
     },
@@ -273,7 +273,7 @@ export const c36: Mission = {
       choices: [
         { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '재측정 안내에 대한 확인 표현. 신속하게 처리해 준 직원에게 감사를 전해요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
-        { text: '치즈를 추가해 주세요', phraseId: 'p_chiizu_tsuika', correct: false, feedback: '식당 옵션 표현이라 공항 수하물과 맞지 않아요' },
+        { text: '이걸 기내수하물로 하겠습니다', phraseId: 'p_kore_tebutsu_ni_shimasu', correct: false, feedback: '짐을 뺀 뒤 다시 무게를 재는 마무리예요 — 확인·감사로 답해요' },
       ],
     },
   ],
@@ -297,7 +297,7 @@ export const c37: Mission = {
       choices: [
         { text: '음식이 부족합니다', phraseId: 'p_ryouri_sukunai', correct: true, feedback: '「料理(りょうり)が少(すく)ないです」— 직접 말하면 일본 뷔페 직원은 즉시 보충해줘요. 손짓+이 표현이면 충분해요' },
         { text: '조금 더 받을 수 있나요?', phraseId: 'p_mou_sukoshi_moraemasu_ka', correct: true, feedback: '「もう少(すこ)しもらえますか」— 공손한 부탁 표현. もらえますか(받을 수 있나요?)는 다양한 상황에서 쓸 수 있어요' },
-        { text: '시간을 바꾸고 싶어요', phraseId: 'p_jikan_kaetai', correct: false, feedback: '역 창구 표현이라 조식 뷔페에는 맞지 않아요' },
+        { text: '커피는 어디예요?', phraseId: 'p_koohii_wa_doko', correct: false, feedback: '지금은 음식이 부족하다고 말하는 상황이에요 — 커피 위치는 그다음에 물어요' },
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
       ],
     },
@@ -308,7 +308,7 @@ export const c37: Mission = {
       choices: [
         { text: '커피는 어디예요?', phraseId: 'p_koohii_wa_doko', correct: true, feedback: '「コーヒーはどこですか」— 뷔페에서 음료 위치를 확인하는 표현. お茶(おちゃ)=녹차, ジュース=주스로 바꿔도 같은 패턴이에요' },
         { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '보충 예정 안내에 대한 감사 표현. 일본 호텔 직원의 신속한 서비스에 짧은 감사 인사가 큰 의미를 가져요' },
-        { text: '방을 바꿔 주세요', phraseId: 'p_heya_kaete_kudasai', correct: false, feedback: '호텔 프런트 요청이지 조식장 표현은 아니에요' },
+        { text: '음식이 부족합니다', phraseId: 'p_ryouri_sukunai', correct: false, feedback: '음식이 부족하다는 건 이미 말했어요 — 안내에 감사하거나 음료 위치를 물어요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
@@ -320,7 +320,7 @@ export const c37: Mission = {
       choices: [
         { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '기다리겠다는 표현. 일본 호텔 조식 서비스에 대한 감사가 남다른 경험을 만들어요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'partial' },
-        { text: '접시를 가져가도 되나요?', phraseId: 'p_osara_tottemo_ii', correct: false, feedback: '회전초밥 표현이라 뷔페 보충 요청에는 어색해요' },
+        { text: '조금 더 받을 수 있나요?', phraseId: 'p_mou_sukoshi_moraemasu_ka', correct: false, feedback: '추가 요청은 이미 했어요 — 기다리겠다는 인사로 마무리해요' },
       ],
     },
   ],
@@ -344,7 +344,7 @@ export const c38: Mission = {
       choices: [
         { text: '추천 생선은 뭐예요?', phraseId: 'p_osusume_no_sakana', correct: true, feedback: '「おすすめの魚(さかな)は何(なん)ですか」— 제철 생선을 추천받는 최고의 방법. 장인이 그날 들어온 최고 재료를 알려줘요' },
         { text: '아지는 뭐예요?', phraseId: 'p_aji_wa_nan_desu_ka', correct: true, feedback: '「アジは何(なん)ですか」— 모르는 생선 이름을 바로 물어봐요. アジ=전갱이(고등어 계열), 여름 제철로 지방이 오른 인기 초밥 재료예요' },
-        { text: '우산을 반납하겠습니다', phraseId: 'p_kasa_wo_kaeshimasu', correct: false, feedback: '호텔 우산 표현이라 스시집에서는 맞지 않아요' },
+        { text: '방어 주세요', phraseId: 'p_hamachi_kudasai', correct: false, feedback: '아직 추천을 받는 중이에요 — 생선 주문은 그다음에 해요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
@@ -356,7 +356,7 @@ export const c38: Mission = {
       choices: [
         { text: '방어 주세요', phraseId: 'p_hamachi_kudasai', correct: true, feedback: '「ハマチください」— 방어(はまち)는 겨울 제철 지방이 오른 인기 재료. カウンター 스시집에서 직접 장인에게 말하는 재미가 있어요' },
         { text: '맥주 한 잔 더 주세요', phraseId: 'p_biiru_mou_ippai', correct: true, feedback: '「ビールもう一杯(いっぱい)ください」— 추가 패턴: もう一杯=한 잔 더, もう一皿(さら)=접시 하나 더, もう一度(いちど)=한 번 더로 응용 가능해요' },
-        { text: '더 넓은 방이 있나요?', phraseId: 'p_motto_hiroi_heya', correct: false, feedback: '호텔 방 변경 표현이에요' },
+        { text: '추천 생선은 뭐예요?', phraseId: 'p_osusume_no_sakana', correct: false, feedback: '추천은 이미 받았어요 — 마음에 드는 생선을 주문하거나 음료를 추가해요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
       ],
     },
@@ -368,7 +368,7 @@ export const c38: Mission = {
       choices: [
         { text: '계산 부탁드립니다', phraseId: 'p_okaikei', correct: true, feedback: '「お会計(かいけい)お願いします」— 스시 카운터 계산은 자리에서 바로 해요. 현금 선호 가게가 많으니 카드 여부를 미리 확인하세요' },
         { text: '잘 먹었습니다', phraseId: 'p_gochisousama', correct: true, feedback: '「ごちそうさまでした」— 식사 후 반드시 해야 하는 인사. 장인과 홀 직원 모두에게 전하면 최고의 마무리예요' },
-        { text: '오픈 티켓을 교환하고 싶습니다', phraseId: 'p_open_ticket_koukan', correct: false, feedback: '역 창구 표현이라 식당 계산에는 맞지 않아요' },
+        { text: '방어 주세요', phraseId: 'p_hamachi_kudasai', correct: false, feedback: '계산하는 마무리예요 — 추가 주문은 계산 전에 해요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
       ],
     },
@@ -392,7 +392,7 @@ export const c39: Mission = {
       choices: [
         { text: '알덴테로 부탁합니다', phraseId: 'p_arudente_de', correct: true, feedback: '「アルデンテで」— 이탈리아어 al dente가 일본에서도 그대로 통해요. 씹히는 식감이 살아있는 면을 원할 때 써요' },
         { text: '보통으로 부탁합니다', phraseId: 'p_futsuu_de', correct: true, feedback: '「普通(ふつう)で」— 특별한 요청 없이 기본으로 달라고 할 때. 「ふつうで大丈夫です」도 자연스러워요' },
-        { text: '티켓을 교환하고 싶습니다', phraseId: 'p_open_ticket_koukan', correct: false, feedback: '파스타 주문에서는 음식 옵션을 답해야 해요' },
+        { text: '치즈를 추가해 주세요', phraseId: 'p_chiizu_tsuika', correct: false, feedback: '지금은 면 익힘을 정하는 단계예요 — 추가 옵션은 그다음에 골라요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
@@ -403,7 +403,7 @@ export const c39: Mission = {
       choices: [
         { text: '치즈를 추가해 주세요', phraseId: 'p_chiizu_tsuika', correct: true, feedback: '「チーズ追加(ついか)で」— 추가 옵션 패턴: 〇〇追加でお願いします. ベーコン(베이컨)·エビ(새우)도 같은 패턴으로 추가 가능해요' },
         { text: '마늘 빼고 부탁합니다', phraseId: 'p_ninniku_nuki', correct: true, feedback: '「にんにく抜(ぬ)きで」— 제외 요청 패턴: 〇〇抜きでお願いします. 알레르기나 기피 식재료가 있을 때 꼭 활용하세요' },
-        { text: '기내수하물로 하겠습니다', phraseId: 'p_kore_tebutsu_ni_shimasu', correct: false, feedback: '공항 수하물 표현이에요' },
+        { text: '알덴테로 부탁합니다', phraseId: 'p_arudente_de', correct: false, feedback: '면 익힘은 이미 정했어요 — 지금은 소스·추가 옵션을 골라요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
       ],
     },
@@ -415,7 +415,7 @@ export const c39: Mission = {
       choices: [
         { text: '이걸로 부탁합니다', phraseId: 'p_kore_de', correct: true, feedback: '「これで」— 이걸로 됐다는 마무리 표현. 추가 요청이 없을 때 간단하게 주문을 확정하는 한 마디예요' },
         { text: '물 주세요', phraseId: 'p_mizu_kudasai', correct: true, feedback: '「お水ください」— 파스타집에서도 물은 대부분 무료. お水(물)와 スパークリングウォーター(탄산수)를 구분해서 요청해요' },
-        { text: '담배 냄새가 납니다', phraseId: 'p_tabako_no_nioi', correct: false, feedback: '호텔 방 문제 표현이에요' },
+        { text: '치즈를 추가해 주세요', phraseId: 'p_chiizu_tsuika', correct: false, feedback: '주문을 마무리하는 단계예요 — 추가 옵션은 앞서 골랐어요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
       ],
     },
@@ -439,7 +439,7 @@ export const c40: Mission = {
       choices: [
         { text: '면세 부탁합니다', phraseId: 'p_menzei_onegai', correct: true, feedback: '「免税(めんぜい)お願いします」— 계산 전에 먼저 말해야 해요. 5,000엔 이상 구매 시 소비세 10%를 돌려받아요' },
         { text: '여권 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: true, feedback: '면세 처리에는 여권 원본이 필요해요. 사본이나 사진은 인정되지 않으니 항상 원본을 지참하세요' },
-        { text: '맥주 한 잔 더 주세요', phraseId: 'p_biiru_mou_ippai', correct: false, feedback: '식당 추가 주문 표현이라 계산대와 맞지 않아요' },
+        { text: '선물 포장 부탁합니다', phraseId: 'p_gift_wrapping_onegai', correct: false, feedback: '먼저 면세를 요청해요 — 선물 포장은 그다음 단계예요' },
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
       ],
     },
@@ -451,7 +451,7 @@ export const c40: Mission = {
       choices: [
         { text: '선물 포장 부탁합니다', phraseId: 'p_gift_wrapping_onegai', correct: true, feedback: '「ギフトラッピングお願いします」— 일본 백화점·편집샵의 선물 포장 수준은 세계 최고예요. 대부분 무료 또는 저렴해요' },
         { text: '카드로요', phraseId: 'p_card_de', correct: true, feedback: '「カードで」— 결제 방식 표현. クレジットカードで, PayPayで처럼 구체적으로 말하면 처리가 더 빠르게 돼요' },
-        { text: '마늘 빼고 부탁합니다', phraseId: 'p_ninniku_nuki', correct: false, feedback: '파스타 옵션 표현이라 편집샵 계산대에서는 맞지 않아요' },
+        { text: '면세 부탁합니다', phraseId: 'p_menzei_onegai', correct: false, feedback: '면세는 이미 요청했어요 — 지금은 포장·결제 방식을 정해요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },

@@ -91,6 +91,24 @@ export const phrases: Phrase[] = [
   { id: 'p_suica_de', kana: 'スイカで', korean: '스이카로요', register: 'productive', tip: '「Suicaで」— Suica·Pasmo 등 IC카드 결제 선택. 편의점·식당·자판기에서도 사용 가능하고 현금보다 빠르고 편리해요' },
   { id: 'p_mou_daijoubu_desu', kana: 'もうだいじょうぶです', kanji: 'もう大丈夫です', korean: '이제 괜찮습니다', register: 'productive', tip: '「もう大丈夫(だいじょうぶ)です」— 추가 도움·권유를 부드럽게 거절할 때. もう(이제)가 붙어 "이미 충분해요"의 뉘앙스예요. 직접적이지 않아 일본 문화에 잘 맞는 거절법이에요' },
 
+  // ── C1 편의점 실생활 확장: 추가 구매·성인 인증·봉투 사이즈·수저·큰 돈·IC 충전·거스름돈 ──
+  // (NPC 발화 = receptive)
+  { id: 'p_ijou_de_yoroshii', kana: 'いじょうでよろしいですか', kanji: '以上でよろしいですか', displayKana: 'いじょうで、よろしいですか？', korean: '이상으로 괜찮으세요?', register: 'receptive' },
+  { id: 'p_nenrei_kakunin', kana: 'ねんれいかくにんのためがめんにタッチをおねがいします', kanji: '年齢確認のため画面にタッチをお願いします', displayKana: 'ねんれいかくにんのため、がめんにタッチをおねがいします', korean: '연령 확인을 위해 화면을 터치해 주세요', register: 'receptive' },
+  { id: 'p_zandaka_tarimasen', kana: 'スイカのざんだかがたりません', kanji: 'Suicaの残高が足りません', displayKana: 'スイカのざんだかが、たりません', korean: '스이카 잔액이 부족합니다', register: 'receptive' },
+  { id: 'p_otsuri_to_reshiito', kana: 'おつりですレシートはごりようですか', kanji: 'お釣りです。レシートはご利用ですか', displayKana: 'おつりです。レシートはごりようですか？', korean: '거스름돈입니다. 영수증 필요하세요?', register: 'receptive' },
+  // (학습자 발화 = productive / both)
+  { id: 'p_oden_hitotsu', kana: 'おでんをひとつください', kanji: 'おでんを一つください', korean: '어묵 하나 주세요', register: 'productive', tip: '「おでんを一(ひと)つください」— 계산대 옆 おでん(어묵)은 겨울 편의점의 명물. つゆ(국물) 양도 「つゆ多(おお)めで」(국물 많이)처럼 요청할 수 있어요' },
+  { id: 'p_karaage_kudasai', kana: 'からあげをください', kanji: '唐揚げをください', korean: '닭튀김 주세요', register: 'productive', tip: '「唐揚(からあ)げをください」— 계산대 핫스낵(ホットスナック)은 가리키며 주문해요. ファミチキ·からあげクン처럼 체인마다 인기 메뉴 이름이 달라요' },
+  { id: 'p_ijou_desu', kana: 'いじょうです', kanji: '以上です', korean: '이게 다예요', register: 'productive', tip: '「以上(いじょう)です」— "주문은 이걸로 끝"이라는 마무리 표현. 식당·편의점 어디서나 「以上で大丈夫(だいじょうぶ)です」형태로도 자주 써요' },
+  { id: 'p_hatachi_ijou_desu', kana: 'はたちいじょうです', kanji: '二十歳以上です', korean: '스무 살 넘었어요', register: 'productive', tip: '「二十歳(はたち)以上(いじょう)です」— 주류·담배 구매 시 연령 확인. 보통은 화면의 「はい」를 누르면 끝나지만, 말로 확인할 때 쓰는 표현이에요. 二十歳는 はたち로 읽는 특별한 단어예요' },
+  { id: 'p_ookii_fukuro', kana: 'おおきいふくろでおねがいします', kanji: '大きい袋でお願いします', displayKana: 'おおきいふくろで、おねがいします', korean: '큰 봉투로 부탁해요', register: 'productive', tip: '「大(おお)きい袋(ふくろ)でお願(ねが)いします」— 짐이 많을 때 큰 봉투를 요청. 반대로 작은 건 小(ちい)さい袋. 봉투는 보통 3~5엔 유료예요' },
+  { id: 'p_supuun_kudasai', kana: 'スプーンをください', kanji: 'スプーンをください', korean: '숟가락 주세요', register: 'productive', tip: '「スプーンをください」— 디저트·카레·컵라면엔 숟가락. 포크는 フォーク, 빨대는 ストロー. 필요한 식기는 직접 말해야 챙겨줘요' },
+  { id: 'p_card_de_onegai', kana: 'カードでおねがいします', kanji: 'カードでお願いします', displayKana: 'カードで、おねがいします', korean: '카드로 부탁드려요', register: 'productive', tip: '「カードでお願(ねが)いします」— 「カードで」보다 정중한 완성형. 점원이 「一括(いっかつ)でよろしいですか」(일시불로 할까요?)라고 물으면 「はい、一括で」라고 답해요' },
+  { id: 'p_suica_de_onegai', kana: 'スイカでおねがいします', kanji: 'Suicaでお願いします', displayKana: 'スイカで、おねがいします', korean: '스이카로 부탁드려요', register: 'productive', tip: '「Suicaでお願(ねが)いします」— IC카드 결제의 정중한 완성형. 점원이 단말기를 가리키면 카드를 「ピッ」 터치하면 끝나요' },
+  { id: 'p_ichiman_de', kana: 'いちまんえんでおねがいします', kanji: '一万円でお願いします', displayKana: 'いちまんえんで、おねがいします', korean: '만 엔으로 낼게요', register: 'productive', tip: '「一万円(いちまんえん)でお願(ねが)いします」— 큰 지폐로 낼 때. 점원이 「一万円(いちまんえん)お預(あず)かりします」(만 엔 받았습니다)라고 복창하고 거스름돈을 줘요' },
+  { id: 'p_sen_en_chaaji', kana: 'せんえんチャージしてください', kanji: '千円チャージしてください', displayKana: 'せんえんチャージ、してください', korean: '천 엔 충전해 주세요', register: 'productive', tip: '「千円(せんえん)チャージしてください」— IC카드 충전 금액 지정. 편의점 계산대에서 현금으로 바로 충전할 수 있어요. 보통 1000엔 단위로 충전해요' },
+
   // ── C2 식당 보강: 개수/이거랑/매워요?/먹을게요 ──
   { id: 'p_hitotsu_kudasai', kana: 'ひとつください', kanji: '一つください', korean: '하나 주세요', register: 'productive', tip: '「一(ひと)つください」— 일본어 고유 수 세기: ひとつ(1), ふたつ(2), みっつ(3), よっつ(4). 二(ふた)つ、三(みっ)つ로 응용해요. 상품·음식 모두 통해요' },
   { id: 'p_futatsu_kudasai', kana: 'ふたつください', kanji: '二つください', korean: '두 개 주세요', register: 'productive', tip: '「二(ふた)つください」— 고유어 수 세기로 작은 물건을 셀 때. 3개는 みっつください, 4개는 よっつください로 이어서 쓸 수 있어요' },
@@ -133,6 +151,13 @@ export const phrases: Phrase[] = [
   { id: 'p_kenbaiki', kana: 'けんばいきはどこですか', kanji: '券売機はどこですか', displayKana: 'けんばいきは、どこですか？', korean: '식권기 어디예요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '「券売機(けんばいき)はどこですか」— 라멘·소바 가게 입구에 주로 있어요. 사진 메뉴 버튼을 고르면 돼요. 모르면 店員(てんいん)さんに聞(き)いて！' },
   { id: 'p_oomori', kana: 'おおもりできますか', kanji: '大盛りできますか', displayKana: 'おおもり、できますか？', korean: '곱빼기 되나요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '「大盛(おおも)りできますか」— 라멘·덮밥류에서 양을 늘릴 때. 많은 가게에서 무료 또는 100엔 추가예요. 반대로 小盛(こも)り(소량)를 요청할 수도 있어요' },
   { id: 'p_kaedama', kana: 'かえだまおねがいします', kanji: '替え玉お願いします', displayKana: 'かえだま、おねがいします', korean: '면 추가요', register: 'productive', tip: 'かえだま=라멘 면 사리 추가. 도쿄·하카타 라멘집 필수' },
+  // C13 라멘 실전 확장 — 자리·식권·면굳기·토핑
+  { id: 'p_kauntaa_e_douzo', kana: 'カウンターせきへどうぞ', kanji: 'カウンター席へどうぞ', displayKana: 'カウンターせきへどうぞ', korean: '카운터석으로 오세요', register: 'receptive' },
+  { id: 'p_shokken_douzo', kana: 'しょっけんをこちらへどうぞ', kanji: '食券をこちらへどうぞ', displayKana: 'しょっけんを、こちらへどうぞ', korean: '식권을 이쪽으로 주세요', register: 'receptive' },
+  { id: 'p_topping_ikaga', kana: 'トッピングはいかがですか', kanji: 'トッピングはいかがですか', displayKana: 'トッピングは、いかがですか？', korean: '토핑은 어떠세요?', register: 'receptive' },
+  { id: 'p_men_katame', kana: 'めんはかためでおねがいします', kanji: '麺は硬めでお願いします', displayKana: 'めんはかためで、おねがいします', korean: '면은 단단하게요', register: 'productive', tip: '「麺(めん)は硬(かた)めで」— 라멘 면 굳기 요청. バリカタ(아주 단단)〉硬(かた)め〉普通(ふつう)〉やわめ(부드럽게) 순. 하카타 돈코츠 라멘에서 특히 자주 물어봐요' },
+  { id: 'p_ajitama_tsuika', kana: 'あじたまついかでおねがいします', kanji: '味玉追加でお願いします', displayKana: 'あじたまついかで、おねがいします', korean: '맛계란 추가요', register: 'productive', tip: '「味玉(あじたま)追加(ついか)で」— 간장에 절인 반숙 계란. 라멘 인기 토핑 1위예요. 「〇〇追加で」는 어떤 토핑에도 쓰는 추가 패턴이에요' },
+  { id: 'p_chaashuu_tsuika', kana: 'チャーシューついかでおねがいします', kanji: 'チャーシュー追加でお願いします', displayKana: 'チャーシューついかで、おねがいします', korean: '차슈 추가요', register: 'productive', tip: '「チャーシュー追加(ついか)で」— 돼지고기 차슈 추가. のり(김)·メンマ(죽순)·ねぎ(파)도 같은 패턴으로 추가할 수 있어요' },
 
   // ── C6 약국 (증상·약) ──
   { id: 'p_dou_shimashita', kana: 'どうしましたか', displayKana: 'どうしましたか？', korean: '어디가 안 좋으세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
@@ -164,6 +189,11 @@ export const phrases: Phrase[] = [
 
   // ── C5 거리·긴급 한마디 (여행 실전 — 화장실·사진·도움) ──
   { id: 'p_toire_doko', kana: 'トイレはどこですか', displayKana: 'トイレは、どこですか？', korean: '화장실 어디예요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '「トイレはどこですか」— お手洗(てあら)い라고도 해요. 일본의 역·백화점·편의점 화장실은 대부분 무료로 개방돼 있어요. 세계 최고 수준의 청결도를 자랑합니다!' },
+  // C5 거리 실전 확장 — 목적지·방향·거리 묻기
+  { id: 'p_chikai_desu_ka', kana: 'ここからちかいですか', kanji: 'ここから近いですか', displayKana: 'ここから、ちかいですか？', korean: '여기서 가까워요?', register: 'productive', tip: '「ここから近(ちか)いですか」— 목적지까지 거리를 가늠할 때. 멀면 遠(とお)いですか, 걸어갈 수 있냐고 물으면 歩(ある)いて行(い)けますか라고 해요' },
+  { id: 'p_massugu_migi', kana: 'まっすぐいってふたつめのかどをみぎです', kanji: 'まっすぐ行って二つ目の角を右です', displayKana: 'まっすぐいって、ふたつめのかどをみぎです', korean: '쭉 가서 두 번째 모퉁이에서 오른쪽이에요', register: 'receptive' },
+  { id: 'p_hidari_migi', kana: 'ひだりですかみぎですか', kanji: '左ですか、右ですか', displayKana: 'ひだりですか、みぎですか？', korean: '왼쪽이에요, 오른쪽이에요?', register: 'productive', tip: '「左(ひだり)ですか、右(みぎ)ですか」— 방향이 헷갈릴 때 확인. 손으로 방향을 가리키며 물으면 더 확실해요. まっすぐ=직진도 함께 기억하세요' },
+  { id: 'p_aruite_nanpun', kana: 'あるいてなんぷんですか', kanji: '歩いて何分ですか', displayKana: 'あるいて、なんぷんですか？', korean: '걸어서 몇 분이에요?', register: 'productive', tip: '「歩(ある)いて何分(なんぷん)ですか」— 도보 소요 시간 확인. 멀면 電車(でんしゃ)とバス、どちらが早(はや)いですか로 교통편을 비교해봐요' },
   { id: 'p_shashin_ii', kana: 'しゃしんとってもいいですか', kanji: '写真撮ってもいいですか', displayKana: 'しゃしん、とってもいいですか？', korean: '사진 찍어도 돼요?', register: 'productive', tip: '「写真(しゃしん)撮(と)ってもいいですか」— 촬영 전 허가 확인은 매너예요. 절·신사 내부는 撮影禁止(さつえいきんし) 구역이 있으니 주의하세요' },
   { id: 'p_shashin_onegai', kana: 'しゃしんおねがいします', kanji: '写真お願いします', displayKana: 'しゃしん、おねがいします', korean: '사진 부탁드려요', register: 'productive', tip: '「写真(しゃしん)お願(ねが)いします」— 스마트폰이나 카메라를 건네며 쓰면 OK. 일본인은 대체로 친절하게 찍어줘요. ありがとうございます로 감사 표시도 잊지 마세요' },
   { id: 'p_tasukete', kana: 'たすけてください', kanji: '助けてください', korean: '도와주세요', register: 'productive', tip: '급할 땐 たすけて만 외쳐도 통합니다' },
@@ -204,6 +234,9 @@ export const phrases: Phrase[] = [
   { id: 'p_oatame_shimasu_ka', kana: 'おあたためしますか', kanji: 'お温めしますか', displayKana: 'おあたためしますか？', korean: '데워 드릴까요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_dore_ni_shimasu_ka', kana: 'どれにしますか', kanji: 'どれにしますか', displayKana: 'どれにしますか？', korean: '어느 것으로 하시겠어요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_fukuro_otsuke_shimasu_ka', kana: 'ふくろおつけしますか', kanji: '袋お付けしますか', displayKana: 'ふくろ、おつけしますか？', korean: '봉투 넣어 드릴까요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  // C15 빵집 실전 확장 — 갓 구운 빵 추천·따로 포장
+  { id: 'p_yakitate_desu', kana: 'こちらはやきたてですよ', kanji: 'こちらは焼きたてですよ', displayKana: 'こちらは、やきたてですよ', korean: '이건 갓 구운 거예요', register: 'receptive' },
+  { id: 'p_betsubetsu_tsutsumi', kana: 'べつべつにつつみますか', kanji: '別々に包みますか', displayKana: 'べつべつに、つつみますか？', korean: '따로따로 포장해 드릴까요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_okaikei_wa_sennihyakuen_desu', kana: 'おかいけいはせんにひゃくえんです', kanji: 'お会計は千二百円です', displayKana: 'おかいけいは、せんにひゃくえんです。', korean: '계산은 1200엔입니다', register: 'receptive' },
   { id: 'p_yoyaku_wa_arimasu_ka', kana: 'よやくはありますか', kanji: '予約はありますか', displayKana: 'よやくは、ありますか？', korean: '예약하셨나요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_nomimono_wa_dou_shimasu_ka', kana: 'おのみものはどうしますか', kanji: 'お飲み物はどうしますか', displayKana: 'おのみものは、どうしますか？', korean: '음료는 어떻게 하시겠어요?', register: 'receptive', grammarRefs: ['g_masuka'] },
@@ -253,6 +286,12 @@ export const phrases: Phrase[] = [
   { id: 'p_mochikaeri_de', kana: 'もちかえりで', kanji: '持ち帰りで', korean: '포장으로요', register: 'productive', tip: '「持(も)ち帰(かえ)りで」— 포장 주문 선택. テイクアウトで라고도 해요. 포장 시 종이컵이나 비닐 용기로 제공되며 가격이 다른 경우도 있어요' },
   { id: 'p_esu_saizu_de', kana: 'エスサイズで', kanji: 'Sサイズで', korean: 'S 사이즈로요', register: 'productive', tip: '「Sサイズで」— 사이즈 선택 표현. 일본 카페의 S 사이즈는 한국보다 작은 경우가 있어요. レギュラー·ラージ 등 가게마다 이름이 달라 메뉴판을 확인해요' },
   { id: 'p_emu_saizu_de', kana: 'エムサイズで', kanji: 'Mサイズで', korean: 'M 사이즈로요', register: 'productive', tip: '「Mサイズで」— 보통 사이즈 선택. 사이즈 차이를 물어보고 싶으면 違(ちが)いは何(なに)ですか라고 해봐요' },
+  // C14 카페 실전 확장 — 따뜻/아이스·커스텀
+  { id: 'p_hot_ice_dochira', kana: 'ホットとアイスどちらにしますか', kanji: 'ホットとアイス、どちらにしますか', displayKana: 'ホットとアイス、どちらにしますか？', korean: '따뜻한 것과 아이스 중 어느 걸로 하시겠어요?', register: 'receptive' },
+  { id: 'p_hotto_de', kana: 'ホットで', korean: '따뜻한 걸로요', register: 'productive', tip: '「ホットで」— 따뜻한 음료 선택. hot의 일본식 표기예요. 반대는 アイス(아이스). 겨울엔 あたたかいの로도 통해요' },
+  { id: 'p_aisu_de', kana: 'アイスで', korean: '차가운 걸로요', register: 'productive', tip: '「アイスで」— 차가운 음료 선택. ice의 일본식 표기. 얼음 적게는 氷(こおり)少(すく)なめで로 요청할 수 있어요' },
+  { id: 'p_shotto_tsuika', kana: 'ショットついかでおねがいします', kanji: 'ショット追加でお願いします', displayKana: 'ショットついかで、おねがいします', korean: '샷 추가요', register: 'productive', tip: '「ショット追加(ついか)で」— 에스프레소 샷 추가. シロップ(시럽)·ミルク(우유) 변경도 「〇〇で」패턴으로 요청해요. 보통 50~100엔 추가예요' },
+  { id: 'p_custom_arimasu', kana: 'カスタマイズはございますか', kanji: 'カスタマイズはございますか', displayKana: 'カスタマイズは、ございますか？', korean: '커스텀(변경) 있으세요?', register: 'receptive' },
   { id: 'p_nihon_go_muzukashii', kana: 'にほんごがむずかしいです', kanji: '日本語が難しいです', korean: '일본어가 어려워요', register: 'productive', tip: '「日本語(にほんご)が難(むずか)しいです」— 솔직하게 표현하면 상대방이 더 쉽게 말해줘요. でも、少(すこ)しずつ練習中(れんしゅうちゅう)です를 붙이면 훨씬 호감을 줘요!' },
   { id: 'p_kippu_nimai_kudasai', kana: 'きっぷをにまいください', kanji: '切符を二枚ください', korean: '표 두 장 주세요', register: 'productive', tip: '「切符(きっぷ)を二枚(にまい)ください」— 티켓·종이류는 枚(まい)로 셉니다. 一枚(いちまい), 二枚(にまい), 三枚(さんまい)로 응용해요. 매수는 数字+枚 기억!' },
   { id: 'p_sumimasen_koko_doko', kana: 'すみませんここはどこですか', kanji: 'すみません、ここはどこですか', displayKana: 'すみません、ここはどこですか？', korean: '실례합니다, 여기가 어디예요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '「すみません、ここはどこですか」— 길을 잃었을 때 구조 요청. スマートフォンの地図(ちず)を一緒に見(み)せると 위치를 더 빠르게 확인할 수 있어요' },

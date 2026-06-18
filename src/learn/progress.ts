@@ -286,6 +286,8 @@ export interface SessionConfig {
   minFresh: { K: number; B: number; C: number };
   /** 미션 ID → 해당 세션에 포함 여부. undefined면 전체 포함. */
   missionTierFilter?: (missionId: string) => boolean;
+  /** 듣기·받아쓰기·발음구분 카드의 레벨(티어) 범위 [min,max]. 범위 밖은 제외. 태그 없는 카드는 항상 포함. */
+  cardTierRange?: [number, number];
 }
 
 // 각 버킷에서 보장하는 최소 fresh(신규) 수 — due 복습이 quota를 다 채워서
@@ -295,11 +297,19 @@ export const SESSION_MIN_FRESH = { K: 2, B: 1, C: 2 } as const;
 export const DEFAULT_SESSION_CONFIG: SessionConfig = { quotas: SESSION_QUOTAS, minFresh: SESSION_MIN_FRESH };
 
 // 발음 구분(P) 카드 SRS — pair: 프리픽스, 같은 쌍 연속 금지, due→fresh 순
-function pickPairCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit: number): Card[] {
+function pickPairCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit: number, tierRange?: [number, number]): Card[] {
   if (limit <= 0) return [];
+  // 발음 구분도 레벨별 — 범위 안 쌍만. 단, 범위 안에 후보가 하나도 없으면 폴백(전체 사용).
+  const inRange = (c: Card) => {
+    if (!tierRange) return true;
+    const ct = (c as { tier?: number }).tier;
+    return ct === undefined || (ct >= tierRange[0] && ct <= tierRange[1]);
+  };
+  const allPairs = allCards.filter((c) => c.kind === 'quiz' && c.id.startsWith('pair:'));
+  const useRange = tierRange ? allPairs.some(inRange) : false;
   const due: Card[] = [], fresh: Card[] = [];
-  for (const c of allCards) {
-    if (c.kind !== 'quiz' || !c.id.startsWith('pair:')) continue;
+  for (const c of allPairs) {
+    if (useRange && !inRange(c)) continue;
     if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
     (progress[c.id] ? due : fresh).push(c);
   }
@@ -454,6 +464,11 @@ export function selectSessionCards(
     if (c.kind === 'quiz' && c.id.startsWith('pair:')) continue;  // 발음 구분은 P 버킷으로 분리
     if (c.kind === 'introduce' && progress[c.id]) continue; // 새 표현 소개는 1회만 — 본 것은 제외(다른 새 표현으로)
     if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
+    // 레벨 필터 — 듣기·받아쓰기·작문 카드는 티어 범위 밖이면 제외(태그 없는 어휘·가나는 항상 포함).
+    if (config.cardTierRange) {
+      const ct = (c as { tier?: number }).tier;
+      if (ct !== undefined && (ct < config.cardTierRange[0] || ct > config.cardTierRange[1])) continue;
+    }
     const key = conceptKey(c);
     const arr = byConcept.get(key);
     if (arr) arr.push(c); else byConcept.set(key, [c]);
@@ -483,7 +498,7 @@ export function selectSessionCards(
   }
   const kSel = pickPool(k, config.quotas.K, config.minFresh.K, progress);
   const bSel = pickPool(b, config.quotas.B, config.minFresh.B, progress);
-  const pSel = pickPairCards(allCards, progress, currentSessionId, config.quotas.P ?? 0);
+  const pSel = pickPairCards(allCards, progress, currentSessionId, config.quotas.P ?? 0, config.cardTierRange);
   const scene = pickScene(filteredByMission, config.quotas.C, progress, currentSessionId);
   // 팁: 안 본 것/오래된 것부터 1개씩 회전 (매번 같은 팁 X)
   const tipsSel = [...tips]

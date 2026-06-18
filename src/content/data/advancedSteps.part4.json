@@ -6,10 +6,28 @@
       "recapPromptJa": "保険はフルカバーになさいますか。一日千円です",
       "recapPromptKo": "보험은 풀커버로 하시겠어요? 하루 1,000엔입니다",
       "choices": [
-        { "text": "네", "phraseId": "p_hai", "correct": true, "feedback": "낯선 도로에서는 풀커버 보험이 마음 편해요" },
-        { "text": "이걸로 부탁드려요", "phraseId": "p_kore_de", "correct": true },
-        { "text": "괜찮습니다 (사양)", "phraseId": "p_daijoubu_desu", "correct": true },
-        { "text": "영수증 주세요", "phraseId": "p_ryoushuusho", "correct": false, "feedback": "보험 결정을 먼저 하고 영수증은 결제 후에 받아요" }
+        {
+          "text": "네",
+          "phraseId": "p_hai",
+          "correct": true,
+          "feedback": "낯선 도로에서는 풀커버 보험이 마음 편해요"
+        },
+        {
+          "text": "이걸로 부탁드려요",
+          "phraseId": "p_kore_de",
+          "correct": true
+        },
+        {
+          "text": "괜찮습니다 (사양)",
+          "phraseId": "p_daijoubu_desu",
+          "correct": true
+        },
+        {
+          "text": "영수증 주세요",
+          "phraseId": "p_ryoushuusho",
+          "correct": false,
+          "feedback": "보험 결정을 먼저 하고 영수증은 결제 후에 받아요"
+        }
       ]
     },
     {
@@ -18,10 +36,29 @@
       "recapPromptJa": "ご返却は満タンで、六時までにお願いいたします",
       "recapPromptKo": "반납은 가득 주유해서 6시까지 부탁드립니다",
       "choices": [
-        { "text": "알겠습니다, 감사합니다", "phraseId": "p_wakarimashita_arigatou", "correct": true },
-        { "text": "다시 한 번 부탁합니다", "phraseId": "p_mou_ichido", "correct": true, "feedback": "반납 조건은 추가 요금과 직결되니 확실히 들어둬요" },
-        { "text": "카드로요", "phraseId": "p_card_de", "correct": false, "feedback": "결제 단계가 아니라 반납 조건 안내예요" },
-        { "text": "어디예요?", "phraseId": "p_doko_desu_ka", "correct": false, "feedback": "반납 장소는 이미 안내받았어요" }
+        {
+          "text": "알겠습니다, 감사합니다",
+          "phraseId": "p_wakarimashita_arigatou",
+          "correct": true
+        },
+        {
+          "text": "다시 한 번 부탁합니다",
+          "phraseId": "p_mou_ichido",
+          "correct": true,
+          "feedback": "반납 조건은 추가 요금과 직결되니 확실히 들어둬요"
+        },
+        {
+          "text": "카드로요",
+          "phraseId": "p_card_de",
+          "correct": false,
+          "feedback": "결제 단계가 아니라 반납 조건 안내예요"
+        },
+        {
+          "text": "어디예요?",
+          "phraseId": "p_doko_desu_ka",
+          "correct": false,
+          "feedback": "반납 장소는 이미 안내받았어요"
+        }
       ]
     }
   ],
@@ -32,10 +69,27 @@
       "recapPromptJa": "今日はどうされましたか。詳しく教えてください",
       "recapPromptKo": "오늘은 어떻게 오셨어요? 자세히 알려 주세요",
       "choices": [
-        { "text": "머리가 아파요", "phraseId": "p_atama_itai", "correct": true },
-        { "text": "배가 아파요", "phraseId": "p_onaka_itai", "correct": true },
-        { "text": "감기예요", "phraseId": "p_kaze_desu", "correct": true },
-        { "text": "약 주세요", "phraseId": "p_kusuri_kudasai", "correct": false, "feedback": "진료가 먼저예요. 증상을 설명하면 의사가 약을 정해줘요" }
+        {
+          "text": "머리가 아파요",
+          "phraseId": "p_atama_itai",
+          "correct": true
+        },
+        {
+          "text": "배가 아파요",
+          "phraseId": "p_onaka_itai",
+          "correct": true
+        },
+        {
+          "text": "감기예요",
+          "phraseId": "p_kaze_desu",
+          "correct": true
+        },
+        {
+          "text": "약 주세요",
+          "phraseId": "p_kusuri_kudasai",
+          "correct": false,
+          "feedback": "진료가 먼저예요. 증상을 설명하면 의사가 약을 정해줘요"
+        }
       ]
     },
     {
@@ -44,10 +98,29 @@
       "recapPromptJa": "お薬を三日分出します。お大事に",
       "recapPromptKo": "약을 3일치 처방하겠습니다. 몸조리 잘하세요",
       "choices": [
-        { "text": "감사합니다", "phraseId": "p_arigatou_gozaimasu", "correct": true },
-        { "text": "이 약은 뭐예요?", "phraseId": "p_kono_kusuri", "correct": true, "feedback": "처방약이 궁금하면 바로 물어보는 게 좋아요" },
-        { "text": "3일이요", "phraseId": "p_mikka", "correct": false, "feedback": "3일치라는 설명을 따라 말할 필요는 없어요. 감사로 답해요" },
-        { "text": "배가 아파요", "phraseId": "p_onaka_itai", "correct": false, "feedback": "증상 설명은 끝났어요. 진료 마무리 인사에 답해요" }
+        {
+          "text": "감사합니다",
+          "phraseId": "p_arigatou_gozaimasu",
+          "correct": true
+        },
+        {
+          "text": "이 약은 뭐예요?",
+          "phraseId": "p_kono_kusuri",
+          "correct": true,
+          "feedback": "처방약이 궁금하면 바로 물어보는 게 좋아요"
+        },
+        {
+          "text": "3일이요",
+          "phraseId": "p_mikka",
+          "correct": false,
+          "feedback": "3일치라는 설명을 따라 말할 필요는 없어요. 감사로 답해요"
+        },
+        {
+          "text": "배가 아파요",
+          "phraseId": "p_onaka_itai",
+          "correct": false,
+          "feedback": "증상 설명은 끝났어요. 진료 마무리 인사에 답해요"
+        }
       ]
     }
   ],
@@ -58,10 +131,30 @@
       "recapPromptJa": "お財布の色と形を教えてください",
       "recapPromptKo": "지갑의 색과 모양을 알려 주세요",
       "choices": [
-        { "text": "잠깐만 기다려 주세요", "phraseId": "p_chotto_matte", "correct": true, "feedback": "사진을 찾아 보여주는 것이 가장 정확해요" },
-        { "text": "일본어는 조금만 할 수 있어요", "phraseId": "p_nihongo_sukoshi_dake", "correct": true, "feedback": "어려운 설명 전에 일본어 수준을 미리 알리면 경찰이 쉽게 말해줘요" },
-        { "text": "도와주세요", "phraseId": "p_tasukete", "correct": false, "feedback": "이미 도움을 받는 중이에요. 질문에 답해요" },
-        { "text": "모르겠어요", "phraseId": "p_wakarimasen", "correct": false, "feedback": "자기 지갑의 특징은 알고 있을 거예요. 사진이나 단어로 전달해요" }
+        {
+          "text": "잠깐만 기다려 주세요",
+          "phraseId": "p_chotto_matte",
+          "correct": true,
+          "feedback": "사진을 찾아 보여주는 것이 가장 정확해요"
+        },
+        {
+          "text": "일본어는 조금만 할 수 있어요",
+          "phraseId": "p_nihongo_sukoshi_dake",
+          "correct": true,
+          "feedback": "어려운 설명 전에 일본어 수준을 미리 알리면 경찰이 쉽게 말해줘요"
+        },
+        {
+          "text": "도와주세요",
+          "phraseId": "p_tasukete",
+          "correct": false,
+          "feedback": "이미 도움을 받는 중이에요. 질문에 답해요"
+        },
+        {
+          "text": "모르겠어요",
+          "phraseId": "p_wakarimasen",
+          "correct": false,
+          "feedback": "자기 지갑의 특징은 알고 있을 거예요. 사진이나 단어로 전달해요"
+        }
       ]
     },
     {
@@ -70,10 +163,28 @@
       "recapPromptJa": "見つかりましたら、ホテルにご連絡します",
       "recapPromptKo": "찾으면 호텔로 연락드리겠습니다",
       "choices": [
-        { "text": "감사합니다", "phraseId": "p_arigatou_gozaimasu", "correct": true },
-        { "text": "알겠습니다, 감사합니다", "phraseId": "p_wakarimashita_arigatou", "correct": true },
-        { "text": "어디예요?", "phraseId": "p_doko_desu_ka", "correct": false, "feedback": "장소 질문이 아니라 연락 약속이에요. 감사로 마무리해요" },
-        { "text": "호텔이에요", "phraseId": "p_hoteru_desu", "correct": false, "feedback": "숙소는 이미 알려줬어요" }
+        {
+          "text": "감사합니다",
+          "phraseId": "p_arigatou_gozaimasu",
+          "correct": true
+        },
+        {
+          "text": "알겠습니다, 감사합니다",
+          "phraseId": "p_wakarimashita_arigatou",
+          "correct": true
+        },
+        {
+          "text": "어디예요?",
+          "phraseId": "p_doko_desu_ka",
+          "correct": false,
+          "feedback": "장소 질문이 아니라 연락 약속이에요. 감사로 마무리해요"
+        },
+        {
+          "text": "호텔이에요",
+          "phraseId": "p_hoteru_desu",
+          "correct": false,
+          "feedback": "숙소는 이미 알려줬어요"
+        }
       ]
     }
   ],
@@ -84,10 +195,28 @@
       "recapPromptJa": "救急車が来ます。動かないでください",
       "recapPromptKo": "구급차가 옵니다. 움직이지 마세요",
       "choices": [
-        { "text": "알겠습니다", "phraseId": "p_wakarimashita", "correct": true },
-        { "text": "감사합니다", "phraseId": "p_arigatou_gozaimasu", "correct": true },
-        { "text": "괜찮습니다", "phraseId": "p_daijoubu_desu", "correct": false, "feedback": "위급할 때 괜찮다고 하면 도움이 늦어질 수 있어요. 지시를 따라요" },
-        { "text": "도와주세요", "phraseId": "p_tasukete", "correct": false, "feedback": "이미 구조가 진행 중이에요. 지시에 답해요" }
+        {
+          "text": "알겠습니다",
+          "phraseId": "p_wakarimashita",
+          "correct": true
+        },
+        {
+          "text": "감사합니다",
+          "phraseId": "p_arigatou_gozaimasu",
+          "correct": true
+        },
+        {
+          "text": "괜찮습니다",
+          "phraseId": "p_daijoubu_desu",
+          "correct": false,
+          "feedback": "위급할 때 괜찮다고 하면 도움이 늦어질 수 있어요. 지시를 따라요"
+        },
+        {
+          "text": "도와주세요",
+          "phraseId": "p_tasukete",
+          "correct": false,
+          "feedback": "이미 구조가 진행 중이에요. 지시에 답해요"
+        }
       ]
     },
     {
@@ -96,10 +225,30 @@
       "recapPromptJa": "病院に着きました。保険証はお持ちですか",
       "recapPromptKo": "병원에 도착했습니다. 보험증 가지고 계세요?",
       "choices": [
-        { "text": "없어요", "phraseId": "p_arimasen", "correct": true, "feedback": "여행자는 보험증이 없는 게 당연해요. 해외여행보험 서류를 보여줘요" },
-        { "text": "여권 여기 있어요", "phraseId": "p_pasupooto_arimasu", "correct": true, "feedback": "신분 확인용으로 여권을 제시하면 접수가 빨라져요" },
-        { "text": "감기예요", "phraseId": "p_kaze_desu", "correct": false, "feedback": "증상 설명은 접수 후 진료실에서 해요" },
-        { "text": "계산 부탁드립니다", "phraseId": "p_okaikei", "correct": false, "feedback": "정산은 진료가 끝난 뒤예요" }
+        {
+          "text": "없어요",
+          "phraseId": "p_arimasen",
+          "correct": true,
+          "feedback": "여행자는 보험증이 없는 게 당연해요. 해외여행보험 서류를 보여줘요"
+        },
+        {
+          "text": "여권 여기 있어요",
+          "phraseId": "p_pasupooto_arimasu",
+          "correct": true,
+          "feedback": "신분 확인용으로 여권을 제시하면 접수가 빨라져요"
+        },
+        {
+          "text": "감기예요",
+          "phraseId": "p_kaze_desu",
+          "correct": false,
+          "feedback": "증상 설명은 접수 후 진료실에서 해요"
+        },
+        {
+          "text": "계산 부탁드립니다",
+          "phraseId": "p_okaikei",
+          "correct": false,
+          "feedback": "정산은 진료가 끝난 뒤예요"
+        }
       ]
     }
   ],
@@ -110,10 +259,28 @@
       "recapPromptJa": "設定が終わりました。電波をご確認ください",
       "recapPromptKo": "설정이 끝났습니다. 신호를 확인해 주세요",
       "choices": [
-        { "text": "괜찮습니다 (잘 돼요)", "phraseId": "p_daijoubu_desu", "correct": true },
-        { "text": "감사합니다", "phraseId": "p_arigatou_gozaimasu", "correct": true },
-        { "text": "사용법 알려 주세요", "phraseId": "p_tsukaikata", "correct": false, "feedback": "설정은 이미 끝났어요. 신호가 잡히는지 확인부터 해요" },
-        { "text": "이거 얼마예요?", "phraseId": "p_kore_ikura", "correct": false, "feedback": "가격은 이미 확인했어요" }
+        {
+          "text": "괜찮습니다 (잘 돼요)",
+          "phraseId": "p_daijoubu_desu",
+          "correct": true
+        },
+        {
+          "text": "감사합니다",
+          "phraseId": "p_arigatou_gozaimasu",
+          "correct": true
+        },
+        {
+          "text": "사용법 알려 주세요",
+          "phraseId": "p_tsukaikata",
+          "correct": false,
+          "feedback": "설정은 이미 끝났어요. 신호가 잡히는지 확인부터 해요"
+        },
+        {
+          "text": "이거 얼마예요?",
+          "phraseId": "p_kore_ikura",
+          "correct": false,
+          "feedback": "가격은 이미 확인했어요"
+        }
       ]
     },
     {
@@ -122,10 +289,29 @@
       "recapPromptJa": "30日後に自動で切れます。延長もできますよ",
       "recapPromptKo": "30일 후 자동으로 끊깁니다. 연장도 가능해요",
       "choices": [
-        { "text": "알겠습니다, 감사합니다", "phraseId": "p_wakarimashita_arigatou", "correct": true },
-        { "text": "추가 요금은 얼마인가요?", "phraseId": "p_tsui_ryoukin_ikura", "correct": true, "feedback": "연장 요금을 미리 확인해 두면 좋아요" },
-        { "text": "이거 얼마예요?", "phraseId": "p_kore_ikura", "correct": false, "feedback": "유심 가격은 이미 계산했어요. 연장 요금은 追加料金으로 물어요" },
-        { "text": "여권 여기 있어요", "phraseId": "p_pasupooto_arimasu", "correct": false, "feedback": "여권 확인은 끝났어요" }
+        {
+          "text": "알겠습니다, 감사합니다",
+          "phraseId": "p_wakarimashita_arigatou",
+          "correct": true
+        },
+        {
+          "text": "추가 요금은 얼마인가요?",
+          "phraseId": "p_tsui_ryoukin_ikura",
+          "correct": true,
+          "feedback": "연장 요금을 미리 확인해 두면 좋아요"
+        },
+        {
+          "text": "이거 얼마예요?",
+          "phraseId": "p_kore_ikura",
+          "correct": false,
+          "feedback": "유심 가격은 이미 계산했어요. 연장 요금은 追加料金으로 물어요"
+        },
+        {
+          "text": "여권 여기 있어요",
+          "phraseId": "p_pasupooto_arimasu",
+          "correct": false,
+          "feedback": "여권 확인은 끝났어요"
+        }
       ]
     }
   ],
@@ -136,10 +322,28 @@
       "recapPromptJa": "上の階の禁煙ルームをご用意できます。ただ、眺めは変わります",
       "recapPromptKo": "위층 금연룸을 준비해 드릴 수 있습니다. 다만 전망은 달라집니다",
       "choices": [
-        { "text": "네, 부탁합니다", "phraseId": "p_hai", "correct": true },
-        { "text": "괜찮습니다 (그 방으로)", "phraseId": "p_daijoubu_desu", "correct": true },
-        { "text": "담배 냄새가 납니다", "phraseId": "p_tabako_no_nioi", "correct": false, "feedback": "문제는 이미 전달했어요. 제안에 답해요" },
-        { "text": "더 넓은 방이 있나요?", "phraseId": "p_motto_hiroi_heya", "correct": false, "feedback": "제안받은 방에 먼저 답한 뒤 추가 요청을 해요" }
+        {
+          "text": "네, 부탁합니다",
+          "phraseId": "p_hai",
+          "correct": true
+        },
+        {
+          "text": "괜찮습니다 (그 방으로)",
+          "phraseId": "p_daijoubu_desu",
+          "correct": true
+        },
+        {
+          "text": "담배 냄새가 납니다",
+          "phraseId": "p_tabako_no_nioi",
+          "correct": false,
+          "feedback": "문제는 이미 전달했어요. 제안에 답해요"
+        },
+        {
+          "text": "더 넓은 방이 있나요?",
+          "phraseId": "p_motto_hiroi_heya",
+          "correct": false,
+          "feedback": "제안받은 방에 먼저 답한 뒤 추가 요청을 해요"
+        }
       ]
     },
     {
@@ -148,10 +352,28 @@
       "recapPromptJa": "お荷物は係がお運びします。10分ほどお待ちください",
       "recapPromptKo": "짐은 담당 직원이 옮겨 드립니다. 10분 정도 기다려 주세요",
       "choices": [
-        { "text": "알겠습니다, 감사합니다", "phraseId": "p_wakarimashita_arigatou", "correct": true },
-        { "text": "감사합니다", "phraseId": "p_arigatou_gozaimasu", "correct": true },
-        { "text": "잠깐만 기다려 주세요", "phraseId": "p_chotto_matte", "correct": false, "feedback": "내가 기다리라는 안내예요. 상대에게 기다려 달라고 하면 반대가 돼요!" },
-        { "text": "방을 바꿔 주세요", "phraseId": "p_heya_kaete_kudasai", "correct": false, "feedback": "방 변경은 이미 진행 중이에요" }
+        {
+          "text": "알겠습니다, 감사합니다",
+          "phraseId": "p_wakarimashita_arigatou",
+          "correct": true
+        },
+        {
+          "text": "감사합니다",
+          "phraseId": "p_arigatou_gozaimasu",
+          "correct": true
+        },
+        {
+          "text": "잠깐만 기다려 주세요",
+          "phraseId": "p_chotto_matte",
+          "correct": false,
+          "feedback": "내가 기다리라는 안내예요. 상대에게 기다려 달라고 하면 반대가 돼요!"
+        },
+        {
+          "text": "방을 바꿔 주세요",
+          "phraseId": "p_heya_kaete_kudasai",
+          "correct": false,
+          "feedback": "방 변경은 이미 진행 중이에요"
+        }
       ]
     }
   ],
@@ -162,10 +384,28 @@
       "recapPromptJa": "次の列車は満席です。30分後の列車でよろしいですか",
       "recapPromptKo": "다음 열차는 만석입니다. 30분 후 열차로 괜찮으세요?",
       "choices": [
-        { "text": "네", "phraseId": "p_hai", "correct": true },
-        { "text": "괜찮습니다", "phraseId": "p_daijoubu_desu", "correct": true },
-        { "text": "나리타 익스프레스로 부탁합니다", "phraseId": "p_narita_ekisupuresu", "correct": false, "feedback": "열차 종류는 이미 정했어요. 시간 변경 제안에 답해요" },
-        { "text": "표 주세요", "phraseId": "p_kippu_kudasai", "correct": false, "feedback": "교환 절차가 이미 진행 중이에요" }
+        {
+          "text": "네",
+          "phraseId": "p_hai",
+          "correct": true
+        },
+        {
+          "text": "괜찮습니다",
+          "phraseId": "p_daijoubu_desu",
+          "correct": true
+        },
+        {
+          "text": "나리타 익스프레스로 부탁합니다",
+          "phraseId": "p_narita_ekisupuresu",
+          "correct": false,
+          "feedback": "열차 종류는 이미 정했어요. 시간 변경 제안에 답해요"
+        },
+        {
+          "text": "시간을 바꾸고 싶어요",
+          "phraseId": "p_jikan_kaetai",
+          "correct": false,
+          "feedback": "만석 안내를 받았어요 — 30분 뒤 열차로 할지 정하면 돼요"
+        }
       ]
     },
     {
@@ -174,10 +414,29 @@
       "recapPromptJa": "ご乗車は12番線、発車は10時20分です",
       "recapPromptKo": "승차는 12번선, 출발은 10시 20분입니다",
       "choices": [
-        { "text": "알겠습니다, 감사합니다", "phraseId": "p_wakarimashita_arigatou", "correct": true },
-        { "text": "다시 한 번 부탁합니다", "phraseId": "p_mou_ichido", "correct": true, "feedback": "승강장과 시간 두 정보를 한 번에 들었어요. 헷갈리면 되물어요" },
-        { "text": "몇 번 선이에요?", "phraseId": "p_nanbansen", "correct": false, "feedback": "12번선이라고 방금 들었어요" },
-        { "text": "시간을 바꾸고 싶어요", "phraseId": "p_jikan_kaetai", "correct": false, "feedback": "시간 변경은 이미 끝났어요" }
+        {
+          "text": "알겠습니다, 감사합니다",
+          "phraseId": "p_wakarimashita_arigatou",
+          "correct": true
+        },
+        {
+          "text": "다시 한 번 부탁합니다",
+          "phraseId": "p_mou_ichido",
+          "correct": true,
+          "feedback": "승강장과 시간 두 정보를 한 번에 들었어요. 헷갈리면 되물어요"
+        },
+        {
+          "text": "몇 번 선이에요?",
+          "phraseId": "p_nanbansen",
+          "correct": false,
+          "feedback": "12번선이라고 방금 들었어요"
+        },
+        {
+          "text": "시간을 바꾸고 싶어요",
+          "phraseId": "p_jikan_kaetai",
+          "correct": false,
+          "feedback": "시간 변경은 이미 끝났어요"
+        }
       ]
     }
   ],
@@ -188,10 +447,27 @@
       "recapPromptJa": "まだ3キロオーバーです。こちらの料金表をご覧ください",
       "recapPromptKo": "아직 3kg 초과입니다. 이 요금표를 봐 주세요",
       "choices": [
-        { "text": "추가 요금은 얼마인가요?", "phraseId": "p_tsui_ryoukin_ikura", "correct": true },
-        { "text": "짐을 줄이겠습니다", "phraseId": "p_nimotsu_herashimasu", "correct": true },
-        { "text": "이걸 기내수하물로 하겠습니다", "phraseId": "p_kore_tebutsu_ni_shimasu", "correct": true },
-        { "text": "괜찮습니다", "phraseId": "p_daijoubu_desu", "correct": false, "feedback": "초과 상태로는 진행할 수 없어요. 요금을 내거나 짐을 줄여요" }
+        {
+          "text": "추가 요금은 얼마인가요?",
+          "phraseId": "p_tsui_ryoukin_ikura",
+          "correct": true
+        },
+        {
+          "text": "짐을 줄이겠습니다",
+          "phraseId": "p_nimotsu_herashimasu",
+          "correct": true
+        },
+        {
+          "text": "이걸 기내수하물로 하겠습니다",
+          "phraseId": "p_kore_tebutsu_ni_shimasu",
+          "correct": true
+        },
+        {
+          "text": "괜찮습니다",
+          "phraseId": "p_daijoubu_desu",
+          "correct": false,
+          "feedback": "초과 상태로는 진행할 수 없어요. 요금을 내거나 짐을 줄여요"
+        }
       ]
     },
     {
@@ -200,10 +476,29 @@
       "recapPromptJa": "モバイルバッテリーはお預け荷物に入れられません",
       "recapPromptKo": "보조배터리는 위탁 수하물에 넣을 수 없습니다",
       "choices": [
-        { "text": "이걸 기내수하물로 하겠습니다", "phraseId": "p_kore_tebutsu_ni_shimasu", "correct": true, "feedback": "보조배터리는 반드시 기내 반입! 항공 안전 규정이에요" },
-        { "text": "알겠습니다", "phraseId": "p_wakarimashita", "correct": true },
-        { "text": "짐을 줄이겠습니다", "phraseId": "p_nimotsu_herashimasu", "correct": false, "feedback": "무게 문제가 아니라 배터리 위치 문제예요. 기내로 옮겨요" },
-        { "text": "추가 요금은 얼마인가요?", "phraseId": "p_tsui_ryoukin_ikura", "correct": false, "feedback": "요금 문제가 아니라 안전 규정이에요" }
+        {
+          "text": "이걸 기내수하물로 하겠습니다",
+          "phraseId": "p_kore_tebutsu_ni_shimasu",
+          "correct": true,
+          "feedback": "보조배터리는 반드시 기내 반입! 항공 안전 규정이에요"
+        },
+        {
+          "text": "알겠습니다",
+          "phraseId": "p_wakarimashita",
+          "correct": true
+        },
+        {
+          "text": "짐을 줄이겠습니다",
+          "phraseId": "p_nimotsu_herashimasu",
+          "correct": false,
+          "feedback": "무게 문제가 아니라 배터리 위치 문제예요. 기내로 옮겨요"
+        },
+        {
+          "text": "추가 요금은 얼마인가요?",
+          "phraseId": "p_tsui_ryoukin_ikura",
+          "correct": false,
+          "feedback": "요금 문제가 아니라 안전 규정이에요"
+        }
       ]
     }
   ],
@@ -214,10 +509,28 @@
       "recapPromptJa": "今日は北海道の雲丹が入っていますよ",
       "recapPromptKo": "오늘은 홋카이도산 성게가 들어왔어요",
       "choices": [
-        { "text": "하나 주세요", "phraseId": "p_hitotsu_kudasai", "correct": true },
-        { "text": "얼마예요?", "phraseId": "p_ikura_desu_ka", "correct": true, "feedback": "성게는 시가(時価)인 경우가 많아 가격 확인이 현명해요" },
-        { "text": "괜찮습니다 (사양)", "phraseId": "p_daijoubu_desu", "correct": true },
-        { "text": "잘 먹었습니다", "phraseId": "p_gochisousama", "correct": false, "feedback": "아직 식사 중이에요" }
+        {
+          "text": "하나 주세요",
+          "phraseId": "p_hitotsu_kudasai",
+          "correct": true
+        },
+        {
+          "text": "얼마예요?",
+          "phraseId": "p_ikura_desu_ka",
+          "correct": true,
+          "feedback": "성게는 시가(時価)인 경우가 많아 가격 확인이 현명해요"
+        },
+        {
+          "text": "괜찮습니다 (사양)",
+          "phraseId": "p_daijoubu_desu",
+          "correct": true
+        },
+        {
+          "text": "잘 먹었습니다",
+          "phraseId": "p_gochisousama",
+          "correct": false,
+          "feedback": "아직 식사 중이에요"
+        }
       ]
     },
     {
@@ -226,10 +539,29 @@
       "recapPromptJa": "お会計はご一緒で15,800円でございます",
       "recapPromptKo": "계산은 합쳐서 15,800엔입니다",
       "choices": [
-        { "text": "카드 돼요?", "phraseId": "p_card_tsukaemasu_ka", "correct": true, "feedback": "전통 스시집은 현금만 받는 곳도 있어 확인이 필요해요" },
-        { "text": "따로따로요", "phraseId": "p_betsubetsu_de", "correct": true },
-        { "text": "잘 먹었습니다", "phraseId": "p_gochisousama", "correct": true, "feedback": "계산하며 건네는 최고의 인사예요" },
-        { "text": "맥주 한 잔 더 주세요", "phraseId": "p_biiru_mou_ippai", "correct": false, "feedback": "계산이 시작됐어요. 추가 주문은 끝났어요" }
+        {
+          "text": "카드 돼요?",
+          "phraseId": "p_card_tsukaemasu_ka",
+          "correct": true,
+          "feedback": "전통 스시집은 현금만 받는 곳도 있어 확인이 필요해요"
+        },
+        {
+          "text": "따로따로요",
+          "phraseId": "p_betsubetsu_de",
+          "correct": true
+        },
+        {
+          "text": "잘 먹었습니다",
+          "phraseId": "p_gochisousama",
+          "correct": true,
+          "feedback": "계산하며 건네는 최고의 인사예요"
+        },
+        {
+          "text": "맥주 한 잔 더 주세요",
+          "phraseId": "p_biiru_mou_ippai",
+          "correct": false,
+          "feedback": "계산이 시작됐어요. 추가 주문은 끝났어요"
+        }
       ]
     }
   ],
@@ -240,10 +572,29 @@
       "recapPromptJa": "免税は5,000円以上のお買い上げが必要です。あと600円足りません",
       "recapPromptKo": "면세는 5,000엔 이상 구매가 필요합니다. 600엔 부족해요",
       "choices": [
-        { "text": "이거랑 이거", "phraseId": "p_kore_to_kore", "correct": true, "feedback": "작은 상품을 추가해 면세 기준을 채우는 실전 요령이에요" },
-        { "text": "괜찮습니다 (면세 포기)", "phraseId": "p_daijoubu_desu", "correct": true },
-        { "text": "면세 부탁합니다", "phraseId": "p_menzei_onegai", "correct": false, "feedback": "금액이 모자라면 면세를 적용할 수 없어요. 추가 구매나 포기를 정해요" },
-        { "text": "여권 여기 있어요", "phraseId": "p_pasupooto_arimasu", "correct": false, "feedback": "여권 문제가 아니라 금액 문제예요" }
+        {
+          "text": "이거랑 이거",
+          "phraseId": "p_kore_to_kore",
+          "correct": true,
+          "feedback": "작은 상품을 추가해 면세 기준을 채우는 실전 요령이에요"
+        },
+        {
+          "text": "괜찮습니다 (면세 포기)",
+          "phraseId": "p_daijoubu_desu",
+          "correct": true
+        },
+        {
+          "text": "면세 부탁합니다",
+          "phraseId": "p_menzei_onegai",
+          "correct": false,
+          "feedback": "금액이 모자라면 면세를 적용할 수 없어요. 추가 구매나 포기를 정해요"
+        },
+        {
+          "text": "여권 여기 있어요",
+          "phraseId": "p_pasupooto_arimasu",
+          "correct": false,
+          "feedback": "여권 문제가 아니라 금액 문제예요"
+        }
       ]
     },
     {
@@ -252,10 +603,29 @@
       "recapPromptJa": "袋は有料ですが、ギフトラッピングは無料です",
       "recapPromptKo": "봉투는 유료지만, 선물 포장은 무료입니다",
       "choices": [
-        { "text": "선물 포장 부탁합니다", "phraseId": "p_gift_wrapping_onegai", "correct": true, "feedback": "무료 선물 포장은 일본 쇼핑의 숨은 혜택이에요" },
-        { "text": "봉투는 필요 없어요", "phraseId": "p_fukuro_iranai", "correct": true },
-        { "text": "영수증은 이메일로 괜찮습니다", "phraseId": "p_receipt_email_ii", "correct": false, "feedback": "영수증 질문이 아니라 포장 질문이에요" },
-        { "text": "면세 부탁합니다", "phraseId": "p_menzei_onegai", "correct": false, "feedback": "면세 처리는 이미 끝났어요" }
+        {
+          "text": "선물 포장 부탁합니다",
+          "phraseId": "p_gift_wrapping_onegai",
+          "correct": true,
+          "feedback": "무료 선물 포장은 일본 쇼핑의 숨은 혜택이에요"
+        },
+        {
+          "text": "봉투는 필요 없어요",
+          "phraseId": "p_fukuro_iranai",
+          "correct": true
+        },
+        {
+          "text": "영수증은 이메일로 괜찮습니다",
+          "phraseId": "p_receipt_email_ii",
+          "correct": false,
+          "feedback": "영수증 질문이 아니라 포장 질문이에요"
+        },
+        {
+          "text": "면세 부탁합니다",
+          "phraseId": "p_menzei_onegai",
+          "correct": false,
+          "feedback": "면세 처리는 이미 끝났어요"
+        }
       ]
     }
   ]

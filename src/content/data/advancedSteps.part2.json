@@ -431,10 +431,10 @@
           "feedback": "추가 없이 바로 계산을 청해도 자연스러워요"
         },
         {
-          "text": "메뉴 좀 보여 주세요",
-          "phraseId": "p_menu_misete",
+          "text": "예약했습니다",
+          "phraseId": "p_yoyaku_shiteimasu",
           "correct": false,
-          "feedback": "마감 직전이라 천천히 고를 시간이 없어요. 빠르게 정해요"
+          "feedback": "이미 입장해 식사 중이에요 — 라스트 오더엔 추가 주문이나 계산을 말해요"
         }
       ]
     }
@@ -464,10 +464,10 @@
           "feedback": "전철 승강장 표현이에요. 버스 정류장과는 달라요"
         },
         {
-          "text": "표 주세요",
-          "phraseId": "p_kippu_kudasai",
+          "text": "어디예요?",
+          "phraseId": "p_doko_desu_ka",
           "correct": false,
-          "feedback": "관광안내소에서는 표 구매보다 정보를 확인해요. 표는 역이나 버스 정류장에서 사요"
+          "feedback": "가는 방법(걸어서/버스)을 안내받았어요 — 위치는 이미 들었으니 이동하면 돼요"
         }
       ]
     },

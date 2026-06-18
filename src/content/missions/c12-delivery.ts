@@ -41,7 +41,7 @@ export const c12: Mission = {
       choices: [
         { text: '영수증 주세요', phraseId: 'p_reshiito_kudasai', correct: true, feedback: '택배 영수증엔 배송 추적번호(追跡番号・ついせきばんごう)가 적혀 있어요. 배송 상황을 앱에서 실시간 확인할 수 있어요' },
         { text: '아니요, 필요 없어요', phraseId: 'p_iie_irimasen', correct: true, feedback: '「いいえ、いりません」— 영수증이 필요 없을 때. 앱으로 영수증을 받는 デジタルレシート도 점점 늘고 있어요' },
-        { text: '데워 주세요', phraseId: 'p_atatamete', correct: false, feedback: '택배 영수증 상황과 안 맞아요 — 편의점 데우기 표현' },
+        { text: '이거 보내고 싶어요', phraseId: 'p_okuritai', correct: false, feedback: '접수는 이미 끝났어요 — 지금은 영수증이 필요한지 답할 차례예요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
       ],
     },

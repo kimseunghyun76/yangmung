@@ -17,7 +17,7 @@ export const c10: Mission = {
       choices: [
         { text: '환전해 주세요', phraseId: 'p_ryougae', correct: true, feedback: '「両替(りょうがえ)してください」— 공항보다 시내 환전소(특히 도톤보리·아키하바라 주변)가 환율이 더 유리해요' },
         { text: '얼마예요? (수수료)', phraseId: 'p_ikura_desu_ka', correct: true, feedback: '수수료(手数料・てすうりょう)를 미리 확인하는 게 현명해요. 0엔이라도 환율 스프레드로 수익을 내는 곳이 많아요' },
-        { text: '데워 주세요', phraseId: 'p_atatamete', correct: false, feedback: '여긴 환전소예요 — 편의점에서 쓰는 말이에요' },
+        { text: '영수증 주세요', phraseId: 'p_ryoushuusho', correct: false, feedback: '영수증은 환전이 끝난 뒤에 받아요 — 지금은 먼저 「両替(りょうがえ)してください」로 환전을 요청하세요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
       ],
@@ -29,7 +29,7 @@ export const c10: Mission = {
       choices: [
         { text: '여권 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: true, feedback: '일본 외국환거래법상 환전 시 여권 제시는 법적 의무예요. 복사본이 아닌 원본을 항상 지참하세요' },
         { text: '잠깐만 기다려 주세요', phraseId: 'p_chotto_matte', correct: true, feedback: '「ちょっとまってください」— 여권을 가방에서 꺼낼 때 여유를 만들어요. 일본인은 이 한 마디에 기다려줘요' },
-        { text: '표 주세요', phraseId: 'p_kippu_kudasai', correct: false, feedback: '환전엔 여권이 필요해요 — 표 사는 곳이 아니에요' },
+        { text: '잔돈으로 해 주세요', phraseId: 'p_komakaku', correct: false, feedback: '잔돈 요청은 환전이 끝난 뒤에 — 지금은 여권을 보여줄 차례예요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
       ],
     },

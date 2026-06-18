@@ -163,10 +163,10 @@
           "feedback": "상황을 파악하고 다른 방법을 찾겠다는 의사 전달"
         },
         {
-          "text": "환전해 주세요",
-          "phraseId": "p_ryougae",
+          "text": "사용법 알려 주세요",
+          "phraseId": "p_tsukaikata",
           "correct": false,
-          "feedback": "ATM 카드 거부 상황에서 환전 요청은 맥락이 다릅니다"
+          "feedback": "이용 가능한 카드를 안내받는 중이에요 — 환전이 아니라 인출 방법을 확인해요"
         }
       ]
     },
@@ -388,10 +388,10 @@
           "feedback": "관람 마무리에 가장 자연스러운 인사"
         },
         {
-          "text": "잘 먹었습니다",
-          "phraseId": "p_gochisousama",
+          "text": "어디예요?",
+          "phraseId": "p_doko_desu_ka",
           "correct": false,
-          "feedback": "스타디움 퇴장 안내에는 식사 인사보다 감사/확인 표현이 맞아요"
+          "feedback": "출구는 이쪽이라고 안내받았어요 — 안내에 감사하거나 「分かりました」로 답해요"
         },
         {
           "text": "알겠습니다",
