@@ -248,6 +248,13 @@ export const phrases: Phrase[] = [
   // C18 관광안내소 실전 확장 — 짐 보관·팸플릿
   { id: 'p_tenimotsu_azukari', kana: 'おにもつのおあずかりもできますよ', kanji: 'お荷物のお預かりもできますよ', displayKana: 'おにもつの おあずかりも、できますよ', korean: '짐 보관도 가능해요', register: 'receptive' },
   { id: 'p_pamphlet_douzo', kana: 'かんこくごのパンフレットもどうぞ', kanji: '韓国語のパンフレットもどうぞ', displayKana: 'かんこくごの パンフレットも、どうぞ', korean: '한국어 팸플릿도 가져가세요', register: 'receptive' },
+  // C22 버스 / C24 렌터카 / C25 병원 실전 확장
+  { id: 'p_seiriken', kana: 'うしろからのってせいりけんをおとりください', kanji: '後ろから乗って整理券をお取りください', displayKana: 'うしろからのって、せいりけんをおとりください', korean: '뒷문으로 타고 정리권을 뽑아 주세요', register: 'receptive' },
+  { id: 'p_tsugi_de_orimasu', kana: 'つぎでおります', kanji: '次で降ります', displayKana: 'つぎで、おります', korean: '다음에서 내려요', register: 'productive', tip: '「次(つぎ)で降(お)ります」— 내리기 전에 降車(こうしゃ)ボタン(하차 벨)을 눌러요. 안 누르면 정류장을 그냥 지나칠 수 있어요. 버스가 멈춘 뒤 일어서는 게 안전해요' },
+  { id: 'p_hoken_dou', kana: 'ほけんはどうなさいますか', kanji: '保険はどうなさいますか', displayKana: 'ほけんは、どうなさいますか？', korean: '보험은 어떻게 하시겠어요?', register: 'receptive' },
+  { id: 'p_navi_nihongo', kana: 'ナビはにほんごのみです', kanji: 'ナビは日本語のみです', displayKana: 'ナビは、にほんごのみです', korean: '내비게이션은 일본어만 됩니다', register: 'receptive' },
+  { id: 'p_monshinhyou', kana: 'もんしんひょうにごきにゅうください', kanji: '問診票にご記入ください', displayKana: 'もんしんひょうに、ごきにゅうください', korean: '문진표를 작성해 주세요', register: 'receptive' },
+  { id: 'p_shohousen_tonari', kana: 'しょほうせんはとなりのやっきょくへ', kanji: '処方箋は隣の薬局へ', displayKana: 'しょほうせんは、となりのやっきょくへ', korean: '처방전은 옆 약국으로 가세요', register: 'receptive' },
   { id: 'p_shashin_ii', kana: 'しゃしんとってもいいですか', kanji: '写真撮ってもいいですか', displayKana: 'しゃしん、とってもいいですか？', korean: '사진 찍어도 돼요?', register: 'productive', tip: '「写真(しゃしん)撮(と)ってもいいですか」— 촬영 전 허가 확인은 매너예요. 절·신사 내부는 撮影禁止(さつえいきんし) 구역이 있으니 주의하세요' },
   { id: 'p_shashin_onegai', kana: 'しゃしんおねがいします', kanji: '写真お願いします', displayKana: 'しゃしん、おねがいします', korean: '사진 부탁드려요', register: 'productive', tip: '「写真(しゃしん)お願(ねが)いします」— 스마트폰이나 카메라를 건네며 쓰면 OK. 일본인은 대체로 친절하게 찍어줘요. ありがとうございます로 감사 표시도 잊지 마세요' },
   { id: 'p_tasukete', kana: 'たすけてください', kanji: '助けてください', korean: '도와주세요', register: 'productive', tip: '급할 땐 たすけて만 외쳐도 통합니다' },

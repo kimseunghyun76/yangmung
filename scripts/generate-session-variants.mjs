@@ -32,6 +32,7 @@ const quick = [
   ['basics', 'BASICS', '1 2 3 月 火 水', 'calendar'],
   ['kana-write', 'WRITE', 'なぞって おぼえる', 'pen'],
   ['pairs', 'SOUND PAIRS', 'つ / す', 'sound'],
+  ['verbs', 'VERB FORMS', 'ます · ながら · たい', 'cards'],
   ['flash', 'SPEED QUIZ', 'READY?', 'bolt'],
 ];
 
@@ -171,7 +172,7 @@ function quickMotif(kind, colors) {
 function quickSvg([id, title, subtitle, kind]) {
   const colors = palette(`quick:${id}`);
   const [ink, accent, paper, hot] = colors;
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 800" role="img" aria-label="${esc(title)} quick practice background">
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 960" role="img" aria-label="${esc(title)} quick practice background">
   <defs>
     <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
       <stop offset="0" stop-color="${paper}"/>
@@ -182,15 +183,15 @@ function quickSvg([id, title, subtitle, kind]) {
       <feDropShadow dx="0" dy="18" stdDeviation="14" flood-color="${ink}" flood-opacity=".24"/>
     </filter>
   </defs>
-  <rect width="1280" height="800" fill="url(#bg)"/>
-  <rect x="38" y="34" width="1204" height="716" rx="64" fill="transparent" stroke="${ink}" stroke-width="10" opacity=".9"/>
-  <path d="M102 628C260 542 414 588 584 616c238 38 340-134 552-102" fill="none" stroke="${accent}" stroke-width="24" stroke-linecap="round" opacity=".16"/>
-  <g filter="url(#lift)">${quickMotif(kind, colors)}</g>
-  <g filter="url(#lift)">${mascot(780, 448, 1.28, 'duo')}</g>
+  <rect width="1280" height="960" fill="url(#bg)"/>
+  <rect x="38" y="34" width="1204" height="876" rx="64" fill="transparent" stroke="${ink}" stroke-width="10" opacity=".9"/>
+  <path d="M102 780C260 694 414 740 584 768c238 38 340-134 552-102" fill="none" stroke="${accent}" stroke-width="24" stroke-linecap="round" opacity=".16"/>
+  <g transform="translate(0 80)" filter="url(#lift)">${quickMotif(kind, colors)}</g>
+  <g filter="url(#lift)">${mascot(780, 574, 1.28, 'duo')}</g>
   <rect x="760" y="118" width="382" height="172" rx="36" fill="#fff" stroke="${ink}" stroke-width="8" opacity=".94"/>
   <text x="804" y="184" fill="${ink}" font-size="42" font-weight="900" font-family="Arial, sans-serif">${esc(title)}</text>
   <text x="804" y="242" fill="${accent}" font-size="30" font-weight="900" font-family="Arial, sans-serif">${esc(subtitle)}</text>
-  <circle cx="1122" cy="624" r="54" fill="${hot}" opacity=".86"/>
+  <circle cx="1122" cy="786" r="54" fill="${hot}" opacity=".86"/>
 </svg>`;
 }
 

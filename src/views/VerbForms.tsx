@@ -31,6 +31,10 @@ export function VerbForms({ onExit }: { onExit: () => void }) {
       <h1 style={{ margin: '10px 0 2px', fontSize: 24 }}>동사 형태</h1>
       <p style={{ margin: '0 0 14px', color: 'var(--ink-soft)', fontSize: 13, fontWeight: 600 }}>여행 빈출 동사를 정중형·동시동작·희망표현으로</p>
 
+      <div style={{ overflow: 'hidden', width: '100%', aspectRatio: '4 / 3', marginBottom: 16, borderRadius: 18, background: 'var(--surface-2)', border: '1px solid var(--glass-border)' }}>
+        <img src="/scenes/quick-practice/verbs.webp" alt="" aria-hidden style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }} />
+      </div>
+
       {/* 모드 전환 */}
       <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
         {(['browse', 'quiz'] as const).map((m) => {

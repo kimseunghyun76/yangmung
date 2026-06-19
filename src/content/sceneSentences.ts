@@ -95,26 +95,47 @@ import supplementalSeeds from './data/sceneSeeds.supplemental.json';
 const SPECIFIC = specificSeeds as unknown as Record<SentenceScene, Seed[]>;
 const SUPPLEMENTAL = supplementalSeeds as unknown as Partial<Record<SentenceScene, Seed[]>>;
 
-// Fisher-Yates 셔플 — 로드할 때마다 다른 순서로 섞어 매 세션 다른 문장을 제공.
-const shuffleSeeds = (arr: Seed[]): Seed[] => {
+const stableHash = (text: string): number => {
+  let hash = 2166136261;
+  for (let i = 0; i < text.length; i++) {
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+};
+
+const seededRandom = (seed: number): (() => number) => {
+  let state = seed >>> 0;
+  return () => {
+    state = Math.imul(state + 0x6d2b79f5, 1);
+    let t = state;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+};
+
+// 검증/오디오 생성 대상이 매 실행마다 바뀌지 않도록, 장면별 고정 시드로 섞는다.
+const shuffleSeeds = (arr: Seed[], salt: string): Seed[] => {
   const out = [...arr];
+  const random = seededRandom(stableHash(salt));
   for (let i = out.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(random() * (i + 1));
     [out[i], out[j]] = [out[j], out[i]];
   }
   return out;
 };
 
 // 전역 중복 없는 장면 전용 도감 — 장면별 최대 20개. C1→C40 순서대로 선점(앞 장면이 공유 문장 차지).
-// ※ SPECIFIC·SUPPLEMENTAL 풀은 로드마다 셔플 → 35~50개 풀에서 무작위 20개 선택, 매번 다른 문장.
+// ※ SPECIFIC·SUPPLEMENTAL 풀은 장면별 고정 시드로 섞어 35~50개 풀에서 20개를 안정적으로 선택한다.
 //   missionSeeds는 장면 핵심 표현이라 항상 포함(셔플 제외).
 const usedKana = new Set<string>();
 const buildScene = (scene: SentenceScene): SceneSentence[] => {
   const out: SceneSentence[] = [];
   const pool: Seed[] = [
-    ...shuffleSeeds(SPECIFIC[scene] ?? []),
+    ...shuffleSeeds(SPECIFIC[scene] ?? [], `${scene}:specific`),
     ...missionSeeds(scene),
-    ...shuffleSeeds(SUPPLEMENTAL[scene] ?? []),
+    ...shuffleSeeds(SUPPLEMENTAL[scene] ?? [], `${scene}:supplemental`),
   ];
   for (const seed of pool) {
     if (usedKana.has(seed[0])) continue;

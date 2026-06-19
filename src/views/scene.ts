@@ -76,7 +76,6 @@ const MANGA_BACKDROPS = {
   ],
 } as const;
 
-const SESSION_MANGA_WEBP_IDS = new Set(['C1', 'C2', 'C3', 'C4']);
 const SESSION_MANGA_IDS = new Set(Array.from({ length: 50 }, (_, i) => `C${i + 1}`));
 const SESSION_MANGA_NAMES = [
   'solo-shop-01',
@@ -99,7 +98,7 @@ export function isMangaSceneImage(src?: string): boolean {
 }
 
 export function quickPracticeBackdrop(kind: string): string {
-  return `/scenes/quick-practice/${kind}.svg`;
+  return `/scenes/quick-practice/${kind}.webp`;
 }
 
 type MangaBackdropGroup = keyof typeof MANGA_BACKDROPS;
@@ -126,14 +125,13 @@ function hashIndex(key: string, size: number): number {
   return Math.abs(h) % size;
 }
 
-// 장면에 맞는 3컷(solo·ff·mf) 풀. C1~C3는 미션 전용 폴더, 그 외는 장소 그룹 공용.
+// 장면에 맞는 3컷(solo·ff·mf) 풀. C1~C50은 미션별 전용 WebP를 사용한다.
 function mangaBackdropPool(missionId: string, place?: string): readonly string[] {
   const group = mangaBackdropGroup(place);
   if (SESSION_MANGA_IDS.has(missionId)) {
-    const ext = SESSION_MANGA_WEBP_IDS.has(missionId) ? 'webp' : 'svg';
     return SESSION_MANGA_NAMES
       .filter((name) => name.includes(`-${group}-`))
-      .map((name) => `/scenes/session-variants/${missionId}/${name}.${ext}`);
+      .map((name) => `/scenes/session-variants/${missionId}/${name}.webp`);
   }
   return MANGA_BACKDROPS[group];
 }
