@@ -6,10 +6,10 @@ export const c6: Mission = {
   tier: 1,
   scenario: '약국에서 약 사기',
   place: '약국',
-  canDo: '사용자는 약국에서 증상(머리·배·감기)을 말하고 약을 요청하며, 약 설명을 못 알아들으면 다시·천천히·영어를 청할 수 있다',
+  canDo: '사용자는 약국에서 증상·열·기침을 말하고, 알레르기/임신 여부를 전하며, 약과 복용법을 확인하고 결제할 수 있다',
   unlockAfter: ['C2'],
-  sequence: ['증상 말하기', '약 요청', '복용 확인'],
-  speakPhraseIds: ['p_atama_itai', 'p_kusuri_kudasai', 'p_kono_kusuri'],
+  sequence: ['증상 말하기', '증상 부연', '약 요청', '안전 확인', '복용 확인', '결제'],
+  speakPhraseIds: ['p_atama_itai', 'p_netsu_arimasu', 'p_kono_kusuri'],
   steps: [
     {
       situationKo: '약사가 어디가 안 좋은지 묻는다',
@@ -23,13 +23,35 @@ export const c6: Mission = {
       ],
     },
     {
-      situationKo: '약을 받고 싶다',
+      situationKo: '약사가 열이나 기침이 있는지 자세히 묻는다',
+      speaker: '약사',
+      promptPhraseId: 'p_netsu_arimasu_ka',
+      choices: [
+        { text: '열이 있어요', phraseId: 'p_netsu_arimasu', correct: true, feedback: '「熱(ねつ)があります」— 체온 증상을 전해요. 몇 도인지 말하려면 「38度(さんじゅうはちど)あります」처럼 〇〇度를 붙여요' },
+        { text: '기침이 나요', phraseId: 'p_seki_ga_demasu', correct: true, feedback: '「咳(せき)が出(で)ます」— 기침 증상. 콧물은 鼻水(はなみず)、목 아픔은 のどが痛いです로 응용해요' },
+        { text: '아니요, 없어요', phraseId: 'p_iie_arimasen', correct: true, feedback: '「いいえ、ありません」— 열·기침이 없으면 그렇게 답해요. 증상을 정확히 전할수록 맞는 약을 받아요' },
+        { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+      ],
+    },
+    {
+      situationKo: '증상을 들은 약사에게 약을 받고 싶다',
       speaker: '나',
       choices: [
-        { text: '약 주세요', phraseId: 'p_kusuri_kudasai', correct: true, feedback: '「薬(くすり)ください」— 직접 약을 요청하는 표현. 어떤 증상인지 미리 말한 다음에 쓰는 게 자연스러워요' },
-        { text: '이 약은 뭐예요?', phraseId: 'p_kono_kusuri', correct: true, feedback: '「この薬は何ですか」— 처방받은 약의 성분·용도를 모를 때 확인하는 표현. 알레르기가 있으면 꼭 물어보세요' },
-        { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+        { text: '약 주세요', phraseId: 'p_kusuri_kudasai', correct: true, feedback: '「薬(くすり)ください」— 증상을 말한 다음 약을 요청하면 자연스러워요. 市販薬(しはんやく, 일반약)는 약사 상담 후 구매해요' },
+        { text: '이 약은 뭐예요?', phraseId: 'p_kono_kusuri', correct: true, feedback: '「この薬(くすり)は何(なん)ですか」— 약의 성분·용도를 확인. 잘 듣는 약일수록 졸음 등 부작용도 물어보면 좋아요' },
+        { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: true, feedback: '「おすすめは何(なん)ですか」— 증상에 맞는 약을 약사에게 추천받아요. 일본 드러그스토어는 약사 상담이 친절해요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
+      ],
+    },
+    {
+      situationKo: '약사가 알레르기나 임신 여부를 확인한다',
+      speaker: '약사',
+      promptPhraseId: 'p_arerugi_ninshin',
+      choices: [
+        { text: '메밀·땅콩 알레르기가 있어요', phraseId: 'p_arerugi', correct: true, feedback: '「そばとピーナッツアレルギーがあります」— 약에도 알레르기 유발 성분이 있을 수 있어요. 구체적으로 전하면 안전한 약을 골라줘요' },
+        { text: '임신 중이에요', phraseId: 'p_ninshin_chuu', correct: true, feedback: '「妊娠中(にんしんちゅう)です」— 임신 중엔 복용 가능한 약이 제한돼요. 반드시 약사에게 알려야 안전해요' },
+        { text: '아니요, 아무것도 없어요', phraseId: 'p_iie_nanimoarimasen', correct: true, feedback: '「いいえ、何(なに)もありません」— 알레르기·임신 모두 해당 없을 때. 솔직하게 답하면 약사가 적합한 약을 줘요' },
+        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
       ],
     },
     {
@@ -41,6 +63,16 @@ export const c6: Mission = {
         { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '약국에서 나갈 때 꼭 인사해요 — 일본 약사는 설명에 많은 신경을 써요. 그 노력에 감사를 전하는 게 예의' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
         { text: '다시 한 번 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
+      ],
+    },
+    {
+      situationKo: '계산대에서 약값을 지불한다',
+      speaker: '나',
+      choices: [
+        { text: '카드로요', phraseId: 'p_card_de', correct: true, feedback: '「カードで」— 드러그스토어는 대부분 카드·IC카드를 받아요. 일반약(市販薬)은 처방전 없이 바로 살 수 있어요' },
+        { text: '현금으로요', phraseId: 'p_genkin_de', correct: true, feedback: '「現金(げんきん)で」— 현금 결제. 약값은 일반약이라 보험 적용 없이 정가로 내요' },
+        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 상담해 준 약사에게 감사 인사. 빠른 쾌유를 빌어주기도 해요(お大事(だいじ)に)' },
+        { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'partial' },
       ],
     },
   ],

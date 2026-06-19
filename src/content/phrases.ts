@@ -194,6 +194,21 @@ export const phrases: Phrase[] = [
   { id: 'p_massugu_migi', kana: 'まっすぐいってふたつめのかどをみぎです', kanji: 'まっすぐ行って二つ目の角を右です', displayKana: 'まっすぐいって、ふたつめのかどをみぎです', korean: '쭉 가서 두 번째 모퉁이에서 오른쪽이에요', register: 'receptive' },
   { id: 'p_hidari_migi', kana: 'ひだりですかみぎですか', kanji: '左ですか、右ですか', displayKana: 'ひだりですか、みぎですか？', korean: '왼쪽이에요, 오른쪽이에요?', register: 'productive', tip: '「左(ひだり)ですか、右(みぎ)ですか」— 방향이 헷갈릴 때 확인. 손으로 방향을 가리키며 물으면 더 확실해요. まっすぐ=직진도 함께 기억하세요' },
   { id: 'p_aruite_nanpun', kana: 'あるいてなんぷんですか', kanji: '歩いて何分ですか', displayKana: 'あるいて、なんぷんですか？', korean: '걸어서 몇 분이에요?', register: 'productive', tip: '「歩(ある)いて何分(なんぷん)ですか」— 도보 소요 시간 확인. 멀면 電車(でんしゃ)とバス、どちらが早(はや)いですか로 교통편을 비교해봐요' },
+  // C6 약국 실전 확장 — 증상 부연·알레르기/임신 확인
+  { id: 'p_netsu_arimasu_ka', kana: 'ねつやせきはありますか', kanji: '熱や咳はありますか', displayKana: 'ねつや せきは、ありますか？', korean: '열이나 기침은 있으세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  { id: 'p_netsu_arimasu', kana: 'ねつがあります', kanji: '熱があります', korean: '열이 있어요', register: 'productive', tip: '「熱(ねつ)があります」— 체온 관련 증상. 몇 도인지 말하려면 「38度(さんじゅうはちど)あります」처럼 〇〇度(ど)を붙여요' },
+  { id: 'p_seki_ga_demasu', kana: 'せきがでます', kanji: '咳が出ます', korean: '기침이 나요', register: 'productive', tip: '「咳(せき)が出(で)ます」— 기침 증상. 콧물은 「鼻水(はなみず)が出ます」, 목 아픔은 「のどが痛(いた)いです」로 응용해요' },
+  { id: 'p_arerugi_ninshin', kana: 'アレルギーやにんしんはありませんか', kanji: 'アレルギーや妊娠はありませんか', displayKana: 'アレルギーや にんしんは、ありませんか？', korean: '알레르기나 임신 중은 아니세요?', register: 'receptive' },
+  { id: 'p_ninshin_chuu', kana: 'にんしんちゅうです', kanji: '妊娠中です', korean: '임신 중이에요', register: 'productive', tip: '「妊娠中(にんしんちゅう)です」— 임신 중에는 복용 가능한 약이 제한돼요. 약사에게 반드시 알려야 안전한 약을 골라줘요' },
+  // C7 쇼핑 실전 확장 — 사이즈/색·시착 후·포장
+  { id: 'p_saizu_ikaga', kana: 'サイズはいかがですか', displayKana: 'サイズは、いかがですか？', korean: '사이즈는 어떠세요?', register: 'receptive' },
+  { id: 'p_ikaga_desu_ka', kana: 'いかがですか', displayKana: 'いかがですか？', korean: '(입어보니) 어떠세요?', register: 'receptive' },
+  { id: 'p_otsutsumi_shimasu_ka', kana: 'おつつみしますか', kanji: 'お包みしますか', displayKana: 'おつつみ、しますか？', korean: '포장해 드릴까요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  // C8 택시 실전 확장 — 짐·경로·요금
+  { id: 'p_nimotsu_arimasu_ka', kana: 'おにもつはありますか', kanji: 'お荷物はありますか', displayKana: 'おにもつは、ありますか？', korean: '짐 있으세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  { id: 'p_kousoku_tsukaimasu_ka', kana: 'こうそくをつかってもいいですか', kanji: '高速を使ってもいいですか', displayKana: 'こうそくを、つかってもいいですか？', korean: '고속도로 이용해도 될까요?', register: 'receptive' },
+  { id: 'p_ippan_michi_de', kana: 'いっぱんどうでおねがいします', kanji: '一般道でお願いします', displayKana: 'いっぱんどうで、おねがいします', korean: '일반도로로 가주세요', register: 'productive', tip: '「一般道(いっぱんどう)でお願(ねが)いします」— 고속도로 요금을 아끼려면 일반도로로. 급하면 반대로 「高速(こうそく)でお願いします」라고 해요' },
+  { id: 'p_ryoukin_ni_narimasu', kana: 'せんはっぴゃくえんになります', kanji: '千八百円になります', displayKana: 'せんはっぴゃくえんに、なります', korean: '1800엔입니다', register: 'receptive' },
   { id: 'p_shashin_ii', kana: 'しゃしんとってもいいですか', kanji: '写真撮ってもいいですか', displayKana: 'しゃしん、とってもいいですか？', korean: '사진 찍어도 돼요?', register: 'productive', tip: '「写真(しゃしん)撮(と)ってもいいですか」— 촬영 전 허가 확인은 매너예요. 절·신사 내부는 撮影禁止(さつえいきんし) 구역이 있으니 주의하세요' },
   { id: 'p_shashin_onegai', kana: 'しゃしんおねがいします', kanji: '写真お願いします', displayKana: 'しゃしん、おねがいします', korean: '사진 부탁드려요', register: 'productive', tip: '「写真(しゃしん)お願(ねが)いします」— 스마트폰이나 카메라를 건네며 쓰면 OK. 일본인은 대체로 친절하게 찍어줘요. ありがとうございます로 감사 표시도 잊지 마세요' },
   { id: 'p_tasukete', kana: 'たすけてください', kanji: '助けてください', korean: '도와주세요', register: 'productive', tip: '급할 땐 たすけて만 외쳐도 통합니다' },

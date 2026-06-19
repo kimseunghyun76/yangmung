@@ -6,9 +6,9 @@ export const c8: Mission = {
   tier: 1,
   scenario: '택시 타기',
   place: '택시',
-  canDo: '사용자는 택시에서 행선지를 말하고, 원하는 곳에서 세워 달라고 하고, 영수증을 받을 수 있다',
+  canDo: '사용자는 택시에서 행선지·짐·경로를 정하고, 원하는 곳에서 세워 달라고 하며, 요금을 내고 영수증을 받을 수 있다',
   unlockAfter: ['C3'],
-  sequence: ['행선지 말하기', '이동 중', '내리기'],
+  sequence: ['행선지 말하기', '행선지 확인', '짐 싣기', '경로 확인', '내리기', '요금·영수증'],
   speakPhraseIds: ['p_made_onegai', 'p_koko_de_tomete', 'p_ryoushuusho'],
   steps: [
     {
@@ -33,13 +33,46 @@ export const c8: Mission = {
       ],
     },
     {
-      situationKo: '목적지에 가까워졌다 — 내릴 준비',
+      situationKo: '기사가 짐이 있는지 묻는다',
+      speaker: '기사',
+      promptPhraseId: 'p_nimotsu_arimasu_ka',
+      choices: [
+        { text: '네, 부탁합니다 (트렁크에)', phraseId: 'p_hai_onegai', correct: true, feedback: '「はい、お願(ねが)いします」— 큰 짐은 トランク(트렁크)에. 일본 택시 기사는 직접 실어줘요. 캐리어가 있으면 미리 말해요' },
+        { text: '괜찮습니다 (가지고 탈게요)', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 작은 가방은 들고 타면 돼요. 무릎 위나 옆자리에 두면 편해요' },
+        { text: '여기서 세워 주세요', phraseId: 'p_koko_de_tomete', correct: false, feedback: '이제 막 출발하는 참이에요 — 세우는 건 목적지 근처에서 말해요' },
+        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
+      ],
+    },
+    {
+      situationKo: '기사가 고속도로를 이용해도 되는지 묻는다',
+      speaker: '기사',
+      promptPhraseId: 'p_kousoku_tsukaimasu_ka',
+      choices: [
+        { text: '네, 부탁합니다', phraseId: 'p_hai_onegai', correct: true, feedback: '「はい、お願(ねが)いします」— 고속도로(高速)는 빠르지만 별도 통행료가 미터기에 더해져요. 급할 때 선택해요' },
+        { text: '일반도로로 가주세요', phraseId: 'p_ippan_michi_de', correct: true, feedback: '「一般道(いっぱんどう)でお願いします」— 통행료를 아끼고 싶을 때. 시간 여유가 있으면 일반도로도 좋아요' },
+        { text: '시부야까지 가주세요', phraseId: 'p_made_onegai', correct: false, feedback: '행선지는 이미 말했어요 — 지금은 경로(고속/일반)를 정하는 중이에요' },
+        { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+      ],
+    },
+    {
+      situationKo: '목적지에 가까워졌다 — 세워 달라고 한다',
       speaker: '나',
       choices: [
-        { text: '여기서 세워 주세요', phraseId: 'p_koko_de_tomete', correct: true, feedback: '「ここで止(と)めてください」— 정확한 위치에서 내리려면 「その角で」(그 모퉁이에서) 등과 함께 써요' },
-        { text: '영수증 주세요', phraseId: 'p_ryoushuusho', correct: true, feedback: '「領収書(りょうしゅうしょ)ください」— 출장 경비 청구나 분실물 신고 시 필요해요. 미터기 요금도 함께 확인하세요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '내릴 때 ありがとうございます 한 마디 — 도쿄 택시 기사는 서비스에 자부심이 강해요. 인사는 꼭 해요' },
-        { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: true, feedback: '미터기가 있지만 요금판이 헷갈리면 직접 물어봐도 괜찮아요. 심야(22시 이후)는 할증이 붙어요' },
+        { text: '여기서 세워 주세요', phraseId: 'p_koko_de_tomete', correct: true, feedback: '「ここで止(と)めてください」— 정확한 위치에서 내리려면 「その角(かど)で」(그 모퉁이에서)와 함께 써요' },
+        { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: true, feedback: '「いくらですか」— 미터기 요금 확인. 심야(22시~5시)는 약 20% 할증이 붙어요' },
+        { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
+        { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+      ],
+    },
+    {
+      situationKo: '기사가 요금을 말한다 — 지불하고 영수증을 받는다',
+      speaker: '기사',
+      promptPhraseId: 'p_ryoukin_ni_narimasu',
+      choices: [
+        { text: '카드로요', phraseId: 'p_card_de', correct: true, feedback: '「カードで」— 도쿄 택시는 대부분 카드·IC카드·QR결제가 돼요. 단말기에 탭하면 끝나요' },
+        { text: '영수증 주세요', phraseId: 'p_ryoushuusho', correct: true, feedback: '「領収書(りょうしゅうしょ)ください」— 경비 처리나 분실물 신고에 필요해요. 내리기 전에 받아두면 좋아요' },
+        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 내릴 때 인사. 도쿄 택시 기사는 서비스에 자부심이 강해요' },
+        { text: '시부야까지 가주세요', phraseId: 'p_made_onegai', correct: false, feedback: '이미 도착했어요 — 지금은 요금을 내고 영수증을 받을 차례예요' },
       ],
     },
   ],
