@@ -6,10 +6,10 @@ export const c12: Mission = {
   tier: 2,
   scenario: '편의점에서 택배 부치기',
   place: '택배',
-  canDo: '사용자는 편의점에서 물건을 부치겠다고 말하고 요금을 물으며, 직원 안내를 못 알아들으면 다시·천천히·영어를 청할 수 있다',
+  canDo: '사용자는 편의점에서 물건을 부치고, 배송일과 결제(선불/착불)를 정하며, 이름을 적고 영수증을 받을 수 있다',
   unlockAfter: ['C1'],
-  sequence: ['부치기 요청', '이름 확인', '영수증 확인'],
-  speakPhraseIds: ['p_okuritai', 'p_takkyubin'],
+  sequence: ['부치기 요청', '배송일 확인', '이름 확인', '결제 방식', '영수증 확인'],
+  speakPhraseIds: ['p_okuritai', 'p_takkyubin', 'p_maebarai_de'],
   steps: [
     {
       situationKo: '짐을 호텔로 부치고 싶다',
@@ -23,6 +23,17 @@ export const c12: Mission = {
       ],
     },
     {
+      situationKo: '직원이 다음 날 배송으로 괜찮은지 묻는다',
+      speaker: '점원',
+      promptPhraseId: 'p_yokujitsu_de_ii',
+      choices: [
+        { text: '네, 부탁합니다', phraseId: 'p_hai_onegai', correct: true, feedback: '「はい、お願(ねが)いします」— 宅急便(たっきゅうびん)은 보통 다음 날~이틀 배송. 시간대(午前/ごぜん 등) 지정도 가능해요' },
+        { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: true, feedback: '「いくらですか」— 배송 속도·거리·크기에 따라 요금이 달라요. 빠른 배송은 추가 요금이 붙기도 해요' },
+        { text: '이거 보내고 싶어요', phraseId: 'p_okuritai', correct: false, feedback: '부치는 건 이미 말했어요 — 지금은 배송일이 괜찮은지 답할 차례예요' },
+        { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+      ],
+    },
+    {
       situationKo: '직원이 전표에 이름과 연락처를 적어 달라고 한다',
       speaker: '점원',
       recapPromptJa: '伝票にお名前とご連絡先をお願いします',
@@ -32,6 +43,17 @@ export const c12: Mission = {
         { text: '잠깐만 기다려 주세요', phraseId: 'p_chotto_matte', correct: true, feedback: '호텔 주소를 찾는 동안 자연스럽게 쓰는 표현이에요' },
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
+      ],
+    },
+    {
+      situationKo: '직원이 배송비를 선불로 낼지 착불로 할지 묻는다',
+      speaker: '점원',
+      promptPhraseId: 'p_chakubarai_ka',
+      choices: [
+        { text: '선불로 할게요', phraseId: 'p_maebarai_de', correct: true, feedback: '「前払(まえばら)いで」— 보내는 사람이 지금 결제. 선물을 보낼 땐 선불이 매너예요' },
+        { text: '착불로 할게요', phraseId: 'p_chakubarai_de', correct: true, feedback: '「着払(ちゃくばら)いで」— 받는 사람이 배송비를 내요. 본인 짐을 호텔·공항으로 보낼 때 쓰기도 해요' },
+        { text: '카드로요', phraseId: 'p_card_de', correct: true, feedback: '「カードで」— 선불 결제 수단으로 카드. 편의점 택배는 현금·카드·IC카드 모두 돼요' },
+        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
       ],
     },
     {
