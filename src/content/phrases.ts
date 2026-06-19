@@ -237,6 +237,17 @@ export const phrases: Phrase[] = [
   // C20 온천 실전 확장 — 신발장·문신 확인
   { id: 'p_getabako_e', kana: 'くつはこちらのげたばこへ', kanji: '靴はこちらの下駄箱へ', displayKana: 'くつは、こちらのげたばこへ', korean: '신발은 이쪽 신발장에 넣어 주세요', register: 'receptive' },
   { id: 'p_tattoo_arimasu_ka', kana: 'タトゥーはありますか', displayKana: 'タトゥーは、ありますか？', korean: '문신이 있으세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  // C17 스시집 / C19 신사 / C21 료칸 / C23 신칸센 실전 확장
+  { id: 'p_nani_kara', kana: 'なにからにぎりましょうか', kanji: '何から握りましょうか', displayKana: 'なにから、にぎりましょうか？', korean: '무엇부터 만들어 드릴까요?', register: 'receptive' },
+  { id: 'p_nirei', kana: 'にれいにはくしゅいちれいです', kanji: '二礼二拍手一礼です', displayKana: 'にれい にはくしゅ いちれいです', korean: '두 번 절, 두 번 박수, 한 번 절이에요', register: 'receptive' },
+  { id: 'p_omikuji', kana: 'おみくじはこちらです', displayKana: 'おみくじは、こちらです', korean: '오미쿠지(운세 뽑기)는 이쪽이에요', register: 'receptive' },
+  { id: 'p_yukata_size', kana: 'ゆかたのサイズはいかがですか', kanji: '浴衣のサイズはいかがですか', displayKana: 'ゆかたのサイズは、いかがですか？', korean: '유카타 사이즈는 어떠세요?', register: 'receptive' },
+  { id: 'p_ofuton', kana: 'おふとんはのちほどしきます', kanji: 'お布団は後ほど敷きます', displayKana: 'おふとんは、のちほどしきます', korean: '이부자리는 나중에 깔아 드릴게요', register: 'receptive' },
+  { id: 'p_nan_gousha', kana: 'なんごうしゃですか', kanji: '何号車ですか', displayKana: 'なんごうしゃですか？', korean: '몇 호차예요?', register: 'productive', tip: '「何号車(なんごうしゃ)ですか」— 신칸센·특급은 차량(号車)이 길어요. 지정석은 표에 적힌 号車와 座席番号(좌석번호)를 확인해요. 승강장 바닥의 号車 표시에서 기다려요' },
+  { id: 'p_ekiben', kana: 'おべんとうやおのみものはいかがですか', kanji: 'お弁当やお飲み物はいかがですか', displayKana: 'おべんとうや おのみものは、いかがですか？', korean: '도시락이나 음료는 어떠세요?', register: 'receptive' },
+  // C18 관광안내소 실전 확장 — 짐 보관·팸플릿
+  { id: 'p_tenimotsu_azukari', kana: 'おにもつのおあずかりもできますよ', kanji: 'お荷物のお預かりもできますよ', displayKana: 'おにもつの おあずかりも、できますよ', korean: '짐 보관도 가능해요', register: 'receptive' },
+  { id: 'p_pamphlet_douzo', kana: 'かんこくごのパンフレットもどうぞ', kanji: '韓国語のパンフレットもどうぞ', displayKana: 'かんこくごの パンフレットも、どうぞ', korean: '한국어 팸플릿도 가져가세요', register: 'receptive' },
   { id: 'p_shashin_ii', kana: 'しゃしんとってもいいですか', kanji: '写真撮ってもいいですか', displayKana: 'しゃしん、とってもいいですか？', korean: '사진 찍어도 돼요?', register: 'productive', tip: '「写真(しゃしん)撮(と)ってもいいですか」— 촬영 전 허가 확인은 매너예요. 절·신사 내부는 撮影禁止(さつえいきんし) 구역이 있으니 주의하세요' },
   { id: 'p_shashin_onegai', kana: 'しゃしんおねがいします', kanji: '写真お願いします', displayKana: 'しゃしん、おねがいします', korean: '사진 부탁드려요', register: 'productive', tip: '「写真(しゃしん)お願(ねが)いします」— 스마트폰이나 카메라를 건네며 쓰면 OK. 일본인은 대체로 친절하게 찍어줘요. ありがとうございます로 감사 표시도 잊지 마세요' },
   { id: 'p_tasukete', kana: 'たすけてください', kanji: '助けてください', korean: '도와주세요', register: 'productive', tip: '급할 땐 たすけて만 외쳐도 통합니다' },
