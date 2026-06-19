@@ -435,7 +435,9 @@ function pickScene(byMission: Map<string, Pool>, quota: number, progress: Progre
   const ordered = [...seededOrder(started, seed), ...fresh];
   for (const [, pool] of ordered) {
     if (out.length >= quota) break;
-    for (const c of [...sortWeakFirst(pool.due, progress), ...pool.fresh]) { // 장면 안에서는 약점 먼저, 그 다음 신규
+    const freshIntroduces = pool.fresh.filter((c) => c.kind === 'introduce');
+    const otherFresh = pool.fresh.filter((c) => c.kind !== 'introduce');
+    for (const c of [...freshIntroduces, ...sortWeakFirst(pool.due, progress), ...otherFresh]) {
       if (out.length >= quota) break;
       out.push(c);
     }
@@ -500,12 +502,18 @@ export function selectSessionCards(
   const bSel = pickPool(b, config.quotas.B, config.minFresh.B, progress);
   const pSel = pickPairCards(allCards, progress, currentSessionId, config.quotas.P ?? 0, config.cardTierRange);
   const scene = pickScene(filteredByMission, config.quotas.C, progress, currentSessionId);
+  const sceneIntroduces = scene.filter((c) => c.kind === 'introduce' && String(c.reviewTarget?.id) !== 'C0');
+  const tutorialIntroduces = scene.filter((c) => c.kind === 'introduce' && String(c.reviewTarget?.id) === 'C0');
+  const sceneRest = scene.filter((c) => c.kind !== 'introduce');
   // 팁: 안 본 것/오래된 것부터 1개씩 회전 (매번 같은 팁 X)
   const tipsSel = [...tips]
     .sort((a, b2) => (progress[a.id]?.lastSeenAt ?? '') < (progress[b2.id]?.lastSeenAt ?? '') ? -1 : 1)
     .slice(0, config.quotas.tip);
-  // 흐름: 단어(B)↔발음(P) 워밍업 → 장면 미션(C) 통째로 → 가나(K, 가나 모드용) → 팁
-  return [...interleave(kSel, interleave(bSel, pSel)), ...scene, ...tipsSel];
+  // 흐름: 새 표현 소개가 있으면 맨 앞 → 단어(B)·발음(P) 워밍업 → 장면 미션(C) → 팁.
+  const warmup = interleave(kSel, interleave(bSel, pSel));
+  return sceneIntroduces.length
+    ? [...sceneIntroduces, ...warmup, ...tutorialIntroduces, ...sceneRest, ...tipsSel]
+    : [...warmup, ...scene, ...tipsSel];
 }
 
 // 홈에서 "시작 버튼이 정확히 몇 카드 시작인지" 표시용 (Done의 "한 세션 더" 가능 여부 판단에도 사용)
