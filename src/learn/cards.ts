@@ -159,9 +159,8 @@ function shuffle<T>(a: T[]): T[] {
 
 function materializeChoicePools(pools: NonNullable<QuizCard['choicePools']>): Choice[] {
   const correct = shuffle(pools.correct).slice(0, 1);
-  const recovery = shuffle(pools.recovery).slice(0, 1);
   const wrong = shuffle(pools.wrong).slice(0, 3);
-  return shuffle([...correct, ...wrong, ...recovery].map((c) => ({ ...c })));
+  return shuffle([...correct, ...wrong].map((c) => ({ ...c })));
 }
 
 export function materializeQuizCard(card: Card): Card {
@@ -343,7 +342,8 @@ function buildBasicLifeCards(): QuizCard[] {
 }
 
 // 미션 스텝 → 퀴즈 선택지 풀.
-// 정책: 정답 후보 중 1개만 노출 + 오답 3개 + 복구 1개. 세션 시작 때마다 다시 뽑아 새 문제처럼 보이게 한다.
+// 정책: 정답 후보 중 1개만 노출 + 오답 3개. 복구 표현은 보기로 섞지 않고 하단 액션으로만 보여준다.
+// 세션 시작 때마다 다시 뽑아 새 문제처럼 보이게 한다.
 function buildStepChoicePools(stepChoices: MissionStep['choices'], byPhrase: (id: string) => Phrase, allPhrases: Phrase[]): NonNullable<QuizCard['choicePools']> {
   const built: Choice[] = stepChoices.map((c) => ({
     label: c.text,

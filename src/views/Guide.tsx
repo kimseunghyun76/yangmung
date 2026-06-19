@@ -154,7 +154,7 @@ function TabRecovery() {
   return (
     <>
       <Section icon="recovery" title="복구 표현 = 실전 전략">
-        모르면 틀린 게 아닙니다. 실제 일본어 대화에서 "모르겠다"고 표현하는 것 자체가 능력입니다. 복구 선택지는 두 가지 결과를 냅니다.
+        모르면 틀린 게 아닙니다. 실제 일본어 대화에서 "모르겠다"고 표현하는 것 자체가 능력입니다. 문제 하단의 복구 액션은 대화를 멈추지 않게 해주는 우회 표현입니다.
         <div style={{ marginTop: 10, marginBottom: 6 }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', padding: '3px 10px', borderRadius: 99, fontSize: 12, fontWeight: 800, background: 'var(--ok-soft)', color: 'var(--ok)', marginRight: 8 }}>FULL</span>
           상대가 처음부터 다시 설명해줍니다. 정보를 완전히 재획득.
