@@ -220,6 +220,16 @@ export const phrases: Phrase[] = [
   { id: 'p_ichiman_ryougae', kana: 'いちまんえんおねがいします', kanji: '一万円お願いします', displayKana: 'いちまんえん、おねがいします', korean: '만 엔 바꿔 주세요', register: 'productive', tip: '「一万円(いちまんえん)お願(ねが)いします」— 환전할 금액을 말해요. 원화 기준으로 「十万(じゅうまん)ウォンを円(えん)に」처럼 말해도 통해요' },
   { id: 'p_zenbu_de', kana: 'ぜんぶでおねがいします', kanji: '全部でお願いします', displayKana: 'ぜんぶで、おねがいします', korean: '전부 다 바꿔 주세요', register: 'productive', tip: '「全部(ぜんぶ)でお願(ねが)いします」— 가진 외화를 전부 환전할 때. 남기고 싶으면 액수를 지정해요' },
   { id: 'p_sen_en_satsu', kana: 'せんえんさつもまぜますか', kanji: '千円札も混ぜますか', displayKana: 'せんえんさつも、まぜますか？', korean: '천 엔짜리도 섞어 드릴까요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  // C11 코인로커 실전 확장 — 크기 선택·이용 시간
+  { id: 'p_locker_size', kana: 'サイズはどれにしますか', displayKana: 'サイズは、どれにしますか？', korean: '크기는 어느 걸로 하시겠어요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  { id: 'p_ookii_no_de', kana: 'おおきいのでおねがいします', kanji: '大きいのでお願いします', displayKana: 'おおきいので、おねがいします', korean: '큰 걸로 부탁해요', register: 'productive', tip: '「大(おお)きいので」— 캐리어는 큰 로커(大型/おおがた). 코인로커는 小(しょう)·中(ちゅう)·大(だい) 크기별로 요금이 달라요(300~700엔)' },
+  { id: 'p_chiisai_no_de', kana: 'ちいさいのでおねがいします', kanji: '小さいのでお願いします', displayKana: 'ちいさいので、おねがいします', korean: '작은 걸로 부탁해요', register: 'productive', tip: '「小(ちい)さいので」— 가방 하나면 작은 로커로 충분해요. 가장 저렴한 크기예요' },
+  { id: 'p_nanji_made', kana: 'なんじまでつかえますか', kanji: '何時まで使えますか', displayKana: 'なんじまで、つかえますか？', korean: '몇 시까지 쓸 수 있어요?', register: 'productive', tip: '「何時(なんじ)まで使(つか)えますか」— 코인로커는 당일 또는 며칠까지 이용 가능. 역 로커는 終電(しゅうでん, 막차) 전에 찾아야 하는 경우도 있어요' },
+  // C12 택배 실전 확장 — 배송일·착불/선불
+  { id: 'p_yokujitsu_de_ii', kana: 'よくじつのおとどけでよろしいですか', kanji: '翌日のお届けでよろしいですか', displayKana: 'よくじつのおとどけで、よろしいですか？', korean: '다음 날 배송으로 괜찮으세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  { id: 'p_chakubarai_ka', kana: 'しはらいはどうなさいますか', kanji: 'お支払いはどうなさいますか', displayKana: 'しはらいは、どうなさいますか？', korean: '결제는 어떻게 하시겠어요?', register: 'receptive' },
+  { id: 'p_maebarai_de', kana: 'まえばらいでおねがいします', kanji: '前払いでお願いします', displayKana: 'まえばらいで、おねがいします', korean: '선불로 할게요', register: 'productive', tip: '「前払(まえばら)いで」— 보내는 사람이 지금 결제. 반대로 받는 사람이 내는 건 着払(ちゃくばら)い예요' },
+  { id: 'p_chakubarai_de', kana: 'ちゃくばらいでおねがいします', kanji: '着払いでお願いします', displayKana: 'ちゃくばらいで、おねがいします', korean: '착불로 할게요', register: 'productive', tip: '「着払(ちゃくばら)いで」— 받는 사람이 배송비를 내는 방식. 선물을 보낼 땐 前払い(선불)가 매너예요' },
   { id: 'p_shashin_ii', kana: 'しゃしんとってもいいですか', kanji: '写真撮ってもいいですか', displayKana: 'しゃしん、とってもいいですか？', korean: '사진 찍어도 돼요?', register: 'productive', tip: '「写真(しゃしん)撮(と)ってもいいですか」— 촬영 전 허가 확인은 매너예요. 절·신사 내부는 撮影禁止(さつえいきんし) 구역이 있으니 주의하세요' },
   { id: 'p_shashin_onegai', kana: 'しゃしんおねがいします', kanji: '写真お願いします', displayKana: 'しゃしん、おねがいします', korean: '사진 부탁드려요', register: 'productive', tip: '「写真(しゃしん)お願(ねが)いします」— 스마트폰이나 카메라를 건네며 쓰면 OK. 일본인은 대체로 친절하게 찍어줘요. ありがとうございます로 감사 표시도 잊지 마세요' },
   { id: 'p_tasukete', kana: 'たすけてください', kanji: '助けてください', korean: '도와주세요', register: 'productive', tip: '급할 땐 たすけて만 외쳐도 통합니다' },
