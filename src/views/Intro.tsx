@@ -5,7 +5,7 @@ import { itemMastery, type ProgressMap } from '../learn/progress';
 import { CONTENT } from '../content';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
-import { isMangaSceneImage, quickPracticeBackdrop, sceneVisualByMission } from './scene';
+import { quickPracticeBackdrop, sceneVisualByMission } from './scene';
 import { PrimaryAction, hexA } from './shell';
 import { MascotBubble, MascotFace, MascotLine } from './mascot';
 
@@ -131,8 +131,6 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
   }
   const sv = sceneVisualByMission(firstMissionId);
   const backdrop = firstMissionId ? (sv.backdrop ?? sv.hero) : quickPracticeBackdrop(quickPracticeKind(cards));
-  const showFullBackdrop = isMangaSceneImage(backdrop);
-  const quickBackdrop = !firstMissionId;
   const mission = firstMissionId ? CONTENT.missions.find((m) => m.id === firstMissionId) : undefined;
   const place = mission?.place;
   const { attempts, seen, weak } = introMissionStats(allCards, progress, firstMissionId);
@@ -146,48 +144,33 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
         position: 'relative',
         overflow: 'hidden',
         borderRadius: 28,
-        minHeight: quickBackdrop ? 'clamp(680px, 118vw, 780px)' : 570,
-        padding: 20,
+        padding: 14,
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
-        border: backdrop ? '1px solid rgba(255,255,255,0.22)' : '1.5px solid var(--border)',
-        background: backdrop ? `linear-gradient(165deg, ${hexA(sv.accent, 0.22)}, ${hexA(sv.accent, 0.38)})` : 'var(--surface-2)',
+        gap: 18,
+        border: '1.5px solid var(--border)',
+        background: 'var(--surface-2)',
         boxShadow: 'var(--glass-shadow)',
-        color: backdrop ? '#fff' : 'var(--ink)',
+        color: 'var(--ink)',
       }}>
-        {backdrop && showFullBackdrop && <img src={backdrop} alt="" aria-hidden style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: quickBackdrop ? 'clamp(300px, 76vw, 520px)' : '100%',
-          objectFit: 'contain',
-          objectPosition: 'center top',
-          opacity: 0.34,
-          filter: 'blur(16px) saturate(.82) contrast(.96) brightness(1.08)',
-        }} />}
-        {backdrop && <img src={backdrop} alt="" aria-hidden style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: quickBackdrop ? 'clamp(300px, 76vw, 520px)' : '100%',
-          objectFit: showFullBackdrop ? 'contain' : 'cover',
-          objectPosition: quickBackdrop ? 'center top' : 'center',
-          filter: 'saturate(.82) contrast(.96) brightness(1.08)',
-        }} />}
-        {backdrop && <div aria-hidden style={{
-          position: 'absolute',
-          inset: 0,
-          background: quickBackdrop
-            ? 'linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.2) 38%, rgba(8,12,22,0.88) 64%, rgba(8,12,22,0.97))'
-            : 'linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.34) 42%, rgba(0,0,0,0.78))',
-        }} />}
+        {backdrop && (
+          <img src={backdrop} alt="" aria-hidden style={{
+            width: 'calc(100% + 28px)',
+            height: 'auto',
+            margin: '-14px -14px 0',
+            display: 'block',
+            borderRadius: '28px 28px 22px 22px',
+            border: '1px solid rgba(255,255,255,0.3)',
+            boxShadow: '0 18px 42px rgba(20,24,34,0.16)',
+            filter: 'saturate(.9) contrast(.98) brightness(1.04)',
+          }} />
+        )}
         {!backdrop && (
           <div aria-hidden style={{ position: 'absolute', right: -18, top: 18, width: 170, height: 170, borderRadius: 42, background: `radial-gradient(circle at 44% 38%, ${hexA(sv.accent, 0.22)}, transparent 64%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: 'rotate(5deg)' }}>
             <MascotFace who="duo" size={112} style={{ filter: 'drop-shadow(0 18px 28px rgba(0,0,0,0.18))' }} />
           </div>
         )}
-        <div style={{ position: 'relative', maxWidth: 760 }}>
+        <div style={{ position: 'relative', maxWidth: 760, padding: '0 4px' }}>
           <span style={{
             width: 62,
             height: 62,
@@ -195,26 +178,26 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: backdrop ? 'rgba(255,255,255,0.18)' : hexA(sv.accent, 0.14),
-            color: backdrop ? '#fff' : sv.accent,
-            border: backdrop ? '1px solid rgba(255,255,255,0.2)' : `1px solid ${hexA(sv.accent, 0.22)}`,
+            background: hexA(sv.accent, 0.14),
+            color: sv.accent,
+            border: `1px solid ${hexA(sv.accent, 0.22)}`,
             backdropFilter: 'blur(10px)',
           }}>
             <Icon name={sv.icon} size={34} />
           </span>
-          <p style={{ color: backdrop ? 'rgba(255,255,255,0.78)' : 'var(--ink-faint)', fontSize: 13, margin: '18px 0 0', fontWeight: 800, letterSpacing: '0.08em' }}>{place ? `${place} 미션` : '오늘의 연습'}</p>
+          <p style={{ color: 'var(--ink-faint)', fontSize: 13, margin: '18px 0 0', fontWeight: 800, letterSpacing: '0.08em' }}>{place ? `${place} 미션` : '오늘의 연습'}</p>
           <h1 style={{ margin: '7px 0 0', lineHeight: 1.22 }}>{goal}</h1>
-          <p style={{ color: backdrop ? 'rgba(255,255,255,0.84)' : 'var(--ink-soft)', fontSize: 15, lineHeight: 1.65, marginTop: 14, maxWidth: 640 }}>
+          <p style={{ color: 'var(--ink-soft)', fontSize: 15, lineHeight: 1.65, marginTop: 14, maxWidth: 640 }}>
             배경 상황을 떠올리고 바로 시작합니다. 이전에 본 표현은 아래 포인트만 다시 확인하면 됩니다.
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 16 }}>
-            <span style={{ borderRadius: 999, padding: '8px 12px', background: 'rgba(255,255,255,0.18)', border: '1px solid rgba(255,255,255,0.24)', color: '#fff', fontSize: 13, fontWeight: 800, backdropFilter: 'blur(10px)' }}>
+            <span style={{ borderRadius: 999, padding: '8px 12px', background: hexA(sv.accent, 0.12), border: `1px solid ${hexA(sv.accent, 0.22)}`, color: sv.accent, fontSize: 13, fontWeight: 800 }}>
               누적 시도 {attempts}회
             </span>
-            <span style={{ borderRadius: 999, padding: '8px 12px', background: 'rgba(255,255,255,0.13)', border: '1px solid rgba(255,255,255,0.18)', color: '#fff', fontSize: 13, fontWeight: 750, backdropFilter: 'blur(10px)' }}>
+            <span style={{ borderRadius: 999, padding: '8px 12px', background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--ink-soft)', fontSize: 13, fontWeight: 750 }}>
               기억한 카드 {seen}개
             </span>
-            <span style={{ borderRadius: 999, padding: '8px 12px', background: 'rgba(255,255,255,0.13)', border: '1px solid rgba(255,255,255,0.18)', color: '#fff', fontSize: 13, fontWeight: 750, backdropFilter: 'blur(10px)' }}>
+            <span style={{ borderRadius: 999, padding: '8px 12px', background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--ink-soft)', fontSize: 13, fontWeight: 750 }}>
               이번 연습 {sessionKind}
             </span>
           </div>
@@ -223,12 +206,12 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
           <section aria-label="기억할 포인트" style={{
             borderRadius: 24,
             padding: 16,
-            background: backdrop ? 'rgba(5, 10, 24, 0.48)' : 'var(--surface)',
-            border: backdrop ? '1px solid rgba(255,255,255,0.18)' : '1px solid var(--border)',
-            boxShadow: backdrop ? '0 20px 42px rgba(0,0,0,0.22)' : 'var(--shadow-soft)',
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
+            boxShadow: 'var(--shadow-soft)',
             backdropFilter: 'blur(18px)',
           }}>
-            <p style={{ margin: 0, color: backdrop ? 'rgba(255,255,255,0.72)' : 'var(--ink-faint)', fontSize: 12, fontWeight: 850, letterSpacing: '0.08em' }}>기억할 포인트</p>
+            <p style={{ margin: 0, color: 'var(--ink-faint)', fontSize: 12, fontWeight: 850, letterSpacing: '0.08em' }}>기억할 포인트</p>
             <div style={{ display: 'grid', gap: 10, marginTop: 12 }}>
               {points.map((point, idx) => (
                 <div key={`${point}-${idx}`} style={{ display: 'grid', gridTemplateColumns: '34px minmax(0,1fr)', gap: 10, alignItems: 'center' }}>
@@ -239,13 +222,13 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
                     display: 'inline-flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    background: hexA(sv.accent, backdrop ? 0.52 : 0.12),
-                    border: backdrop ? '1px solid rgba(255,255,255,0.18)' : `1px solid ${hexA(sv.accent, 0.24)}`,
-                    color: backdrop ? '#fff' : sv.accent,
+                    background: hexA(sv.accent, 0.12),
+                    border: `1px solid ${hexA(sv.accent, 0.24)}`,
+                    color: sv.accent,
                     fontWeight: 900,
                     flex: '0 0 auto',
                   }}>{idx + 1}</span>
-                  <p style={{ margin: 0, color: backdrop ? 'rgba(255,255,255,0.9)' : 'var(--ink)', fontSize: 14, lineHeight: 1.5, fontWeight: 720, overflowWrap: 'anywhere' }}>{point}</p>
+                  <p style={{ margin: 0, color: 'var(--ink)', fontSize: 14, lineHeight: 1.5, fontWeight: 720, overflowWrap: 'anywhere' }}>{point}</p>
                 </div>
               ))}
             </div>

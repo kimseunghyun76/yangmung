@@ -13,7 +13,7 @@ import { SpeakCardView } from './SpeakCard';
 import { DictationCardView } from './DictationCard';
 import { DiscoverCardView } from './DiscoverCard';
 import { ReadingAid } from './ReadingAid';
-import { isMangaSceneImage, sceneVisualByMission, sceneBackdropForCard } from './scene';
+import { sceneVisualByMission, sceneBackdropForCard } from './scene';
 import { Icon } from '../ui/Icon';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
 import { MascotLine, mascotShows } from './mascot';
@@ -43,7 +43,6 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
   const sv = missionId ? sceneVisualByMission(missionId) : null;
   // 배경 컷은 카드(화면) 전환마다 회전 — 같은 장면이라도 카드마다 다른 컷이 보인다.
   const cardBackdrop = sv ? (sv.backdrop ? sceneBackdropForCard(missionId, index) : sv.hero) : undefined;
-  const showFullBackdrop = isMangaSceneImage(cardBackdrop);
   const accent = sv?.accent ?? '#b9382e';
   const isMissionStep = card.kind === 'quiz' && !!card.promptPhrase;
   const speaker = isMissionStep ? card.sub : '';
@@ -100,19 +99,17 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
               key={cardBackdrop}로 카드 전환마다 등장 애니를 재생해 컷이 바뀌는 게 보이게 한다. */}
           {cardBackdrop && (
             <div key={cardBackdrop} className="ym-scene-bg" style={{
-              position: 'relative', overflow: 'hidden', width: '100%',
-              height: 'clamp(150px, 46vw, 186px)', borderRadius: 16,
+              position: 'relative', overflow: 'hidden', width: 'calc(100% + 40px)', marginLeft: -20, marginRight: -20,
+              borderRadius: 16,
               background: `linear-gradient(135deg, ${hexA(accent, 0.14)}, var(--surface-2))`, marginBottom: 18,
             }}>
-              {showFullBackdrop && (
-                <img src={cardBackdrop} alt="" aria-hidden style={{
-                  position: 'absolute', inset: 0, width: '100%', height: '100%',
-                  objectFit: 'contain', opacity: 0.24, filter: 'blur(12px) saturate(.85) contrast(.96)',
-                }} />
-              )}
               <img src={cardBackdrop} alt="" aria-hidden style={{
-                position: 'absolute', inset: showFullBackdrop ? 0 : 0, width: '100%', height: '100%',
-                objectFit: showFullBackdrop ? 'contain' : 'cover', objectPosition: 'center', filter: 'saturate(.85) contrast(.96)',
+                width: '100%',
+                height: 'auto',
+                display: 'block',
+                objectFit: 'contain',
+                objectPosition: 'center',
+                filter: 'saturate(.88) contrast(.98)',
               }} />
             </div>
           )}
