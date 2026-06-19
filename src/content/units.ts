@@ -100,12 +100,12 @@ export const units: Unit[] = [
   {
     id: 'u_b1_airport_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 입국심사에서 목적·체류기간·숙소를 답할 수 있다',
-    newPhraseIds: ['p_kankou_desu', 'p_shigoto_desu', 'p_isshuukan', 'p_mikka', 'p_hoteru_desu'],
+    newPhraseIds: ['p_kankou_desu', 'p_shigoto_desu', 'p_isshuukan', 'p_mikka', 'p_hoteru_desu', 'p_kaishain_desu', 'p_gakusei_desu'],
   },
   {
     id: 'u_b1_exchange_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 환전을 요청하고 잔돈으로 바꿔 달라고 할 수 있다',
-    newPhraseIds: ['p_ryougae', 'p_komakaku'],
+    newPhraseIds: ['p_ryougae', 'p_komakaku', 'p_ichiman_ryougae', 'p_zenbu_de'],
   },
   {
     id: 'u_b1_locker_core', track: 'lang', stage: 'B1', mode: 'action',
