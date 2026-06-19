@@ -209,6 +209,17 @@ export const phrases: Phrase[] = [
   { id: 'p_kousoku_tsukaimasu_ka', kana: 'こうそくをつかってもいいですか', kanji: '高速を使ってもいいですか', displayKana: 'こうそくを、つかってもいいですか？', korean: '고속도로 이용해도 될까요?', register: 'receptive' },
   { id: 'p_ippan_michi_de', kana: 'いっぱんどうでおねがいします', kanji: '一般道でお願いします', displayKana: 'いっぱんどうで、おねがいします', korean: '일반도로로 가주세요', register: 'productive', tip: '「一般道(いっぱんどう)でお願(ねが)いします」— 고속도로 요금을 아끼려면 일반도로로. 급하면 반대로 「高速(こうそく)でお願いします」라고 해요' },
   { id: 'p_ryoukin_ni_narimasu', kana: 'せんはっぴゃくえんになります', kanji: '千八百円になります', displayKana: 'せんはっぴゃくえんに、なります', korean: '1800엔입니다', register: 'receptive' },
+  // C9 공항 입국심사 실전 확장 — 직업·왕복권·지문
+  { id: 'p_oshigoto_wa', kana: 'おしごとはなんですか', kanji: 'お仕事は何ですか', displayKana: 'おしごとは、なんですか？', korean: '직업이 무엇이세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  { id: 'p_kaishain_desu', kana: 'かいしゃいんです', kanji: '会社員です', korean: '회사원이에요', register: 'productive', tip: '「会社員(かいしゃいん)です」— 직업을 묻는 입국심사 질문에. 학생은 学生(がくせい)、주부는 主婦(しゅふ)、자영업은 自営業(じえいぎょう)예요' },
+  { id: 'p_gakusei_desu', kana: 'がくせいです', kanji: '学生です', korean: '학생이에요', register: 'productive', tip: '「学生(がくせい)です」— 학생 신분. 大学生(だいがくせい, 대학생)처럼 구체적으로 말해도 좋아요' },
+  { id: 'p_kaeri_koukuuken', kana: 'かえりのこうくうけんはありますか', kanji: '帰りの航空券はありますか', displayKana: 'かえりのこうくうけんは、ありますか？', korean: '돌아가는 항공권 있으세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  { id: 'p_shimon_shashin', kana: 'しもんとしゃしんをおねがいします', kanji: '指紋と写真をお願いします', displayKana: 'しもんとしゃしんを、おねがいします', korean: '지문과 사진을 부탁드립니다', register: 'receptive' },
+  // C10 환전 실전 확장 — 금액 지정·지폐 단위
+  { id: 'p_ikura_ryougae', kana: 'いくらりょうがえしますか', kanji: 'いくら両替しますか', displayKana: 'いくら、りょうがえしますか？', korean: '얼마를 환전하시겠어요?', register: 'receptive', grammarRefs: ['g_masuka'] },
+  { id: 'p_ichiman_ryougae', kana: 'いちまんえんおねがいします', kanji: '一万円お願いします', displayKana: 'いちまんえん、おねがいします', korean: '만 엔 바꿔 주세요', register: 'productive', tip: '「一万円(いちまんえん)お願(ねが)いします」— 환전할 금액을 말해요. 원화 기준으로 「十万(じゅうまん)ウォンを円(えん)に」처럼 말해도 통해요' },
+  { id: 'p_zenbu_de', kana: 'ぜんぶでおねがいします', kanji: '全部でお願いします', displayKana: 'ぜんぶで、おねがいします', korean: '전부 다 바꿔 주세요', register: 'productive', tip: '「全部(ぜんぶ)でお願(ねが)いします」— 가진 외화를 전부 환전할 때. 남기고 싶으면 액수를 지정해요' },
+  { id: 'p_sen_en_satsu', kana: 'せんえんさつもまぜますか', kanji: '千円札も混ぜますか', displayKana: 'せんえんさつも、まぜますか？', korean: '천 엔짜리도 섞어 드릴까요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_shashin_ii', kana: 'しゃしんとってもいいですか', kanji: '写真撮ってもいいですか', displayKana: 'しゃしん、とってもいいですか？', korean: '사진 찍어도 돼요?', register: 'productive', tip: '「写真(しゃしん)撮(と)ってもいいですか」— 촬영 전 허가 확인은 매너예요. 절·신사 내부는 撮影禁止(さつえいきんし) 구역이 있으니 주의하세요' },
   { id: 'p_shashin_onegai', kana: 'しゃしんおねがいします', kanji: '写真お願いします', displayKana: 'しゃしん、おねがいします', korean: '사진 부탁드려요', register: 'productive', tip: '「写真(しゃしん)お願(ねが)いします」— 스마트폰이나 카메라를 건네며 쓰면 OK. 일본인은 대체로 친절하게 찍어줘요. ありがとうございます로 감사 표시도 잊지 마세요' },
   { id: 'p_tasukete', kana: 'たすけてください', kanji: '助けてください', korean: '도와주세요', register: 'productive', tip: '급할 땐 たすけて만 외쳐도 통합니다' },
