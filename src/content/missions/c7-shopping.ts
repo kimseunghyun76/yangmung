@@ -6,9 +6,9 @@ export const c7: Mission = {
   tier: 1,
   scenario: '쇼핑하고 면세 받기',
   place: '쇼핑',
-  canDo: '사용자는 가격을 묻고, 입어봐도 되는지 확인하고, 면세·카드 결제를 요청하며 여권을 제시할 수 있다',
+  canDo: '사용자는 가격·사이즈·색을 묻고 입어본 뒤 결정하며, 면세·결제·포장까지 실제 흐름대로 처리할 수 있다',
   unlockAfter: ['C2'],
-  sequence: ['가격 묻기', '입어보기', '면세 확인', '결제'],
+  sequence: ['가격 묻기', '사이즈·색', '입어본 뒤', '면세 확인', '결제', '포장'],
   speakPhraseIds: ['p_kore_ikura', 'p_menzei_dekimasu_ka', 'p_card_tsukaemasu_ka'],
   steps: [
     {
@@ -19,6 +19,30 @@ export const c7: Mission = {
         { text: '입어 봐도 돼요?', phraseId: 'p_shichaku', correct: true, feedback: '試着(しちゃく)してもいいですか — 일본 매장은 허락 없이 입어보면 실례예요. 한 마디만 해도 직원이 기뻐해요' },
         { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: true, feedback: '「カードは使えますか」— 구매 전 미리 확인하면 현금 준비 여부를 결정할 수 있어요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
+      ],
+    },
+    {
+      situationKo: '점원이 사이즈가 어떤지 묻는다',
+      speaker: '점원',
+      promptPhraseId: 'p_saizu_ikaga',
+      choices: [
+        { text: 'M 사이즈 있나요?', phraseId: 'p_emu_saizu_arimasu_ka', correct: true, feedback: '「Mサイズはありますか」— 일본 사이즈는 한국보다 작은 편이에요(일본 M ≒ 한국 S~M). 표기를 꼭 확인해요' },
+        { text: '다른 색 있나요?', phraseId: 'p_hoka_no_iro_arimasu_ka', correct: true, feedback: '「他(ほか)の色(いろ)はありますか」— 색상 문의. 他の는 "다른"이라는 뜻으로 サイズ·デザイン에도 응용돼요' },
+        { text: '입어 봐도 돼요?', phraseId: 'p_shichaku', correct: true, feedback: '「試着(しちゃく)してもいいですか」— 사이즈가 애매하면 직접 입어보는 게 확실해요. 보통 3벌 이내로 제한돼요' },
+        { text: '면세 되나요?', phraseId: 'p_menzei_dekimasu_ka', correct: false, feedback: '아직 살지 정하기 전이에요 — 면세는 구매를 결정한 뒤에 물어봐요' },
+        { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+      ],
+    },
+    {
+      situationKo: '입어 본 뒤 점원이 어떤지 묻는다',
+      speaker: '점원',
+      promptPhraseId: 'p_ikaga_desu_ka',
+      choices: [
+        { text: '조금 작아요', phraseId: 'p_chotto_chiisai_desu', correct: true, feedback: '「ちょっと小(ちい)さいです」— ちょっと를 붙이면 부드럽게 전달돼요. 이어서 「Lサイズはありますか」로 연결하면 완벽해요' },
+        { text: '이걸로 할게요', phraseId: 'p_kore_kudasai_shop', correct: true, feedback: '「これをください」— 마음에 들면 바로 구매 확정. 계산대로 들고 가거나 점원에게 건네요' },
+        { text: '다른 색 있나요?', phraseId: 'p_hoka_no_iro_arimasu_ka', correct: true, feedback: '「他(ほか)の色(いろ)はありますか」— 사이즈는 맞는데 색이 아쉬우면 다른 색을 물어봐요' },
+        { text: '영수증 주세요', phraseId: 'p_ryoushuusho', correct: false, feedback: '아직 계산 전이에요 — 영수증은 결제한 뒤에 받아요' },
+        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
       ],
     },
     {
@@ -39,6 +63,17 @@ export const c7: Mission = {
         { text: '이걸로 할게요', phraseId: 'p_kore_kudasai_shop', correct: true, feedback: '계산대에서 「これをください」로 최종 구매 확정. 점원이 금액을 알려주면 지불하면 돼요' },
         { text: '현금으로요', phraseId: 'p_genkin_de', correct: true, feedback: '「現金(げんきん)で」— 현금 결제 표현. 일본 여행엔 현금을 넉넉히 준비하는 게 여전히 안전해요' },
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
+      ],
+    },
+    {
+      situationKo: '점원이 포장해 줄지 묻는다',
+      speaker: '점원',
+      promptPhraseId: 'p_otsutsumi_shimasu_ka',
+      choices: [
+        { text: '선물 포장 부탁합니다', phraseId: 'p_gift_wrapping_onegai', correct: true, feedback: '「ギフトラッピングお願(ねが)いします」— 일본 백화점·매장의 선물 포장은 수준이 높아요. 대부분 무료 또는 저렴해요' },
+        { text: '괜찮습니다 (그냥 주세요)', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 포장이 필요 없으면 가볍게 사양해요. 봉투만 받으면 돼요' },
+        { text: '카드로요', phraseId: 'p_card_de', correct: false, feedback: '결제는 이미 끝났어요 — 지금은 포장 여부를 답할 차례예요' },
+        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
       ],
     },
   ],

@@ -85,7 +85,7 @@ export const units: Unit[] = [
   {
     id: 'u_b1_pharmacy_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 약국에서 증상을 말하고 약을 요청하고 약에 대해 물을 수 있다',
-    newPhraseIds: ['p_atama_itai', 'p_onaka_itai', 'p_kaze_desu', 'p_kusuri_kudasai', 'p_kono_kusuri'],
+    newPhraseIds: ['p_atama_itai', 'p_onaka_itai', 'p_kaze_desu', 'p_kusuri_kudasai', 'p_kono_kusuri', 'p_netsu_arimasu', 'p_seki_ga_demasu', 'p_ninshin_chuu'],
   },
   {
     id: 'u_b1_shopping_core', track: 'lang', stage: 'B1', mode: 'action',
@@ -95,7 +95,7 @@ export const units: Unit[] = [
   {
     id: 'u_b1_taxi_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 택시에서 행선지를 말하고 세워 달라고 하며 영수증을 받을 수 있다',
-    newPhraseIds: ['p_takushi_onegai', 'p_made_onegai', 'p_koko_de_tomete', 'p_ryoushuusho'],
+    newPhraseIds: ['p_takushi_onegai', 'p_made_onegai', 'p_koko_de_tomete', 'p_ryoushuusho', 'p_ippan_michi_de'],
   },
   {
     id: 'u_b1_airport_core', track: 'lang', stage: 'B1', mode: 'action',
