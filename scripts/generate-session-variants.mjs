@@ -62,20 +62,25 @@ function palette(seedText) {
   return palettes[hash(seedText) % palettes.length];
 }
 
-function mascot(x, y, scale, kind = 'duo') {
+function naturalPets(x, y, scale, kind = 'duo') {
   const cat = `
-    <g transform="translate(${x - 42 * scale} ${y}) scale(${scale})">
-      <path d="M12 24 22 8l10 18 10-18 10 16c12 4 20 16 20 31 0 22-18 38-40 38S-8 77-8 55c0-15 8-27 20-31Z" fill="#f8fbff" stroke="#102033" stroke-width="5" stroke-linejoin="round"/>
-      <circle cx="21" cy="56" r="4" fill="#102033"/><circle cx="47" cy="56" r="4" fill="#102033"/>
-      <path d="M31 66h8M35 66v8M22 76c6 5 20 5 26 0" fill="none" stroke="#102033" stroke-width="4" stroke-linecap="round"/>
-      <path d="M4 43h-18M6 53h-20M64 43h18M62 53h20" stroke="#102033" stroke-width="3" stroke-linecap="round" opacity=".55"/>
+    <g transform="translate(${x - 50 * scale} ${y + 28 * scale}) scale(${scale})">
+      <ellipse cx="34" cy="62" rx="54" ry="30" fill="#f7fafc" stroke="#102033" stroke-width="5"/>
+      <path d="M70 48c20-36 54-28 52 8-16-14-30-9-42 12" fill="#f7fafc" stroke="#102033" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="-12" cy="44" r="28" fill="#f7fafc" stroke="#102033" stroke-width="5"/>
+      <path d="M-32 28-44 8-20 22M-4 20 12 2 12 28" fill="#f7fafc" stroke="#102033" stroke-width="5" stroke-linejoin="round"/>
+      <circle cx="-22" cy="43" r="3.5" fill="#102033"/><circle cx="-5" cy="43" r="3.5" fill="#102033"/>
+      <path d="M-16 54c7 5 14 5 21 0M-50 50h-22M-50 60h-22M12 50h24M12 60h24" fill="none" stroke="#102033" stroke-width="3" stroke-linecap="round" opacity=".55"/>
     </g>`;
   const dog = `
-    <g transform="translate(${x + 26 * scale} ${y + 8 * scale}) scale(${scale})">
-      <path d="M2 34 20 10l10 20 24-2 10-18 16 26c7 7 11 16 11 28 0 22-18 38-44 38S4 86 4 64c0-12 4-22 12-29Z" fill="#e9f2ff" stroke="#102033" stroke-width="5" stroke-linejoin="round"/>
-      <path d="M28 36c8-6 24-6 32 0" fill="none" stroke="#102033" stroke-width="4" stroke-linecap="round" opacity=".5"/>
-      <circle cx="33" cy="63" r="4" fill="#102033"/><circle cx="59" cy="63" r="4" fill="#102033"/>
-      <path d="M42 72h9M35 82c7 6 23 6 30 0" fill="none" stroke="#102033" stroke-width="4" stroke-linecap="round"/>
+    <g transform="translate(${x + 36 * scale} ${y + 16 * scale}) scale(${scale})">
+      <ellipse cx="44" cy="74" rx="66" ry="36" fill="#dca56d" stroke="#102033" stroke-width="5"/>
+      <path d="M104 50c34-24 48 14 18 34" fill="none" stroke="#102033" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="-10" cy="52" r="34" fill="#dca56d" stroke="#102033" stroke-width="5"/>
+      <path d="M-34 30c-24-12-28 22-8 42M12 30c24-12 28 22 8 42" fill="#b97845" stroke="#102033" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="-21" cy="51" r="4" fill="#102033"/><circle cx="2" cy="51" r="4" fill="#102033"/>
+      <path d="M-12 62h10M-22 74c10 7 24 7 34 0" fill="none" stroke="#102033" stroke-width="4" stroke-linecap="round"/>
+      <path d="M10 104v28M58 104v28" stroke="#102033" stroke-width="6" stroke-linecap="round"/>
     </g>`;
   return kind === 'cat' ? cat : kind === 'dog' ? dog : `${cat}${dog}`;
 }
@@ -116,18 +121,25 @@ function environment(kind, motif, colors, title) {
 
 function people(pattern, colors) {
   const [ink, accent, , hot] = colors;
-  const person = (x, y, s, hair, shirt) => `
+  // Trendy everyday Japan/Korea fashion, brand-inspired only: workwear jackets, striped tees,
+  // clean caps, canvas totes, red-heart-like patches. No exact logos or trademark text.
+  const person = (x, y, s, hair, shirt, jacket = '#f8fafc', cap = false) => `
     <g transform="translate(${x} ${y}) scale(${s})">
       <circle cx="0" cy="-78" r="42" fill="#ffe1c7" stroke="${ink}" stroke-width="6"/>
       <path d="M-42-76c8-48 74-58 92-6-28-12-54-10-92 6Z" fill="${hair}" stroke="${ink}" stroke-width="6" stroke-linejoin="round"/>
-      <path d="M-44 34c8-70 80-70 92 0v96h-92Z" fill="${shirt}" stroke="${ink}" stroke-width="7" stroke-linejoin="round"/>
+      ${cap ? `<path d="M-42-106c30-22 72-18 98 7 18 1 32 8 42 20-28 6-70 4-122-6Z" fill="${ink}" stroke="${ink}" stroke-width="5" stroke-linejoin="round"/>` : ''}
+      <path d="M-52 34c10-72 92-72 104 0v100h-104Z" fill="${jacket}" stroke="${ink}" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M-32 18h66v112h-66Z" fill="${shirt}" stroke="${ink}" stroke-width="5"/>
+      <path d="M-32 48h66M-32 76h66" stroke="${accent}" stroke-width="5" opacity=".5"/>
+      <circle cx="28" cy="44" r="8" fill="#e11d48" stroke="${ink}" stroke-width="3"/>
       <circle cx="-14" cy="-76" r="4" fill="${ink}"/><circle cx="18" cy="-76" r="4" fill="${ink}"/>
       <path d="M-10-54c12 8 26 8 38 0" stroke="${ink}" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <path d="M-64 76c-42 8-42 76 0 84" fill="none" stroke="${ink}" stroke-width="8" stroke-linecap="round" opacity=".5"/>
     </g>`;
-  const staff = person(488, 446, 1.08, '#222635', accent);
-  if (pattern === 'solo') return `${staff}${person(716, 468, 1.02, '#2b2434', '#ffffff')}`;
-  if (pattern === 'ff') return `${staff}${person(696, 468, .98, '#33213a', '#ffffff')}${person(836, 480, .9, '#51372b', hot)}`;
-  return `${staff}${person(692, 470, .98, '#2b2434', '#ffffff')}${person(842, 484, .92, '#263244', hot)}`;
+  const staff = person(488, 446, 1.08, '#222635', accent, '#1f2937');
+  if (pattern === 'solo') return `${staff}${person(716, 468, 1.02, '#2b2434', '#ffffff', '#b9c2d0', true)}`;
+  if (pattern === 'ff') return `${staff}${person(696, 468, .98, '#33213a', '#ffffff', '#dbe4ee')}${person(836, 480, .9, '#51372b', hot, '#f2f4f7', true)}`;
+  return `${staff}${person(692, 470, .98, '#2b2434', '#ffffff', '#a7b3c6', true)}${person(842, 484, .92, '#263244', hot, '#e7e0d8')}`;
 }
 
 function sessionSvg(mission, cut) {
@@ -148,7 +160,7 @@ function sessionSvg(mission, cut) {
   </defs>
   ${environment(group, motif, colors, title)}
   <g filter="url(#lift)">${people(pattern, colors)}</g>
-  <g filter="url(#lift)">${mascot(226, 480, 1.02, 'duo')}</g>
+  <g filter="url(#lift)">${naturalPets(226, 480, 1.02, 'duo')}</g>
   <rect x="78" y="578" width="460" height="102" rx="30" fill="#fff" stroke="${ink}" stroke-width="8" opacity=".94"/>
   <text x="116" y="626" fill="${ink}" font-size="30" font-weight="900" font-family="Arial, sans-serif">${esc(mission.scenario ?? mission.place ?? mission.id)}</text>
   <text x="116" y="662" fill="${accent}" font-size="24" font-weight="800" font-family="Arial, sans-serif">${esc(pattern.toUpperCase())} · ${esc(group.toUpperCase())}</text>
@@ -187,7 +199,7 @@ function quickSvg([id, title, subtitle, kind]) {
   <rect x="38" y="34" width="1204" height="876" rx="64" fill="transparent" stroke="${ink}" stroke-width="10" opacity=".9"/>
   <path d="M102 780C260 694 414 740 584 768c238 38 340-134 552-102" fill="none" stroke="${accent}" stroke-width="24" stroke-linecap="round" opacity=".16"/>
   <g transform="translate(0 80)" filter="url(#lift)">${quickMotif(kind, colors)}</g>
-  <g filter="url(#lift)">${mascot(780, 574, 1.28, 'duo')}</g>
+  <g filter="url(#lift)">${naturalPets(780, 574, 1.28, 'duo')}</g>
   <rect x="760" y="118" width="382" height="172" rx="36" fill="#fff" stroke="${ink}" stroke-width="8" opacity=".94"/>
   <text x="804" y="184" fill="${ink}" font-size="42" font-weight="900" font-family="Arial, sans-serif">${esc(title)}</text>
   <text x="804" y="242" fill="${accent}" font-size="30" font-weight="900" font-family="Arial, sans-serif">${esc(subtitle)}</text>

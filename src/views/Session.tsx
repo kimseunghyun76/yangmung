@@ -227,6 +227,7 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
   const correctChoice = card.choices.find((x) => x.correct && !x.recovery) ?? card.choices.find((x) => x.correct);
   const hintFallback = !isKanaQuiz && !hintGrammar ? buildHintFallback(card, correctChoice) : undefined;
   const hasHint = !!hintGrammar || !!hintFallback;
+  const recoveryChoice = card.choicePools?.recovery?.[0] ?? card.choices.find((x) => x.recovery);
   return (
     <>
       {/* 1. 일본어 (주인공) */}
@@ -294,9 +295,42 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
 
       {reveal && <ChoiceFeedback card={card} picked={picked!} cardIndex={index} onNext={onNext} />}
       {!reveal && (
-        <button onClick={onKnown} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--ink-faint)', fontWeight: 600, marginTop: 14, width: '100%', textAlign: 'center' }}>이미 알아요 (건너뛰기)</button>
+        recoveryChoice
+          ? <RecoverySkipAction choice={recoveryChoice} onClick={onKnown} />
+          : <button onClick={onKnown} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--ink-faint)', fontWeight: 600, marginTop: 14, width: '100%', textAlign: 'center' }}>이번 카드는 건너뛰기</button>
       )}
     </>
+  );
+}
+
+function RecoverySkipAction({ choice, onClick }: { choice: Choice; onClick: () => void }) {
+  const ja = choice.phrase ? (choice.phrase.kanji ?? choice.phrase.kana) : choice.ja;
+  const ko = choice.phrase?.korean ?? choice.label;
+  return (
+    <button
+      onClick={onClick}
+      className="ym-press"
+      style={{
+        width: '100%',
+        marginTop: 14,
+        padding: 13,
+        borderRadius: 14,
+        border: '1px solid var(--warn)',
+        background: 'var(--warn-soft)',
+        color: 'var(--ink)',
+        cursor: 'pointer',
+        textAlign: 'left',
+      }}
+    >
+      <span style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--warn)', fontSize: 12, fontWeight: 900 }}>
+        <Icon name="recovery" size={15} /> 막혔을 때 대화 넘기기
+      </span>
+      <span style={{ display: 'block', marginTop: 6, fontSize: 13, lineHeight: 1.45, color: 'var(--ink-soft)', fontWeight: 700 }}>
+        답을 고르기 어렵다면 이렇게 말하고 넘어갈 수 있어요. 누르면 이 카드는 건너뜁니다.
+      </span>
+      {ja && <strong lang="ja" style={{ display: 'block', marginTop: 8, fontSize: 16, color: 'var(--ink)' }}>{ja}</strong>}
+      <span style={{ display: 'block', marginTop: 2, fontSize: 13, color: 'var(--ink-soft)', fontWeight: 750 }}>{ko}</span>
+    </button>
   );
 }
 
