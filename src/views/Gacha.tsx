@@ -52,6 +52,8 @@ function DeckCardFace({ sceneId, rarity, size = 56 }: { sceneId: string; rarity:
   const item = gachaItemForPlace(placeOf(sceneId), rarity);
   const cardNo = String(rarityToTier(rarity) * 100 + Math.max(1, SCENES.findIndex((m) => m.id === sceneId) + 1)).padStart(3, '0');
   const holo = rarity === 'gold' || rarity === 'diamond';
+  const stars = rarityStars(rarity);
+  const showDescription = size >= 120;
   return (
     <span className={`ym-mcard is-${rarity} ${holo ? 'is-holo' : ''}`} style={{
       ['--rarity-color' as string]: meta.color,
@@ -61,15 +63,17 @@ function DeckCardFace({ sceneId, rarity, size = 56 }: { sceneId: string; rarity:
     }}>
       <span className="ym-mcard-brand" style={{ fontSize: Math.max(5, Math.round(size * 0.055)), marginTop: Math.round(size * 0.045) }}>YANGMUNG TRAVEL CARD</span>
       <span className="ym-mcard-serial" style={{ fontSize: Math.max(5, Math.round(size * 0.052)) }}>NO.{cardNo}</span>
-      <span className="ym-mcard-stars" aria-label={`${rarityStars(rarity)}성 카드`} style={{ fontSize: Math.max(6, Math.round(size * 0.072)), marginTop: Math.round(size * 0.032) }}>
-        {Array.from({ length: rarityStars(rarity) }, (_, i) => <span key={i}>★</span>)}
+      <span className="ym-mcard-tier" aria-hidden style={{ fontSize: Math.max(6, Math.round(size * 0.061)) }}>{stars} STAR</span>
+      <span className="ym-mcard-stars" aria-label={`${stars}성 카드`} style={{ fontSize: Math.max(7, Math.round(size * 0.074)), marginTop: Math.round(size * 0.03) }}>
+        {Array.from({ length: 5 }, (_, i) => <span className={i < stars ? 'is-on' : undefined} key={i}>★</span>)}
       </span>
-      <span aria-hidden className="ym-mcard-art" style={{ width: Math.round(size * 0.78), height: Math.round(size * 0.64), marginTop: Math.round(size * 0.052) }}>
+      <span aria-hidden className="ym-mcard-art" style={{ width: Math.round(size * 0.82), height: Math.round(size * 0.69), marginTop: Math.round(size * 0.045) }}>
         <ItemArt sceneId={sceneId} rarity={rarity} size={size} />
       </span>
       <span className="ym-mcard-title" lang="ja" style={{ fontSize: Math.max(8, Math.round(size * 0.13)), width: '88%', marginTop: Math.round(size * 0.055) }}>{item.jaTitle ?? item.title}</span>
       <span className="ym-mcard-sub" style={{ fontSize: Math.max(6, Math.round(size * 0.079)), padding: '1px 6px', marginTop: 3, maxWidth: '86%' }}>{item.title}</span>
-      <span className="ym-mcard-desc" style={{ fontSize: Math.max(5, Math.round(size * 0.058)), width: '84%' }}>{itemKoreanDescription(placeOf(sceneId), item.title, rarity)}</span>
+      {showDescription && <span className="ym-mcard-desc" style={{ fontSize: Math.max(7, Math.round(size * 0.056)), width: '84%' }}>{itemKoreanDescription(placeOf(sceneId), item.title, rarity)}</span>}
+      <span className="ym-mcard-place" style={{ fontSize: Math.max(5, Math.round(size * 0.052)) }}>{placeOf(sceneId)}</span>
     </span>
   );
 }
@@ -759,7 +763,7 @@ export function DeckBrowser() {
         <StatTile label="저장 용량" value={`${stats.storageKb}KB`} sub={`정답 ${stats.correct}/${stats.attempts}`} />
       </div>
       <LearningHeatmap dayCounts={stats.dayCounts} />
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 14 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(150px, 1fr))', gap: 14 }}>
         {SCENES.map((m) => {
           const card = collection.cards[m.id];
           const owned = totalItems(card) > 0;
@@ -776,9 +780,9 @@ export function DeckBrowser() {
             );
           }
           return (
-            <div key={m.id} className="ym-gacha-merge-host" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '14px 9px', borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', position: 'relative', overflow: 'hidden' }}>
-              <button className="ym-press" onClick={() => setSelected(m.id)} style={{ border: 0, background: 'transparent', color: 'var(--ink)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: 0 }}>
-                <DeckCardFace sceneId={m.id} rarity={rarity} size={82} />
+            <div key={m.id} className="ym-gacha-merge-host" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 9, padding: '15px 10px', borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', position: 'relative', overflow: 'hidden' }}>
+              <button className="ym-press" onClick={() => setSelected(m.id)} style={{ border: 0, background: 'transparent', color: 'var(--ink)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, padding: 0, width: '100%' }}>
+                <DeckCardFace sceneId={m.id} rarity={rarity} size={116} />
                 <span style={{ fontSize: 12, fontWeight: 850 }}>{placeOf(m.id)}</span>
               </button>
               <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}>

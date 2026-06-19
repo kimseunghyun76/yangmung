@@ -94,6 +94,10 @@ function ModeSelect({ lastMode, lastCount, onStart, onExit }: SelectProps) {
         <span style={{ width: 32 }} />
       </div>
 
+      <div style={{ overflow: 'hidden', width: '100%', aspectRatio: '4 / 3', marginBottom: 18, borderRadius: 18, background: '#111827', border: '1px solid rgba(255,255,255,.14)' }}>
+        <img src="/scenes/quick-practice/flash.webp" alt="" aria-hidden style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }} />
+      </div>
+
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 18 }}>
         {(Object.entries(MODE_CONFIG) as [FlashMode, typeof MODE_CONFIG[FlashMode]][]).map(([m, c]) => {
           const active = mode === m;

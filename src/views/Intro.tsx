@@ -132,6 +132,7 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
   const sv = sceneVisualByMission(firstMissionId);
   const backdrop = firstMissionId ? (sv.backdrop ?? sv.hero) : quickPracticeBackdrop(quickPracticeKind(cards));
   const showFullBackdrop = isMangaSceneImage(backdrop);
+  const quickBackdrop = !firstMissionId;
   const mission = firstMissionId ? CONTENT.missions.find((m) => m.id === firstMissionId) : undefined;
   const place = mission?.place;
   const { attempts, seen, weak } = introMissionStats(allCards, progress, firstMissionId);
@@ -145,7 +146,7 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
         position: 'relative',
         overflow: 'hidden',
         borderRadius: 28,
-        minHeight: 570,
+        minHeight: quickBackdrop ? 'clamp(680px, 118vw, 780px)' : 570,
         padding: 20,
         display: 'flex',
         flexDirection: 'column',
@@ -159,8 +160,9 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
           position: 'absolute',
           inset: 0,
           width: '100%',
-          height: '100%',
+          height: quickBackdrop ? 'clamp(300px, 76vw, 520px)' : '100%',
           objectFit: 'contain',
+          objectPosition: 'center top',
           opacity: 0.34,
           filter: 'blur(16px) saturate(.82) contrast(.96) brightness(1.08)',
         }} />}
@@ -168,12 +170,18 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
           position: 'absolute',
           inset: 0,
           width: '100%',
-          height: '100%',
+          height: quickBackdrop ? 'clamp(300px, 76vw, 520px)' : '100%',
           objectFit: showFullBackdrop ? 'contain' : 'cover',
-          objectPosition: 'center',
+          objectPosition: quickBackdrop ? 'center top' : 'center',
           filter: 'saturate(.82) contrast(.96) brightness(1.08)',
         }} />}
-        {backdrop && <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.34) 42%, rgba(0,0,0,0.78))' }} />}
+        {backdrop && <div aria-hidden style={{
+          position: 'absolute',
+          inset: 0,
+          background: quickBackdrop
+            ? 'linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.2) 38%, rgba(8,12,22,0.88) 64%, rgba(8,12,22,0.97))'
+            : 'linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.34) 42%, rgba(0,0,0,0.78))',
+        }} />}
         {!backdrop && (
           <div aria-hidden style={{ position: 'absolute', right: -18, top: 18, width: 170, height: 170, borderRadius: 42, background: `radial-gradient(circle at 44% 38%, ${hexA(sv.accent, 0.22)}, transparent 64%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: 'rotate(5deg)' }}>
             <MascotFace who="duo" size={112} style={{ filter: 'drop-shadow(0 18px 28px rgba(0,0,0,0.18))' }} />
