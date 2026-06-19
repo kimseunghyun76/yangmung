@@ -230,6 +230,13 @@ export const phrases: Phrase[] = [
   { id: 'p_chakubarai_ka', kana: 'しはらいはどうなさいますか', kanji: 'お支払いはどうなさいますか', displayKana: 'しはらいは、どうなさいますか？', korean: '결제는 어떻게 하시겠어요?', register: 'receptive' },
   { id: 'p_maebarai_de', kana: 'まえばらいでおねがいします', kanji: '前払いでお願いします', displayKana: 'まえばらいで、おねがいします', korean: '선불로 할게요', register: 'productive', tip: '「前払(まえばら)いで」— 보내는 사람이 지금 결제. 반대로 받는 사람이 내는 건 着払(ちゃくばら)い예요' },
   { id: 'p_chakubarai_de', kana: 'ちゃくばらいでおねがいします', kanji: '着払いでお願いします', displayKana: 'ちゃくばらいで、おねがいします', korean: '착불로 할게요', register: 'productive', tip: '「着払(ちゃくばら)いで」— 받는 사람이 배송비를 내는 방식. 선물을 보낼 땐 前払い(선불)가 매너예요' },
+  // C16 이자카야 실전 확장 — 오토시·음식 추가
+  { id: 'p_otoshi_desu', kana: 'おとおしはこちらです', kanji: 'お通しはこちらです', displayKana: 'おとおしは、こちらです', korean: '오토시(기본 안주)입니다', register: 'receptive' },
+  { id: 'p_kore_nani', kana: 'これはなんですか', kanji: 'これは何ですか', displayKana: 'これは、なんですか？', korean: '이건 뭐예요?', register: 'productive', tip: '「これは何(なん)ですか」— 처음 보는 음식·메뉴를 물을 때. 이자카야의 お通し(오토시)는 자릿세 개념의 기본 안주로, 거절하기 어려운 문화예요' },
+  { id: 'p_oryouri_ikaga', kana: 'おりょうりはいかがですか', kanji: 'お料理はいかがですか', displayKana: 'おりょうりは、いかがですか？', korean: '음식은 어떠세요?', register: 'receptive' },
+  // C20 온천 실전 확장 — 신발장·문신 확인
+  { id: 'p_getabako_e', kana: 'くつはこちらのげたばこへ', kanji: '靴はこちらの下駄箱へ', displayKana: 'くつは、こちらのげたばこへ', korean: '신발은 이쪽 신발장에 넣어 주세요', register: 'receptive' },
+  { id: 'p_tattoo_arimasu_ka', kana: 'タトゥーはありますか', displayKana: 'タトゥーは、ありますか？', korean: '문신이 있으세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_shashin_ii', kana: 'しゃしんとってもいいですか', kanji: '写真撮ってもいいですか', displayKana: 'しゃしん、とってもいいですか？', korean: '사진 찍어도 돼요?', register: 'productive', tip: '「写真(しゃしん)撮(と)ってもいいですか」— 촬영 전 허가 확인은 매너예요. 절·신사 내부는 撮影禁止(さつえいきんし) 구역이 있으니 주의하세요' },
   { id: 'p_shashin_onegai', kana: 'しゃしんおねがいします', kanji: '写真お願いします', displayKana: 'しゃしん、おねがいします', korean: '사진 부탁드려요', register: 'productive', tip: '「写真(しゃしん)お願(ねが)いします」— 스마트폰이나 카메라를 건네며 쓰면 OK. 일본인은 대체로 친절하게 찍어줘요. ありがとうございます로 감사 표시도 잊지 마세요' },
   { id: 'p_tasukete', kana: 'たすけてください', kanji: '助けてください', korean: '도와주세요', register: 'productive', tip: '급할 땐 たすけて만 외쳐도 통합니다' },

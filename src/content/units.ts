@@ -127,7 +127,7 @@ export const units: Unit[] = [
     canDo: '사용자는 카페·관광·교통·긴급 장면에서 새로 필요한 짧은 응답을 말할 수 있다',
     newPhraseIds: [
       'p_tennai_de', 'p_mochikaeri_de', 'p_esu_saizu_de', 'p_emu_saizu_de',
-      'p_hotto_de', 'p_aisu_de', 'p_shotto_tsuika',
+      'p_hotto_de', 'p_aisu_de', 'p_shotto_tsuika', 'p_kore_nani',
       'p_kippu_nimai_kudasai', 'p_sumimasen_koko_doko', 'p_nihon_go_muzukashii',
       'p_nihongo_sukoshi_dake', 'p_chiketto_wa_kochira_desu', 'p_basho_o_oshiete_kudasai',
     ],

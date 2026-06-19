@@ -157,7 +157,7 @@ export const c16: Mission = {
   scenario: '이자카야에서 주문',
   canDo: '사용자는 이자카야에서 예약·음료·추가 주문·마지막 주문을 처리할 수 있다',
   unlockAfter: ['C2'],
-  sequence: ['예약 확인', '첫 음료', '추가 주문'],
+  sequence: ['예약 확인', '첫 음료', '오토시 안내', '음식 추가', '추가 주문'],
   speakPhraseIds: ['p_futari_desu', 'p_osusume_wa', 'p_okaikei'],
   steps: [
     {
@@ -176,10 +176,32 @@ export const c16: Mission = {
       speaker: '점원',
       promptPhraseId: 'p_nomimono_wa_dou_shimasu_ka',
       choices: [
-        { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: true, feedback: '「おすすめは何(なん)ですか」— 이자카야 인기 주류·안주를 현지인 감각으로 추천받아요' },
+        { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: true, feedback: '「おすすめは何(なん)ですか」— 이자카야 인기 주류·안주를 현지인 감각으로 추천받아요. 첫 잔은 とりあえずビール(우선 맥주)가 정석이에요' },
         { text: '물 주세요', phraseId: 'p_mizu_kudasai', correct: true, feedback: '「お水(みず)ください」— 이자카야에서 물은 대부분 무료. お通し(오토시) 안주와 함께 나오는 경우가 많아요' },
         { text: '계산 부탁드립니다', phraseId: 'p_okaikei', correct: false, feedback: '이제 막 앉아 첫 음료를 고르는 중이에요 — 계산은 마지막에 해요' },
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
+      ],
+    },
+    {
+      situationKo: '주문하지 않은 작은 안주가 나온다 — 오토시 안내를 듣는다',
+      speaker: '점원',
+      promptPhraseId: 'p_otoshi_desu',
+      choices: [
+        { text: '이건 뭐예요?', phraseId: 'p_kore_nani', correct: true, feedback: '「これは何(なん)ですか」— お通し(오토시)는 자릿세 개념의 기본 안주(300~500엔). 주문 안 해도 나오고 거절이 어려운 문화예요' },
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「わかりました」— 오토시는 일본 이자카야의 관습이에요. 받아들이면 자연스러워요' },
+        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 가볍게 인사하고 받아요. 자릿세 포함이라 계산서에 お通し代로 찍혀요' },
+        { text: '계산 부탁드립니다', phraseId: 'p_okaikei', correct: false, feedback: '이제 막 안주가 나온 참이에요 — 계산은 마지막에 해요' },
+      ],
+    },
+    {
+      situationKo: '점원이 음식 주문은 어떻게 할지 묻는다',
+      speaker: '점원',
+      promptPhraseId: 'p_oryouri_ikaga',
+      choices: [
+        { text: '이거랑 이거요', phraseId: 'p_kore_to_kore', correct: true, feedback: '「これとこれ」— 메뉴를 가리키며 주문. 焼(や)き鳥(とり)·枝豆(えだまめ)·唐揚(からあ)げ는 이자카야 정석 안주예요' },
+        { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: true, feedback: '「おすすめは何(なん)ですか」— 그날의 추천 안주(本日(ほんじつ)のおすすめ)를 물어봐요' },
+        { text: '이거 빼 주세요', phraseId: 'p_kore_nuite', correct: true, feedback: '「これを抜(ぬ)いてください」— 못 먹는 재료가 있으면 빼 달라고 해요. 알레르기는 미리 전하면 안전해요' },
+        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -345,9 +367,9 @@ export const c20: Mission = {
   tier: 2,
   place: '온천',
   scenario: '온천 이용 방법 묻기',
-  canDo: '사용자는 온천에서 요금·수건·기본 이용 규칙을 이해하고 되물을 수 있다',
+  canDo: '사용자는 온천에서 요금·신발장·문신 규정·수건·입욕 규칙을 이해하고 되물을 수 있다',
   unlockAfter: ['C4'],
-  sequence: ['요금 확인', '수건 대여', '입욕 규칙'],
+  sequence: ['요금 확인', '신발장 안내', '문신 확인', '수건 대여', '입욕 규칙'],
   speakPhraseIds: ['p_ikura_desu_ka', 'p_hai', 'p_wakarimashita_arigatou'],
   steps: [
     {
@@ -359,6 +381,28 @@ export const c20: Mission = {
         { text: '현금으로요', phraseId: 'p_genkin_de', correct: true, feedback: '현금으로 입욕료를 낼 때 — 가장 간단한 결제 표현' },
         { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: false, feedback: '방금 800엔이라고 들었어요. 금액을 들은 뒤에는 결제 방법을 말해요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+      ],
+    },
+    {
+      situationKo: '직원이 신발을 신발장에 넣으라고 안내한다',
+      speaker: '접수 직원',
+      promptPhraseId: 'p_getabako_e',
+      choices: [
+        { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '「わかりました」— 입구에서 신발을 下駄箱(げたばこ, 신발장)에 넣고 열쇠를 받아요. 슬리퍼로 갈아 신는 곳도 있어요' },
+        { text: '어디예요?', phraseId: 'p_doko_desu_ka', correct: true, feedback: '「どこですか」— 신발장 위치가 헷갈리면 물어봐요. 보통 입구 바로 옆에 있어요' },
+        { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: false, feedback: '결제는 이미 끝났어요 — 지금은 신발장 안내를 따르는 단계예요' },
+        { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+      ],
+    },
+    {
+      situationKo: '직원이 문신이 있는지 확인한다',
+      speaker: '접수 직원',
+      promptPhraseId: 'p_tattoo_arimasu_ka',
+      choices: [
+        { text: '아니요, 없어요', phraseId: 'p_iie_arimasen', correct: true, feedback: '「いいえ、ありません」— 일본 온천은 위생·관습상 문신(タトゥー) 입장을 제한하는 곳이 많아요. 작은 문신은 防水(ぼうすい)シール로 가리기도 해요' },
+        { text: '네, 있어요', phraseId: 'p_hai_arimasu', correct: true, feedback: '「はい、あります」— 솔직하게 답해요. 문신이 있으면 貸切風呂(かしきりぶろ, 전세탕)를 안내받거나 가림 스티커를 권유받아요' },
+        { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: false, feedback: '요금은 이미 냈어요 — 지금은 문신 여부를 답하는 단계예요' },
+        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
       ],
     },
     {
