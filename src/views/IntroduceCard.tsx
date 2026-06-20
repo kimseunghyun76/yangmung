@@ -24,6 +24,23 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext }: Prop
       <h2 style={{ marginTop: 14, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="discover" size={22} /> 새 표현</h2>
       <p style={{ color: 'var(--ink-soft)', marginTop: 0, lineHeight: 1.5 }}>{card.note}</p>
 
+      {card.answersQuestion && (
+        <div style={{ marginTop: 14, padding: 12, borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--surface-2)' }}>
+          <p style={{ margin: 0, fontSize: 11.5, fontWeight: 800, color: 'var(--ink-faint)', letterSpacing: '.03em' }}>이런 질문에 답할 때</p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 6 }}>
+            <span style={{ minWidth: 0 }}>
+              <span lang="ja" style={{ display: 'block', fontSize: 16, fontWeight: 700 }}>{card.answersQuestion.kana}</span>
+              <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 600 }}>{card.answersQuestion.korean}</span>
+            </span>
+            <button onClick={() => speak(card.answersQuestion!.ja)} disabled={!ttsSupported()} aria-label="질문 듣기"
+              style={{ flex: '0 0 auto', width: 38, height: 38, borderRadius: 11, border: '1px solid var(--glass-border)', background: 'var(--surface)', color: 'var(--accent)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Icon name="listen" size={16} />
+            </button>
+          </div>
+          <p style={{ margin: '8px 0 0', fontSize: 11, color: 'var(--ink-faint)', textAlign: 'center', fontWeight: 700 }}>↓ 이렇게 답해요</p>
+        </div>
+      )}
+
       <div style={{ background: 'var(--accent-soft)', padding: 16, borderRadius: 10, marginTop: 14, textAlign: 'center' }}>
         <ReadingAid text={card.kana} isFamiliar={isKanaFamiliar} fontSize={30} />
         <p style={{ margin: '8px 0 0', color: 'var(--ink-soft)' }}>{card.korean}</p>

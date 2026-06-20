@@ -80,6 +80,7 @@ export interface IntroduceCard {
   korean: string;
   tip?: string;
   note: string;
+  answersQuestion?: { ja: string; kana: string; korean: string }; // 이 표현이 답하는 질문(점원 대사)
   reviewTarget?: ReviewTarget;
 }
 
@@ -693,7 +694,7 @@ export function buildCards(): Card[] {
   // (한번이라도 새 표현으로 본 문장은 다시 소개 카드로 나오지 않음)
   const introduced = new Set<string>();
   for (const m of missions) {
-    const addIntroduce = (phraseId: string, note: string) => {
+    const addIntroduce = (phraseId: string, note: string, question?: IntroduceCard['answersQuestion']) => {
       if (introduced.has(phraseId)) return;
       introduced.add(phraseId);
       const p = byPhrase(phraseId);
@@ -708,6 +709,7 @@ export function buildCards(): Card[] {
         korean: p.korean,
         tip: p.tip,
         note,
+        answersQuestion: question,
         reviewTarget: { type: 'mission', id: m.id as CLevel },
       });
     };
@@ -723,11 +725,17 @@ export function buildCards(): Card[] {
         : undefined;
       // 이 스텝에서 학습자가 고를 수 있는 표현(productive/both) 중 아직 소개 안 된 것을 먼저 새 표현으로.
       // → 모든 답변 문장이 퀴즈 전에 한 번은 의미·소리와 함께 소개됨.
+      // 이 표현이 "어떤 질문(점원 대사)에 대한 답"인지 맥락도 같이 넘긴다.
+      const qInfo = prompt
+        ? { ja: ttsText(prompt) ?? prompt.kana, kana: prompt.displayKana ?? prompt.kana, korean: prompt.korean }
+        : recapPrompt
+          ? { ja: recapPrompt.kana, kana: recapPrompt.kana, korean: recapPrompt.korean }
+          : undefined;
       for (const ch of step.choices) {
         if (!ch.phraseId) continue;
         const reg = byPhrase(ch.phraseId).register;
         if (reg === 'productive' || reg === 'both') {
-          addIntroduce(ch.phraseId, '이 장면에서 쓸 수 있는 표현이에요. 의미와 소리를 먼저 익혀둡니다.');
+          addIntroduce(ch.phraseId, '이 장면에서 쓸 수 있는 표현이에요. 의미와 소리를 먼저 익혀둡니다.', qInfo);
         }
       }
       const choicePools = buildStepChoicePools(step.choices, byPhrase, phrases);

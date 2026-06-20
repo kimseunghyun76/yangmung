@@ -4,7 +4,6 @@ import type { Card } from '../learn/cards';
 import { itemMastery, type ProgressMap } from '../learn/progress';
 import { CONTENT } from '../content';
 import { WRAP } from '../ui/styles';
-import { Icon } from '../ui/Icon';
 import { quickPracticeBackdrop, sceneVisualByMission } from './scene';
 import { PrimaryAction, hexA } from './shell';
 import { MascotBubble, MascotFace, MascotLine } from './mascot';
@@ -171,21 +170,7 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
           </div>
         )}
         <div style={{ position: 'relative', maxWidth: 760, padding: '0 4px' }}>
-          <span style={{
-            width: 62,
-            height: 62,
-            borderRadius: 20,
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: hexA(sv.accent, 0.14),
-            color: sv.accent,
-            border: `1px solid ${hexA(sv.accent, 0.22)}`,
-            backdropFilter: 'blur(10px)',
-          }}>
-            <Icon name={sv.icon} size={34} />
-          </span>
-          <p style={{ color: 'var(--ink-faint)', fontSize: 13, margin: '18px 0 0', fontWeight: 800, letterSpacing: '0.08em' }}>{place ? `${place} 미션` : '오늘의 연습'}</p>
+          <p style={{ color: 'var(--ink-faint)', fontSize: 13, margin: 0, fontWeight: 800, letterSpacing: '0.08em' }}>{place ? `${place} 미션` : '오늘의 연습'}</p>
           <h1 style={{ margin: '7px 0 0', lineHeight: 1.22 }}>{goal}</h1>
           <p style={{ color: 'var(--ink-soft)', fontSize: 15, lineHeight: 1.65, marginTop: 14, maxWidth: 640 }}>
             배경 상황을 떠올리고 바로 시작합니다. 이전에 본 표현은 아래 포인트만 다시 확인하면 됩니다.
