@@ -78,6 +78,7 @@ export const phrases: Phrase[] = [
 
   // ── 전철·여행 기본 어휘 (인벤토리 — 미션 차차 사용) ──
   { id: 'p_eki', kana: 'えき', kanji: '駅', korean: '역', register: 'both' },
+  { id: 'p_eki_wa_doko', kana: 'えきはどこですか', kanji: '駅はどこですか', displayKana: 'えきは、どこですか？', korean: '역은 어디예요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '「駅(えき)はどこですか」— 가장 가까운 역을 찾을 때. 「一番近(いちばんちか)い駅はどこですか」(가장 가까운 역은?)로 더 구체적으로 물을 수 있어요. 역은 길찾기의 기준점이에요' },
   { id: 'p_norikae', kana: 'のりかえ', kanji: '乗り換え', korean: '환승', register: 'both' },
   { id: 'p_kaisatsu', kana: 'かいさつ', kanji: '改札', korean: '개찰구', register: 'both' },
   { id: 'p_kippu', kana: 'きっぷ', kanji: '切符', korean: '표 / 티켓', register: 'both' },

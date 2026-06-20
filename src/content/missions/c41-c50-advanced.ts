@@ -105,7 +105,7 @@ export const c42: Mission = {
       recapPromptJa: '何にしますか',
       recapPromptKo: '무엇으로 하시겠어요?',
       choices: [
-        { text: '이거요', phraseId: 'p_kore', correct: true, feedback: '「これ」— 화면이나 버튼을 가리키며 선택하는 가장 간단한 표현. 일본 자판기는 暖(あたた)かい(따뜻한)·冷(つめ)たい(차가운) 표시도 있어 체크해봐요' },
+        { text: '이걸로 부탁드려요', phraseId: 'p_kore_de', correct: true, feedback: '「これでお願(ねが)いします」— 화면이나 버튼을 가리키며 선택. 일본 자판기는 暖(あたた)かい(따뜻한)·冷(つめ)たい(차가운) 표시도 있어 체크해봐요' },
         { text: '이 버튼 눌러 주세요', phraseId: 'p_kono_botan_oshite', correct: true, feedback: '「このボタンを押(お)してください」— 어떤 버튼인지 모를 때 직접 도움을 구하는 실용 표현. 화면을 가리키며 쓰면 바로 이해해줘요' },
         { text: '커피는 어디예요?', phraseId: 'p_koohii_wa_doko', correct: true, feedback: '「コーヒーはどこですか」— 원하는 음료 위치를 찾을 때. 자판기는 カテゴリー(コーヒー·炭酸/たんさん·お茶/おちゃ 등)별로 구분돼 있어요' },
         { text: '잔돈으로 해 주세요', phraseId: 'p_komakaku', correct: false, feedback: '자판기에서 잔돈 교환 요청은 불가능합니다' },
@@ -127,7 +127,7 @@ export const c42: Mission = {
       speaker: '상대',
       promptPhraseId: 'p_urikire',
       choices: [
-        { text: '이거요', phraseId: 'p_kore', correct: true, feedback: '「これ」— 다른 음료를 가리켜 골라요. 売(う)り切(き)れ는 버튼에 빨간불이 들어와요' },
+        { text: '이거 주세요', phraseId: 'p_kore_kudasai', correct: true, feedback: '「これをください」— 다른 음료를 가리켜 골라요. 売(う)り切(き)れ(품절)는 버튼에 빨간불이 들어와요' },
         { text: '이건 뭐예요?', phraseId: 'p_kore_nani', correct: true, feedback: '「これは何(なん)ですか」— 처음 보는 음료를 물어봐요. 신상·한정 음료가 자주 나와요' },
         { text: '괜찮아요', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 굳이 안 사도 되면 가볍게 넘어가요' },
         { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
@@ -672,7 +672,7 @@ export const c50: Mission = {
       recapPromptJa: 'どちらに行きたいですか',
       recapPromptKo: '어디에 가고 싶으세요?',
       choices: [
-        { text: '역 어디예요?', phraseId: 'p_eki', correct: true, feedback: '「駅(えき)はどこですか」— 역을 목적지로 삼을 때. 일본은 역이 랜드마크 역할을 해요. 역만 찾으면 대부분의 문제가 해결돼요' },
+        { text: '역은 어디예요?', phraseId: 'p_eki_wa_doko', correct: true, feedback: '「駅(えき)はどこですか」— 역을 목적지로 삼을 때. 일본은 역이 랜드마크 역할을 해요. 역만 찾으면 대부분의 문제가 해결돼요' },
         { text: '신주쿠역은 어디예요?', phraseId: 'p_shinjuku_doko', correct: true, feedback: '「新宿駅(しんじゅくえき)はどこですか」— 구체적인 역명을 말할 때. ○○駅はどこですか 패턴 하나로 일본 어디서나 쓸 수 있어요' },
         { text: '장소를 알려 주세요', phraseId: 'p_basho_o_oshiete_kudasai', correct: true, feedback: '「場所(ばしょ)を教(おし)えてください」— 목적지 주소나 장소를 알려달라고 할 때. 스마트폰 지도를 보여주며 쓰면 더 효과적이에요' },
         { text: '예약했어요', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '길을 물어보는 상황에서 예약 얘기는 맥락에 맞지 않아요' },
@@ -684,7 +684,7 @@ export const c50: Mission = {
       promptPhraseId: 'p_aruku_densha',
       choices: [
         { text: '걸어서 몇 분이에요?', phraseId: 'p_aruite_nanpun', correct: true, feedback: '「歩(ある)いて何分(なんぷん)ですか」— 도보 시간을 확인해 결정. 가까우면 걷고 멀면 전철·버스를 타요' },
-        { text: '역 어디예요?', phraseId: 'p_eki', correct: true, feedback: '「駅(えき)はどこですか」— 전철을 타려면 가까운 역을 먼저 찾아요' },
+        { text: '역은 어디예요?', phraseId: 'p_eki_wa_doko', correct: true, feedback: '「駅(えき)はどこですか」— 전철을 타려면 가까운 역을 먼저 찾아요' },
         { text: '사진 부탁드려요', phraseId: 'p_shashin_onegai', correct: false, feedback: '지금은 이동 방법을 정하는 중이에요 — 사진 요청은 맥락과 달라요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
@@ -707,7 +707,7 @@ export const c50: Mission = {
       choices: [
         { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 도움받은 후 가장 자연스러운 마무리. 일본인의 친절에 감사를 전하면 双方(そうほう)이 기분 좋게 헤어질 수 있어요' },
         { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '「分(わ)かりました、ありがとうございます」— 이해와 감사를 한 번에. 방향 설명을 받고 고마움을 표하는 가장 완전한 마무리 표현이에요' },
-        { text: '저쪽이요?', phraseId: 'p_are', correct: true, feedback: '「あれ」→ 「あちらですか」— 상대가 가리키는 방향을 재확인할 때. 손으로 방향을 가리키며 あちらですか？하면 더 자연스러워요' },
+        { text: '어느 쪽이에요?', phraseId: 'p_dochira_desu_ka', correct: true, feedback: '「どちらですか」— 상대가 가리키는 방향을 재확인할 때. 손으로 방향을 가리키며 함께 쓰면 더 자연스러워요. まっすぐ(직진)·右(오른쪽)·左(왼쪽)도 함께 알아두세요' },
         { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: false, feedback: '이미 안내가 끝난 상황 — 속도 요청은 시기가 맞지 않아요' },
       ],
     },
