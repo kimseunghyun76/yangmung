@@ -56,7 +56,7 @@ const BACKDROPS: Record<string, string> = {
   C49: '/scenes/generated/c49-omakase-sushi-bg.webp',
   C50: '/scenes/generated/c50-lost-street-bg.webp',
 };
-const LEGACY_SCENE_SVGS = new Set(['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12', 'C13']);
+const LEGACY_SCENE_IMAGES = new Set(['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12', 'C13']);
 
 const MANGA_BACKDROPS = {
   shop: [
@@ -228,9 +228,9 @@ export function sceneVisualByPlace(place?: string): SceneVisual {
   const mission = place ? CONTENT.missions.find((m) => m.place === place && BACKDROPS[m.id]) : undefined;
   if (!mission) return base;
   const key = mission.id.toLowerCase();
-  const legacy = LEGACY_SCENE_SVGS.has(mission.id) ? {
-    thumb: `/scenes/${key}-thumb.svg`,
-    hero: `/scenes/${key}-hero.svg`,
+  const legacy = LEGACY_SCENE_IMAGES.has(mission.id) ? {
+    thumb: `/scenes/${key}-thumb.webp`,
+    hero: `/scenes/${key}-hero.webp`,
   } : {};
   return {
     ...base,
@@ -245,11 +245,11 @@ export function sceneVisualByMission(missionId?: string): SceneVisual {
   const base = sceneVisualByPlace(m?.place);
   const v = m?.visual;
   const key = missionId?.toLowerCase();
-  const hasLegacySvg = !!missionId && !!key && LEGACY_SCENE_SVGS.has(missionId);
+  const hasLegacyImage = !!missionId && !!key && LEGACY_SCENE_IMAGES.has(missionId);
   const generated = {
-    ...(hasLegacySvg ? {
-      thumb: `/scenes/${key}-thumb.svg`,
-      hero: `/scenes/${key}-hero.svg`,
+    ...(hasLegacyImage ? {
+      thumb: `/scenes/${key}-thumb.webp`,
+      hero: `/scenes/${key}-hero.webp`,
     } : {}),
     ...(missionId && BACKDROPS[missionId] ? { backdrop: mangaBackdropFor(missionId, m?.place) ?? BACKDROPS[missionId] } : {}),
   };

@@ -213,15 +213,4 @@ function write(file, body) {
 }
 
 let count = 0;
-for (const mission of CONTENT.missions.filter((m) => /^C\d+$/.test(m.id) && m.id !== 'C0')) {
-  for (const cut of cuts) {
-    write(path.join(SESSION_OUT, mission.id, `${cut[0]}.svg`), sessionSvg(mission, cut));
-    count++;
-  }
-}
-for (const item of quick) {
-  write(path.join(QUICK_OUT, `${item[0]}.svg`), quickSvg(item));
-  count++;
-}
-
-console.log(`Generated ${count} SVG scene assets.`);
+console.log(`Generated ${count} SVG scene assets. Runtime scene assets are maintained as checked-in WebP files.`);
