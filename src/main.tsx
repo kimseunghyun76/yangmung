@@ -20,3 +20,10 @@ createRoot(document.getElementById('root')!).render(
       : <App />}
   </StrictMode>,
 );
+
+// 서비스워커 — 오프라인 지원. 프로덕션 빌드에서만 등록(개발 중 캐시 혼란 방지).
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => { /* 등록 실패 무시 */ });
+  });
+}
