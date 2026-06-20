@@ -1,5 +1,5 @@
-// 받아쓰기 카드 v2 — 듣고 가나 타일을 슬롯에 채워 문장 완성.
-// 개선: 글자 슬롯(진행감) + 글자별 정/오답 피드백 + 슬롯 탭으로 정정. (진입 자동재생은 App에서 일원화)
+// 받아쓰기 카드 — 듣고 화면 가나 키패드로 직접 입력. (작문=한국어 보고 가나 타일 조립은 기존 유지)
+// 진입 자동재생은 App에서 일원화.
 import { useState } from 'react';
 import type { DictationCard } from '../learn/cards';
 import { speak, ttsSupported } from '../tts';
@@ -12,88 +12,185 @@ interface Props {
   onNext: () => void;
 }
 
-export function DictationCardView({ card, onResult, onNext }: Props) {
-  const [built, setBuilt] = useState<number[]>([]); // 고른 타일 인덱스 순서
-  const [checked, setChecked] = useState<null | boolean>(null);
+// ── 가나 키패드 데이터 (히라가나 기준, 가타카나·탁점은 코드 오프셋으로 파생) ──
+const GOJUON: string[][] = [
+  ['あ', 'い', 'う', 'え', 'お'],
+  ['か', 'き', 'く', 'け', 'こ'],
+  ['さ', 'し', 'す', 'せ', 'そ'],
+  ['た', 'ち', 'つ', 'て', 'と'],
+  ['な', 'に', 'ぬ', 'ね', 'の'],
+  ['は', 'ひ', 'ふ', 'へ', 'ほ'],
+  ['ま', 'み', 'む', 'め', 'も'],
+  ['や', '', 'ゆ', '', 'よ'],
+  ['ら', 'り', 'る', 'れ', 'ろ'],
+  ['わ', '', 'を', '', 'ん'],
+];
+const DAKUTEN: Record<string, string> = {
+  か: 'が', き: 'ぎ', く: 'ぐ', け: 'げ', こ: 'ご', さ: 'ざ', し: 'じ', す: 'ず', せ: 'ぜ', そ: 'ぞ',
+  た: 'だ', ち: 'ぢ', つ: 'づ', て: 'で', と: 'ど', は: 'ば', ひ: 'び', ふ: 'ぶ', へ: 'べ', ほ: 'ぼ', う: 'ゔ',
+};
+const HANDAKUTEN: Record<string, string> = { は: 'ぱ', ひ: 'ぴ', ふ: 'ぷ', へ: 'ぺ', ほ: 'ぽ' };
+const SMALL: Record<string, string> = { あ: 'ぁ', い: 'ぃ', う: 'ぅ', え: 'ぇ', お: 'ぉ', つ: 'っ', や: 'ゃ', ゆ: 'ゅ', よ: 'ょ', わ: 'ゎ' };
 
+const isKata = (ch: string) => ch >= 'ァ' && ch <= 'ヶ';
+const toKata = (ch: string) => (ch >= 'ぁ' && ch <= 'ゖ' ? String.fromCharCode(ch.charCodeAt(0) + 0x60) : ch);
+const toHira = (ch: string) => (isKata(ch) ? String.fromCharCode(ch.charCodeAt(0) - 0x60) : ch);
+// 마지막 글자에 탁점/반탁점/작은글자 적용 (스크립트 유지)
+function applyMod(ch: string, map: Record<string, string>): string | null {
+  const h = toHira(ch);
+  const r = map[h];
+  if (!r) return null;
+  return isKata(ch) ? toKata(r) : r;
+}
+
+function KanaKeypad({ onInput, onMod, onBack, onClear }: {
+  onInput: (ch: string) => void; onMod: (map: Record<string, string>) => void; onBack: () => void; onClear: () => void;
+}) {
+  const [kata, setKata] = useState(false);
+  const key: React.CSSProperties = { height: 38, borderRadius: 9, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontSize: 19, fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: 0 };
+  const mod: React.CSSProperties = { ...key, fontSize: 14, fontWeight: 800, background: 'var(--surface-2)' };
+  const disp = (ch: string) => (kata ? toKata(ch) : ch);
+  return (
+    <div style={{ marginTop: 12 }}>
+      <div style={{ display: 'flex', gap: 6, marginBottom: 6 }}>
+        <button className="ym-press" onClick={() => setKata(false)} style={{ ...mod, flex: 1, background: !kata ? 'var(--accent)' : 'var(--surface-2)', color: !kata ? 'var(--accent-ink)' : 'var(--ink-soft)' }} lang="ja">かな</button>
+        <button className="ym-press" onClick={() => setKata(true)} style={{ ...mod, flex: 1, background: kata ? 'var(--accent)' : 'var(--surface-2)', color: kata ? 'var(--accent-ink)' : 'var(--ink-soft)' }} lang="ja">カナ</button>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 5 }}>
+        {GOJUON.flat().map((ch, i) => (
+          ch
+            ? <button key={i} className="ym-press" onClick={() => onInput(disp(ch))} style={key} lang="ja">{disp(ch)}</button>
+            : <span key={i} />
+        ))}
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 5, marginTop: 5 }}>
+        <button className="ym-press" onClick={() => onMod(DAKUTEN)} style={mod} lang="ja" aria-label="탁점">゛</button>
+        <button className="ym-press" onClick={() => onMod(HANDAKUTEN)} style={mod} lang="ja" aria-label="반탁점">゜</button>
+        <button className="ym-press" onClick={() => onMod(SMALL)} style={mod} aria-label="작은 글자">小</button>
+        <button className="ym-press" onClick={() => onInput('ー')} style={{ ...key, fontSize: 16 }} lang="ja" aria-label="장음">ー</button>
+        <button className="ym-press" onClick={onBack} style={mod} aria-label="지우기">⌫</button>
+      </div>
+      <button className="ym-press" onClick={onClear} style={{ ...mod, width: '100%', marginTop: 5, height: 32, fontSize: 12 }}>전체 지우기</button>
+    </div>
+  );
+}
+
+export function DictationCardView({ card, onResult, onNext }: Props) {
+  const compose = card.promptKind === 'korean'; // 한→일 작문: 한국어 보고 일본어 조립(타일 유지)
+  return compose ? <ComposeBody card={card} onResult={onResult} onNext={onNext} /> : <DictationTyping card={card} onResult={onResult} onNext={onNext} />;
+}
+
+// ── 받아쓰기: 듣고 가나 키패드로 직접 입력 ──
+function DictationTyping({ card, onResult, onNext }: Props) {
+  const answer = card.answer.join('');
+  const [typed, setTyped] = useState('');
+  const [checked, setChecked] = useState<null | boolean>(null);
+  const chars = Array.from(typed);
+  const ansChars = Array.from(answer);
+  const slotCount = Math.max(ansChars.length, chars.length);
+
+  const input = (ch: string) => { if (checked === null) setTyped((t) => t + ch); };
+  const applyLast = (map: Record<string, string>) => {
+    if (checked !== null || !chars.length) return;
+    const last = chars[chars.length - 1];
+    const r = applyMod(last, map);
+    if (r) setTyped(chars.slice(0, -1).join('') + r);
+  };
+  const back = () => { if (checked === null) setTyped((t) => Array.from(t).slice(0, -1).join('')); };
+  const clear = () => { if (checked === null) setTyped(''); };
+  const check = () => { const ok = typed === answer; setChecked(ok); onResult(ok); };
+
+  return (
+    <div>
+      <h2 style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="dictation" size={22} /> 받아쓰기</h2>
+      <p style={{ color: 'var(--ink-soft)', margin: '4px 0 0' }}>듣고, 가나 키패드로 직접 입력해요</p>
+
+      <div style={{ textAlign: 'center', marginTop: 12, display: 'flex', gap: 8, justifyContent: 'center' }}>
+        <button style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: 'var(--accent-soft)' }} onClick={() => speak(card.ja)} disabled={!ttsSupported()}><Icon name="listen" size={17} /> 듣기</button>
+        <button style={{ ...BTN, padding: '10px 18px', fontSize: 14 }} onClick={() => speak(card.ja, { rate: 0.6 })} disabled={!ttsSupported()}>천천히</button>
+      </div>
+
+      {/* 입력 글자 슬롯 — 답 길이만큼 칸 + 진행감. 채점 후 글자별 정/오답 색. */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center', margin: '18px 0 6px', minHeight: 52 }}>
+        {Array.from({ length: Math.max(1, slotCount) }, (_, i) => {
+          const ch = chars[i];
+          const caret = checked === null && i === chars.length && i < ansChars.length;
+          let border = 'var(--glass-border)', bg = ch !== undefined ? 'var(--glass-bg-strong)' : 'transparent', color = 'var(--ink)';
+          if (checked !== null) {
+            const ok = ch !== undefined && ch === ansChars[i];
+            if (ch !== undefined) { border = ok ? 'var(--ok)' : 'var(--accent)'; bg = ok ? 'var(--ok-soft)' : 'var(--accent-soft)'; color = ok ? 'var(--ink)' : 'var(--accent)'; }
+          }
+          return (
+            <span key={i} lang="ja" style={{ width: 44, height: 52, borderRadius: 12, fontSize: 26, fontWeight: 700, color, border: `1.5px ${ch === undefined ? 'dashed' : 'solid'} ${caret ? 'var(--accent)' : border}`, background: bg, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{ch ?? ''}</span>
+          );
+        })}
+      </div>
+
+      {checked === null ? (
+        <>
+          <KanaKeypad onInput={input} onMod={applyLast} onBack={back} onClear={clear} />
+          <button style={{ ...PRIMARY, width: '100%', marginTop: 14 }} onClick={check} disabled={!typed}>확인</button>
+        </>
+      ) : (
+        <div className="ym-reveal" style={{ marginTop: 16 }}>
+          {checked ? (
+            <p style={{ background: 'var(--ok-soft)', padding: 12, borderRadius: 12, color: 'var(--ok)', fontWeight: 700, margin: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <Icon name="check" size={16} /> 정답! {answer} — {card.korean}
+            </p>
+          ) : (
+            <p style={{ background: 'var(--accent-soft)', padding: 12, borderRadius: 12, color: 'var(--accent)', margin: 0 }}>
+              아쉬워요. 정답은 <strong lang="ja">{answer}</strong> <span style={{ color: 'var(--ink-soft)' }}>— {card.korean}</span>
+            </p>
+          )}
+          <button style={{ ...BTN, marginTop: 10, width: '100%' }} onClick={() => speak(card.ja)} disabled={!ttsSupported()}><Icon name="listen" size={16} /> 발음 듣기</button>
+          <button style={{ ...PRIMARY, marginTop: 10, width: '100%' }} onClick={onNext}>다음</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── 작문(한→일): 한국어 보고 가나 타일 조립 (기존 유지) ──
+function ComposeBody({ card, onResult, onNext }: Props) {
+  const [built, setBuilt] = useState<number[]>([]);
+  const [checked, setChecked] = useState<null | boolean>(null);
   const usable = card.tiles.map((_, i) => !built.includes(i));
   const builtText = built.map((i) => card.tiles[i]);
   const slotCount = Math.max(card.answer.length, built.length);
 
-  function tap(i: number) {
-    if (checked !== null || !usable[i]) return;
-    setBuilt((b) => [...b, i]);
-  }
-  function removeAt(slot: number) {
-    if (checked !== null || slot >= built.length) return;
-    setBuilt((b) => [...b.slice(0, slot), ...b.slice(slot + 1)]);
-  }
-  function undo() {
-    if (checked !== null) return;
-    setBuilt((b) => b.slice(0, -1));
-  }
-  function check() {
-    const correct = builtText.length === card.answer.length && builtText.every((t, i) => t === card.answer[i]);
-    setChecked(correct);
-    onResult(correct);
-  }
-
-  const compose = card.promptKind === 'korean'; // 한→일 작문: 한국어 보고 일본어 조립
+  function tap(i: number) { if (checked === null && usable[i]) setBuilt((b) => [...b, i]); }
+  function removeAt(slot: number) { if (checked === null && slot < built.length) setBuilt((b) => [...b.slice(0, slot), ...b.slice(slot + 1)]); }
+  function undo() { if (checked === null) setBuilt((b) => b.slice(0, -1)); }
+  function check() { const ok = builtText.length === card.answer.length && builtText.every((t, i) => t === card.answer[i]); setChecked(ok); onResult(ok); }
 
   return (
     <div>
-      <h2 style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
-        <Icon name="dictation" size={22} /> {compose ? '작문' : '받아쓰기'}
-      </h2>
-      <p style={{ color: 'var(--ink-soft)', margin: '4px 0 0' }}>
-        {compose ? '뜻을 보고, 가나를 골라 일본어 문장을 만들어요' : '듣고, 가나를 순서대로 골라 문장을 만들어요'}
-      </p>
+      <h2 style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="dictation" size={22} /> 작문</h2>
+      <p style={{ color: 'var(--ink-soft)', margin: '4px 0 0' }}>뜻을 보고, 가나를 골라 일본어 문장을 만들어요</p>
 
-      {compose ? (
-        // 작문: 한국어 프롬프트를 보여줌. 정답 음성은 채점 후에만(미리 들으면 유추됨).
-        <div style={{ textAlign: 'center', marginTop: 14 }}>
-          <p style={{ fontSize: 22, fontWeight: 800, color: 'var(--ink)', margin: 0 }}>{card.korean}</p>
-          <p style={{ fontSize: 13, color: 'var(--ink-faint)', margin: '6px 0 0' }}>일본어로 만들어 보세요</p>
-        </div>
-      ) : (
-        <div style={{ textAlign: 'center', marginTop: 12, display: 'flex', gap: 8, justifyContent: 'center' }}>
-          <button style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: 'var(--accent-soft)' }} onClick={() => speak(card.ja)} disabled={!ttsSupported()}><Icon name="listen" size={17} /> 듣기</button>
-          <button style={{ ...BTN, padding: '10px 18px', fontSize: 14 }} onClick={() => speak(card.ja, { rate: 0.6 })} disabled={!ttsSupported()}>천천히</button>
-        </div>
-      )}
+      <div style={{ textAlign: 'center', marginTop: 14 }}>
+        <p style={{ fontSize: 22, fontWeight: 800, color: 'var(--ink)', margin: 0 }}>{card.korean}</p>
+        <p style={{ fontSize: 13, color: 'var(--ink-faint)', margin: '6px 0 0' }}>일본어로 만들어 보세요</p>
+      </div>
 
-      {/* 글자 슬롯 — 채워질 자리 + 진행감. 채운 글자는 탭해서 빼기. 채점 후 글자별 정/오답 색. */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center', margin: '18px 0 6px', minHeight: 52 }}>
         {Array.from({ length: slotCount }, (_, i) => {
           const ch = builtText[i];
           const caret = checked === null && i === built.length && i < card.answer.length;
-          let border = 'var(--glass-border)';
-          let bg = ch !== undefined ? 'var(--glass-bg-strong)' : 'transparent';
-          let color = 'var(--ink)';
-          if (checked !== null && ch !== undefined) {
-            const ok = ch === card.answer[i];
-            border = ok ? 'var(--ok)' : 'var(--accent)';
-            bg = ok ? 'var(--ok-soft)' : 'var(--accent-soft)';
-            color = ok ? 'var(--ink)' : 'var(--accent)';
-          }
+          let border = 'var(--glass-border)', bg = ch !== undefined ? 'var(--glass-bg-strong)' : 'transparent', color = 'var(--ink)';
+          if (checked !== null && ch !== undefined) { const ok = ch === card.answer[i]; border = ok ? 'var(--ok)' : 'var(--accent)'; bg = ok ? 'var(--ok-soft)' : 'var(--accent-soft)'; color = ok ? 'var(--ink)' : 'var(--accent)'; }
           return (
-            <button key={i} onClick={() => removeAt(i)} disabled={checked !== null || ch === undefined}
-              style={{
-                width: 44, height: 52, borderRadius: 12, fontSize: 26, fontWeight: 700, color,
-                border: `1.5px ${ch === undefined ? 'dashed' : 'solid'} ${caret ? 'var(--accent)' : border}`,
-                background: bg, cursor: checked === null && ch !== undefined ? 'pointer' : 'default',
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minHeight: 0,
-              }}>
+            <button key={i} onClick={() => removeAt(i)} disabled={checked !== null || ch === undefined} lang="ja"
+              style={{ width: 44, height: 52, borderRadius: 12, fontSize: 26, fontWeight: 700, color, border: `1.5px ${ch === undefined ? 'dashed' : 'solid'} ${caret ? 'var(--accent)' : border}`, background: bg, cursor: checked === null && ch !== undefined ? 'pointer' : 'default', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minHeight: 0 }}>
               {ch ?? ''}
             </button>
           );
         })}
       </div>
 
-      {/* 타일 */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginTop: 10 }}>
         {card.tiles.map((t, i) => (
-          <button key={i} className="ym-press" onClick={() => tap(i)} disabled={!usable[i] || checked !== null}
+          <button key={i} className="ym-press" onClick={() => tap(i)} disabled={!usable[i] || checked !== null} lang="ja"
             style={{ ...BTN, fontSize: 24, padding: '8px 16px', opacity: usable[i] ? 1 : 0.28, background: 'var(--glass-bg-strong)' }}>{t}</button>
         ))}
       </div>
@@ -111,14 +208,10 @@ export function DictationCardView({ card, onResult, onNext }: Props) {
             </p>
           ) : (
             <p style={{ background: 'var(--accent-soft)', padding: 12, borderRadius: 12, color: 'var(--accent)', margin: 0 }}>
-              아쉬워요. 정답은 <strong>{card.answer.join('')}</strong> <span style={{ color: 'var(--ink-soft)' }}>— {card.korean}</span>
+              아쉬워요. 정답은 <strong lang="ja">{card.answer.join('')}</strong> <span style={{ color: 'var(--ink-soft)' }}>— {card.korean}</span>
             </p>
           )}
-          {compose && (
-            <button style={{ ...BTN, marginTop: 10, width: '100%' }} onClick={() => speak(card.ja)} disabled={!ttsSupported()}>
-              <Icon name="listen" size={16} /> 발음 듣기
-            </button>
-          )}
+          <button style={{ ...BTN, marginTop: 10, width: '100%' }} onClick={() => speak(card.ja)} disabled={!ttsSupported()}><Icon name="listen" size={16} /> 발음 듣기</button>
           <button style={{ ...PRIMARY, marginTop: 10, width: '100%' }} onClick={onNext}>다음</button>
         </div>
       )}
