@@ -1,0 +1,17 @@
+{
+  "name": "yangmung — 일본어 여행 학습",
+  "short_name": "yangmung",
+  "description": "여행 미션으로 익히는 일본어 — 가나·표현·장면 회화",
+  "lang": "ko",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f3ed",
+  "theme_color": "#b9382e",
+  "icons": [
+    { "src": "/app-icon.png", "sizes": "192x192 512x512 1024x1024", "type": "image/png", "purpose": "any" },
+    { "src": "/app-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
