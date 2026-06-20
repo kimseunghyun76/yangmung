@@ -70,7 +70,7 @@ export const units: Unit[] = [
   {
     id: 'u_b1_station_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 역에서 행선지·환승·표·개찰구를 묻고 안내를 듣고 다음 행동을 정할 수 있다',
-    newPhraseIds: ['p_shinjuku_doko', 'p_michi_oshiete', 'p_dochira_desu_ka', 'p_ikura_desu_ka', 'p_doko_desu_ka', 'p_eki', 'p_norikae', 'p_kaisatsu', 'p_kippu', 'p_kippu_kudasai', 'p_chaaji_onegai', 'p_kaisatsu_doko', 'p_nanbansen', 'p_tsugi_wa_shibuya', 'p_nan_gousha', 'p_tsugi_de_orimasu'],
+    newPhraseIds: ['p_shinjuku_doko', 'p_michi_oshiete', 'p_dochira_desu_ka', 'p_ikura_desu_ka', 'p_doko_desu_ka', 'p_eki', 'p_norikae', 'p_kaisatsu', 'p_kippu', 'p_kippu_kudasai', 'p_chaaji_onegai', 'p_kaisatsu_doko', 'p_nanbansen', 'p_tsugi_wa_shibuya', 'p_nan_gousha', 'p_tsugi_de_orimasu', 'p_eki_wa_doko'],
   },
   {
     id: 'u_b1_hotel_core', track: 'lang', stage: 'B1', mode: 'action',

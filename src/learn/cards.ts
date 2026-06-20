@@ -770,12 +770,12 @@ export function buildCards(): Card[] {
     }
   }
 
-  // 받아쓰기/작문 대상 — 큐레이트 입문 표현(DICTATION_IDS)을 앞에, 그다음 읽기단위 2~8인 모든 표현을
-  // 자동 편입(기존 콘텐츠를 활용해 풀을 15 → 70여 개로 확장, 매번 같은 12개 반복 해소).
+  // 받아쓰기/작문 대상 — 큐레이트 입문 표현(DICTATION_IDS)을 앞에, 그다음 읽기단위 2~12인 모든 표현을
+  // 자동 편입. 상한을 12로 올려 긴 문장(점원·역무원 대사 등)도 받아쓰기·작문·한→일 풀에 포함 → 고급 레벨이 두꺼워짐.
   const dictationTargetIds: string[] = (() => {
     const fitLen = (p: typeof phrases[number]) => {
       const n = toReadingUnits(p.kana).map((u) => u.text).filter((t) => t.trim()).length;
-      return n >= 2 && n <= 8;
+      return n >= 2 && n <= 12;
     };
     const curated = DICTATION_IDS.filter((id) => phrases.some((p) => p.id === id));
     const seen = new Set(curated);
@@ -787,7 +787,8 @@ export function buildCards(): Card[] {
   const dictTier = (id: string, units: number): 1 | 2 | 3 | 4 | 5 => {
     const mt = phraseTier.get(id);
     if (mt) return mt;
-    return units <= 3 ? 1 : units <= 5 ? 2 : 3;
+    // 미션에 안 쓰인 표현은 길이로 레벨 추정 — 길수록 높은 레벨(받아쓰기 난이도↑)
+    return units <= 3 ? 1 : units <= 5 ? 2 : units <= 7 ? 3 : units <= 9 ? 4 : 5;
   };
   const pushTileCard = (id: string, kind: 'dictation' | 'compose') => {
     const p = phrases.find((x) => x.id === id);
