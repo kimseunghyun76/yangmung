@@ -570,10 +570,10 @@ export const c22: Mission = {
   tier: 3,
   place: '버스',
   scenario: '버스 타고 목적지 가기',
-  canDo: '사용자는 버스에서 목적지, IC카드 사용, 하차 위치를 확인할 수 있다',
+  canDo: '사용자는 버스에서 목적지·IC카드·정리권·하차 벨·하차 위치를 확인할 수 있다',
   unlockAfter: ['C3'],
-  sequence: ['목적지 확인', 'IC카드', '하차'],
-  speakPhraseIds: ['p_doko_desu_ka', 'p_card_tsukaemasu_ka', 'p_wakarimashita_arigatou'],
+  sequence: ['목적지 확인', 'IC카드', '정리권', '하차 벨', '하차'],
+  speakPhraseIds: ['p_doko_desu_ka', 'p_tsugi_de_orimasu', 'p_wakarimashita_arigatou'],
   steps: [
     {
       situationKo: '운전사가 어디까지 가는지 확인한다',
@@ -595,6 +595,27 @@ export const c22: Mission = {
         { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: 'IC카드 사용 안내를 받은 뒤 감사 인사 — カードをタッチして乗りましょう(카드 태그 후 승차)' },
         { text: '어느 쪽이에요?', phraseId: 'p_dochira_desu_ka', correct: false, feedback: '결제 안내 중이에요 — 방향은 내릴 때 확인해요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+      ],
+    },
+    {
+      situationKo: '뒷문으로 타고 정리권을 뽑으라는 안내를 듣는다',
+      speaker: '운전사',
+      promptPhraseId: 'p_seiriken',
+      choices: [
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「わかりました」— 整理券(せいりけん)은 탄 정류장을 기록한 번호표. 내릴 때 요금표에서 그 번호 요금을 확인해 후불로 내요(IC카드는 불필요)' },
+        { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: true, feedback: '「カード使(つか)えますか」— IC카드를 쓰면 정리권 없이 탈 때·내릴 때 터치만 하면 돼요' },
+        { text: '어느 쪽이에요?', phraseId: 'p_dochira_desu_ka', correct: false, feedback: '지금은 정리권 안내를 따르는 단계예요 — 방향은 내릴 때 확인해요' },
+        { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+      ],
+    },
+    {
+      situationKo: '목적지가 가까워져 하차 벨을 누르고 알린다',
+      speaker: '나',
+      choices: [
+        { text: '다음에서 내려요', phraseId: 'p_tsugi_de_orimasu', correct: true, feedback: '「次(つぎ)で降(お)ります」— 내리기 전 降車(こうしゃ)ボタン(하차 벨)을 눌러요. 안 누르면 정류장을 지나칠 수 있어요' },
+        { text: '여기서 세워 주세요', phraseId: 'p_koko_de_tomete', correct: false, feedback: '버스는 정해진 정류장에만 서요 — 「次で降ります」로 다음 정류장에서 내려요' },
+        { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+        { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
       ],
     },
     {
@@ -684,9 +705,9 @@ export const c24: Mission = {
   tier: 3,
   place: '렌터카',
   scenario: '렌터카 빌리고 반납',
-  canDo: '사용자는 렌터카 카운터에서 예약, 면허증, 반납 장소, 주유 조건을 확인할 수 있다',
+  canDo: '사용자는 렌터카 카운터에서 면허증·보험·반납 장소·내비·주유 조건을 확인할 수 있다',
   unlockAfter: ['C8'],
-  sequence: ['예약 확인', '반납 장소', '주유 조건'],
+  sequence: ['면허증 제시', '보험 선택', '반납 장소', '내비 안내', '주유 조건'],
   speakPhraseIds: ['p_yoyaku_shiteimasu', 'p_card_de', 'p_ryoushuusho'],
   steps: [
     {
@@ -702,6 +723,17 @@ export const c24: Mission = {
       ],
     },
     {
+      situationKo: '직원이 보험은 어떻게 할지 묻는다',
+      speaker: '카운터 직원',
+      promptPhraseId: 'p_hoken_dou',
+      choices: [
+        { text: '네, 부탁합니다 (보험 가입)', phraseId: 'p_hai_onegai', correct: true, feedback: '「はい、お願(ねが)いします」— 면책보상제도(免責補償/めんせきほしょう) 가입을 권장해요. 사고 시 자기부담금이 크게 줄어요. 하루 1,000~2,000엔 정도예요' },
+        { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: true, feedback: '「おすすめは何(なん)ですか」— 보험 종류가 헷갈리면 추천을 물어봐요. 외국인 여행자는 풀커버를 택하는 경우가 많아요' },
+        { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: true, feedback: '「いくらですか」— 보험료를 확인. 기본 보험 + 추가 보상(NOC 등)으로 나뉘어요' },
+        { text: '영수증 주세요', phraseId: 'p_ryoushuusho', correct: false, feedback: '아직 계약 중이에요 — 영수증은 정산할 때 받아요' },
+      ],
+    },
+    {
       situationKo: '차를 어디에 반납해야 하는지 안내받는다',
       speaker: '카운터 직원',
       promptPhraseId: 'p_henkyaku_basho_wa_kochira_desu',
@@ -710,6 +742,17 @@ export const c24: Mission = {
         { text: '어디예요?', phraseId: 'p_doko_desu_ka', correct: false, feedback: '방금 이쪽이라고 안내받았어요. 위치를 들었으면 확인 응답을 해요' },
         { text: '영수증 주세요', phraseId: 'p_ryoushuusho', correct: false, feedback: '반납 장소 안내 단계예요. 영수증은 계산할 때 요청해요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+      ],
+    },
+    {
+      situationKo: '직원이 내비게이션은 일본어만 된다고 안내한다',
+      speaker: '카운터 직원',
+      promptPhraseId: 'p_navi_nihongo',
+      choices: [
+        { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: true, feedback: '「使(つか)い方(かた)を教(おし)えてください」— 내비는 전화번호나 マップコード(맵코드)로 목적지를 입력해요. 직원이 기본 조작을 알려줘요' },
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「わかりました」— 일본어 내비가 부담되면 스마트폰 지도 앱을 거치대에 두고 병행해요' },
+        { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
+        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
       ],
     },
     {
@@ -731,11 +774,22 @@ export const c25: Mission = {
   tier: 3,
   place: '병원',
   scenario: '병원에서 증상 설명',
-  canDo: '사용자는 병원에서 증상, 보험 여부, 쉬운 설명 요청을 안전하게 말할 수 있다',
+  canDo: '사용자는 병원에서 문진표·증상·보험·진료 설명·처방전을 안전하게 처리할 수 있다',
   unlockAfter: ['C6'],
-  sequence: ['증상 설명', '보험 확인', '진료 설명'],
+  sequence: ['문진표 작성', '증상 설명', '보험 확인', '진료 설명', '처방전'],
   speakPhraseIds: ['p_atama_itai', 'p_onaka_itai', 'p_yasashii_nihongo'],
   steps: [
+    {
+      situationKo: '접수에서 문진표를 작성해 달라고 한다',
+      speaker: '접수 직원',
+      promptPhraseId: 'p_monshinhyou',
+      choices: [
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「わかりました」— 問診票(もんしんひょう)는 증상·병력·알레르기를 적는 표예요. 영어 양식을 달라고 「英語(えいご)のはありますか」로 물어봐도 좋아요' },
+        { text: '도와주세요', phraseId: 'p_tasukete', correct: true, feedback: '「助(たす)けてください」— 한자 양식이 어려우면 도움을 요청해요. 접수처에서 함께 작성해줄 수 있어요' },
+        { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
+        { text: '카드로요', phraseId: 'p_card_de', correct: false, feedback: '지금은 문진표를 작성하는 단계예요 — 결제는 진료 후에 해요' },
+      ],
+    },
     {
       situationKo: '접수에서 증상을 말해 달라고 한다',
       speaker: '접수 직원',
@@ -767,6 +821,17 @@ export const c25: Mission = {
         { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '의사 설명 예고에 감사 인사 — 잘 모르면 もう一度(いちど)ゆっくり教(おし)えてください로 다시 부탁해요' },
         { text: '카드로요', phraseId: 'p_card_de', correct: false, feedback: '진료 설명 안내에는 결제보다 이해 확인이 먼저예요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
+      ],
+    },
+    {
+      situationKo: '진료가 끝나고 처방전은 옆 약국으로 가라고 안내받는다',
+      speaker: '의료진',
+      promptPhraseId: 'p_shohousen_tonari',
+      choices: [
+        { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '「わかりました」— 일본은 의약분업이라 병원에서 처방전(処方箋/しょほうせん)을 받아 院外(いんがい)약국에서 약을 받아요. 처방전은 보통 4일 이내 유효해요' },
+        { text: '어디예요?', phraseId: 'p_doko_desu_ka', correct: true, feedback: '「どこですか」— 약국 위치가 헷갈리면 물어봐요. 병원 바로 옆이나 길 건너에 있는 경우가 많아요' },
+        { text: '카드로요', phraseId: 'p_card_de', correct: true, feedback: '「カードで」— 진료비를 계산. 외국인 자비 진료는 현금을 요구하는 곳도 있으니 미리 확인해요' },
+        { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
       ],
     },
   ],
