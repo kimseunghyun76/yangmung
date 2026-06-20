@@ -12,6 +12,12 @@ export default defineConfig({
           if (id.includes('node_modules/react-dom') || id.includes('node_modules/react/') || id.includes('node_modules/scheduler')) {
             return 'react-vendor';
           }
+          // 학습 콘텐츠 데이터(표현·미션·문법·어휘…)를 앱 코드와 분리 → 둘 중 하나만 바뀌어도
+          // 나머지는 캐시 적중(에디트가 잦은 앱이라 PWA 캐싱과 시너지).
+          // 단, sceneSentences/sceneSeeds(256KB)는 Admin 전용 lazy라 제외 — eager로 끌려오면 역효과.
+          if (id.includes('/src/content/') && !id.includes('sceneSentences') && !id.includes('sceneSeeds')) {
+            return 'content';
+          }
         },
       },
     },
