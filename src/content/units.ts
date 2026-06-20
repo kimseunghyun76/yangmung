@@ -130,7 +130,7 @@ export const units: Unit[] = [
       'p_hotto_de', 'p_aisu_de', 'p_shotto_tsuika', 'p_kore_nani',
       'p_kippu_nimai_kudasai', 'p_sumimasen_koko_doko', 'p_nihon_go_muzukashii',
       'p_nihongo_sukoshi_dake', 'p_chiketto_wa_kochira_desu', 'p_basho_o_oshiete_kudasai',
-      'p_saifu_nakushita', 'p_ugokemasen', 'p_kusuri_nondeimasu',
+      'p_saifu_nakushita', 'p_ugokemasen', 'p_kusuri_nondeimasu', 'p_sentaku_de', 'p_kansou_de',
     ],
   },
   {

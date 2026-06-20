@@ -1047,10 +1047,10 @@ export const c29: Mission = {
   tier: 3,
   place: '코인세탁',
   scenario: '코인세탁기 사용',
-  canDo: '사용자는 코인세탁소에서 기계 위치, 세제, 완료 시간을 확인할 수 있다',
+  canDo: '사용자는 코인세탁소에서 기계 위치·세탁/건조 코스·세제·완료 시간·건조 완료를 확인할 수 있다',
   unlockAfter: ['C4'],
-  sequence: ['기계 찾기', '세제 확인', '완료 시간'],
-  speakPhraseIds: ['p_tsukaikata', 'p_ikura_desu_ka', 'p_wakarimashita_arigatou'],
+  sequence: ['기계 찾기', '코스 선택', '세제 확인', '완료 시간', '건조 완료'],
+  speakPhraseIds: ['p_tsukaikata', 'p_sentaku_de', 'p_wakarimashita_arigatou'],
   steps: [
     {
       situationKo: '직원 또는 주변 사람이 세탁기 위치를 알려준다',
@@ -1061,6 +1061,17 @@ export const c29: Mission = {
         { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: true, feedback: '「いくらですか」— 세탁(洗濯) 600~700엔, 건조(乾燥) 100엔/8분 정도. 동전 100엔짜리 여러 개 미리 준비해요' },
         { text: '스이카로요', phraseId: 'p_suica_de', correct: false, feedback: '코인세탁기는 보통 동전으로 써요 — 먼저 사용법을 물어봐요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
+      ],
+    },
+    {
+      situationKo: '직원이 세탁인지 건조인지 묻는다',
+      speaker: '안내 직원',
+      promptPhraseId: 'p_sentaku_kansou',
+      choices: [
+        { text: '세탁이요', phraseId: 'p_sentaku_de', correct: true, feedback: '「洗濯(せんたく)で」— 빨래를 처음부터 할 때. 일체형 기계는 洗濯から乾燥まで(세탁부터 건조까지) 한 번에 되는 곳도 있어요' },
+        { text: '건조요', phraseId: 'p_kansou_de', correct: true, feedback: '「乾燥(かんそう)で」— 빨래만 따로 말릴 때. 호텔에서 손빨래한 옷을 건조기만 돌리러 오기도 해요' },
+        { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: true, feedback: '「使(つか)い方(かた)を教(おし)えてください」— 코스 선택이 헷갈리면 물어봐요. 그림 안내가 붙어 있는 기계도 많아요' },
+        { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -1085,6 +1096,17 @@ export const c29: Mission = {
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
       ],
     },
+    {
+      situationKo: '건조가 끝났다는 안내를 듣고 빨래를 꺼낸다',
+      speaker: '안내 직원',
+      promptPhraseId: 'p_kansou_owari',
+      choices: [
+        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 빨래를 바로 꺼내요. 다음 사람을 위해 기계를 비워두는 게 매너예요' },
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「わかりました」— 덜 말랐으면 동전을 더 넣어 시간을 추가할 수 있어요' },
+        { text: '건조요', phraseId: 'p_kansou_de', correct: true, feedback: '「乾燥(かんそう)で」— 더 말리고 싶으면 건조를 한 번 더. 두꺼운 옷은 시간이 더 필요해요' },
+        { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: false, feedback: '요금은 이미 냈어요 — 지금은 빨래를 꺼내 마무리하면 돼요' },
+      ],
+    },
   ],
 };
 
@@ -1093,9 +1115,9 @@ export const c30: Mission = {
   tier: 3,
   place: '축제',
   scenario: '축제와 행사 즐기기',
-  canDo: '사용자는 축제에서 표, 먹거리, 사진, 입구 방향을 확인할 수 있다',
+  canDo: '사용자는 축제에서 표·먹거리·노점 게임·입구 방향·불꽃놀이 자리를 확인할 수 있다',
   unlockAfter: ['C18'],
-  sequence: ['표 사기', '먹거리 주문', '입구 확인'],
+  sequence: ['표 사기', '먹거리 주문', '노점 게임', '입구 확인', '불꽃놀이 자리'],
   speakPhraseIds: ['p_kippu_kudasai', 'p_kore_kudasai', 'p_shashin_ii'],
   steps: [
     {
@@ -1121,6 +1143,17 @@ export const c30: Mission = {
       ],
     },
     {
+      situationKo: '노점 주인이 금붕어 뜨기를 권한다',
+      speaker: '노점 점원',
+      promptPhraseId: 'p_kingyo_sukui',
+      choices: [
+        { text: '이거 주세요', phraseId: 'p_kore_kudasai', correct: true, feedback: '「これをください」— 金魚(きんぎょ)すくい·射的(しゃてき, 사격)·輪投(わな)げ는 일본 축제 노점 게임. 종이 뜰채(ポイ)로 금붕어를 떠요' },
+        { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: true, feedback: '「いくらですか」— 노점 게임은 보통 1회 300~500엔. 잡은 금붕어를 가져가거나 경품으로 바꾸기도 해요' },
+        { text: '이건 뭐예요?', phraseId: 'p_kore_nani', correct: true, feedback: '「これは何(なん)ですか」— 처음 보는 게임이나 간식을 물어봐요. 점원이 신나게 설명해줘요' },
+        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
+      ],
+    },
+    {
       situationKo: '입구 방향과 사진 가능 여부를 확인한다',
       speaker: '안내 직원',
       promptPhraseId: 'p_iriguchi_wa_migi_desu',
@@ -1128,6 +1161,17 @@ export const c30: Mission = {
         { text: '사진 찍어도 돼요?', phraseId: 'p_shashin_ii', correct: true, feedback: '「写真(しゃしん)いいですか」— 퍼레이드·공연 촬영 전 허가를 구하는 에티켓. 손짓으로 카메라를 가리키며 묻는 것도 통해요' },
         { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '입구 방향 안내에 감사 — 오른쪽(右/みぎ)·왼쪽(左/ひだり) 방향 확인 후 이동해요' },
         { text: '표 두 장 주세요', phraseId: 'p_kippu_nimai_kudasai', correct: false, feedback: '표는 이미 샀어요 — 지금은 입구 방향과 촬영 여부를 확인해요' },
+        { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
+      ],
+    },
+    {
+      situationKo: '직원이 불꽃놀이는 강변에서 볼 수 있다고 안내한다',
+      speaker: '안내 직원',
+      promptPhraseId: 'p_hanabi_kasenjiki',
+      choices: [
+        { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '「わかりました」— 花火大会(はなびたいかい)는 河川敷(かせんじき, 강변)에서 잘 보여요. 명당은 일찍 자리를 잡아야 해요. 浴衣(유카타) 차림도 운치 있어요' },
+        { text: '어디예요?', phraseId: 'p_doko_desu_ka', correct: true, feedback: '「どこですか」— 강변 위치를 구체적으로 확인. 지도 앱과 함께 보면 길을 잃지 않아요' },
+        { text: '사진 찍어도 돼요?', phraseId: 'p_shashin_ii', correct: true, feedback: '「写真(しゃしん)いいですか」— 불꽃놀이는 삼각대 사용이 제한되는 곳도 있어요. 주변에 방해되지 않게 촬영해요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
       ],
     },
