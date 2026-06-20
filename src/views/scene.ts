@@ -4,78 +4,6 @@ import type { IconName } from '../ui/Icon';
 
 export interface SceneVisual { emoji: string; icon: IconName; bg: string; accent: string; thumb?: string; hero?: string; backdrop?: string; success?: string; loop?: string }
 
-const BACKDROPS: Record<string, string> = {
-  C1: '/scenes/generated/c1-conbini-bg.webp',
-  C2: '/scenes/generated/c2-restaurant-bg.webp',
-  C3: '/scenes/generated/c3-train-bg.webp',
-  C4: '/scenes/generated/c4-hotel-bg.webp',
-  C5: '/scenes/generated/c5-street-bg.webp',
-  C6: '/scenes/generated/c6-pharmacy-bg.webp',
-  C7: '/scenes/generated/c7-shopping-bg.webp',
-  C8: '/scenes/generated/c8-taxi-bg.webp',
-  C9: '/scenes/generated/c9-airport-bg.webp',
-  C10: '/scenes/generated/c10-exchange-bg.webp',
-  C11: '/scenes/generated/c11-locker-bg.webp',
-  C12: '/scenes/generated/c12-delivery-bg.webp',
-  C13: '/scenes/generated/c13-ramen-bg.webp',
-  C14: '/scenes/generated/c14-cafe-bg.webp',
-  C15: '/scenes/generated/c15-bakery-bg.webp',
-  C16: '/scenes/generated/c16-izakaya-bg.webp',
-  C17: '/scenes/generated/c17-sushi-bg.webp',
-  C18: '/scenes/generated/c18-tourist-info-bg.webp',
-  C19: '/scenes/generated/c19-shrine-bg.webp',
-  C20: '/scenes/generated/c20-onsen-bg.webp',
-  C21: '/scenes/generated/c21-ryokan-bg.webp',
-  C22: '/scenes/generated/c22-bus-bg.webp',
-  C23: '/scenes/generated/c23-shinkansen-bg.webp',
-  C24: '/scenes/generated/c24-rental-car-bg.webp',
-  C25: '/scenes/generated/c25-hospital-bg.webp',
-  C26: '/scenes/generated/c26-police-bg.webp',
-  C27: '/scenes/generated/c27-emergency-bg.webp',
-  C28: '/scenes/generated/c28-telecom-bg.webp',
-  C29: '/scenes/generated/c29-laundromat-bg.webp',
-  C30: '/scenes/generated/c30-festival-bg.webp',
-  C31: '/scenes/generated/c31-kaiten-sushi-bg.webp',
-  C32: '/scenes/generated/c32-fashion-fitting-bg.webp',
-  C33: '/scenes/generated/c33-hotel-umbrella-bg.webp',
-  C34: '/scenes/generated/c34-hotel-room-change-bg.webp',
-  C35: '/scenes/generated/c35-narita-ticket-bg.webp',
-  C36: '/scenes/generated/c36-airport-baggage-bg.webp',
-  C37: '/scenes/generated/c37-breakfast-buffet-bg.webp',
-  C38: '/scenes/generated/c38-sushi-extra-bg.webp',
-  C39: '/scenes/generated/c39-pasta-options-bg.webp',
-  C40: '/scenes/generated/c40-fashion-checkout-bg.webp',
-  C41: '/scenes/generated/c41-refund-exchange-bg.webp',
-  C42: '/scenes/generated/c42-vending-machine-bg.webp',
-  C43: '/scenes/generated/c43-atm-bg.webp',
-  C44: '/scenes/generated/c44-copy-machine-bg.webp',
-  C45: '/scenes/generated/c45-mobile-pickup-bg.webp',
-  C46: '/scenes/generated/c46-stadium-bg.webp',
-  C47: '/scenes/generated/c47-mall-info-bg.webp',
-  C48: '/scenes/generated/c48-prescription-pharmacy-bg.webp',
-  C49: '/scenes/generated/c49-omakase-sushi-bg.webp',
-  C50: '/scenes/generated/c50-lost-street-bg.webp',
-};
-const LEGACY_SCENE_IMAGES = new Set(['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12', 'C13']);
-
-const MANGA_BACKDROPS = {
-  shop: [
-    '/scenes/manga-variants/solo-shop-01.webp',
-    '/scenes/manga-variants/ff-shop-01.webp',
-    '/scenes/manga-variants/mf-shop-01.webp',
-  ],
-  restaurant: [
-    '/scenes/manga-variants/solo-restaurant-02.webp',
-    '/scenes/manga-variants/ff-restaurant-02.webp',
-    '/scenes/manga-variants/mf-restaurant-02.webp',
-  ],
-  street: [
-    '/scenes/manga-variants/solo-street-03.webp',
-    '/scenes/manga-variants/ff-street-03.webp',
-    '/scenes/manga-variants/mf-street-03.webp',
-  ],
-} as const;
-
 const SESSION_MANGA_IDS = new Set(Array.from({ length: 50 }, (_, i) => `C${i + 1}`));
 const SESSION_MANGA_NAMES = [
   'solo-shop-01',
@@ -91,8 +19,7 @@ const SESSION_MANGA_NAMES = [
 
 export function isMangaSceneImage(src?: string): boolean {
   return !!src && (
-    src.includes('/scenes/manga-variants/')
-    || src.includes('/scenes/session-variants/')
+    src.includes('/scenes/session-variants/')
     || src.includes('/scenes/quick-practice/')
   );
 }
@@ -101,7 +28,7 @@ export function quickPracticeBackdrop(kind: string): string {
   return `/scenes/quick-practice/${kind}.webp`;
 }
 
-type MangaBackdropGroup = keyof typeof MANGA_BACKDROPS;
+type MangaBackdropGroup = 'shop' | 'restaurant' | 'street';
 
 const SHOP_PLACES = new Set([
   '편의점', '쇼핑', '약국', '환전', '통신매장', '편집샵피팅', '편집샵계산',
@@ -133,7 +60,7 @@ function mangaBackdropPool(missionId: string, place?: string): readonly string[]
       .filter((name) => name.includes(`-${group}-`))
       .map((name) => `/scenes/session-variants/${missionId}/${name}.webp`);
   }
-  return MANGA_BACKDROPS[group];
+  return [];
 }
 
 function mangaBackdropFor(missionId?: string, place?: string): string | undefined {
@@ -164,8 +91,8 @@ export function sceneBackdropForCard(missionId?: string, cardIndex = 0): string 
   if (!missionId) return undefined;
   const m = CONTENT.missions.find((x) => x.id === missionId);
   const pool = mangaBackdropPool(missionId, m?.place);
-  if (!pool.length) return BACKDROPS[missionId];
-  return pool[(backdropSeed + cardIndex) % pool.length] ?? BACKDROPS[missionId];
+  if (!pool.length) return undefined;
+  return pool[(backdropSeed + cardIndex) % pool.length];
 }
 
 const BY_PLACE: Record<string, SceneVisual> = {
@@ -225,17 +152,11 @@ const DEFAULT: SceneVisual = { emoji: '旅', icon: 'scene-store', bg: '#f6e4df',
 
 export function sceneVisualByPlace(place?: string): SceneVisual {
   const base = (place && BY_PLACE[place]) || DEFAULT;
-  const mission = place ? CONTENT.missions.find((m) => m.place === place && BACKDROPS[m.id]) : undefined;
+  const mission = place ? CONTENT.missions.find((m) => m.place === place && SESSION_MANGA_IDS.has(m.id)) : undefined;
   if (!mission) return base;
-  const key = mission.id.toLowerCase();
-  const legacy = LEGACY_SCENE_IMAGES.has(mission.id) ? {
-    thumb: `/scenes/${key}-thumb.webp`,
-    hero: `/scenes/${key}-hero.webp`,
-  } : {};
   return {
     ...base,
-    ...legacy,
-    backdrop: mangaBackdropFor(mission.id, mission.place) ?? BACKDROPS[mission.id],
+    backdrop: mangaBackdropFor(mission.id, mission.place),
   };
 }
 
@@ -244,14 +165,8 @@ export function sceneVisualByMission(missionId?: string): SceneVisual {
   const m = CONTENT.missions.find((x) => x.id === missionId);
   const base = sceneVisualByPlace(m?.place);
   const v = m?.visual;
-  const key = missionId?.toLowerCase();
-  const hasLegacyImage = !!missionId && !!key && LEGACY_SCENE_IMAGES.has(missionId);
-  const generated = {
-    ...(hasLegacyImage ? {
-      thumb: `/scenes/${key}-thumb.webp`,
-      hero: `/scenes/${key}-hero.webp`,
-    } : {}),
-    ...(missionId && BACKDROPS[missionId] ? { backdrop: mangaBackdropFor(missionId, m?.place) ?? BACKDROPS[missionId] } : {}),
+  const generated: Pick<SceneVisual, 'thumb' | 'hero' | 'backdrop'> = {
+    ...(missionId && SESSION_MANGA_IDS.has(missionId) ? { backdrop: mangaBackdropFor(missionId, m?.place) } : {}),
   };
   if (!v) return { ...base, ...generated };
   return {
