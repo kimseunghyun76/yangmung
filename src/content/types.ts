@@ -141,14 +141,6 @@ export type ReviewTarget =
   | { type: 'grammar'; id: string }
   | { type: 'mission'; id: CLevel };
 
-export interface SrsCard {
-  target: ReviewTarget;
-  ease: number;
-  intervalDays: number;
-  dueAt: string;
-  lapses: number;
-}
-
 export interface ContentBundle {
   kana: KanaItem[];
   phrases: Phrase[];

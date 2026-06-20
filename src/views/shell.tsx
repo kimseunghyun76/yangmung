@@ -1,7 +1,6 @@
 // Scene UI Shell — 홈·세션이 공유하는 "장면 배경 + 글래스 패널 + 강한 CTA" 공통 구조.
 // Immersive Scene Coach의 뼈대. (UI_REDESIGN_PROPOSAL.md §4,§5 참고)
 import type { CSSProperties, ReactNode } from 'react';
-import { isMangaSceneImage } from './scene';
 
 // #rrggbb → rgba(.., a)  — 장면 accent 틴트용
 export function hexA(hex: string, a: number): string {
@@ -44,44 +43,3 @@ export function GlassPanel({ children, style, scroll, strong }: {
   );
 }
 
-// 장면 히어로 — 장면 컬러 일러스트 + accent 틴트 + 하단 스크림. 그 위에 콘텐츠(콘텐츠는 흰 글자).
-export function SceneHero({ hero, accent, kicker, title, children, minH = 210, style }: {
-  hero?: string; accent: string; kicker?: ReactNode; title?: ReactNode; children?: ReactNode; minH?: number; style?: CSSProperties;
-}) {
-  const showFullHero = isMangaSceneImage(hero);
-  return (
-    <div style={{
-      position: 'relative', borderRadius: 24, overflow: 'hidden', minHeight: minH,
-      background: `linear-gradient(165deg, ${hexA(accent, 0.16)}, ${hexA(accent, 0.30)})`,
-      border: '1px solid var(--glass-border)', boxShadow: 'var(--glass-shadow)', ...style,
-    }}>
-      {hero && showFullHero && (
-        <img src={hero} alt="" aria-hidden style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'contain',
-          opacity: 0.34,
-          filter: 'blur(14px) saturate(.82) contrast(.96) brightness(1.08)',
-        }} />
-      )}
-      {hero && <img src={hero} alt="" aria-hidden style={{
-        position: 'absolute',
-        inset: showFullHero ? 0 : 0,
-        width: '100%',
-        height: '100%',
-        objectFit: showFullHero ? 'contain' : 'cover',
-        opacity: showFullHero ? 1 : 0.9,
-        filter: 'saturate(.82) contrast(.96) brightness(1.08)',
-      }} />}
-      {/* 스크림 — 전반적으로 어둡게(테마 무관) 해서 흰 텍스트 가독 확보 */}
-      <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.34) 45%, rgba(0,0,0,0.68) 100%)' }} />
-      <div style={{ position: 'relative', minHeight: minH, padding: 18, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', color: '#fff' }}>
-        {kicker && <p style={{ margin: 0, fontSize: 12, fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', textShadow: '0 1px 6px rgba(0,0,0,0.5)' }}>{kicker}</p>}
-        {title && <p style={{ margin: '6px 0 0', fontSize: 25, fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.02em', textShadow: '0 1px 10px rgba(0,0,0,0.55)' }}>{title}</p>}
-        {children}
-      </div>
-    </div>
-  );
-}

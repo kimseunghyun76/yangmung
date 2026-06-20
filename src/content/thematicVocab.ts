@@ -19,5 +19,3 @@ export interface VocabGroup {
 
 const raw = rawData as { groups: VocabGroup[] };
 export const VOCAB_GROUPS: VocabGroup[] = raw.groups;
-export const VOCAB_GROUP_MAP: Map<string, VocabGroup> = new Map(VOCAB_GROUPS.map((g) => [g.id, g]));
-export const ALL_VOCAB_ITEMS: VocabItem[] = VOCAB_GROUPS.flatMap((g) => g.items);

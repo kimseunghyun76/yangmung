@@ -726,11 +726,6 @@ export function selectFlashCardsByMode(
   return shuffleKana(pool.slice(0, Math.max(limit, 8))).slice(0, limit);
 }
 
-// 하위 호환 — 기존 호출부(블리츠 모드로 동작)
-export function selectFlashCards(allCards: Card[], progress: ProgressMap, limit = 12): Card[] {
-  return selectFlashCardsByMode(allCards, progress, 'blitz', limit);
-}
-
 // 한→일 작문 전용 덱 — 한국어 보고 가나 타일로 일본어 조립(산출 강화).
 export function selectComposeCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit = 12): Card[] {
   const due: Card[] = [], fresh: Card[] = [];
@@ -811,19 +806,3 @@ export function isKanaReadStable(progress: ProgressMap, kanaId: string): boolean
   return !!p && p.consecutiveCorrect >= 2;
 }
 
-// 홈 카운트 (오늘 복습/신규)
-export function sessionCounts(
-  allCards: Card[],
-  progress: ProgressMap,
-  currentSessionId: number,
-): { due: number; fresh: number; cooldown: number; total: number } {
-  let due = 0, fresh = 0, cooldown = 0;
-  for (const c of allCards) {
-    if (c.kind !== 'quiz') continue;
-    const s = classifyCard(c, progress[c.id], currentSessionId);
-    if (s === 'due') due++;
-    else if (s === 'new') fresh++;
-    else cooldown++;
-  }
-  return { due, fresh, cooldown, total: due + fresh + cooldown };
-}
