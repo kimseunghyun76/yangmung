@@ -241,7 +241,6 @@ function randomGachaDrawCount(): number {
   const table: { count: number; weight: number }[] = [
     { count: 1, weight: 30 },
     { count: 2, weight: 20 },
-    { count: 3, weight: 10 },
     { count: 5, weight: 20 },
     { count: 10, weight: 10 },
     { count: 20, weight: 7 },
@@ -435,7 +434,22 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
 
       {phase === 'open' && typeof document !== 'undefined' && createPortal(
         <div onClick={overlayTap} className={`ym-gacha-stage ${stage === 'cards' ? 'is-burst' : ''}`}
-          style={{ ['--gacha-color' as string]: box.colors[1], position: 'fixed', inset: 0, zIndex: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, padding: 'max(14px, env(safe-area-inset-top)) 18px max(14px, env(safe-area-inset-bottom))', background: 'radial-gradient(circle at 50% 34%, rgba(255,255,255,0.16), transparent 24%), rgba(0,0,0,0.72)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
+          style={{
+            ['--gacha-color' as string]: box.colors[1],
+            position: 'fixed',
+            inset: 0,
+            zIndex: 200,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 10,
+            padding: 'max(14px, env(safe-area-inset-top)) 18px max(14px, env(safe-area-inset-bottom))',
+            background: 'radial-gradient(circle at 50% 28%, rgba(255,230,165,.24), transparent 25%), radial-gradient(circle at 22% 18%, rgba(89,204,226,.12), transparent 28%), linear-gradient(140deg, rgba(8,7,4,.94), rgba(38,27,11,.9) 48%, rgba(8,12,22,.96))',
+            boxShadow: 'inset 0 0 140px rgba(255,216,128,.16), inset 0 0 260px rgba(0,0,0,.45)',
+            backdropFilter: 'blur(10px) saturate(1.08)',
+            WebkitBackdropFilter: 'blur(10px) saturate(1.08)',
+          }}>
           <span className="ym-gacha-comic-bg" aria-hidden />
           {capState === 'pop' && stage !== 'crank' && <span className="ym-manga-lines" aria-hidden />}
           {stage === 'cards' && <BurstParticles color={box.colors[1]} />}

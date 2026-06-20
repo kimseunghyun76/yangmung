@@ -569,15 +569,15 @@
       .ym-gacha-card-pile > .ym-gacha-draw-card { position: relative; z-index: 8; }
       .ym-gacha-pile-back { position: absolute; left: calc(50% - 48px + var(--pile-offset) * 9px); top: calc(50% - 72px + var(--pile-offset) * -4px); z-index: calc(7 - var(--pile-offset)); transform: rotate(calc(var(--pile-offset) * 4deg)); filter: brightness(.86); pointer-events: none; }
       .ym-gacha-opened-stack {
-        display: flex; align-items: center; justify-content: flex-start; min-height: 236px;
-        width: min(94vw, 680px); max-width: min(94vw, 680px); overflow-x: auto; overflow-y: visible;
-        padding: 9px 18px 14px 18px; scrollbar-width: thin;
+        display: flex; align-items: center; justify-content: flex-start; min-height: 248px;
+        width: min(96vw, 760px); max-width: min(96vw, 760px); overflow-x: auto; overflow-y: visible;
+        padding: 12px 22px 18px 22px; scrollbar-width: thin;
         -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
         mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
       }
       .ym-gacha-opened-stack-card {
-        flex: 0 0 auto; position: relative; margin-left: -118px; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer;
-        filter: drop-shadow(0 14px 16px rgba(0,0,0,.3));
+        flex: 0 0 auto; position: relative; margin-left: -106px; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer;
+        filter: drop-shadow(0 18px 20px rgba(0,0,0,.36));
         transition: transform .18s ease, filter .18s ease; animation: ym-gacha-card-settle .42s cubic-bezier(.2,.86,.28,1.1) both;
       }
       .ym-gacha-opened-stack-card:first-child { margin-left: 0; }
@@ -586,14 +586,15 @@
       .ym-gacha-opened-stack-card:hover,
       .ym-gacha-opened-stack-card:focus-within { transform: translateY(-8px) rotate(0); filter: drop-shadow(0 18px 22px rgba(0,0,0,.38)); z-index: 30; }
       .ym-gacha-rare-burst {
-        position: fixed; left: 50%; top: 34%; z-index: 12; transform: translate(-50%,-50%);
+        position: fixed; left: 50%; top: 44%; z-index: 12; transform: translate(-50%,-50%);
         display: grid; place-items: center; pointer-events: none; text-align: center;
-        min-width: min(76vw, 340px); padding: 16px 26px; border-radius: 24px;
+        min-width: min(82vw, 420px); padding: 18px 30px; border-radius: 26px;
         color: #fff8dc; border: 2px solid color-mix(in srgb, var(--rarity-color,#f0a23a), #fff 28%);
         background:
-          radial-gradient(circle at 50% 0%, rgba(255,255,255,.42), transparent 42%),
-          linear-gradient(135deg, color-mix(in srgb, var(--rarity-color,#f0a23a), #fff 14%), color-mix(in srgb, var(--rarity-color,#f0a23a), #000 20%));
-        box-shadow: 0 0 34px color-mix(in srgb, var(--rarity-color,#f0a23a), transparent 24%), 0 24px 56px rgba(0,0,0,.42);
+          linear-gradient(112deg, transparent 0 28%, rgba(255,255,255,.34) 42%, transparent 56%),
+          radial-gradient(circle at 50% 0%, rgba(255,255,255,.52), transparent 44%),
+          linear-gradient(135deg, color-mix(in srgb, var(--rarity-color,#f0a23a), #fff 18%), color-mix(in srgb, var(--rarity-color,#f0a23a), #000 26%));
+        box-shadow: 0 0 48px color-mix(in srgb, var(--rarity-color,#f0a23a), transparent 18%), 0 28px 72px rgba(0,0,0,.52), inset 0 1px 0 rgba(255,255,255,.5);
         animation: ym-gacha-rare-burst 1.45s cubic-bezier(.16,.88,.22,1.14) both;
       }
       .ym-gacha-rare-burst span { font-size: clamp(34px, 11vw, 70px); line-height: .9; font-weight: 1000; letter-spacing: .08em; -webkit-text-stroke: 2px rgba(32,36,47,.72); text-shadow: 0 0 18px rgba(255,255,255,.38); }
@@ -741,7 +742,7 @@
         min-height: 374px;
         display: grid;
         place-items: center;
-        filter: drop-shadow(0 18px 24px rgba(0,0,0,.35));
+        filter: drop-shadow(0 22px 28px rgba(0,0,0,.46)) saturate(1.04) contrast(1.03);
       }
       .ym-gpn-image-machine.is-active {
         animation: ym-gpn-machine-run .42s ease-in-out infinite;
@@ -767,6 +768,7 @@
         user-select: none;
         pointer-events: none;
         transform-origin: 50% 78%;
+        filter: drop-shadow(0 0 12px rgba(255,226,160,.18));
       }
       .ym-gpn-dome-overlay {
         position: absolute;
@@ -780,7 +782,7 @@
         box-shadow: none;
         overflow: hidden;
         mix-blend-mode: normal;
-        opacity: .92;
+        opacity: .96;
       }
       .ym-gpn-dome-vortex {
         position: absolute;
@@ -790,10 +792,10 @@
         bottom: 4%;
         border-radius: 999px 999px 40px 40px;
         pointer-events: none;
-        opacity: .18;
+        opacity: .24;
         background:
-          conic-gradient(from 0deg at 50% 54%, transparent 0 18deg, rgba(255,255,255,.38) 20deg 28deg, transparent 31deg 78deg, rgba(255,255,255,.24) 82deg 92deg, transparent 96deg 162deg, rgba(255,255,255,.28) 166deg 176deg, transparent 180deg);
-        filter: blur(.2px);
+          conic-gradient(from 0deg at 50% 54%, transparent 0 16deg, rgba(255,236,185,.44) 20deg 29deg, transparent 33deg 74deg, rgba(125,219,236,.24) 80deg 93deg, transparent 98deg 154deg, rgba(255,255,255,.34) 164deg 178deg, transparent 184deg);
+        filter: blur(.25px);
       }
       .ym-gpn-dome-overlay.is-spin .ym-gpn-dome-vortex {
         animation: ym-gpn-dome-vortex .72s linear infinite;
@@ -804,23 +806,24 @@
         pointer-events: none;
         border-radius: inherit;
         background:
-          radial-gradient(ellipse at 28% 16%, rgba(255,255,255,.62), rgba(255,255,255,.14) 17%, transparent 28%),
-          linear-gradient(112deg, transparent 0 31%, rgba(255,255,255,.32) 36%, transparent 43% 100%),
-          radial-gradient(ellipse at 50% 100%, rgba(255,255,255,.22), transparent 48%);
+          radial-gradient(ellipse at 28% 15%, rgba(255,255,255,.78), rgba(255,255,255,.16) 18%, transparent 30%),
+          linear-gradient(112deg, transparent 0 29%, rgba(255,255,255,.38) 36%, transparent 45% 100%),
+          radial-gradient(ellipse at 50% 100%, rgba(255,244,210,.25), transparent 50%),
+          linear-gradient(180deg, rgba(255,255,255,.18), transparent 54%);
         mix-blend-mode: screen;
-        opacity: .78;
+        opacity: .86;
       }
       .ym-gpn-dome-overlay.is-spin {
         background:
-          radial-gradient(circle at 50% 48%, rgba(255,255,255,.18), transparent 38%),
-          conic-gradient(from 0deg at 50% 54%, rgba(255,255,255,.16), transparent 18%, rgba(255,255,255,.22), transparent 42%, rgba(255,255,255,.18), transparent 70%);
-        box-shadow: inset 0 0 28px rgba(255,255,255,.28), 0 0 22px color-mix(in srgb, var(--gacha-color,#e55c4f), transparent 35%);
+          radial-gradient(circle at 50% 48%, rgba(255,255,255,.22), transparent 38%),
+          conic-gradient(from 0deg at 50% 54%, rgba(255,232,170,.2), transparent 18%, rgba(134,220,236,.22), transparent 42%, rgba(255,255,255,.18), transparent 70%);
+        box-shadow: inset 0 0 34px rgba(255,255,255,.34), inset 0 -20px 32px rgba(20,40,80,.2), 0 0 30px color-mix(in srgb, var(--gacha-color,#e55c4f), transparent 30%);
       }
       .ym-gpn-dome-overlay::after { display: none; }
       .ym-gpn-image-machine .ym-gpn-ball {
-        width: 34px;
-        height: 26px;
-        opacity: .88;
+        width: 36px;
+        height: 28px;
+        opacity: .94;
         transform: rotate(var(--cap-rot,-10deg)) scale(var(--cap-scale,1));
       }
       .ym-gpn-dome-overlay.is-spin .ym-gpn-ball {
@@ -892,21 +895,21 @@
         position: absolute;
         inset: -12%;
         pointer-events: none;
-        opacity: .34;
+        opacity: .42;
         background:
-          repeating-conic-gradient(from -8deg at 50% 46%, transparent 0deg 7deg, rgba(255,255,255,.26) 7.5deg 9deg),
-          radial-gradient(circle at 26% 22%, rgba(255,255,255,.34), transparent 13%),
-          radial-gradient(circle at 78% 68%, var(--gacha-color, #f0a23a), transparent 18%);
+          repeating-conic-gradient(from -8deg at 50% 46%, transparent 0deg 8deg, rgba(255,236,185,.22) 8.5deg 10deg),
+          radial-gradient(circle at 26% 22%, rgba(255,255,255,.3), transparent 13%),
+          radial-gradient(circle at 78% 68%, color-mix(in srgb, var(--gacha-color, #f0a23a), #fff 16%), transparent 18%);
         -webkit-mask: radial-gradient(circle at 50% 46%, transparent 0 16%, #000 28%, #000 78%, transparent 86%);
         mask: radial-gradient(circle at 50% 46%, transparent 0 16%, #000 28%, #000 78%, transparent 86%);
         animation: ym-gacha-rays 1.3s cubic-bezier(.2,.8,.2,1) both;
       }
       .ym-gacha-stage {
         background:
-          radial-gradient(circle at 50% 30%, rgba(255,255,255,.22) 0 2px, transparent 3px),
-          radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--gacha-color, #e55c4f), transparent 24%), transparent 36%),
-          radial-gradient(circle at 20% 78%, rgba(255,255,255,.1), transparent 26%),
-          linear-gradient(180deg, rgba(19,21,33,.92), rgba(6,8,14,.96)) !important;
+          radial-gradient(circle at 50% 28%, rgba(255,230,165,.24), transparent 25%),
+          radial-gradient(circle at 23% 18%, rgba(93,213,232,.12), transparent 28%),
+          radial-gradient(circle at 78% 72%, color-mix(in srgb, var(--gacha-color, #e55c4f), transparent 30%), transparent 27%),
+          linear-gradient(140deg, rgba(8,7,4,.94), rgba(38,27,11,.9) 48%, rgba(8,12,22,.96)) !important;
       }
       .ym-gacha-stage::before {
         background:
@@ -916,11 +919,11 @@
       }
       .ym-mcard {
         background:
-          linear-gradient(90deg, rgba(255,255,255,.52), transparent 18%, rgba(255,255,255,.22) 54%, transparent 78%),
-          repeating-linear-gradient(90deg, rgba(255,255,255,.06) 0 1px, transparent 1px 8px),
-          linear-gradient(180deg, #fbfbf8, #e6dfce 66%, #c8b895);
-        border: 2px solid color-mix(in srgb, var(--rarity-color,#d78f73), #fff 18%);
-        box-shadow: 0 0 0 1px rgba(255,255,255,.42), 0 0 0 4px #1e2430, 0 16px 34px rgba(0,0,0,.34);
+          linear-gradient(115deg, rgba(255,255,255,.58), transparent 17%, rgba(255,255,255,.18) 53%, transparent 76%),
+          repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 1px, transparent 1px 8px),
+          linear-gradient(180deg, #fffdf5, #eee4cf 64%, #bea979);
+        border: 2px solid color-mix(in srgb, var(--rarity-color,#d78f73), #fff 24%);
+        box-shadow: 0 0 0 1px rgba(255,255,255,.52), 0 0 0 4px #161b25, 0 20px 42px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.72);
       }
       .ym-mcard::before {
         background:
@@ -1014,34 +1017,39 @@
       .ym-mcard.is-basic { --rarity-color:#9aa3ad; }
       .ym-mcard.is-bronze {
         background:
+          linear-gradient(115deg, rgba(255,255,255,.4), transparent 26%, rgba(255,230,190,.24) 54%, transparent 78%),
           radial-gradient(circle at 50% 34%, rgba(255,231,190,.78), transparent 29%),
-          linear-gradient(145deg, #fff3df, #c98649 54%, #5d3826);
+          linear-gradient(145deg, #fff4df, #bd7a41 54%, #4b3026);
       }
       .ym-mcard.is-silver {
         background:
-          radial-gradient(circle at 50% 34%, rgba(255,255,255,.86), transparent 30%),
-          linear-gradient(145deg, #f8fbff, #bcc7d5 54%, #516074);
+          linear-gradient(115deg, rgba(255,255,255,.66), transparent 26%, rgba(203,225,244,.24) 56%, transparent 80%),
+          radial-gradient(circle at 50% 34%, rgba(255,255,255,.9), transparent 30%),
+          linear-gradient(145deg, #fbfdff, #b5c2d0 54%, #3f4b5e);
       }
       .ym-mcard.is-gold {
         background:
-          radial-gradient(circle at 50% 34%, rgba(255,250,203,.92), transparent 30%),
-          linear-gradient(145deg, #fff7c9, #dba72e 48%, #2b2230 100%);
+          linear-gradient(112deg, transparent 0 28%, rgba(255,255,255,.5) 42%, transparent 56%),
+          radial-gradient(circle at 50% 34%, rgba(255,250,203,.94), transparent 30%),
+          linear-gradient(145deg, #fff8c8, #e4b038 45%, #6d4919 72%, #1b1d28 100%);
+        box-shadow: 0 0 0 1px rgba(255,255,255,.62), 0 0 0 4px #181923, 0 0 26px rgba(242,188,67,.34), 0 22px 46px rgba(0,0,0,.46), inset 0 1px 0 rgba(255,255,255,.75);
       }
       .ym-mcard.is-diamond {
         background:
+          linear-gradient(115deg, rgba(255,255,255,.54), transparent 22%, rgba(255,255,255,.32) 50%, transparent 76%),
           radial-gradient(circle at 50% 34%, rgba(255,255,255,.96), transparent 27%),
-          linear-gradient(120deg, #ecffff, #77d7ef 34%, #ba96ff 58%, #ffe78d 78%, #7ce2f2);
+          linear-gradient(120deg, #f2ffff, #73d5e9 34%, #a987f4 58%, #ffe48a 78%, #62d6e9);
         background-size: 180% 180%;
         animation: ym-gacha-back-rainbow 2.6s ease-in-out infinite;
       }
       .ym-mcard-art {
         overflow: hidden;
-        border-radius: 7%;
+        border-radius: 8%;
         background:
-          linear-gradient(145deg, rgba(255,255,255,.9), rgba(255,255,255,.34)),
-          color-mix(in srgb, var(--rarity-color,#d78f73), #fff 72%);
-        border: 1.5px solid rgba(32,36,47,.72);
-        box-shadow: inset 0 0 0 2px rgba(255,255,255,.58), 0 3px 0 rgba(32,36,47,.18);
+          linear-gradient(145deg, rgba(255,255,255,.94), rgba(255,255,255,.36)),
+          radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--rarity-color,#d78f73), #fff 58%), rgba(255,255,255,.72) 65%);
+        border: 1.5px solid rgba(21,24,34,.78);
+        box-shadow: inset 0 0 0 2px rgba(255,255,255,.64), 0 4px 0 rgba(21,24,34,.2), 0 10px 16px rgba(0,0,0,.16);
         isolation: isolate;
       }
       .ym-mcard-art::before {
@@ -1071,7 +1079,7 @@
         filter: blur(3px);
       }
       .ym-mcard-img {
-        width: 92%; height: 92%; object-fit: contain; object-position: center; display: block;
+        width: 88%; height: 88%; object-fit: contain; object-position: center; display: block;
         filter: saturate(1.1) contrast(1.06) drop-shadow(0 11px 9px rgba(28,31,42,.3));
         animation: ym-mcard-item-float 2.8s ease-in-out infinite;
       }
@@ -1110,10 +1118,11 @@
       }
       .ym-mback {
         background:
-          radial-gradient(circle at 50% 45%, rgba(255,255,255,.24), transparent 20%),
+          linear-gradient(115deg, rgba(255,255,255,.18), transparent 28%, rgba(255,255,255,.08) 55%, transparent 78%),
+          radial-gradient(circle at 50% 45%, rgba(255,255,255,.28), transparent 20%),
           repeating-conic-gradient(from 8deg at 50% 50%, transparent 0deg 8deg, rgba(255,248,236,.13) 8deg 12deg),
-          linear-gradient(145deg, #39446c, #202947 62%, #151b32);
-        box-shadow: 0 0 0 2.5px var(--rarity-color,#6b7a99), 0 8px 0 -1px #242838, 0 15px 24px rgba(0,0,0,.34);
+          linear-gradient(145deg, #3d4a76, #202947 62%, #11182d);
+        box-shadow: 0 0 0 2.5px var(--rarity-color,#6b7a99), 0 8px 0 -1px #1b2030, 0 18px 30px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.34);
       }
       .ym-mback-mascot {
         position: relative;

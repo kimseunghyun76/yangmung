@@ -205,35 +205,10 @@ function thumb(id, label, kind, bg, accent) {
 `;
 }
 
-for (const [id, label, kind, bg, accent] of scenes) {
-  writeFileSync(join(sceneDir, `${id}-hero.svg`), hero(id, label, kind, bg, accent));
-  writeFileSync(join(sceneDir, `${id}-thumb.svg`), thumb(id, label, kind, bg, accent));
-}
-
 for (const [name, body] of Object.entries(icons)) {
   writeFileSync(join(iconDir, `${name}.svg`), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${body}</svg>
 `);
 }
-
-writeFileSync(join(publicDir, 'app-icon.svg'), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="yangmung app icon">
-  <rect width="1024" height="1024" rx="224" fill="${palette.ink}"/>
-  <circle cx="760" cy="248" r="92" fill="${palette.accent}"/>
-  <path d="M300 646c70 82 178 100 260 44 70-48 88-154 24-216-60-58-164-58-234 8-50 48-70 122-40 192 24 56 82 98 154 98 82 0 150-46 178-116" fill="none" stroke="#f6f6f4" stroke-width="64" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M304 328h408" stroke="#f6f6f4" stroke-width="58" stroke-linecap="round"/>
-</svg>
-`);
-writeFileSync(join(publicDir, 'favicon.svg'), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="${palette.ink}"/><circle cx="47" cy="16" r="6" fill="${palette.accent}"/><path d="M20 40c5 7 14 9 21 4 6-4 7-13 2-18-5-5-14-5-20 1-5 5-6 14-1 20" fill="none" stroke="#f6f6f4" stroke-width="5" stroke-linecap="round"/></svg>
-`);
-writeFileSync(join(publicDir, 'celebrate.svg'), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" role="img" aria-label="session complete celebration">
-  <rect width="480" height="480" fill="transparent"/>
-  <circle cx="360" cy="104" r="44" fill="${palette.accent}"/>
-  <circle cx="122" cy="350" r="28" fill="${palette.warn}" opacity=".88"/>
-  <path d="M156 380 214 174l130 130z" fill="${palette.bg}" stroke="${palette.ink}" stroke-width="12" stroke-linejoin="round"/>
-  <path d="m214 174 42 88-100 118z" fill="${palette.accent}" opacity=".9"/>
-  <path d="M112 112l28 24M362 308l42 34M314 72l18-42M94 240l-48 12M382 190l50-10" stroke="${palette.ink}" stroke-width="12" stroke-linecap="round"/>
-  <path d="M250 94l16 36 38 10-36 16-10 38-16-36-38-10 36-16z" fill="${palette.warn}"/>
-</svg>
-`);
 
 const app1024 = appIconPng(1024);
 const apple180 = appIconPng(180);
@@ -242,4 +217,4 @@ writeFileSync(join(publicDir, 'app-icon.png'), app1024);
 writeFileSync(join(publicDir, 'apple-touch-icon.png'), apple180);
 writeFileSync(join(publicDir, 'favicon.ico'), icoFromPng(fav32));
 
-console.log(`Generated ${scenes.length * 2 + Object.keys(icons).length + 6} assets in public/.`);
+console.log(`Generated ${Object.keys(icons).length + 3} assets in public/.`);
