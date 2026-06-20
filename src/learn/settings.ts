@@ -49,14 +49,6 @@ export interface SkillProfile {
 
 const SKILL_KEY = 'yangmung:skillprofile:v1';
 
-export function loadSkillProfile(): SkillProfile | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = window.localStorage.getItem(SKILL_KEY);
-    return raw ? (JSON.parse(raw) as SkillProfile) : null;
-  } catch { return null; }
-}
-
 export function saveSkillProfile(p: SkillProfile): void {
   if (typeof window === 'undefined') return;
   try { window.localStorage.setItem(SKILL_KEY, JSON.stringify(p)); } catch {}

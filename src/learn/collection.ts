@@ -40,18 +40,9 @@ export const MERGE_NEED: Record<Rarity, number> = {
   diamond: 50,
 };
 
-export const NEXT_RARITY: Partial<Record<Rarity, Rarity>> = {
-  basic: 'bronze',
-  bronze: 'silver',
-  silver: 'gold',
-  gold: 'diamond',
-};
-
 export const rarityMeta = (rarity: Rarity) => RARITIES.find((r) => r.key === rarity) ?? RARITIES[0];
-export const tierMeta = (tier: number) => RARITIES[Math.min(Math.max(tier, 1), 5) - 1];
 export const rarityToTier = (rarity: Rarity) => RARITIES.findIndex((r) => r.key === rarity) + 1;
 export const tierToRarity = (tier: number): Rarity => RARITIES[Math.min(Math.max(tier, 1), 5) - 1].key;
-export const tierNeed = (tier: number) => MERGE_NEED[tierToRarity(tier)] ?? Infinity;
 export const MAX_TIER = 5;
 
 export const BOX: Record<BoxGrade, { label: string; draws: number; colors: [string, string] }> = {
@@ -213,22 +204,6 @@ export function claim(prev: Collection, sessionId: number, sceneIds: string[], d
   }
 
   return { collection: autoUpgradeCollection({ cards, sentences, trophies: normalized.trophies, lastClaimedSessionId: sessionId }), results };
-}
-
-export function mergeScene(prev: Collection, sceneId: string, rarity: Rarity): Collection {
-  const c = normalizeCollection(prev);
-  const need = MERGE_NEED[rarity];
-  const cards = { ...c.cards };
-  const card = normalizeCard(cards[sceneId]);
-  const items = itemsOf(card);
-  if ((items[rarity] ?? 0) < need) return c;
-  items[rarity] -= need;
-  const trophies = { ...c.trophies };
-  const target = upgradeTarget(rarity);
-  if (target === 'honor') trophies.honor = (trophies.honor ?? 0) + 1;
-  else items[target] += 1;
-  cards[sceneId] = { items };
-  return { ...c, cards, trophies };
 }
 
 // ── 장면 lock 해제 (그 장면의 수집 카드 소모) ──────────────

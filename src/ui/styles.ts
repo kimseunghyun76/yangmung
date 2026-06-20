@@ -59,17 +59,6 @@ export const PRIMARY: CSSProperties = {
 };
 
 // 텍스트형 액션 — 밑줄 없는 강조 링크
-export const TEXT_ACTION: CSSProperties = {
-  border: 'none',
-  background: 'none',
-  color: COLORS.indigo,
-  fontWeight: 700,
-  fontSize: 17,
-  cursor: 'pointer',
-  padding: '8px 0',
-  letterSpacing: '-0.01em',
-};
-
 // 카드 컨테이너 — 굵은 테두리 블록(섀도 없음, 테두리로 정의)
 export const CARD: CSSProperties = {
   background: COLORS.surface,
@@ -78,21 +67,6 @@ export const CARD: CSSProperties = {
   padding: 18,
 };
 
-// 칩 — 굵은 테두리 알약
-export const CHIP: CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 6,
-  padding: '8px 12px',
-  borderRadius: RADIUS.pill,
-  border: `1.5px solid ${BORDER}`,
-  background: COLORS.surface,
-  color: COLORS.ink,
-  fontSize: 13,
-  fontWeight: 600,
-  cursor: 'pointer',
-  minHeight: 44,
-};
 
 // iOS Safe Area 대응 (노치·홈 인디케이터). HIG: 콘텐츠가 안전 영역 안에 들어오게.
 export const WRAP: CSSProperties = {

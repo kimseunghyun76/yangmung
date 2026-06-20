@@ -15,10 +15,6 @@ export function loadFlashBest(mode: FlashMode): FlashBest {
   return load()[mode] ?? { score: 0, combo: 0 };
 }
 
-export function loadAllFlashBest(): Store {
-  return load();
-}
-
 // 기록 갱신 후 "신기록 여부"를 돌려준다(점수 기준).
 export function saveFlashRun(mode: FlashMode, score: number, combo: number): { isRecord: boolean; prev: FlashBest } {
   const store = load();

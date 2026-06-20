@@ -11,6 +11,7 @@ import {
 } from './learn/progress';
 import { loadCollection, saveCollection, fillDevCards, spendSceneCards, unlockCost } from './learn/collection';
 import { loadCardUnlocks, saveCardUnlocks, addCardUnlock, resetCardUnlocks, isSceneOpen } from './learn/unlocks';
+import { resetFlashBest } from './learn/flashScores';
 import { adaptSessionConfig, diagnose } from './learn/adaptive';
 import { extractKanaChars } from './learn/kanaReading';
 import { loadSettings, MODE_PRESETS, saveSettings, type Settings } from './learn/settings';
@@ -492,6 +493,7 @@ export function App() {
     setDiscovered([]);
     resetCardUnlocks();
     setCardUnlocks([]);
+    resetFlashBest();
   }
 
   // 카드로 장면 해제 — 그 장면 카드를 tier별 비용만큼 소모. 부족하면 false.
