@@ -8,6 +8,16 @@ import { Icon } from '../ui/Icon';
 import { PrimaryAction } from './shell';
 import { GachaBox } from './Gacha';
 import { boxGrade } from '../learn/collection';
+import { loadFlashBest, saveFlashRun, type FlashBest } from '../learn/flashScores';
+
+const vibrate = (p: number | number[]) => { try { navigator.vibrate?.(p); } catch { /* 미지원 무시 */ } };
+// 콤보 단계 칭호 — 3 HOT · 6 FEVER · 10 PERFECT
+function comboTier(combo: number): { label: string; color: string } | null {
+  if (combo >= 10) return { label: 'PERFECT', color: '#ffd24a' };
+  if (combo >= 6) return { label: 'FEVER', color: '#ff7a3d' };
+  if (combo >= 3) return { label: 'HOT', color: '#ff4d6d' };
+  return null;
+}
 
 interface Props {
   cards: Card[];
@@ -83,6 +93,7 @@ function ModeSelect({ lastMode, lastCount, onStart, onExit }: SelectProps) {
   const [mode, setMode] = useState<FlashMode>(lastMode);
   const [count, setCount] = useState<CountOption>(lastCount);
   const cfg = MODE_CONFIG[mode];
+  const best = loadFlashBest(mode);
 
   return (
     <main style={{ ...WRAP, minHeight: '100svh', paddingTop: 24 }}>
@@ -137,6 +148,12 @@ function ModeSelect({ lastMode, lastCount, onStart, onExit }: SelectProps) {
             {['', '초급', '중급', '고급', '최강'][cfg.difficulty]}
           </span>
         </div>
+        {best.score > 0 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 10, paddingTop: 10, borderTop: '1px solid var(--glass-border)' }}>
+            <span style={{ fontSize: 12, fontWeight: 800, color: cfg.color }}>🏅 내 최고 {best.score.toLocaleString()}점</span>
+            <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ink-faint)' }}>· 최고 콤보 {best.combo}</span>
+          </div>
+        )}
       </div>
 
       <div style={{ marginBottom: 22 }}>
@@ -188,8 +205,13 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
   const tickRef = useRef<number | null>(null);
   const advRef = useRef<number | null>(null);
   const lockedRef = useRef(false);
-  const scoreRef = useRef(0);
+  const scoreRef = useRef(0);        // 누적 점수(반응속도·콤보 가산)
+  const correctRef = useRef(0);      // 맞힌 개수(정답률·보상 판정용)
+  const bestComboRef = useRef(0);
   const shownRef = useRef(Date.now());
+  const [floatPts, setFloatPts] = useState<{ n: number; key: number } | null>(null); // 정답 시 +점수 플로팅
+  const [record, setRecord] = useState<{ isRecord: boolean; prev: FlashBest } | null>(null);
+  const myBest = useRef<FlashBest>(loadFlashBest(mode)).current; // 이 모드 최고기록(시작 시점)
   const card = cards[idx];
 
   useEffect(() => {
@@ -197,6 +219,7 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
     lockedRef.current = false;
     setPicked(null);
     setCallout(null);
+    setFloatPts(null);
     setLeft(DURATION);
     shownRef.current = Date.now();
     const start = Date.now();
@@ -219,12 +242,14 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
   }
 
   function finishGame() {
-    const final = scoreRef.current;
-    if (cards.length && final / cards.length >= REWARD_RATIO && unlockedSceneIds.length) {
-      const n = final >= cards.length ? 2 : 1;
+    const correctCount = correctRef.current;
+    const acc = cards.length ? correctCount / cards.length : 0;
+    setRecord(saveFlashRun(mode, scoreRef.current, bestComboRef.current));
+    if (cards.length && acc >= REWARD_RATIO && unlockedSceneIds.length) {
+      const n = correctCount >= cards.length ? 2 : 1;
       const pool = [...unlockedSceneIds];
       for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
-      const stars = Math.round((final / cards.length) * 3);
+      const stars = Math.round(acc * 3);
       setReward({ sid: Date.now(), scenes: pool.slice(0, n), grade: boxGrade(stars, 0) });
     }
     setDone(true);
@@ -240,11 +265,23 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
     setPicked(choiceIdx);
     setCallout(correct ? (fast ? 'perfect' : 'good') : 'miss');
     if (correct) {
-      scoreRef.current += 1;
+      correctRef.current += 1;
+      const comboNow = combo + 1;
+      const elapsed = Date.now() - shownRef.current;
+      const remRatio = Math.max(0, Math.min(1, 1 - elapsed / DURATION));
+      const speedBonus = Math.round(remRatio * 150);          // 빨리 답할수록 +최대 150
+      const comboBonus = Math.min(comboNow, 12) * 15;          // 콤보 유지 보너스
+      const gained = 100 + speedBonus + comboBonus;
+      scoreRef.current += gained;
       setScore(scoreRef.current);
-      setCombo((c) => { const n = c + 1; setBest((b) => Math.max(b, n)); return n; });
+      setFloatPts({ n: gained, key: Date.now() });
+      bestComboRef.current = Math.max(bestComboRef.current, comboNow);
+      setBest(bestComboRef.current);
+      setCombo(comboNow);
+      vibrate(comboNow >= 10 ? [10, 30, 10] : 15);
     } else {
       setCombo(0);
+      vibrate([20, 40, 20]);
     }
     advRef.current = window.setTimeout(() => {
       if (idx + 1 >= cards.length) finishGame(); else setIdx((i) => i + 1);
@@ -252,19 +289,28 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
   }
 
   if (done) {
-    const pct = cards.length ? Math.round((score / cards.length) * 100) : 0;
+    const correctCount = correctRef.current;
+    const pct = cards.length ? Math.round((correctCount / cards.length) * 100) : 0;
     const win = reward !== null;
+    const isRecord = !!record?.isRecord;
     return (
       <main className={`ym-speed-show ym-speed-result ${win ? 'is-win' : ''}`} style={{ ...WRAP, minHeight: '100svh' }}>
         <span className="ym-speed-show-lights" aria-hidden />
         <div className="ym-rise ym-speed-result-board">
           <span className="ym-speed-onair" style={{ background: cfg.color }}><i /> {cfg.label.toUpperCase()}</span>
           <h1>{win ? 'CHALLENGE CLEAR' : 'TIME UP'}</h1>
+          {isRecord && (
+            <div className="ym-burst" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, margin: '0 auto 6px', padding: '5px 14px', borderRadius: 999, background: '#ffd24a', color: '#3a2c00', fontWeight: 950, fontSize: 14 }}>🎉 신기록!</div>
+          )}
           <div className="ym-speed-final-score">
-            <strong>{score}</strong>
-            <span>/ {count}</span>
+            <strong>{score.toLocaleString()}</strong>
+            <span>점</span>
           </div>
-          <div className="ym-speed-result-stats">
+          <div style={{ fontSize: 12, fontWeight: 800, color: isRecord ? '#ffd24a' : '#d9e8ff', marginTop: 2 }}>
+            {isRecord ? `이전 기록 ${record!.prev.score.toLocaleString()}점 경신` : `내 최고 ${Math.max(myBest.score, score).toLocaleString()}점`}
+          </div>
+          <div className="ym-speed-result-stats" style={{ marginTop: 10 }}>
+            <span><b>{correctCount}/{count}</b> 정답</span>
             <span><b>{pct}%</b> ACCURACY</span>
             <span><b>{best}</b> BEST COMBO</span>
           </div>
@@ -300,6 +346,7 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
   const low = ratio <= 0.25;
   const barColor = ratio > 0.5 ? cfg.color : ratio > 0.25 ? '#e0a23a' : '#e0564a';
   const hot = combo >= 3;
+  const tier = comboTier(combo);
   const promptText = card.listen ? null : (card.bannerJa || card.banner);
   const signCard = card.id.startsWith('sign:');
   const cardFx = callout === 'miss' ? 'ym-speed-card is-miss' : callout ? `ym-speed-card is-${callout}` : `ym-speed-card${hot ? ' is-hot' : ''}`;
@@ -320,9 +367,17 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
       </header>
 
       <section className="ym-speed-scoreboard" aria-label="scoreboard">
-        <div><span>SCORE</span><strong>{score}</strong></div>
-        <div><span>COMBO</span><strong>{combo}</strong></div>
-        <div><span>BEST</span><strong>{best}</strong></div>
+        <div style={{ position: 'relative' }}>
+          <span>SCORE</span><strong>{score.toLocaleString()}</strong>
+          {floatPts && (
+            <span key={floatPts.key} className="ym-rise" style={{ position: 'absolute', top: -2, right: 6, color: '#ffd24a', fontWeight: 950, fontSize: 14, pointerEvents: 'none', textShadow: '0 1px 6px rgba(0,0,0,.5)' }}>+{floatPts.n}</span>
+          )}
+        </div>
+        <div>
+          <span>COMBO</span>
+          <strong style={tier ? { color: tier.color } : undefined}>{combo}{tier && <em style={{ fontSize: 9, fontStyle: 'normal', marginLeft: 3, fontWeight: 950, verticalAlign: 'top' }}>{tier.label}</em>}</strong>
+        </div>
+        <div><span>내 기록</span><strong>{Math.max(myBest.score, score).toLocaleString()}</strong></div>
       </section>
 
       <section className="ym-speed-mainstage">
@@ -333,7 +388,7 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
         </div>
         <div key={`${idx}:${callout ?? ''}`} className={`${cardFx} ym-speed-question ym-speed-led-question`}>
           <span className="ym-speed-category">{card.tag}</span>
-          {hot && <span className="ym-speed-combo-burst">COMBO ×{combo}</span>}
+          {tier && <span className="ym-speed-combo-burst" style={{ color: tier.color }}>{tier.label} ×{combo}</span>}
           {signCard ? (
             <SignPromptBoard text={card.bannerJa || card.banner} category={card.tag.replace(' 읽기', '')} />
           ) : card.listen ? (
