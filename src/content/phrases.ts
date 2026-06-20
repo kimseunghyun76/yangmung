@@ -265,6 +265,13 @@ export const phrases: Phrase[] = [
   { id: 'p_kusuri_nondeimasu', kana: 'くすりをのんでいます', kanji: '薬を飲んでいます', displayKana: 'くすりを、のんでいます', korean: '약을 먹고 있어요', register: 'productive', tip: '「薬(くすり)を飲(の)んでいます」— 복용 중인 약을 알리면 응급 처치가 안전해져요. 약 이름이나 약봉지를 보여주면 더 좋아요' },
   { id: 'p_data_youryou', kana: 'データようりょうはどれくらいひつようですか', kanji: 'データ容量はどれくらい必要ですか', displayKana: 'データようりょうは、どれくらいひつようですか？', korean: '데이터 용량은 어느 정도 필요하세요?', register: 'receptive' },
   { id: 'p_nannichikan', kana: 'なんにちかんごりようですか', kanji: '何日間ご利用ですか', displayKana: 'なんにちかん、ごりようですか？', korean: '며칠간 이용하세요?', register: 'receptive' },
+  // C29 코인세탁 / C30 축제 실전 확장
+  { id: 'p_sentaku_kansou', kana: 'せんたくとかんそうどちらですか', kanji: '洗濯と乾燥、どちらですか', displayKana: 'せんたくと かんそう、どちらですか？', korean: '세탁인가요, 건조인가요?', register: 'receptive' },
+  { id: 'p_sentaku_de', kana: 'せんたくでおねがいします', kanji: '洗濯でお願いします', displayKana: 'せんたくで、おねがいします', korean: '세탁이요', register: 'productive', tip: '「洗濯(せんたく)で」— 코인세탁기는 洗濯(세탁)·乾燥(건조) 코스가 따로예요. 세탁만 하면 800엔 안팎, 건조는 100엔/약 10분이에요' },
+  { id: 'p_kansou_de', kana: 'かんそうでおねがいします', kanji: '乾燥でお願いします', displayKana: 'かんそうで、おねがいします', korean: '건조요', register: 'productive', tip: '「乾燥(かんそう)で」— 빨래만 따로 건조할 때. 동전을 넣은 만큼 시간이 추가돼요. 두껍게 마른 옷은 시간을 넉넉히 잡아요' },
+  { id: 'p_kansou_owari', kana: 'かんそうがおわりました', kanji: '乾燥が終わりました', displayKana: 'かんそうが、おわりました', korean: '건조가 끝났어요', register: 'receptive' },
+  { id: 'p_kingyo_sukui', kana: 'きんぎょすくいはいかがですか', kanji: '金魚すくいはいかがですか', displayKana: 'きんぎょすくいは、いかがですか？', korean: '금붕어 뜨기 어떠세요?', register: 'receptive' },
+  { id: 'p_hanabi_kasenjiki', kana: 'はなびはかせんじきでごらんいただけます', kanji: '花火は河川敷でご覧いただけます', displayKana: 'はなびは、かせんじきでごらんいただけます', korean: '불꽃놀이는 강변에서 보실 수 있어요', register: 'receptive' },
   { id: 'p_shashin_ii', kana: 'しゃしんとってもいいですか', kanji: '写真撮ってもいいですか', displayKana: 'しゃしん、とってもいいですか？', korean: '사진 찍어도 돼요?', register: 'productive', tip: '「写真(しゃしん)撮(と)ってもいいですか」— 촬영 전 허가 확인은 매너예요. 절·신사 내부는 撮影禁止(さつえいきんし) 구역이 있으니 주의하세요' },
   { id: 'p_shashin_onegai', kana: 'しゃしんおねがいします', kanji: '写真お願いします', displayKana: 'しゃしん、おねがいします', korean: '사진 부탁드려요', register: 'productive', tip: '「写真(しゃしん)お願(ねが)いします」— 스마트폰이나 카메라를 건네며 쓰면 OK. 일본인은 대체로 친절하게 찍어줘요. ありがとうございます로 감사 표시도 잊지 마세요' },
   { id: 'p_tasukete', kana: 'たすけてください', kanji: '助けてください', korean: '도와주세요', register: 'productive', tip: '급할 땐 たすけて만 외쳐도 통합니다' },
