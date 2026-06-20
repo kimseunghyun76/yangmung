@@ -842,10 +842,10 @@ export const c26: Mission = {
   tier: 3,
   place: '경찰서',
   scenario: '분실물과 길 도움 요청',
-  canDo: '사용자는 경찰서에서 분실물, 시간, 연락처, 다음 행동을 설명할 수 있다',
+  canDo: '사용자는 경찰서에서 분실물 종류·시간·연락처·신고서 작성을 처리할 수 있다',
   unlockAfter: ['C5'],
-  sequence: ['분실물 말하기', '잃어버린 시간', '연락처 남기기'],
-  speakPhraseIds: ['p_tasukete', 'p_sumimasen', 'p_michi_oshiete'],
+  sequence: ['도움 요청', '분실물 종류', '잃어버린 시간', '연락처 남기기', '신고서 작성'],
+  speakPhraseIds: ['p_tasukete', 'p_saifu_nakushita', 'p_michi_oshiete'],
   steps: [
     {
       situationKo: '파출소에 들어서자 경찰관이 무슨 일인지 묻는다',
@@ -857,6 +857,17 @@ export const c26: Mission = {
         { text: '일본어가 어려워요', phraseId: 'p_nihon_go_muzukashii', correct: true, feedback: '「日本語(にほんご)が難(むずか)しいです」— 언어 장벽을 솔직하게 말하면 통역 서비스(電話通訳/でんわつうやく)를 연결해줄 수 있어요' },
         { text: '길을 가르쳐 주세요', phraseId: 'p_michi_oshiete', correct: false, feedback: '지금은 무슨 일인지부터 설명해요 — 길 안내는 다른 도움이에요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
+      ],
+    },
+    {
+      situationKo: '경찰관이 무엇을 잃어버렸는지 묻는다',
+      speaker: '경찰관',
+      promptPhraseId: 'p_nani_nakushita',
+      choices: [
+        { text: '지갑을 잃어버렸어요', phraseId: 'p_saifu_nakushita', correct: true, feedback: '「財布(さいふ)をなくしました」— 「〇〇をなくしました」패턴. パスポート(여권)·スマホ(스마트폰)로 바꿔 말할 수 있어요. 색·특징도 덧붙이면 좋아요' },
+        { text: '여권 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: false, feedback: '지금은 무엇을 잃어버렸는지 답할 차례예요 — 여권은 신분 확인 때 보여줘요' },
+        { text: '일본어가 어려워요', phraseId: 'p_nihon_go_muzukashii', correct: true, feedback: '「日本語(にほんご)が難(むずか)しいです」— 정확한 설명이 어려우면 통역 도움을 받아요. 그림을 그리거나 사진을 보여줘도 좋아요' },
+        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
       ],
     },
     {
@@ -881,6 +892,17 @@ export const c26: Mission = {
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
       ],
     },
+    {
+      situationKo: '경찰관이 분실 신고서를 작성할지 묻는다',
+      speaker: '경찰관',
+      promptPhraseId: 'p_funshitsu_todoke',
+      choices: [
+        { text: '네, 부탁합니다', phraseId: 'p_hai_onegai', correct: true, feedback: '「はい、お願(ねが)いします」— 紛失届(ふんしつとどけ)는 분실 신고서. 여권 분실 시 대사관 재발급에도 이 서류 번호(受理番号/じゅりばんごう)가 필요해요' },
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「わかりました」— 작성 안내를 이해했을 때. 신용카드 분실이면 카드사에도 바로 정지 요청을 해요' },
+        { text: '잠깐만 기다려 주세요', phraseId: 'p_chotto_matte', correct: true, feedback: '「ちょっと待(ま)ってください」— 필요한 정보를 정리하는 동안 양해를 구해요' },
+        { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
+      ],
+    },
   ],
 };
 
@@ -889,9 +911,9 @@ export const c27: Mission = {
   tier: 3,
   place: '긴급상황',
   scenario: '긴급상황에서 도움 청하기',
-  canDo: '사용자는 긴급상황에서 도움 요청, 상태, 위치를 짧고 명확하게 전달할 수 있다',
+  canDo: '사용자는 긴급상황에서 도움 요청·거동 상태·증상·지병·위치를 짧고 명확하게 전달할 수 있다',
   unlockAfter: ['C26'],
-  sequence: ['도움 요청', '상태 확인', '위치 전달'],
+  sequence: ['도움 요청', '거동 확인', '구급차 호출', '지병·약', '위치 전달'],
   speakPhraseIds: ['p_tasukete', 'p_atama_itai', 'p_doko_desu_ka'],
   steps: [
     {
@@ -906,6 +928,17 @@ export const c27: Mission = {
       ],
     },
     {
+      situationKo: '행인이 움직일 수 있는지 묻는다',
+      speaker: '행인',
+      promptPhraseId: 'p_ugokemasu_ka',
+      choices: [
+        { text: '움직일 수 없어요', phraseId: 'p_ugokemasen', correct: true, feedback: '「動(うご)けません」— 거동이 어려우면 무리하지 말고 그대로 도움을 기다려요. 함부로 움직이면 부상이 악화될 수 있어요' },
+        { text: '괜찮아요', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 조금 움직일 수 있으면 안전한 곳으로 이동해요. 무리는 금물이에요' },
+        { text: '배가 아파요', phraseId: 'p_onaka_itai', correct: true, feedback: '「お腹(なか)が痛いです」— 거동을 답하며 증상도 함께 전하면 더 정확해요' },
+        { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+      ],
+    },
+    {
       situationKo: '구급차를 부르겠다는 말을 듣는다',
       speaker: '행인',
       promptPhraseId: 'p_kyuukyuusha_o_yobimasu',
@@ -914,6 +947,17 @@ export const c27: Mission = {
         { text: '배가 아파요', phraseId: 'p_onaka_itai', correct: true, feedback: '「お腹(なか)が痛いです」— 구급대원에게 증상 전달. 배가 아프면서 어지럽거나 구토가 있으면 함께 말해요' },
         { text: '도와주세요', phraseId: 'p_tasukete', correct: false, feedback: '구급차를 부른다고 했어요 — 지금은 상태(증상)를 전해요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'partial' },
+      ],
+    },
+    {
+      situationKo: '구급대원이 지병이나 복용 약이 있는지 묻는다',
+      speaker: '구급대원',
+      promptPhraseId: 'p_jibyou',
+      choices: [
+        { text: '약을 먹고 있어요', phraseId: 'p_kusuri_nondeimasu', correct: true, feedback: '「薬(くすり)を飲(の)んでいます」— 복용 약을 알리면 응급 처치가 안전해져요. 약봉지나 お薬手帳(おくすりてちょう)를 보여주면 더 좋아요' },
+        { text: '아니요, 없어요', phraseId: 'p_iie_arimasen', correct: true, feedback: '「いいえ、ありません」— 지병·약이 없으면 그렇게 답해요. 알레르기가 있으면 꼭 함께 전해요' },
+        { text: '배가 아파요', phraseId: 'p_onaka_itai', correct: true, feedback: '「お腹(なか)が痛いです」— 지병 질문에 현재 증상도 덧붙이면 진단에 도움이 돼요' },
+        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
       ],
     },
     {
@@ -935,9 +979,9 @@ export const c28: Mission = {
   tier: 3,
   place: '통신매장',
   scenario: '유심과 데이터 개통',
-  canDo: '사용자는 통신매장에서 요금제, 여권 확인, 설정 도움, 결제를 처리할 수 있다',
+  canDo: '사용자는 통신매장에서 요금제·데이터 용량·이용 기간·여권 확인·설정을 처리할 수 있다',
   unlockAfter: ['C7'],
-  sequence: ['요금제 선택', '여권 확인', '설정 도움'],
+  sequence: ['요금제 선택', '데이터 용량', '이용 기간', '여권 확인', '설정 도움'],
   speakPhraseIds: ['p_kore_ikura', 'p_card_tsukaemasu_ka', 'p_card_de'],
   steps: [
     {
@@ -949,6 +993,28 @@ export const c28: Mission = {
         { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: true, feedback: '「おすすめは何(なん)ですか」— 관광객에게 맞는 단기 데이터 요금제를 직원이 추천해줘요' },
         { text: '여권 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: false, feedback: '먼저 요금제를 정해요 — 여권 확인은 개통 단계에서 해요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
+      ],
+    },
+    {
+      situationKo: '점원이 데이터 용량이 얼마나 필요한지 묻는다',
+      speaker: '점원',
+      promptPhraseId: 'p_data_youryou',
+      choices: [
+        { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: true, feedback: '「おすすめは何(なん)ですか」— 지도·SNS 위주면 하루 1~3GB로 충분해요. 동영상을 많이 보면 무제한(無制限/むせいげん)을 고려해요' },
+        { text: '이거 얼마예요?', phraseId: 'p_kore_ikura', correct: true, feedback: '「これ、いくらですか」— 용량별 가격을 비교. 무제한과 용량제 중 여행 스타일에 맞게 골라요' },
+        { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: true, feedback: '「いくらですか」— 용량을 정하면서 가격도 확인. eSIM이면 QR로 바로 개통되기도 해요' },
+        { text: '여권 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: false, feedback: '아직 요금제를 고르는 중이에요 — 여권은 개통할 때 보여줘요' },
+      ],
+    },
+    {
+      situationKo: '점원이 며칠간 이용할지 묻는다',
+      speaker: '점원',
+      promptPhraseId: 'p_nannichikan',
+      choices: [
+        { text: '일주일이요', phraseId: 'p_isshuukan', correct: true, feedback: '「一週間(いっしゅうかん)です」— 이용 기간을 말해요. 8일·15일·30일권 등 기간별 상품이 있어요' },
+        { text: '3일이요', phraseId: 'p_mikka', correct: true, feedback: '「三日(みっか)です」— 짧은 여행이면 단기권이 경제적이에요. 날수 표현은 불규칙하니 외워두면 편해요' },
+        { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: true, feedback: '「おすすめは何(なん)ですか」— 체류 일수에 맞는 상품을 추천받아요. 남는 날은 아깝지 않게 딱 맞춰요' },
+        { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
       ],
     },
     {
