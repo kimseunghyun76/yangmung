@@ -617,9 +617,12 @@ export function selectStudyDeck(
 ): Card[] {
   const study = allCards.filter((c) => c.kind === 'introduce' && studyTest(c.id));
   const quiz = allCards.filter((c) => c.kind === 'quiz' && quizTest(c.id));
-  const studyPick = shuffleKana(study).slice(0, opts.studyLimit ?? study.length);
+  // 단어 먼저, 예문(:study:ex…) 나중에 — 단어를 익힌 뒤 문장에서 확인.
+  const isEx = (c: Card) => /:study:ex\d+$/.test(c.id);
+  const words = shuffleKana(study.filter((c) => !isEx(c))).slice(0, opts.studyLimit ?? study.length);
+  const examples = study.filter(isEx);
   const quizPick = shuffleKana(quiz).slice(0, opts.quizCount ?? 3);
-  return [...studyPick, ...quizPick];
+  return [...words, ...examples, ...quizPick];
 }
 
 // 주제별 어휘 전용 덱 — vocab:groupId:* 카드, 그룹 필터 가능. limit = 24.

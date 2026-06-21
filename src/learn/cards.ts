@@ -483,6 +483,20 @@ function buildVocabCards(): Card[] {
         ]),
       });
     }
+
+    // 그룹 대표 예문 — 단어를 익힌 뒤 문장 속에서 보는 학습 카드(채점 없음).
+    (group.examples ?? []).forEach((ex, i) => {
+      cards.push({
+        kind: 'introduce',
+        id: `vocab:${group.id}:study:ex${i}`,
+        tag: `어휘 · ${group.label} · 예문`,
+        phraseId: `vocab:${group.id}:ex${i}`,
+        ja: ex.ja,
+        kana: ex.kana,
+        korean: ex.korean,
+        note: '배운 단어가 문장에서 어떻게 쓰이는지 듣고 읽어보세요.',
+      });
+    });
   }
 
   return cards;
