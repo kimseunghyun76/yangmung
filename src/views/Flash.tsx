@@ -79,7 +79,6 @@ type CountOption = typeof COUNT_OPTIONS[number];
 
 const REWARD_RATIO = 0.75;
 
-type Callout = 'perfect' | 'good' | 'miss' | null;
 
 // ── 모드 선택 화면 ────────────────────────────────────────────────────────────
 interface SelectProps {
@@ -191,7 +190,6 @@ interface GameProps {
 function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: GameProps) {
   const cfg = MODE_CONFIG[mode];
   const DURATION = cfg.durationMs;
-  const FAST_MS = cfg.fastMs;
 
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
@@ -199,7 +197,6 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
   const [combo, setCombo] = useState(0);
   const [best, setBest] = useState(0);
   const [left, setLeft] = useState(DURATION);
-  const [callout, setCallout] = useState<Callout>(null);
   const [done, setDone] = useState(false);
   const [reward, setReward] = useState<{ sid: number; scenes: string[]; grade: ReturnType<typeof boxGrade> } | null>(null);
   const tickRef = useRef<number | null>(null);
@@ -220,7 +217,6 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
     if (done || !card) return;
     lockedRef.current = false;
     setPicked(null);
-    setCallout(null);
     setFloatPts(null);
     setLeft(DURATION);
     shownRef.current = Date.now();
@@ -263,9 +259,7 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
     if (tickRef.current) { window.clearInterval(tickRef.current); tickRef.current = null; }
     const ch = choiceIdx >= 0 ? card.choices[choiceIdx] : undefined;
     const correct = !!ch?.correct && !ch?.recovery;
-    const fast = correct && Date.now() - shownRef.current < FAST_MS;
     setPicked(choiceIdx);
-    setCallout(correct ? (fast ? 'perfect' : 'good') : 'miss');
     const elapsedAll = Date.now() - shownRef.current;
     if (correct) {
       correctRef.current += 1;
@@ -302,42 +296,45 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
     const win = reward !== null;
     const isRecord = !!record?.isRecord;
     return (
-      <main className={`ym-speed-show ym-speed-result ${win ? 'is-win' : ''}`} style={{ ...WRAP, minHeight: '100svh' }}>
-        <span className="ym-speed-show-lights" aria-hidden />
-        <div className="ym-rise ym-speed-result-board">
-          <span className="ym-speed-onair" style={{ background: cfg.color }}><i /> {cfg.label.toUpperCase()}</span>
-          <h1>{win ? 'CHALLENGE CLEAR' : 'TIME UP'}</h1>
+      <main style={{ ...WRAP, minHeight: '100svh', paddingTop: 'max(20px, env(safe-area-inset-top))' }}>
+        <div className="ym-rise ym-glass ym-glass-strong" style={{ padding: '24px 20px', borderRadius: 22, textAlign: 'center' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 13, fontWeight: 800, color: 'var(--ink-soft)' }}>
+            <span aria-hidden style={{ fontSize: 15 }}>{cfg.emoji}</span>{cfg.label}
+          </span>
+          <h1 style={{ margin: '10px 0 0', fontSize: 25, fontWeight: 900, color: 'var(--ink)', letterSpacing: '-0.02em' }}>{win ? '클리어!' : '시간 종료'}</h1>
           {isRecord && (
-            <div className="ym-burst" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, margin: '0 auto 6px', padding: '5px 14px', borderRadius: 999, background: '#ffd24a', color: '#3a2c00', fontWeight: 950, fontSize: 14 }}>🎉 신기록!</div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, margin: '10px auto 0', padding: '4px 13px', borderRadius: 999, background: 'var(--accent-soft)', color: 'var(--accent)', fontWeight: 900, fontSize: 13 }}>
+              <Icon name="star" size={14} /> 신기록
+            </div>
           )}
-          <div className="ym-speed-final-score">
-            <strong>{score.toLocaleString()}</strong>
-            <span>점</span>
+          <div style={{ marginTop: 14 }}>
+            <strong style={{ fontSize: 58, fontWeight: 950, color: 'var(--accent)', fontVariantNumeric: 'tabular-nums', lineHeight: 0.95 }}>{score.toLocaleString()}</strong>
+            <span style={{ fontSize: 20, color: 'var(--ink-soft)', marginLeft: 6, fontWeight: 800 }}>점</span>
           </div>
-          <div style={{ fontSize: 12, fontWeight: 800, color: isRecord ? '#f0d28a' : 'rgba(244,237,224,.78)', marginTop: 2 }}>
+          <p style={{ margin: '6px 0 0', fontSize: 12.5, fontWeight: 750, color: isRecord ? 'var(--accent)' : 'var(--ink-faint)' }}>
             {isRecord ? `이전 기록 ${record!.prev.score.toLocaleString()}점 경신` : `내 최고 ${Math.max(myBest.score, score).toLocaleString()}점`}
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 18 }}>
+            <ResultStat label="정답" value={`${correctCount}/${count}`} />
+            <ResultStat label="정답률" value={`${pct}%`} />
+            <ResultStat label="최고 콤보" value={best} />
+            {correctCount > 0 && <ResultStat label="평균 반응" value={`${(reactSumRef.current / correctCount / 1000).toFixed(1)}초`} />}
           </div>
-          <div className="ym-speed-result-stats" style={{ marginTop: 10 }}>
-            <span><b>{correctCount}/{count}</b> 정답</span>
-            <span><b>{pct}%</b> ACCURACY</span>
-            <span><b>{best}</b> BEST COMBO</span>
-            {correctCount > 0 && <span><b>{(reactSumRef.current / correctCount / 1000).toFixed(1)}초</b> 평균 반응</span>}
-          </div>
-          <div style={{ marginTop: 10, fontSize: 12, color: 'rgba(244,237,224,.78)', fontWeight: 700 }}>
-            {pct >= 90 ? '🏆 완벽! 다음 레벨에도 도전해 보세요.' : pct >= 75 ? '🎯 보석함 획득! 꾸준히 유지해요.' : `정답률 ${Math.round(REWARD_RATIO * 100)}% 이상이면 보석함을 받아요!`}
-          </div>
+          <p style={{ marginTop: 14, marginBottom: 0, fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 700, lineHeight: 1.5 }}>
+            {pct >= 90 ? '완벽해요! 다음 레벨에도 도전해 보세요.' : pct >= 75 ? '보석함 획득! 꾸준히 유지해요.' : `정답률 ${Math.round(REWARD_RATIO * 100)}% 이상이면 보석함을 받아요.`}
+          </p>
         </div>
 
         {missedRef.current.length > 0 && (
-          <div className="ym-rise" style={{ animationDelay: '.04s', marginTop: 18, background: 'linear-gradient(180deg, rgba(43,32,21,.94), rgba(24,17,11,.95))', border: '1px solid rgba(216,162,74,.26)', borderRadius: 16, padding: '14px 16px', boxShadow: '0 12px 30px rgba(0,0,0,.3)' }}>
-            <p style={{ margin: '0 0 10px', fontSize: 12, fontWeight: 800, letterSpacing: '0.04em', color: '#d8a24a' }}>틀린 표현 다시보기</p>
+          <div className="ym-rise ym-glass" style={{ animationDelay: '.04s', marginTop: 14, padding: '14px 16px', borderRadius: 18 }}>
+            <p style={{ margin: '0 0 10px', fontSize: 12, fontWeight: 800, letterSpacing: '0.04em', color: 'var(--accent)' }}>틀린 표현 다시보기</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {missedRef.current.slice(0, 8).map((m, i) => (
                 <button key={i} className="ym-press" onClick={() => speak(m.ja)} disabled={!ttsSupported()}
-                  style={{ display: 'flex', alignItems: 'center', gap: 10, textAlign: 'left', background: 'rgba(255,247,235,.05)', border: '1px solid rgba(216,162,74,.18)', borderRadius: 12, padding: '9px 12px', cursor: 'pointer', color: '#f4ede0' }}>
-                  <Icon name="listen" size={15} style={{ color: '#e2655a', flex: '0 0 auto' }} />
+                  style={{ display: 'flex', alignItems: 'center', gap: 10, textAlign: 'left', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: 12, padding: '9px 12px', cursor: 'pointer', color: 'var(--ink)' }}>
+                  <Icon name="listen" size={15} style={{ color: 'var(--accent)', flex: '0 0 auto' }} />
                   <span lang="ja" style={{ fontSize: 16, fontWeight: 800 }}>{m.ja}</span>
-                  {m.ko && <span style={{ fontSize: 12.5, color: 'rgba(244,237,224,.66)', marginLeft: 'auto' }}>{m.ko}</span>}
+                  {m.ko && <span style={{ fontSize: 12.5, color: 'var(--ink-soft)', marginLeft: 'auto' }}>{m.ko}</span>}
                 </button>
               ))}
             </div>
@@ -345,13 +342,13 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
         )}
 
         {reward && (
-          <div className="ym-rise" style={{ animationDelay: '.06s', marginTop: 18 }}>
+          <div className="ym-rise" style={{ animationDelay: '.06s', marginTop: 16 }}>
             <GachaBox sessionId={reward.sid} sceneIds={reward.scenes} grade={reward.grade} />
           </div>
         )}
 
-        <div className="ym-rise" style={{ animationDelay: '.1s', marginTop: 22, display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <PrimaryAction onClick={onReplay} style={{ background: cfg.color }}><Icon name="fast" size={18} /> 모드 선택</PrimaryAction>
+        <div className="ym-rise" style={{ animationDelay: '.1s', marginTop: 20, display: 'flex', flexDirection: 'column', gap: 10, paddingBottom: 'max(16px, env(safe-area-inset-bottom))' }}>
+          <PrimaryAction onClick={onReplay}><Icon name="fast" size={18} /> 모드 선택</PrimaryAction>
           <button className="ym-press" onClick={onExit} style={homeBtn}><Icon name="nav-home" size={18} /> 홈으로</button>
         </div>
       </main>
@@ -367,82 +364,87 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
     </main>
   );
 
-  const ratio = left / DURATION;
+  const ratio = Math.max(0, Math.min(1, left / DURATION));
   const low = ratio <= 0.25;
-  const barColor = ratio > 0.5 ? cfg.color : ratio > 0.25 ? '#e0a23a' : '#e0564a';
-  const hot = combo >= 3;
+  const barColor = ratio > 0.5 ? 'var(--accent)' : ratio > 0.25 ? '#e0a23a' : '#e0564a';
   const tier = comboTier(combo);
   const promptText = card.listen ? null : (card.bannerJa || card.banner);
   const signCard = card.id.startsWith('sign:');
-  const cardFx = callout === 'miss' ? 'ym-speed-card is-miss' : callout ? `ym-speed-card is-${callout}` : `ym-speed-card${hot ? ' is-hot' : ''}`;
-  const timeLeft = Math.max(0, Math.ceil(left / 1000));
-  const timerDeg = `${Math.max(0, Math.min(1, ratio)) * 360}deg`;
   const answerLetters = ['A', 'B', 'C', 'D'];
 
   return (
-    <main className={`ym-speed-show ${hot ? 'is-hot' : ''} ${low ? 'is-low' : ''} ${callout ? `is-${callout}` : ''}`}
-      style={{ ...WRAP, position: 'relative', overflow: 'hidden', minHeight: '100svh' }}>
-      <span className="ym-speed-show-lights" aria-hidden />
-      <span className="ym-speed-led-wall" aria-hidden />
-      {callout && <SpeedScreenFx tone={callout} />}
-      <header className="ym-speed-broadcast">
-        <button onClick={onExit} className="ym-speed-exit">EXIT</button>
-        <span className="ym-speed-onair" style={{ background: cfg.color }}><i /> {cfg.label}</span>
-        <span className="ym-speed-round">Q {idx + 1}/{count}</span>
+    <main style={{ ...WRAP, minHeight: '100svh', display: 'flex', flexDirection: 'column', paddingTop: 'max(14px, env(safe-area-inset-top))' }}>
+      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+        <button onClick={onExit} className="ym-press" style={ghostIcon} aria-label="나가기"><Icon name="back" size={18} /></button>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 14, fontWeight: 800, color: 'var(--ink)' }}>
+          <span aria-hidden style={{ fontSize: 15 }}>{cfg.emoji}</span>{cfg.label}
+        </span>
+        <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--ink-soft)', fontVariantNumeric: 'tabular-nums' }}>{idx + 1} / {count}</span>
       </header>
 
-      <section className="ym-speed-scoreboard" aria-label="scoreboard">
-        <div style={{ position: 'relative' }}>
-          <span>SCORE</span><strong>{score.toLocaleString()}</strong>
-          {floatPts && (
-            <span key={floatPts.key} className="ym-rise" style={{ position: 'absolute', top: -2, right: 6, color: '#ffd24a', fontWeight: 950, fontSize: 14, pointerEvents: 'none', textShadow: '0 1px 6px rgba(0,0,0,.5)' }}>+{floatPts.n}</span>
-          )}
-        </div>
-        <div>
-          <span>COMBO</span>
-          <strong style={tier ? { color: tier.color } : undefined}>{combo}{tier && <em style={{ fontSize: 9, fontStyle: 'normal', marginLeft: 3, fontWeight: 950, verticalAlign: 'top' }}>{tier.label}</em>}</strong>
-        </div>
-        <div><span>내 기록</span><strong>{Math.max(myBest.score, score).toLocaleString()}</strong></div>
-      </section>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 14 }}>
+        <StatChip label="점수" value={score.toLocaleString()} float={floatPts} />
+        <StatChip label="콤보" value={<>{combo}{tier && <em style={{ fontSize: 10, fontStyle: 'normal', fontWeight: 900, marginLeft: 3, color: tier.color }}>{tier.label}</em>}</>} />
+        <StatChip label="내 기록" value={Math.max(myBest.score, score).toLocaleString()} />
+      </div>
 
-      <section className="ym-speed-mainstage">
-        <div className={`ym-speed-clock ${low ? 'is-low' : ''}`}
-          style={{ ['--timer-deg' as string]: timerDeg, ['--timer-color' as string]: barColor }}>
-          <strong>{timeLeft}</strong>
-          <span>SEC</span>
-        </div>
-        <div key={`${idx}:${callout ?? ''}`} className={`${cardFx} ym-speed-question ym-speed-led-question`}>
-          <span className="ym-speed-category">{card.tag}</span>
-          {tier && <span className="ym-speed-combo-burst" style={{ color: tier.color }}>{tier.label} ×{combo}</span>}
-          {signCard ? (
-            <SignPromptBoard text={card.bannerJa || card.banner} category={card.tag.replace(' 읽기', '')} />
-          ) : card.listen ? (
-            <button className="ym-press" onClick={() => card.bannerJa && speak(card.bannerJa)} disabled={!ttsSupported()}
-              style={{ width: 84, height: 84, borderRadius: 99, border: `1px solid ${cfg.color}`, background: `${cfg.color}18`, color: cfg.color, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Icon name="listen" size={40} />
-            </button>
-          ) : (
-            <div className="ym-speed-prompt" lang="ja">{promptText}</div>
-          )}
-          {card.sub && <p className="ym-speed-sub">{card.sub}</p>}
-        </div>
-      </section>
+      <div className={`ym-speed-timer ${low ? 'is-low' : ''}`} style={{ marginBottom: 18 }}>
+        <div className="ym-speed-timer-fill" style={{ width: `${ratio * 100}%`, background: barColor }} />
+      </div>
 
-      <section className="ym-speed-buzzer-grid">
+      <div className="ym-glass ym-glass-strong" style={{ position: 'relative', padding: '24px 18px', borderRadius: 20, textAlign: 'center', marginBottom: 18, minHeight: 152, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ position: 'absolute', left: 16, top: 13, fontSize: 11, fontWeight: 800, letterSpacing: '.06em', color: 'var(--accent)' }}>{card.tag}</span>
+        {tier && <span style={{ position: 'absolute', right: 14, top: 12, fontSize: 11, fontWeight: 900, color: tier.color }}>{tier.label} ×{combo}</span>}
+        {signCard ? (
+          <SignPromptBoard text={card.bannerJa || card.banner} category={card.tag.replace(' 읽기', '')} />
+        ) : card.listen ? (
+          <button className="ym-press" onClick={() => card.bannerJa && speak(card.bannerJa)} disabled={!ttsSupported()}
+            style={{ width: 88, height: 88, borderRadius: 99, border: '1px solid var(--accent)', background: 'var(--accent-soft)', color: 'var(--accent)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name="listen" size={42} />
+          </button>
+        ) : (
+          <div lang="ja" style={{ fontSize: 'clamp(32px, 9vw, 54px)', fontWeight: 900, color: 'var(--ink)', lineHeight: 1.05, wordBreak: 'keep-all' }}>{promptText}</div>
+        )}
+        {card.sub && <p style={{ margin: '12px 0 0', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>{card.sub}</p>}
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 'auto', paddingBottom: 'max(14px, env(safe-area-inset-bottom))' }}>
         {card.choices.map((c, i) => {
           const isPicked = picked === i;
           const reveal = picked !== null;
           const right = c.correct && !c.recovery;
-          const fx = reveal && right ? ' is-correct ym-answer-correct' : reveal && isPicked && !right ? ' is-wrong ym-answer-wrong' : reveal ? ' is-dim' : '';
+          let border = 'var(--glass-border)', bg = 'var(--glass-bg-strong)', col = 'var(--ink)', badgeBg = 'var(--glass-bg)', badgeCol = 'var(--ink-soft)';
+          if (reveal && right) { border = 'var(--ok)'; bg = 'var(--ok-soft)'; badgeBg = 'var(--ok)'; badgeCol = '#fff'; }
+          else if (reveal && isPicked && !right) { border = 'var(--accent)'; bg = 'var(--accent-soft)'; col = 'var(--accent)'; badgeBg = 'var(--accent)'; badgeCol = '#fff'; }
           return (
-            <button key={i} className={`ym-press ym-speed-buzzer${fx}`} onClick={() => handle(i)} disabled={picked !== null}>
-              <span>{answerLetters[i] ?? i + 1}</span>
-              <strong>{c.label}</strong>
+            <button key={i} className="ym-press" onClick={() => handle(i)} disabled={reveal}
+              style={{ display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left', padding: '14px 14px', borderRadius: 16, border: `1.5px solid ${border}`, background: bg, color: col, cursor: reveal ? 'default' : 'pointer', opacity: reveal && !right && !isPicked ? 0.42 : 1, transition: 'opacity .15s' }}>
+              <span style={{ width: 30, height: 30, flex: '0 0 30px', borderRadius: 9, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: badgeBg, color: badgeCol, fontWeight: 900, fontSize: 14 }}>{answerLetters[i] ?? i + 1}</span>
+              <strong style={{ fontWeight: 800, fontSize: 16, lineHeight: 1.25, wordBreak: 'keep-all' }}>{c.label}</strong>
             </button>
           );
         })}
-      </section>
+      </div>
     </main>
+  );
+}
+
+function StatChip({ label, value, float }: { label: string; value: React.ReactNode; float?: { n: number; key: number } | null }) {
+  return (
+    <div className="ym-glass" style={{ position: 'relative', padding: '9px 8px', borderRadius: 14, textAlign: 'center' }}>
+      <span style={{ display: 'block', fontSize: 10.5, fontWeight: 800, letterSpacing: '.03em', color: 'var(--ink-faint)' }}>{label}</span>
+      <strong style={{ display: 'block', marginTop: 3, fontSize: 20, fontWeight: 900, color: 'var(--ink)', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{value}</strong>
+      {float && <span key={float.key} className="ym-rise" style={{ position: 'absolute', top: 0, right: 6, color: 'var(--accent)', fontWeight: 950, fontSize: 13, pointerEvents: 'none' }}>+{float.n}</span>}
+    </div>
+  );
+}
+
+function ResultStat({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div style={{ borderRadius: 14, padding: '11px 10px', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)' }}>
+      <span style={{ display: 'block', fontSize: 11, fontWeight: 750, color: 'var(--ink-faint)' }}>{label}</span>
+      <strong style={{ display: 'block', marginTop: 3, fontSize: 21, fontWeight: 900, color: 'var(--ink)', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{value}</strong>
+    </div>
   );
 }
 
@@ -481,20 +483,6 @@ export function Flash({ cards, unlockedSceneIds, onExit, onReplay: _onReplay }: 
   );
 }
 
-function SpeedScreenFx({ tone }: { tone: Exclude<Callout, null> }) {
-  const label = tone === 'perfect' ? 'PERFECT' : tone === 'good' ? 'HIT' : 'MISS';
-  const color = tone === 'miss' ? '#e0564a' : tone === 'perfect' ? '#f0b43f' : '#4cae79';
-  return (
-    <span aria-hidden className={`ym-speed-screen-fx is-${tone}`} style={{ ['--fx-color' as string]: color }}>
-      <FlashHitFx tone={tone} />
-      <span className="ym-speed-fx-ring is-one" />
-      <span className="ym-speed-fx-ring is-two" />
-      <span className="ym-speed-fx-swipe" />
-      <span className={`ym-speed-callout is-${tone}`}>{label}</span>
-    </span>
-  );
-}
-
 function SignPromptBoard({ text, category }: { text: string; category: string }) {
   const menu = category === '메뉴';
   const traffic = category === '교통';
@@ -506,22 +494,6 @@ function SignPromptBoard({ text, category }: { text: string; category: string })
       <span lang="ja" className="ym-local-sign-text">{text}</span>
       <span className="ym-local-sign-sub">{menu ? '本日のおすすめ' : traffic ? '駅構内案内' : caution ? 'ご注意ください' : 'まちの表示'}</span>
     </div>
-  );
-}
-
-function FlashHitFx({ tone }: { tone: Exclude<Callout, null> }) {
-  const color = tone === 'miss' ? '#e0564a' : tone === 'perfect' ? '#f0b43f' : '#4cae79';
-  const count = tone === 'perfect' ? 24 : tone === 'good' ? 18 : 12;
-  return (
-    <span aria-hidden className={`ym-speed-hitfx is-${tone}`} style={{ ['--fx-color' as string]: color }}>
-      {Array.from({ length: count }).map((_, i) => (
-        <i key={i} style={{
-          ['--fx-color' as string]: color,
-          ['--fx-rot' as string]: `${i * (360 / count)}deg`,
-          animationDelay: `${i * 0.01}s`,
-        }} />
-      ))}
-    </span>
   );
 }
 
