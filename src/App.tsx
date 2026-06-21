@@ -433,11 +433,13 @@ export function App() {
     const fast = Date.now() - cardStartRef.current < FAST_MS;
     setPicked(idx);
     if (card.kind !== 'quiz') { if (c.ja) speak(c.ja); return; }
-    // 미션 스텝이면 "내가 고른 답변" 기록 (대화 리캡용)
+    // 미션 스텝이면 "내가 고른 답변" 기록 (대화 리캡용).
+    // 반전 퀴즈는 어색한 답을 고른 것이라, 리캡엔 자연스러운 답(유효 보기)을 대신 기록.
     if (card.reviewTarget?.type === 'mission') {
+      const recap = card.inverted ? (card.choices.find((x) => !x.correct && x.phrase) ?? c) : c;
       setPicks((prev) => ({
         ...prev,
-        [card.id]: { label: c.label, ja: c.ja, kana: c.phrase?.kana, korean: c.phrase?.korean, recovery: !!c.recovery, hasPhrase: !!c.phrase },
+        [card.id]: { label: recap.label, ja: recap.ja, kana: recap.phrase?.kana, korean: recap.phrase?.korean, recovery: !!recap.recovery, hasPhrase: !!recap.phrase },
       }));
     }
     creditKana(card);
