@@ -547,7 +547,9 @@ export function App() {
       return <Placement cards={placementCards} onDone={finishPlacement} onSkip={() => setView('home')} />;
     }
     if (view === 'verbs') {
-      return <VerbForms onExit={() => setView('home')} />;
+      return <VerbForms onExit={() => setView('home')} progress={progress} onAnswer={(id, correct) => {
+        setProgress((m) => { const np = recordAttempt(m, id, { correct, usedRecovery: false, sessionId }); saveProgress(np); return np; });
+      }} />;
     }
     if (view === 'write') {
       return <KanaWrite items={writeItems} onExit={() => setView('home')} onReplay={startKanaWrite}
