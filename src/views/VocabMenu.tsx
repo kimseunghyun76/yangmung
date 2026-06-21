@@ -127,9 +127,9 @@ export function VocabMenu({ nav, allCards, progress, onSelectGroup, onBack }: Pr
             background: 'var(--glass-bg)', fontSize: 26,
           }}>🔢</span>
           <span style={{ flex: 1, minWidth: 0 }}>
-            <span style={{ display: 'block', fontSize: 15.5, fontWeight: 800 }}>생활 기초</span>
+            <span style={{ display: 'block', fontSize: 15.5, fontWeight: 800 }}>생활 기초 · 표 학습 🔢</span>
             <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-soft)', marginTop: 2, lineHeight: 1.4 }}>
-              숫자·요일·달·시간·금액·셈 단위
+              숫자·월·요일·시간을 표로 한 번에
             </span>
           </span>
           <span style={{ color: 'var(--ink-faint)', fontSize: 18 }}>›</span>
