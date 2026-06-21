@@ -54,7 +54,7 @@ export function VocabMenu({ nav, allCards, progress, onSelectGroup, onBack }: Pr
           반드시 외울 단어
         </h1>
         <p style={{ margin: 0, fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.5 }}>
-          주제별로 체계적으로 익혀요. 읽기·듣기·뜻→일본어 3단계 반복.
+          주제별로 설명·듣기·읽기로 익히고, 마지막에 듣고 일본어 찾기.
         </p>
       </div>
 
@@ -110,6 +110,30 @@ export function VocabMenu({ nav, allCards, progress, onSelectGroup, onBack }: Pr
             </button>
           );
         })}
+
+        {/* 생활 기초 — 숫자·요일·시간 (어휘 커리큘럼에 병합) */}
+        <button
+          className="ym-press"
+          onClick={() => onSelectGroup('basics')}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 14, textAlign: 'left',
+            padding: '14px 16px', borderRadius: 18, cursor: 'pointer',
+            border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
+          }}
+        >
+          <span style={{
+            width: 48, height: 48, flex: '0 0 48px', borderRadius: 14,
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            background: 'var(--glass-bg)', fontSize: 26,
+          }}>🔢</span>
+          <span style={{ flex: 1, minWidth: 0 }}>
+            <span style={{ display: 'block', fontSize: 15.5, fontWeight: 800 }}>생활 기초</span>
+            <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-soft)', marginTop: 2, lineHeight: 1.4 }}>
+              숫자·요일·달·시간·금액·셈 단위
+            </span>
+          </span>
+          <span style={{ color: 'var(--ink-faint)', fontSize: 18 }}>›</span>
+        </button>
       </div>
 
       <div style={{ marginTop: 20 }}>

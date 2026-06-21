@@ -33,7 +33,6 @@ interface Props {
   onPracticeDictation: () => void;
   onPracticeCompose: () => void;
   onPracticeFlash: () => void;
-  onPracticeBasics: () => void;
   onPracticeWrite: () => void;
   onPracticePairs: () => void;
   onPracticeVocab: () => void;
@@ -45,7 +44,7 @@ interface Props {
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' };
 
-export function Home({ nav, allCards, progress, session, sessionConfig, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation, onPracticeCompose, onPracticeFlash, onPracticeBasics, onPracticeWrite, onPracticePairs, onPracticeVocab, onPracticeGreetings, onPracticeVerbs, onPlacement, placementDone }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation, onPracticeCompose, onPracticeFlash, onPracticeWrite, onPracticePairs, onPracticeVocab, onPracticeGreetings, onPracticeVerbs, onPlacement, placementDone }: Props) {
   const upcomingId = nextSessionId(session);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
   const planned = plan.size;
@@ -166,7 +165,6 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
               { label: '간판·메뉴', sub: '실전 읽기', icon: 'sign', onClick: onPracticeSigns },
               { label: '받아쓰기', sub: '듣고 가나 쓰기', icon: 'dictation', onClick: onPracticeDictation },
               { label: '한→일 작문', sub: '뜻 보고 작문', icon: 'speak', onClick: onPracticeCompose },
-              { label: '생활 기초', sub: '숫자·요일·시간', icon: 'target', onClick: onPracticeBasics },
               { label: '가나 쓰기', sub: '따라쓰기', icon: 'dictation', onClick: onPracticeWrite },
               { label: '발음 구분', sub: 'つ/す·장음·촉음', icon: 'listen', onClick: onPracticePairs },
               { label: '동사 형태', sub: 'ます·ながら·たい', icon: 'flow', onClick: onPracticeVerbs },
