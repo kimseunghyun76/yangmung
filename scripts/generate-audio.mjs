@@ -4,6 +4,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { CONTENT } from '../src/content/index.ts';
+import { buildCards } from '../src/learn/cards.ts';
 import { signs } from '../src/content/signs.ts';
 import { SCENE_SENTENCES } from '../src/content/sceneSentences.ts';
 
@@ -30,7 +31,7 @@ const REGION = process.env.AZURE_SPEECH_REGION || 'koreacentral';
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry');
 const force = args.includes('--force');
-const only = valueArg('--only'); // kana | phrases | signs | sentences | tips | recap | core
+const only = valueArg('--only'); // kana | phrases | signs | sentences | tips | recap | cards | core
 const VOICE_KEY = valueArg('--voice') || (only === 'recap' ? 'keita' : 'nanami');
 const VOICE = VOICES[VOICE_KEY];
 const sourceIdFilter = valueArg('--source-id'); // 특정 Phrase/Kana/Sign id만 재생성
@@ -83,6 +84,10 @@ function inheritedSpeechPhoneme(item) {
   return CONTENT.phrases.find((p) => p.speechPhoneme && [displayText(p), synthesisText(p), normalizeText(p.kana), normalizeText(p.kanji)].some((text) => keys.has(text)))?.speechPhoneme;
 }
 
+function hasJapaneseText(text) {
+  return /[\u3040-\u30ff\u3400-\u9fff]/.test(String(text || ''));
+}
+
 function addItem(items, seen, source, sourceId, text, priority = 50, altTexts = [], synthText = text, speechPhoneme = undefined) {
   const clean = normalizeText(text);
   if (!clean) return;
@@ -115,6 +120,42 @@ function missionPhraseIds() {
     for (const id of m.speakPhraseIds ?? []) ids.add(id);
   }
   return ids;
+}
+
+function addCardSpeakItem(items, seen, cardId, field, text, altTexts = [], synthText = text) {
+  const clean = normalizeText(text);
+  if (!clean || !hasJapaneseText(clean)) return;
+  addItem(items, seen, 'card', `${cardId}:${field}`, clean, 48, altTexts, synthText);
+}
+
+function collectCardSpeakItems(items, seen) {
+  for (const card of buildCards()) {
+    if (card.kind === 'quiz') {
+      addCardSpeakItem(items, seen, card.id, 'bannerJa', card.bannerJa);
+      for (const [i, choice] of (card.choices ?? []).entries()) {
+        addCardSpeakItem(items, seen, card.id, `choice:${i}`, choice.ja);
+      }
+      continue;
+    }
+
+    if (card.kind === 'introduce') {
+      addCardSpeakItem(items, seen, card.id, 'ja', card.ja, [card.kana], card.kana || card.ja);
+      addCardSpeakItem(
+        items,
+        seen,
+        card.id,
+        'answersQuestion',
+        card.answersQuestion?.ja,
+        [card.answersQuestion?.kana],
+        card.answersQuestion?.kana || card.answersQuestion?.ja,
+      );
+      continue;
+    }
+
+    if (card.kind === 'speak' || card.kind === 'dictation' || card.kind === 'discover') {
+      addCardSpeakItem(items, seen, card.id, 'ja', card.ja, [card.kana], card.kana || card.ja);
+    }
+  }
 }
 
 function collectItems() {
@@ -162,6 +203,9 @@ function collectItems() {
   }
   if (!only || only === 'recap') {
     RECAP_PROMPTS.forEach((text, i) => addItem(items, seen, 'recap', `recap_${i + 1}`, text, 32));
+  }
+  if (!only || only === 'cards') {
+    collectCardSpeakItems(items, seen);
   }
 
   items.sort((a, b) => a.priority - b.priority || a.text.localeCompare(b.text, 'ja'));

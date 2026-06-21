@@ -640,22 +640,24 @@
       .ym-gacha-draw-card.is-silver::before,
       .ym-gacha-draw-card.is-gold::before,
       .ym-gacha-draw-card.is-diamond::before {
-        content: ''; position: absolute; left: 50%; top: 50%; width: 126px; height: 168px; transform: translate(-50%,-50%);
-        border-radius: 999px; z-index: -1; pointer-events: none;
-        background: radial-gradient(circle, color-mix(in srgb, var(--rarity-color, #f0a23a), #fff 28%), transparent 64%);
-        filter: blur(10px); animation: ym-gacha-rare-aura 1.25s ease-in-out infinite;
+        content: ''; position: absolute; inset: 8px; transform: none;
+        border-radius: 20px; z-index: -1; pointer-events: none;
+        background:
+          radial-gradient(ellipse at 50% 48%, color-mix(in srgb, var(--rarity-color, #d8a24a), #fff 24%), transparent 66%),
+          linear-gradient(180deg, color-mix(in srgb, var(--rarity-color, #d8a24a), transparent 78%), transparent);
+        filter: blur(12px); animation: ym-gacha-rare-aura 1.45s ease-in-out infinite;
       }
       .ym-gacha-draw-card.is-gold::after,
       .ym-gacha-draw-card.is-diamond::after {
-        content: ''; position: absolute; inset: -10px; border-radius: 20px; pointer-events: none; z-index: 3;
-        border: 1px solid color-mix(in srgb, var(--rarity-color, #f0a23a), #fff 34%);
+        content: ''; position: absolute; inset: 2px; border-radius: 18px; pointer-events: none; z-index: 3;
+        border: 1px solid color-mix(in srgb, var(--rarity-color, #d8a24a), #fff 34%);
         background:
           linear-gradient(115deg, transparent 0 34%, rgba(255,255,255,.58) 43%, transparent 52%),
-          radial-gradient(circle at 85% 12%, color-mix(in srgb, var(--rarity-color,#f0a23a), #fff 12%) 0 2px, transparent 3px),
-          radial-gradient(circle at 15% 88%, color-mix(in srgb, var(--rarity-color,#f0a23a), #fff 8%) 0 2px, transparent 3px);
+          radial-gradient(circle at 85% 12%, color-mix(in srgb, var(--rarity-color,#d8a24a), #fff 12%) 0 2px, transparent 3px),
+          radial-gradient(circle at 15% 88%, color-mix(in srgb, var(--rarity-color,#d8a24a), #fff 8%) 0 2px, transparent 3px);
         background-size: 220% 100%, auto, auto;
-        box-shadow: 0 0 20px color-mix(in srgb, var(--rarity-color, #f0a23a), transparent 42%);
-        animation: ym-gacha-rare-sheen 1.55s ease-in-out infinite;
+        box-shadow: 0 0 24px color-mix(in srgb, var(--rarity-color, #d8a24a), transparent 42%), inset 0 0 18px rgba(255,255,255,.12);
+        animation: ym-gacha-rare-sheen 1.85s ease-in-out infinite;
       }
       .ym-gacha-card-back {
         position: relative; overflow: hidden;
@@ -735,19 +737,19 @@
 
       /* ── Gacha v2: Japanese capsule-toy + anime trading card direction ── */
       .ym-gpn-image-machine {
-        width: 256px;
+        width: 272px;
         min-height: 374px;
         display: grid;
         place-items: center;
-        filter: drop-shadow(0 22px 28px rgba(0,0,0,.46)) saturate(1.04) contrast(1.03);
+        filter: drop-shadow(0 26px 34px rgba(0,0,0,.54)) saturate(1.02) contrast(1.04);
       }
       .ym-gpn-image-machine.is-active {
         animation: ym-gpn-machine-run .42s ease-in-out infinite;
       }
       .ym-gpn-mini-slot {
         position: relative;
-        width: 156px;
-        height: 226px;
+        width: 166px;
+        height: 232px;
         display: grid;
         place-items: end center;
         margin: 0 auto 2px;
@@ -756,7 +758,7 @@
         position: absolute;
         left: 50%;
         bottom: 0;
-        margin-left: -128px;
+        margin-left: -136px;
       }
       .ym-gpn-image-machine.is-jolt { animation: ym-gpn-machine-jolt .22s ease-out both; }
       .ym-gpn-machine-img {
@@ -765,13 +767,13 @@
         user-select: none;
         pointer-events: none;
         transform-origin: 50% 78%;
-        filter: drop-shadow(0 0 12px rgba(255,226,160,.18));
+        filter: drop-shadow(0 0 18px rgba(255,226,160,.22));
       }
       .ym-gpn-dome-overlay {
         position: absolute;
-        left: 34px;
+        left: 31px;
         top: 44px;
-        width: 188px;
+        width: 194px;
         height: 150px;
         border: 0;
         border-radius: 94px 94px 38px 38px;
@@ -818,8 +820,8 @@
       }
       .ym-gpn-dome-overlay::after { display: none; }
       .ym-gpn-image-machine .ym-gpn-ball {
-        width: 36px;
-        height: 28px;
+        width: 40px;
+        height: 31px;
         opacity: .94;
         transform: rotate(var(--cap-rot,-10deg)) scale(var(--cap-scale,1));
       }
@@ -890,29 +892,29 @@
       .ym-gpn-image-machine.is-active .ym-gpn-chute-glow { animation: ym-gpn-chute-ready .48s ease-in-out infinite; }
       .ym-gacha-comic-bg {
         position: absolute;
-        inset: -12%;
+        inset: 0;
         pointer-events: none;
-        opacity: .16;
+        opacity: .52;
         background:
-          repeating-conic-gradient(from -8deg at 50% 46%, transparent 0deg 8deg, rgba(255,236,185,.22) 8.5deg 10deg),
-          radial-gradient(circle at 26% 22%, rgba(255,255,255,.3), transparent 13%),
-          radial-gradient(circle at 78% 68%, color-mix(in srgb, var(--gacha-color, #f0a23a), #fff 16%), transparent 18%);
-        -webkit-mask: radial-gradient(circle at 50% 46%, transparent 0 16%, #000 28%, #000 78%, transparent 86%);
-        mask: radial-gradient(circle at 50% 46%, transparent 0 16%, #000 28%, #000 78%, transparent 86%);
-        animation: ym-gacha-rays 1.3s cubic-bezier(.2,.8,.2,1) both;
+          linear-gradient(118deg, transparent 0 38%, rgba(255,255,255,.12) 45%, transparent 52% 100%),
+          radial-gradient(ellipse at 50% 18%, rgba(255,247,220,.22), transparent 34%),
+          radial-gradient(circle at 18% 24%, color-mix(in srgb, var(--gacha-color, #d8a24a), transparent 78%), transparent 24%),
+          radial-gradient(circle at 82% 76%, rgba(91,199,224,.12), transparent 26%);
+        mix-blend-mode: screen;
       }
       .ym-gacha-stage {
         background:
-          radial-gradient(circle at 50% 28%, rgba(255,230,165,.24), transparent 25%),
-          radial-gradient(circle at 23% 18%, rgba(93,213,232,.12), transparent 28%),
-          radial-gradient(circle at 78% 72%, color-mix(in srgb, var(--gacha-color, #e55c4f), transparent 30%), transparent 27%),
-          linear-gradient(140deg, rgba(8,7,4,.94), rgba(38,27,11,.9) 48%, rgba(8,12,22,.96)) !important;
+          radial-gradient(ellipse at 50% 18%, rgba(255,232,178,.25), transparent 34%),
+          radial-gradient(circle at 24% 20%, rgba(91,199,224,.10), transparent 28%),
+          radial-gradient(circle at 76% 72%, color-mix(in srgb, var(--gacha-color, #d8a24a), transparent 68%), transparent 27%),
+          linear-gradient(145deg, rgba(10,12,18,.98), rgba(29,24,17,.96) 48%, rgba(7,10,16,.99)) !important;
+        color: #fff7eb;
       }
       .ym-gacha-stage::before {
         background:
-          radial-gradient(circle at 20% 18%, rgba(255,255,255,.26), transparent 13%),
-          radial-gradient(circle at 78% 70%, color-mix(in srgb, var(--gacha-color, #e55c4f), transparent 20%), transparent 16%),
-          repeating-linear-gradient(135deg, rgba(255,255,255,.04) 0 2px, transparent 2px 18px);
+          linear-gradient(90deg, transparent 0 49%, rgba(255,247,235,.06) 50%, transparent 51%),
+          radial-gradient(circle at 20% 18%, rgba(255,255,255,.18), transparent 13%),
+          radial-gradient(circle at 78% 70%, color-mix(in srgb, var(--gacha-color, #d8a24a), transparent 78%), transparent 16%);
       }
       .ym-mcard {
         background:
@@ -1076,7 +1078,7 @@
         filter: blur(3px);
       }
       .ym-mcard-img {
-        width: 88%; height: 88%; object-fit: contain; object-position: center; display: block;
+        width: 124%; height: 124%; object-fit: contain; object-position: center; display: block;
         filter: saturate(1.1) contrast(1.06) drop-shadow(0 11px 9px rgba(28,31,42,.3));
         animation: ym-mcard-item-float 2.8s ease-in-out infinite;
       }

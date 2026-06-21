@@ -206,6 +206,27 @@ export function claim(prev: Collection, sessionId: number, sceneIds: string[], d
   return { collection: autoUpgradeCollection({ cards, sentences, trophies: normalized.trophies, lastClaimedSessionId: sessionId }), results };
 }
 
+// 상용 가챠(보물 개봉식) 드롭 — 전 등급(기본~다이아)을 직접 드롭한다.
+// 세션 중복 가드 없음(의도적으로 반복 뽑는 가챠). RARITIES 가중치(50/30/13/7/1) 사용.
+const FULL_DRAW_TABLE = RARITIES.map((r) => ({ rarity: r.key, weight: r.weight }));
+export function drawGacha(prev: Collection, sceneIds: string[], draws = 1): { collection: Collection; results: DropResult[] } {
+  const normalized = normalizeCollection(prev);
+  if (sceneIds.length === 0) return { collection: normalized, results: [] };
+  const cards = { ...normalized.cards };
+  const results: DropResult[] = [];
+  for (let i = 0; i < draws; i++) {
+    const sceneId = pickScene(sceneIds);
+    const rarity = weightedFromTable(FULL_DRAW_TABLE);
+    const before = cards[sceneId];
+    const isNew = !before || totalItems(before) === 0;
+    const items = itemsOf(normalizeCard(before));
+    items[rarity] += 1;
+    cards[sceneId] = { items };
+    results.push({ sceneId, rarity, count: 1, isNew, sentenceIds: [], tier: rarityToTier(rarity), shards: items[rarity], leveledTo: null });
+  }
+  return { collection: autoUpgradeCollection({ ...normalized, cards }), results };
+}
+
 // ── 장면 lock 해제 (그 장면의 수집 카드 소모) ──────────────
 // tier별 필요한 "그 장면" 카드 수. 레벨이 높을수록 더 많이.
 export const UNLOCK_COST: Record<number, number> = { 1: 3, 2: 5, 3: 8, 4: 10, 5: 12 };

@@ -115,8 +115,24 @@ const MOTIF_IMAGE: Record<ItemMotif, string> = {
   festival: '/gacha/items/motif/motif-festival.webp',
 };
 
-function withMotifImage(item: GachaItemArt): GachaItemArt {
-  return { ...item, image: item.image ?? MOTIF_IMAGE[item.motif] };
+export function gachaItemAssetSlug(title: string, rarity: Rarity, motif: ItemMotif): string {
+  const body = compactTitle(title)
+    .split('')
+    .map((ch) => ch.charCodeAt(0).toString(36))
+    .join('-')
+    .slice(0, 90);
+  return `${rarity}-${motif}-${body || 'item'}`;
+}
+
+export function gachaItemAssetPath(title: string, rarity: Rarity, motif: ItemMotif): string {
+  return `/gacha/items/generated-v2/${gachaItemAssetSlug(title, rarity, motif)}.png`;
+}
+
+function withMotifImage(item: GachaItemArt, rarity: Rarity): GachaItemArt {
+  return {
+    ...item,
+    image: gachaItemAssetPath(item.title, rarity, item.motif) || item.image || MOTIF_IMAGE[item.motif],
+  };
 }
 
 const BY_PLACE: Record<string, Partial<Record<Rarity, GachaItemArt>>> = {
@@ -249,7 +265,9 @@ const PLACE_ALIAS: Record<string, string> = {
   스시추가: '스시집',
 };
 
+export const GACHA_ITEM_PLACES = Object.keys(BY_PLACE);
+
 export function gachaItemForPlace(place: string | undefined, rarity: Rarity): GachaItemArt {
   const key = place && (BY_PLACE[place] ? place : PLACE_ALIAS[place]);
-  return withJa(withMotifImage((key && BY_PLACE[key]?.[rarity]) || GENERIC[rarity]));
+  return withJa(withMotifImage((key && BY_PLACE[key]?.[rarity]) || GENERIC[rarity], rarity));
 }
