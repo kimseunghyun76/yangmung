@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { deflateSync } from 'node:zlib';
 import { CONTENT } from '../src/content/index.ts';
 import { RARITIES } from '../src/learn/collection.ts';
-import { GACHA_ITEM_PLACES, gachaItemForPlace } from '../src/learn/gachaItems.ts';
+import { GACHA_ITEM_PLACES, gachaLabItemForPlace } from '../src/learn/gachaItems.ts';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const outDir = join(root, 'public', 'gacha', 'items', 'generated-v2');
@@ -325,7 +325,7 @@ const places = [...new Set([...GACHA_ITEM_PLACES, ...CONTENT.missions.map((m) =>
 const items = new Map();
 for (const place of places) {
   for (const r of RARITIES) {
-    const item = gachaItemForPlace(place, r.key);
+    const item = gachaLabItemForPlace(place, r.key);
     const rel = item.image?.replace(/^\/gacha\/items\/generated-v2\//, '');
     if (!rel) continue;
     items.set(rel, { item, rarity: r.key, place });
