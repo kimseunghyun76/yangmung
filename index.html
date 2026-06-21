@@ -282,36 +282,33 @@
         box-shadow: inset 6px -8px 0 rgba(0,0,0,.09), inset -6px 4px 0 rgba(255,255,255,.36); }
       .ym-gpn-capsule.is-pop .ym-gpn-cap-top { animation: ym-gpn-half-top .62s cubic-bezier(.2,.7,.3,1) both; }
       .ym-gpn-capsule.is-pop .ym-gpn-cap-bottom { animation: ym-gpn-half-bottom .62s cubic-bezier(.2,.7,.3,1) both; }
-      .ym-manga-lines { position:absolute; left:50%; top:50%; width:min(150vw,640px); height:min(150vw,640px); margin:calc(min(150vw,640px)/-2) 0 0 calc(min(150vw,640px)/-2); pointer-events:none;
+      .ym-manga-lines { display:none; position:absolute; left:50%; top:50%; width:min(150vw,640px); height:min(150vw,640px); margin:calc(min(150vw,640px)/-2) 0 0 calc(min(150vw,640px)/-2); pointer-events:none;
         background: repeating-conic-gradient(from 3deg, transparent 0deg 5deg, rgba(255,253,246,.92) 5.6deg 7.4deg);
         -webkit-mask: radial-gradient(circle, transparent 0 24%, #000 46%, #000 72%, transparent 76%);
         mask: radial-gradient(circle, transparent 0 24%, #000 46%, #000 72%, transparent 76%);
         animation: ym-manga-lines-in .85s cubic-bezier(.2,.8,.3,1) both; }
-      .ym-manga-sfx { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); pointer-events:none; z-index:6;
+      .ym-manga-sfx { display:none; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); pointer-events:none; z-index:6;
         font-weight:1000; font-style:italic; letter-spacing:.04em; color:#fffdf6; -webkit-text-stroke: 2.5px #211a12;
         text-shadow: 4px 4px 0 #211a12, 0 0 26px rgba(255,255,255,.5);
         animation: ym-manga-sfx-pop .9s cubic-bezier(.2,.85,.3,1.1) both; }
       .ym-gpn-spill { animation: ym-gpn-card-spill .6s cubic-bezier(.22,.9,.3,1.18) both; animation-delay: var(--spill-d, 0s); }
       /* ── 망가 트레카 (가챠 카드) — 크림+잉크 외곽선+하프톤 ── */
       .ym-mcard { position:relative; overflow:hidden; display:inline-flex; flex-direction:column; align-items:center;
-        background:
-          radial-gradient(circle at 88% 6%, color-mix(in srgb, var(--rarity-color,#f0a23a), transparent 72%) 0 26%, transparent 27%),
-          repeating-radial-gradient(circle at 8% 96%, rgba(32,36,47,.1) 0 1px, transparent 1.5px 7px),
-          linear-gradient(176deg, #fffdf6, #fdf4e0 70%, #f7ead2);
-        border: 3px solid #211a12;
-        box-shadow: 0 0 0 2.5px var(--rarity-color,#f0a23a), 0 7px 0 -1px #211a12, 0 14px 22px rgba(0,0,0,.3); }
-      .ym-mcard::before { content:''; position:absolute; left:0; right:0; top:0; height:21%;
-        background: linear-gradient(180deg, color-mix(in srgb, var(--rarity-color,#f0a23a), #fff 22%), color-mix(in srgb, var(--rarity-color,#f0a23a), #fff 4%));
-        border-bottom: 2.5px solid #211a12; }
+        background: linear-gradient(176deg, #fffdf6, #fdf4e0 72%, #f7ead2);
+        border: 1px solid rgba(33,26,18,.5);
+        box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--rarity-color,#caa15c), transparent 30%), 0 10px 26px rgba(33,26,18,.22); }
+      .ym-mcard::before { content:''; position:absolute; left:0; right:0; top:0; height:18%;
+        background: linear-gradient(180deg, color-mix(in srgb, var(--rarity-color,#caa15c), transparent 30%), color-mix(in srgb, var(--rarity-color,#caa15c), transparent 78%));
+        border-bottom: 1px solid rgba(33,26,18,.28); }
       .ym-mcard.is-holo::after { content:''; position:absolute; inset:0; pointer-events:none; mix-blend-mode:soft-light; opacity:.85;
         background: linear-gradient(118deg, rgba(216,162,74,.46), rgba(255,240,210,.52) 28%, rgba(226,101,90,.4) 54%, rgba(216,162,74,.46) 80%);
         background-size: 240% 240%; animation: ym-gacha-back-rainbow 2.6s linear infinite; }
-      .ym-mcard-stars { position:relative; z-index:2; display:flex; gap:1px; line-height:1; color:#fffdf6; -webkit-text-stroke:.8px #211a12; text-shadow:1px 1.5px 0 #211a12; }
-      .ym-mcard-title { position:relative; z-index:2; color:#211a12; font-weight:950; text-align:center; line-height:1.1; }
-      .ym-mcard-sub { position:relative; z-index:2; color:#fffdf6; background:#211a12; border-radius:99px; font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .ym-mcard-stars { position:relative; z-index:2; display:flex; gap:1px; line-height:1; color:#caa15c; text-shadow:0 1px 1px rgba(33,26,18,.3); }
+      .ym-mcard-title { position:relative; z-index:2; color:#211a12; font-weight:850; text-align:center; line-height:1.1; }
+      .ym-mcard-sub { position:relative; z-index:2; color:#fdf4e0; background:rgba(33,26,18,.82); border-radius:99px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
       .ym-mcard-art { position:relative; z-index:1; display:flex; align-items:center; justify-content:center;
         border-radius:50%; background: radial-gradient(circle at 34% 26%, #fffdf6, #fdeed2 70%);
-        border: 2.5px solid #211a12; box-shadow: inset -3px -4px 0 rgba(32,36,47,.1); }
+        border: 1px solid rgba(33,26,18,.32); box-shadow: inset -2px -3px 6px rgba(33,26,18,.08); }
       /* ── 망가 카드 뒷면 — 먹빛 사문(沙紋)+집중선+？ ── */
       .ym-mback { position:relative; overflow:hidden; display:inline-flex; align-items:center; justify-content:center;
         color:#fff8ec; background:
@@ -895,7 +892,7 @@
         position: absolute;
         inset: -12%;
         pointer-events: none;
-        opacity: .42;
+        opacity: .16;
         background:
           repeating-conic-gradient(from -8deg at 50% 46%, transparent 0deg 8deg, rgba(255,236,185,.22) 8.5deg 10deg),
           radial-gradient(circle at 26% 22%, rgba(255,255,255,.3), transparent 13%),
