@@ -128,10 +128,17 @@ export function gachaItemAssetPath(title: string, rarity: Rarity, motif: ItemMot
   return `/gacha/items/generated-v2/${gachaItemAssetSlug(title, rarity, motif)}.png`;
 }
 
-function withMotifImage(item: GachaItemArt, rarity: Rarity): GachaItemArt {
+function withLegacyImage(item: GachaItemArt): GachaItemArt {
   return {
     ...item,
-    image: gachaItemAssetPath(item.title, rarity, item.motif) || item.image || MOTIF_IMAGE[item.motif],
+    image: item.image || MOTIF_IMAGE[item.motif],
+  };
+}
+
+function withLabImage(item: GachaItemArt, rarity: Rarity): GachaItemArt {
+  return {
+    ...item,
+    image: gachaItemAssetPath(item.title, rarity, item.motif),
   };
 }
 
@@ -269,5 +276,10 @@ export const GACHA_ITEM_PLACES = Object.keys(BY_PLACE);
 
 export function gachaItemForPlace(place: string | undefined, rarity: Rarity): GachaItemArt {
   const key = place && (BY_PLACE[place] ? place : PLACE_ALIAS[place]);
-  return withJa(withMotifImage((key && BY_PLACE[key]?.[rarity]) || GENERIC[rarity], rarity));
+  return withJa(withLegacyImage((key && BY_PLACE[key]?.[rarity]) || GENERIC[rarity]));
+}
+
+export function gachaLabItemForPlace(place: string | undefined, rarity: Rarity): GachaItemArt {
+  const key = place && (BY_PLACE[place] ? place : PLACE_ALIAS[place]);
+  return withJa(withLabImage((key && BY_PLACE[key]?.[rarity]) || GENERIC[rarity], rarity));
 }

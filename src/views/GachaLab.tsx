@@ -6,7 +6,7 @@ import { useMemo, useRef, useState } from 'react';
 import { CONTENT } from '../content';
 import { isMissionUnlocked, type ProgressMap } from '../learn/progress';
 import { drawGacha, loadCollection, saveCollection, bestRarity, totalItems, type Collection, type Rarity } from '../learn/collection';
-import { gachaItemForPlace } from '../learn/gachaItems';
+import { gachaLabItemForPlace } from '../learn/gachaItems';
 import { WRAP } from '../ui/styles';
 import { NavBar, type NavBarProps } from './NavBar';
 import { MascotFace } from './mascot';
@@ -47,7 +47,7 @@ const castFor = (place: string): Cast => CAST[place] ?? DEFAULT_CAST;
 function artFor(sceneId: string, rarity: Rarity): DrawItem {
   const m = CONTENT.missions.find((x) => x.id === sceneId);
   const place = (m?.place ?? m?.scenario ?? sceneId) as string;
-  const a = gachaItemForPlace(place, rarity);
+  const a = gachaLabItemForPlace(place, rarity);
   return { sceneId, name: a.jaTitle ?? a.title, korean: a.title, place, image: a.image ?? '', rarity };
 }
 const bestOf = (items: DrawItem[]) => items.reduce((b, it) => (RANK.indexOf(it.rarity) > RANK.indexOf(b.rarity) ? it : b), items[0]);
@@ -159,15 +159,20 @@ export function GachaLab({ nav, progress, onExit }: Props) {
 
           {(phase === 'idle' || phase === 'charging') && (
             <div className={`gl-box ${phase === 'charging' ? 'is-charging' : ''}`} aria-hidden>
+              <span className="gl-box-backlight" />
               <span className="gl-box-aura" />
+              <span className="gl-box-shadow" />
               <span className="gl-box-lid" />
+              <span className="gl-box-slit" />
               <span className="gl-box-body" />
+              <span className="gl-box-rune" />
               <span className="gl-box-seal">福</span>
             </div>
           )}
 
           {single && bv && (
             <div className="gl-reveal">
+              <span className="gl-burst-ring" aria-hidden style={{ ['--c' as string]: bv.color }} />
               <span className="gl-pillar" aria-hidden style={{ ['--c' as string]: bv.color }} />
               {Array.from({ length: special ? 22 : 14 }).map((_, i) => (
                 <span key={i} className="gl-spark" aria-hidden style={{ ['--c' as string]: bv.color, ['--a' as string]: `${i * (360 / (special ? 22 : 14))}deg`, ['--d' as string]: `${i * 0.03}s` }} />
@@ -196,6 +201,7 @@ export function GachaLab({ nav, progress, onExit }: Props) {
 
           {phase === 'multi' && best && bv && (
             <div className="gl-multi">
+              <span className="gl-multi-sweep" aria-hidden style={{ ['--c' as string]: bv.color }} />
               {special && (
                 <div className="gl-multi-feat" style={{ ['--c' as string]: bv.color }}>
                   <Cameo place={best.place} side="l" />
@@ -289,8 +295,14 @@ function cta(primary: boolean, color?: string): React.CSSProperties {
 const STYLE = `
 .gl-root{ --stage:#171019; }
 .gl-stage{ position:relative; height:min(60svh,540px); border-radius:24px; overflow:hidden; display:flex; align-items:center; justify-content:center;
-  background:radial-gradient(circle at 50% 30%, #2a1f33, #15101b 70%); border:1px solid rgba(255,255,255,.08); box-shadow:inset 0 0 60px rgba(0,0,0,.5); }
-.gl-stage.is-special{ background:radial-gradient(circle at 50% 28%, #2c1430, #0e0a14 72%); }
+  background:
+    radial-gradient(circle at 50% 16%, rgba(255,241,195,.12), transparent 28%),
+    linear-gradient(180deg, rgba(255,255,255,.04), transparent 34%),
+    radial-gradient(circle at 50% 30%, #2a1f33, #15101b 70%);
+  border:1px solid rgba(255,255,255,.08); box-shadow:inset 0 0 60px rgba(0,0,0,.5), 0 22px 44px rgba(29,18,19,.22); }
+.gl-stage.is-special{ background:
+    radial-gradient(circle at 50% 18%, rgba(255,215,108,.18), transparent 31%),
+    radial-gradient(circle at 50% 28%, #2c1430, #0e0a14 72%); }
 .gl-stage-light{ position:absolute; inset:0; pointer-events:none;
   background:radial-gradient(circle at 50% 18%, color-mix(in srgb, var(--aura,#caa15c), transparent 55%), transparent 46%); animation:gl-pulse 2.4s ease-in-out infinite; }
 .gl-stage-floor{ position:absolute; left:-20%; right:-20%; bottom:-8%; height:42%; pointer-events:none;
@@ -300,19 +312,36 @@ const STYLE = `
   -webkit-mask:radial-gradient(circle at 50% 40%, transparent 0 22%, #000 40%, transparent 72%); mask:radial-gradient(circle at 50% 40%, transparent 0 22%, #000 40%, transparent 72%); }
 @keyframes gl-spin{ to{ transform:rotate(360deg) } }
 @keyframes gl-pulse{ 0%,100%{opacity:.7} 50%{opacity:1} }
-.gl-box{ position:relative; width:150px; height:130px; z-index:2; filter:drop-shadow(0 18px 26px rgba(0,0,0,.5)); }
-.gl-box.is-charging{ animation:gl-tremble .16s linear infinite; }
-@keyframes gl-tremble{ 0%,100%{transform:translate(0,0) rotate(0)} 25%{transform:translate(-3px,1px) rotate(-2deg)} 75%{transform:translate(3px,-1px) rotate(2deg)} }
-.gl-box-aura{ position:absolute; inset:-30%; border-radius:50%; pointer-events:none;
-  background:radial-gradient(circle, rgba(216,162,74,.5), transparent 64%); animation:gl-pulse 1.3s ease-in-out infinite; }
+.gl-box{ position:relative; width:168px; height:148px; z-index:2; filter:drop-shadow(0 18px 26px rgba(0,0,0,.5)); transform-style:preserve-3d; }
+.gl-box.is-charging{ animation:gl-tremble .18s linear infinite; }
+@keyframes gl-tremble{ 0%,100%{transform:translate(0,0) rotate(0)} 22%{transform:translate(-2px,1px) rotate(-1.4deg)} 54%{transform:translate(2px,-1px) rotate(1.6deg)} 76%{transform:translate(-1px,-1px) rotate(-.8deg)} }
+.gl-box-backlight{ position:absolute; left:50%; top:46%; width:210px; height:210px; transform:translate(-50%,-50%) rotate(0deg); border-radius:50%; opacity:.35;
+  background:conic-gradient(from 0deg, transparent, rgba(255,215,116,.55), transparent 30%, rgba(184,80,62,.38), transparent 64%, rgba(255,241,202,.48), transparent);
+  filter:blur(1px); animation:gl-spin 7.5s linear infinite; }
+.gl-box.is-charging .gl-box-backlight{ opacity:.72; animation-duration:1.8s; }
+.gl-box-aura{ position:absolute; inset:-42%; border-radius:50%; pointer-events:none;
+  background:radial-gradient(circle, rgba(216,162,74,.48), rgba(185,56,46,.15) 38%, transparent 66%); animation:gl-pulse 1.3s ease-in-out infinite; }
+.gl-box-shadow{ position:absolute; left:3px; right:3px; bottom:-10px; height:28px; border-radius:50%; background:radial-gradient(ellipse, rgba(0,0,0,.42), transparent 72%); filter:blur(5px); }
 .gl-box-body{ position:absolute; left:8px; right:8px; bottom:0; height:78px; border-radius:10px 10px 14px 14px;
-  background:linear-gradient(180deg,#b23a2f,#7d2620); border:2px solid #2a1810; box-shadow:inset 0 4px 0 rgba(255,255,255,.18); }
-.gl-box-lid{ position:absolute; left:0; right:0; top:18px; height:36px; border-radius:12px;
-  background:linear-gradient(180deg,#caa14a,#9c7a30); border:2px solid #2a1810; box-shadow:inset 0 3px 0 rgba(255,255,255,.3); z-index:1; }
-.gl-box-seal{ position:absolute; left:50%; top:62px; transform:translateX(-50%); z-index:2; font-size:22px; font-weight:900; color:#fff2dc; text-shadow:0 1px 2px rgba(0,0,0,.5); }
+  background:linear-gradient(180deg,#bd4337 0%,#8f2b25 54%,#5f1d18 100%); border:2px solid #2a1810; box-shadow:inset 0 4px 0 rgba(255,255,255,.18), inset 0 -18px 22px rgba(0,0,0,.22); }
+.gl-box-lid{ position:absolute; left:0; right:0; top:18px; height:38px; border-radius:13px;
+  background:linear-gradient(180deg,#f0d98d 0%,#caa14a 46%,#8d6928 100%); border:2px solid #2a1810; box-shadow:inset 0 3px 0 rgba(255,255,255,.38), 0 8px 18px rgba(0,0,0,.22); z-index:2; transform-origin:50% 100%; }
+.gl-box.is-charging .gl-box-lid{ animation:gl-lid-crack .92s ease-in-out infinite; }
+@keyframes gl-lid-crack{ 0%,100%{ transform:translateY(0) rotateX(0deg)} 45%{ transform:translateY(-8px) rotateX(-18deg)} 70%{ transform:translateY(-3px) rotateX(-7deg)} }
+.gl-box-slit{ position:absolute; left:18px; right:18px; top:57px; height:8px; border-radius:999px; background:linear-gradient(90deg, transparent, rgba(255,236,138,.95), transparent); z-index:3; opacity:.28; filter:blur(.2px); }
+.gl-box.is-charging .gl-box-slit{ animation:gl-slit .72s ease-in-out infinite; }
+@keyframes gl-slit{ 0%,100%{ opacity:.28; transform:scaleX(.72)} 50%{ opacity:1; transform:scaleX(1.08)} }
+.gl-box-rune{ position:absolute; left:50%; bottom:20px; width:76px; height:76px; margin-left:-38px; border-radius:50%; z-index:2; opacity:.5;
+  border:1px solid rgba(255,226,140,.45); box-shadow:inset 0 0 18px rgba(255,226,140,.16), 0 0 12px rgba(255,226,140,.12); }
+.gl-box-rune:before,.gl-box-rune:after{ content:''; position:absolute; inset:12px; border-radius:50%; border:1px dashed rgba(255,239,190,.44); }
+.gl-box-rune:after{ inset:24px; border-style:solid; }
+.gl-box.is-charging .gl-box-rune{ animation:gl-spin 2.6s linear infinite; opacity:.9; }
+.gl-box-seal{ position:absolute; left:50%; top:65px; transform:translateX(-50%); z-index:4; font-size:24px; font-weight:900; color:#fff2dc; text-shadow:0 1px 2px rgba(0,0,0,.5), 0 0 10px rgba(255,226,140,.45); }
 .gl-cast{ position:absolute; left:0; right:0; bottom:128px; display:flex; justify-content:center; gap:120px; z-index:1; pointer-events:none; animation:gl-walkin .6s ease both; }
 @keyframes gl-walkin{ from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:none} }
 .gl-reveal{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:3; }
+.gl-burst-ring{ position:absolute; left:50%; top:48%; width:90px; height:90px; margin:-45px 0 0 -45px; border-radius:50%; border:3px solid var(--c,#e8b23a); box-shadow:0 0 24px var(--c,#e8b23a), inset 0 0 18px var(--c,#e8b23a); opacity:0; animation:gl-burst .86s cubic-bezier(.16,.9,.24,1) both; }
+@keyframes gl-burst{ 0%{opacity:0; transform:scale(.28)} 22%{opacity:1} 100%{opacity:0; transform:scale(4.8)} }
 .gl-pillar{ position:absolute; left:50%; top:-10%; width:120px; height:120%; transform:translateX(-50%);
   background:linear-gradient(180deg, color-mix(in srgb, var(--c,#e8b23a), transparent 20%), transparent 80%); filter:blur(8px); opacity:.7; animation:gl-pillar .9s ease-out both; mix-blend-mode:screen; }
 @keyframes gl-pillar{ 0%{opacity:0; transform:translateX(-50%) scaleY(.2)} 40%{opacity:.85} 100%{opacity:.55; transform:translateX(-50%) scaleY(1)} }
@@ -339,6 +368,10 @@ const STYLE = `
 .gl-cameo-name{ margin-top:5px; font-size:13px; font-weight:900; color:#fff7eb; text-shadow:0 1px 3px rgba(0,0,0,.6); }
 .gl-cameo-role{ font-size:10px; font-weight:700; color:rgba(255,247,235,.78); }
 .gl-multi{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; z-index:3; padding:8px 10px 130px; overflow:auto; }
+.gl-multi-sweep{ position:absolute; inset:-18%; opacity:.28; pointer-events:none; mix-blend-mode:screen;
+  background:linear-gradient(118deg, transparent 35%, color-mix(in srgb, var(--c,#e8b23a), transparent 25%) 48%, transparent 61%);
+  transform:translateX(-44%) rotate(0deg); animation:gl-sweep 1.15s ease-out both; }
+@keyframes gl-sweep{ 0%{opacity:0; transform:translateX(-52%)} 28%{opacity:.46} 100%{opacity:0; transform:translateX(52%)} }
 .gl-multi-feat{ position:relative; display:flex; flex-direction:column; align-items:center; padding:6px 10px 0; }
 .gl-grid{ display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:7px; width:100%; max-width:360px; }
 .gl-cell{ display:flex; flex-direction:column; align-items:center; padding:5px 2px 4px; border-radius:12px; border:1px solid color-mix(in srgb, var(--c,#888), transparent 50%);
