@@ -2,6 +2,7 @@
 // 진입 자동재생은 App에서 일원화.
 import { useState } from 'react';
 import type { DictationCard } from '../learn/cards';
+import type { SegPos } from '../learn/jaSegment';
 import { speak, ttsSupported } from '../tts';
 import { BTN, PRIMARY } from '../ui/styles';
 import { Icon } from '../ui/Icon';
@@ -150,7 +151,39 @@ function DictationTyping({ card, onResult, onNext }: Props) {
   );
 }
 
-// ── 작문(한→일): 한국어 보고 가나 타일 조립 (기존 유지) ──
+// ── 품사 레인 — 작문 타일을 단어·조사·동사로 묶어 색으로 구분 ──
+const POS_META: Record<SegPos, { label: string; color: string; soft: string }> = {
+  word: { label: '단어', color: 'var(--ink-soft)', soft: 'var(--glass-bg-strong)' },
+  particle: { label: '조사', color: '#3a78d8', soft: 'rgba(58,120,216,0.12)' },
+  verb: { label: '동사·서술어', color: 'var(--ok)', soft: 'var(--ok-soft)' },
+};
+function PosLanes({ tiles, tilePos, usable, locked, onTap }: {
+  tiles: string[]; tilePos: SegPos[]; usable: boolean[]; locked: boolean; onTap: (i: number) => void;
+}) {
+  const order: SegPos[] = ['word', 'particle', 'verb'];
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 12 }}>
+      {order.map((pos) => {
+        const idxs = tiles.map((_, i) => i).filter((i) => tilePos[i] === pos);
+        if (idxs.length === 0) return null;
+        const meta = POS_META[pos];
+        return (
+          <div key={pos} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ flex: '0 0 56px', fontSize: 11, fontWeight: 800, color: meta.color, textAlign: 'right' }}>{meta.label}</span>
+            <div style={{ flex: 1, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {idxs.map((i) => (
+                <button key={i} className="ym-press" onClick={() => onTap(i)} disabled={!usable[i] || locked} lang="ja"
+                  style={{ ...BTN, fontSize: 22, padding: '8px 14px', opacity: usable[i] ? 1 : 0.28, background: meta.soft, border: `1.5px solid ${meta.color}`, color: 'var(--ink)' }}>{tiles[i]}</button>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ── 작문(한→일): 한국어 보고 타일 조립. 분절되면 품사 레인, 아니면 가나 타일. ──
 function ComposeBody({ card, onResult, onNext }: Props) {
   const [built, setBuilt] = useState<number[]>([]);
   const [checked, setChecked] = useState<null | boolean>(null);
@@ -166,7 +199,7 @@ function ComposeBody({ card, onResult, onNext }: Props) {
   return (
     <div>
       <h2 style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="dictation" size={22} /> 작문</h2>
-      <p style={{ color: 'var(--ink-soft)', margin: '4px 0 0' }}>뜻을 보고, 가나를 골라 일본어 문장을 만들어요</p>
+      <p style={{ color: 'var(--ink-soft)', margin: '4px 0 0' }}>{card.tilePos ? '뜻을 보고, 단어·조사·동사를 골라 문장을 만들어요' : '뜻을 보고, 가나를 골라 일본어 문장을 만들어요'}</p>
 
       <div style={{ textAlign: 'center', marginTop: 14 }}>
         <p style={{ fontSize: 22, fontWeight: 800, color: 'var(--ink)', margin: 0 }}>{card.korean}</p>
@@ -179,21 +212,27 @@ function ComposeBody({ card, onResult, onNext }: Props) {
           const caret = checked === null && i === built.length && i < card.answer.length;
           let border = 'var(--glass-border)', bg = ch !== undefined ? 'var(--glass-bg-strong)' : 'transparent', color = 'var(--ink)';
           if (checked !== null && ch !== undefined) { const ok = ch === card.answer[i]; border = ok ? 'var(--ok)' : 'var(--accent)'; bg = ok ? 'var(--ok-soft)' : 'var(--accent-soft)'; color = ok ? 'var(--ink)' : 'var(--accent)'; }
+          // 품사 묶음(단어 타일)은 글자 수가 달라 가변 폭, 가나 단위는 고정 44px.
+          const wide = !!card.tilePos;
           return (
             <button key={i} onClick={() => removeAt(i)} disabled={checked !== null || ch === undefined} lang="ja"
-              style={{ width: 44, height: 52, borderRadius: 12, fontSize: 26, fontWeight: 700, color, border: `1.5px ${ch === undefined ? 'dashed' : 'solid'} ${caret ? 'var(--accent)' : border}`, background: bg, cursor: checked === null && ch !== undefined ? 'pointer' : 'default', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minHeight: 0 }}>
+              style={{ ...(wide ? { minWidth: 44, padding: '0 12px' } : { width: 44 }), height: 52, borderRadius: 12, fontSize: wide ? 22 : 26, fontWeight: 700, color, border: `1.5px ${ch === undefined ? 'dashed' : 'solid'} ${caret ? 'var(--accent)' : border}`, background: bg, cursor: checked === null && ch !== undefined ? 'pointer' : 'default', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minHeight: 0 }}>
               {ch ?? ''}
             </button>
           );
         })}
       </div>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginTop: 10 }}>
-        {card.tiles.map((t, i) => (
-          <button key={i} className="ym-press" onClick={() => tap(i)} disabled={!usable[i] || checked !== null} lang="ja"
-            style={{ ...BTN, fontSize: 24, padding: '8px 16px', opacity: usable[i] ? 1 : 0.28, background: 'var(--glass-bg-strong)' }}>{t}</button>
-        ))}
-      </div>
+      {card.tilePos ? (
+        <PosLanes tiles={card.tiles} tilePos={card.tilePos} usable={usable} locked={checked !== null} onTap={tap} />
+      ) : (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginTop: 10 }}>
+          {card.tiles.map((t, i) => (
+            <button key={i} className="ym-press" onClick={() => tap(i)} disabled={!usable[i] || checked !== null} lang="ja"
+              style={{ ...BTN, fontSize: 24, padding: '8px 16px', opacity: usable[i] ? 1 : 0.28, background: 'var(--glass-bg-strong)' }}>{t}</button>
+          ))}
+        </div>
+      )}
 
       {checked === null ? (
         <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>

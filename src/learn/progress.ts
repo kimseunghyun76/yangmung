@@ -749,7 +749,10 @@ export function selectComposeCards(allCards: Card[], progress: ProgressMap, curr
     if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
     (progress[c.id] ? due : fresh).push(c);
   }
-  return [...shuffleKana(due), ...shuffleKana(fresh)].slice(0, limit);
+  // 품사 묶음(tilePos) 카드를 앞세워 작문 경험을 일관되게 한다. 부족하면 가나 타일 카드로 채움.
+  const hasPos = (c: Card) => c.kind === 'dictation' && !!c.tilePos;
+  const order = (arr: Card[]) => { const a = shuffleKana(arr); return [...a.filter(hasPos), ...a.filter((c) => !hasPos(c))]; };
+  return [...order(due), ...order(fresh)].slice(0, limit);
 }
 
 // 가나 전용 덱 — 한 스크립트(히라/가타)만, 개념별 가장 안 본 형태 1장씩, 약점 먼저. (직접 진입 링크용)

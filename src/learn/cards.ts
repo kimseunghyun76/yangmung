@@ -6,6 +6,7 @@ import { signs } from '../content/signs';
 import { minimalPairs } from '../content/minimalPairs';
 import { VOCAB_GROUPS, type VocabItem } from '../content/thematicVocab';
 import { toReadingUnits } from './kanaReading';
+import { segmentJa, type SegPos } from './jaSegment';
 
 // 받아쓰기 대상 — 짧고 순수 가나인 표현 (초보자 듣기+쓰기 입문)
 const DICTATION_IDS = [
@@ -132,6 +133,7 @@ export interface DictationCard {
   answer: string[];      // 정답 가나 단위 순서
   korean: string;
   tiles: string[];       // 섞인 타일(정답 + 방해)
+  tilePos?: SegPos[];    // 작문(품사 묶음) — tiles와 같은 순서의 품사 태그(단어·조사·동사). 있으면 품사 레인 UI.
   promptKind?: 'listen' | 'korean'; // listen: 듣고 쓰기(기본) · korean: 한국어 보고 작문(산출)
   /** 레벨(난이도) 태그 — 미션 티어/표현 길이에서 유도. 세션 레벨 필터용. */
   tier?: 1 | 2 | 3 | 4 | 5;
@@ -859,17 +861,45 @@ export function buildCards(): Card[] {
   const pushTileCard = (id: string, kind: 'dictation' | 'compose') => {
     const p = phrases.find((x) => x.id === id);
     if (!p) return;
-    const answer = toReadingUnits(p.kana).map((u) => u.text).filter((t) => t.trim());
-    const distractors = shuffle(DICTATION_DISTRACTORS.filter((d) => !answer.includes(d))).slice(0, 3);
+    const units = toReadingUnits(p.kana).map((u) => u.text).filter((t) => t.trim());
+
+    // 작문 — 깔끔하게 분절되면 단어·조사·동사 타일(품사 묶음), 아니면 가나 타일로 폴백.
+    if (kind === 'compose') {
+      const seg = segmentJa(p.kana);
+      if (seg.confident && seg.segments.length >= 2) {
+        const answer = seg.segments.map((s) => s.text);
+        const shuffled = shuffle(seg.segments.map((s, idx) => ({ s, idx })));
+        cards.push({
+          kind: 'dictation',
+          id: `compose:${id}`,
+          tag: '작문',
+          promptKind: 'korean',
+          ja: ttsText(p) ?? p.kana, answer, korean: p.korean,
+          tiles: shuffled.map(({ s }) => s.text),
+          tilePos: shuffled.map(({ s }) => s.pos),
+          tier: dictTier(id, answer.length),
+          reviewTarget: { type: 'phrase', id },
+        });
+        return;
+      }
+      // 폴백: 가나 단위 타일 + 방해 타일
+      const distractors = shuffle(DICTATION_DISTRACTORS.filter((d) => !units.includes(d))).slice(0, 3);
+      cards.push({
+        kind: 'dictation', id: `compose:${id}`, tag: '작문', promptKind: 'korean',
+        ja: ttsText(p) ?? p.kana, answer: units, korean: p.korean,
+        tiles: shuffle([...units, ...distractors]),
+        tier: dictTier(id, units.length), reviewTarget: { type: 'phrase', id },
+      });
+      return;
+    }
+
+    // 받아쓰기 — 듣고 가나 키패드로 입력(타일 풀은 호환용으로만 유지)
+    const distractors = shuffle(DICTATION_DISTRACTORS.filter((d) => !units.includes(d))).slice(0, 3);
     cards.push({
-      kind: 'dictation',
-      id: `${kind}:${id}`,
-      tag: kind === 'compose' ? '작문' : '받아쓰기',
-      ...(kind === 'compose' ? { promptKind: 'korean' as const } : {}),
-      ja: ttsText(p) ?? p.kana, answer, korean: p.korean,
-      tiles: shuffle([...answer, ...distractors]),
-      tier: dictTier(id, answer.length),
-      reviewTarget: { type: 'phrase', id },
+      kind: 'dictation', id: `dictation:${id}`, tag: '받아쓰기',
+      ja: ttsText(p) ?? p.kana, answer: units, korean: p.korean,
+      tiles: shuffle([...units, ...distractors]),
+      tier: dictTier(id, units.length), reviewTarget: { type: 'phrase', id },
     });
   };
 
