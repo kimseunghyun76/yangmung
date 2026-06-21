@@ -23,7 +23,7 @@ import type { PickMap } from './views/OrderCard';
 import type { KanaItem } from './content/types';
 import { MascotEmpty } from './views/mascot';
 
-type View = 'home' | 'map' | 'review' | 'gacha' | 'intro' | 'session' | 'done' | 'flash' | 'write' | 'placement' | 'vocab' | 'verbs';
+type View = 'home' | 'map' | 'review' | 'gacha' | 'intro' | 'session' | 'done' | 'flash' | 'write' | 'placement' | 'vocab' | 'vocabTable' | 'verbs';
 
 const Home = lazy(() => import('./views/Home').then((m) => ({ default: m.Home })));
 const Intro = lazy(() => import('./views/Intro').then((m) => ({ default: m.Intro })));
@@ -38,6 +38,7 @@ const Review = lazy(() => import('./views/Review').then((m) => ({ default: m.Rev
 const Guide = lazy(() => import('./views/Guide').then((m) => ({ default: m.Guide })));
 const SettingsModal = lazy(() => import('./views/SettingsModal').then((m) => ({ default: m.SettingsModal })));
 const VocabMenu = lazy(() => import('./views/VocabMenu').then((m) => ({ default: m.VocabMenu })));
+const VocabTable = lazy(() => import('./views/VocabTable').then((m) => ({ default: m.VocabTable })));
 const VerbForms = lazy(() => import('./views/VerbForms').then((m) => ({ default: m.VerbForms })));
 
 function AppFallback() {
@@ -601,8 +602,18 @@ export function App() {
           nav={{ ...nav, current: 'home' }}
           allCards={allCards}
           progress={progress}
-          onSelectGroup={(groupId) => { startVocabSession(groupId); }}
+          onSelectGroup={(groupId) => { if (groupId === 'basics') setView('vocabTable'); else startVocabSession(groupId); }}
           onBack={() => setView('home')}
+        />
+      );
+    }
+    if (view === 'vocabTable') {
+      return (
+        <VocabTable
+          nav={{ ...nav, current: 'home' }}
+          progress={progress}
+          onQuiz={() => startVocabSession('basics')}
+          onBack={() => setView('vocab')}
         />
       );
     }
