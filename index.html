@@ -200,7 +200,7 @@
       .ym-gpn-machine.is-jolt { animation: ym-gpn-machine-jolt .3s ease-out both; }
       .ym-gpn-dome { position:relative; width:172px; height:128px; border-radius:86px 86px 18px 18px; overflow:hidden;
         background: linear-gradient(168deg, rgba(255,255,255,.34), rgba(214,232,255,.14) 38%, rgba(150,180,220,.18));
-        border: 4px solid #20242f; box-shadow: inset 0 0 0 3px rgba(255,255,255,.22), inset 0 -14px 22px rgba(40,60,100,.18); }
+        border: 4px solid #211a12; box-shadow: inset 0 0 0 3px rgba(255,255,255,.22), inset 0 -14px 22px rgba(90,66,32,.18); }
       .ym-gpn-dome::after { content:''; position:absolute; left:12%; top:8%; width:30%; height:22%; border-radius:50%;
         background: linear-gradient(140deg, rgba(255,255,255,.9), rgba(255,255,255,0)); transform: rotate(-18deg); pointer-events:none; }
       .ym-gpn-ball { position:absolute; width:48px; height:36px; border-radius:999px; transform:rotate(var(--cap-rot, -10deg));
@@ -253,18 +253,18 @@
       .ym-gpn-dome.is-jolt .ym-gpn-ball { animation: ym-gpn-ball-jolt .42s cubic-bezier(.2,.85,.3,1.2) both; animation-delay: var(--d,0s); }
       .ym-gpn-dome.is-spin .ym-gpn-ball { left:50%; top:54%; margin:-19px 0 0 -19px; animation: ym-gpn-ball-orbit var(--spd,.55s) linear infinite; animation-delay: var(--d,0s); }
       .ym-gpn-body { position:relative; width:188px; margin-top:-6px; padding:14px 0 16px; border-radius:16px 16px 22px 22px;
-        background: linear-gradient(180deg, #ee5f4c, #d8402f 58%, #b93225); border: 4px solid #20242f;
+        background: linear-gradient(180deg, #ee5f4c, #d8402f 58%, #b93225); border: 4px solid #211a12;
         box-shadow: inset 0 4px 0 rgba(255,255,255,.32), inset 0 -8px 0 rgba(0,0,0,.18); display:flex; flex-direction:column; align-items:center; gap:9px; }
       .ym-gpn-body.is-wood { background: linear-gradient(180deg, #b98a5a, #9c6f42 58%, #7d5631); }
       .ym-gpn-body.is-silver { background: linear-gradient(180deg, #aeb8c6, #8e99aa 58%, #6f7a8c); }
       .ym-gpn-body.is-gold { background: linear-gradient(180deg, #f2c14e, #e3a428 58%, #bd831c); }
-      .ym-gpn-label { padding:2px 12px; border-radius:999px; background:#fff8ec; border:3px solid #20242f; color:#20242f; font-weight:950; font-size:13px; letter-spacing:.2em; }
+      .ym-gpn-label { padding:2px 12px; border-radius:999px; background:#fff8ec; border:3px solid #211a12; color:#211a12; font-weight:950; font-size:13px; letter-spacing:.2em; }
       .ym-gpn-crank { position:relative; width:56px; height:56px; border-radius:50%; background: radial-gradient(circle at 36% 32%, #fffdf6, #d9dce4 64%, #aab0bf);
-        border:4px solid #20242f; box-shadow: 0 3px 0 rgba(0,0,0,.25); transition: transform .3s cubic-bezier(.22,1.1,.32,1.1); }
-      .ym-gpn-crank::before { content:''; position:absolute; left:50%; top:50%; width:74%; height:12px; margin:-6px 0 0 -37%; border-radius:6px; background:#3a4252; border:2.5px solid #20242f; }
-      .ym-gpn-crank::after { content:''; position:absolute; left:50%; top:50%; width:12px; height:12px; margin:-6px 0 0 -6px; border-radius:50%; background:#fff8ec; border:2.5px solid #20242f; }
+        border:4px solid #211a12; box-shadow: 0 3px 0 rgba(0,0,0,.25); transition: transform .3s cubic-bezier(.22,1.1,.32,1.1); }
+      .ym-gpn-crank::before { content:''; position:absolute; left:50%; top:50%; width:74%; height:12px; margin:-6px 0 0 -37%; border-radius:6px; background:#4a4030; border:2.5px solid #211a12; }
+      .ym-gpn-crank::after { content:''; position:absolute; left:50%; top:50%; width:12px; height:12px; margin:-6px 0 0 -6px; border-radius:50%; background:#fff8ec; border:2.5px solid #211a12; }
       .ym-gpn-crank.is-idle { animation: ym-gpn-crank-pulse 1.2s ease-in-out infinite; }
-      .ym-gpn-chute { width:64px; height:30px; border-radius:8px 8px 12px 12px; background:#1c2029; border:4px solid #20242f; box-shadow: inset 0 5px 8px rgba(0,0,0,.7), inset 0 -2px 0 rgba(255,255,255,.08); }
+      .ym-gpn-chute { width:64px; height:30px; border-radius:8px 8px 12px 12px; background:#221a12; border:4px solid #211a12; box-shadow: inset 0 5px 8px rgba(0,0,0,.7), inset 0 -2px 0 rgba(255,255,255,.08); }
       .ym-gpn-capsule { position:relative; width:138px; height:112px; }
       .ym-gpn-capsule.is-drop { animation: ym-gpn-cap-drop .8s cubic-bezier(.3,.8,.3,1.1) both; }
       .ym-gpn-capsule.is-wobble { animation: ym-gpn-cap-wobble .7s ease-in-out infinite; transform-origin: 50% 86%; }
@@ -275,7 +275,7 @@
       .ym-gpn-capsule-whole .ym-gpn-ball-lock { width:22px; height:22px; margin:-3px 0 0 -11px; border-width:2px; }
       .ym-gpn-capsule-whole .ym-gpn-ball-glare { left:14%; top:8%; width:38%; height:28%; }
       .ym-gpn-capsule.is-pop .ym-gpn-capsule-whole { opacity:0; transform:rotate(-8deg) scale(.74); }
-      .ym-gpn-cap-half { position:absolute; left:2px; width:134px; height:58px; border:4px solid #20242f; box-sizing:border-box; opacity:0; }
+      .ym-gpn-cap-half { position:absolute; left:2px; width:134px; height:58px; border:4px solid #211a12; box-sizing:border-box; opacity:0; }
       .ym-gpn-cap-top { top:4px; border-radius:70px 70px 10px 10px; background: linear-gradient(180deg, var(--cap-top,rgba(255,255,255,.78)) 0 78%, rgba(255,255,255,.92));
         box-shadow: inset 8px 9px 0 rgba(255,255,255,.46), inset -7px -3px 0 rgba(0,0,0,.13); }
       .ym-gpn-cap-bottom { bottom:6px; border-radius:10px 10px 70px 70px; background: linear-gradient(180deg, color-mix(in srgb, var(--cap,#e8554d), #fff 14%), var(--cap,#e8554d) 84%);
@@ -288,8 +288,8 @@
         mask: radial-gradient(circle, transparent 0 24%, #000 46%, #000 72%, transparent 76%);
         animation: ym-manga-lines-in .85s cubic-bezier(.2,.8,.3,1) both; }
       .ym-manga-sfx { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); pointer-events:none; z-index:6;
-        font-weight:1000; font-style:italic; letter-spacing:.04em; color:#fffdf6; -webkit-text-stroke: 2.5px #20242f;
-        text-shadow: 4px 4px 0 #20242f, 0 0 26px rgba(255,255,255,.5);
+        font-weight:1000; font-style:italic; letter-spacing:.04em; color:#fffdf6; -webkit-text-stroke: 2.5px #211a12;
+        text-shadow: 4px 4px 0 #211a12, 0 0 26px rgba(255,255,255,.5);
         animation: ym-manga-sfx-pop .9s cubic-bezier(.2,.85,.3,1.1) both; }
       .ym-gpn-spill { animation: ym-gpn-card-spill .6s cubic-bezier(.22,.9,.3,1.18) both; animation-delay: var(--spill-d, 0s); }
       /* ── 망가 트레카 (가챠 카드) — 크림+잉크 외곽선+하프톤 ── */
@@ -298,29 +298,29 @@
           radial-gradient(circle at 88% 6%, color-mix(in srgb, var(--rarity-color,#f0a23a), transparent 72%) 0 26%, transparent 27%),
           repeating-radial-gradient(circle at 8% 96%, rgba(32,36,47,.1) 0 1px, transparent 1.5px 7px),
           linear-gradient(176deg, #fffdf6, #fdf4e0 70%, #f7ead2);
-        border: 3px solid #20242f;
-        box-shadow: 0 0 0 2.5px var(--rarity-color,#f0a23a), 0 7px 0 -1px #20242f, 0 14px 22px rgba(0,0,0,.3); }
+        border: 3px solid #211a12;
+        box-shadow: 0 0 0 2.5px var(--rarity-color,#f0a23a), 0 7px 0 -1px #211a12, 0 14px 22px rgba(0,0,0,.3); }
       .ym-mcard::before { content:''; position:absolute; left:0; right:0; top:0; height:21%;
         background: linear-gradient(180deg, color-mix(in srgb, var(--rarity-color,#f0a23a), #fff 22%), color-mix(in srgb, var(--rarity-color,#f0a23a), #fff 4%));
-        border-bottom: 2.5px solid #20242f; }
-      .ym-mcard.is-holo::after { content:''; position:absolute; inset:0; pointer-events:none; mix-blend-mode:soft-light; opacity:.9;
-        background: linear-gradient(118deg, rgba(255,120,140,.55), rgba(255,222,120,.5) 26%, rgba(130,255,190,.5) 50%, rgba(120,190,255,.55) 74%, rgba(220,130,255,.5));
+        border-bottom: 2.5px solid #211a12; }
+      .ym-mcard.is-holo::after { content:''; position:absolute; inset:0; pointer-events:none; mix-blend-mode:soft-light; opacity:.85;
+        background: linear-gradient(118deg, rgba(216,162,74,.46), rgba(255,240,210,.52) 28%, rgba(226,101,90,.4) 54%, rgba(216,162,74,.46) 80%);
         background-size: 240% 240%; animation: ym-gacha-back-rainbow 2.6s linear infinite; }
-      .ym-mcard-stars { position:relative; z-index:2; display:flex; gap:1px; line-height:1; color:#fffdf6; -webkit-text-stroke:.8px #20242f; text-shadow:1px 1.5px 0 #20242f; }
-      .ym-mcard-title { position:relative; z-index:2; color:#20242f; font-weight:950; text-align:center; line-height:1.1; }
-      .ym-mcard-sub { position:relative; z-index:2; color:#fffdf6; background:#20242f; border-radius:99px; font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .ym-mcard-stars { position:relative; z-index:2; display:flex; gap:1px; line-height:1; color:#fffdf6; -webkit-text-stroke:.8px #211a12; text-shadow:1px 1.5px 0 #211a12; }
+      .ym-mcard-title { position:relative; z-index:2; color:#211a12; font-weight:950; text-align:center; line-height:1.1; }
+      .ym-mcard-sub { position:relative; z-index:2; color:#fffdf6; background:#211a12; border-radius:99px; font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
       .ym-mcard-art { position:relative; z-index:1; display:flex; align-items:center; justify-content:center;
         border-radius:50%; background: radial-gradient(circle at 34% 26%, #fffdf6, #fdeed2 70%);
-        border: 2.5px solid #20242f; box-shadow: inset -3px -4px 0 rgba(32,36,47,.1); }
-      /* ── 망가 카드 뒷면 — 인디고+집중선+？ ── */
+        border: 2.5px solid #211a12; box-shadow: inset -3px -4px 0 rgba(32,36,47,.1); }
+      /* ── 망가 카드 뒷면 — 먹빛 사문(沙紋)+집중선+？ ── */
       .ym-mback { position:relative; overflow:hidden; display:inline-flex; align-items:center; justify-content:center;
         color:#fff8ec; background:
           repeating-conic-gradient(from 8deg at 50% 50%, transparent 0deg 9deg, rgba(255,248,236,.1) 9deg 13deg),
-          radial-gradient(circle at 50% 42%, #3a4668, #232c47 64%, #1a2136);
-        border: 3px solid #20242f; box-shadow: 0 0 0 2.5px var(--rarity-color,#6b7a99), 0 6px 0 -1px #20242f, 0 12px 18px rgba(0,0,0,.34); }
+          radial-gradient(circle at 50% 42%, #4a3d2c, #2e2519 64%, #1f190f);
+        border: 3px solid #211a12; box-shadow: 0 0 0 2.5px var(--rarity-color,#caa15c), 0 6px 0 -1px #211a12, 0 12px 18px rgba(0,0,0,.34); }
       .ym-mback::after { content:''; position:absolute; left:14%; top:7%; width:30%; height:14%; border-radius:50%; transform:rotate(-16deg);
         background: linear-gradient(140deg, rgba(255,255,255,.34), transparent); }
-      .ym-mback-q { position:relative; z-index:2; font-weight:1000; -webkit-text-stroke:1.5px #20242f; text-shadow:2.5px 3px 0 #20242f; }
+      .ym-mback-q { position:relative; z-index:2; font-weight:1000; -webkit-text-stroke:1.5px #211a12; text-shadow:2.5px 3px 0 #211a12; }
       .ym-mback.is-silver, .ym-mback.is-gold, .ym-mback.is-diamond { animation: ym-gacha-rare-back 1.15s ease-in-out infinite; }
       .ym-mback.is-gold::before, .ym-mback.is-diamond::before { content:''; position:absolute; inset:-30%;
         background: conic-gradient(from 0deg, transparent 0 12%, color-mix(in srgb, var(--rarity-color,#f0a23a), #fff 30%) 16%, transparent 20% 56%, rgba(255,255,255,.5) 60%, transparent 64%);
@@ -948,7 +948,7 @@
         padding: 2px 5px;
         border: 1px solid rgba(32,36,47,.24);
         border-radius: 3px;
-        color: #20242f;
+        color: #211a12;
         background: rgba(255,255,255,.72);
         font-weight: 1000;
         letter-spacing: .04em;
@@ -979,8 +979,8 @@
       }
       .ym-mcard-stars .is-on {
         color: color-mix(in srgb, var(--rarity-color,#d78f73), #fff 12%);
-        -webkit-text-stroke: .7px #20242f;
-        text-shadow: 0 1px 0 rgba(255,255,255,.7), 0 1.5px 0 #20242f;
+        -webkit-text-stroke: .7px #211a12;
+        text-shadow: 0 1px 0 rgba(255,255,255,.7), 0 1.5px 0 #211a12;
       }
       .ym-mcard-sub {
         max-width: 86%;
@@ -1102,7 +1102,7 @@
         position:absolute; left:50%; top:50%; z-index:4; transform:translate(-50%,-50%);
         width:44px; height:44px; border-radius:999px; display:grid; place-items:center;
         background: radial-gradient(circle at 35% 25%, #fff, color-mix(in srgb, var(--cap,#e55c4f), #fff 58%) 58%, color-mix(in srgb, var(--cap,#e55c4f), #000 8%));
-        border:3px solid #20242f; color:#20242f; font-size:28px; font-weight:1000;
+        border:3px solid #211a12; color:#211a12; font-size:28px; font-weight:1000;
         box-shadow:0 0 22px rgba(255,255,255,.48), inset 0 2px 0 rgba(255,255,255,.72);
       }
       .ym-gpn-cap-top {
