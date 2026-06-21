@@ -314,7 +314,7 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
             <strong>{score.toLocaleString()}</strong>
             <span>점</span>
           </div>
-          <div style={{ fontSize: 12, fontWeight: 800, color: isRecord ? '#ffd24a' : '#d9e8ff', marginTop: 2 }}>
+          <div style={{ fontSize: 12, fontWeight: 800, color: isRecord ? '#f0d28a' : 'rgba(244,237,224,.78)', marginTop: 2 }}>
             {isRecord ? `이전 기록 ${record!.prev.score.toLocaleString()}점 경신` : `내 최고 ${Math.max(myBest.score, score).toLocaleString()}점`}
           </div>
           <div className="ym-speed-result-stats" style={{ marginTop: 10 }}>
@@ -323,21 +323,21 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
             <span><b>{best}</b> BEST COMBO</span>
             {correctCount > 0 && <span><b>{(reactSumRef.current / correctCount / 1000).toFixed(1)}초</b> 평균 반응</span>}
           </div>
-          <div style={{ marginTop: 10, fontSize: 12, color: '#d9e8ff', fontWeight: 700 }}>
+          <div style={{ marginTop: 10, fontSize: 12, color: 'rgba(244,237,224,.78)', fontWeight: 700 }}>
             {pct >= 90 ? '🏆 완벽! 다음 레벨에도 도전해 보세요.' : pct >= 75 ? '🎯 보석함 획득! 꾸준히 유지해요.' : `정답률 ${Math.round(REWARD_RATIO * 100)}% 이상이면 보석함을 받아요!`}
           </div>
         </div>
 
         {missedRef.current.length > 0 && (
-          <div className="ym-rise" style={{ animationDelay: '.04s', marginTop: 18, background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)', borderRadius: 16, padding: '14px 16px' }}>
-            <p style={{ margin: '0 0 10px', fontSize: 12, fontWeight: 800, letterSpacing: '0.04em', color: 'var(--accent)' }}>틀린 표현 다시보기</p>
+          <div className="ym-rise" style={{ animationDelay: '.04s', marginTop: 18, background: 'linear-gradient(180deg, rgba(43,32,21,.94), rgba(24,17,11,.95))', border: '1px solid rgba(216,162,74,.26)', borderRadius: 16, padding: '14px 16px', boxShadow: '0 12px 30px rgba(0,0,0,.3)' }}>
+            <p style={{ margin: '0 0 10px', fontSize: 12, fontWeight: 800, letterSpacing: '0.04em', color: '#d8a24a' }}>틀린 표현 다시보기</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {missedRef.current.slice(0, 8).map((m, i) => (
                 <button key={i} className="ym-press" onClick={() => speak(m.ja)} disabled={!ttsSupported()}
-                  style={{ display: 'flex', alignItems: 'center', gap: 10, textAlign: 'left', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: 12, padding: '9px 12px', cursor: 'pointer', color: 'var(--ink)' }}>
-                  <Icon name="listen" size={15} style={{ color: 'var(--accent)', flex: '0 0 auto' }} />
+                  style={{ display: 'flex', alignItems: 'center', gap: 10, textAlign: 'left', background: 'rgba(255,247,235,.05)', border: '1px solid rgba(216,162,74,.18)', borderRadius: 12, padding: '9px 12px', cursor: 'pointer', color: '#f4ede0' }}>
+                  <Icon name="listen" size={15} style={{ color: '#e2655a', flex: '0 0 auto' }} />
                   <span lang="ja" style={{ fontSize: 16, fontWeight: 800 }}>{m.ja}</span>
-                  {m.ko && <span style={{ fontSize: 12.5, color: 'var(--ink-soft)', marginLeft: 'auto' }}>{m.ko}</span>}
+                  {m.ko && <span style={{ fontSize: 12.5, color: 'rgba(244,237,224,.66)', marginLeft: 'auto' }}>{m.ko}</span>}
                 </button>
               ))}
             </div>
