@@ -680,15 +680,41 @@ export function selectBasicLifeCards(allCards: Card[], progress: ProgressMap, cu
   return [...sortWeakFirst(due, progress), ...shuffleKana(fresh)].slice(0, limit);
 }
 
-// 받아쓰기 전용 덱 — 받아쓰기 카드만, 약점/안 본 것 먼저. (직접 진입)
+// 표현별 "최근 학습 시점" — 같은 표현(reviewTarget=phrase)을 가리키는 모든 카드의 lastSessionId 최댓값.
+// 받아쓰기·작문 등에서 "현재 학습 중인 표현"을 가려내는 데 쓴다(어떤 모달리티로 봤든 최근이면 현재).
+function phraseRecency(allCards: Card[], progress: ProgressMap): Map<string, number> {
+  const recency = new Map<string, number>();
+  for (const c of allCards) {
+    const tgt = 'reviewTarget' in c ? c.reviewTarget : undefined;
+    if (!tgt || tgt.type !== 'phrase') continue;
+    const ls = progress[c.id]?.lastSessionId ?? 0;
+    if (ls <= 0) continue;
+    const pid = String(tgt.id);
+    if (ls > (recency.get(pid) ?? 0)) recency.set(pid, ls);
+  }
+  return recency;
+}
+const RECENT_WINDOW = 3; // 최근 N 세션 이내에 본 표현을 "현재 학습 중"으로 본다.
+
+// 받아쓰기 전용 덱 — 현재 학습 중(최근 본) 표현 우선, 그다음 약점/안 본 것. (듣고 쓰기 = 받아쓰기·듣기)
 export function selectDictationCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit = 12): Card[] {
-  const due: Card[] = [], fresh: Card[] = [];
+  const recency = phraseRecency(allCards, progress);
+  const isCurrent = (c: DictationCard): boolean => {
+    const tgt = c.reviewTarget;
+    if (!tgt || tgt.type !== 'phrase') return false;
+    const ls = recency.get(String(tgt.id)) ?? 0;
+    return ls > 0 && currentSessionId - ls <= RECENT_WINDOW;
+  };
+  const current: DictationCard[] = [], due: DictationCard[] = [], fresh: DictationCard[] = [];
   for (const c of allCards) {
     if (c.kind !== 'dictation' || c.promptKind === 'korean') continue; // 작문(korean)은 별도 트랙
     if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
-    (progress[c.id] ? due : fresh).push(c);
+    if (isCurrent(c)) current.push(c);
+    else if (progress[c.id]) due.push(c);
+    else fresh.push(c);
   }
-  return [...shuffleKana(due), ...shuffleKana(fresh)].slice(0, limit);
+  // 현재 학습 표현 먼저(약점 순) → 기존 복습(due) → 신규(fresh)
+  return [...sortWeakFirst(current, progress), ...shuffleKana(due), ...shuffleKana(fresh)].slice(0, limit);
 }
 
 // 속도전 플래시 — 레벨별 카드 풀 선택.
