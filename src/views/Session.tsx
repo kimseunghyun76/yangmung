@@ -226,7 +226,8 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
   const hintGrammar = relatedGrammar(card);
   const correctChoice = card.choices.find((x) => x.correct && !x.recovery) ?? card.choices.find((x) => x.correct);
   const hintFallback = !isKanaQuiz && !hintGrammar ? buildHintFallback(card, correctChoice) : undefined;
-  const hasHint = !!hintGrammar || !!hintFallback;
+  // 반전 퀴즈는 "정답 표현 설명" 힌트가 어긋나므로 끔.
+  const hasHint = !card.inverted && (!!hintGrammar || !!hintFallback);
   const recoveryChoice = card.choicePools?.recovery?.[0] ?? card.choices.find((x) => x.recovery);
   return (
     <>
@@ -276,6 +277,13 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
       {isMissionStep
         ? <p style={{ textAlign: 'center', color: 'var(--ink-soft)', fontSize: 14, margin: '8px 0 0' }}>{card.promptPhrase!.korean}</p>
         : card.sub ? <p style={{ textAlign: 'center', color: 'var(--ink-faint)', fontSize: 14, margin: '8px 0 0' }}>{card.sub}</p> : null}
+
+      {/* 반전 퀴즈 안내 — 어색한 답 고르기 */}
+      {card.inverted && !reveal && (
+        <div style={{ marginTop: 14, padding: '10px 12px', borderRadius: 12, border: '1px solid var(--warn)', background: 'var(--warn-soft)', textAlign: 'center' }}>
+          <span style={{ fontWeight: 800, color: 'var(--warn)', fontSize: 14 }}>❌ 이 상황에 <u>어울리지 않는</u> 답을 고르세요</span>
+        </div>
+      )}
 
       {/* 4. 선택지 (행동) */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 9, marginTop: 16 }}>
@@ -367,12 +375,17 @@ function choiceStyle(state: 'idle' | 'correct' | 'wrong' | 'dim'): React.CSSProp
 
 // 선택 후 피드백 — 정답 / 오답 / 복구
 function ChoiceFeedback({ card, picked, cardIndex, onNext }: { card: Extract<Card, { kind: 'quiz' }>; picked: number; cardIndex: number; onNext: () => void }) {
+  const inverted = !!card.inverted;
   const c = card.choices[picked];
   const isRecovery = !!c.recovery;
-  const isCorrect = c.correct && !isRecovery;
-  const isWrong = !c.correct;
-  const event = isRecovery ? 'recovery' : isCorrect ? 'correct' : 'wrong';
+  // 반전: c.correct(타깃)=어색한 답을 고른 게 성공. 일반: c.correct=자연스러운 답이 성공.
+  const isCorrect = !inverted && c.correct && !isRecovery;
+  const isWrong = !inverted && !c.correct;
+  const invSuccess = inverted && !!c.correct;  // 어색한 답(정답)을 골랐다
+  const invFail = inverted && !c.correct;       // 자연스러운 답을 골랐다(실패)
+  const event = isRecovery ? 'recovery' : (isCorrect || invSuccess) ? 'correct' : 'wrong';
   const correctRef = card.choices.find((x) => x.correct && !x.recovery && x.phrase);
+  const target = inverted ? card.choices.find((x) => x.correct) : undefined; // 어색한 답(타깃)
   const ja = c.phrase ? (c.phrase.kanji ?? c.phrase.kana) : undefined;
   // 오답일 때 이 표현과 연결된 문법 팁을 즉시 노출(세션 끝 무작위 팁과 별개로 "맞는 순간" 학습)
   const wrongTip = isWrong ? relatedGrammar(card) : undefined;
@@ -406,6 +419,25 @@ function ChoiceFeedback({ card, picked, cardIndex, onNext }: { card: Extract<Car
             </p>
           )}
           {wrongTip && <WrongTip g={wrongTip} />}
+        </div>
+      )}
+      {invSuccess && (
+        <div style={{ background: 'var(--ok-soft)', padding: 14, borderRadius: 14, marginBottom: 10 }}>
+          <p style={{ margin: 0, color: 'var(--ok)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="check" size={18} /> 정답! 이 답이 어색해요</p>
+          {ja && <PhraseLine ja={ja} korean={c.phrase!.korean} />}
+          {c.feedback && <FeedbackText>{c.feedback}</FeedbackText>}
+        </div>
+      )}
+      {invFail && (
+        <div style={{ background: 'var(--accent-soft)', padding: 14, borderRadius: 14, marginBottom: 10 }}>
+          <p style={{ margin: 0, color: 'var(--accent)', fontWeight: 700 }}>이건 자연스러운 답이에요 — 어색한 답을 골라야 해요</p>
+          {target?.phrase && (
+            <p style={{ margin: '8px 0 0', fontSize: 14 }}>
+              어색한 답 → <strong lang="ja">{target.phrase.kanji ?? target.phrase.kana}</strong>
+              <span style={{ color: 'var(--ink-soft)' }}> — {target.phrase.korean}</span>
+            </p>
+          )}
+          {target?.feedback && <FeedbackText>{target.feedback}</FeedbackText>}
         </div>
       )}
       {card.listen && card.bannerJa && (

@@ -54,6 +54,8 @@ export interface QuizCard {
     wrong: Choice[];
     recovery: Choice[];
   };
+  /** 반전 퀴즈 — "이 상황에 어색한(맞지 않는) 답"을 고른다. 정답 보기 여럿 + 오답 1개. */
+  inverted?: boolean;
   listen?: boolean;
   /** 레벨(난이도) 태그 — 미션 티어에서 유도. 세션 레벨 필터용. 없으면 모든 레벨에 노출. */
   tier?: 1 | 2 | 3 | 4 | 5;
@@ -158,7 +160,13 @@ function shuffle<T>(a: T[]): T[] {
   return r;
 }
 
-function materializeChoicePools(pools: NonNullable<QuizCard['choicePools']>): Choice[] {
+function materializeChoicePools(pools: NonNullable<QuizCard['choicePools']>, inverted = false): Choice[] {
+  if (inverted) {
+    // 반전: 자연스러운 답 여러 개(고를 대상 아님 → correct:false) + 어색한 답 1개(고를 대상 → correct:true).
+    const valid = shuffle(pools.correct).slice(0, 3).map((c) => ({ ...c, correct: false }));
+    const target = shuffle(pools.wrong).slice(0, 1).map((c) => ({ ...c, correct: true, recovery: false }));
+    return shuffle([...valid, ...target]);
+  }
   const correct = shuffle(pools.correct).slice(0, 1);
   const wrong = shuffle(pools.wrong).slice(0, 3);
   return shuffle([...correct, ...wrong].map((c) => ({ ...c })));
@@ -166,7 +174,7 @@ function materializeChoicePools(pools: NonNullable<QuizCard['choicePools']>): Ch
 
 export function materializeQuizCard(card: Card): Card {
   if (card.kind !== 'quiz' || !card.choicePools) return card;
-  return { ...card, choices: materializeChoicePools(card.choicePools) };
+  return { ...card, choices: materializeChoicePools(card.choicePools, card.inverted) };
 }
 
 const fallbackRecoveryIds = ['p_mou_ichido', 'p_yukkuri', 'p_yasashii_nihongo', 'p_eigo_de'];
@@ -739,6 +747,10 @@ export function buildCards(): Card[] {
         }
       }
       const choicePools = buildStepChoicePools(step.choices, byPhrase, phrases);
+      // 반전 퀴즈 — 정답(자연스러운 답)이 여럿이라 "하나 고르기"가 모호한 스텝은
+      // "어색한 답 고르기"로 바꾼다. 작성자가 명시한 오답(상황에 안 맞는 보기)이 있는 스텝만.
+      const authoredWrong = step.choices.some((ch) => ch.correct === false && !ch.recoveryType);
+      const inverted = authoredWrong && choicePools.correct.length >= 1;
       cards.push({
         kind: 'quiz', id: `mission:${m.id}:${idx}`, tag: `${m.id} 미션`,
         scenario: m.scenario,
@@ -748,8 +760,9 @@ export function buildCards(): Card[] {
         sub: step.speaker ?? '',
         promptPhrase: phraseInfo(prompt) ?? recapPrompt,
         reviewTarget: { type: 'mission', id: m.id as CLevel },
+        inverted,
         choicePools,
-        choices: materializeChoicePools(choicePools),
+        choices: materializeChoicePools(choicePools, inverted),
       });
     });
 
