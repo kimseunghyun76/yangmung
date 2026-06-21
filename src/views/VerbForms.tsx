@@ -1,6 +1,7 @@
 // 동사 형태 메뉴 — ます형·～ながら·～たい. 보기(레퍼런스) + 연습(퀴즈) 두 모드.
 import { useState } from 'react';
 import { VERB_FORMS, VERB_FORM_INFO, VERB_FORM_KEYS, type VerbConj, type VerbEntry, type VerbFormKey } from '../content/verbForms';
+import { itemMastery, type ProgressMap } from '../learn/progress';
 import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
@@ -18,7 +19,11 @@ const GROUP_LABEL: Record<VerbEntry['group'], string> = { godan: '5단', ichidan
 const shuffle = <T,>(a: T[]): T[] => { const r = [...a]; for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
 const rand = (n: number) => Math.floor(Math.random() * n);
 
-export function VerbForms({ onExit }: { onExit: () => void }) {
+export function VerbForms({ onExit, progress, onAnswer }: {
+  onExit: () => void;
+  progress?: ProgressMap;
+  onAnswer?: (id: string, correct: boolean) => void;
+}) {
   const [mode, setMode] = useState<'browse' | 'quiz'>('browse');
 
   return (
@@ -48,7 +53,7 @@ export function VerbForms({ onExit }: { onExit: () => void }) {
         })}
       </div>
 
-      {mode === 'browse' ? <Browse /> : <Quiz />}
+      {mode === 'browse' ? <Browse /> : <Quiz progress={progress} onAnswer={onAnswer} />}
 
       <PrimaryAction onClick={onExit} style={{ marginTop: 20 }}>홈으로</PrimaryAction>
     </main>
@@ -120,9 +125,18 @@ function Browse() {
 
 interface Question { verb: VerbEntry; formKey: VerbFormKey; choices: VerbConj[]; answer: VerbConj }
 
-function makeQuestion(): Question {
-  const verb = VERB_FORMS[rand(VERB_FORMS.length)];
-  const formKey = VERB_FORM_KEYS[rand(VERB_FORM_KEYS.length)];
+const verbCardId = (verbId: string, formKey: VerbFormKey) => `verb:${verbId}:${formKey}`;
+
+function makeQuestion(progress?: ProgressMap): Question {
+  let verb = VERB_FORMS[rand(VERB_FORMS.length)];
+  let formKey = VERB_FORM_KEYS[rand(VERB_FORM_KEYS.length)];
+  if (progress) {
+    // SRS 연동 — (동사×형태) 조합 중 약한(숙련도 낮은) 것 우선, 가장 약한 8개에서 무작위.
+    const combos = VERB_FORMS.flatMap((v) => VERB_FORM_KEYS.map((k) => ({ v, k, m: itemMastery(progress[verbCardId(v.id, k)]) })));
+    combos.sort((a, b) => a.m - b.m);
+    const pick = combos[rand(Math.min(8, combos.length))];
+    verb = pick.v; formKey = pick.k;
+  }
   const answer = verb[formKey];
   const pool: VerbConj[] = [];
   for (const k of VERB_FORM_KEYS) if (k !== formKey) pool.push(verb[k]); // 같은 동사 다른 형태
@@ -133,8 +147,8 @@ function makeQuestion(): Question {
   return { verb, formKey, choices: shuffle([answer, ...distractors]), answer };
 }
 
-function Quiz() {
-  const [q, setQ] = useState<Question>(() => makeQuestion());
+function Quiz({ progress, onAnswer }: { progress?: ProgressMap; onAnswer?: (id: string, correct: boolean) => void }) {
+  const [q, setQ] = useState<Question>(() => makeQuestion(progress));
   const [picked, setPicked] = useState<string | null>(null);
   const [score, setScore] = useState({ ok: 0, total: 0 });
   const info = VERB_FORM_INFO[q.formKey];
@@ -142,10 +156,12 @@ function Quiz() {
 
   function choose(c: VerbConj) {
     if (reveal) return;
+    const correct = c.ja === q.answer.ja;
     setPicked(c.ja);
-    setScore((s) => ({ ok: s.ok + (c.ja === q.answer.ja ? 1 : 0), total: s.total + 1 }));
+    setScore((s) => ({ ok: s.ok + (correct ? 1 : 0), total: s.total + 1 }));
+    onAnswer?.(verbCardId(q.verb.id, q.formKey), correct);
   }
-  function next() { setPicked(null); setQ(makeQuestion()); }
+  function next() { setPicked(null); setQ(makeQuestion(progress)); }
 
   return (
     <div>
