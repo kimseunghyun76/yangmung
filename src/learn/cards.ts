@@ -160,6 +160,44 @@ function shuffle<T>(a: T[]): T[] {
   return r;
 }
 
+// 학습형(설명·듣기·읽기) 카드 — 채점 없이 항목을 익히는 introduce 카드.
+function makeStudyCard(opts: { id: string; tag: string; ja: string; kana: string; korean: string; tip?: string }): IntroduceCard {
+  return {
+    kind: 'introduce',
+    id: opts.id,
+    tag: opts.tag,
+    phraseId: opts.id,
+    ja: opts.ja,
+    kana: opts.kana,
+    korean: opts.korean,
+    tip: opts.tip,
+    note: '소리를 듣고, 일본어와 뜻을 함께 읽어보세요.',
+    // reviewTarget 없음 — 소개 카드는 채점하지 않는다.
+  };
+}
+
+// "듣고 일본어 찾기" 퀴즈 — 소리(kana)를 듣고 알맞은 일본어 표기를 고른다.
+function makeHearToJaCard(opts: {
+  id: string; tag: string; reviewId: string;
+  item: { ja: string; kana: string };
+  distract: { ja: string; kana: string }[];
+}): QuizCard {
+  return {
+    kind: 'quiz',
+    id: opts.id,
+    tag: opts.tag,
+    banner: '듣기',
+    bannerJa: opts.item.kana,
+    sub: '듣고 알맞은 일본어를 고르세요',
+    listen: true,
+    reviewTarget: { type: 'phrase', id: opts.reviewId },
+    choices: shuffle([
+      { label: opts.item.ja, correct: true, ja: opts.item.kana },
+      ...opts.distract.map((d) => ({ label: d.ja, correct: false, ja: d.kana })),
+    ]),
+  };
+}
+
 function materializeChoicePools(pools: NonNullable<QuizCard['choicePools']>, inverted = false): Choice[] {
   if (inverted) {
     // 반전: 자연스러운 답 여러 개(고를 대상 아님 → correct:false) + 어색한 답 1개(고를 대상 → correct:true).
@@ -291,8 +329,8 @@ const BASIC_GROUP_LABEL: Record<BasicLifeItem['group'], string> = {
   money: '금액',
 };
 
-function buildBasicLifeCards(): QuizCard[] {
-  const cards: QuizCard[] = [];
+function buildBasicLifeCards(): Card[] {
+  const cards: Card[] = [];
   const byGroup = new Map<BasicLifeItem['group'], BasicLifeItem[]>();
   for (const item of BASIC_LIFE_ITEMS) {
     const arr = byGroup.get(item.group);
@@ -307,6 +345,9 @@ function buildBasicLifeCards(): QuizCard[] {
   for (const item of BASIC_LIFE_ITEMS) {
     const group = BASIC_GROUP_LABEL[item.group];
     const distract = distractorsFor(item);
+    // 학습형 — 설명·듣기·읽기 + 듣고 일본어 찾기
+    cards.push(makeStudyCard({ id: `basic:study:${item.id}`, tag: `생활 기초 · ${group}`, ja: item.ja, kana: item.kana, korean: item.korean }));
+    cards.push(makeHearToJaCard({ id: `basic:hear2ja:${item.id}`, tag: `생활 기초 · ${group}`, reviewId: `basic:${item.id}`, item, distract }));
     cards.push({
       kind: 'quiz',
       id: `basic:read:${item.id}`,
@@ -487,8 +528,8 @@ function buildKanaCards(stage: string, kanaIds: string[], lk: KanaLookup): QuizC
 
 // ── 주제별 어휘 카드 ─────────────────────────────────────────────────────────
 // 그룹별 vocab:groupId:itemId 카드 3종 생성: ja→ko 읽기, kana 듣기, ko→ja 역방향.
-function buildVocabCards(): QuizCard[] {
-  const cards: QuizCard[] = [];
+function buildVocabCards(): Card[] {
+  const cards: Card[] = [];
 
   for (const group of VOCAB_GROUPS) {
     const distractorsFor = (item: VocabItem): VocabItem[] => {
@@ -500,6 +541,10 @@ function buildVocabCards(): QuizCard[] {
 
     for (const item of group.items) {
       const distract = distractorsFor(item);
+
+      // 학습형 — 설명·듣기·읽기 + 듣고 일본어 찾기
+      cards.push(makeStudyCard({ id: `vocab:${group.id}:study:${item.id}`, tag: `어휘 · ${group.label}`, ja: item.ja, kana: item.kana, korean: item.korean, tip: item.tip }));
+      cards.push(makeHearToJaCard({ id: `vocab:${group.id}:hear2ja:${item.id}`, tag: `어휘 · ${group.label}`, reviewId: `vocab:${group.id}:${item.id}`, item, distract }));
 
       // (A) ja 표기 → 뜻 (읽기)
       cards.push({
@@ -860,6 +905,9 @@ export function buildCards(): Card[] {
   for (const sg of signs) {
     const pool = signs.filter((x) => x.category === sg.category && x.korean !== sg.korean);
     const distract = shuffle(pool.length >= 2 ? pool : signs.filter((x) => x.korean !== sg.korean)).slice(0, 3);
+    // 학습형 — 설명·듣기·읽기 + 듣고 일본어 찾기
+    cards.push(makeStudyCard({ id: `sign:study:${sg.id}`, tag: `${sg.category} 읽기`, ja: sg.ja, kana: sg.kana, korean: sg.korean }));
+    cards.push(makeHearToJaCard({ id: `sign:hear2ja:${sg.id}`, tag: `${sg.category} 읽기`, reviewId: `sign:${sg.id}`, item: sg, distract }));
     cards.push({
       kind: 'quiz', id: `sign:${sg.id}`, tag: `${sg.category} 읽기`,
       banner: sg.ja, bannerJa: sg.kana, sub: '이 표기는 무슨 뜻일까요?',

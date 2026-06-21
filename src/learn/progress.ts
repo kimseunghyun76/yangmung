@@ -607,6 +607,21 @@ export function selectPairCards(allCards: Card[], progress: ProgressMap, current
   return out;
 }
 
+// 학습형 덱 — 항목을 모두 설명·듣기·읽기(introduce)한 뒤, 마지막에 "듣고 일본어 찾기" 퀴즈 몇 개만.
+// 기본 인사·어휘 커리큘럼·간판은 뜻 고르기 퀴즈가 아니라 이 흐름으로 학습한다.
+export function selectStudyDeck(
+  allCards: Card[],
+  studyTest: (id: string) => boolean,
+  quizTest: (id: string) => boolean,
+  opts: { studyLimit?: number; quizCount?: number } = {},
+): Card[] {
+  const study = allCards.filter((c) => c.kind === 'introduce' && studyTest(c.id));
+  const quiz = allCards.filter((c) => c.kind === 'quiz' && quizTest(c.id));
+  const studyPick = shuffleKana(study).slice(0, opts.studyLimit ?? study.length);
+  const quizPick = shuffleKana(quiz).slice(0, opts.quizCount ?? 3);
+  return [...studyPick, ...quizPick];
+}
+
 // 주제별 어휘 전용 덱 — vocab:groupId:* 카드, 그룹 필터 가능. limit = 24.
 export function selectVocabCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, groupId?: string, limit = 24): Card[] {
   const prefix = groupId ? `vocab:${groupId}:` : 'vocab:';

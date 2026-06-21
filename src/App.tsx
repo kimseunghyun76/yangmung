@@ -5,8 +5,8 @@ import { CONTENT } from './content';
 import {
   classifyCard, clearProgress, isKanaFamiliar, loadDiscovered, loadProgress, loadSeenKana, loadSession,
   markKanaKnown, markKanaSeen, missionsFromCards, nextSessionId, planSession, plannedSessionSize, recordAttempt, recordKnown,
-  saveDiscovered, saveProgress, saveSeenKana, saveSession, selectBasicLifeCards, selectComposeCards, selectDictationCards,
-  selectFlashCardsByMode, selectGreetingCards, selectMissionCards, selectPairCards, selectScriptKanaCards, selectSessionCards, selectSignCards, selectVocabCards,
+  saveDiscovered, saveProgress, saveSeenKana, saveSession, selectComposeCards, selectDictationCards,
+  selectFlashCardsByMode, selectMissionCards, selectPairCards, selectScriptKanaCards, selectSessionCards, selectSignCards, selectStudyDeck,
   type FlashMode, type SeenKana, type SessionLogEntry,
 } from './learn/progress';
 import { loadCollection, saveCollection, fillDevCards, spendSceneCards, unlockCost } from './learn/collection';
@@ -243,7 +243,8 @@ export function App() {
   }
   // 거리 읽기 — 간판·메뉴·안내·교통 표기 읽기 연습
   function startSignSession() {
-    const cards = selectSignCards(allCards, progress, nextSessionId(session));
+    // 학습형 — 간판을 모두 설명·듣기·읽기한 뒤, 듣고 일본어 찾기 3문제.
+    const cards = selectStudyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:hear2ja:'), { studyLimit: 16 });
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true);
   }
@@ -266,21 +267,23 @@ export function App() {
     setView('flash');
     return cards;
   }
-  function startBasicsSession() {
-    const cards = selectBasicLifeCards(allCards, progress, nextSessionId(session), 24);
-    if (cards.length === 0) return startSignSession();
-    beginSession(nextSessionId(session), cards, true);
-  }
-  // 어휘 커리큘럼 — 그룹별 또는 전체 어휘 세션
+  // 어휘 커리큘럼 — 그룹별 또는 전체. 생활 기초(basics)도 여기에 병합.
+  // 모두 학습형: 설명·듣기·읽기 후 듣고 일본어 찾기 3문제.
   function startVocabSession(groupId: string) {
-    const gid = groupId === 'all' ? undefined : groupId;
-    const cards = selectVocabCards(allCards, progress, nextSessionId(session), gid, 24);
+    let cards: Card[];
+    if (groupId === 'basics') {
+      cards = selectStudyDeck(allCards, (id) => id.startsWith('basic:study:'), (id) => id.startsWith('basic:hear2ja:'), { studyLimit: 24, quizCount: 4 });
+    } else if (groupId === 'all') {
+      cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:') && id.includes(':study:'), (id) => id.startsWith('vocab:') && id.includes(':hear2ja:'), { studyLimit: 24, quizCount: 5 });
+    } else {
+      cards = selectStudyDeck(allCards, (id) => id.startsWith(`vocab:${groupId}:study:`), (id) => id.startsWith(`vocab:${groupId}:hear2ja:`));
+    }
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true);
   }
-  // 기본 인사 전용 세션
+  // 기본 인사 전용 세션 — 학습형
   function startGreetingSession() {
-    const cards = selectGreetingCards(allCards, progress, nextSessionId(session), 18);
+    const cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:greetings:study:'), (id) => id.startsWith('vocab:greetings:hear2ja:'));
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true);
   }
@@ -629,7 +632,7 @@ export function App() {
         allCards={allCards} progress={progress} session={session} sessionConfig={sessionConfig}
         diagnosis={diag}
         modeLabel={MODE_PRESETS[settings.mode].label}
-        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession} onPracticeCompose={startComposeSession} onPracticeFlash={startFlashSession} onPracticeBasics={startBasicsSession} onPracticeWrite={startKanaWrite} onPracticePairs={startPairSession} onPracticeVocab={() => setView('vocab')} onPracticeGreetings={startGreetingSession} onPracticeVerbs={() => setView('verbs')} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
+        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession} onPracticeCompose={startComposeSession} onPracticeFlash={startFlashSession} onPracticeWrite={startKanaWrite} onPracticePairs={startPairSession} onPracticeVocab={() => setView('vocab')} onPracticeGreetings={startGreetingSession} onPracticeVerbs={() => setView('verbs')} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
       />
     );
   }
