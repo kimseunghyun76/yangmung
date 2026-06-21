@@ -208,6 +208,8 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
   const scoreRef = useRef(0);        // 누적 점수(반응속도·콤보 가산)
   const correctRef = useRef(0);      // 맞힌 개수(정답률·보상 판정용)
   const bestComboRef = useRef(0);
+  const reactSumRef = useRef(0);     // 정답까지 걸린 시간 합(평균 반응속도용)
+  const missedRef = useRef<{ ja: string; ko: string }[]>([]); // 틀린 표현(다시보기용)
   const shownRef = useRef(Date.now());
   const [floatPts, setFloatPts] = useState<{ n: number; key: number } | null>(null); // 정답 시 +점수 플로팅
   const [record, setRecord] = useState<{ isRecord: boolean; prev: FlashBest } | null>(null);
@@ -264,10 +266,12 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
     const fast = correct && Date.now() - shownRef.current < FAST_MS;
     setPicked(choiceIdx);
     setCallout(correct ? (fast ? 'perfect' : 'good') : 'miss');
+    const elapsedAll = Date.now() - shownRef.current;
     if (correct) {
       correctRef.current += 1;
+      reactSumRef.current += elapsedAll;
       const comboNow = combo + 1;
-      const elapsed = Date.now() - shownRef.current;
+      const elapsed = elapsedAll;
       const remRatio = Math.max(0, Math.min(1, 1 - elapsed / DURATION));
       const speedBonus = Math.round(remRatio * 150);          // 빨리 답할수록 +최대 150
       const comboBonus = Math.min(comboNow, 12) * 15;          // 콤보 유지 보너스
@@ -282,6 +286,10 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
     } else {
       setCombo(0);
       vibrate([20, 40, 20]);
+      const target = card.choices.find((c) => c.correct && !c.recovery);
+      const ja = card.bannerJa || target?.ja || card.banner;
+      const ko = target?.phrase?.korean || target?.label || '';
+      if (ja && !missedRef.current.some((m) => m.ja === ja)) missedRef.current.push({ ja, ko });
     }
     advRef.current = window.setTimeout(() => {
       if (idx + 1 >= cards.length) finishGame(); else setIdx((i) => i + 1);
@@ -313,11 +321,28 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
             <span><b>{correctCount}/{count}</b> 정답</span>
             <span><b>{pct}%</b> ACCURACY</span>
             <span><b>{best}</b> BEST COMBO</span>
+            {correctCount > 0 && <span><b>{(reactSumRef.current / correctCount / 1000).toFixed(1)}초</b> 평균 반응</span>}
           </div>
           <div style={{ marginTop: 10, fontSize: 12, color: '#d9e8ff', fontWeight: 700 }}>
             {pct >= 90 ? '🏆 완벽! 다음 레벨에도 도전해 보세요.' : pct >= 75 ? '🎯 보석함 획득! 꾸준히 유지해요.' : `정답률 ${Math.round(REWARD_RATIO * 100)}% 이상이면 보석함을 받아요!`}
           </div>
         </div>
+
+        {missedRef.current.length > 0 && (
+          <div className="ym-rise" style={{ animationDelay: '.04s', marginTop: 18, background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)', borderRadius: 16, padding: '14px 16px' }}>
+            <p style={{ margin: '0 0 10px', fontSize: 12, fontWeight: 800, letterSpacing: '0.04em', color: 'var(--accent)' }}>틀린 표현 다시보기</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {missedRef.current.slice(0, 8).map((m, i) => (
+                <button key={i} className="ym-press" onClick={() => speak(m.ja)} disabled={!ttsSupported()}
+                  style={{ display: 'flex', alignItems: 'center', gap: 10, textAlign: 'left', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: 12, padding: '9px 12px', cursor: 'pointer', color: 'var(--ink)' }}>
+                  <Icon name="listen" size={15} style={{ color: 'var(--accent)', flex: '0 0 auto' }} />
+                  <span lang="ja" style={{ fontSize: 16, fontWeight: 800 }}>{m.ja}</span>
+                  {m.ko && <span style={{ fontSize: 12.5, color: 'var(--ink-soft)', marginLeft: 'auto' }}>{m.ko}</span>}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {reward && (
           <div className="ym-rise" style={{ animationDelay: '.06s', marginTop: 18 }}>
