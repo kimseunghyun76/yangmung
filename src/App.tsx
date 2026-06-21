@@ -542,7 +542,7 @@ export function App() {
       return <GachaPage nav={{ ...nav, current: 'gacha' }} progress={progress} />;
     }
     if (view === 'gachalab') {
-      return <GachaLab nav={{ ...nav, current: 'gachalab' }} onExit={() => setView('home')} />;
+      return <GachaLab nav={{ ...nav, current: 'gachalab' }} progress={progress} onExit={() => setView('home')} />;
     }
     if (view === 'flash') {
       const unlockedSceneIds = CONTENT.missions.filter((m) => m.id !== 'C0' && isSceneOpen(m.id, progress, cardUnlocks, !!settings.devUnlockAll)).map((m) => m.id);

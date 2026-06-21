@@ -1,75 +1,68 @@
-// 새 가챠 프로토타입 — 「양뭉 보물 개봉식」 (온라인·웅장·2.5D 실물).
-// 기존 가챠(Gacha.tsx)·index.html과 분리된 신규 탭. 스타일은 이 파일 안에 self-contained.
-// Phase 2: 고희귀도(SSR·UR) 전용 화려한 연출 + 미션 여성 캐릭터 카메오, 다연차(10연차).
-import { useRef, useState } from 'react';
+// 보물 개봉식 가챠 (상용 버전) — 온라인·웅장·2.5D 실물.
+// 실제 컬렉션 파이프라인 연동: drawGacha(전 등급 직접 드롭) → 컬렉션 저장 → 도감 반영.
+// 고희귀도(SSR=금·UR=다이아) 전용 화려한 개봉 + 미션 여성 캐릭터 카메오, 다연차(10연차).
+// 캐릭터/일부 아이템 이미지는 별도 제작(친구 작업) — CAST.art / 아이템 image 슬롯에 들어온다.
+import { useMemo, useRef, useState } from 'react';
+import { CONTENT } from '../content';
+import { isMissionUnlocked, type ProgressMap } from '../learn/progress';
+import { drawGacha, loadCollection, saveCollection, bestRarity, totalItems, type Collection, type Rarity } from '../learn/collection';
+import { gachaItemForPlace } from '../learn/gachaItems';
 import { WRAP } from '../ui/styles';
 import { NavBar, type NavBarProps } from './NavBar';
 import { MascotFace } from './mascot';
 import { speak } from '../tts';
 
-type Rarity = 'common' | 'rare' | 'epic' | 'ssr' | 'ur';
-interface ProtoItem { id: string; name: string; korean: string; scene: string; image: string; rarity: Rarity }
-
-const RARITY: Record<Rarity, { label: string; stars: number; color: string; glow: string; weight: number; special: boolean }> = {
-  common: { label: '커먼', stars: 2, color: '#b9b2a4', glow: 'rgba(216,210,196,.5)', weight: 50, special: false },
-  rare: { label: '레어', stars: 3, color: '#4f93d8', glow: 'rgba(79,147,216,.6)', weight: 30, special: false },
-  epic: { label: '에픽', stars: 4, color: '#9a6ad6', glow: 'rgba(154,106,214,.65)', weight: 13, special: false },
-  ssr: { label: 'SSR', stars: 5, color: '#e8b23a', glow: 'rgba(232,178,58,.85)', weight: 6, special: true },
-  ur: { label: 'UR', stars: 6, color: '#ff5db1', glow: 'rgba(255,93,177,.9)', weight: 1, special: true },
+// 컬렉션 등급 → 시각 등급(별·색·특별 연출 여부).
+const VIS: Record<Rarity, { label: string; stars: number; color: string; glow: string; special: boolean }> = {
+  basic: { label: '커먼', stars: 2, color: '#b9b2a4', glow: 'rgba(216,210,196,.5)', special: false },
+  bronze: { label: '레어', stars: 3, color: '#c98a4b', glow: 'rgba(201,138,75,.6)', special: false },
+  silver: { label: '에픽', stars: 4, color: '#aab2be', glow: 'rgba(170,178,190,.62)', special: false },
+  gold: { label: 'SSR', stars: 5, color: '#e8b23a', glow: 'rgba(232,178,58,.85)', special: true },
+  diamond: { label: 'UR', stars: 6, color: '#5bc7e0', glow: 'rgba(91,199,224,.9)', special: true },
 };
-const RANK: Rarity[] = ['common', 'rare', 'epic', 'ssr', 'ur'];
+const RANK: Rarity[] = ['basic', 'bronze', 'silver', 'gold', 'diamond'];
 
-// 프로토타입 샘플 — 기존 아이템 이미지를 재활용(이미지 에셋은 수정하지 않음).
-const SAMPLE_ITEMS: ProtoItem[] = [
-  { id: 'onigiri', name: 'おにぎり', korean: '주먹밥', scene: '편의점', image: '/gacha/items/generated/onigiri.png', rarity: 'common' },
-  { id: 'hotsnack', name: 'ホットスナック', korean: '핫스낵', scene: '편의점', image: '/gacha/items/generated/hot-snack.png', rarity: 'common' },
-  { id: 'water', name: 'お水', korean: '물 한 잔', scene: '식당', image: '/gacha/items/generated/water-glass.png', rarity: 'common' },
-  { id: 'bento', name: 'お弁当', korean: '도시락', scene: '편의점', image: '/gacha/items/generated/bento-box.png', rarity: 'rare' },
-  { id: 'teishoku', name: '定食', korean: '정식 세트', scene: '식당', image: '/gacha/items/generated/teishoku-menu.png', rarity: 'rare' },
-  { id: 'premium', name: '特上弁当', korean: '프리미엄 도시락', scene: '편의점', image: '/gacha/items/generated/premium-bento.png', rarity: 'epic' },
-  { id: 'recommend', name: 'おすすめ膳', korean: '추천 세트', scene: '식당', image: '/gacha/items/generated/recommended-set.png', rarity: 'epic' },
-  { id: 'combo', name: '夜食コンボ', korean: '심야 콤보', scene: '편의점', image: '/gacha/items/generated/late-night-combo.png', rarity: 'ssr' },
-  { id: 'kingbento', name: '伝説の駅弁', korean: '전설의 에키벤', scene: '전철', image: '/gacha/items/generated/premium-bento.png', rarity: 'ur' },
-];
+interface DrawItem { sceneId: string; name: string; korean: string; place: string; image: string; rarity: Rarity }
 
-// 미션 여성 캐릭터 — 프로토용 카메오 플레이스홀더(실제 캐릭터 아트는 추후 이 슬롯에 교체).
-const CAMEOS = [
-  { kana: 'ナナミ', role: '편의점 점원', hue: 330 },
-  { kana: 'さくら', role: '식당 직원', hue: 350 },
-  { kana: 'ゆい', role: '역무원', hue: 262 },
-];
+// 미션 여성 캐릭터 카메오 — 장면(place)별. art가 채워지면 실제 캐릭터 이미지로, 없으면 실루엣 플레이스홀더.
+interface Cast { kana: string; role: string; hue: number; art?: string }
+const CAST: Record<string, Cast> = {
+  '편의점': { kana: 'ナナミ', role: '편의점 점원', hue: 330 },
+  '식당': { kana: 'さくら', role: '식당 직원', hue: 350 },
+  '라멘': { kana: 'みお', role: '라멘집 직원', hue: 16 },
+  '카페': { kana: 'リン', role: '카페 바리스타', hue: 28 },
+  '전철': { kana: 'ゆい', role: '역무원', hue: 262 },
+  '신칸센': { kana: 'ゆい', role: '역무원', hue: 248 },
+  '호텔': { kana: 'あおい', role: '호텔 프런트', hue: 210 },
+  '료칸': { kana: 'はな', role: '료칸 안주인', hue: 300 },
+  '환전': { kana: 'あや', role: '은행원', hue: 200 },
+  '약국': { kana: 'みき', role: '약사', hue: 158 },
+  '쇼핑': { kana: 'えま', role: '편집샵 점원', hue: 320 },
+  '관광안내소': { kana: 'ことね', role: '관광 안내원', hue: 184 },
+  '축제': { kana: 'まつり', role: '축제 도우미', hue: 8 },
+};
+const DEFAULT_CAST: Cast = { kana: 'なかま', role: '여행 동료', hue: 280 };
+const castFor = (place: string): Cast => CAST[place] ?? DEFAULT_CAST;
 
-function rollItem(): ProtoItem {
-  const total = SAMPLE_ITEMS.reduce((s, it) => s + RARITY[it.rarity].weight, 0);
-  let r = Math.random() * total;
-  for (const it of SAMPLE_ITEMS) { r -= RARITY[it.rarity].weight; if (r <= 0) return it; }
-  return SAMPLE_ITEMS[0];
+function artFor(sceneId: string, rarity: Rarity): DrawItem {
+  const m = CONTENT.missions.find((x) => x.id === sceneId);
+  const place = (m?.place ?? m?.scenario ?? sceneId) as string;
+  const a = gachaItemForPlace(place, rarity);
+  return { sceneId, name: a.jaTitle ?? a.title, korean: a.title, place, image: a.image ?? '', rarity };
 }
-function rollMany(n: number): ProtoItem[] {
-  const out = Array.from({ length: n }, rollItem);
-  // 10연차 보장: 에픽 이상 1장 확정.
-  if (n >= 10 && !out.some((it) => RANK.indexOf(it.rarity) >= 2)) {
-    const pool = SAMPLE_ITEMS.filter((it) => RANK.indexOf(it.rarity) >= 2);
-    out[n - 1] = pool[Math.floor(Math.random() * pool.length)];
-  }
-  return out;
-}
-const bestOf = (items: ProtoItem[]) => items.reduce((b, it) => (RANK.indexOf(it.rarity) > RANK.indexOf(b.rarity) ? it : b), items[0]);
-
-const DEX_KEY = 'yangmung:gachalab:dex:v1';
-const loadDex = (): string[] => { try { return JSON.parse(localStorage.getItem(DEX_KEY) || '[]'); } catch { return []; } };
-const saveDex = (ids: string[]) => { try { localStorage.setItem(DEX_KEY, JSON.stringify(ids)); } catch { /* noop */ } };
+const bestOf = (items: DrawItem[]) => items.reduce((b, it) => (RANK.indexOf(it.rarity) > RANK.indexOf(b.rarity) ? it : b), items[0]);
 
 const Stars = ({ n, color }: { n: number; color: string }) => (
   <span className="gl-stars" style={{ color }}>{'★'.repeat(n)}</span>
 );
 
-// ── 미션 여성 캐릭터 카메오(플레이스홀더) — SSR/UR에서 등장 ──
-function Cameo({ idx, side }: { idx: number; side: 'l' | 'r' }) {
-  const c = CAMEOS[idx % CAMEOS.length];
+function Cameo({ place, side }: { place: string; side: 'l' | 'r' }) {
+  const c = castFor(place);
   return (
     <div className={`gl-cameo gl-cameo-${side}`} style={{ ['--hue' as string]: String(c.hue) }} aria-hidden>
-      <span className="gl-cameo-fig"><i /><b /></span>
+      <span className="gl-cameo-fig">
+        {c.art ? <img src={c.art} alt="" /> : <><i /><b /></>}
+      </span>
       <span className="gl-cameo-name" lang="ja">{c.kana}</span>
       <span className="gl-cameo-role">{c.role}</span>
     </div>
@@ -77,7 +70,7 @@ function Cameo({ idx, side }: { idx: number; side: 'l' | 'r' }) {
 }
 
 // ── 2.5D 아이템 — 포인터/자동 틸트 + 홀로 시트 + 부유 ──
-function Item25D({ item, size = 200 }: { item: ProtoItem; size?: number }) {
+function Item25D({ item, size = 200 }: { item: DrawItem; size?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
   const onMove = (e: React.PointerEvent) => {
@@ -89,14 +82,14 @@ function Item25D({ item, size = 200 }: { item: ProtoItem; size?: number }) {
     el.style.setProperty('--ry', `${(px * 22).toFixed(1)}deg`);
   };
   const reset = () => { const el = ref.current; if (el) { el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); } };
-  const rc = RARITY[item.rarity];
+  const v = VIS[item.rarity];
   return (
     <div className="gl-25d-wrap" style={{ width: size, height: size }} onPointerMove={onMove} onPointerLeave={reset}>
       <div ref={ref} className="gl-25d">
-        <div className="gl-25d-glow" style={{ background: `radial-gradient(circle, ${rc.glow}, transparent 68%)` }} />
+        <div className="gl-25d-glow" style={{ background: `radial-gradient(circle, ${v.glow}, transparent 68%)` }} />
         <div className="gl-25d-art">
-          {failed ? (
-            <div className="gl-25d-fallback" style={{ borderColor: rc.color }}><span lang="ja">{item.name}</span></div>
+          {failed || !item.image ? (
+            <div className="gl-25d-fallback" style={{ borderColor: v.color }}><span lang="ja">{item.name}</span></div>
           ) : (
             <img src={item.image} alt={item.korean} draggable={false} onError={() => setFailed(true)} />
           )}
@@ -108,33 +101,43 @@ function Item25D({ item, size = 200 }: { item: ProtoItem; size?: number }) {
   );
 }
 
-interface Props { nav: NavBarProps; onExit: () => void }
+interface Props { nav: NavBarProps; progress: ProgressMap; onExit: () => void }
 
-export function GachaLab({ nav, onExit }: Props) {
+export function GachaLab({ nav, progress, onExit }: Props) {
   const [tab, setTab] = useState<'draw' | 'dex'>('draw');
   const [phase, setPhase] = useState<'idle' | 'charging' | 'single' | 'multi'>('idle');
-  const [results, setResults] = useState<ProtoItem[]>([]);
-  const [dex, setDex] = useState<string[]>(() => loadDex());
+  const [results, setResults] = useState<DrawItem[]>([]);
+  const [collection, setCollection] = useState<Collection>(() => loadCollection());
 
-  function startPull(n: number) {
+  const scenes = useMemo(() => {
+    const list = CONTENT.missions
+      .filter((m) => m.id !== 'C0' && isMissionUnlocked(m.id, progress))
+      .map((m) => ({ id: m.id, place: (m.place ?? m.scenario ?? m.id) as string }));
+    return list.length ? list : [{ id: 'C1', place: '편의점' }];
+  }, [progress]);
+  const sceneIds = useMemo(() => scenes.map((s) => s.id), [scenes]);
+  const ownedCount = scenes.filter((s) => totalItems(collection.cards[s.id]) > 0).length;
+
+  function pull(n: number) {
     if (phase === 'charging') return;
     setPhase('charging');
     window.setTimeout(() => {
-      const items = rollMany(n);
+      const { collection: nc, results: drops } = drawGacha(collection, sceneIds, n);
+      saveCollection(nc);
+      setCollection(nc);
+      const items = drops.map((d) => artFor(d.sceneId, d.rarity));
       setResults(items);
-      setDex((d) => { const nx = [...new Set([...d, ...items.map((i) => i.id)])]; saveDex(nx); return nx; });
-      const best = bestOf(items);
-      speak(best.name);
+      speak(bestOf(items).name);
       setPhase(n === 1 ? 'single' : 'multi');
     }, n === 1 ? 720 : 900);
   }
-  function again() { setResults([]); setPhase('idle'); }
+  function reset() { setResults([]); setPhase('idle'); }
 
   const single = phase === 'single' ? results[0] : null;
   const best = results.length ? bestOf(results) : null;
-  const special = !!best && RARITY[best.rarity].special;
-  const bc = best ? RARITY[best.rarity] : null;
-  const auraColor = special && bc ? bc.color : '#caa15c';
+  const bv = best ? VIS[best.rarity] : null;
+  const special = !!bv && bv.special;
+  const auraColor = special && bv ? bv.color : '#caa15c';
 
   return (
     <main className="gl-root" style={{ ...WRAP, minHeight: '100svh', position: 'relative', overflow: 'hidden' }}>
@@ -142,8 +145,8 @@ export function GachaLab({ nav, onExit }: Props) {
       <NavBar {...nav} />
 
       <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
-        <button className="ym-press" onClick={() => { setTab('draw'); }} style={pill(tab === 'draw')}>✨ 뽑기</button>
-        <button className="ym-press" onClick={() => { setTab('dex'); again(); }} style={pill(tab === 'dex')}>🗃 보물 도감 <b style={{ opacity: .7 }}>{dex.length}/{SAMPLE_ITEMS.length}</b></button>
+        <button className="ym-press" onClick={() => setTab('draw')} style={pill(tab === 'draw')}>✨ 뽑기</button>
+        <button className="ym-press" onClick={() => { setTab('dex'); reset(); }} style={pill(tab === 'dex')}>🗃 보물 도감 <b style={{ opacity: .7 }}>{ownedCount}/{scenes.length}</b></button>
         <span style={{ flex: 1 }} />
         <button className="ym-press" onClick={onExit} style={{ ...pill(false), padding: '8px 12px' }}>← 홈</button>
       </div>
@@ -163,29 +166,27 @@ export function GachaLab({ nav, onExit }: Props) {
             </div>
           )}
 
-          {/* 단일 개봉 */}
-          {single && (
+          {single && bv && (
             <div className="gl-reveal">
-              <span className="gl-pillar" aria-hidden style={{ ['--c' as string]: bc!.color }} />
+              <span className="gl-pillar" aria-hidden style={{ ['--c' as string]: bv.color }} />
               {Array.from({ length: special ? 22 : 14 }).map((_, i) => (
-                <span key={i} className="gl-spark" aria-hidden style={{ ['--c' as string]: bc!.color, ['--a' as string]: `${i * (360 / (special ? 22 : 14))}deg`, ['--d' as string]: `${i * 0.03}s` }} />
+                <span key={i} className="gl-spark" aria-hidden style={{ ['--c' as string]: bv.color, ['--a' as string]: `${i * (360 / (special ? 22 : 14))}deg`, ['--d' as string]: `${i * 0.03}s` }} />
               ))}
               {special && (
                 <>
-                  <Cameo idx={0} side="l" />
-                  {single.rarity === 'ur' && <Cameo idx={2} side="r" />}
-                  <span className="gl-special-tag" style={{ color: bc!.color }}>{single.rarity === 'ur' ? '✦ UR 등장! ✦' : '✧ SSR ✧'}</span>
+                  <Cameo place={single.place} side="l" />
+                  {single.rarity === 'diamond' && <Cameo place={single.place} side="r" />}
+                  <span className="gl-special-tag" style={{ color: bv.color }}>{single.rarity === 'diamond' ? '✦ UR 등장! ✦' : '✧ SSR ✧'}</span>
                 </>
               )}
               <div className="gl-rise">
-                <span className="gl-rarity-badge" style={{ background: bc!.color }}>{bc!.label}</span>
+                <span className="gl-rarity-badge" style={{ background: bv.color }}>{bv.label}</span>
                 <Item25D item={single} size={special ? 224 : 206} />
-                <Stars n={bc!.stars} color={bc!.color} />
+                <Stars n={bv.stars} color={bv.color} />
               </div>
             </div>
           )}
 
-          {/* 캐릭터 — 양·뭉 */}
           {phase !== 'multi' && (
             <div className="gl-cast" aria-hidden>
               <MascotFace who="yang" mood={single ? 'done' : 'tip'} size={62} style={{ filter: 'drop-shadow(0 10px 16px rgba(0,0,0,.4))' }} />
@@ -193,25 +194,24 @@ export function GachaLab({ nav, onExit }: Props) {
             </div>
           )}
 
-          {/* 다연차 그리드 */}
-          {phase === 'multi' && (
+          {phase === 'multi' && best && bv && (
             <div className="gl-multi">
-              {special && bc && (
-                <div className="gl-multi-feat" style={{ ['--c' as string]: bc.color }}>
-                  <Cameo idx={0} side="l" />
-                  {best!.rarity === 'ur' && <Cameo idx={2} side="r" />}
-                  <span className="gl-special-tag" style={{ color: bc.color }}>{best!.rarity === 'ur' ? '✦ UR 등장! ✦' : '✧ SSR ✧'}</span>
-                  <Item25D item={best!} size={150} />
-                  <Stars n={bc.stars} color={bc.color} />
+              {special && (
+                <div className="gl-multi-feat" style={{ ['--c' as string]: bv.color }}>
+                  <Cameo place={best.place} side="l" />
+                  {best.rarity === 'diamond' && <Cameo place={best.place} side="r" />}
+                  <span className="gl-special-tag" style={{ color: bv.color }}>{best.rarity === 'diamond' ? '✦ UR 등장! ✦' : '✧ SSR ✧'}</span>
+                  <Item25D item={best} size={150} />
+                  <Stars n={bv.stars} color={bv.color} />
                 </div>
               )}
               <div className="gl-grid">
                 {results.map((it, i) => {
-                  const rc = RARITY[it.rarity];
+                  const v = VIS[it.rarity];
                   return (
-                    <div key={i} className="gl-cell" style={{ ['--c' as string]: rc.color, animationDelay: `${i * 0.06}s` }}>
+                    <div key={i} className="gl-cell" style={{ ['--c' as string]: v.color, animationDelay: `${i * 0.06}s` }}>
                       <Item25D item={it} size={56} />
-                      <Stars n={rc.stars} color={rc.color} />
+                      <Stars n={v.stars} color={v.color} />
                     </div>
                   );
                 })}
@@ -219,25 +219,24 @@ export function GachaLab({ nav, onExit }: Props) {
             </div>
           )}
 
-          {/* 하단 패널 */}
           <div className="gl-panel">
             {phase === 'idle' && (
               <>
                 <p className="gl-prompt">양·뭉과 함께 오늘의 보물을 뽑아볼까요?</p>
                 <div style={{ display: 'flex', gap: 10 }}>
-                  <button className="ym-press" onClick={() => startPull(1)} style={cta(true, '#caa15c')}>✨ 1회 뽑기</button>
-                  <button className="ym-press" onClick={() => startPull(10)} style={cta(true, '#b9382e')}>🎴 10연차</button>
+                  <button className="ym-press" onClick={() => pull(1)} style={cta(true, '#caa15c')}>✨ 1회 뽑기</button>
+                  <button className="ym-press" onClick={() => pull(10)} style={cta(true, '#b9382e')}>🎴 10연차</button>
                 </div>
               </>
             )}
             {phase === 'charging' && <p className="gl-prompt gl-charge-txt">기운을 모으는 중…</p>}
-            {(phase === 'single' || phase === 'multi') && best && (
+            {(phase === 'single' || phase === 'multi') && best && bv && (
               <>
-                <p className="gl-get">{phase === 'multi' ? `${results.length}개 획득!` : '획득!'} {single && <b lang="ja" style={{ color: bc!.color }}>{single.name}</b>}{phase === 'multi' && <b style={{ color: bc!.color }}> 최고 {bc!.label}</b>}</p>
-                <p className="gl-get-sub">{phase === 'single' && single ? `${single.korean} · ${single.scene}에서 얻은 보물 · ` : '도감에 등록 · '}기울이면 입체로 보여요</p>
+                <p className="gl-get">{phase === 'multi' ? `${results.length}개 획득!` : '획득!'} {single && <b lang="ja" style={{ color: bv.color }}>{single.name}</b>}{phase === 'multi' && <b style={{ color: bv.color }}> 최고 {bv.label}</b>}</p>
+                <p className="gl-get-sub">{phase === 'single' && single ? `${single.korean} · ${single.place} · ` : '도감에 등록 · '}기울이면 입체로 보여요</p>
                 <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
-                  <button className="ym-press" onClick={() => startPull(phase === 'multi' ? 10 : 1)} style={cta(true)}>다시 뽑기</button>
-                  <button className="ym-press" onClick={() => { setTab('dex'); again(); }} style={cta(false)}>도감 보기</button>
+                  <button className="ym-press" onClick={() => pull(phase === 'multi' ? 10 : 1)} style={cta(true)}>다시 뽑기</button>
+                  <button className="ym-press" onClick={() => { setTab('dex'); reset(); }} style={cta(false)}>도감 보기</button>
                 </div>
               </>
             )}
@@ -246,17 +245,20 @@ export function GachaLab({ nav, onExit }: Props) {
       ) : (
         <section>
           <p style={{ margin: '0 0 12px', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>
-            획득한 실물 보물을 진열했어요. 카드를 기울여 보세요 (2.5D).
+            장면별 최고 등급 보물을 진열했어요. 카드를 기울여 보세요 (2.5D).
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
-            {[...SAMPLE_ITEMS].sort((a, b) => RANK.indexOf(b.rarity) - RANK.indexOf(a.rarity)).map((it) => {
-              const owned = dex.includes(it.id);
-              const rc2 = RARITY[it.rarity];
+            {scenes.map((s) => {
+              const owned = totalItems(collection.cards[s.id]) > 0;
+              const r = owned ? bestRarity(collection.cards[s.id]) : 'basic';
+              const v = VIS[r];
+              const item = owned ? artFor(s.id, r) : null;
               return (
-                <div key={it.id} className="gl-shelf" style={{ borderColor: owned ? rc2.color : 'var(--glass-border)' }}>
-                  {owned ? <Item25D item={it} size={130} /> : <div className="gl-shelf-empty">？</div>}
-                  <p className="gl-shelf-name" style={{ color: owned ? 'var(--ink)' : 'var(--ink-faint)' }}>{owned ? it.korean : '미획득'}</p>
-                  {owned && <span className="gl-shelf-tag" style={{ color: rc2.color, borderColor: rc2.color }}>{rc2.label} {'★'.repeat(rc2.stars)}</span>}
+                <div key={s.id} className="gl-shelf" style={{ borderColor: owned ? v.color : 'var(--glass-border)' }}>
+                  {owned && item ? <Item25D item={item} size={130} /> : <div className="gl-shelf-empty">？</div>}
+                  <p className="gl-shelf-name" style={{ color: owned ? 'var(--ink)' : 'var(--ink-faint)' }}>{owned && item ? item.korean : s.place}</p>
+                  {owned ? <span className="gl-shelf-tag" style={{ color: v.color, borderColor: v.color }}>{v.label} {'★'.repeat(v.stars)}</span>
+                    : <span className="gl-shelf-tag" style={{ color: 'var(--ink-faint)', borderColor: 'var(--glass-border)' }}>미획득</span>}
                 </div>
               );
             })}
@@ -331,6 +333,7 @@ const STYLE = `
 .gl-cameo-fig{ position:relative; width:84px; height:104px; border-radius:18px; overflow:hidden;
   background:linear-gradient(180deg, hsl(var(--hue,330) 70% 70%), hsl(var(--hue,330) 55% 42%));
   border:2px solid rgba(255,255,255,.55); box-shadow:0 8px 22px rgba(0,0,0,.45), 0 0 20px hsl(var(--hue,330) 80% 60% / .5); }
+.gl-cameo-fig img{ width:100%; height:100%; object-fit:cover; }
 .gl-cameo-fig i{ position:absolute; left:50%; top:20px; width:30px; height:30px; margin-left:-15px; border-radius:50%; background:rgba(255,255,255,.92); }
 .gl-cameo-fig b{ position:absolute; left:50%; bottom:0; width:64px; height:48px; margin-left:-32px; border-radius:40px 40px 0 0; background:rgba(255,255,255,.85); }
 .gl-cameo-name{ margin-top:5px; font-size:13px; font-weight:900; color:#fff7eb; text-shadow:0 1px 3px rgba(0,0,0,.6); }
@@ -348,8 +351,8 @@ const STYLE = `
 @keyframes gl-float{ 0%,100%{translate:0 0} 50%{translate:0 -10px} }
 .gl-25d-glow{ position:absolute; inset:-12%; border-radius:50%; transform:translateZ(-40px); filter:blur(6px); }
 .gl-25d-art{ position:absolute; inset:6%; transform:translateZ(28px); border-radius:18px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
-.gl-25d-art img{ width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 10px 16px rgba(0,0,0,.4)); }
-.gl-25d-fallback{ width:90%; height:90%; border-radius:16px; border:2px dashed; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:14px; background:rgba(255,255,255,.06); text-align:center; padding:6px; }
+.gl-25d-art img{ width:118%; height:118%; object-fit:contain; filter:drop-shadow(0 10px 16px rgba(0,0,0,.4)); }
+.gl-25d-fallback{ width:90%; height:90%; border-radius:16px; border:2px dashed; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:13px; background:rgba(255,255,255,.06); text-align:center; padding:6px; }
 .gl-25d-holo{ position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen; opacity:.5;
   background:linear-gradient(115deg, transparent 38%, rgba(255,255,255,.5) 46%, transparent 54%); background-size:240% 100%; animation:gl-holo 2.6s linear infinite; }
 @keyframes gl-holo{ from{background-position:180% 0} to{background-position:-80% 0} }
