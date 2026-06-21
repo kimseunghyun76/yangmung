@@ -115,13 +115,59 @@ function CapsuleBall({ className = '', style, mark = false }: { className?: stri
   );
 }
 
+// 朱 칠기 캡슐 디스펜서 — 플라스틱 가챠폰 이미지 대신 코드로 그린 절제된 머신(SVG).
+// 유리 돔은 비워 두어 위에 얹히는 캡슐 오버레이가 "돔 안"에 보이게 한다.
+function MachineArt() {
+  const dome = 'M44 198 C 44 78, 88 50, 128 50 C 168 50, 212 78, 212 198 Z';
+  return (
+    <svg className="ym-gpn-machine-img" viewBox="0 0 256 374" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <defs>
+        <linearGradient id="gpnLacq" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#c8443b" /><stop offset="0.55" stopColor="#a5322a" /><stop offset="1" stopColor="#7d2620" />
+        </linearGradient>
+        <linearGradient id="gpnBrass" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#e7cd82" /><stop offset="0.5" stopColor="#caa14a" /><stop offset="1" stopColor="#8f6c2c" />
+        </linearGradient>
+        <radialGradient id="gpnGlass" cx="0.4" cy="0.28" r="0.85">
+          <stop offset="0" stopColor="#ffffff" stopOpacity="0.40" /><stop offset="0.45" stopColor="#fff7e6" stopOpacity="0.10" /><stop offset="1" stopColor="#d8c4a0" stopOpacity="0.14" />
+        </radialGradient>
+        <linearGradient id="gpnBase" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#2c2118" /><stop offset="1" stopColor="#17100a" />
+        </linearGradient>
+      </defs>
+      {/* 받침 */}
+      <rect x="58" y="334" width="140" height="32" rx="13" fill="url(#gpnBase)" stroke="#211a12" strokeWidth="4" />
+      {/* 칠기 몸체 */}
+      <rect x="48" y="196" width="160" height="150" rx="24" fill="url(#gpnLacq)" stroke="#211a12" strokeWidth="4" />
+      {/* 금 상감선 */}
+      <rect x="58" y="206" width="140" height="130" rx="18" fill="none" stroke="#e7cd82" strokeWidth="1.4" opacity="0.5" />
+      {/* 왼쪽 광택 */}
+      <rect x="59" y="208" width="44" height="124" rx="14" fill="#ffffff" opacity="0.07" />
+      {/* 손잡이 자리(오버레이가 얹힘) */}
+      <circle cx="128" cy="244" r="33" fill="#7d2620" stroke="#211a12" strokeWidth="3" />
+      <circle cx="128" cy="244" r="33" fill="none" stroke="#e7cd82" strokeWidth="1.2" opacity="0.4" />
+      {/* 배출구 */}
+      <rect x="96" y="302" width="64" height="26" rx="9" fill="#140e07" stroke="#211a12" strokeWidth="3" />
+      <rect x="103" y="306" width="50" height="8" rx="4" fill="#000000" opacity="0.5" />
+      {/* 유리 돔 */}
+      <path d={dome} fill="url(#gpnGlass)" stroke="url(#gpnBrass)" strokeWidth="5" />
+      <path d={dome} fill="none" stroke="#211a12" strokeWidth="1.4" opacity="0.45" />
+      {/* 황동 림 */}
+      <rect x="44" y="190" width="168" height="16" rx="8" fill="url(#gpnBrass)" stroke="#211a12" strokeWidth="3.5" />
+      <rect x="50" y="194" width="156" height="3" fill="#fff7e6" opacity="0.3" />
+      {/* 돔 하이라이트 */}
+      <ellipse cx="96" cy="94" rx="24" ry="38" fill="#ffffff" opacity="0.16" transform="rotate(-18 96 94)" />
+    </svg>
+  );
+}
+
 function GachaMachine({ grade, taps, spinning, mini = false }: { grade: BoxGrade; taps: number; spinning?: boolean; mini?: boolean }) {
   const domeState = spinning || taps > 0 ? 'is-spin' : '';
   const speed = Math.max(0.34, 0.92 - taps * 0.075);
   const machine = (
     <div className={`ym-gpn-machine ym-gpn-image-machine ${taps > 0 || spinning ? 'is-active' : ''} ${taps > 0 && !spinning ? 'is-jolt' : ''}`} key={`m:${taps}:${spinning ? 's' : ''}`}
       style={{ ['--ball-speed' as string]: `${speed}s`, ['--tap-count' as string]: String(taps), ...(mini ? { transform: 'scale(0.58)', transformOrigin: 'center bottom' } : null) }}>
-      <img className="ym-gpn-machine-img" src="/gacha/machine/gachapon-machine.webp" alt="" draggable={false} />
+      <MachineArt />
       <div className={`ym-gpn-dome ym-gpn-dome-overlay ${domeState}`} aria-hidden>
         <span className="ym-gpn-dome-vortex" aria-hidden />
         {BALL_POS.map((p, i) => (
