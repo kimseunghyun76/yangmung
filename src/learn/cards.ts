@@ -698,10 +698,7 @@ export function buildCards(): Card[] {
         }
       }
       const choicePools = buildStepChoicePools(step.choices, byPhrase, phrases);
-      // 반전 퀴즈 — 정답(자연스러운 답)이 여럿이라 "하나 고르기"가 모호한 스텝은
-      // "어색한 답 고르기"로 바꾼다. 작성자가 명시한 오답(상황에 안 맞는 보기)이 있는 스텝만.
-      const authoredWrong = step.choices.some((ch) => ch.correct === false && !ch.recoveryType);
-      const inverted = authoredWrong && choicePools.correct.length >= 1;
+      // 미션 퀴즈 = "맞는 답 고르기"로 통일 (반전 퀴즈 제거).
       cards.push({
         kind: 'quiz', id: `mission:${m.id}:${idx}`, tag: `${m.id} 미션`,
         scenario: m.scenario,
@@ -711,9 +708,8 @@ export function buildCards(): Card[] {
         sub: step.speaker ?? '',
         promptPhrase: phraseInfo(prompt) ?? recapPrompt,
         reviewTarget: { type: 'mission', id: m.id as CLevel },
-        inverted,
         choicePools,
-        choices: materializeChoicePools(choicePools, inverted),
+        choices: materializeChoicePools(choicePools, false),
       });
     });
 
@@ -762,6 +758,35 @@ export function buildCards(): Card[] {
     // 미션에 안 쓰인 표현은 길이로 레벨 추정 — 길수록 높은 레벨(받아쓰기 난이도↑)
     return units <= 3 ? 1 : units <= 5 ? 2 : units <= 7 ? 3 : units <= 9 ? 4 : 5;
   };
+  // 작문 방해 타일 풀 — 모든 작문 대상 문장을 분절해 품사별 토큰을 모은다.
+  // (작문이 "정답 조각만 배열"이 되지 않도록, 같은 품사의 그럴듯한 오답을 섞기 위함)
+  const composePool: Record<SegPos, string[]> = { word: [], particle: [], verb: [] };
+  {
+    const seen: Record<SegPos, Set<string>> = { word: new Set(), particle: new Set(), verb: new Set() };
+    for (const id of dictationTargetIds) {
+      const p = phrases.find((x) => x.id === id);
+      if (!p) continue;
+      const seg = segmentJa(p.kana);
+      if (!seg.confident) continue;
+      for (const s of seg.segments) {
+        if (!seen[s.pos].has(s.text)) { seen[s.pos].add(s.text); composePool[s.pos].push(s.text); }
+      }
+    }
+  }
+  // 정답 조각 + 같은 품사 방해 타일(품사당 최대 2, 합계 최대 4)을 섞어 작문 보기를 만든다.
+  const composeTiles = (segs: { text: string; pos: SegPos }[]): { tiles: string[]; tilePos: SegPos[] } => {
+    const used = new Set(segs.map((s) => s.text));
+    const posInAnswer = new Set(segs.map((s) => s.pos));
+    const decoys: { text: string; pos: SegPos }[] = [];
+    for (const pos of ['word', 'particle', 'verb'] as SegPos[]) {
+      if (!posInAnswer.has(pos)) continue;
+      for (const t of shuffle(composePool[pos].filter((x) => !used.has(x))).slice(0, 2)) {
+        decoys.push({ text: t, pos }); used.add(t);
+      }
+    }
+    const combined = shuffle([...segs.map((s) => ({ text: s.text, pos: s.pos })), ...shuffle(decoys).slice(0, 4)]);
+    return { tiles: combined.map((c) => c.text), tilePos: combined.map((c) => c.pos) };
+  };
   const pushTileCard = (id: string, kind: 'dictation' | 'compose') => {
     const p = phrases.find((x) => x.id === id);
     if (!p) return;
@@ -772,15 +797,15 @@ export function buildCards(): Card[] {
       const seg = segmentJa(p.kana);
       if (seg.confident && seg.segments.length >= 2) {
         const answer = seg.segments.map((s) => s.text);
-        const shuffled = shuffle(seg.segments.map((s, idx) => ({ s, idx })));
+        const { tiles, tilePos } = composeTiles(seg.segments);
         cards.push({
           kind: 'dictation',
           id: `compose:${id}`,
           tag: '작문',
           promptKind: 'korean',
           ja: ttsText(p) ?? p.kana, answer, korean: p.korean,
-          tiles: shuffled.map(({ s }) => s.text),
-          tilePos: shuffled.map(({ s }) => s.pos),
+          tiles,
+          tilePos,
           tier: dictTier(id, answer.length),
           reviewTarget: { type: 'phrase', id },
         });
