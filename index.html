@@ -557,18 +557,199 @@
       }
       .ym-gacha-item-art img { width: 100%; height: 100%; object-fit: contain; display: block; animation: ym-game-card-float 1.45s ease-in-out infinite; }
       .ym-gacha-item-art.is-level-up-token::before { opacity: .78; }
+      @keyframes ym-shuffle-preview-card {
+        0%,100% { transform: translateX(calc(var(--i) * 11px)) rotate(calc(var(--i) * 6deg)); }
+        50% { transform: translateX(calc(var(--i) * 14px)) translateY(-6px) rotate(calc(var(--i) * 8deg)); }
+      }
+      @keyframes ym-shuffle-cut-left {
+        0% { transform: translateX(-24px) rotate(-8deg); opacity: 0; }
+        28%,58% { transform: translateX(-112px) rotate(-16deg); opacity: 1; }
+        100% { transform: translateX(-18px) rotate(-4deg); opacity: 0; }
+      }
+      @keyframes ym-shuffle-cut-right {
+        0% { transform: translateX(24px) rotate(8deg); opacity: 0; }
+        28%,58% { transform: translateX(112px) rotate(16deg); opacity: 1; }
+        100% { transform: translateX(18px) rotate(4deg); opacity: 0; }
+      }
+      @keyframes ym-shuffle-fan-card {
+        0% { opacity: 0; transform: translate(-50%, -50%) rotate(0deg) translateY(0) scale(.72); }
+        28% { opacity: 0; }
+        46%,78% { opacity: 1; transform: translate(-50%, -50%) rotate(calc(var(--i) * 10deg)) translateY(-44px) scale(1); }
+        100% { opacity: 0; transform: translate(-50%, -50%) rotate(calc(var(--i) * 3deg)) translateY(10px) scale(.76); }
+      }
+      @keyframes ym-shuffle-ring {
+        0% { opacity: 0; transform: scale(.4) rotate(0); }
+        24% { opacity: .75; }
+        100% { opacity: 0; transform: scale(1.5) rotate(28deg); }
+      }
+      .ym-shuffle-preview {
+        position: relative; width: 190px; height: 122px; display: inline-grid; place-items: center;
+        filter: drop-shadow(0 18px 22px rgba(0,0,0,.22));
+      }
+      .ym-shuffle-preview-card {
+        position: absolute; left: 50%; top: 50%; margin: -45px 0 0 -35px;
+        animation: ym-shuffle-preview-card 1.8s ease-in-out infinite;
+        animation-delay: calc(var(--i) * .04s);
+      }
+      .ym-shuffle-stage {
+        position: relative; z-index: 3; width: min(92vw, 620px); height: min(56vh, 430px);
+        display: grid; place-items: center; isolation: isolate;
+      }
+      .ym-shuffle-table-ring {
+        position: absolute; width: min(78vw, 430px); height: min(78vw, 430px); border-radius: 999px;
+        border: 2px solid color-mix(in srgb, var(--gacha-color,#d8a24a), #fff 22%);
+        box-shadow: 0 0 24px color-mix(in srgb, var(--gacha-color,#d8a24a), transparent 42%), inset 0 0 28px rgba(255,255,255,.08);
+        animation: ym-shuffle-ring 2.9s ease-out both;
+      }
+      .ym-shuffle-stage.has-gold .ym-shuffle-table-ring,
+      .ym-shuffle-stage.has-diamond .ym-shuffle-table-ring,
+      .ym-shuffle-stage.has-xur .ym-shuffle-table-ring {
+        border-width: 3px;
+        box-shadow: 0 0 36px color-mix(in srgb, var(--gacha-color,#d8a24a), transparent 24%), inset 0 0 36px color-mix(in srgb, var(--gacha-color,#d8a24a), transparent 68%);
+        animation-duration: 3.35s;
+      }
+      .ym-shuffle-stage.has-diamond,
+      .ym-shuffle-stage.has-xur { filter: drop-shadow(0 0 22px color-mix(in srgb, var(--gacha-color,#5bc7e0), transparent 42%)); }
+      .ym-shuffle-cut,
+      .ym-shuffle-fan {
+        position: absolute; left: 50%; top: 50%; width: 1px; height: 1px; transform-style: preserve-3d;
+      }
+      .ym-shuffle-cut.is-left { animation: ym-shuffle-cut-left 1.8s cubic-bezier(.16,.86,.22,1) both; }
+      .ym-shuffle-cut.is-right { animation: ym-shuffle-cut-right 1.8s cubic-bezier(.16,.86,.22,1) both; }
+      .ym-shuffle-cut span {
+        position: absolute; left: -46px; top: -62px;
+        transform: translateY(calc(var(--i) * -5px)) rotate(calc(var(--i) * .8deg));
+        filter: drop-shadow(0 12px 18px rgba(0,0,0,.28));
+      }
+      .ym-shuffle-fan span {
+        position: absolute; left: 0; top: 0;
+        transform-origin: 50% 112%;
+        animation: ym-shuffle-fan-card 2.95s cubic-bezier(.16,.86,.22,1) both;
+        animation-delay: calc(.06s * (var(--i) + 5));
+        filter: drop-shadow(0 14px 22px rgba(0,0,0,.32));
+      }
+      .ym-shuffle-stage strong {
+        position: absolute; left: 0; right: 0; bottom: 34px; text-align: center;
+        color: #fff7eb; font-size: clamp(20px, 6vw, 34px); line-height: 1; font-weight: 1000;
+        text-shadow: 0 0 24px color-mix(in srgb, var(--gacha-color,#d8a24a), transparent 32%), 0 3px 0 rgba(0,0,0,.36);
+      }
+      .ym-shuffle-stage em {
+        position: absolute; left: 0; right: 0; bottom: 7px; text-align: center; font-style: normal;
+        color: rgba(255,247,235,.68); font-size: 12px; font-weight: 850;
+      }
+      .ym-gacha-card-show .ym-gacha-show-lights {
+        position: absolute; inset: 0; pointer-events: none; z-index: 1; opacity: .72;
+        background:
+          conic-gradient(from 212deg at 10% 0%, transparent 0 12deg, color-mix(in srgb, var(--gacha-color,#d8a24a), transparent 78%) 13deg 25deg, transparent 26deg 58deg),
+          conic-gradient(from 148deg at 90% 0%, transparent 0 12deg, rgba(255,255,255,.12) 13deg 25deg, transparent 26deg 58deg),
+          radial-gradient(circle at 50% 22%, rgba(255,247,235,.12), transparent 28%);
+      }
       .ym-gacha-draw-card { position: relative; transform-style: preserve-3d; perspective: 760px; border-radius: 16px; }
       .ym-gacha-draw-card.is-flipped { animation: ym-gacha-flip .54s cubic-bezier(.2,.8,.2,1.16) both; }
       .ym-gacha-draw-card.is-large.is-gold.is-flipped,
-      .ym-gacha-draw-card.is-large.is-diamond.is-flipped { animation: ym-gacha-rare-flip .72s cubic-bezier(.16,.88,.22,1.14) both; }
-      .ym-gacha-pile-zone { min-height: 362px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; width: min(100%, 680px); }
-      .ym-gacha-card-pile { position: relative; width: 196px; min-height: 248px; display: grid; place-items: center; animation: ym-gacha-pile-idle 1.5s ease-in-out infinite; }
+      .ym-gacha-draw-card.is-large.is-diamond.is-flipped { animation: ym-gacha-rare-flip 1.05s cubic-bezier(.16,.88,.22,1.14) both; }
+      .ym-gacha-pile-zone { min-height: min(58vh, 482px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; width: min(100%, 780px); }
+      .ym-gacha-card-pile { position: relative; width: min(76vw, 274px); min-height: 346px; display: grid; place-items: center; animation: ym-gacha-pile-idle 1.5s ease-in-out infinite; }
+      .ym-gacha-card-pile.is-gold,
+      .ym-gacha-card-pile.is-diamond {
+        filter: drop-shadow(0 0 26px color-mix(in srgb, var(--rarity-color,#f0a23a), transparent 36%));
+      }
+      .ym-gacha-card-pile.is-xur {
+        filter: drop-shadow(0 0 34px rgba(185,150,255,.6)) drop-shadow(0 0 18px rgba(121,220,242,.45));
+      }
       .ym-gacha-card-pile > .ym-gacha-draw-card { position: relative; z-index: 8; }
-      .ym-gacha-pile-back { position: absolute; left: calc(50% - 48px + var(--pile-offset) * 9px); top: calc(50% - 72px + var(--pile-offset) * -4px); z-index: calc(7 - var(--pile-offset)); transform: rotate(calc(var(--pile-offset) * 4deg)); filter: brightness(.86); pointer-events: none; }
+      .ym-gacha-pile-back { position: absolute; left: calc(50% - 41px + var(--pile-offset) * 9px); top: calc(50% - 53px + var(--pile-offset) * -4px); z-index: calc(7 - var(--pile-offset)); transform: rotate(calc(var(--pile-offset) * 4deg)); filter: brightness(.86); pointer-events: none; }
+      @keyframes ym-item-reveal-pop {
+        0% { opacity: 0; transform: translateY(22px) scale(.82); }
+        58% { opacity: 1; transform: translateY(-4px) scale(1.04); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+      }
+      @keyframes ym-item-reveal-premium {
+        0% { opacity: 0; transform: translateY(34px) scale(.62) rotate(-4deg); filter: brightness(.8); }
+        24% { opacity: 1; transform: translateY(-10px) scale(1.12) rotate(2deg); filter: brightness(1.26); }
+        54% { transform: translateY(0) scale(1.02) rotate(0); filter: brightness(1.08); }
+        100% { transform: translateY(0) scale(1); filter: brightness(1); }
+      }
+      @keyframes ym-item-reveal-aura {
+        0% { opacity: 0; transform: scale(.4) rotate(0); }
+        30% { opacity: .86; }
+        100% { opacity: .44; transform: scale(1.16) rotate(28deg); }
+      }
+      .ym-item-reveal {
+        position: relative; width: min(86vw, 390px); min-height: 338px; border: 0; border-radius: 28px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+        padding: 14px 16px 18px; color: #fff7eb; background: transparent; cursor: pointer;
+        animation: ym-item-reveal-pop .42s cubic-bezier(.16,.88,.22,1.14) both;
+      }
+      .ym-item-reveal.is-repeat { animation-duration: .24s; }
+      .ym-item-reveal.is-new:not(.is-premium) { animation-duration: .58s; }
+      .ym-item-reveal.is-premium { min-height: 390px; animation: ym-item-reveal-premium 1.14s cubic-bezier(.16,.88,.22,1.14) both; }
+      .ym-item-reveal-aura {
+        position: absolute; inset: 9%; border-radius: 999px; z-index: -1;
+        background:
+          conic-gradient(from 0deg, transparent, color-mix(in srgb, var(--rarity-color,#d8a24a), #fff 18%), transparent 32%, rgba(255,255,255,.26), transparent 64%),
+          radial-gradient(circle, color-mix(in srgb, var(--rarity-color,#d8a24a), transparent 34%), transparent 62%);
+        filter: blur(.4px); animation: ym-item-reveal-aura .9s ease-out both;
+      }
+      .ym-item-reveal.is-repeat .ym-item-reveal-aura { opacity: .24; animation-duration: .28s; }
+      .ym-item-reveal.is-premium .ym-item-reveal-aura { inset: -2%; animation-duration: 2.1s; animation-iteration-count: 2; mix-blend-mode: screen; }
+      .ym-item-reveal-art {
+        position: relative; z-index: 2; width: min(62vw, 230px); height: min(62vw, 230px);
+        display: grid; place-items: center; filter: drop-shadow(0 22px 26px rgba(0,0,0,.34)) drop-shadow(0 0 18px color-mix(in srgb, var(--rarity-color,#d8a24a), transparent 36%));
+      }
+      .ym-item-reveal.is-premium .ym-item-reveal-art { width: min(68vw, 270px); height: min(68vw, 270px); }
+      .ym-item-reveal-art img { width: 100%; height: 100%; object-fit: contain; display: block; animation: ym-mcard-item-float 2.2s ease-in-out infinite; }
+      .ym-item-reveal-copy {
+        position: relative; z-index: 3; width: min(100%, 360px); display: flex; flex-direction: column; align-items: center; gap: 4px;
+        padding: 12px 14px; border-radius: 18px;
+        background: linear-gradient(180deg, rgba(20,18,16,.62), rgba(12,13,18,.72));
+        border: 1px solid color-mix(in srgb, var(--rarity-color,#d8a24a), transparent 42%);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 14px 28px rgba(0,0,0,.24);
+      }
+      .ym-item-reveal-rarity {
+        color: color-mix(in srgb, var(--rarity-color,#d8a24a), #fff 14%); font-size: 11px; font-weight: 1000; letter-spacing: .16em;
+      }
+      .ym-item-reveal-copy strong { color: #fffdf5; font-size: clamp(24px, 7vw, 40px); line-height: 1.05; font-weight: 1000; text-align: center; text-shadow: 0 0 18px color-mix(in srgb, var(--rarity-color,#d8a24a), transparent 54%); }
+      .ym-item-reveal-copy em { font-style: normal; color: rgba(255,247,235,.86); font-size: 14px; font-weight: 900; }
+      .ym-item-reveal-copy span:last-child { color: rgba(255,247,235,.72); font-size: 12.5px; line-height: 1.45; font-weight: 760; text-align: center; }
+      .ym-item-reveal-next {
+        position: relative; z-index: 4; min-width: 88px; height: 34px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;
+        color: #231a10; background: linear-gradient(135deg, #fff8df, color-mix(in srgb, var(--rarity-color,#d8a24a), #fff 38%));
+        font-size: 12px; font-weight: 1000; box-shadow: 0 10px 20px rgba(0,0,0,.22);
+      }
+      @keyframes ym-merge-shuffle-fx {
+        0% { opacity: 0; transform: translateY(18px) scale(.78); }
+        22% { opacity: 1; transform: translateY(-4px) scale(1.05); }
+        70% { opacity: 1; transform: translateY(0) scale(1); }
+        100% { opacity: 0; transform: translateY(-14px) scale(.98); }
+      }
+      .ym-merge-shuffle-fx {
+        position: sticky; top: 8px; z-index: 20; margin: 0 0 12px; min-height: 86px; border-radius: 18px;
+        display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; padding: 12px 14px;
+        color: #fff7eb; border: 1px solid color-mix(in srgb, var(--rarity-color,#d8a24a), #fff 24%);
+        background:
+          linear-gradient(112deg, transparent, rgba(255,255,255,.18), transparent),
+          radial-gradient(circle at 50% 20%, color-mix(in srgb, var(--rarity-color,#d8a24a), transparent 42%), transparent 56%),
+          linear-gradient(145deg, rgba(28,22,18,.92), rgba(12,13,18,.94));
+        box-shadow: 0 18px 34px rgba(0,0,0,.24), 0 0 24px color-mix(in srgb, var(--rarity-color,#d8a24a), transparent 58%);
+        animation: ym-merge-shuffle-fx 1.1s cubic-bezier(.16,.88,.22,1.14) both;
+      }
+      .ym-merge-shuffle-fx.is-gold,
+      .ym-merge-shuffle-fx.is-diamond,
+      .ym-merge-shuffle-fx.is-xur { animation-duration: 1.7s; }
+      .ym-merge-shuffle-fx span,
+      .ym-merge-shuffle-fx strong {
+        display: grid; place-items: center; height: 54px; border-radius: 14px; font-size: 24px; font-weight: 1000;
+        background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.16);
+      }
+      .ym-merge-shuffle-fx strong {
+        color: color-mix(in srgb, var(--rarity-color,#d8a24a), #fff 18%); box-shadow: 0 0 18px color-mix(in srgb, var(--rarity-color,#d8a24a), transparent 44%);
+      }
+      .ym-merge-shuffle-fx b { font-size: 10px; font-weight: 1000; letter-spacing: .16em; color: rgba(255,247,235,.74); text-align: center; }
       .ym-gacha-opened-stack {
-        display: flex; align-items: center; justify-content: flex-start; min-height: 248px;
+        display: flex; align-items: center; justify-content: flex-start; min-height: 232px;
         width: min(96vw, 760px); max-width: min(96vw, 760px); overflow-x: auto; overflow-y: visible;
-        padding: 12px 22px 18px 22px; scrollbar-width: thin;
+        padding: 4px 22px 16px 22px; scrollbar-width: thin;
         -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
         mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
       }
@@ -592,11 +773,11 @@
           radial-gradient(circle at 50% 0%, rgba(255,255,255,.52), transparent 44%),
           linear-gradient(135deg, color-mix(in srgb, var(--rarity-color,#f0a23a), #fff 18%), color-mix(in srgb, var(--rarity-color,#f0a23a), #000 26%));
         box-shadow: 0 0 48px color-mix(in srgb, var(--rarity-color,#f0a23a), transparent 18%), 0 28px 72px rgba(0,0,0,.52), inset 0 1px 0 rgba(255,255,255,.5);
-        animation: ym-gacha-rare-burst 1.45s cubic-bezier(.16,.88,.22,1.14) both;
+        animation: ym-gacha-rare-burst 2.6s cubic-bezier(.16,.88,.22,1.14) both;
       }
       .ym-gacha-rare-burst span { font-size: clamp(34px, 11vw, 70px); line-height: .9; font-weight: 1000; letter-spacing: .08em; -webkit-text-stroke: 2px rgba(32,36,47,.72); text-shadow: 0 0 18px rgba(255,255,255,.38); }
       .ym-gacha-rare-burst strong { margin-top: 8px; font-size: 13px; letter-spacing: .16em; color: rgba(255,255,255,.9); text-shadow: 0 1px 6px rgba(0,0,0,.34); }
-      .ym-gacha-rare-burst.is-diamond { color: #f1feff; }
+      .ym-gacha-rare-burst.is-diamond { color: #f1feff; animation-duration: 3.4s; }
       .ym-gacha-detail-backdrop {
         position: fixed; inset: 0; z-index: 16; display: grid; place-items: center; padding: 18px;
         background: rgba(0,0,0,.46); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -1041,6 +1222,15 @@
         background-size: 180% 180%;
         animation: ym-gacha-back-rainbow 2.6s ease-in-out infinite;
       }
+      .ym-mcard.is-xur {
+        background:
+          linear-gradient(118deg, rgba(255,255,255,.64), transparent 18%, rgba(255,255,255,.36) 44%, transparent 72%),
+          radial-gradient(circle at 50% 34%, rgba(255,255,255,.98), transparent 24%),
+          conic-gradient(from 18deg, #f6ffff, #8ee9ff, #b996ff, #ffe58a, #ff8ad8, #f6ffff);
+        background-size: 180% 180%;
+        animation: ym-gacha-back-rainbow 1.8s ease-in-out infinite;
+        box-shadow: 0 0 0 1px rgba(255,255,255,.7), 0 0 0 4px #181923, 0 0 34px rgba(185,150,255,.48), 0 22px 50px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.8);
+      }
       .ym-mcard-art {
         overflow: hidden;
         border-radius: 8%;
@@ -1078,7 +1268,7 @@
         filter: blur(3px);
       }
       .ym-mcard-img {
-        width: 124%; height: 124%; object-fit: contain; object-position: center; display: block;
+        width: 132%; height: 132%; object-fit: contain; object-position: center; display: block;
         filter: saturate(1.1) contrast(1.06) drop-shadow(0 11px 9px rgba(28,31,42,.3));
         animation: ym-mcard-item-float 2.8s ease-in-out infinite;
       }
@@ -1087,8 +1277,10 @@
       .ym-mcard.is-silver .ym-mcard-img { filter: grayscale(.08) saturate(.96) contrast(1.08) drop-shadow(0 11px 10px rgba(74,86,102,.34)); }
       .ym-mcard.is-gold .ym-mcard-img { filter: saturate(1.22) contrast(1.08) drop-shadow(0 0 12px rgba(240,190,72,.46)) drop-shadow(0 12px 12px rgba(28,31,42,.24)); }
       .ym-mcard.is-diamond .ym-mcard-img { filter: saturate(1.28) contrast(1.1) drop-shadow(0 0 10px rgba(121,220,242,.58)) drop-shadow(0 0 18px rgba(190,150,255,.36)) drop-shadow(0 12px 12px rgba(28,31,42,.22)); }
+      .ym-mcard.is-xur .ym-mcard-img { filter: saturate(1.35) contrast(1.12) drop-shadow(0 0 12px rgba(121,220,242,.68)) drop-shadow(0 0 22px rgba(185,150,255,.52)) drop-shadow(0 13px 13px rgba(28,31,42,.22)); }
       .ym-mcard.is-gold .ym-mcard-img,
-      .ym-mcard.is-diamond .ym-mcard-img {
+      .ym-mcard.is-diamond .ym-mcard-img,
+      .ym-mcard.is-xur .ym-mcard-img {
         filter: saturate(1.18) contrast(1.08) drop-shadow(0 0 12px color-mix(in srgb, var(--rarity-color,#d78f73), transparent 22%)) drop-shadow(0 12px 12px rgba(28,31,42,.24));
       }
       .ym-gpn-capsule {
@@ -1141,7 +1333,8 @@
         display: none !important;
       }
       .ym-mback.is-gold .ym-mback-mascot,
-      .ym-mback.is-diamond .ym-mback-mascot {
+      .ym-mback.is-diamond .ym-mback-mascot,
+      .ym-mback.is-xur .ym-mback-mascot {
         background:
           radial-gradient(circle at 38% 28%, #ffffff 0 16%, transparent 17%),
           linear-gradient(145deg, #ffffff 0 24%, #ffe6b0 44%, #cda14a 70%, #ffffff 100%);

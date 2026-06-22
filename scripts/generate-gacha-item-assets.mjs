@@ -17,6 +17,7 @@ const rarityPal = {
   silver: { main: '#b8c1cd', dark: '#56616e', light: '#f5fbff', gem: '#d8e2ee' },
   gold: { main: '#f1bf45', dark: '#7f5216', light: '#fff1a8', gem: '#ffd65b' },
   diamond: { main: '#77d7ec', dark: '#265d85', light: '#f5ffff', gem: '#b996ff' },
+  xur: { main: '#b996ff', dark: '#4a2d84', light: '#f8f3ff', gem: '#79dcf2' },
 };
 const motifAccent = {
   food: '#e85743',

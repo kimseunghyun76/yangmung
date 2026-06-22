@@ -7,6 +7,7 @@ import { CONTENT } from '../content';
 import { isMissionUnlocked, type ProgressMap } from '../learn/progress';
 import { drawGacha, loadCollection, saveCollection, bestRarity, totalItems, type Collection, type Rarity } from '../learn/collection';
 import { gachaLabItemForPlace } from '../learn/gachaItems';
+import { getCash, spend, COST_PER_DRAW, formatCash } from '../learn/wallet';
 import { WRAP } from '../ui/styles';
 import { NavBar, type NavBarProps } from './NavBar';
 import { MascotFace } from './mascot';
@@ -19,8 +20,9 @@ const VIS: Record<Rarity, { label: string; stars: number; color: string; glow: s
   silver: { label: '에픽', stars: 4, color: '#aab2be', glow: 'rgba(170,178,190,.62)', special: false },
   gold: { label: 'SSR', stars: 5, color: '#e8b23a', glow: 'rgba(232,178,58,.85)', special: true },
   diamond: { label: 'UR', stars: 6, color: '#5bc7e0', glow: 'rgba(91,199,224,.9)', special: true },
+  xur: { label: 'XUR', stars: 7, color: '#b996ff', glow: 'rgba(185,150,255,.92)', special: true },
 };
-const RANK: Rarity[] = ['basic', 'bronze', 'silver', 'gold', 'diamond'];
+const RANK: Rarity[] = ['basic', 'bronze', 'silver', 'gold', 'diamond', 'xur'];
 
 interface DrawItem { sceneId: string; name: string; korean: string; place: string; image: string; rarity: Rarity }
 
@@ -108,6 +110,8 @@ export function GachaLab({ nav, progress, onExit }: Props) {
   const [phase, setPhase] = useState<'idle' | 'charging' | 'single' | 'multi'>('idle');
   const [results, setResults] = useState<DrawItem[]>([]);
   const [collection, setCollection] = useState<Collection>(() => loadCollection());
+  const [cash, setCash] = useState(() => getCash());
+  const [shortMsg, setShortMsg] = useState('');
 
   const scenes = useMemo(() => {
     const list = CONTENT.missions
@@ -120,6 +124,10 @@ export function GachaLab({ nav, progress, onExit }: Props) {
 
   function pull(n: number) {
     if (phase === 'charging') return;
+    const cost = n * COST_PER_DRAW;
+    const left = spend(cost);
+    if (left === null) { setShortMsg(`캐시가 부족해요 (${formatCash(cost)} 필요)`); window.setTimeout(() => setShortMsg(''), 2200); return; }
+    setCash(left);
     setPhase('charging');
     window.setTimeout(() => {
       const { collection: nc, results: drops } = drawGacha(collection, sceneIds, n);
@@ -144,11 +152,12 @@ export function GachaLab({ nav, progress, onExit }: Props) {
       <style>{STYLE}</style>
       <NavBar {...nav} />
 
-      <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
         <button className="ym-press" onClick={() => setTab('draw')} style={pill(tab === 'draw')}>✨ 뽑기</button>
-        <button className="ym-press" onClick={() => { setTab('dex'); reset(); }} style={pill(tab === 'dex')}>🗃 보물 도감 <b style={{ opacity: .7 }}>{ownedCount}/{scenes.length}</b></button>
+        <button className="ym-press" onClick={() => { setTab('dex'); reset(); }} style={pill(tab === 'dex')}>🗃 도감 <b style={{ opacity: .7 }}>{ownedCount}/{scenes.length}</b></button>
         <span style={{ flex: 1 }} />
-        <button className="ym-press" onClick={onExit} style={{ ...pill(false), padding: '8px 12px' }}>← 홈</button>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '7px 12px', borderRadius: 999, border: '1.5px solid #e8b23a', background: 'rgba(232,178,58,.12)', color: '#e8b23a', fontWeight: 900, fontSize: 13, whiteSpace: 'nowrap' }}>💰 {formatCash(cash)}</span>
+        <button className="ym-press" onClick={onExit} style={{ ...pill(false), padding: '8px 11px' }}>← 홈</button>
       </div>
 
       {tab === 'draw' ? (
@@ -180,8 +189,8 @@ export function GachaLab({ nav, progress, onExit }: Props) {
               {special && (
                 <>
                   <Cameo place={single.place} side="l" />
-                  {single.rarity === 'diamond' && <Cameo place={single.place} side="r" />}
-                  <span className="gl-special-tag" style={{ color: bv.color }}>{single.rarity === 'diamond' ? '✦ UR 등장! ✦' : '✧ SSR ✧'}</span>
+                  {(single.rarity === 'diamond' || single.rarity === 'xur') && <Cameo place={single.place} side="r" />}
+                  <span className="gl-special-tag" style={{ color: bv.color }}>{single.rarity === 'xur' ? '✦ XUR 완성! ✦' : single.rarity === 'diamond' ? '✦ UR 등장! ✦' : '✧ SSR ✧'}</span>
                 </>
               )}
               <div className="gl-rise">
@@ -205,8 +214,8 @@ export function GachaLab({ nav, progress, onExit }: Props) {
               {special && (
                 <div className="gl-multi-feat" style={{ ['--c' as string]: bv.color }}>
                   <Cameo place={best.place} side="l" />
-                  {best.rarity === 'diamond' && <Cameo place={best.place} side="r" />}
-                  <span className="gl-special-tag" style={{ color: bv.color }}>{best.rarity === 'diamond' ? '✦ UR 등장! ✦' : '✧ SSR ✧'}</span>
+                  {(best.rarity === 'diamond' || best.rarity === 'xur') && <Cameo place={best.place} side="r" />}
+                  <span className="gl-special-tag" style={{ color: bv.color }}>{best.rarity === 'xur' ? '✦ XUR 완성! ✦' : best.rarity === 'diamond' ? '✦ UR 등장! ✦' : '✧ SSR ✧'}</span>
                   <Item25D item={best} size={150} />
                   <Stars n={bv.stars} color={bv.color} />
                 </div>
@@ -228,10 +237,10 @@ export function GachaLab({ nav, progress, onExit }: Props) {
           <div className="gl-panel">
             {phase === 'idle' && (
               <>
-                <p className="gl-prompt">양·뭉과 함께 오늘의 보물을 뽑아볼까요?</p>
+                <p className="gl-prompt">{shortMsg || `양·뭉과 함께 보물을 뽑아볼까요? (1장 ${formatCash(COST_PER_DRAW)})`}</p>
                 <div style={{ display: 'flex', gap: 10 }}>
-                  <button className="ym-press" onClick={() => pull(1)} style={cta(true, '#caa15c')}>✨ 1회 뽑기</button>
-                  <button className="ym-press" onClick={() => pull(10)} style={cta(true, '#b9382e')}>🎴 10연차</button>
+                  <button className="ym-press" onClick={() => pull(1)} style={cta(true, '#caa15c')}>✨ 1회 · {formatCash(COST_PER_DRAW)}</button>
+                  <button className="ym-press" onClick={() => pull(10)} style={cta(true, '#b9382e')}>🎴 10연차 · {formatCash(COST_PER_DRAW * 10)}</button>
                 </div>
               </>
             )}
