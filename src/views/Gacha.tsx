@@ -4,11 +4,11 @@ import { createPortal } from 'react-dom';
 import { CONTENT } from '../content';
 import {
   BOX, MERGE_NEED, RARITIES,
-  bestRarity, claim, diamondCount, honorTrophyCount, itemsOf, loadCollection,
-  ownedCount, rarityMeta, rarityToTier, saveCollection, totalItems,
+  bestRarity, canMergeRarity, claim, diamondCount, honorTrophyCount, itemsOf, loadCollection,
+  mergeSceneRarity, nextMergeRarity, ownedCount, rarityMeta, rarityToTier, saveCollection, totalItems,
   type BoxGrade, type Collection, type DropResult, type Rarity,
 } from '../learn/collection';
-import { gachaItemForPlace } from '../learn/gachaItems';
+import { gachaItemForPlace, gachaLabItemForPlace } from '../learn/gachaItems';
 import { loadProgress } from '../learn/progress';
 import { Icon } from '../ui/Icon';
 import { speakSequence, ttsSupported } from '../tts';
@@ -21,7 +21,8 @@ const SCENES = CONTENT.missions.filter((m) => m.id !== 'C0');
 const MAX_GACHA_DRAWS = 30;
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place ?? id;
 const rarityStars = (rarity: Rarity) => rarityToTier(rarity);
-const isRareReveal = (rarity: Rarity) => rarity === 'gold' || rarity === 'diamond';
+const isRareReveal = (rarity: Rarity) => rarity === 'gold' || rarity === 'diamond' || rarity === 'xur';
+const isPremiumReveal = (rarity: Rarity) => rarity === 'gold' || rarity === 'diamond' || rarity === 'xur';
 
 function itemKoreanDescription(place: string, title: string, rarity: Rarity): string {
   const tone: Record<Rarity, string> = {
@@ -30,13 +31,14 @@ function itemKoreanDescription(place: string, title: string, rarity: Rarity): st
     silver: '상황 설명까지 자연스럽게 이어 주는 선물',
     gold: '정중하고 구체적인 부탁을 연습하게 해 주는 선물',
     diamond: '최종 미션을 떠올리게 하는 특별한 선물',
+    xur: 'UR 병합으로만 열리는 초월 선물',
   };
   return `${place}에서 얻은 ${title}. ${tone[rarity]}입니다.`;
 }
 
 function ItemArt({ sceneId, rarity, size }: { sceneId: string; rarity: Rarity; size: number }) {
   const sv = sceneVisualByMission(sceneId);
-  const item = gachaItemForPlace(placeOf(sceneId), rarity);
+  const item = gachaLabItemForPlace(placeOf(sceneId), rarity);
   const [failed, setFailed] = useState(false);
   const src = !failed ? item.image : undefined;
   if (!src) {
@@ -63,11 +65,11 @@ function DeckCardFace({ sceneId, rarity, size = 56 }: { sceneId: string; rarity:
     }}>
       <span className="ym-mcard-brand" style={{ fontSize: Math.max(5, Math.round(size * 0.055)), marginTop: Math.round(size * 0.045) }}>YANGMUNG TRAVEL CARD</span>
       <span className="ym-mcard-serial" style={{ fontSize: Math.max(5, Math.round(size * 0.052)) }}>NO.{cardNo}</span>
-      <span className="ym-mcard-tier" aria-hidden style={{ fontSize: Math.max(6, Math.round(size * 0.061)) }}>{stars} STAR</span>
+      <span className="ym-mcard-tier" aria-hidden style={{ fontSize: Math.max(6, Math.round(size * 0.061)) }}>{meta.label}</span>
       <span className="ym-mcard-stars" aria-label={`${stars}성 카드`} style={{ fontSize: Math.max(7, Math.round(size * 0.074)), marginTop: Math.round(size * 0.03) }}>
-        {Array.from({ length: 5 }, (_, i) => <span className={i < stars ? 'is-on' : undefined} key={i}>★</span>)}
+        {Array.from({ length: 6 }, (_, i) => <span className={i < stars ? 'is-on' : undefined} key={i}>★</span>)}
       </span>
-      <span aria-hidden className="ym-mcard-art" style={{ width: Math.round(size * 0.82), height: Math.round(size * 0.69), marginTop: Math.round(size * 0.045) }}>
+      <span aria-hidden className="ym-mcard-art" style={{ width: Math.round(size * 0.88), height: Math.round(size * 0.76), marginTop: Math.round(size * 0.04) }}>
         <ItemArt sceneId={sceneId} rarity={rarity} size={size} />
       </span>
       <span className="ym-mcard-title" lang="ja" style={{ fontSize: Math.max(8, Math.round(size * 0.13)), width: '88%', marginTop: Math.round(size * 0.055) }}>{item.jaTitle ?? item.title}</span>
@@ -75,147 +77,6 @@ function DeckCardFace({ sceneId, rarity, size = 56 }: { sceneId: string; rarity:
       {showDescription && <span className="ym-mcard-desc" style={{ fontSize: Math.max(7, Math.round(size * 0.056)), width: '84%' }}>{itemKoreanDescription(placeOf(sceneId), item.title, rarity)}</span>}
       <span className="ym-mcard-place" style={{ fontSize: Math.max(5, Math.round(size * 0.052)) }}>{placeOf(sceneId)}</span>
     </span>
-  );
-}
-
-// 가챠폰 머신(ガチャガチャ) — 머신은 고정, 돔 안 캡슐만 탭 속도에 맞춰 빨라진다.
-// 전통 칠기·기모노 톤(朱·金·藍·苔·梅·藤) — 캔디 무지개 대신 절제된 보석빛으로.
-const CAPSULE_COLORS: [string, string][] = [
-  ['rgba(255,240,232,.78)', '#c5403a'], // 朱 vermilion
-  ['rgba(238,242,250,.74)', '#3a5a8c'], // 藍 indigo
-  ['rgba(255,248,228,.80)', '#cda24a'], // 金 gold
-  ['rgba(240,246,236,.74)', '#6e8e5a'], // 苔 moss
-  ['rgba(250,238,242,.76)', '#a85870'], // 梅 plum
-  ['rgba(244,240,250,.72)', '#6d5e9c'], // 藤 wisteria
-  ['rgba(255,244,234,.78)', '#c5613a'], // 柿 persimmon
-  ['rgba(238,244,246,.72)', '#4a7d86'], // 浅葱 teal
-];
-const BALL_POS = [
-  { l: 14, t: 50 }, { l: 32, t: 61 }, { l: 52, t: 58 }, { l: 72, t: 50 },
-  { l: 22, t: 31 }, { l: 45, t: 24 }, { l: 64, t: 31 }, { l: 82, t: 33 },
-];
-const BALL_DEPTH = [0.82, 1.04, 0.94, 0.78, 1.1, 0.9, 1.02, 0.86];
-const DISPENSED_CAPSULE_COLORS: Record<BoxGrade, [string, string]> = {
-  wood: CAPSULE_COLORS[0],
-  silver: CAPSULE_COLORS[1],
-  gold: CAPSULE_COLORS[2],
-};
-
-function CapsuleBall({ className = '', style, mark = false }: { className?: string; style?: React.CSSProperties; mark?: boolean }) {
-  return (
-    <span className={`ym-gpn-ball ${className}`} aria-hidden style={style}>
-      <span className="ym-gpn-ball-shell" />
-      <span className="ym-gpn-ball-cup" />
-      <span className="ym-gpn-ball-band" />
-      <span className="ym-gpn-ball-seam" />
-      <span className="ym-gpn-ball-lock" />
-      <span className="ym-gpn-ball-glare" />
-      {mark && <span className="ym-gpn-capsule-mark">?</span>}
-    </span>
-  );
-}
-
-// 朱 칠기 캡슐 디스펜서 — 플라스틱 가챠폰 이미지 대신 코드로 그린 절제된 머신(SVG).
-// 유리 돔은 비워 두어 위에 얹히는 캡슐 오버레이가 "돔 안"에 보이게 한다.
-function MachineArt() {
-  const dome = 'M44 198 C 44 78, 88 50, 128 50 C 168 50, 212 78, 212 198 Z';
-  return (
-    <svg className="ym-gpn-machine-img" viewBox="0 0 256 374" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-      <defs>
-        <linearGradient id="gpnLacq" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#c8443b" /><stop offset="0.55" stopColor="#a5322a" /><stop offset="1" stopColor="#7d2620" />
-        </linearGradient>
-        <linearGradient id="gpnBrass" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#e7cd82" /><stop offset="0.5" stopColor="#caa14a" /><stop offset="1" stopColor="#8f6c2c" />
-        </linearGradient>
-        <radialGradient id="gpnGlass" cx="0.4" cy="0.28" r="0.85">
-          <stop offset="0" stopColor="#ffffff" stopOpacity="0.40" /><stop offset="0.45" stopColor="#fff7e6" stopOpacity="0.10" /><stop offset="1" stopColor="#d8c4a0" stopOpacity="0.14" />
-        </radialGradient>
-        <linearGradient id="gpnBase" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#2c2118" /><stop offset="1" stopColor="#17100a" />
-        </linearGradient>
-      </defs>
-      {/* 받침 */}
-      <rect x="58" y="334" width="140" height="32" rx="13" fill="url(#gpnBase)" stroke="#211a12" strokeWidth="4" />
-      {/* 칠기 몸체 */}
-      <rect x="48" y="196" width="160" height="150" rx="24" fill="url(#gpnLacq)" stroke="#211a12" strokeWidth="4" />
-      {/* 금 상감선 */}
-      <rect x="58" y="206" width="140" height="130" rx="18" fill="none" stroke="#e7cd82" strokeWidth="1.4" opacity="0.5" />
-      {/* 왼쪽 광택 */}
-      <rect x="59" y="208" width="44" height="124" rx="14" fill="#ffffff" opacity="0.07" />
-      {/* 손잡이 자리(오버레이가 얹힘) */}
-      <circle cx="128" cy="244" r="33" fill="#7d2620" stroke="#211a12" strokeWidth="3" />
-      <circle cx="128" cy="244" r="33" fill="none" stroke="#e7cd82" strokeWidth="1.2" opacity="0.4" />
-      {/* 배출구 */}
-      <rect x="96" y="302" width="64" height="26" rx="9" fill="#140e07" stroke="#211a12" strokeWidth="3" />
-      <rect x="103" y="306" width="50" height="8" rx="4" fill="#000000" opacity="0.5" />
-      {/* 유리 돔 */}
-      <path d={dome} fill="url(#gpnGlass)" stroke="url(#gpnBrass)" strokeWidth="5" />
-      <path d={dome} fill="none" stroke="#211a12" strokeWidth="1.4" opacity="0.45" />
-      {/* 황동 림 */}
-      <rect x="44" y="190" width="168" height="16" rx="8" fill="url(#gpnBrass)" stroke="#211a12" strokeWidth="3.5" />
-      <rect x="50" y="194" width="156" height="3" fill="#fff7e6" opacity="0.3" />
-      {/* 돔 하이라이트 */}
-      <ellipse cx="96" cy="94" rx="24" ry="38" fill="#ffffff" opacity="0.16" transform="rotate(-18 96 94)" />
-    </svg>
-  );
-}
-
-function GachaMachine({ grade, taps, spinning, mini = false }: { grade: BoxGrade; taps: number; spinning?: boolean; mini?: boolean }) {
-  const domeState = spinning || taps > 0 ? 'is-spin' : '';
-  const speed = Math.max(0.34, 0.92 - taps * 0.075);
-  const machine = (
-    <div className={`ym-gpn-machine ym-gpn-image-machine ${taps > 0 || spinning ? 'is-active' : ''} ${taps > 0 && !spinning ? 'is-jolt' : ''}`} key={`m:${taps}:${spinning ? 's' : ''}`}
-      style={{ ['--ball-speed' as string]: `${speed}s`, ['--tap-count' as string]: String(taps), ...(mini ? { transform: 'scale(0.58)', transformOrigin: 'center bottom' } : null) }}>
-      <MachineArt />
-      <div className={`ym-gpn-dome ym-gpn-dome-overlay ${domeState}`} aria-hidden>
-        <span className="ym-gpn-dome-vortex" aria-hidden />
-        {BALL_POS.map((p, i) => (
-          <CapsuleBall key={i} style={{
-            left: `${p.l}%`, top: `${p.t}%`,
-            ['--cap-scale' as string]: String(BALL_DEPTH[i]),
-            ['--cap-top' as string]: CAPSULE_COLORS[i][0],
-            ['--cap' as string]: CAPSULE_COLORS[i][1],
-            ['--cap-rot' as string]: `${-18 + (i % 5) * 9}deg`,
-            ['--jx' as string]: `${(i % 2 === 0 ? 1 : -1) * (4 + (i % 3) * 4)}px`,
-            ['--jy' as string]: `${-8 - (i % 4) * 5}px`,
-            ['--d' as string]: `${i * 0.03}s`,
-            ['--ang' as string]: `${i * 45}deg`,
-            ['--orbit' as string]: `${18 + (i % 3) * 10}px`,
-            ['--spd' as string]: `calc(var(--ball-speed, .82s) + ${(i % 3) * 0.1}s)`,
-            ['--tx1' as string]: `${(i % 2 === 0 ? 1 : -1) * (18 + (i % 3) * 7)}px`,
-            ['--ty1' as string]: `${-18 + (i % 4) * 5}px`,
-            ['--tx2' as string]: `${(i % 3 === 0 ? -1 : 1) * (26 + (i % 2) * 10)}px`,
-            ['--ty2' as string]: `${10 - (i % 3) * 7}px`,
-            ['--tx3' as string]: `${(i % 2 === 0 ? -1 : 1) * (10 + (i % 4) * 6)}px`,
-            ['--ty3' as string]: `${18 - (i % 2) * 9}px`,
-          }} />
-        ))}
-        <span className="ym-gpn-dome-glass" aria-hidden />
-      </div>
-      <span className="ym-gpn-crank-shadow" aria-hidden />
-      <span className={`ym-gpn-touch-ring is-${grade} ${taps === 0 && !spinning ? 'is-idle' : ''}`} aria-hidden />
-      <span className="ym-gpn-crank-knob" aria-hidden />
-      <span className="ym-gpn-chute-glow" aria-hidden />
-    </div>
-  );
-  if (!mini) return machine;
-  return <div className="ym-gpn-mini-slot">{machine}</div>;
-}
-
-// 배출된 캡슐 — 떨어지고(ゴトンッ) → 흔들리고 → 빠캉! 반으로 갈라짐(パカッ‼)
-function Capsule({ grade, state }: { grade: BoxGrade; state: 'drop' | 'wobble' | 'pop' }) {
-  const box = BOX[grade];
-  const [capTop, capBottom] = DISPENSED_CAPSULE_COLORS[grade];
-  return (
-    <div className={`ym-gpn-capsule is-${state}`} style={{
-      ['--cap-top' as string]: capTop,
-      ['--cap' as string]: capBottom || box.colors[1],
-    }}>
-      <CapsuleBall className="ym-gpn-capsule-whole" mark={state !== 'pop'} />
-      <span className="ym-gpn-cap-half ym-gpn-cap-top" aria-hidden />
-      <span className="ym-gpn-cap-half ym-gpn-cap-bottom" aria-hidden />
-    </div>
   );
 }
 
@@ -232,27 +93,65 @@ function CardBack({ rarity = 'basic', size = 82 }: { rarity?: Rarity; size?: num
   );
 }
 
-function DrawCard({ item, flipped, onFlip, index, active = true, large = false }: { item: DropResult; flipped: boolean; onFlip: () => void; index: number; active?: boolean; large?: boolean }) {
+function ItemReveal({ item, index, active, onNext }: { item: DropResult; index: number; active: boolean; onNext: () => void }) {
   const meta = rarityMeta(item.rarity);
+  const art = gachaLabItemForPlace(placeOf(item.sceneId), item.rarity);
+  const [failed, setFailed] = useState(false);
+  const premium = isPremiumReveal(item.rarity);
+  const className = `ym-item-reveal is-${item.rarity} ${item.isNew ? 'is-new' : 'is-repeat'} ${premium ? 'is-premium' : ''}`;
   return (
     <button
-      className={`ym-gacha-draw-card ${flipped ? `is-flipped is-${item.rarity}` : 'ym-press'} ${active ? 'is-active' : ''} ${large ? 'is-large' : ''}`}
-      onClick={(e) => { e.stopPropagation(); onFlip(); }}
-      disabled={!active}
-      style={{
-        ['--rarity-color' as string]: meta.color,
-        animationDelay: flipped ? `${index * 0.035}s` : undefined,
-        width: large ? 172 : 110, minHeight: large ? 244 : 166, border: 0, background: 'transparent', color: '#fff', cursor: active ? 'pointer' : 'default',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5, padding: 0,
-      }}
+      className={className}
+      onClick={(e) => { e.stopPropagation(); onNext(); }}
+      style={{ ['--rarity-color' as string]: meta.color, ['--intro-index' as string]: index }}
     >
-      {flipped ? <DeckCardFace sceneId={item.sceneId} rarity={item.rarity} size={large ? 154 : 96} /> : <CardBack rarity={item.rarity} size={large ? 148 : 96} />}
-      {flipped && (
-        <>
-          <span style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,.84)', maxWidth: 86, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{placeOf(item.sceneId)}</span>
-        </>
-      )}
+      <span className="ym-item-reveal-aura" aria-hidden />
+      <span className="ym-item-reveal-art">
+        {!failed && art.image ? (
+          <img src={art.image} alt="" draggable={false} onError={() => setFailed(true)} />
+        ) : (
+          <span className={`ym-gacha-item-illustration is-${art.motif} is-${item.rarity}`} />
+        )}
+      </span>
+      <span className="ym-item-reveal-copy">
+        <span className="ym-item-reveal-rarity">{meta.label}{item.isNew ? ' · NEW' : ''}</span>
+        <strong lang="ja">{art.jaTitle ?? art.title}</strong>
+        <em>{art.title}</em>
+        <span>{itemKoreanDescription(placeOf(item.sceneId), art.title, item.rarity)}</span>
+      </span>
+      <span className="ym-item-reveal-next">{active ? '다음' : '확인'}</span>
     </button>
+  );
+}
+
+function CardShufflePreview({ color }: { color: string }) {
+  return (
+    <span className="ym-shuffle-preview" aria-hidden style={{ ['--gacha-color' as string]: color }}>
+      {Array.from({ length: 7 }).map((_, i) => (
+        <span key={i} className="ym-shuffle-preview-card" style={{ ['--i' as string]: i - 3 }}><CardBack size={70} /></span>
+      ))}
+    </span>
+  );
+}
+
+function CardShuffleStage({ color, count, hint }: { color: string; count: number; hint?: Rarity }) {
+  const hintMeta = hint ? rarityMeta(hint) : null;
+  const premium = hint && isPremiumReveal(hint);
+  return (
+    <div className={`ym-shuffle-stage ${premium ? `has-${hint}` : ''}`} aria-hidden style={{ ['--gacha-color' as string]: hintMeta?.color ?? color }}>
+      <span className="ym-shuffle-table-ring" />
+      <span className="ym-shuffle-cut is-left">
+        {Array.from({ length: 5 }).map((_, i) => <span key={i} style={{ ['--i' as string]: i }}><CardBack size={92} /></span>)}
+      </span>
+      <span className="ym-shuffle-cut is-right">
+        {Array.from({ length: 5 }).map((_, i) => <span key={i} style={{ ['--i' as string]: i }}><CardBack size={92} /></span>)}
+      </span>
+      <span className="ym-shuffle-fan">
+        {Array.from({ length: 11 }).map((_, i) => <span key={i} style={{ ['--i' as string]: i - 5 }}><CardBack size={96} /></span>)}
+      </span>
+      <strong>{count}장의 여행 카드 셔플 중</strong>
+      <em>{premium && hintMeta ? `덱 안에서 ${hintMeta.label}의 강한 빛이 느껴집니다` : '잠시 후 한 장씩 공개됩니다'}</em>
+    </div>
   );
 }
 
@@ -315,40 +214,44 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
 }) {
   const box = BOX[grade];
   const [phase, setPhase] = useState<'closed' | 'open' | 'revealed'>('closed');
-  const [stage, setStage] = useState<'crank' | 'capsule' | 'cards'>('crank');
-  const [capState, setCapState] = useState<'drop' | 'wobble' | 'pop'>('drop');
-  const [spinning, setSpinning] = useState(false);
+  const [stage, setStage] = useState<'shuffle' | 'cards'>('shuffle');
   const [sfx, setSfx] = useState<{ text: string; size: number; key: number } | null>(null);
   const [results, setResults] = useState<DropResult[]>([]);
-  const [taps, setTaps] = useState(0);
   const [flipped, setFlipped] = useState<Set<number>>(new Set());
   const [visibleCount, setVisibleCount] = useState(1);
   const [currentDraws, setCurrentDraws] = useState(drawCount ?? box.draws);
-  const [spotlightIndex, setSpotlightIndex] = useState<number | null>(null);
-  const [bulkOpening, setBulkOpening] = useState(false);
   const [rareBurst, setRareBurst] = useState<{ index: number; rarity: Rarity; key: number } | null>(null);
   const [deck, setDeck] = useState(false);
-  const openedRef = useRef(false);
-  const dispenseRef = useRef(false);
   const plannedDrawsRef = useRef(drawCount ?? box.draws);
   const timersRef = useRef<number[]>([]);
+  const introSeenRef = useRef<Set<number>>(new Set());
   const displayDraws = currentDraws;
   const closedDrawLabel = randomDrawCount ? '여행 선물 카드 1~30장 랜덤' : `여행 선물 카드 ${displayDraws}장`;
-  const TAPS = 7; // 실제 손잡이를 돌리는 느낌으로 여러 번 회전 후 캡슐 배출
   const allFlipped = results.length > 0 && flipped.size >= results.length;
-  const visibleResults = results.slice(0, visibleCount);
   const activeIndex = Math.min(Math.max(visibleCount - 1, 0), Math.max(results.length - 1, 0));
   const activeResult = results[activeIndex];
   const openedResults = results.filter((_, i) => flipped.has(i) && i < activeIndex);
+  const shuffleHint = results.reduce<Rarity | undefined>((best, r) => {
+    if (!best) return isPremiumReveal(r.rarity) ? r.rarity : undefined;
+    return rarityToTier(r.rarity) > rarityToTier(best) ? r.rarity : best;
+  }, undefined);
   const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 850, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase', margin: '0 0 12px', textAlign: 'center' };
 
-  // 기다리면 자동 배출(학습 흐름을 막지 않기) + 타이머 정리
-  useEffect(() => {
-    if (phase !== 'open' || stage !== 'crank') return undefined;
-    const t = window.setTimeout(() => beginDispense(), 5000);
-    return () => window.clearTimeout(t);
-  }, [phase, stage]);
   useEffect(() => () => { timersRef.current.forEach((t) => window.clearTimeout(t)); }, []);
+  useEffect(() => {
+    if (phase !== 'open' || stage !== 'cards' || !activeResult || introSeenRef.current.has(activeIndex)) return;
+    introSeenRef.current.add(activeIndex);
+    if (isPremiumReveal(activeResult.rarity)) {
+      setRareBurst({ index: activeIndex, rarity: activeResult.rarity, key: Date.now() });
+      playSfx(activeResult.rarity === 'diamond' ? 'UR REVEAL' : activeResult.rarity === 'xur' ? 'XUR REVEAL' : 'SSR REVEAL', activeResult.rarity === 'diamond' || activeResult.rarity === 'xur' ? 48 : 42);
+      const hold = activeResult.rarity === 'xur' ? 4200 : activeResult.rarity === 'diamond' ? 3400 : 2600;
+      after(hold, () => setRareBurst((cur) => (cur?.index === activeIndex ? null : cur)));
+    } else if (activeResult.isNew) {
+      playSfx('NEW!', 30);
+    } else {
+      playSfx(rarityMeta(activeResult.rarity).label, 22);
+    }
+  }, [phase, stage, activeIndex, activeResult]);
 
   if (sceneIds.length === 0) return null;
 
@@ -370,81 +273,34 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
     plannedDrawsRef.current = planned;
     setCurrentDraws(planned);
     if (reduceMotion()) { doClaim(); setPhase('revealed'); return; }
-    openedRef.current = false;
-    dispenseRef.current = false;
-    setTaps(0); setStage('crank'); setCapState('drop'); setSpinning(false); setSfx(null);
-    setFlipped(new Set()); setResults([]); setVisibleCount(1); setSpotlightIndex(null); setBulkOpening(false); setRareBurst(null); setPhase('open');
-  }
-  // 크랭크 다 돌림 → 볼들이 빠르게 돌고 → 캡슐이 굴러떨어짐
-  function beginDispense() {
-    if (dispenseRef.current) return;
-    dispenseRef.current = true;
-    setSpinning(true);
-    playSfx('コロコロ…', 22);
-    after(900, () => {
-      setSpinning(false);
-      setStage('capsule');
-      setCapState('drop');
-      playSfx('ゴトンッ!', 26);
-      after(850, () => setCapState('wobble'));
-      after(2400, () => popCapsule()); // 안 눌러도 자동으로 빠캉
-    });
-  }
-  // 캡슐 빠캉! → 카드 분출
-  function popCapsule() {
-    if (openedRef.current) return;
-    openedRef.current = true;
     const r = doClaim();
-    setCapState('pop');
-    playSfx('パカッ‼', 40);
-    after(560, () => {
+    setStage('shuffle');
+    setSfx(null);
+    setFlipped(new Set());
+    introSeenRef.current = new Set();
+    setVisibleCount(1);
+    setRareBurst(null);
+    setPhase('open');
+    playSfx('SHUFFLE', 36);
+    after(1320, () => playSfx('CUT', 30));
+    after(2500, () => playSfx('DRAW', 38));
+    after(3050, () => {
       setStage('cards');
       setVisibleCount(r.length > 0 ? 1 : 0);
     });
   }
   function overlayTap() {
-    if (stage === 'crank') {
-      if (dispenseRef.current) return;
-      const n = taps + 1;
-      setTaps(n);
-      playSfx('ガチャッ', 22);
-      if (n >= TAPS) beginDispense();
-    } else if (stage === 'capsule' && capState === 'wobble') {
-      popCapsule();
+    if (stage === 'shuffle') {
+      setStage('cards');
+      setVisibleCount(results.length > 0 ? 1 : 0);
     }
   }
   function flip(i: number) {
-    if (flipped.has(i)) {
-      advanceCard(i);
-      return;
-    }
     setFlipped((prev) => new Set(prev).add(i));
-    if (isRareReveal(results[i]?.rarity)) {
-      setRareBurst({ index: i, rarity: results[i].rarity, key: Date.now() });
-      playSfx(results[i].rarity === 'diamond' ? 'DIAMOND!' : 'GOLD!', 38);
-      after(1500, () => setRareBurst((cur) => (cur?.index === i ? null : cur)));
-    }
+    advanceCard(i);
   }
   function advanceCard(i: number) {
     if (i === visibleCount - 1 && visibleCount < results.length) setVisibleCount((n) => Math.min(results.length, n + 1));
-  }
-  function revealBulkRest() {
-    setSpotlightIndex(null);
-    setVisibleCount(results.length);
-    window.setTimeout(() => {
-      setBulkOpening(true);
-      setFlipped(new Set(results.map((_, i) => i)));
-      const rareIndex = results.findIndex((r) => isRareReveal(r.rarity));
-      if (rareIndex >= 0) {
-        setRareBurst({ index: rareIndex, rarity: results[rareIndex].rarity, key: Date.now() });
-        after(1600, () => setRareBurst((cur) => (cur?.index === rareIndex ? null : cur)));
-      }
-      window.setTimeout(() => setBulkOpening(false), Math.min(5200, 760 + results.length * 36));
-    }, 120);
-  }
-  function flipAll(e: React.MouseEvent) {
-    e.stopPropagation();
-    revealBulkRest();
   }
 
   return (
@@ -455,9 +311,9 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
         <button className="ym-press" onClick={start}
           style={{ width: '100%', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '18px 18px 20px', borderRadius: 22, border: '1px solid var(--glass-border)', background: `radial-gradient(circle at 50% 38%, ${box.colors[1]}2e, transparent 46%), var(--glass-bg-strong)`, cursor: 'pointer', color: 'var(--ink)' }}>
           <GachaGlow color={box.colors[1]} />
-          <GachaMachine grade={grade} taps={0} mini />
-          <span style={{ fontWeight: 850, fontSize: 16 }}>{box.label} 가챠 돌리기</span>
-          <span style={{ fontSize: 12, color: 'var(--ink-faint)', fontWeight: 750 }}>{closedDrawLabel}</span>
+          <CardShufflePreview color={box.colors[1]} />
+          <span style={{ fontWeight: 900, fontSize: 16 }}>{box.label} 카드 셔플 시작</span>
+          <span style={{ fontSize: 12, color: 'var(--ink-faint)', fontWeight: 750 }}>{closedDrawLabel} · 한 장씩 공개</span>
         </button>
       )}
 
@@ -480,7 +336,7 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
       )}
 
       {phase === 'open' && typeof document !== 'undefined' && createPortal(
-        <div onClick={overlayTap} className={`ym-gacha-stage ${stage === 'cards' ? 'is-burst' : ''}`}
+        <div onClick={overlayTap} className={`ym-gacha-stage ym-gacha-card-show ${stage === 'cards' ? 'is-burst' : 'is-shuffling'}`}
           style={{
             ['--gacha-color' as string]: box.colors[1],
             position: 'fixed',
@@ -498,84 +354,65 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
             WebkitBackdropFilter: 'blur(10px) saturate(1.08)',
           }}>
           <span className="ym-gacha-comic-bg" aria-hidden />
-          {capState === 'pop' && stage !== 'crank' && <span className="ym-manga-lines" aria-hidden />}
+          <span className="ym-gacha-show-lights" aria-hidden />
           {stage === 'cards' && <BurstParticles color={box.colors[1]} />}
           {rareBurst && (
             <div key={`rare:${rareBurst.key}`} className={`ym-gacha-rare-burst is-${rareBurst.rarity}`} style={{ ['--rarity-color' as string]: rarityMeta(rareBurst.rarity).color }} aria-hidden>
-              <span>{rareBurst.rarity === 'diamond' ? 'DIAMOND' : 'GOLD'}</span>
-              <strong>{rarityStars(rareBurst.rarity)} STAR CARD</strong>
+              <span>{rareBurst.rarity === 'diamond' ? 'UR CARD' : 'SSR CARD'}</span>
+              <strong>{rarityStars(rareBurst.rarity)} STAR SPECIAL REVEAL</strong>
             </div>
           )}
           {sfx && (
-            <span key={`sfx:${sfx.key}`} className="ym-manga-sfx" aria-hidden style={{ fontSize: sfx.size, top: stage === 'crank' ? '30%' : '42%' }}>{sfx.text}</span>
+            <span key={`sfx:${sfx.key}`} className="ym-manga-sfx" aria-hidden style={{ fontSize: sfx.size, top: stage === 'shuffle' ? '30%' : '42%' }}>{sfx.text}</span>
           )}
 
-          {stage === 'crank' ? (
+          {stage === 'shuffle' ? (
             <>
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span className="ym-glow" aria-hidden style={{ position: 'absolute', inset: -26, borderRadius: '50%', background: `radial-gradient(circle, ${box.colors[1]}66, ${box.colors[1]}22 44%, transparent 72%)` }} />
-                <GachaMachine grade={grade} taps={taps} spinning={spinning} />
-              </div>
-              <p style={{ color: '#fff', fontWeight: 850, fontSize: 16, textShadow: '0 1px 8px rgba(0,0,0,.5)' }}>
-                {spinning ? '캡슐이 굴러가는 중…' : '탭할수록 캡슐이 빨라져요!'}
-              </p>
-              <div style={{ display: 'flex', gap: 7 }}>
-                {Array.from({ length: TAPS }, (_, k) => (
-                  <span key={k} style={{ width: 13, height: 13, borderRadius: 99, border: '2.5px solid rgba(255,255,255,.7)', background: k < taps ? box.colors[1] : 'transparent', boxShadow: k < taps ? `0 0 12px ${box.colors[1]}` : 'none', transition: 'all .15s' }} />
-                ))}
-              </div>
-              <span style={{ color: 'rgba(255,255,255,.76)', fontSize: 12, fontWeight: 800 }}>스핀 {taps}/{TAPS} · 기다리면 자동으로 나와요</span>
-            </>
-          ) : stage === 'capsule' ? (
-            <>
-              <Capsule grade={grade} state={capState} />
-              <p style={{ color: '#fff', fontWeight: 850, fontSize: 16, textShadow: '0 1px 8px rgba(0,0,0,.5)' }}>
-                {capState === 'wobble' ? '탭해서 캡슐 열기!' : '몇 장이 들어 있을까요?'}
-              </p>
-              {capState === 'wobble' && <span style={{ color: 'rgba(255,255,255,.78)', fontSize: 12, fontWeight: 800 }}>열기 전까지 카드 수는 비밀이에요</span>}
+              <CardShuffleStage color={box.colors[1]} count={results.length || currentDraws} hint={shuffleHint} />
+              <span style={{ position: 'relative', zIndex: 3, color: 'rgba(255,255,255,.74)', fontSize: 12, fontWeight: 850 }}>탭하면 셔플을 건너뛸 수 있어요</span>
             </>
           ) : (
             <>
-              {spotlightIndex !== null && results[spotlightIndex] && (
-                <div className={`ym-gacha-spotlight is-${results[spotlightIndex].rarity}`} style={{ ['--rarity-color' as string]: rarityMeta(results[spotlightIndex].rarity).color }}>
-                  <span className="ym-gacha-rays" aria-hidden style={{ position: 'absolute', width: 420, height: 420, color: rarityMeta(results[spotlightIndex].rarity).color, opacity: 0.72 }} />
-                  <DrawCard item={results[spotlightIndex]} index={spotlightIndex} flipped={flipped.has(spotlightIndex)} active large onFlip={() => {}} />
-                  <p style={{ margin: 0, color: '#fff', fontSize: 16, fontWeight: 950, textShadow: '0 2px 14px rgba(0,0,0,.55)' }}>특별한 선물 카드!</p>
-                </div>
-              )}
               <div className="ym-gpn-spill" style={{ position: 'relative', zIndex: 2, textAlign: 'center' }}>
-                <p style={{ margin: 0, color: '#fff', fontWeight: 950, fontSize: 20, textShadow: '2px 2px 0 #20242f' }}>카드 {results.length}장 발견!</p>
-                <p style={{ margin: '4px 0 0', color: 'rgba(255,255,255,.72)', fontWeight: 750, fontSize: 12 }}>첫 탭은 뒤집기, 다시 탭하면 다음 카드로 넘어가요</p>
+                <p style={{ margin: 0, color: '#fff', fontWeight: 1000, fontSize: 21, textShadow: '2px 2px 0 #20242f' }}>
+                  {results.length}장 중 {Math.min(activeIndex + 1, results.length)}번째 카드
+                </p>
+                <p style={{ margin: '5px 0 0', color: 'rgba(255,255,255,.76)', fontWeight: 800, fontSize: 12 }}>
+                  {activeResult ? '아이템을 확인하고 다음으로 넘어가세요' : '획득한 아이템을 정리하는 중입니다'}
+                </p>
               </div>
-              {!bulkOpening && spotlightIndex === null && (
-                <div className="ym-gacha-pile-zone ym-gpn-spill" style={{ position: 'relative', zIndex: 2, ['--spill-d' as string]: '.08s' }}>
-                  <div className="ym-gacha-card-pile">
-                    {results.slice(activeIndex + 1, Math.min(results.length, activeIndex + 5)).map((r, offset) => (
-                      <span key={`pile:${activeIndex}:${offset}`} className="ym-gacha-pile-back" style={{ ['--pile-offset' as string]: offset + 1 }}>
-                        <CardBack rarity={r.rarity} />
-                      </span>
-                    ))}
-                    {activeResult && (
-                      <DrawCard key={`active:${activeIndex}:${activeResult.sceneId}:${activeResult.rarity}:${flipped.has(activeIndex) ? 'on' : 'off'}`} item={activeResult} index={activeIndex} flipped={flipped.has(activeIndex)} active large onFlip={() => flip(activeIndex)} />
-                    )}
-                  </div>
-                  {openedResults.length > 0 && (
-                    <div className="ym-gacha-opened-stack" aria-label="앞서 뽑은 카드">
-                      {openedResults.slice(-14).map((r, i) => (
-                        <span key={`opened:${i}:${r.sceneId}:${r.rarity}`} className="ym-gacha-opened-stack-card">
-                          <DeckCardFace sceneId={r.sceneId} rarity={r.rarity} size={154} />
-                        </span>
-                      ))}
-                    </div>
+              <div className="ym-gacha-pile-zone ym-gpn-spill" style={{ position: 'relative', zIndex: 2, ['--spill-d' as string]: '.08s' }}>
+                <div className={`ym-gacha-card-pile ${activeResult && isRareReveal(activeResult.rarity) ? `is-${activeResult.rarity}` : ''}`}>
+                  {results.slice(activeIndex + 1, Math.min(results.length, activeIndex + 6)).map((r, offset) => (
+                    <span key={`pile:${activeIndex}:${offset}`} className="ym-gacha-pile-back" style={{ ['--pile-offset' as string]: offset + 1 }}>
+                      <CardBack rarity={r.rarity} />
+                    </span>
+                  ))}
+                  {activeResult && (
+                    <ItemReveal
+                      key={`active:${activeIndex}:${activeResult.sceneId}:${activeResult.rarity}`}
+                      item={activeResult}
+                      index={activeIndex}
+                      active={activeIndex < results.length - 1}
+                      onNext={() => flip(activeIndex)}
+                    />
                   )}
                 </div>
-              )}
-              <div className={bulkOpening ? 'ym-gacha-draw-grid is-bulk-opening' : 'ym-gacha-draw-grid'} style={{ position: 'relative', zIndex: 2, display: bulkOpening ? 'grid' : 'none', gridTemplateColumns: 'repeat(auto-fit, minmax(92px, 112px))', gap: 12, justifyContent: 'center', alignItems: 'start', maxWidth: 720, width: '100%', maxHeight: 'min(62vh, 560px)', overflowY: 'auto', padding: '6px 4px 12px' }}>
-                {visibleResults.map((r, i) => <DrawCard key={`${i}:${r.sceneId}:${r.rarity}`} item={r} index={i} flipped={flipped.has(i)} active onFlip={() => flip(i)} />)}
+                {openedResults.length > 0 && (
+                  <div className="ym-gacha-opened-stack" aria-label="앞서 뽑은 카드">
+                    {openedResults.slice(-14).map((r, i) => (
+                      <span key={`opened:${i}:${r.sceneId}:${r.rarity}`} className="ym-gacha-opened-stack-card">
+                        <DeckCardFace sceneId={r.sceneId} rarity={r.rarity} size={154} />
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
               <div style={{ display: 'flex', gap: 10, position: 'relative', zIndex: 2 }}>
-                {!allFlipped && spotlightIndex === null && <button onClick={flipAll} style={overlayBtn}>한번에 보기</button>}
-                {allFlipped && !bulkOpening && <button onClick={(e) => { e.stopPropagation(); setPhase('revealed'); }} className="ym-card-in" style={overlayBtn}>오늘 얻은 카드 보기</button>}
+                {activeResult && activeIndex < results.length - 1 && (
+                  <button onClick={(e) => { e.stopPropagation(); flip(activeIndex); }} style={overlayBtn}>다음 카드</button>
+                )}
+                {allFlipped && <button onClick={(e) => { e.stopPropagation(); setPhase('revealed'); }} className="ym-card-in" style={overlayBtn}>오늘 얻은 카드 보기</button>}
               </div>
             </>
           )}
@@ -702,6 +539,13 @@ function giftDialogue(place: string, itemTitle: string, rarity: Rarity): { title
         { ja: '可能でしたら、限定仕様や背景の物語も添えてくださいますか', ko: '가능하다면 한정 사양이나 배경 이야기도 함께 받을 수 있을까요?' },
       ],
     },
+    xur: {
+      title: '초월 선물의 약속',
+      lines: [
+        { ja: 'この特別な招待状で、次の旅の約束を形にしたいです', ko: '이 특별한 초대장으로 다음 여행의 약속을 구체적으로 만들고 싶어요.' },
+        { ja: '二人だけの記念になるように、いちばん美しい形で残していただけますか', ko: '둘만의 기념이 되도록 가장 아름다운 형태로 남겨 주실 수 있을까요?' },
+      ],
+    },
   };
   return map[rarity];
 }
@@ -744,10 +588,20 @@ function totalItemsAll(c: Collection): number {
 }
 
 export function DeckBrowser() {
-  const [collection] = useState<Collection>(() => loadCollection());
+  const [collection, setCollection] = useState<Collection>(() => loadCollection());
   const [selected, setSelected] = useState<string>();
   const [selectedDetail, setSelectedDetail] = useState<{ sceneId: string; rarity: Rarity } | null>(null);
+  const [mergeFx, setMergeFx] = useState<{ from: Rarity; to: Rarity; key: number } | null>(null);
   const stats = useLearningStats(collection);
+
+  function runMerge(sceneId: string, rarity: Rarity) {
+    const merged = mergeSceneRarity(collection, sceneId, rarity);
+    if (!merged) return;
+    saveCollection(merged.collection);
+    setCollection(merged.collection);
+    setMergeFx({ from: rarity, to: merged.target, key: Date.now() });
+    window.setTimeout(() => setMergeFx(null), isPremiumReveal(merged.target) ? 1800 : 1100);
+  }
 
   if (selected) {
     const card = collection.cards[selected];
@@ -759,9 +613,17 @@ export function DeckBrowser() {
         <p style={{ margin: '0 0 14px', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>
           {placeOf(selected)}에서 모은 선물 카드예요. 획득한 카드만 눌러 상세 문장을 볼 수 있습니다.
         </p>
+        {mergeFx && (
+          <div key={mergeFx.key} className={`ym-merge-shuffle-fx is-${mergeFx.to}`} style={{ ['--rarity-color' as string]: rarityMeta(mergeFx.to).color }}>
+            <span>{rarityMeta(mergeFx.from).label}</span>
+            <b>SHUFFLE MERGE</b>
+            <strong>{rarityMeta(mergeFx.to).label}</strong>
+          </div>
+        )}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10, marginBottom: 14 }}>
           {RARITIES.map((r) => {
             const count = items[r.key];
+            const target = nextMergeRarity(r.key);
             if (!count) {
               return (
                 <div key={r.key} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, padding: 11, borderRadius: 16, border: '1px dashed var(--glass-border)', background: 'var(--glass-bg)', opacity: 0.62 }}>
@@ -773,11 +635,19 @@ export function DeckBrowser() {
             }
             const item = gachaItemForPlace(placeOf(selected), r.key);
             return (
-              <button key={r.key} className="ym-press" onClick={() => setSelectedDetail({ sceneId: selected, rarity: r.key })} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: 11, borderRadius: 16, border: `1px solid ${r.color}`, background: 'var(--glass-bg-strong)', color: 'var(--ink)', cursor: 'pointer' }}>
-                <DeckCardFace sceneId={selected} rarity={r.key} size={94} />
-                <span lang="ja" style={{ fontSize: 12, fontWeight: 950, color: r.color, textAlign: 'center' }}>{item.jaTitle ?? item.title}</span>
-                <span style={{ fontSize: 11, fontWeight: 850, color: 'var(--ink-soft)' }}>x{count}</span>
-              </button>
+              <div key={r.key} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: 11, borderRadius: 16, border: `1px solid ${r.color}`, background: 'var(--glass-bg-strong)', color: 'var(--ink)' }}>
+                <button className="ym-press" onClick={() => setSelectedDetail({ sceneId: selected, rarity: r.key })} style={{ border: 0, background: 'transparent', color: 'var(--ink)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: 0 }}>
+                  <DeckCardFace sceneId={selected} rarity={r.key} size={104} />
+                  <span lang="ja" style={{ fontSize: 12, fontWeight: 950, color: r.color, textAlign: 'center' }}>{item.jaTitle ?? item.title}</span>
+                  <span style={{ fontSize: 11, fontWeight: 850, color: 'var(--ink-soft)' }}>x{count}</span>
+                </button>
+                {target && canMergeRarity(card, r.key) && (
+                  <button className="ym-press" onClick={() => runMerge(selected, r.key)}
+                    style={{ marginTop: 2, width: '100%', border: 0, borderRadius: 999, padding: '7px 8px', background: r.color, color: '#fff', fontSize: 11, fontWeight: 950, cursor: 'pointer' }}>
+                    {MERGE_NEED[r.key]}장 병합 → {rarityMeta(target).label}
+                  </button>
+                )}
+              </div>
             );
           })}
         </div>
@@ -810,7 +680,7 @@ export function DeckBrowser() {
         {' · '}최종 선물 <strong style={{ color: 'var(--accent)' }}>{finalGift.have}</strong>/{finalGift.total}
       </p>
       <p style={{ margin: '0 0 14px', fontSize: 12, color: 'var(--ink-faint)', lineHeight: 1.5 }}>
-        같은 별 카드를 50장 모으면 자동으로 상위 카드 1장으로 업그레이드돼요. 결과는 바로 위 70%, 두 단계 위 20%, 세 단계 위 10% 확률입니다.
+        같은 장면의 같은 테크트리에서만 병합돼요. N 10장→R, R 5장→SR, SR 5장→SSR, SSR 5장→UR, UR 3장→XUR입니다.
       </p>
       <div style={{ margin: '0 0 14px', padding: 14, borderRadius: 16, border: `1px solid ${finalGift.ready ? 'var(--accent)' : 'var(--glass-border)'}`, background: finalGift.ready ? 'var(--accent-soft)' : 'var(--glass-bg-strong)', color: 'var(--ink)' }}>
         <strong style={{ display: 'block', fontSize: 15 }}>비밀 최종 미션 카드</strong>
@@ -853,7 +723,7 @@ export function DeckBrowser() {
                   return <span key={r.key} style={{ fontSize: 10.5, fontWeight: 850, color: count > 0 ? r.color : 'var(--ink-faint)', border: `1px solid ${count > 0 ? r.color : 'var(--glass-border)'}`, borderRadius: 999, padding: '2px 5px' }}>{label}</span>;
                 })}
               </div>
-              <span style={{ fontSize: 10.5, color: 'var(--ink-faint)', fontWeight: 800 }}>같은 별 {MERGE_NEED.basic}장마다 자동 업그레이드</span>
+              <span style={{ fontSize: 10.5, color: 'var(--ink-faint)', fontWeight: 800 }}>같은 테크트리 수동 병합</span>
               <span style={{ fontSize: 10, color: 'var(--ink-faint)', fontWeight: 750 }}>선물 카드 {totalItems(card)}장</span>
             </div>
           );

@@ -1,6 +1,6 @@
 // 가챠 컬렉션 — 학습 로직과 분리된 수집 보상.
 // 장면별 카드를 모으고, 낮은 등급 카드를 병합해 상위 등급과 명예 트로피를 만든다.
-export type Rarity = 'basic' | 'bronze' | 'silver' | 'gold' | 'diamond';
+export type Rarity = 'basic' | 'bronze' | 'silver' | 'gold' | 'diamond' | 'xur';
 export type TrophyKey = 'honor';
 export type BoxGrade = 'wood' | 'silver' | 'gold';
 
@@ -24,26 +24,28 @@ const KEY = 'yangmung:collection:v1';
 const EMPTY: Collection = { cards: {}, sentences: {}, trophies: {}, lastClaimedSessionId: 0 };
 
 export const RARITIES: { key: Rarity; label: string; color: string; weight: number }[] = [
-  { key: 'basic', label: '기본', color: 'var(--ink-faint)', weight: 50 },
-  { key: 'bronze', label: '동', color: '#a9743b', weight: 30 },
-  { key: 'silver', label: '은', color: '#9aa3ad', weight: 13 },
-  { key: 'gold', label: '금', color: '#d9a531', weight: 7 },
-  { key: 'diamond', label: '다이아', color: '#5bc7e0', weight: 1 },
+  { key: 'basic', label: 'N', color: '#8b95a3', weight: 50 },
+  { key: 'bronze', label: 'R', color: '#b77a42', weight: 30 },
+  { key: 'silver', label: 'SR', color: '#9aa3ad', weight: 10 },
+  { key: 'gold', label: 'SSR', color: '#d9a531', weight: 7 },
+  { key: 'diamond', label: 'UR', color: '#5bc7e0', weight: 3 },
+  { key: 'xur', label: 'XUR', color: '#b996ff', weight: 0 },
 ];
 
 export const DRAW_COUNT = 10;
 export const MERGE_NEED: Record<Rarity, number> = {
-  basic: 50,
-  bronze: 50,
-  silver: 50,
-  gold: 50,
-  diamond: 50,
+  basic: 10,
+  bronze: 5,
+  silver: 5,
+  gold: 5,
+  diamond: 3,
+  xur: Number.POSITIVE_INFINITY,
 };
 
 export const rarityMeta = (rarity: Rarity) => RARITIES.find((r) => r.key === rarity) ?? RARITIES[0];
 export const rarityToTier = (rarity: Rarity) => RARITIES.findIndex((r) => r.key === rarity) + 1;
-export const tierToRarity = (tier: number): Rarity => RARITIES[Math.min(Math.max(tier, 1), 5) - 1].key;
-export const MAX_TIER = 5;
+export const tierToRarity = (tier: number): Rarity => RARITIES[Math.min(Math.max(tier, 1), 6) - 1].key;
+export const MAX_TIER = 6;
 
 export const BOX: Record<BoxGrade, { label: string; draws: number; colors: [string, string] }> = {
   wood: { label: '가챠 박스', draws: DRAW_COUNT, colors: ['#c56f62', '#d78f73'] },
@@ -64,7 +66,7 @@ export interface DropResult {
 }
 
 function emptyItems(): Record<Rarity, number> {
-  return { basic: 0, bronze: 0, silver: 0, gold: 0, diamond: 0 };
+  return { basic: 0, bronze: 0, silver: 0, gold: 0, diamond: 0, xur: 0 };
 }
 
 export function itemsOf(card?: DeckCard): Record<Rarity, number> {
@@ -105,8 +107,6 @@ export function saveCollection(c: Collection): void {
   try { window.localStorage.setItem(KEY, JSON.stringify(normalizeCollection(c))); } catch {}
 }
 
-const rarityByStar = (star: 1 | 2 | 3 | 4 | 5): Rarity => RARITIES[star - 1].key;
-
 function weightedFromTable(table: { rarity: Rarity; weight: number }[]): Rarity {
   const total = table.reduce((sum, r) => sum + r.weight, 0);
   let roll = Math.random() * total;
@@ -118,67 +118,34 @@ function weightedFromTable(table: { rarity: Rarity; weight: number }[]): Rarity 
 }
 
 function weightedRarity(level: 1 | 2 | 3 | 4 = 2): Rarity {
-  if (level === 1) {
-    return weightedFromTable([
-      { rarity: rarityByStar(1), weight: 80 },
-      { rarity: rarityByStar(2), weight: 18 },
-      { rarity: rarityByStar(3), weight: 2 },
-    ]);
-  }
-  if (level === 3) {
-    return weightedFromTable([
-      { rarity: rarityByStar(2), weight: 80 },
-      { rarity: rarityByStar(3), weight: 16 },
-      { rarity: rarityByStar(4), weight: 4 },
-    ]);
-  }
-  if (level === 4) {
-    return weightedFromTable([
-      { rarity: rarityByStar(2), weight: 70 },
-      { rarity: rarityByStar(3), weight: 26 },
-      { rarity: rarityByStar(4), weight: 4 },
-    ]);
-  }
-  return weightedFromTable([
-    { rarity: rarityByStar(1), weight: 70 },
-    { rarity: rarityByStar(2), weight: 26 },
-    { rarity: rarityByStar(3), weight: 4 },
-  ]);
+  void level;
+  return weightedFromTable(RARITIES.filter((r) => r.weight > 0).map((r) => ({ rarity: r.key, weight: r.weight })));
 }
 
 function pickScene(sceneIds: string[]): string {
   return sceneIds[Math.floor(Math.random() * sceneIds.length)];
 }
 
-function upgradeTarget(rarity: Rarity): Rarity | TrophyKey {
-  if (rarity === 'diamond') return 'honor';
-  const base = rarityToTier(rarity);
-  const roll = Math.random() * 100;
-  const offset = roll < 70 ? 1 : roll < 90 ? 2 : 3;
-  return tierToRarity(Math.min(MAX_TIER, base + offset));
+export function nextMergeRarity(rarity: Rarity): Rarity | null {
+  if (rarity === 'xur') return null;
+  return tierToRarity(Math.min(MAX_TIER, rarityToTier(rarity) + 1));
 }
 
-function autoUpgradeCollection(c: Collection): Collection {
-  const cards = { ...c.cards };
-  const trophies = { ...c.trophies };
-  let changed = true;
-  while (changed) {
-    changed = false;
-    for (const sceneId of Object.keys(cards)) {
-      const items = itemsOf(cards[sceneId]);
-      for (const rarity of RARITIES.map((r) => r.key)) {
-        const need = MERGE_NEED[rarity];
-        if ((items[rarity] ?? 0) < need) continue;
-        items[rarity] -= need;
-        const target = upgradeTarget(rarity);
-        if (target === 'honor') trophies.honor = (trophies.honor ?? 0) + 1;
-        else items[target] += 1;
-        cards[sceneId] = { items };
-        changed = true;
-      }
-    }
-  }
-  return { ...c, cards, trophies };
+export function canMergeRarity(card: DeckCard | undefined, rarity: Rarity): boolean {
+  const need = MERGE_NEED[rarity];
+  return Number.isFinite(need) && itemsOf(card)[rarity] >= need;
+}
+
+export function mergeSceneRarity(prev: Collection, sceneId: string, rarity: Rarity): { collection: Collection; target: Rarity } | null {
+  const target = nextMergeRarity(rarity);
+  if (!target) return null;
+  const c = normalizeCollection(prev);
+  const items = itemsOf(c.cards[sceneId]);
+  const need = MERGE_NEED[rarity];
+  if (items[rarity] < need) return null;
+  items[rarity] -= need;
+  items[target] += 1;
+  return { collection: { ...c, cards: { ...c.cards, [sceneId]: { items } } }, target };
 }
 
 // 세션 보상 — 해당 세션 장면에서만 드롭. 별 등급 확률은 현재 학습 모드에 맞춘다.
@@ -194,7 +161,8 @@ export function claim(prev: Collection, sessionId: number, sceneIds: string[], d
     const sceneId = pickScene(sceneIds);
     const rarity = weightedRarity(preferredLevel);
     const before = cards[sceneId];
-    const isNew = !before || totalItems(before) === 0;
+    const beforeItems = itemsOf(before);
+    const isNew = beforeItems[rarity] === 0;
     const item = normalizeCard(before);
     const items = itemsOf(item);
     items[rarity] += 1;
@@ -203,12 +171,12 @@ export function claim(prev: Collection, sessionId: number, sceneIds: string[], d
     results.push({ sceneId, rarity, count: 1, isNew, sentenceIds: [], tier: rarityToTier(rarity), shards: items[rarity], leveledTo: null });
   }
 
-  return { collection: autoUpgradeCollection({ cards, sentences, trophies: normalized.trophies, lastClaimedSessionId: sessionId }), results };
+  return { collection: { cards, sentences, trophies: normalized.trophies, lastClaimedSessionId: sessionId }, results };
 }
 
 // 상용 가챠(보물 개봉식) 드롭 — 전 등급(기본~다이아)을 직접 드롭한다.
-// 세션 중복 가드 없음(의도적으로 반복 뽑는 가챠). RARITIES 가중치(50/30/13/7/1) 사용.
-const FULL_DRAW_TABLE = RARITIES.map((r) => ({ rarity: r.key, weight: r.weight }));
+// 세션 중복 가드 없음(의도적으로 반복 뽑는 가챠). XUR은 병합 전용이라 직접 드롭하지 않는다.
+const FULL_DRAW_TABLE = RARITIES.filter((r) => r.weight > 0).map((r) => ({ rarity: r.key, weight: r.weight }));
 export function drawGacha(prev: Collection, sceneIds: string[], draws = 1): { collection: Collection; results: DropResult[] } {
   const normalized = normalizeCollection(prev);
   if (sceneIds.length === 0) return { collection: normalized, results: [] };
@@ -218,13 +186,14 @@ export function drawGacha(prev: Collection, sceneIds: string[], draws = 1): { co
     const sceneId = pickScene(sceneIds);
     const rarity = weightedFromTable(FULL_DRAW_TABLE);
     const before = cards[sceneId];
-    const isNew = !before || totalItems(before) === 0;
+    const beforeItems = itemsOf(before);
+    const isNew = beforeItems[rarity] === 0;
     const items = itemsOf(normalizeCard(before));
     items[rarity] += 1;
     cards[sceneId] = { items };
     results.push({ sceneId, rarity, count: 1, isNew, sentenceIds: [], tier: rarityToTier(rarity), shards: items[rarity], leveledTo: null });
   }
-  return { collection: autoUpgradeCollection({ ...normalized, cards }), results };
+  return { collection: { ...normalized, cards }, results };
 }
 
 // ── 장면 lock 해제 (그 장면의 수집 카드 소모) ──────────────
@@ -250,7 +219,7 @@ export function spendSceneCards(prev: Collection, sceneId: string, n: number): C
 export function fillDevCards(prev: Collection, sceneIds: string[]): Collection {
   const c = normalizeCollection(prev);
   const cards = { ...c.cards };
-  const dist: [Rarity, number][] = [['basic', 14], ['bronze', 8], ['silver', 5], ['gold', 2], ['diamond', 1]]; // 합 30
+  const dist: [Rarity, number][] = [['basic', 14], ['bronze', 8], ['silver', 5], ['gold', 2], ['diamond', 1], ['xur', 0]]; // 합 30
   for (const id of sceneIds) {
     const items = itemsOf(cards[id]);
     for (const [r, add] of dist) items[r] += add;

@@ -102,6 +102,7 @@ const GENERIC: Record<Rarity, GachaItemArt> = {
   silver: { title: '로컬 패스', sub: '은', motif: 'ticket' },
   gold: { title: '마스터 키트', sub: '금', motif: 'service' },
   diamond: { title: '명예 배지', sub: '다이아', motif: 'festival' },
+  xur: { title: '비밀 초대장', sub: 'XUR', motif: 'festival' },
 };
 
 const MOTIF_IMAGE: Record<ItemMotif, string> = {
@@ -274,12 +275,26 @@ const PLACE_ALIAS: Record<string, string> = {
 
 export const GACHA_ITEM_PLACES = Object.keys(BY_PLACE);
 
+function itemForKey(key: string | undefined, rarity: Rarity): GachaItemArt {
+  const row = key ? BY_PLACE[key] : undefined;
+  const direct = row?.[rarity];
+  if (direct) return direct;
+  if (rarity === 'xur' && row?.diamond) {
+    return {
+      title: `${row.diamond.title} 초월 초대장`,
+      sub: 'XUR',
+      motif: row.diamond.motif,
+    };
+  }
+  return GENERIC[rarity];
+}
+
 export function gachaItemForPlace(place: string | undefined, rarity: Rarity): GachaItemArt {
   const key = place && (BY_PLACE[place] ? place : PLACE_ALIAS[place]);
-  return withJa(withLegacyImage((key && BY_PLACE[key]?.[rarity]) || GENERIC[rarity]));
+  return withJa(withLegacyImage(itemForKey(key, rarity)));
 }
 
 export function gachaLabItemForPlace(place: string | undefined, rarity: Rarity): GachaItemArt {
   const key = place && (BY_PLACE[place] ? place : PLACE_ALIAS[place]);
-  return withJa(withLabImage((key && BY_PLACE[key]?.[rarity]) || GENERIC[rarity], rarity));
+  return withJa(withLabImage(itemForKey(key, rarity), rarity));
 }
