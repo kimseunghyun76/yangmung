@@ -15,7 +15,7 @@ import { resetFlashBest } from './learn/flashScores';
 import { earn, REWARD_SESSION, REWARD_PRACTICE } from './learn/wallet';
 import { adaptSessionConfig, diagnose } from './learn/adaptive';
 import { extractKanaChars } from './learn/kanaReading';
-import { loadSettings, MODE_PRESETS, saveSettings, type Settings } from './learn/settings';
+import { loadSettings, MODE_PRESETS, saveSettings, sceneSentenceLevelForMode, type Settings } from './learn/settings';
 import { sessionGoalText } from './views/goal';
 import { resetMangaBackdrops } from './views/scene';
 import { speak, stopSpeaking, ttsSupported } from './tts';
@@ -48,7 +48,9 @@ function AppFallback() {
 }
 
 export function App() {
-  const allCards = useMemo<Card[]>(buildCards, []);
+  const [settings, setSettings] = useState<Settings>(() => loadSettings());
+  const difficulty = sceneSentenceLevelForMode(settings.mode); // 1~4 — 레벨에 맞춘 난이도
+  const allCards = useMemo<Card[]>(() => buildCards(difficulty), [difficulty]); // 모드 바뀌면 난이도 반영해 재생성
   const [view, setView] = useState<View>('home');
   const [progress, setProgress] = useState(() => loadProgress());
   const [session, setSession] = useState(() => loadSession());
@@ -70,7 +72,6 @@ export function App() {
   const [seenKana, setSeenKana] = useState<SeenKana>(() => loadSeenKana());
   const [discovered, setDiscovered] = useState<string[]>(() => loadDiscovered());
   const [cardUnlocks, setCardUnlocks] = useState<string[]>(() => loadCardUnlocks()); // 카드로 해제한 장면
-  const [settings, setSettings] = useState<Settings>(() => loadSettings());
   const [showGuide, setShowGuide] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const cardStartRef = useRef<number>(Date.now());     // 현재 카드 표시 시각 (빠른 정답 판정)

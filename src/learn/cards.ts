@@ -502,7 +502,8 @@ function buildVocabCards(): Card[] {
   return cards;
 }
 
-export function buildCards(): Card[] {
+// difficulty(1~4) — 레벨(모드)에 맞춰 작문 방해 타일·받아쓰기 방해 수를 조절한다.
+export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
   const { kana, phrases, grammar, missions, units } = CONTENT;
   const byKana = (id: string) => kana.find((k) => k.id === id)!;
   const byKanaChar = (ch: string) => kana.find((k) => k.char === ch);
@@ -774,17 +775,20 @@ export function buildCards(): Card[] {
     }
   }
   // 정답 조각 + 같은 품사 방해 타일(품사당 최대 2, 합계 최대 4)을 섞어 작문 보기를 만든다.
+  // 레벨에 맞춘 방해 타일 수: 입문 적게 → 고급 많게.
+  const perLane = difficulty <= 1 ? 1 : 2;
+  const decoyCap = [2, 3, 4, 6][difficulty - 1];
   const composeTiles = (segs: { text: string; pos: SegPos }[]): { tiles: string[]; tilePos: SegPos[] } => {
     const used = new Set(segs.map((s) => s.text));
     const posInAnswer = new Set(segs.map((s) => s.pos));
     const decoys: { text: string; pos: SegPos }[] = [];
     for (const pos of ['word', 'particle', 'verb'] as SegPos[]) {
       if (!posInAnswer.has(pos)) continue;
-      for (const t of shuffle(composePool[pos].filter((x) => !used.has(x))).slice(0, 2)) {
+      for (const t of shuffle(composePool[pos].filter((x) => !used.has(x))).slice(0, perLane)) {
         decoys.push({ text: t, pos }); used.add(t);
       }
     }
-    const combined = shuffle([...segs.map((s) => ({ text: s.text, pos: s.pos })), ...shuffle(decoys).slice(0, 4)]);
+    const combined = shuffle([...segs.map((s) => ({ text: s.text, pos: s.pos })), ...shuffle(decoys).slice(0, decoyCap)]);
     return { tiles: combined.map((c) => c.text), tilePos: combined.map((c) => c.pos) };
   };
   const pushTileCard = (id: string, kind: 'dictation' | 'compose') => {
@@ -812,7 +816,7 @@ export function buildCards(): Card[] {
         return;
       }
       // 폴백: 가나 단위 타일 + 방해 타일
-      const distractors = shuffle(DICTATION_DISTRACTORS.filter((d) => !units.includes(d))).slice(0, 3);
+      const distractors = shuffle(DICTATION_DISTRACTORS.filter((d) => !units.includes(d))).slice(0, [2, 3, 4, 5][difficulty - 1]);
       cards.push({
         kind: 'dictation', id: `compose:${id}`, tag: '작문', promptKind: 'korean',
         ja: ttsText(p) ?? p.kana, answer: units, korean: p.korean,
@@ -823,7 +827,7 @@ export function buildCards(): Card[] {
     }
 
     // 받아쓰기 — 듣고 가나 키패드로 입력(타일 풀은 호환용으로만 유지)
-    const distractors = shuffle(DICTATION_DISTRACTORS.filter((d) => !units.includes(d))).slice(0, 3);
+    const distractors = shuffle(DICTATION_DISTRACTORS.filter((d) => !units.includes(d))).slice(0, [2, 3, 4, 5][difficulty - 1]);
     cards.push({
       kind: 'dictation', id: `dictation:${id}`, tag: '받아쓰기',
       ja: ttsText(p) ?? p.kana, answer: units, korean: p.korean,
