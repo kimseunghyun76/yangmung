@@ -5,6 +5,7 @@ import { BTN, PRIMARY } from '../ui/styles';
 import { ReadingAid } from './ReadingAid';
 import { Icon } from '../ui/Icon';
 import { MascotLine } from './mascot';
+import { WordArt, hasWordArt } from './WordArt';
 
 interface Props {
   card: IntroduceCard;
@@ -22,6 +23,13 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext }: Prop
   return (
     <div>
       <h2 style={{ marginTop: 14, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="discover" size={22} /> 새 표현</h2>
+      {hasWordArt(card.id) && (
+        <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 8px' }}>
+          <span style={{ display: 'inline-flex', padding: 8, borderRadius: 20, background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)', boxShadow: '0 6px 16px rgba(0,0,0,.08)' }}>
+            <WordArt id={card.id} korean={card.korean} kana={card.kana} size={104} />
+          </span>
+        </div>
+      )}
       <p style={{ color: 'var(--ink-soft)', marginTop: 0, lineHeight: 1.5 }}>{card.note}</p>
 
       {card.answersQuestion && (
