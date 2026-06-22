@@ -25,6 +25,7 @@ interface Props {
   dictationCount?: number;
   composeCount?: number;
   signCount?: number;
+  cashEarned?: number;
   onRetryWeak: () => void;
   onContinue: () => void;
   onReview?: () => void;
@@ -38,7 +39,7 @@ interface Props {
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place
   ?? CONTENT.missions.find((m) => m.id === id)?.scenario ?? id;
 
-export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, fallbackSceneIds = [], nextSceneId, showGacha = true, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, onRetryWeak, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onHome }: Props) {
+export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, fallbackSceneIds = [], nextSceneId, showGacha = true, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, cashEarned = 0, onRetryWeak, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onHome }: Props) {
   const stars = quizSeen ? Math.max(1, Math.round((score / quizSeen) * 3)) : 0;
   const s = summarize(progress);
   const sr = sessionResult(progress, sessionId);
@@ -86,6 +87,11 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
         <p style={{ color: 'var(--ink-soft)', fontSize: 14, margin: '8px 0 0', fontWeight: 600 }}>
           첫 시도 {score}/{quizSeen}{speakCount > 0 ? ` · 말하기 ${speakCount}` : ''}
         </p>
+        {cashEarned > 0 && (
+          <p style={{ color: 'var(--accent)', fontSize: 13, margin: '8px 0 0', fontWeight: 850 }}>
+            보상 +{cashEarned.toLocaleString()} 캐시
+          </p>
+        )}
       </div>
 
       {/* 여권 스탬프 — 오늘 해낸 장면 */}

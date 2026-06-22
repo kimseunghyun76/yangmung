@@ -1,6 +1,7 @@
 // 설정 — 글래스 하단 시트. 학습 모드·발음 보조·듣기 속도·자동 진행·초기화.
-import type { CSSProperties } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { MODE_PRESETS, type ChoiceMode, type LearnMode, type ReadingAidMode, type Settings } from '../learn/settings';
+import { earn, getCash, DEBUG_TOPUP, formatCash } from '../learn/wallet';
 import { Modal } from './Modal';
 import { Icon } from '../ui/Icon';
 
@@ -32,6 +33,7 @@ const head: CSSProperties = { margin: '0 0 8px', fontWeight: 700, fontSize: 14, 
 const toggle = (on: boolean): CSSProperties => ({ ...gbtn, padding: '8px 16px', borderRadius: 999, background: on ? 'var(--accent)' : 'var(--glass-bg-strong)', color: on ? 'var(--accent-ink)' : 'var(--ink-soft)', border: `1px solid ${on ? 'var(--ink)' : 'var(--glass-border)'}` });
 
 export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnown, onReset, onResetUnlocks, onFillDevCards, onClose }: Props) {
+  const [cash, setCash] = useState(getCash());
   const seg = (active: boolean): CSSProperties => ({
     ...gbtn, flex: 1, textAlign: 'center', fontSize: 13, padding: '9px 6px',
     background: active ? 'var(--accent)' : 'var(--glass-bg-strong)', color: active ? 'var(--accent-ink)' : 'var(--ink-soft)',
@@ -88,6 +90,11 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-soft)' }}>모든 장면 lock 해제</span>
         <button className="ym-press" style={toggle(!!settings.devUnlockAll)} onClick={() => onChange({ ...settings, devUnlockAll: !settings.devUnlockAll })}>{settings.devUnlockAll ? '켜짐' : '꺼짐'}</button>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
+        <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-soft)' }}>캐시 잔액 <b style={{ color: 'var(--accent)' }}>{formatCash(cash)}</b></span>
+        <button className="ym-press" style={{ ...gbtn, padding: '6px 12px' }}
+          onClick={() => setCash(earn(DEBUG_TOPUP))}>+{formatCash(DEBUG_TOPUP)} 적립</button>
       </div>
       <button className="ym-press" style={{ ...gbtn, width: '100%', marginTop: 10, textAlign: 'center' }}
         onClick={() => { onFillDevCards(); onClose(); }}>

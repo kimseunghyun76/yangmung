@@ -1,5 +1,7 @@
 // 홈 — Immersive Scene Coach. 오늘의 루트 + 장면 히어로 + 가나/여행 루트 진입.
+import { useState } from 'react';
 import { CONTENT } from '../content';
+import { getCash, canClaimDaily, claimDaily, DAILY_BONUS, formatCash } from '../learn/wallet';
 import type { Card } from '../learn/cards';
 import type { Diagnosis } from '../learn/adaptive';
 import { LEVEL_LABEL } from '../learn/adaptive';
@@ -71,6 +73,8 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
   return (
     <main style={WRAP}>
       <NavBar {...nav} />
+
+      <AttendanceBanner onGoGacha={() => nav.onNavigate('gachalab')} />
 
       {/* 슬림 헤더 — 난이도 칩(누르면 수준 진단으로 재조정) */}
       <div className="ym-rise" style={{ display: 'flex', justifyContent: 'flex-end', margin: '0 0 12px' }}>
@@ -571,4 +575,29 @@ function coachForHome(d: Diagnosis, mission: ReturnType<typeof CONTENT.missions.
     if (p) return { who: 'yang', line: `오늘은 「${p.kanji ?? p.displayKana ?? p.kana}」를 먼저 귀에 익혀요.` };
   }
   return { who: 'mung', line: '짧게 한 판만 해도 다음 장면이 훨씬 덜 낯설어요.' };
+}
+
+// 일일 출석 + 캐시 잔액 — 하루 1회 5000원, 탭하면 가챠로.
+function AttendanceBanner({ onGoGacha }: { onGoGacha: () => void }) {
+  const [cash, setCash] = useState(() => getCash());
+  const [claimable, setClaimable] = useState(() => canClaimDaily());
+  function claim() {
+    const got = claimDaily();
+    if (got != null) { setCash(getCash()); setClaimable(false); }
+  }
+  return (
+    <div className="ym-rise" style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '0 0 12px', padding: '10px 14px', borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)' }}>
+      <button className="ym-press" onClick={onGoGacha} title="보물 뽑기로" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, border: 'none', background: 'none', cursor: 'pointer', color: '#caa15c', fontWeight: 900, fontSize: 15 }}>
+        💰 {formatCash(cash)}
+      </button>
+      <span style={{ flex: 1 }} />
+      {claimable ? (
+        <button className="ym-press" onClick={claim} style={{ padding: '8px 14px', borderRadius: 999, border: 'none', background: 'var(--accent)', color: '#fff', fontWeight: 850, fontSize: 13, cursor: 'pointer', boxShadow: '0 6px 16px rgba(185,56,46,.3)' }}>
+          🎁 출석 +{formatCash(DAILY_BONUS)}
+        </button>
+      ) : (
+        <span style={{ fontSize: 12.5, fontWeight: 750, color: 'var(--ink-faint)' }}>오늘 출석 완료 ✓</span>
+      )}
+    </div>
+  );
 }
