@@ -1,0 +1,1002 @@
+{
+  "generatedAt": "2026-06-22",
+  "count": 75,
+  "note": "image 경로 그대로 투명 png(640²) 생성 → 랩 가챠/도감에 자동 반영",
+  "items": [
+    {
+      "image": "/gacha/items/generated-v2/basic-drink-10zg-14vp.png",
+      "rarity": "basic",
+      "rarityKo": "커먼",
+      "ja": "水グラス",
+      "ko": "물컵",
+      "motif": "drink",
+      "places": [
+        "식당",
+        "조식뷔페"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/basic-drink-12ys-13ec-12g4-14v8-164c.png",
+      "rarity": "basic",
+      "rarityKo": "커먼",
+      "ja": "アイスコーヒー",
+      "ko": "아이스커피",
+      "motif": "drink",
+      "places": [
+        "카페"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/basic-food-122k-xz5-yf4-115x.png",
+      "rarity": "basic",
+      "rarityKo": "커먼",
+      "ja": "おにぎり",
+      "ko": "삼각김밥",
+      "motif": "food",
+      "places": [
+        "택배",
+        "편의점"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/basic-food-1350-15eo-12ho.png",
+      "rarity": "basic",
+      "rarityKo": "커먼",
+      "ja": "お通し",
+      "ko": "오토시",
+      "motif": "food",
+      "places": [
+        "이자카야"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/basic-food-13ip-12ho-15eo-1568.png",
+      "rarity": "basic",
+      "rarityKo": "커먼",
+      "ja": "皿トークン",
+      "ko": "접시 토큰",
+      "motif": "food",
+      "places": [
+        "회전초밥"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/basic-food-14vp-108s-10t4.png",
+      "rarity": "basic",
+      "rarityKo": "커먼",
+      "ja": "カップラーメン",
+      "ko": "컵라멘",
+      "motif": "food",
+      "places": [
+        "라멘"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/basic-food-15eo-10p4-15eo-15os-12g4-158g.png",
+      "rarity": "basic",
+      "rarityKo": "커먼",
+      "ja": "トマトパスタ",
+      "ko": "토마토 파스타",
+      "motif": "food",
+      "places": [
+        "파스타"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/basic-food-y4k-108w-14i0-115x.png",
+      "rarity": "basic",
+      "rarityKo": "커먼",
+      "ja": "玉子寿司",
+      "ko": "계란초밥",
+      "motif": "food",
+      "places": [
+        "스시집",
+        "스시추가"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/basic-food-zc8-15ph-11md.png",
+      "rarity": "basic",
+      "rarityKo": "커먼",
+      "ja": "あんパン",
+      "ko": "단팥빵",
+      "motif": "food",
+      "places": [
+        "빵집"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/basic-safety-10p4-12g4-1564.png",
+      "rarity": "basic",
+      "rarityKo": "커먼",
+      "ja": "マスク",
+      "ko": "마스크",
+      "motif": "safety",
+      "places": [
+        "긴급상황",
+        "병원",
+        "약국"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/basic-service-133g-166h-10t0-10vc.png",
+      "rarity": "basic",
+      "rarityKo": "커먼",
+      "ja": "旅メモ",
+      "ko": "여행 메모",
+      "motif": "service",
+      "places": [
+        "길거리",
+        "복합쇼핑몰",
+        "쇼핑몰 서비스 데스크",
+        "스시 오마카세",
+        "야구장·스타디움",
+        "자판기",
+        "카페·레스토랑 픽업 카운터",
+        "편의점 ATM",
+        "편의점 복합기"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/basic-shopping-12bg-164x-1169.png",
+      "rarity": "basic",
+      "rarityKo": "커먼",
+      "ja": "ショッピングバッグ",
+      "ko": "쇼핑백",
+      "motif": "shopping",
+      "places": [
+        "쇼핑",
+        "통신매장",
+        "편집샵계산",
+        "편집샵피팅",
+        "환전"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/basic-stay-10jc-157o.png",
+      "rarity": "basic",
+      "rarityKo": "커먼",
+      "ja": "ルームキー",
+      "ko": "룸키",
+      "motif": "stay",
+      "places": [
+        "료칸",
+        "온천",
+        "호텔",
+        "호텔방변경",
+        "호텔우산"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/basic-ticket-12gp-14bs-ya4.png",
+      "rarity": "basic",
+      "rarityKo": "커먼",
+      "ja": "乗車券",
+      "ko": "승차권",
+      "motif": "ticket",
+      "places": [
+        "공항",
+        "공항수하물",
+        "나리타역",
+        "렌터카",
+        "버스",
+        "신칸센",
+        "전철",
+        "택시"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/basic-ticket-13uo-zic-13lc-xz5.png",
+      "rarity": "basic",
+      "rarityKo": "커먼",
+      "ja": "地図のかけら",
+      "ko": "지도 조각",
+      "motif": "ticket",
+      "places": [
+        "거리",
+        "경찰서",
+        "관광안내소",
+        "신사",
+        "축제",
+        "코인로커",
+        "코인세탁"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/bronze-drink-108s-zwc.png",
+      "rarity": "bronze",
+      "rarityKo": "레어",
+      "ja": "ラテ",
+      "ko": "라떼",
+      "motif": "drink",
+      "places": [
+        "카페"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/bronze-drink-123h-10px-13p8.png",
+      "rarity": "bronze",
+      "rarityKo": "레어",
+      "ja": "生ビール",
+      "ko": "생맥주",
+      "motif": "drink",
+      "places": [
+        "이자카야"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/bronze-food-10co-13ek-14i0-115x.png",
+      "rarity": "bronze",
+      "rarityKo": "레어",
+      "ja": "レーン寿司",
+      "ko": "레일 초밥",
+      "motif": "food",
+      "places": [
+        "회전초밥"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/bronze-food-10t8-10f4-11md.png",
+      "rarity": "bronze",
+      "rarityKo": "레어",
+      "ja": "メロンパン",
+      "ko": "멜론빵",
+      "motif": "food",
+      "places": [
+        "빵집"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/bronze-food-12bg-13c0-108s-10t4.png",
+      "rarity": "bronze",
+      "rarityKo": "레어",
+      "ja": "醤油ラーメン",
+      "ko": "쇼유라멘",
+      "motif": "food",
+      "places": [
+        "라멘"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/bronze-food-13it-12hp-10t0-z90.png",
+      "rarity": "bronze",
+      "rarityKo": "레어",
+      "ja": "定食メニュー",
+      "ko": "정식 메뉴",
+      "motif": "food",
+      "places": [
+        "식당",
+        "조식뷔페"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/bronze-food-14c8-14rc-14i0-115x.png",
+      "rarity": "bronze",
+      "rarityKo": "레어",
+      "ja": "まぐろ寿司",
+      "ko": "참치초밥",
+      "motif": "food",
+      "places": [
+        "스시집",
+        "스시추가"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/bronze-food-1564-10os-15os-12g4-158g.png",
+      "rarity": "bronze",
+      "rarityKo": "레어",
+      "ja": "クリームパスタ",
+      "ko": "크림 파스타",
+      "motif": "food",
+      "places": [
+        "파스타"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/bronze-food-165n-12g4-ywl.png",
+      "rarity": "bronze",
+      "rarityKo": "레어",
+      "ja": "ホットスナック",
+      "ko": "핫스낵",
+      "motif": "food",
+      "places": [
+        "택배",
+        "편의점"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/bronze-safety-10vd-14t0-zro.png",
+      "rarity": "bronze",
+      "rarityKo": "레어",
+      "ja": "のど飴",
+      "ko": "목캔디",
+      "motif": "safety",
+      "places": [
+        "긴급상황",
+        "병원",
+        "약국"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/bronze-service-y5k-10vd-15y4-13uo.png",
+      "rarity": "bronze",
+      "rarityKo": "레어",
+      "ja": "路地サイン",
+      "ko": "골목 표지",
+      "motif": "service",
+      "places": [
+        "거리",
+        "경찰서",
+        "관광안내소",
+        "신사",
+        "축제",
+        "코인로커",
+        "코인세탁"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/bronze-shopping-1224-13ec-13t4-1598-yd4.png",
+      "rarity": "bronze",
+      "rarityKo": "레어",
+      "ja": "サイズタグ",
+      "ko": "사이즈 태그",
+      "motif": "shopping",
+      "places": [
+        "쇼핑",
+        "통신매장",
+        "편집샵계산",
+        "편집샵피팅",
+        "환전"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/bronze-stay-131w-10t0-zbc-15o0.png",
+      "rarity": "bronze",
+      "rarityKo": "레어",
+      "ja": "アメニティ",
+      "ko": "어메니티",
+      "motif": "stay",
+      "places": [
+        "료칸",
+        "온천",
+        "호텔",
+        "호텔방변경",
+        "호텔우산"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/bronze-ticket-12hw-13ic-1528-15v4.png",
+      "rarity": "bronze",
+      "rarityKo": "레어",
+      "ja": "実戦クーポン",
+      "ko": "실전 쿠폰",
+      "motif": "ticket",
+      "places": [
+        "길거리",
+        "복합쇼핑몰",
+        "쇼핑몰 서비스 데스크",
+        "스시 오마카세",
+        "야구장·스타디움",
+        "자판기",
+        "카페·레스토랑 픽업 카운터",
+        "편의점 ATM",
+        "편의점 복합기"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/bronze-ticket-y8g-15f9-14s4-zq4.png",
+      "rarity": "bronze",
+      "rarityKo": "레어",
+      "ja": "交通カード",
+      "ko": "교통카드",
+      "motif": "ticket",
+      "places": [
+        "공항",
+        "공항수하물",
+        "나리타역",
+        "렌터카",
+        "버스",
+        "신칸센",
+        "전철",
+        "택시"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/diamond-drink-115g-10oc-12g4-158g-12ho-yd4-zbc-14ew.png",
+      "rarity": "diamond",
+      "rarityKo": "UR",
+      "ja": "バリスタシグネチャー",
+      "ko": "바리스타 시그니처",
+      "motif": "drink",
+      "places": [
+        "카페"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/diamond-festival-10ud-1348-1168-13uo.png",
+      "rarity": "diamond",
+      "rarityKo": "UR",
+      "ja": "名誉バッジ",
+      "ko": "명예 배지",
+      "motif": "festival",
+      "places": [
+        "길거리",
+        "복합쇼핑몰",
+        "쇼핑몰 서비스 데스크",
+        "스시 오마카세",
+        "야구장·스타디움",
+        "자판기",
+        "카페·레스토랑 픽업 카운터",
+        "편의점 ATM",
+        "편의점 복합기"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/diamond-festival-zic-12ho-158w-168o-xz4.png",
+      "rarity": "diamond",
+      "rarityKo": "UR",
+      "ja": "街の探検家",
+      "ko": "도시 탐험가",
+      "motif": "festival",
+      "places": [
+        "거리",
+        "경찰서",
+        "관광안내소",
+        "신사",
+        "축제",
+        "코인로커",
+        "코인세탁"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/diamond-food-127k-162s-12g4-15so-1270-15os-12g4-158g.png",
+      "rarity": "diamond",
+      "rarityKo": "UR",
+      "ja": "シェフ特製パスタ",
+      "ko": "셰프 스페셜 파스타",
+      "motif": "food",
+      "places": [
+        "파스타"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/diamond-food-12i4-130c-14ys-11bo.png",
+      "rarity": "diamond",
+      "rarityKo": "UR",
+      "ja": "深夜セット",
+      "ko": "심야 콤보",
+      "motif": "food",
+      "places": [
+        "택배",
+        "편의점"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/diamond-food-1350-10p4-14s4-1260-14yc-12g4.png",
+      "rarity": "diamond",
+      "rarityKo": "UR",
+      "ja": "おまかせコース",
+      "ko": "오마카세 코스",
+      "motif": "food",
+      "places": [
+        "식당",
+        "조식뷔페"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/diamond-food-13fp-13eg-1350-10p4-14s4-1260.png",
+      "rarity": "diamond",
+      "rarityKo": "UR",
+      "ja": "職人おまかせ",
+      "ko": "장인 오마카세",
+      "motif": "food",
+      "places": [
+        "스시집",
+        "스시추가"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/diamond-food-15mh-122p-165w-1228-10zg-108s-10t4.png",
+      "rarity": "diamond",
+      "rarityKo": "UR",
+      "ja": "特上海鮮ラーメン",
+      "ko": "특상 해산물라멘",
+      "motif": "food",
+      "places": [
+        "라멘"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/diamond-food-15os-15o0-12ho-132o-115h-12g4.png",
+      "rarity": "diamond",
+      "rarityKo": "UR",
+      "ja": "パティシエボックス",
+      "ko": "파티시에 박스",
+      "motif": "food",
+      "places": [
+        "빵집"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/diamond-food-zcw-131w-1630-10co-13ec-15mg.png",
+      "rarity": "diamond",
+      "rarityKo": "UR",
+      "ja": "大漁プレート",
+      "ko": "대어 플레이트",
+      "motif": "food",
+      "places": [
+        "회전초밥"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/diamond-food-zcw-13fp-14lw-14f0-14yc-12g4.png",
+      "rarity": "diamond",
+      "rarityKo": "UR",
+      "ja": "大将おすすめコース",
+      "ko": "대장 추천 코스",
+      "motif": "food",
+      "places": [
+        "이자카야"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/diamond-safety-12yw-12i4-157o-15mg.png",
+      "rarity": "diamond",
+      "rarityKo": "UR",
+      "ja": "安心キット",
+      "ko": "안심 키트",
+      "motif": "safety",
+      "places": [
+        "긴급상황",
+        "병원",
+        "약국"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/diamond-shopping-1658-13it-15ow-14yc-zro.png",
+      "rarity": "diamond",
+      "rarityKo": "UR",
+      "ja": "限定コーデ",
+      "ko": "한정판 코디",
+      "motif": "shopping",
+      "places": [
+        "쇼핑",
+        "통신매장",
+        "편집샵계산",
+        "편집샵피팅",
+        "환전"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/diamond-stay-14vc-12ho-131w-13uo-15pk-12g4.png",
+      "rarity": "diamond",
+      "rarityKo": "UR",
+      "ja": "コンシェルジュパス",
+      "ko": "컨시어지 패스",
+      "motif": "stay",
+      "places": [
+        "료칸",
+        "온천",
+        "호텔",
+        "호텔방변경",
+        "호텔우산"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/diamond-ticket-133g-166h-10co-13ek-15pk-12g4.png",
+      "rarity": "diamond",
+      "rarityKo": "UR",
+      "ja": "旅レールパス",
+      "ko": "여행 레일패스",
+      "motif": "ticket",
+      "places": [
+        "공항",
+        "공항수하물",
+        "나리타역",
+        "렌터카",
+        "버스",
+        "신칸센",
+        "전철",
+        "택시"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/gold-drink-12g4-15so-1270-11jo-10cs-zq4.png",
+      "rarity": "gold",
+      "rarityKo": "SSR",
+      "ja": "スペシャルブレンド",
+      "ko": "스페셜 블렌드",
+      "motif": "drink",
+      "places": [
+        "카페"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/gold-food-1224-12ho-114o-10vc-zmo.png",
+      "rarity": "gold",
+      "rarityKo": "SSR",
+      "ja": "刺身盛り",
+      "ko": "사시미 모둠",
+      "motif": "food",
+      "places": [
+        "이자카야"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/gold-food-127k-162s-1630-10co-13ec-15mg.png",
+      "rarity": "gold",
+      "rarityKo": "SSR",
+      "ja": "シェフ皿",
+      "ko": "셰프 플레이트",
+      "motif": "food",
+      "places": [
+        "식당",
+        "조식뷔페"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/gold-food-1350-15eo-10f0.png",
+      "rarity": "gold",
+      "rarityKo": "SSR",
+      "ja": "大トロ",
+      "ko": "오토로",
+      "motif": "food",
+      "places": [
+        "스시집",
+        "스시추가"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/gold-food-15mg-10bw-1630-15os-12g4-158g.png",
+      "rarity": "gold",
+      "rarityKo": "SSR",
+      "ja": "トリュフパスタ",
+      "ko": "트러플 파스타",
+      "motif": "food",
+      "places": [
+        "파스타"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/gold-food-15mh-125c-yzo-158g.png",
+      "rarity": "gold",
+      "rarityKo": "SSR",
+      "ja": "特選ネタ",
+      "ko": "특선 네타",
+      "motif": "food",
+      "places": [
+        "회전초밥"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/gold-food-162s-10oc-114o-132c-119g-15eo.png",
+      "rarity": "gold",
+      "rarityKo": "SSR",
+      "ja": "特製弁当",
+      "ko": "프리미엄 벤토",
+      "motif": "food",
+      "places": [
+        "택배",
+        "편의점"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/gold-food-xzn-y98-1390-12hp-11md.png",
+      "rarity": "gold",
+      "rarityKo": "SSR",
+      "ja": "焼きたて食パン",
+      "ko": "갓구운 식빵",
+      "motif": "food",
+      "places": [
+        "빵집"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/gold-food-zig-14yc-14ps-14bs-12fc-108s-10t4.png",
+      "rarity": "gold",
+      "rarityKo": "SSR",
+      "ja": "豚骨チャーシューメン",
+      "ko": "돈코츠 차슈라멘",
+      "motif": "food",
+      "places": [
+        "라멘"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/gold-safety-130d-1224-14lw-14f0-1260-15mg.png",
+      "rarity": "gold",
+      "rarityKo": "SSR",
+      "ja": "薬剤師セット",
+      "ko": "약사 추천 세트",
+      "motif": "safety",
+      "places": [
+        "긴급상황",
+        "병원",
+        "약국"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/gold-service-10p4-12g4-15bk-157o-15mg.png",
+      "rarity": "gold",
+      "rarityKo": "SSR",
+      "ja": "マスターキット",
+      "ko": "마스터 키트",
+      "motif": "service",
+      "places": [
+        "길거리",
+        "복합쇼핑몰",
+        "쇼핑몰 서비스 데스크",
+        "스시 오마카세",
+        "야구장·스타디움",
+        "자판기",
+        "카페·레스토랑 픽업 카운터",
+        "편의점 ATM",
+        "편의점 복합기"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/gold-shopping-1268-10cp-15mg-13fw-1587.png",
+      "rarity": "gold",
+      "rarityKo": "SSR",
+      "ja": "セレクトジャケット",
+      "ko": "셀렉트 재킷",
+      "motif": "shopping",
+      "places": [
+        "쇼핑",
+        "통신매장",
+        "편집샵계산",
+        "편집샵피팅",
+        "환전"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/gold-stay-12g4-13b8-15mg-157o.png",
+      "rarity": "gold",
+      "rarityKo": "SSR",
+      "ja": "スイートキー",
+      "ko": "스위트 키",
+      "motif": "stay",
+      "places": [
+        "료칸",
+        "온천",
+        "호텔",
+        "호텔방변경",
+        "호텔우산"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/gold-ticket-10f0-14vg-10iw-15mg.png",
+      "rarity": "gold",
+      "rarityKo": "SSR",
+      "ja": "ローカルルート",
+      "ko": "로컬 루트",
+      "motif": "ticket",
+      "places": [
+        "거리",
+        "경찰서",
+        "관광안내소",
+        "신사",
+        "축제",
+        "코인로커",
+        "코인세탁"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/gold-ticket-13uo-13it-1259-ya4.png",
+      "rarity": "gold",
+      "rarityKo": "SSR",
+      "ja": "指定席券",
+      "ko": "지정석권",
+      "motif": "ticket",
+      "places": [
+        "공항",
+        "공항수하물",
+        "나리타역",
+        "렌터카",
+        "버스",
+        "신칸센",
+        "전철",
+        "택시"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/silver-drink-10pc-14bs-108s-zwc.png",
+      "rarity": "silver",
+      "rarityKo": "에픽",
+      "ja": "抹茶ラテ",
+      "ko": "말차라떼",
+      "motif": "drink",
+      "places": [
+        "카페"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/silver-food-114o-128c-118k-15bk-108s-10t4.png",
+      "rarity": "silver",
+      "rarityKo": "에픽",
+      "ja": "味噌バターラーメン",
+      "ko": "미소버터라멘",
+      "motif": "food",
+      "places": [
+        "라멘"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/silver-food-130c-157o-15eo-10oc.png",
+      "rarity": "silver",
+      "rarityKo": "에픽",
+      "ja": "焼き鳥",
+      "ko": "야키토리",
+      "motif": "food",
+      "places": [
+        "이자카야"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/silver-food-133k-131w-116r-122c.png",
+      "rarity": "silver",
+      "rarityKo": "에픽",
+      "ja": "サーモン腹身",
+      "ko": "연어뱃살",
+      "motif": "food",
+      "places": [
+        "스시집",
+        "스시추가"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/silver-food-14lw-14f0-1260-15mg.png",
+      "rarity": "silver",
+      "rarityKo": "에픽",
+      "ja": "おすすめセット",
+      "ko": "추천 세트",
+      "motif": "food",
+      "places": [
+        "식당",
+        "조식뷔페"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/silver-food-14s4-10co-11md.png",
+      "rarity": "silver",
+      "rarityKo": "에픽",
+      "ja": "カレーパン",
+      "ko": "카레빵",
+      "motif": "food",
+      "places": [
+        "빵집"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/silver-food-165w-1228-10zg-15os-12g4-158g.png",
+      "rarity": "silver",
+      "rarityKo": "에픽",
+      "ja": "海鮮パスタ",
+      "ko": "해산물 파스타",
+      "motif": "food",
+      "places": [
+        "파스타"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/silver-food-zic-12ho-108t-1260-15mg.png",
+      "rarity": "silver",
+      "rarityKo": "에픽",
+      "ja": "弁当セット",
+      "ko": "도시락 세트",
+      "motif": "food",
+      "places": [
+        "택배",
+        "편의점"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/silver-safety-122p-11l0-130d.png",
+      "rarity": "silver",
+      "rarityKo": "에픽",
+      "ja": "常備薬",
+      "ko": "상비약",
+      "motif": "safety",
+      "places": [
+        "긴급상황",
+        "병원",
+        "약국"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/silver-ticket-10f0-14vg-15pk-12g4.png",
+      "rarity": "silver",
+      "rarityKo": "에픽",
+      "ja": "ローカルパス",
+      "ko": "로컬 패스",
+      "motif": "ticket",
+      "places": [
+        "길거리",
+        "복합쇼핑몰",
+        "쇼핑몰 서비스 데스크",
+        "스시 오마카세",
+        "야구장·스타디움",
+        "자판기",
+        "카페·레스토랑 픽업 카운터",
+        "편의점 ATM",
+        "편의점 복합기"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/silver-ticket-13lc-12hp-ya4.png",
+      "rarity": "silver",
+      "rarityKo": "에픽",
+      "ja": "朝食券",
+      "ko": "조식권",
+      "motif": "ticket",
+      "places": [
+        "료칸",
+        "온천",
+        "호텔",
+        "호텔방변경",
+        "호텔우산"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/silver-ticket-15bk-14rc-15pk-yz4-1260-15mg.png",
+      "rarity": "silver",
+      "rarityKo": "에픽",
+      "ja": "タッチパネルセット",
+      "ko": "터치패널 세트",
+      "motif": "ticket",
+      "places": [
+        "회전초밥"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/silver-ticket-164c-15ol-15o0-14wj.png",
+      "rarity": "silver",
+      "rarityKo": "에픽",
+      "ja": "試着チケット",
+      "ko": "피팅 티켓",
+      "motif": "ticket",
+      "places": [
+        "쇼핑",
+        "통신매장",
+        "편집샵계산",
+        "편집샵피팅",
+        "환전"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/silver-ticket-ydl-166h-15pk-12g4.png",
+      "rarity": "silver",
+      "rarityKo": "에픽",
+      "ja": "急行パス",
+      "ko": "급행 패스",
+      "motif": "ticket",
+      "places": [
+        "공항",
+        "공항수하물",
+        "나리타역",
+        "렌터카",
+        "버스",
+        "신칸센",
+        "전철",
+        "택시"
+      ]
+    },
+    {
+      "image": "/gacha/items/generated-v2/silver-ticket-zix-yzo-13uo-zic.png",
+      "rarity": "silver",
+      "rarityKo": "에픽",
+      "ja": "町の地図",
+      "ko": "동네 지도",
+      "motif": "ticket",
+      "places": [
+        "거리",
+        "경찰서",
+        "관광안내소",
+        "신사",
+        "축제",
+        "코인로커",
+        "코인세탁"
+      ]
+    }
+  ]
+}

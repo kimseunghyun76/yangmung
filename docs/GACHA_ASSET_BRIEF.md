@@ -40,17 +40,17 @@
 
 ## ② 아이템 실물 이미지
 
-- **용도**: 뽑힌 보물(2.5D 카드). 일부 장면은 모티프 일반 아이콘(`/gacha/items/motif/motif-*.webp`)으로 대체 중 → **장면 고유 실물**로 교체하면 수집 만족도가 크게 올라갑니다.
+랩(보물 개봉식) 가챠는 아이템 이미지를 **`/gacha/items/generated-v2/<slug>.png` 경로로 자동 해석**합니다.
+slug는 (제목·등급·모티프)로 기계가 만들기 때문에 **손으로 이름 짓지 말고**, 아래 매니페스트의 `image` 경로 그대로 파일을 만들면 됩니다.
+
+- **체크리스트(필수)**: [`docs/gacha-lab-assets.json`](./gacha-lab-assets.json) — **필요한 75장**의 정확한 파일 경로 목록.
+  - 각 항목: `image`(만들 파일 경로) · `ja`/`ko`(무엇을 그릴지) · `rarity`/`rarityKo`(등급) · `motif`(food/drink/ticket/stay/shopping/service/safety/festival) · `places`(이 이미지를 쓰는 장면들)
+  - 재생성(데이터 바뀌면): `npx tsx scripts/gacha-lab-manifest.ts`
 - **스펙**: 투명 `png`, **단일 오브젝트 중앙, 정면/약간 위 시점, 자체 그림자 없음**, 권장 **640×640px**.
-- **경로/배선**: `src/learn/gachaItems.ts`의 `BY_PLACE['<place>']['<rarity>'].image = '/gacha/items/<...>'`
-- **등급(rarity)**: `basic·bronze·silver·gold·diamond`. 5종 모두 이상적이지만 **우선순위는 gold(SSR)·diamond(UR)** 부터.
+- **등급 느낌**: gold(SSR)·diamond(UR)는 더 화려·고급(특상/한정), basic은 소박하게. **우선순위는 gold·diamond 부터.**
+- **반영**: 파일을 경로대로 두기만 하면 코드 수정 없이 뽑기·도감에 자동 반영됩니다. (해석 함수: `gachaLabItemForPlace` → `/generated-v2/<slug>.png`)
 
-### 이미 전용 이미지 보유(예시)
-편의점(`premium-bento` 등) · 식당(`chef-plate`) · 전철(`reserved-seat-ticket`) · 라멘(`ramen-*`)
-
-### 모티프 일반 아이콘 사용 중 → 교체 권장
-호텔 · 카페 · 빵집 · 약국 · 쇼핑 · 온천 · 이자카야 · 료칸 · 회전초밥 등
-(현재 `motif-stay / motif-drink / motif-food / motif-safety / motif-shopping …`로 대체)
+> 기존(구) 가챠는 별도 경로(`gachaItemForPlace` → 레거시/모티프 이미지)를 쓰며 이 작업과 무관합니다. 랩 가챠만 채우면 됩니다.
 
 ---
 
@@ -60,7 +60,6 @@
 ---
 
 ## 작업 후 반영 방법
-1. 파일을 위 경로 규칙대로 `public/gacha/cast/…`, `public/gacha/items/…`에 둡니다.
-2. 캐릭터: `GachaLab.tsx`의 `CAST[place].art`에 경로 추가(또는 알려주시면 제가 배선).
-3. 아이템: `gachaItems.ts`의 `BY_PLACE[place][rarity].image`에 경로 추가.
-4. 그러면 뽑기·도감·카메오에 **자동 반영**됩니다. 코드 구조 변경 불필요.
+1. **아이템**: [`docs/gacha-lab-assets.json`](./gacha-lab-assets.json)의 `image` 경로 그대로 `public/gacha/items/generated-v2/…`에 png를 둡니다 → **자동 반영**(코드 수정 불필요).
+2. **캐릭터**: `public/gacha/cast/<slug>.webp`로 둔 뒤 `GachaLab.tsx`의 `CAST[place].art`에 경로 한 줄 추가(또는 알려주시면 제가 배선).
+3. 그러면 뽑기·도감·카메오에 자동 반영됩니다. 구조 변경 불필요.
