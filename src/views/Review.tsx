@@ -134,18 +134,13 @@ export function Review({ nav, allCards, progress, seenKana, cardUnlocks, devUnlo
   );
 }
 
-type PFilter = '전체' | '본 적 있음' | '예정' | '복구';
-const PFILTERS: PFilter[] = ['전체', '본 적 있음', '예정', '복구'];
-
-// 표현 탭 — 검색 + 필터(전체/본 적 있음/예정/복구).
+// 표현 탭 — 검색만. 제공된(본 적 있음) 표현 전체에서 검색하며, 예정/미제공 표현은 결과에서 제외.
 function PhraseTab({ phrases, phraseSeen }: { phrases: Phrase[]; phraseSeen: Set<string> }) {
   const [q, setQ] = useState('');
-  const [pf, setPf] = useState<PFilter>('본 적 있음');
   const nq = q.trim().toLowerCase();
   const list = phrases.filter((p) => {
-    if (pf === '본 적 있음' && !phraseSeen.has(p.id)) return false;
-    if (pf === '예정' && phraseSeen.has(p.id)) return false;
-    if (pf === '복구' && !p.recoveryType) return false;
+    // 예정·아직 제공 안 된 표현은 검색 결과에서 제외
+    if (!phraseSeen.has(p.id)) return false;
     if (nq) {
       const hay = `${p.kanji ?? ''} ${p.displayKana ?? ''} ${p.kana} ${p.korean} ${p.romaji ?? ''}`.toLowerCase();
       if (!hay.includes(nq)) return false;
@@ -164,18 +159,6 @@ function PhraseTab({ phrases, phraseSeen }: { phrases: Phrase[]; phraseSeen: Set
           style={{ flex: 1, minWidth: 0, border: 'none', outline: 'none', background: 'transparent', color: 'var(--ink)', fontSize: 15, fontFamily: 'inherit' }}
         />
         {q && <button onClick={() => setQ('')} aria-label="지우기" style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'var(--ink-faint)', fontSize: 16, padding: 2, minHeight: 0 }}>✕</button>}
-      </div>
-      {/* 필터 칩 */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
-        {PFILTERS.map((f) => {
-          const on = pf === f;
-          return (
-            <button key={f} className="ym-press" onClick={() => setPf(f)}
-              style={{ padding: '6px 12px', borderRadius: 999, border: `1px solid ${on ? 'var(--ink)' : 'var(--glass-border)'}`, background: on ? 'var(--accent)' : 'var(--glass-bg-strong)', color: on ? 'var(--accent-ink)' : 'var(--ink-soft)', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
-              {f}
-            </button>
-          );
-        })}
       </div>
       <p style={{ ...kicker, marginBottom: 10 }}>표현 {list.length}</p>
       {list.length === 0
