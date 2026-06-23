@@ -207,8 +207,10 @@ export function App() {
   function pickDiscovery(): DiscoverCard | null {
     for (const p of CONTENT.phrases) {
       if (discovered.includes(p.id)) continue;
+      // 너무 간단한 문장은 제외 + 실제로 쓰는(말하는) 표현만 — 복습 차원에서 새 표현을 다시 제공.
+      if (p.register !== 'productive' && p.register !== 'both') continue;
       const chars = extractKanaChars(p.kana);
-      if (chars.length < 2) continue;
+      if (chars.length < 4) continue;
       if (chars.every((ch) => isKanaFamiliar(ch, seenKana))) {
         return { kind: 'discover', id: `discover:${p.id}`, tag: '발견', ja: p.displayKana ?? p.kana, kana: p.kana, korean: p.korean };
       }
