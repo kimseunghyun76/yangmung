@@ -579,10 +579,16 @@ export function planSession(
 
 // 장면(미션) 단독 연습 덱 — 해당 미션의 카드(스텝 + 순서 맞추기)를 순서대로. (수동 선택이라 cooldown 무시)
 export function selectMissionCards(allCards: Card[], missionId: string): Card[] {
-  return allCards.filter(
+  const cards = allCards.filter(
     (c) => (c.kind === 'introduce' || c.kind === 'quiz' || c.kind === 'order' || c.kind === 'speak')
       && c.reviewTarget?.type === 'mission' && String(c.reviewTarget.id) === missionId,
   );
+  // 미션은 "새 표현(introduce)"을 가장 먼저 보여준다. 단, 한 번에 너무 많지 않게 앞쪽은 소수만,
+  // 나머지(있으면)는 연습 뒤로. (introduce는 전역에서 표현당 1회만 생성되므로 처음 제공되는 표현만 등장)
+  const MAX_INTRO_FIRST = 4;
+  const intros = cards.filter((c) => c.kind === 'introduce');
+  const rest = cards.filter((c) => c.kind !== 'introduce');
+  return [...intros.slice(0, MAX_INTRO_FIRST), ...rest, ...intros.slice(MAX_INTRO_FIRST)];
 }
 
 // 발음 구분 전용 덱 — 최소 페어(듣고 둘 중 고르기)만, 약점/안 본 것 먼저. (직접 진입)

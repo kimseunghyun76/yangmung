@@ -10,13 +10,12 @@ export const c0: Mission = {
   unlockAfter: ['u_b0_reaction'],
   steps: [
     {
-      situationKo: '점원이 인사한다',
+      situationKo: '점원이 「어서 오세요」 하고 맞이해요 — 어떻게 인사할까요?',
       speaker: '점원',
       promptPhraseId: 'p_irasshai',
       choices: [
-        { text: '안녕하세요', phraseId: 'p_konnichiwa', correct: true, feedback: '「こんにちは」— 낮 인사. 아침엔 おはようございます, 저녁엔 こんばんは. 상점에 들어서면 자연스럽게 인사해 봐요' },
-        { text: '(가볍게 목례한다)', actionText: '가볍게 목례한다', correct: false, feedback: '목례도 자연스럽지만, 일본어 공부 중이니 인사를 입으로 꺼내 보는 연습을 해요!' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 가장 정중한 감사 표현. 친구끼리는 ありがとう만 써도 OK. 일본에서 가장 많이 쓰는 말 중 하나예요' },
+        { text: '안녕하세요', phraseId: 'p_konnichiwa', correct: true, feedback: '「こんにちは」— 낮 인사. 아침엔 おはようございます, 저녁엔 こんばんは. 가게에 들어서면 이렇게 인사해 봐요' },
+        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: false, feedback: '「ありがとうございます」는 고맙거나 나갈 때 인사예요. 막 들어와 맞이 인사를 받았을 땐 こんにちは가 자연스러워요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
         { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'partial' },
       ],
