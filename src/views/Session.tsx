@@ -218,16 +218,20 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
   const reveal = picked !== null;
   const big = card.tag.startsWith('K') ? 68 : 30;
   // 보기 표시 난이도: 가나 퀴즈는 소리(한글) 유지, 표현/미션 보기는 일본어로(한글병기→가나만→한자).
-  const choiceMode = loadSettings().choiceMode;
+  const settings = loadSettings();
+  const choiceMode = settings.choiceMode;
+  const beginner = settings.mode === 'beginner' || settings.mode === 'kana'; // 초급에서만 한국어 해석 노출
   const isKanaQuiz = card.reviewTarget?.type === 'kana';
+  const isKo2Ja = card.id.includes(':ko2ja:'); // 뜻 보고 일본어 고르기
   // 힌트: 답하기 전에 눌러 내 속도로 읽는다(정답 자동 넘김과 무관).
   // 1순위 문법 규칙, 없으면 정답 표현의 설명(tip/feedback)으로 폴백 — 가나 퀴즈는 제외.
   const [hintOpen, setHintOpen] = useState(false);
   const hintGrammar = relatedGrammar(card);
   const correctChoice = card.choices.find((x) => x.correct && !x.recovery) ?? card.choices.find((x) => x.correct);
   const hintFallback = !isKanaQuiz && !hintGrammar ? buildHintFallback(card, correctChoice) : undefined;
-  // 반전 퀴즈는 "정답 표현 설명" 힌트가 어긋나므로 끔.
-  const hasHint = !card.inverted && (!!hintGrammar || !!hintFallback);
+  // 반전 퀴즈·발음 구분(pair)은 힌트를 끈다.
+  const isPair = card.id.startsWith('pair:');
+  const hasHint = !card.inverted && !isPair && (!!hintGrammar || !!hintFallback);
   const recoveryChoice = card.choicePools?.recovery?.[0] ?? card.choices.find((x) => x.recovery);
   return (
     <>
@@ -239,6 +243,8 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
             <Icon name="listen" size={34} />
           </button>
           <span className="ym-wave" aria-hidden><i /><i /><i /><i /><i /></span>
+          <p lang="ja" style={{ margin: '4px 0 0', fontSize: 15, fontWeight: 800, color: 'var(--ink)' }}>聞いて意味を選びましょう</p>
+          {beginner && <p style={{ margin: '2px 0 0', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 600 }}>듣고 의미를 고르세요</p>}
         </div>
       ) : isMissionStep ? (
         <div style={{ textAlign: 'center', marginBottom: 4 }}>
@@ -260,7 +266,7 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
       )}
       {card.listen && (
         <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 4, flexWrap: 'wrap' }}>
-          <ListenBtn onClick={() => speak(card.bannerJa!, { rate: 0.6 })}>천천히 다시</ListenBtn>
+          <ListenBtn onClick={() => speak(card.bannerJa!, { rate: 0.6 })}><span aria-hidden style={{ fontSize: 15, marginRight: 3 }}>🐢</span> 천천히</ListenBtn>
           {hasHint && !reveal && <HintBtn open={hintOpen} onClick={() => setHintOpen((o) => !o)} />}
         </div>
       )}
@@ -273,10 +279,12 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
       {/* 힌트 ON → 문법 규칙(있으면) 또는 정답 표현의 설명. 답하면 닫히고 결과 피드백으로 대체. */}
       {hintOpen && !reveal && (hintGrammar ? <WrongTip g={hintGrammar} /> : hintFallback ? <HintExplain {...hintFallback} /> : null)}
 
-      {/* 3. 한국어 (보조) — 질문/뜻 */}
-      {isMissionStep
-        ? <p style={{ textAlign: 'center', color: 'var(--ink-soft)', fontSize: 14, margin: '8px 0 0' }}>{card.promptPhrase!.korean}</p>
-        : card.sub ? <p style={{ textAlign: 'center', color: 'var(--ink-faint)', fontSize: 14, margin: '8px 0 0' }}>{card.sub}</p> : null}
+      {/* 3. 한국어 (보조) — 질문/뜻. 듣기 카드는 위 타이틀로 대체. ko2ja(뜻→일본어)는 질문을 또렷이. */}
+      {isMissionStep ? (
+        <p style={{ textAlign: 'center', color: 'var(--ink-soft)', fontSize: 14, margin: '8px 0 0' }}>{card.promptPhrase!.korean}</p>
+      ) : card.listen ? null : card.sub ? (
+        <p style={{ textAlign: 'center', color: isKo2Ja ? 'var(--ink)' : 'var(--ink-faint)', fontSize: isKo2Ja ? 15.5 : 14, fontWeight: isKo2Ja ? 800 : 400, margin: '8px 0 0' }}>{card.sub}</p>
+      ) : null}
 
       {/* 반전 퀴즈 안내 — 어색한 답 고르기 */}
       {card.inverted && !reveal && (
@@ -332,9 +340,6 @@ function RecoverySkipAction({ choice, onClick }: { choice: Choice; onClick: () =
     >
       <span style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--warn)', fontSize: 12, fontWeight: 900 }}>
         <Icon name="recovery" size={15} /> 막혔을 때 대화 넘기기
-      </span>
-      <span style={{ display: 'block', marginTop: 6, fontSize: 13, lineHeight: 1.45, color: 'var(--ink-soft)', fontWeight: 700 }}>
-        답을 고르기 어렵다면 이렇게 말하고 넘어갈 수 있어요. 누르면 이 카드는 건너뜁니다.
       </span>
       {ja && <strong lang="ja" style={{ display: 'block', marginTop: 8, fontSize: 16, color: 'var(--ink)' }}>{ja}</strong>}
       <span style={{ display: 'block', marginTop: 2, fontSize: 13, color: 'var(--ink-soft)', fontWeight: 750 }}>{ko}</span>

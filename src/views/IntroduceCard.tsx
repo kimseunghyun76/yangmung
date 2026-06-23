@@ -4,7 +4,7 @@ import { speak, ttsSupported } from '../tts';
 import { BTN, PRIMARY } from '../ui/styles';
 import { ReadingAid } from './ReadingAid';
 import { Icon } from '../ui/Icon';
-import { MascotLine } from './mascot';
+import { MascotBubble } from './mascot';
 import { WordArt, hasWordArt } from './WordArt';
 
 interface Props {
@@ -49,36 +49,25 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext }: Prop
         </div>
       )}
 
-      <div style={{ background: 'var(--accent-soft)', padding: 16, borderRadius: 10, marginTop: 14, textAlign: 'center' }}>
+      {/* 일본어 블록 — 탭하면 듣기 */}
+      <button onClick={() => speak(card.ja)} disabled={!ttsSupported()}
+        style={{ display: 'block', width: '100%', background: 'var(--accent-soft)', padding: 16, borderRadius: 10, marginTop: 14, textAlign: 'center', border: 'none', cursor: 'pointer', color: 'var(--ink)' }}>
         <ReadingAid text={card.kana} isFamiliar={isKanaFamiliar} fontSize={30} />
         <p style={{ margin: '8px 0 0', color: 'var(--ink-soft)' }}>{card.korean}</p>
-        <p style={{ margin: '8px 0 0', fontSize: 11, color: 'var(--ink-faint)' }}>빨간 로마자는 아직 익숙하지 않은 글자예요 — 익히면 사라져요</p>
-      </div>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 8, fontSize: 11.5, color: 'var(--accent)', fontWeight: 750 }}><Icon name="listen" size={13} /> 탭하면 들려요</span>
+      </button>
 
-      <div style={{ textAlign: 'center', marginTop: 12, display: 'flex', gap: 8, justifyContent: 'center' }}>
-        <button
-          style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: 'var(--surface)' }}
-          onClick={() => speak(card.ja)}
-          disabled={!ttsSupported()}
-        >
-          <Icon name="listen" size={17} /> 듣기
-        </button>
-        <button
-          style={{ ...BTN, padding: '10px 18px', fontSize: 14, background: 'var(--surface)' }}
-          onClick={() => speak(card.ja, { rate: 0.6 })}
-          disabled={!ttsSupported()}
-        >
-          천천히
+      <div style={{ textAlign: 'center', marginTop: 10 }}>
+        <button style={{ ...BTN, padding: '9px 16px', fontSize: 14, background: 'var(--surface)' }}
+          onClick={() => speak(card.ja, { rate: 0.6 })} disabled={!ttsSupported()}>
+          <span style={{ fontSize: 16, marginRight: 5 }} aria-hidden>🐢</span> 천천히 듣기
         </button>
       </div>
 
-      {card.tip && (
-        <p style={{ background: 'var(--surface-2)', padding: 12, borderRadius: 8, color: 'var(--ink-soft)', fontSize: 14, lineHeight: 1.5 }}>
-          <Icon name="tip" size={15} style={{ marginRight: 6 }} />{card.tip}
-        </p>
-      )}
-
-      <MascotLine key={`${card.id}:intro`} copyKey="introducePhrase" style={{ marginTop: 14 }} />
+      {/* 고양이 말풍선 — 팁이 있으면 팁을, 없으면 짧은 안내 */}
+      <MascotBubble who="yang" mood="tip" key={`${card.id}:tip`} style={{ marginTop: 14 }}>
+        {card.tip ?? '소리와 뜻을 같이 익혀요.'}
+      </MascotBubble>
       <button style={{ ...PRIMARY, width: '100%', marginTop: 14 }} onClick={next}>알겠어요</button>
     </div>
   );
