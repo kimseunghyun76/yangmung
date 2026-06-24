@@ -383,7 +383,8 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
   const choiceLabel = (c: Choice) => situationCard ? (c.phrase?.kana ?? c.ja ?? c.label) : c.label;
   const answerLetters = ['A', 'B', 'C', 'D'];
   const timeSec = Math.max(0, left / 1000).toFixed(1);
-  const timerDeg = `${Math.round(ratio * 360)}deg`;
+  const plen = Array.from(promptText ?? '').length;
+  const promptFs = plen <= 4 ? 'clamp(38px, 12vw, 60px)' : plen <= 9 ? 'clamp(26px, 8vw, 42px)' : 'clamp(19px, 5.6vw, 28px)';
 
   return (
     <main className="ym-speed-show" style={{ minHeight: '100svh', position: 'relative', overflow: 'hidden' }}>
@@ -414,38 +415,49 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
           <div><span>BEST</span><strong>{Math.max(myBest.score, score).toLocaleString()}</strong></div>
         </section>
 
-        <section className="ym-speed-mainstage">
-          <div className={`ym-speed-clock ${low ? 'is-low' : ''}`} style={{ ['--timer-color' as string]: barColor, ['--timer-deg' as string]: timerDeg }}>
-            <strong>{timeSec}</strong>
-            <span>SECONDS</span>
+        {/* 타이머 — 전체 폭 슬림 바 */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '2px 0 12px' }}>
+          <div style={{ flex: 1, height: 12, borderRadius: 999, background: 'rgba(255,247,235,.12)', overflow: 'hidden', boxShadow: low ? '0 0 16px rgba(224,86,74,.4)' : 'none' }}>
+            <div style={{ height: '100%', width: `${ratio * 100}%`, background: barColor, borderRadius: 999, transition: 'width .1s linear' }} />
           </div>
-          <div className="ym-speed-led-question">
-            <span className="ym-speed-category">{card.tag}</span>
-            {tier && <span className="ym-speed-combo-burst">{tier.label} ×{combo}</span>}
-            {signCard ? (
-              <SignPromptBoard text={card.bannerJa || card.banner} category={card.tag.replace(' 읽기', '')} />
-            ) : card.listen ? (
-              <button className="ym-press" onClick={() => card.bannerJa && speak(card.bannerJa)} disabled={!ttsSupported()}
-                style={{ width: 96, height: 96, borderRadius: 999, border: '1px solid rgba(216,162,74,.5)', background: 'rgba(255,247,235,.08)', color: '#fff7eb', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 28px rgba(216,162,74,.18)' }}>
-                <Icon name="listen" size={46} />
-              </button>
-            ) : (
-              <div lang="ja" className="ym-speed-prompt" style={situationCard ? { fontSize: 'clamp(20px, 6.4vw, 30px)', lineHeight: 1.22, wordBreak: 'keep-all' } : undefined}>{promptText}</div>
-            )}
-            {card.sub && !situationCard && <p className="ym-speed-sub">{card.sub}</p>}
-          </div>
-        </section>
+          <span style={{ minWidth: 50, textAlign: 'right', color: low ? '#e0564a' : '#fff7eb', fontWeight: 1000, fontSize: 18, fontVariantNumeric: 'tabular-nums' }}>{timeSec}s</span>
+        </div>
 
-        <div className="ym-speed-buzzer-grid">
+        {/* 질문 — 전체 폭, 글자 자동 크기 */}
+        <div style={{ position: 'relative', borderRadius: 20, padding: '22px 16px', minHeight: 148, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', background: 'linear-gradient(180deg, rgba(43,32,21,.72), rgba(26,19,12,.74))', border: '1px solid rgba(216,162,74,.28)' }}>
+          <span style={{ position: 'absolute', left: 14, top: 12, fontSize: 10.5, fontWeight: 900, letterSpacing: '.08em', color: '#d8a24a' }}>{card.tag}</span>
+          {tier && <span style={{ position: 'absolute', right: 12, top: 11, fontSize: 11, fontWeight: 1000, color: '#f0d28a' }}>{tier.label} ×{combo}</span>}
+          {signCard ? (
+            <SignPromptBoard text={card.bannerJa || card.banner} category={card.tag.replace(' 읽기', '')} />
+          ) : card.listen ? (
+            <>
+              <button className="ym-press" onClick={() => card.bannerJa && speak(card.bannerJa)} disabled={!ttsSupported()}
+                style={{ width: 92, height: 92, borderRadius: 999, border: '1px solid rgba(216,162,74,.5)', background: 'rgba(255,247,235,.08)', color: '#fff7eb', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 28px rgba(216,162,74,.18)' }}>
+                <Icon name="listen" size={44} />
+              </button>
+              <p lang="ja" style={{ margin: '10px 0 0', fontSize: 14, fontWeight: 800, color: '#fff7eb' }}>聞いて意味を選びましょう</p>
+            </>
+          ) : (
+            <div lang="ja" style={{ fontSize: promptFs, fontWeight: 1000, color: '#fff7eb', lineHeight: 1.16, wordBreak: 'keep-all' }}>{promptText}</div>
+          )}
+          {card.sub && !situationCard && !card.listen && <p style={{ margin: '8px 0 0', fontSize: 12.5, color: 'rgba(244,237,224,.66)', fontWeight: 600 }}>{card.sub}</p>}
+        </div>
+
+        {/* 선택지 — 세로 스택(전체 폭), 긴 일본어도 줄바꿈 */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 14, paddingBottom: 'max(14px, env(safe-area-inset-bottom))' }}>
           {card.choices.map((c, i) => {
             const isPicked = picked === i;
             const reveal = picked !== null;
             const right = c.correct && !c.recovery;
-            const stateClass = reveal && right ? 'is-correct' : reveal && isPicked && !right ? 'is-wrong' : reveal ? 'is-dim' : '';
+            let border = 'rgba(216,162,74,.22)', bg = 'linear-gradient(145deg, rgba(48,36,24,.92), rgba(26,19,12,.94))', badgeBg = 'rgba(216,162,74,.92)', op = 1;
+            if (reveal && right) { border = '#6fb98a'; bg = 'linear-gradient(145deg, rgba(45,96,64,.92), rgba(18,40,28,.94))'; badgeBg = '#6fb98a'; }
+            else if (reveal && isPicked && !right) { border = '#e2655a'; bg = 'linear-gradient(145deg, rgba(120,42,36,.92), rgba(44,16,13,.94))'; badgeBg = '#e2655a'; }
+            else if (reveal) op = 0.42;
             return (
-              <button key={i} className={`ym-press ym-speed-buzzer ${stateClass}`} onClick={() => handle(i)} disabled={reveal}>
-                <span>{answerLetters[i] ?? i + 1}</span>
-                <strong lang={situationCard ? 'ja' : undefined}>{choiceLabel(c)}</strong>
+              <button key={i} className="ym-press" onClick={() => handle(i)} disabled={reveal}
+                style={{ display: 'flex', alignItems: 'center', gap: 12, textAlign: 'left', padding: '15px 14px', borderRadius: 16, border: `1.5px solid ${border}`, background: bg, color: '#f7f0e3', cursor: reveal ? 'default' : 'pointer', opacity: op, transition: 'opacity .12s', minHeight: 56 }}>
+                <span style={{ width: 30, height: 30, flex: '0 0 30px', borderRadius: 9, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: badgeBg, color: '#2a1c08', fontWeight: 1000, fontSize: 14 }}>{answerLetters[i] ?? i + 1}</span>
+                <strong lang={situationCard ? 'ja' : undefined} style={{ fontWeight: 850, fontSize: 16, lineHeight: 1.3, wordBreak: 'keep-all' }}>{choiceLabel(c)}</strong>
               </button>
             );
           })}
