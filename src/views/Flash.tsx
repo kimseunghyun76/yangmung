@@ -1,7 +1,7 @@
 // 속도전 — 레벨별 모드 선택 + 제한시간 내 즉답 대결. 콤보·점수, 고득점이면 보석함 보상.
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import type { Card } from '../learn/cards';
+import type { Card, Choice } from '../learn/cards';
 import type { FlashMode } from '../learn/progress';
 import { speak, stopSpeaking, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
@@ -377,8 +377,10 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
   const low = ratio <= 0.25;
   const barColor = ratio > 0.5 ? 'var(--accent)' : ratio > 0.25 ? '#e0a23a' : '#e0564a';
   const tier = comboTier(combo);
+  const situationCard = card.reviewTarget?.type === 'mission'; // 상황 대화 = 일본어 질문 + 일본어 답
   const promptText = card.listen ? null : (card.bannerJa || card.banner);
   const signCard = card.id.startsWith('sign:');
+  const choiceLabel = (c: Choice) => situationCard ? (c.phrase?.kana ?? c.ja ?? c.label) : c.label;
   const answerLetters = ['A', 'B', 'C', 'D'];
   const timeSec = Math.max(0, left / 1000).toFixed(1);
   const timerDeg = `${Math.round(ratio * 360)}deg`;
@@ -428,9 +430,9 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
                 <Icon name="listen" size={46} />
               </button>
             ) : (
-              <div lang="ja" className="ym-speed-prompt">{promptText}</div>
+              <div lang="ja" className="ym-speed-prompt" style={situationCard ? { fontSize: 'clamp(20px, 6.4vw, 30px)', lineHeight: 1.22, wordBreak: 'keep-all' } : undefined}>{promptText}</div>
             )}
-            {card.sub && <p className="ym-speed-sub">{card.sub}</p>}
+            {card.sub && !situationCard && <p className="ym-speed-sub">{card.sub}</p>}
           </div>
         </section>
 
@@ -443,7 +445,7 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
             return (
               <button key={i} className={`ym-press ym-speed-buzzer ${stateClass}`} onClick={() => handle(i)} disabled={reveal}>
                 <span>{answerLetters[i] ?? i + 1}</span>
-                <strong>{c.label}</strong>
+                <strong lang={situationCard ? 'ja' : undefined}>{choiceLabel(c)}</strong>
               </button>
             );
           })}

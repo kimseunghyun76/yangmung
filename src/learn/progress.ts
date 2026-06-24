@@ -746,9 +746,11 @@ export function selectFlashCardsByMode(
     (c.id.startsWith('basic:') && !c.id.includes(':read:')) ||
     c.id.startsWith('vocab:')
   );
+  // 상황 대화 = 일본어 점원 대사(promptPhrase)를 보고 일본어 답을 고른다.
+  // 제한시간 내 읽도록 점원 대사는 너무 길지 않은 것만(가나 16자 이하).
   const isSituation = (c: Card) => c.kind === 'quiz' &&
     c.reviewTarget?.type === 'mission' &&
-    !c.promptPhrase; // 상황 프롬프트(긴 점원 발화)는 제외 — 제한시간 내 읽기 불가
+    !!c.promptPhrase && (c.promptPhrase.kana?.length ?? 99) <= 16;
 
   const accept = (c: Card): boolean => {
     if (c.kind !== 'quiz' || c.choices.length < 2) return false;
