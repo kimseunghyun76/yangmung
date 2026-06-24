@@ -29,7 +29,6 @@ export const c1: Mission = {
       speaker: '점원',
       promptPhraseId: 'p_nenrei_kakunin',
       choices: [
-        { text: '(화면의 「예」를 누른다)', actionText: '화면의 「20歳以上」 버튼을 누른다', correct: true, feedback: '주류·담배는 연령 확인이 의무예요. 보통 단말기 화면의 「20歳以上」 버튼을 직접 누르면 끝납니다' },
         { text: '스무 살 넘었어요', phraseId: 'p_hatachi_ijou_desu', correct: true, feedback: '「二十歳(はたち)以上(いじょう)です」— 말로 확인해줄 때. 二十歳는 はたち로 읽는 특별한 단어라 알아두면 좋아요' },
         { text: '네, 알겠습니다', phraseId: 'p_hai_wakarimashita', correct: true, feedback: '「はい、分(わ)かりました」— 안내를 이해하고 화면을 누르면 돼요. 당황하지 말고 차분히 따라가면 됩니다' },
         { text: '카드로 부탁드려요', phraseId: 'p_card_de_onegai', correct: false, feedback: '아직 결제 단계가 아니에요 — 지금은 연령 확인을 먼저 해야 해요' },
@@ -90,7 +89,6 @@ export const c1: Mission = {
         { text: '만 엔으로 낼게요', phraseId: 'p_ichiman_de', correct: true, feedback: '「一万円(いちまんえん)でお願(ねが)いします」— 큰 지폐로 낼 때. 점원이 「一万円お預(あず)かりします」라고 복창하고 거스름돈을 줘요' },
         { text: '네, 알겠습니다', phraseId: 'p_hai_wakarimashita', correct: true, feedback: '「はい、分(わ)かりました」— 금액을 알아들었을 때. 돈은 트레이(トレー)에 올려놓는 게 일본 방식이에요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
-        { text: '(번역앱 보여주기)', actionText: '번역앱 화면을 보여준다', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
       ],
     },
     {

@@ -247,20 +247,22 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
           {beginner && <p style={{ margin: '2px 0 0', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 600 }}>듣고 의미를 고르세요</p>}
         </div>
       ) : isMissionStep ? (
-        <div style={{ textAlign: 'center', marginBottom: 4 }}>
+        <button onClick={() => card.bannerJa && speak(card.bannerJa)} disabled={!card.bannerJa || !ttsSupported()}
+          style={{ display: 'block', width: '100%', textAlign: 'center', marginBottom: 4, border: 'none', background: 'none', cursor: card.bannerJa ? 'pointer' : 'default', color: 'var(--ink)' }}>
           <span style={{ fontSize: 22, verticalAlign: 'bottom', color: 'var(--ink-faint)' }}>「</span>
           <ReadingAid text={card.promptPhrase!.kana} isFamiliar={isKanaFamiliar} fontSize={28} />
           <span style={{ fontSize: 22, verticalAlign: 'bottom', color: 'var(--ink-faint)' }}>」</span>
-        </div>
+        </button>
       ) : (
-        <div style={{ fontSize: big, fontWeight: 700, textAlign: 'center', margin: '4px 0' }}>{card.banner}</div>
+        <button onClick={() => card.bannerJa && speak(card.bannerJa)} disabled={!card.bannerJa || !ttsSupported()}
+          style={{ display: 'block', width: '100%', fontSize: big, fontWeight: 700, textAlign: 'center', margin: '4px 0', border: 'none', background: 'none', cursor: card.bannerJa ? 'pointer' : 'default', color: 'var(--ink)' }}>{card.banner}</button>
       )}
 
-      {/* 2. 듣기 / 천천히 / 힌트 (1급 액션) */}
+      {/* 2. (일본어 탭=듣기) 탭 안내 + 천천히 / 힌트 */}
       {card.bannerJa && !card.listen && (
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 6, flexWrap: 'wrap' }}>
-          <ListenBtn onClick={() => speak(card.bannerJa!)}><Icon name="listen" size={17} /> 듣기</ListenBtn>
-          <ListenBtn onClick={() => speak(card.bannerJa!, { rate: 0.6 })}>천천히</ListenBtn>
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'center', alignItems: 'center', marginTop: 6, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 11.5, color: 'var(--ink-faint)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 3 }}><Icon name="listen" size={12} /> 탭하면 들려요</span>
+          <ListenBtn onClick={() => speak(card.bannerJa!, { rate: 0.6 })}><span aria-hidden style={{ fontSize: 15, marginRight: 3 }}>🐢</span> 천천히</ListenBtn>
           {hasHint && !reveal && <HintBtn open={hintOpen} onClick={() => setHintOpen((o) => !o)} />}
         </div>
       )}

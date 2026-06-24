@@ -27,7 +27,6 @@ export const c8: Mission = {
       promptPhraseId: 'p_doko_made',
       choices: [
         { text: '시부야까지 가주세요', phraseId: 'p_made_onegai', correct: true, feedback: '기사가 못 알아들었을 때 또렷이 한 번 더. 지명을 한자로 쓴 쪽지를 보여줘도 효과적이에요' },
-        { text: '(지도를 보여준다)', actionText: '지도 화면을 보여준다', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
         { text: '여기서 세워 주세요', phraseId: 'p_koko_de_tomete', correct: false, feedback: '아직 출발 단계 — 행선지를 먼저 확인해요' },
       ],

@@ -85,6 +85,7 @@ export interface IntroduceCard {
   tip?: string;
   note: string;
   answersQuestion?: { ja: string; kana: string; korean: string }; // 이 표현이 답하는 질문(점원 대사)
+  altAnswers?: { ja: string; kana: string; korean: string }[];     // 같은 질문에 가능한 다른 정답들
   reviewTarget?: ReviewTarget;
 }
 
@@ -656,7 +657,7 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
   for (const m of missions) {
     const placeLabel = (m.place ?? m.scenario) as string;
     const sceneNote = `「${placeLabel}」와 같은 상황에서 쓸 수 있는 표현들을 익혀봅시다.`;
-    const addIntroduce = (phraseId: string, note: string, question?: IntroduceCard['answersQuestion']) => {
+    const addIntroduce = (phraseId: string, note: string, question?: IntroduceCard['answersQuestion'], altAnswers?: IntroduceCard['altAnswers']) => {
       if (introduced.has(phraseId)) return;
       introduced.add(phraseId);
       const p = byPhrase(phraseId);
@@ -672,6 +673,7 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
         tip: p.tip,
         note,
         answersQuestion: question,
+        altAnswers: altAnswers && altAnswers.length ? altAnswers : undefined,
         reviewTarget: { type: 'mission', id: m.id as CLevel },
       });
     };
@@ -693,11 +695,18 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
         : recapPrompt
           ? { ja: recapPrompt.kana, kana: recapPrompt.kana, korean: recapPrompt.korean }
           : undefined;
+      // 같은 질문에 대한 정답(productive·correct·복구 아님)들 — 답변이 둘 이상이면 함께 보여준다.
+      const isAns = (c: typeof step.choices[number]) =>
+        !!c.phraseId && c.correct && !c.recoveryType && ['productive', 'both'].includes(byPhrase(c.phraseId).register);
+      const correctAnswers = step.choices.filter(isAns);
       for (const ch of step.choices) {
         if (!ch.phraseId) continue;
         const reg = byPhrase(ch.phraseId).register;
         if (reg === 'productive' || reg === 'both') {
-          addIntroduce(ch.phraseId, sceneNote, qInfo);
+          const alts = isAns(ch)
+            ? correctAnswers.filter((o) => o.phraseId !== ch.phraseId).map((o) => { const ap = byPhrase(o.phraseId!); return { ja: ttsText(ap) ?? ap.kana, kana: ap.displayKana ?? ap.kana, korean: ap.korean }; })
+            : undefined;
+          addIntroduce(ch.phraseId, sceneNote, qInfo, alts);
         }
       }
       const choicePools = buildStepChoicePools(step.choices, byPhrase, phrases);
