@@ -43,7 +43,6 @@ export const c2: Mission = {
         { text: '물 주세요', phraseId: 'p_mizu_kudasai', correct: true, feedback: '「お水(みず)ください」— 일본 식당 물은 대부분 무료. お水とセルフサービスがある場合は셀프로 가져가면 돼요' },
         { text: '아니요, 괜찮습니다 (음료 사양)', phraseId: 'p_iie_kekkou', correct: true, feedback: 'いいえ、結構です — 정중하게 거절할 때 가장 자연스러운 표현' },
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
-        { text: '(메뉴 사진 가리키기)', actionText: '메뉴 사진을 가리킨다', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
         { text: '아니요, 필요 없어요', phraseId: 'p_iie_irimasen', correct: true, feedback: '「いいえ、いりません」— 음료가 필요 없을 때 명확하게 거절. いいえ、結構(けっこう)です도 더 부드러운 대안이에요' },
       ],
     },

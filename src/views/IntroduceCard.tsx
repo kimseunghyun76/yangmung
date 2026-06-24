@@ -64,6 +64,24 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext }: Prop
         </button>
       </div>
 
+      {card.altAnswers && card.altAnswers.length > 0 && (
+        <div style={{ marginTop: 12, padding: 12, borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--surface-2)' }}>
+          <p style={{ margin: '0 0 8px', fontSize: 11.5, fontWeight: 800, color: 'var(--ink-faint)', letterSpacing: '.03em' }}>이렇게도 답할 수 있어요</p>
+          {card.altAnswers.map((a, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: i ? 8 : 0 }}>
+              <span style={{ minWidth: 0 }}>
+                <span lang="ja" style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{a.kana}</span>
+                <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 600 }}>{a.korean}</span>
+              </span>
+              <button onClick={() => speak(a.ja)} disabled={!ttsSupported()} aria-label="듣기"
+                style={{ flex: '0 0 auto', width: 34, height: 34, borderRadius: 10, border: '1px solid var(--glass-border)', background: 'var(--surface)', color: 'var(--accent)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Icon name="listen" size={15} />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* 고양이 말풍선 — 팁이 있으면 팁을, 없으면 짧은 안내 */}
       <MascotBubble who="yang" mood="tip" key={`${card.id}:tip`} style={{ marginTop: 14 }}>
         {card.tip ?? '소리와 뜻을 같이 익혀요.'}

@@ -39,7 +39,6 @@ export const c9: Mission = {
       promptPhraseId: 'p_doko_tomaru',
       choices: [
         { text: '호텔이에요', phraseId: 'p_hoteru_desu', correct: true, feedback: '「ホテルです」— 한 단어로 충분해요. 호텔명이나 예약확인서를 미리 꺼내두면 심사가 더 빨리 끝나요' },
-        { text: '(예약 확인서를 보여준다)', actionText: '호텔 예약 확인서를 보여준다', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
         { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: false, feedback: '어디서 묵는지 물었으니 숙소를 답해야 해요. 「ホテルです」' },
       ],
@@ -61,7 +60,6 @@ export const c9: Mission = {
       promptPhraseId: 'p_kaeri_koukuuken',
       choices: [
         { text: '네, 있어요', phraseId: 'p_hai_arimasu', correct: true, feedback: '「はい、あります」— 왕복·귀국 항공권 확인. 단기 관광은 돌아갈 일정이 있는지 확인해요. 예약 화면을 보여줘도 좋아요' },
-        { text: '(귀국 항공권을 보여준다)', actionText: '귀국 항공권 화면을 보여준다', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
         { text: '호텔이에요', phraseId: 'p_hoteru_desu', correct: false, feedback: '숙소는 이미 답했어요 — 지금은 돌아가는 항공권을 묻고 있어요' },
       ],
@@ -72,7 +70,6 @@ export const c9: Mission = {
       promptPhraseId: 'p_shimon_shashin',
       choices: [
         { text: '네, 알겠습니다', phraseId: 'p_hai_wakarimashita', correct: true, feedback: '「はい、分(わ)かりました」— 일본 입국 시 양손 검지 지문과 얼굴 사진을 찍어요. 안내에 따라 손가락을 단말기에 올려요' },
-        { text: '(단말기에 손가락을 올린다)', actionText: '지문 단말기에 검지를 올린다', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
         { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 심사를 마치며 인사. 입국 스탬프나 재류 스티커를 받고 마무리해요' },
         { text: '관광이에요', phraseId: 'p_kankou_desu', correct: false, feedback: '지금은 지문·사진 안내를 따르는 단계예요 — 목적은 앞서 답했어요' },
       ],
