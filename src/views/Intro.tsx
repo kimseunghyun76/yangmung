@@ -153,16 +153,25 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
         color: 'var(--ink)',
       }}>
         {backdrop && (
-          <img src={backdrop} alt="" aria-hidden style={{
-            width: 'calc(100% + 28px)',
-            height: 'auto',
-            margin: '-14px -14px 0',
-            display: 'block',
-            borderRadius: '28px 28px 22px 22px',
-            border: '1px solid rgba(255,255,255,0.3)',
-            boxShadow: '0 18px 42px rgba(20,24,34,0.16)',
-            filter: 'saturate(.9) contrast(.98) brightness(1.04)',
-          }} />
+          <div style={{ position: 'relative', width: 'calc(100% + 28px)', margin: '-14px -14px 0', borderRadius: '28px 28px 22px 22px', overflow: 'hidden', boxShadow: '0 18px 42px rgba(20,24,34,0.16)', border: '1px solid rgba(255,255,255,0.3)' }}>
+            <img src={backdrop} alt="" aria-hidden style={{
+              width: '100%',
+              height: 'auto',
+              display: 'block',
+              filter: 'saturate(.9) contrast(.98) brightness(1.04)',
+            }} />
+            {/* 안내문을 배경 장면 하단에 오버레이 — 장면과 한 덩어리로 */}
+            <div style={{
+              position: 'absolute', left: 0, right: 0, bottom: 0, padding: '36px 16px 12px',
+              background: 'linear-gradient(to top, rgba(18,14,10,.82), rgba(18,14,10,.36) 56%, transparent)',
+              color: '#fff',
+            }}>
+              <p style={{ margin: 0, fontSize: 12.5, fontWeight: 800, letterSpacing: '.06em', color: '#ffe6b0' }}>{place ? `${place} 미션` : '오늘의 연습'}</p>
+              <p style={{ margin: '4px 0 0', fontSize: 13.5, lineHeight: 1.5, fontWeight: 600, color: 'rgba(255,255,255,.95)', textShadow: '0 1px 6px rgba(0,0,0,.5)' }}>
+                배경 상황을 떠올리고 바로 시작합니다. 이전에 본 표현은 아래 포인트만 다시 확인하면 됩니다.
+              </p>
+            </div>
+          </div>
         )}
         {!backdrop && (
           <div aria-hidden style={{ position: 'absolute', right: -18, top: 18, width: 170, height: 170, borderRadius: 42, background: `radial-gradient(circle at 44% 38%, ${hexA(sv.accent, 0.22)}, transparent 64%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: 'rotate(5deg)' }}>
@@ -170,11 +179,14 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
           </div>
         )}
         <div style={{ position: 'relative', maxWidth: 760, padding: '0 4px' }}>
-          <p style={{ color: 'var(--ink-faint)', fontSize: 13, margin: 0, fontWeight: 800, letterSpacing: '0.08em' }}>{place ? `${place} 미션` : '오늘의 연습'}</p>
-          <h1 style={{ margin: '7px 0 0', lineHeight: 1.22 }}>{goal}</h1>
-          <p style={{ color: 'var(--ink-soft)', fontSize: 15, lineHeight: 1.65, marginTop: 14, maxWidth: 640 }}>
-            배경 상황을 떠올리고 바로 시작합니다. 이전에 본 표현은 아래 포인트만 다시 확인하면 됩니다.
-          </p>
+          {/* 배경이 있으면 키커·안내문은 이미지 오버레이로 옮겼으므로 본문에선 생략 */}
+          {!backdrop && <p style={{ color: 'var(--ink-faint)', fontSize: 13, margin: 0, fontWeight: 800, letterSpacing: '0.08em' }}>{place ? `${place} 미션` : '오늘의 연습'}</p>}
+          <h1 style={{ margin: backdrop ? 0 : '7px 0 0', lineHeight: 1.22 }}>{goal}</h1>
+          {!backdrop && (
+            <p style={{ color: 'var(--ink-soft)', fontSize: 15, lineHeight: 1.65, marginTop: 14, maxWidth: 640 }}>
+              배경 상황을 떠올리고 바로 시작합니다. 이전에 본 표현은 아래 포인트만 다시 확인하면 됩니다.
+            </p>
+          )}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 16 }}>
             <span style={{ borderRadius: 999, padding: '8px 12px', background: hexA(sv.accent, 0.12), border: `1px solid ${hexA(sv.accent, 0.22)}`, color: sv.accent, fontSize: 13, fontWeight: 800 }}>
               누적 시도 {attempts}회

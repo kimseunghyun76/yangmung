@@ -432,7 +432,13 @@ function pickScene(byMission: Map<string, Pool>, quota: number, progress: Progre
   const entries = [...byMission.entries()];
   const started = entries.filter(([mid]) => missionExperiencedCount(progress, mid) > 0);
   const fresh = entries.filter(([mid]) => missionExperiencedCount(progress, mid) === 0);
-  const ordered = [...seededOrder(started, seed), ...fresh];
+  // 새 미션(잠금해제·미시작, 튜토리얼 C0 제외)이 있으면 가장 앞에 둬서 "오늘의 여행 미션"이
+  // 새 장면이 되고, 같은 장면(예: 편의점)을 끝없이 복습하느라 진도가 막히는 걸 방지한다.
+  // 그 다음 시작한 장면들을 회전 복습 → 남은 새 미션 순. (새 미션이 없으면 시작한 장면 회전만)
+  const leadFresh = fresh.find(([mid]) => mid !== 'C0');
+  const ordered = leadFresh
+    ? [leadFresh, ...seededOrder(started, seed), ...fresh.filter((e) => e !== leadFresh)]
+    : [...seededOrder(started, seed), ...fresh];
   for (const [, pool] of ordered) {
     if (out.length >= quota) break;
     const freshIntroduces = pool.fresh.filter((c) => c.kind === 'introduce');
