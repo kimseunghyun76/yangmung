@@ -18,7 +18,7 @@ import { extractKanaChars } from './learn/kanaReading';
 import { loadSettings, MODE_PRESETS, saveSettings, sceneSentenceLevelForMode, type Settings } from './learn/settings';
 import { sessionGoalText } from './views/goal';
 import { resetMangaBackdrops } from './views/scene';
-import { speak, stopSpeaking, ttsSupported } from './tts';
+import { speak, stopSpeaking, ttsSupported, setListenRate } from './tts';
 import { WRAP } from './ui/styles';
 import type { PickMap } from './views/OrderCard';
 import type { KanaItem } from './content/types';
@@ -161,12 +161,14 @@ export function App() {
     else if (card.kind === 'introduce' || card.kind === 'speak' || card.kind === 'discover') ja = card.ja;
     else if (card.kind === 'dictation' && card.promptKind !== 'korean') ja = card.ja; // 작문(한국어 프롬프트)은 자동재생 X
     if (!ja) return;
-    const t = window.setTimeout(() => speak(ja, { rate: 0.95 }), 120);
+    const t = window.setTimeout(() => speak(ja), 120);
     return () => { clearTimeout(t); stopSpeaking(); };
   }, [i, view, card]);
 
   // 주간/야간 테마를 <html data-theme>에 반영
   useEffect(() => { document.documentElement.dataset.theme = settings.theme; }, [settings.theme]);
+  // 듣기 속도 — 설정값을 tts 전역에 반영 (마운트 시 포함)
+  useEffect(() => { setListenRate(settings.listenRate); }, [settings.listenRate]);
 
   // 카드가 바뀌면 표시 시각 리셋 + 이전 자동넘김 타이머 정리
   useEffect(() => {

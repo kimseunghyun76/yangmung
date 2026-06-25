@@ -1,7 +1,7 @@
 // 새 표현 소개 카드 — 퀴즈 전에 의미·소리·쪼개보기를 먼저 제공.
 import type { IntroduceCard } from '../learn/cards';
 import { speak, ttsSupported } from '../tts';
-import { BTN, PRIMARY } from '../ui/styles';
+import { PRIMARY } from '../ui/styles';
 import { ReadingAid } from './ReadingAid';
 import { Icon } from '../ui/Icon';
 import { MascotBubble } from './mascot';
@@ -37,16 +37,11 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
       {card.answersQuestion && (
         <div style={{ marginTop: 14, padding: 12, borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--surface-2)' }}>
           <p style={{ margin: 0, fontSize: 11.5, fontWeight: 800, color: 'var(--ink-faint)', letterSpacing: '.03em' }}>이런 질문에 답할 때</p>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 6 }}>
-            <span style={{ minWidth: 0 }}>
-              <span lang="ja" style={{ display: 'block', fontSize: 16, fontWeight: 700 }}>{card.answersQuestion.kana}</span>
-              <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 600 }}>{card.answersQuestion.korean}</span>
-            </span>
-            <button onClick={() => speak(card.answersQuestion!.ja)} disabled={!ttsSupported()} aria-label="질문 듣기"
-              style={{ flex: '0 0 auto', width: 38, height: 38, borderRadius: 11, border: '1px solid var(--glass-border)', background: 'var(--surface)', color: 'var(--accent)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Icon name="listen" size={16} />
-            </button>
-          </div>
+          <button onClick={() => speak(card.answersQuestion!.ja)} disabled={!ttsSupported()}
+            style={{ display: 'block', width: '100%', marginTop: 6, padding: 0, border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer', color: 'var(--ink)' }}>
+            <span lang="ja" style={{ display: 'block', fontSize: 16, fontWeight: 700 }}>{card.answersQuestion.kana}</span>
+            <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 600 }}>{card.answersQuestion.korean}</span>
+          </button>
           <p style={{ margin: '8px 0 0', fontSize: 11, color: 'var(--ink-faint)', textAlign: 'center', fontWeight: 700 }}>↓ 이렇게 답해요</p>
         </div>
       )}
@@ -59,27 +54,15 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 8, fontSize: 11.5, color: 'var(--accent)', fontWeight: 750 }}><Icon name="listen" size={13} /> 탭하면 들려요</span>
       </button>
 
-      <div style={{ textAlign: 'center', marginTop: 10 }}>
-        <button style={{ ...BTN, padding: '9px 16px', fontSize: 14, background: 'var(--surface)' }}
-          onClick={() => speak(card.ja, { rate: 0.6 })} disabled={!ttsSupported()}>
-          <span style={{ fontSize: 16, marginRight: 5 }} aria-hidden>🐢</span> 천천히 듣기
-        </button>
-      </div>
-
       {card.altAnswers && card.altAnswers.length > 0 && (
         <div style={{ marginTop: 12, padding: 12, borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--surface-2)' }}>
           <p style={{ margin: '0 0 8px', fontSize: 11.5, fontWeight: 800, color: 'var(--ink-faint)', letterSpacing: '.03em' }}>이렇게도 답할 수 있어요</p>
           {card.altAnswers.map((a, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: i ? 8 : 0 }}>
-              <span style={{ minWidth: 0 }}>
-                <span lang="ja" style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{a.kana}</span>
-                <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 600 }}>{a.korean}</span>
-              </span>
-              <button onClick={() => speak(a.ja)} disabled={!ttsSupported()} aria-label="듣기"
-                style={{ flex: '0 0 auto', width: 34, height: 34, borderRadius: 10, border: '1px solid var(--glass-border)', background: 'var(--surface)', color: 'var(--accent)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Icon name="listen" size={15} />
-              </button>
-            </div>
+            <button key={i} onClick={() => speak(a.ja)} disabled={!ttsSupported()}
+              style={{ display: 'block', width: '100%', marginTop: i ? 8 : 0, padding: 0, border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer', color: 'var(--ink)' }}>
+              <span lang="ja" style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{a.kana}</span>
+              <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 600 }}>{a.korean}</span>
+            </button>
           ))}
         </div>
       )}

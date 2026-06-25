@@ -197,7 +197,7 @@ function TabTips() {
   return (
     <>
       <Section icon="listen" title="듣기가 안 들릴 때">
-        <StepBadge n={1} label="카드 아래 '천천히' 버튼을 눌러 0.6배 속도로 다시 들어보세요." />
+        <StepBadge n={1} label="설정 → 듣기 속도를 ×0.8 이하로 낮추면 모든 듣기가 더 천천히 들려요." />
         <StepBadge n={2} label="받아쓰기 세션으로 자주 틀리는 소리를 집중 훈련하세요." />
         <StepBadge n={3} label="발음 구분 메뉴에서 っ·ー·つ/す 같은 헷갈리는 쌍을 반복하세요." />
       </Section>

@@ -108,7 +108,6 @@ function DictationTyping({ card, onResult, onNext }: Props) {
 
       <div style={{ textAlign: 'center', marginTop: 12, display: 'flex', gap: 8, justifyContent: 'center' }}>
         <button style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: 'var(--accent-soft)' }} onClick={() => speak(card.ja)} disabled={!ttsSupported()}><Icon name="listen" size={17} /> 듣기</button>
-        <button style={{ ...BTN, padding: '10px 18px', fontSize: 14 }} onClick={() => speak(card.ja, { rate: 0.6 })} disabled={!ttsSupported()}>천천히</button>
       </div>
 
       {/* 입력 글자 슬롯 — 답 길이만큼 칸 + 진행감. 채점 후 글자별 정/오답 색. */}

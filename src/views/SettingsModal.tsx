@@ -1,7 +1,8 @@
 // 설정 — 글래스 하단 시트. 학습 모드·발음 보조·듣기 속도·자동 진행·초기화.
 import { useState, type CSSProperties } from 'react';
-import { MODE_PRESETS, type ChoiceMode, type LearnMode, type ReadingAidMode, type Settings } from '../learn/settings';
+import { MODE_PRESETS, LISTEN_RATES, type ChoiceMode, type LearnMode, type ReadingAidMode, type Settings } from '../learn/settings';
 import { earn, getCash, DEBUG_TOPUP, formatCash } from '../learn/wallet';
+import { speak, setListenRate } from '../tts';
 import { Modal } from './Modal';
 import { Icon } from '../ui/Icon';
 
@@ -70,6 +71,17 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
         ))}
       </div>
       <p style={{ margin: '6px 2px 0', fontSize: 11.5, color: 'var(--ink-faint)' }}>난이도가 오를수록 한글을 떼고(일본어만), 최고 난이도는 한자로 — 가나 퀴즈는 그대로예요.</p>
+
+      <p style={{ ...head, marginTop: 18 }}><Icon name="listen" size={16} /> 듣기 속도</p>
+      <div style={{ display: 'flex', gap: 6 }}>
+        {LISTEN_RATES.map((r) => (
+          <button key={r} className="ym-press" style={seg(settings.listenRate === r)}
+            onClick={() => { setListenRate(r); onChange({ ...settings, listenRate: r }); speak('ありがとうございます'); }}>
+            ×{r}
+          </button>
+        ))}
+      </div>
+      <p style={{ margin: '6px 2px 0', fontSize: 11.5, color: 'var(--ink-faint)' }}>일본어를 탭하면 이 속도로 들려요. 누르면 바로 미리 들어볼 수 있어요.</p>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 18 }}>
         <span style={head}><Icon name="fast" size={16} /> 정답이면 자동으로 다음</span>
