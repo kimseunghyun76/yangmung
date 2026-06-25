@@ -51,7 +51,6 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
         style={{ display: 'block', width: '100%', background: 'var(--accent-soft)', padding: 16, borderRadius: 10, marginTop: 14, textAlign: 'center', border: 'none', cursor: 'pointer', color: 'var(--ink)' }}>
         <ReadingAid text={card.kana} isFamiliar={isKanaFamiliar} fontSize={30} />
         <p style={{ margin: '8px 0 0', color: 'var(--ink-soft)' }}>{card.korean}</p>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 8, fontSize: 11.5, color: 'var(--accent)', fontWeight: 750 }}><Icon name="listen" size={13} /> 탭하면 들려요</span>
       </button>
 
       {card.altAnswers && card.altAnswers.length > 0 && (

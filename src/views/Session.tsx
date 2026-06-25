@@ -54,7 +54,7 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
   const exit = () => { if (index === 0 || confirm('세션을 끝내고 홈으로 갈까요? (지금까지 푼 카드는 저장돼요)')) onExit(); };
 
   return (
-    <main style={{ ...WRAP, minHeight: '100dvh', display: 'flex', flexDirection: 'column', padding: 0 }}>
+    <main style={{ ...WRAP, height: '100dvh', display: 'flex', flexDirection: 'column', padding: 0 }}>
       {/* ── 1. 내비게이션 바 (배경 이미지는 질문 문장 위로 이동) ── */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0,
@@ -149,6 +149,15 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
           )}
         </div>
       </GlassPanel>
+      {/* 화면 하단 공통 안내 — 일본어 문장은 탭하면 다시 들을 수 있다 */}
+      {(card.kind === 'introduce' || card.kind === 'quiz') && (
+        <p style={{
+          flexShrink: 0, margin: 0, textAlign: 'center', fontSize: 11, fontWeight: 600, color: 'var(--ink-faint)',
+          padding: '7px 16px max(8px, env(safe-area-inset-bottom))', background: 'var(--surface-2)',
+        }}>
+          문장을 탭하면 다시 들을 수 있어요
+        </p>
+      )}
     </main>
   );
 }
@@ -277,11 +286,10 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
           style={{ display: 'block', width: '100%', fontSize: big, fontWeight: 700, textAlign: 'center', margin: '4px 0', border: 'none', background: 'none', cursor: card.bannerJa ? 'pointer' : 'default', color: 'var(--ink)' }}>{card.banner}</button>
       )}
 
-      {/* 2. (일본어 탭=듣기) 탭 안내 / 힌트 */}
-      {card.bannerJa && !card.listen && (
+      {/* 2. 힌트 (일본어 탭=듣기 안내는 화면 하단 공통 문구로 통일) */}
+      {card.bannerJa && !card.listen && hasHint && !reveal && (
         <div style={{ display: 'flex', gap: 8, justifyContent: 'center', alignItems: 'center', marginTop: 6, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 11.5, color: 'var(--ink-faint)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 3 }}><Icon name="listen" size={12} /> 탭하면 들려요</span>
-          {hasHint && !reveal && <HintBtn open={hintOpen} onClick={() => setHintOpen((o) => !o)} />}
+          <HintBtn open={hintOpen} onClick={() => setHintOpen((o) => !o)} />
         </div>
       )}
       {card.listen && hasHint && !reveal && (
