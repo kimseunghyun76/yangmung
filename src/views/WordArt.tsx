@@ -1,6 +1,6 @@
-// 단어 일러스트 — 어휘 "새 표현" 카드에서 단어를 귀엽게 SVG로 그려 보여준다.
-// 이미지로 더 잘 외우도록: 구체 단어는 전용 그림, 색은 색 스와치, 나머지는 그룹 테마 + 가나.
-import type { CSSProperties } from 'react';
+// 단어 일러스트 — 어휘 "새 표현" 카드에서 단어를 이미지로 보여준다.
+// 생성 PNG를 우선 사용하고, 누락 시 SVG 폴백으로 내려간다.
+import { useState, type CSSProperties } from 'react';
 
 // 카드 id에서 그룹 추출: vocab:<group>:study:..., basic:study:..., sign:study:...
 function groupOf(id: string): string {
@@ -200,7 +200,31 @@ export function hasWordArt(id: string): boolean {
   return (id.startsWith('vocab:') && id.includes(':study:')) || id.startsWith('basic:study:') || id.startsWith('sign:study:');
 }
 
+function vocabWordArtSrc(id: string): string | null {
+  if (!id.startsWith('vocab:') || !id.includes(':study:')) return null;
+  const [, group, kind, item] = id.split(':');
+  if (!group || kind !== 'study' || !item || item.startsWith('ex')) return null;
+  return `/vocab/word-art/${group}/${item}.png`;
+}
+
 export function WordArt({ id, korean, kana: _kana, size = 96, style }: { id: string; korean: string; kana: string; size?: number; style?: CSSProperties }) {
+  const assetSrc = vocabWordArtSrc(id);
+  const [assetFailed, setAssetFailed] = useState(false);
+  if (assetSrc && !assetFailed) {
+    return (
+      <img
+        src={assetSrc}
+        width={size}
+        height={size}
+        alt={korean}
+        loading="lazy"
+        decoding="async"
+        onError={() => setAssetFailed(true)}
+        style={{ width: size, height: size, objectFit: 'contain', display: 'block', ...style }}
+      />
+    );
+  }
+
   const group = groupOf(id);
   const hue = GROUP_HUE[group] ?? '#caa14a';
   let body: JSX.Element;
