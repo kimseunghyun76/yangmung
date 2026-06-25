@@ -70,7 +70,7 @@ export const c9: Mission = {
       promptPhraseId: 'p_shimon_shashin',
       choices: [
         { text: '네, 알겠습니다', phraseId: 'p_hai_wakarimashita', correct: true, feedback: '「はい、分(わ)かりました」— 일본 입국 시 양손 검지 지문과 얼굴 사진을 찍어요. 안내에 따라 손가락을 단말기에 올려요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 심사를 마치며 인사. 입국 스탬프나 재류 스티커를 받고 마무리해요' },
+        { text: '네, 손가락 올릴게요', phraseId: 'p_yubi_okimasu', correct: true, feedback: '「指(ゆび)を置(お)きます」— 지문 인식 안내를 행동으로 받는 표현. 감사 인사보다 안내를 따라 움직이는 게 이 장면에 훨씬 자연스러워요' },
         { text: '관광이에요', phraseId: 'p_kankou_desu', correct: false, feedback: '지금은 지문·사진 안내를 따르는 단계예요 — 목적은 앞서 답했어요' },
       ],
     },

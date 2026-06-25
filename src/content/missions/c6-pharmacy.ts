@@ -60,7 +60,7 @@ export const c6: Mission = {
       promptPhraseId: 'p_shokugo_nonde',
       choices: [
         { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '복용법을 이해했다는 신호. 「食後(しょくご)に」=식후에, 「一日三回(いちにちさんかい)」=하루 3회 정도는 외워두면 좋아요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '약국에서 나갈 때 꼭 인사해요 — 일본 약사는 설명에 많은 신경을 써요. 그 노력에 감사를 전하는 게 예의' },
+        { text: '식후에 먹으면 되나요?', phraseId: 'p_shokugo_kakunin', correct: true, feedback: '「食後(しょくご)に飲(の)めばいいですか」— 복용법을 들었으면 핵심을 되물어 확인. 약을 안전하게 먹는 데는 감사보다 이 확인이 훨씬 중요해요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
         { text: '다시 한 번 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
       ],
@@ -71,7 +71,7 @@ export const c6: Mission = {
       choices: [
         { text: '카드로요', phraseId: 'p_card_de', correct: true, feedback: '「カードで」— 드러그스토어는 대부분 카드·IC카드를 받아요. 일반약(市販薬)은 처방전 없이 바로 살 수 있어요' },
         { text: '현금으로요', phraseId: 'p_genkin_de', correct: true, feedback: '「現金(げんきん)で」— 현금 결제. 약값은 일반약이라 보험 적용 없이 정가로 내요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 상담해 준 약사에게 감사 인사. 빠른 쾌유를 빌어주기도 해요(お大事(だいじ)に)' },
+        { text: '카드로도 되나요?', phraseId: 'p_kado_de_ii_desu_ka', correct: true, feedback: '「カードでもいいですか」— 결제 전에 카드가 되는지 확인. 드러그스토어는 대부분 되지만 미리 물어보면 깔끔해요' },
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'partial' },
       ],
     },

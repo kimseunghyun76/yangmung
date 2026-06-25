@@ -62,7 +62,7 @@ export const c10: Mission = {
         { text: '잔돈으로 해 주세요', phraseId: 'p_komakaku', correct: true, feedback: '「細(こま)かくしてください」— 큰 지폐를 잔돈으로. 교통 IC카드 충전·자판기·신사 오사이센(봉납금)에 잔돈이 꼭 필요해요' },
         { text: '영수증 주세요', phraseId: 'p_ryoushuusho', correct: true, feedback: '환전 영수증은 재환전·경비 처리 시 필요할 수 있어요. 여행 끝까지 보관하는 습관을 들이세요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '환전 완료 후 감사인사 한 마디 — 짧아도 일본어로 하면 직원이 기억해주고 다음 방문이 더 친절해져요' },
+        { text: '금액 확인했어요', phraseId: 'p_kingaku_kakunin', correct: true, feedback: '「金額(きんがく)を確認(かくにん)しました」— 받은 돈을 그 자리에서 확인했다는 표현. 돈 거래에서는 감사보다 확인이 먼저예요' },
       ],
     },
   ],

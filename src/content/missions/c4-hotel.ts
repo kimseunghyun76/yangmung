@@ -48,7 +48,7 @@ export const c4: Mission = {
       speaker: '프런트',
       promptPhraseId: 'p_kagi_desu',
       choices: [
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '키를 받으며 감사 인사. 일본 호텔 직원은 정중한 응대에 보람을 느껴요 — 이 한 마디가 숙박 경험을 더 따뜻하게 해요' },
+        { text: '잘 부탁드립니다', phraseId: 'p_yoroshiku_onegai', correct: true, feedback: '「よろしくお願(ねが)いします」— 키를 받으며 "잘 부탁합니다". 체크인 응대를 자연스럽게 받는 만능 표현이라 단순한 감사보다 어울려요' },
         { text: '방은 어디예요?', phraseId: 'p_heya_doko', correct: true, feedback: '「部屋(へや)はどこですか」— 키를 받고 바로 방 위치를 확인. 엘리베이터 위치도 함께 물어보면 편리해요' },
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
         { text: '조식은요?', phraseId: 'p_choushoku_wa', correct: false, feedback: '키를 막 받은 참이에요 — 조식·와이파이는 바로 다음 단계에서 확인해요' },

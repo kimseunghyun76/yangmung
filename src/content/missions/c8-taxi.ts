@@ -70,7 +70,7 @@ export const c8: Mission = {
       choices: [
         { text: '카드로요', phraseId: 'p_card_de', correct: true, feedback: '「カードで」— 도쿄 택시는 대부분 카드·IC카드·QR결제가 돼요. 단말기에 탭하면 끝나요' },
         { text: '영수증 주세요', phraseId: 'p_ryoushuusho', correct: true, feedback: '「領収書(りょうしゅうしょ)ください」— 경비 처리나 분실물 신고에 필요해요. 내리기 전에 받아두면 좋아요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 내릴 때 인사. 도쿄 택시 기사는 서비스에 자부심이 강해요' },
+        { text: '거스름돈은 괜찮아요', phraseId: 'p_otsuri_daijoubu', correct: true, feedback: '「お釣(つ)りは大丈夫(だいじょうぶ)です」— 소액 거스름돈을 사양할 때. 내리기 직전 자연스럽게 쓰는 택시 마무리 표현이에요' },
         { text: '시부야까지 가주세요', phraseId: 'p_made_onegai', correct: false, feedback: '이미 도착했어요 — 지금은 요금을 내고 영수증을 받을 차례예요' },
       ],
     },

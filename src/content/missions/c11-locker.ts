@@ -39,7 +39,7 @@ export const c11: Mission = {
       promptPhraseId: 'p_kono_botan_oshite',
       choices: [
         { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '설명을 들은 후 「わかりました」로 이해 표시. 실제로 모르면 솔직히 다시 물어보는 게 나아요. 침묵은 상대를 당황하게 해요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '직원이 도와줬으면 꼭 감사인사. 일본에서는 이 작은 배려가 상대방에게 큰 기쁨이 돼요' },
+        { text: '사용법 알겠어요', phraseId: 'p_tsukaikata_wakatta', correct: true, feedback: '「使(つか)い方(かた)が分(わ)かりました」— 설명을 듣고 이해했다는 신호. 정말 이해했을 때만 쓰고, 헷갈리면 もう一度를 청하는 게 좋아요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
       ],
@@ -61,7 +61,7 @@ export const c11: Mission = {
       choices: [
         { text: '몇 시까지 쓸 수 있어요?', phraseId: 'p_nanji_made', correct: true, feedback: '「何時(なんじ)まで使(つか)えますか」— 역 로커는 막차(終電) 전에 찾아야 하는 경우도 있어요. 며칠 보관 가능한 곳도 있어요' },
         { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: true, feedback: '「いくらですか」— 하루 초과 시 추가 요금이 붙는 로커도 있어요. 이용 시간과 요금을 함께 확인해요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 안내에 감사 인사. 로커 번호와 비밀번호(또는 IC카드)를 꼭 기억해요' },
+        { text: '번호 메모해 둘게요', phraseId: 'p_bangou_memo', correct: true, feedback: '「番号(ばんごう)をメモしておきます」— 로커 번호·비밀번호를 잊지 않게 적어두겠다는 표현. 찾을 때 헤매지 않도록 실용적인 마무리예요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
       ],
     },
