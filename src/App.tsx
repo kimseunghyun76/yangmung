@@ -242,7 +242,7 @@ export function App() {
     beginSession(id, cards, true);
   }
   function startSceneSession(missionId: string) {
-    const cards = selectMissionCards(allCards, missionId);
+    const cards = selectMissionCards(allCards, missionId, progress);
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true); // 미션 = 1000
   }

@@ -584,7 +584,9 @@ export function planSession(
 }
 
 // 장면(미션) 단독 연습 덱 — 해당 미션의 카드(스텝 + 순서 맞추기)를 순서대로. (수동 선택이라 cooldown 무시)
-export function selectMissionCards(allCards: Card[], missionId: string): Card[] {
+// progress를 주면 "복습"으로 보고 이미 본 새 표현(introduce)은 제외 → 덱이 가벼워짐
+// (편의점처럼 표현이 24개씩 쌓인 장면을 매번 38장씩 다시 보던 문제 해소). 처음 보는 표현은 유지.
+export function selectMissionCards(allCards: Card[], missionId: string, progress?: ProgressMap): Card[] {
   const cards = allCards.filter(
     (c) => (c.kind === 'introduce' || c.kind === 'quiz' || c.kind === 'order' || c.kind === 'speak')
       && c.reviewTarget?.type === 'mission' && String(c.reviewTarget.id) === missionId,
@@ -592,7 +594,8 @@ export function selectMissionCards(allCards: Card[], missionId: string): Card[] 
   // 미션은 "새 표현(introduce)"을 가장 먼저 보여준다. 단, 한 번에 너무 많지 않게 앞쪽은 소수만,
   // 나머지(있으면)는 연습 뒤로. (introduce는 전역에서 표현당 1회만 생성되므로 처음 제공되는 표현만 등장)
   const MAX_INTRO_FIRST = 4;
-  const intros = cards.filter((c) => c.kind === 'introduce');
+  // 복습(progress 제공)이면 이미 본 새 표현은 빼고, 안 본 새 표현만 앞쪽 소수 유지.
+  const intros = cards.filter((c) => c.kind === 'introduce' && !(progress && progress[c.id]));
   const rest = cards.filter((c) => c.kind !== 'introduce');
   return [...intros.slice(0, MAX_INTRO_FIRST), ...rest, ...intros.slice(MAX_INTRO_FIRST)];
 }
