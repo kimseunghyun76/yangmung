@@ -32,6 +32,7 @@ const MODE_CONFIG: Record<FlashMode, {
   label: string;
   sub: string;
   emoji: string;
+  examples: string[];
   durationMs: number;
   fastMs: number;
   color: string;
@@ -41,6 +42,7 @@ const MODE_CONFIG: Record<FlashMode, {
     label: '가나 특훈',
     sub: '히라가나 · 가타카나 읽기 / 듣기 즉답',
     emoji: 'あ',
+    examples: ['あ → 아', 'キャ', 'つ / す'],
     durationMs: 8000,
     fastMs: 3500,
     color: '#3fb27f',
@@ -50,6 +52,7 @@ const MODE_CONFIG: Record<FlashMode, {
     label: '표현 특훈',
     sub: '여행 표현 · 간판 · 어휘 의미 즉답',
     emoji: '💬',
+    examples: ['ください', 'どこですか', 'いくらですか'],
     durationMs: 6000,
     fastMs: 2800,
     color: '#3b9fe0',
@@ -59,6 +62,7 @@ const MODE_CONFIG: Record<FlashMode, {
     label: '상황 대화',
     sub: '편의점 · 식당 · 전철 — 장면 선택지 즉답',
     emoji: '🗺',
+    examples: ['コンビニ', 'レストラン', '電車'],
     durationMs: 5000,
     fastMs: 2200,
     color: '#9b59b6',
@@ -68,6 +72,7 @@ const MODE_CONFIG: Record<FlashMode, {
     label: '전체 블리츠',
     sub: '가나 + 표현 + 상황 무작위 최강 혼합',
     emoji: '⚡',
+    examples: ['읽기', '듣기', '상황'],
     durationMs: 4000,
     fastMs: 1800,
     color: '#e0564a',
@@ -75,7 +80,7 @@ const MODE_CONFIG: Record<FlashMode, {
   },
 };
 
-const COUNT_OPTIONS = [10, 15, 20] as const;
+const COUNT_OPTIONS = [10, 15, 20, 30] as const;
 type CountOption = typeof COUNT_OPTIONS[number];
 
 const REWARD_RATIO = 0.75;
@@ -101,7 +106,9 @@ function ModeSelect({ lastMode, lastCount, onStart, onExit }: SelectProps) {
         <button onClick={onExit} style={ghostIcon}>
           <Icon name="back" size={18} />
         </button>
-        <span style={{ fontWeight: 800, fontSize: 16 }}>⚡ 속도전 설정</span>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontWeight: 800, fontSize: 16 }}>
+          <Icon name="fast" size={17} /> 속도전 설정
+        </span>
         <span style={{ width: 32 }} />
       </div>
 
@@ -129,6 +136,14 @@ function ModeSelect({ lastMode, lastCount, onStart, onExit }: SelectProps) {
                   }} />
                 ))}
               </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 9 }}>
+                {c.examples.slice(0, 2).map((ex) => (
+                  <span key={ex} lang="ja" style={{
+                    padding: '3px 6px', borderRadius: 999, background: active ? '#fffdf6' : 'var(--glass-bg)',
+                    border: '1px solid var(--glass-border)', fontSize: 10.5, fontWeight: 800, color: active ? c.color : 'var(--ink-soft)',
+                  }}>{ex}</span>
+                ))}
+              </div>
             </button>
           );
         })}
@@ -140,6 +155,14 @@ function ModeSelect({ lastMode, lastCount, onStart, onExit }: SelectProps) {
           <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-soft)' }}>⏱ {cfg.durationMs / 1000}초 제한</span>
         </div>
         <p style={{ margin: 0, fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.5 }}>{cfg.sub}</p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 10 }}>
+          {cfg.examples.map((ex) => (
+            <span key={ex} lang="ja" style={{
+              padding: '5px 9px', borderRadius: 999, background: '#fffdf6',
+              border: `1px solid ${cfg.color}33`, color: cfg.color, fontSize: 12, fontWeight: 850,
+            }}>{ex}</span>
+          ))}
+        </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8 }}>
           {[1, 2, 3, 4].map((n) => (
             <span key={n} style={{ width: 10, height: 10, borderRadius: 99, background: n <= cfg.difficulty ? cfg.color : 'var(--glass-border)' }} />

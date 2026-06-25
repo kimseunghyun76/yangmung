@@ -162,19 +162,19 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
           <p style={{ margin: 0, ...label }}>빠른 연습</p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 12 }}>
             {([
-              { label: '히라가나', sub: '46자 읽기', icon: 'kana', onClick: () => onPracticeKana('hiragana') },
-              { label: '가타카나', sub: '46자 읽기', icon: 'kana', onClick: () => onPracticeKana('katakana') },
-              { label: '기본 인사', sub: 'こんにちは·ありがとう', icon: 'speak', onClick: onPracticeGreetings },
-              { label: '어휘 커리큘럼', sub: '주제별 필수 단어', icon: 'target', onClick: onPracticeVocab },
-              { label: '간판·메뉴', sub: '실전 읽기', icon: 'sign', onClick: onPracticeSigns },
-              { label: '받아쓰기', sub: '듣고 가나 쓰기', icon: 'dictation', onClick: onPracticeDictation },
-              { label: '한→일 작문', sub: '뜻 보고 작문', icon: 'speak', onClick: onPracticeCompose },
-              { label: '가나 쓰기', sub: '따라쓰기', icon: 'dictation', onClick: onPracticeWrite },
-              { label: '발음 구분', sub: 'つ/す·장음·촉음', icon: 'listen', onClick: onPracticePairs },
-              { label: '동사 형태', sub: 'ます·ながら·たい', icon: 'flow', onClick: onPracticeVerbs },
-            ] as { label: string; sub: string; icon: IconName; onClick: () => void }[]).map((t) => (
+              { label: '히라가나', sub: '청음·탁음·요음 전체', examples: ['あ', 'きゃ', 'ぱ'], icon: 'kana', onClick: () => onPracticeKana('hiragana') },
+              { label: '가타카나', sub: '외래어 표기까지 읽기', examples: ['ア', 'チャ', 'ー'], icon: 'kana', onClick: () => onPracticeKana('katakana') },
+              { label: '기본 인사', sub: '첫 만남·감사·부탁', examples: ['こんにちは', 'ありがとう'], icon: 'speak', onClick: onPracticeGreetings },
+              { label: '어휘 커리큘럼', sub: '그림으로 익히는 필수 단어', examples: ['음식', '교통', '감정'], icon: 'target', onClick: onPracticeVocab },
+              { label: '간판·메뉴', sub: '역·식당·주의 표지 읽기', examples: ['入口', '会計', '禁煙'], icon: 'sign', onClick: onPracticeSigns },
+              { label: '받아쓰기', sub: '듣고 가나로 직접 입력', examples: ['듣기', '조립', '확인'], icon: 'dictation', onClick: onPracticeDictation },
+              { label: '한→일 작문', sub: '뜻을 보고 일본어 만들기', examples: ['주세요', '어디예요'], icon: 'speak', onClick: onPracticeCompose },
+              { label: '가나 쓰기', sub: '손으로 따라 쓰며 기억', examples: ['획순', '반복'], icon: 'dictation', onClick: onPracticeWrite },
+              { label: '발음 구분', sub: '비슷한 소리 즉시 구분', examples: ['つ/す', 'っ', 'ー'], icon: 'listen', onClick: onPracticePairs },
+              { label: '동사 형태', sub: 'ます·たい·ながら 활용', examples: ['食べます', '行きたい'], icon: 'flow', onClick: onPracticeVerbs },
+            ] as { label: string; sub: string; examples: string[]; icon: IconName; onClick: () => void }[]).map((t) => (
               <button key={t.label} className="ym-press" onClick={t.onClick} style={{
-                display: 'flex', alignItems: 'center', gap: 11, textAlign: 'left', minWidth: 0,
+                display: 'flex', alignItems: 'flex-start', gap: 11, textAlign: 'left', minWidth: 0,
                 border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
                 borderRadius: 16, padding: '12px 12px', cursor: 'pointer',
               }}>
@@ -184,6 +184,11 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
                 <span style={{ minWidth: 0 }}>
                   <span style={{ display: 'block', fontSize: 14, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.label}</span>
                   <span style={{ display: 'block', fontSize: 11, color: 'var(--ink-faint)', fontWeight: 700, marginTop: 1 }}>{t.sub}</span>
+                  <span style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 7 }}>
+                    {t.examples.slice(0, 3).map((ex) => (
+                      <span key={ex} style={{ maxWidth: '100%', padding: '3px 6px', borderRadius: 999, background: 'var(--glass-bg)', color: 'var(--ink-soft)', border: '1px solid var(--glass-border)', fontSize: 10.5, fontWeight: 850, lineHeight: 1.1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ex}</span>
+                    ))}
+                  </span>
                 </span>
               </button>
             ))}

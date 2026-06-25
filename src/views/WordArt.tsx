@@ -59,13 +59,148 @@ const SPECIFIC: Record<string, JSX.Element> = {
   '무지개': (<g fill="none" strokeWidth="6" strokeLinecap="round"><path d="M16 74 A34 34 0 0 1 84 74" stroke="#e0463c" /><path d="M24 74 A26 26 0 0 1 76 74" stroke="#f0c23a" /><path d="M32 74 A18 18 0 0 1 68 74" stroke="#5db87a" /><path d="M40 74 A10 10 0 0 1 60 74" stroke="#3a78d8" /></g>),
 };
 
+const hasAny = (text: string, words: string[]) => words.some((w) => text.includes(w));
+
+function genericIllustration(group: string, korean: string, hue: string): JSX.Element {
+  const ko = korean.trim();
+  if (group === 'animals' || hasAny(ko, ['동물', '말', '소', '돼지', '닭', '새끼', '여우', '원숭이'])) {
+    return (
+      <g>
+        <ellipse cx="50" cy="62" rx="29" ry="24" fill="#d9a35a" />
+        <circle cx="30" cy="42" r="9" fill="#b77a42" />
+        <circle cx="70" cy="42" r="9" fill="#b77a42" />
+        <ellipse cx="50" cy="68" rx="13" ry="9" fill="#f0dcc0" />
+        <Face cy={58} />
+      </g>
+    );
+  }
+  if (group === 'plants' || hasAny(ko, ['꽃', '나무', '잎', '풀', '식물'])) {
+    return (
+      <g>
+        <path d="M50 82 V44" stroke="#5db87a" strokeWidth="6" strokeLinecap="round" />
+        <ellipse cx="38" cy="58" rx="12" ry="7" fill="#6fcf88" transform="rotate(-28 38 58)" />
+        <ellipse cx="62" cy="56" rx="12" ry="7" fill="#6fcf88" transform="rotate(28 62 56)" />
+        {[0, 72, 144, 216, 288].map((a) => {
+          const r = a * Math.PI / 180;
+          return <ellipse key={a} cx={50 + 16 * Math.cos(r)} cy={34 + 16 * Math.sin(r)} rx="9" ry="13" fill="#e88bb2" transform={`rotate(${a} ${50 + 16 * Math.cos(r)} ${34 + 16 * Math.sin(r)})`} />;
+        })}
+        <circle cx="50" cy="34" r="9" fill="#f0c23a" />
+      </g>
+    );
+  }
+  if (group === 'food' || hasAny(ko, ['밥', '고기', '생선', '음식', '우유', '차', '주스', '과자', '케이크', '야채', '과일'])) {
+    if (hasAny(ko, ['우유', '차', '주스', '물', '음료'])) {
+      return (
+        <g>
+          <rect x="34" y="28" width="32" height="50" rx="8" fill="#fff7e8" stroke="#6b4a30" strokeWidth="3" />
+          <rect x="38" y="44" width="24" height="26" rx="5" fill="#7cc4e8" opacity=".8" />
+          <path d="M64 44 H74 Q84 44 84 54 Q84 64 74 64 H66" fill="none" stroke="#6b4a30" strokeWidth="4" strokeLinecap="round" />
+          <Face cy={56} />
+        </g>
+      );
+    }
+    return (
+      <g>
+        <ellipse cx="50" cy="66" rx="32" ry="13" fill="#e8e0d0" />
+        <circle cx="39" cy="54" r="15" fill="#f0c23a" />
+        <circle cx="58" cy="51" r="14" fill="#e0794a" />
+        <circle cx="56" cy="66" r="11" fill="#5db87a" />
+        <Face cy={54} />
+      </g>
+    );
+  }
+  if (group === 'family' || hasAny(ko, ['엄마', '아빠', '가족', '형', '누나', '동생', '사람', '친구'])) {
+    return (
+      <g>
+        <circle cx="38" cy="40" r="14" fill="#ffe1c7" stroke="#3a2a1e" strokeWidth="2" />
+        <circle cx="63" cy="38" r="16" fill="#ffe1c7" stroke="#3a2a1e" strokeWidth="2" />
+        <path d="M22 82 Q30 56 44 56 Q56 56 62 82Z" fill="#7cc4e8" />
+        <path d="M48 82 Q56 56 70 56 Q82 56 88 82Z" fill="#e88bb2" />
+        <Face cx={38} cy={40} scale={0.6} />
+        <Face cx={63} cy={38} scale={0.65} />
+      </g>
+    );
+  }
+  if (group === 'transport' || hasAny(ko, ['역', '전철', '버스', '택시', '차', '공항', '비행기'])) {
+    return (
+      <g>
+        <rect x="24" y="34" width="52" height="38" rx="9" fill="#7cc4e8" stroke="#3a2a1e" strokeWidth="3" />
+        <rect x="30" y="42" width="40" height="14" rx="3" fill="#fff" opacity=".86" />
+        <circle cx="36" cy="74" r="6" fill="#3a2a1e" />
+        <circle cx="64" cy="74" r="6" fill="#3a2a1e" />
+        <path d="M20 32 H80" stroke="#f0a23a" strokeWidth="5" strokeLinecap="round" />
+      </g>
+    );
+  }
+  if (group === 'places' || group === 'sign' || hasAny(ko, ['가게', '학교', '회사', '집', '장소', '입구', '출구', '화장실', '계산'])) {
+    return (
+      <g>
+        <path d="M24 44 H76 L68 28 H32 Z" fill="#f0a23a" stroke="#3a2a1e" strokeWidth="3" strokeLinejoin="round" />
+        <rect x="28" y="44" width="44" height="34" rx="4" fill="#fff7e8" stroke="#3a2a1e" strokeWidth="3" />
+        <rect x="44" y="58" width="12" height="20" rx="2" fill="#7cc4e8" />
+        <path d="M34 52 H66" stroke={hue} strokeWidth="5" strokeLinecap="round" />
+      </g>
+    );
+  }
+  if (group === 'weather' || hasAny(ko, ['날씨', '바람', '흐림', '더위', '추위'])) {
+    return (
+      <g>
+        <circle cx="36" cy="38" r="16" fill="#f0c23a" />
+        <path d="M30 62 Q28 48 44 48 Q50 36 66 42 Q80 44 78 58 Q86 60 82 70 H32 Q22 70 30 62Z" fill="#aab2be" />
+        <path d="M44 76 C54 84 66 82 76 76" stroke="#7cc4e8" strokeWidth="4" strokeLinecap="round" fill="none" />
+      </g>
+    );
+  }
+  if (group === 'feelings' || hasAny(ko, ['기분', '좋다', '나쁘다', '무섭다', '즐겁다', '슬프다'])) {
+    return (
+      <g>
+        <circle cx="50" cy="54" r="30" fill="#f0c23a" />
+        <circle cx="39" cy="48" r="4" fill="#3a2a1e" />
+        <circle cx="61" cy="48" r="4" fill="#3a2a1e" />
+        <path d="M36 62 Q50 76 64 62" stroke="#3a2a1e" strokeWidth="4" strokeLinecap="round" fill="none" />
+        <circle cx="31" cy="58" r="5" fill="#f0a0a0" opacity=".55" />
+        <circle cx="69" cy="58" r="5" fill="#f0a0a0" opacity=".55" />
+      </g>
+    );
+  }
+  if (group === 'sports' || hasAny(ko, ['공', '운동', '축구', '야구', '테니스'])) {
+    return (
+      <g>
+        <circle cx="50" cy="54" r="29" fill="#fff" stroke="#3a2a1e" strokeWidth="3" />
+        <path d="M50 25 V83 M25 54 H83" stroke={hue} strokeWidth="5" strokeLinecap="round" opacity=".9" />
+        <path d="M31 35 Q50 48 69 35 M31 73 Q50 60 69 73" stroke="#3a2a1e" strokeWidth="2.5" fill="none" opacity=".5" />
+      </g>
+    );
+  }
+  if (group === 'adjectives' || group === 'basic') {
+    return (
+      <g>
+        <rect x="24" y="28" width="52" height="48" rx="16" fill={hue} opacity=".86" />
+        <circle cx="40" cy="50" r="8" fill="#fff" opacity=".35" />
+        <circle cx="62" cy="42" r="5" fill="#fff" opacity=".45" />
+        <path d="M34 68 H66" stroke="#fff" strokeWidth="5" strokeLinecap="round" opacity=".58" />
+      </g>
+    );
+  }
+  return (
+    <g>
+      <circle cx="50" cy="50" r="34" fill={hue} opacity=".18" />
+      <rect x="27" y="30" width="46" height="42" rx="15" fill={hue} />
+      <circle cx="42" cy="47" r="4" fill="#fff" />
+      <circle cx="58" cy="47" r="4" fill="#fff" />
+      <path d="M39 59 Q50 67 61 59" stroke="#fff" strokeWidth="3" fill="none" strokeLinecap="round" />
+      <circle cx="34" cy="38" r="6" fill="#fff" opacity=".24" />
+    </g>
+  );
+}
+
 // 단어 카드(단일 단어 학습)에만 — 예문(:study:ex…)·미션 인트로는 제외.
 export function hasWordArt(id: string): boolean {
   if (/:study:ex\d+$/.test(id)) return false;
   return (id.startsWith('vocab:') && id.includes(':study:')) || id.startsWith('basic:study:') || id.startsWith('sign:study:');
 }
 
-export function WordArt({ id, korean, kana, size = 96, style }: { id: string; korean: string; kana: string; size?: number; style?: CSSProperties }) {
+export function WordArt({ id, korean, kana: _kana, size = 96, style }: { id: string; korean: string; kana: string; size?: number; style?: CSSProperties }) {
   const group = groupOf(id);
   const hue = GROUP_HUE[group] ?? '#caa14a';
   let body: JSX.Element;
@@ -85,16 +220,7 @@ export function WordArt({ id, korean, kana, size = 96, style }: { id: string; ko
       </g>
     );
   } else {
-    // 그룹 테마 폴백 — 둥근 배지 + 가나 + 살짝 얼굴.
-    const initial = Array.from(kana)[0] ?? '?';
-    body = (
-      <g>
-        <circle cx="50" cy="50" r="34" fill={hue} opacity=".18" />
-        <circle cx="50" cy="50" r="26" fill={hue} />
-        <text x="50" y="50" textAnchor="middle" dominantBaseline="central" fontSize="26" fontWeight="800" fill="#fff" lang="ja">{initial}</text>
-        <circle cx="38" cy="36" r="6" fill="#fff" opacity=".25" />
-      </g>
-    );
+    body = genericIllustration(group, korean, hue);
   }
 
   return (
