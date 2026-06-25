@@ -132,6 +132,7 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
   const backdrop = firstMissionId ? (sv.backdrop ?? sv.hero) : quickPracticeBackdrop(quickPracticeKind(cards));
   const mission = firstMissionId ? CONTENT.missions.find((m) => m.id === firstMissionId) : undefined;
   const place = mission?.place;
+  const scenario = mission?.scenario ?? goal; // 오버레이 타이틀: 「{place} 미션 › {scenario}」
   const { attempts, seen, weak } = introMissionStats(allCards, progress, firstMissionId);
   const points = mission ? memoryPoints(mission, weak, attempts) : quickPracticePoints(cards);
   const sessionKind = missionCount > 0 ? `${missionCount}개 상황 카드` : `${expressionCount || cards.length}개 표현 카드`;
@@ -166,8 +167,12 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
               background: 'linear-gradient(to top, rgba(18,14,10,.82), rgba(18,14,10,.36) 56%, transparent)',
               color: '#fff',
             }}>
-              <p style={{ margin: 0, fontSize: 12.5, fontWeight: 800, letterSpacing: '.06em', color: '#ffe6b0' }}>{place ? `${place} 미션` : '오늘의 연습'}</p>
-              <p style={{ margin: '4px 0 0', fontSize: 13.5, lineHeight: 1.5, fontWeight: 600, color: 'rgba(255,255,255,.95)', textShadow: '0 1px 6px rgba(0,0,0,.5)' }}>
+              <p style={{ margin: 0, fontSize: 22, fontWeight: 900, lineHeight: 1.18, color: '#fff', textShadow: '0 2px 10px rgba(0,0,0,.55)' }}>
+                <span style={{ color: '#ffe6b0', fontSize: 14, fontWeight: 850, letterSpacing: '.02em' }}>{place ? `${place} 미션` : '오늘의 연습'}</span>
+                <span style={{ opacity: .55, margin: '0 8px', fontWeight: 700 }}>›</span>
+                {scenario}
+              </p>
+              <p style={{ margin: '8px 0 0', fontSize: 13, lineHeight: 1.5, fontWeight: 600, color: 'rgba(255,255,255,.92)', textShadow: '0 1px 6px rgba(0,0,0,.5)' }}>
                 배경 상황을 떠올리고 바로 시작합니다. 이전에 본 표현은 아래 포인트만 다시 확인하면 됩니다.
               </p>
             </div>
@@ -179,9 +184,9 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
           </div>
         )}
         <div style={{ position: 'relative', maxWidth: 760, padding: '0 4px' }}>
-          {/* 배경이 있으면 키커·안내문은 이미지 오버레이로 옮겼으므로 본문에선 생략 */}
+          {/* 배경이 있으면 키커·타이틀·안내문은 이미지 오버레이로 옮겼으므로 본문에선 생략 */}
           {!backdrop && <p style={{ color: 'var(--ink-faint)', fontSize: 13, margin: 0, fontWeight: 800, letterSpacing: '0.08em' }}>{place ? `${place} 미션` : '오늘의 연습'}</p>}
-          <h1 style={{ margin: backdrop ? 0 : '7px 0 0', lineHeight: 1.22 }}>{goal}</h1>
+          {!backdrop && <h1 style={{ margin: '7px 0 0', lineHeight: 1.22 }}>{goal}</h1>}
           {!backdrop && (
             <p style={{ color: 'var(--ink-soft)', fontSize: 15, lineHeight: 1.65, marginTop: 14, maxWidth: 640 }}>
               배경 상황을 떠올리고 바로 시작합니다. 이전에 본 표현은 아래 포인트만 다시 확인하면 됩니다.
