@@ -80,14 +80,20 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
         </button>
       </div>
 
-      {/* ── 3. 장면·화자 배지 ── */}
-      {(sv ? (scenario || speaker) : !!plainTag) && (
-        <div style={{ padding: '0 16px 10px', display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap', background: 'var(--surface-2)', flexShrink: 0 }}>
-          {sv && scenario && <span style={{ padding: '4px 11px', borderRadius: 999, fontSize: 12, fontWeight: 700, background: hexA(accent, 0.9), color: '#fff' }}>{scenario}</span>}
-          {sv && speaker && <span style={{ padding: '4px 10px', borderRadius: 999, fontSize: 12, fontWeight: 700, background: 'var(--accent-soft)', color: 'var(--accent)' }}>{speaker}</span>}
-          {!sv && plainTag && <span style={{ padding: '5px 11px', borderRadius: 999, fontSize: 12, fontWeight: 800, background: 'var(--accent-soft)', color: 'var(--accent)' }}>{plainTag}</span>}
-        </div>
-      )}
+      {/* ── 3. 장면·화자 배지 (새 표현 카드는 장면명을 배경 하단 오버레이로 옮겨 숨김) ── */}
+      {(() => {
+        const showScenario = !!sv && !!scenario && card.kind !== 'introduce';
+        const showSpeaker = !!sv && !!speaker;
+        const showPlain = !sv && !!plainTag;
+        if (!showScenario && !showSpeaker && !showPlain) return null;
+        return (
+          <div style={{ padding: '0 16px 10px', display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap', background: 'var(--surface-2)', flexShrink: 0 }}>
+            {showScenario && <span style={{ padding: '4px 11px', borderRadius: 999, fontSize: 12, fontWeight: 700, background: hexA(accent, 0.9), color: '#fff' }}>{scenario}</span>}
+            {showSpeaker && <span style={{ padding: '4px 10px', borderRadius: 999, fontSize: 12, fontWeight: 700, background: 'var(--accent-soft)', color: 'var(--accent)' }}>{speaker}</span>}
+            {showPlain && <span style={{ padding: '5px 11px', borderRadius: 999, fontSize: 12, fontWeight: 800, background: 'var(--accent-soft)', color: 'var(--accent)' }}>{plainTag}</span>}
+          </div>
+        );
+      })()}
 
       {/* ── 4. 글래스 학습 시트 (flex로 끝까지 채우고, 길면 내부 스크롤) ── */}
       <GlassPanel style={{
@@ -271,18 +277,16 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
           style={{ display: 'block', width: '100%', fontSize: big, fontWeight: 700, textAlign: 'center', margin: '4px 0', border: 'none', background: 'none', cursor: card.bannerJa ? 'pointer' : 'default', color: 'var(--ink)' }}>{card.banner}</button>
       )}
 
-      {/* 2. (일본어 탭=듣기) 탭 안내 + 천천히 / 힌트 */}
+      {/* 2. (일본어 탭=듣기) 탭 안내 / 힌트 */}
       {card.bannerJa && !card.listen && (
         <div style={{ display: 'flex', gap: 8, justifyContent: 'center', alignItems: 'center', marginTop: 6, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 11.5, color: 'var(--ink-faint)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 3 }}><Icon name="listen" size={12} /> 탭하면 들려요</span>
-          <ListenBtn onClick={() => speak(card.bannerJa!, { rate: 0.6 })}><span aria-hidden style={{ fontSize: 15, marginRight: 3 }}>🐢</span> 천천히</ListenBtn>
           {hasHint && !reveal && <HintBtn open={hintOpen} onClick={() => setHintOpen((o) => !o)} />}
         </div>
       )}
-      {card.listen && (
+      {card.listen && hasHint && !reveal && (
         <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 4, flexWrap: 'wrap' }}>
-          <ListenBtn onClick={() => speak(card.bannerJa!, { rate: 0.6 })}><span aria-hidden style={{ fontSize: 15, marginRight: 3 }}>🐢</span> 천천히</ListenBtn>
-          {hasHint && !reveal && <HintBtn open={hintOpen} onClick={() => setHintOpen((o) => !o)} />}
+          <HintBtn open={hintOpen} onClick={() => setHintOpen((o) => !o)} />
         </div>
       )}
       {/* 듣기 행이 없는 카드(예: 음성 없는 미션 스텝)도 힌트는 노출 */}
@@ -362,16 +366,7 @@ function RecoverySkipAction({ choice, onClick }: { choice: Choice; onClick: () =
   );
 }
 
-function ListenBtn({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button className="ym-press" onClick={onClick} disabled={!ttsSupported()}
-      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '10px 18px', borderRadius: 999, border: '1px solid var(--glass-border)', background: 'var(--accent-soft)', color: 'var(--accent)', fontWeight: 700, fontSize: 15, cursor: 'pointer' }}>
-      {children}
-    </button>
-  );
-}
-
-// 힌트 버튼 — 듣기·천천히 옆. 열리면 정답 표현의 문법 규칙을 보여준다.
+// 힌트 버튼 — 듣기 안내 옆. 열리면 정답 표현의 문법 규칙을 보여준다.
 function HintBtn({ open, onClick }: { open: boolean; onClick: () => void }) {
   return (
     <button className="ym-press" onClick={onClick} aria-expanded={open}

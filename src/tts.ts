@@ -18,6 +18,13 @@ interface AudioManifest {
   voiceTextIndex?: Record<string, Record<string, string>>;
 }
 
+// 전역 듣기 속도 — 설정에서 지정(x0.5~x2). speak() 호출에 rate 미지정 시 기본값.
+let globalRate = 1;
+export function setListenRate(rate: number): void {
+  if (Number.isFinite(rate) && rate > 0) globalRate = rate;
+}
+export function getListenRate(): number { return globalRate; }
+
 let jaVoice: SpeechSynthesisVoice | null = null;
 let manifestPromise: Promise<AudioManifest | null> | null = null;
 let cachedManifest: AudioManifest | null | undefined; // undefined = 아직 미로드
@@ -85,7 +92,7 @@ function speakWeb(text: string, opts: SpeakOpts = {}, token = speakToken): void 
   }
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'ja-JP';
-  u.rate = opts.rate ?? 0.95;
+  u.rate = opts.rate ?? globalRate;
   const v = pickVoice();
   if (v) u.voice = v;
   if (opts.onEnd) {
@@ -133,7 +140,7 @@ export function speak(text: string, opts: SpeakOpts = {}): void {
     const version = item.synthSignature ? `?v=${encodeURIComponent(item.synthSignature)}` : '';
     const audio = new Audio(`${item.path}${version}`);
     currentAudio = audio;
-    audio.playbackRate = opts.rate ?? 1;
+    audio.playbackRate = opts.rate ?? globalRate;
     let done = false;
     const finish = () => {
       if (done || token !== speakToken) return;

@@ -655,8 +655,9 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
   // (한번이라도 새 표현으로 본 문장은 다시 소개 카드로 나오지 않음)
   const introduced = new Set<string>();
   for (const m of missions) {
-    const placeLabel = (m.place ?? m.scenario) as string;
-    const sceneNote = `「${placeLabel}」와 같은 상황에서 쓸 수 있는 표현들을 익혀봅시다.`;
+    // 구체적인 상황(scenario)을 우선 — 「편의점 계산대」에서 쓸 수 있는 표현들을 익혀봅시다.
+    const sceneLabel = (m.scenario ?? m.place) as string;
+    const sceneNote = `「${sceneLabel}」에서 쓸 수 있는 표현들을 익혀봅시다.`;
     const addIntroduce = (phraseId: string, note: string, question?: IntroduceCard['answersQuestion'], altAnswers?: IntroduceCard['altAnswers']) => {
       if (introduced.has(phraseId)) return;
       introduced.add(phraseId);

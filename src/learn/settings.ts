@@ -12,11 +12,15 @@ export interface Settings {
   choiceMode: ChoiceMode;     // 퀴즈 보기를 일본어로(난이도별)
   fastForward: boolean;       // 정답이면 자동으로 다음 카드 (빠른 진행)
   theme: Theme;               // 주간/야간
+  listenRate: number;         // 듣기 속도 배율 (x0.5~x2)
   devUnlockAll?: boolean;     // 개발용 — 모든 장면 lock 무시
 }
 
 const KEY = 'yangmung:settings:v1';
-const DEFAULTS: Settings = { mode: 'default', readingAid: 'auto', choiceMode: 'kana_ko', fastForward: true, theme: 'light', devUnlockAll: false };
+const DEFAULTS: Settings = { mode: 'default', readingAid: 'auto', choiceMode: 'kana_ko', fastForward: true, theme: 'light', listenRate: 1, devUnlockAll: false };
+
+// 듣기 속도 선택지 — 설정 UI + 검증 공용.
+export const LISTEN_RATES = [0.5, 0.8, 1, 1.2, 1.5, 2] as const;
 
 // 첫 실행이면 시스템 외형(라이트/다크)을 따른다 (Apple HIG: 시스템 appearance 존중).
 function systemTheme(): Theme {

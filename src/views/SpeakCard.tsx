@@ -90,7 +90,6 @@ export function SpeakCardView({ card, isKanaFamiliar, onPracticed, onNext }: Pro
       {/* 원음 */}
       <div style={{ textAlign: 'center', marginTop: 14, display: 'flex', gap: 8, justifyContent: 'center' }}>
         <button style={{ ...BTN, padding: '10px 22px', fontSize: 18, background: 'var(--accent-soft)' }} onClick={() => speak(card.ja)} disabled={!ttsSupported()}><Icon name="listen" size={17} /> 듣기</button>
-        <button style={{ ...BTN, padding: '10px 18px', fontSize: 14 }} onClick={() => speak(card.ja, { rate: 0.6 })} disabled={!ttsSupported()}>천천히</button>
       </div>
 
       {/* 녹음 / 비교 */}
