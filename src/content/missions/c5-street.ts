@@ -29,8 +29,8 @@ export const c5: Mission = {
       choices: [
         { text: '왼쪽이에요, 오른쪽이에요?', phraseId: 'p_hidari_migi', correct: true, feedback: '「左(ひだり)ですか、右(みぎ)ですか」— 방향이 헷갈리면 바로 확인. まっすぐ(직진)·角(かど, 모퉁이)도 함께 알아두면 좋아요' },
         { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「わかりました」— 안내를 이해했을 때. 머릿속으로 경로를 그리며 들으면 기억에 오래 남아요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 길을 알려준 친절에 감사. 일본인은 이 한 마디에 기분 좋게 답해줘요' },
-        { text: '도와주세요', phraseId: 'p_tasukete', correct: false, feedback: '지금은 길 안내를 받는 중이에요 — 이해했으면 확인이나 감사로 답해요' },
+        { text: '덕분에 도움이 됐어요', phraseId: 'p_tasukarimashita', correct: true, feedback: '「助(たす)かりました」— 길을 알려준 사람에게 "덕분에 살았어요". 그냥 감사보다 도움이 됐다는 마음이 더 잘 전해져요' },
+        { text: '도와주세요', phraseId: 'p_tasukete', correct: false, feedback: '지금은 길 안내를 받는 중이에요 — 이해했으면 확인이나 한마디로 답해요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
       ],
     },

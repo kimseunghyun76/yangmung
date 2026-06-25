@@ -75,17 +75,17 @@ export const units: Unit[] = [
   {
     id: 'u_b1_hotel_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 호텔 프런트에서 체크인을 요청하고, 예약·여권·방 위치·조식·와이파이를 확인할 수 있다',
-    newPhraseIds: ['p_checkin_onegai', 'p_yoyaku_shiteimasu', 'p_heya_doko', 'p_wifi_arimasu_ka', 'p_choushoku_wa'],
+    newPhraseIds: ['p_checkin_onegai', 'p_yoyaku_shiteimasu', 'p_heya_doko', 'p_wifi_arimasu_ka', 'p_choushoku_wa', 'p_yoroshiku_onegai'],
   },
   {
     id: 'u_b1_street_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 길에서 목적지·방향·거리를 묻고, 화장실·사진을 부탁하고 도움을 청할 수 있다',
-    newPhraseIds: ['p_toire_doko', 'p_shashin_ii', 'p_shashin_onegai', 'p_tasukete', 'p_chikai_desu_ka', 'p_hidari_migi', 'p_aruite_nanpun'],
+    newPhraseIds: ['p_toire_doko', 'p_shashin_ii', 'p_shashin_onegai', 'p_tasukete', 'p_chikai_desu_ka', 'p_hidari_migi', 'p_aruite_nanpun', 'p_tasukarimashita'],
   },
   {
     id: 'u_b1_pharmacy_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 약국에서 증상을 말하고 약을 요청하고 약에 대해 물을 수 있다',
-    newPhraseIds: ['p_atama_itai', 'p_onaka_itai', 'p_kaze_desu', 'p_kusuri_kudasai', 'p_kono_kusuri', 'p_netsu_arimasu', 'p_seki_ga_demasu', 'p_ninshin_chuu'],
+    newPhraseIds: ['p_atama_itai', 'p_onaka_itai', 'p_kaze_desu', 'p_kusuri_kudasai', 'p_kono_kusuri', 'p_netsu_arimasu', 'p_seki_ga_demasu', 'p_ninshin_chuu', 'p_shokugo_kakunin', 'p_kado_de_ii_desu_ka'],
   },
   {
     id: 'u_b1_shopping_core', track: 'lang', stage: 'B1', mode: 'action',
@@ -95,22 +95,22 @@ export const units: Unit[] = [
   {
     id: 'u_b1_taxi_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 택시에서 행선지를 말하고 세워 달라고 하며 영수증을 받을 수 있다',
-    newPhraseIds: ['p_takushi_onegai', 'p_made_onegai', 'p_koko_de_tomete', 'p_ryoushuusho', 'p_ippan_michi_de'],
+    newPhraseIds: ['p_takushi_onegai', 'p_made_onegai', 'p_koko_de_tomete', 'p_ryoushuusho', 'p_ippan_michi_de', 'p_otsuri_daijoubu'],
   },
   {
     id: 'u_b1_airport_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 입국심사에서 목적·체류기간·숙소를 답할 수 있다',
-    newPhraseIds: ['p_kankou_desu', 'p_shigoto_desu', 'p_isshuukan', 'p_mikka', 'p_hoteru_desu', 'p_kaishain_desu', 'p_gakusei_desu'],
+    newPhraseIds: ['p_kankou_desu', 'p_shigoto_desu', 'p_isshuukan', 'p_mikka', 'p_hoteru_desu', 'p_kaishain_desu', 'p_gakusei_desu', 'p_yubi_okimasu'],
   },
   {
     id: 'u_b1_exchange_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 환전을 요청하고 잔돈으로 바꿔 달라고 할 수 있다',
-    newPhraseIds: ['p_ryougae', 'p_komakaku', 'p_ichiman_ryougae', 'p_zenbu_de'],
+    newPhraseIds: ['p_ryougae', 'p_komakaku', 'p_ichiman_ryougae', 'p_zenbu_de', 'p_kingaku_kakunin'],
   },
   {
     id: 'u_b1_locker_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 코인로커 위치와 사용법을 물을 수 있다',
-    newPhraseIds: ['p_koinrokkaa', 'p_tsukaikata', 'p_kono_botan_oshite', 'p_ookii_no_de', 'p_chiisai_no_de', 'p_nanji_made'],
+    newPhraseIds: ['p_koinrokkaa', 'p_tsukaikata', 'p_kono_botan_oshite', 'p_ookii_no_de', 'p_chiisai_no_de', 'p_nanji_made', 'p_tsukaikata_wakatta', 'p_bangou_memo'],
   },
   {
     id: 'u_b1_delivery_core', track: 'lang', stage: 'B1', mode: 'action',
@@ -120,7 +120,7 @@ export const units: Unit[] = [
   {
     id: 'u_b1_ramen_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 라멘집 식권기·면 추가·곱빼기를 묻고 요청할 수 있다',
-    newPhraseIds: ['p_kenbaiki', 'p_oomori', 'p_kaedama', 'p_men_katame', 'p_ajitama_tsuika', 'p_chaashuu_tsuika'],
+    newPhraseIds: ['p_kenbaiki', 'p_oomori', 'p_kaedama', 'p_men_katame', 'p_ajitama_tsuika', 'p_chaashuu_tsuika', 'p_counter_de_ii', 'p_mata_kimasu'],
   },
   {
     id: 'u_b1_more_scene_core', track: 'lang', stage: 'B1', mode: 'action',

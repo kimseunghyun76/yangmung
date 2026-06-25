@@ -57,7 +57,7 @@ export const c3: Mission = {
       promptPhraseId: 'p_norikae_kudasai',
       choices: [
         { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '환승 안내를 이해했다는 신호. 실제로 모르면 솔직히 천천히 말해 달라고 하는 게 더 좋아요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '도움을 받으면 반드시 ありがとうございます — 일본인은 이 한 마디에 환하게 웃어요' },
+        { text: '덕분에 도움이 됐어요', phraseId: 'p_tasukarimashita', correct: true, feedback: '「助(たす)かりました」— 환승 안내를 받은 뒤 "덕분에 살았어요". 그냥 감사보다 도움이 됐다는 실감을 전하는 게 더 자연스러워요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
         { text: '다시 한 번 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
       ],
