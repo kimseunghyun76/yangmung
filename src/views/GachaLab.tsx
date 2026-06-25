@@ -1,4 +1,4 @@
-// 보물 개봉식 가챠 (상용 버전) — 온라인·웅장·2.5D 실물.
+// 양·뭉 토이 뽑기 — 마스코트 스타일 아이템 수집 + 2.5D 공개 연출.
 // 실제 컬렉션 파이프라인 연동: drawGacha(전 등급 직접 드롭) → 컬렉션 저장 → 도감 반영.
 // 고희귀도(SSR=금·UR=다이아) 전용 화려한 개봉 + 미션 여성 캐릭터 카메오, 다연차(10연차).
 // 캐릭터/일부 아이템 이미지는 별도 제작(친구 작업) — CAST.art / 아이템 image 슬롯에 들어온다.
@@ -13,14 +13,14 @@ import { NavBar, type NavBarProps } from './NavBar';
 import { MascotFace } from './mascot';
 import { speak } from '../tts';
 
-// 컬렉션 등급 → 시각 등급(별·색·특별 연출 여부).
-const VIS: Record<Rarity, { label: string; stars: number; color: string; glow: string; special: boolean }> = {
-  basic: { label: '커먼', stars: 2, color: '#b9b2a4', glow: 'rgba(216,210,196,.5)', special: false },
-  bronze: { label: '레어', stars: 3, color: '#c98a4b', glow: 'rgba(201,138,75,.6)', special: false },
-  silver: { label: '에픽', stars: 4, color: '#aab2be', glow: 'rgba(170,178,190,.62)', special: false },
-  gold: { label: 'SSR', stars: 5, color: '#e8b23a', glow: 'rgba(232,178,58,.85)', special: true },
-  diamond: { label: 'UR', stars: 6, color: '#5bc7e0', glow: 'rgba(91,199,224,.9)', special: true },
-  xur: { label: 'XUR', stars: 7, color: '#b996ff', glow: 'rgba(185,150,255,.92)', special: true },
+// 컬렉션 등급 → 시각 등급(N/R/SR/SSR/UR/XUR).
+const VIS: Record<Rarity, { label: string; color: string; glow: string; special: boolean }> = {
+  basic: { label: 'N', color: '#b9b2a4', glow: 'rgba(216,210,196,.5)', special: false },
+  bronze: { label: 'R', color: '#c98a4b', glow: 'rgba(201,138,75,.6)', special: false },
+  silver: { label: 'SR', color: '#aab2be', glow: 'rgba(170,178,190,.62)', special: false },
+  gold: { label: 'SSR', color: '#e8b23a', glow: 'rgba(232,178,58,.85)', special: true },
+  diamond: { label: 'UR', color: '#5bc7e0', glow: 'rgba(91,199,224,.9)', special: true },
+  xur: { label: 'XUR', color: '#b996ff', glow: 'rgba(185,150,255,.92)', special: true },
 };
 const RANK: Rarity[] = ['basic', 'bronze', 'silver', 'gold', 'diamond', 'xur'];
 
@@ -54,8 +54,8 @@ function artFor(sceneId: string, rarity: Rarity): DrawItem {
 }
 const bestOf = (items: DrawItem[]) => items.reduce((b, it) => (RANK.indexOf(it.rarity) > RANK.indexOf(b.rarity) ? it : b), items[0]);
 
-const Stars = ({ n, color }: { n: number; color: string }) => (
-  <span className="gl-stars" style={{ color }}>{'★'.repeat(n)}</span>
+const LevelMark = ({ label, color }: { label: string; color: string }) => (
+  <span className="gl-level-mark" style={{ color, borderColor: color }}>{label}</span>
 );
 
 function Cameo({ place, side }: { place: string; side: 'l' | 'r' }) {
@@ -97,6 +97,9 @@ function Item25D({ item, size = 200 }: { item: DrawItem; size?: number }) {
           )}
           <span className="gl-25d-holo" />
         </div>
+        <span className="gl-25d-sticker">
+          <MascotFace who={item.rarity === 'diamond' || item.rarity === 'xur' ? 'yang' : 'mung'} mood={v.special ? 'tip' : 'correct'} size={Math.max(24, Math.round(size * 0.2))} />
+        </span>
         <div className="gl-25d-floor" />
       </div>
     </div>
@@ -153,11 +156,11 @@ export function GachaLab({ nav, progress, onExit }: Props) {
       <NavBar {...nav} />
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-        <button className="ym-press" onClick={() => setTab('draw')} style={pill(tab === 'draw')}>✨ 뽑기</button>
-        <button className="ym-press" onClick={() => { setTab('dex'); reset(); }} style={pill(tab === 'dex')}>🗃 도감 <b style={{ opacity: .7 }}>{ownedCount}/{scenes.length}</b></button>
+        <button className="ym-press" onClick={() => setTab('draw')} style={pill(tab === 'draw')}>뽑기</button>
+        <button className="ym-press" onClick={() => { setTab('dex'); reset(); }} style={pill(tab === 'dex')}>도감 <b style={{ opacity: .7 }}>{ownedCount}/{scenes.length}</b></button>
         <span style={{ flex: 1 }} />
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '7px 12px', borderRadius: 999, border: '1.5px solid #e8b23a', background: 'rgba(232,178,58,.12)', color: '#e8b23a', fontWeight: 900, fontSize: 13, whiteSpace: 'nowrap' }}>💰 {formatCash(cash)}</span>
-        <button className="ym-press" onClick={onExit} style={{ ...pill(false), padding: '8px 11px' }}>← 홈</button>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '7px 12px', borderRadius: 999, border: '1.5px solid #e8b23a', background: 'rgba(232,178,58,.12)', color: '#b77a25', fontWeight: 900, fontSize: 13, whiteSpace: 'nowrap' }}>Y {formatCash(cash)}</span>
+        <button className="ym-press" onClick={onExit} style={{ ...pill(false), padding: '8px 11px' }}>홈</button>
       </div>
 
       {tab === 'draw' ? (
@@ -175,7 +178,11 @@ export function GachaLab({ nav, progress, onExit }: Props) {
               <span className="gl-box-slit" />
               <span className="gl-box-body" />
               <span className="gl-box-rune" />
-              <span className="gl-box-seal">福</span>
+              <span className="gl-box-mascots">
+                <MascotFace who="yang" mood="tip" size={52} />
+                <MascotFace who="mung" mood="correct" size={52} />
+              </span>
+              <span className="gl-box-seal">YM</span>
             </div>
           )}
 
@@ -196,7 +203,7 @@ export function GachaLab({ nav, progress, onExit }: Props) {
               <div className="gl-rise">
                 <span className="gl-rarity-badge" style={{ background: bv.color }}>{bv.label}</span>
                 <Item25D item={single} size={special ? 224 : 206} />
-                <Stars n={bv.stars} color={bv.color} />
+                <LevelMark label={bv.label} color={bv.color} />
               </div>
             </div>
           )}
@@ -217,7 +224,7 @@ export function GachaLab({ nav, progress, onExit }: Props) {
                   {(best.rarity === 'diamond' || best.rarity === 'xur') && <Cameo place={best.place} side="r" />}
                   <span className="gl-special-tag" style={{ color: bv.color }}>{best.rarity === 'xur' ? '✦ XUR 완성! ✦' : best.rarity === 'diamond' ? '✦ UR 등장! ✦' : '✧ SSR ✧'}</span>
                   <Item25D item={best} size={150} />
-                  <Stars n={bv.stars} color={bv.color} />
+                  <LevelMark label={bv.label} color={bv.color} />
                 </div>
               )}
               <div className="gl-grid">
@@ -226,7 +233,7 @@ export function GachaLab({ nav, progress, onExit }: Props) {
                   return (
                     <div key={i} className="gl-cell" style={{ ['--c' as string]: v.color, animationDelay: `${i * 0.06}s` }}>
                       <Item25D item={it} size={56} />
-                      <Stars n={v.stars} color={v.color} />
+                      <LevelMark label={v.label} color={v.color} />
                     </div>
                   );
                 })}
@@ -237,18 +244,18 @@ export function GachaLab({ nav, progress, onExit }: Props) {
           <div className="gl-panel">
             {phase === 'idle' && (
               <>
-                <p className="gl-prompt">{shortMsg || `양·뭉과 함께 보물을 뽑아볼까요? (1장 ${formatCash(COST_PER_DRAW)})`}</p>
+                <p className="gl-prompt">{shortMsg || `양·뭉 캡슐에서 미션 아이템을 뽑아볼까요? (1장 ${formatCash(COST_PER_DRAW)})`}</p>
                 <div style={{ display: 'flex', gap: 10 }}>
-                  <button className="ym-press" onClick={() => pull(1)} style={cta(true, '#caa15c')}>✨ 1회 · {formatCash(COST_PER_DRAW)}</button>
-                  <button className="ym-press" onClick={() => pull(10)} style={cta(true, '#b9382e')}>🎴 10연차 · {formatCash(COST_PER_DRAW * 10)}</button>
+                  <button className="ym-press" onClick={() => pull(1)} style={cta(true, '#f2ad57')}>1회 · {formatCash(COST_PER_DRAW)}</button>
+                  <button className="ym-press" onClick={() => pull(10)} style={cta(true, '#58b8cf')}>10연차 · {formatCash(COST_PER_DRAW * 10)}</button>
                 </div>
               </>
             )}
-            {phase === 'charging' && <p className="gl-prompt gl-charge-txt">기운을 모으는 중…</p>}
+            {phase === 'charging' && <p className="gl-prompt gl-charge-txt">캡슐을 흔드는 중...</p>}
             {(phase === 'single' || phase === 'multi') && best && bv && (
               <>
                 <p className="gl-get">{phase === 'multi' ? `${results.length}개 획득!` : '획득!'} {single && <b lang="ja" style={{ color: bv.color }}>{single.name}</b>}{phase === 'multi' && <b style={{ color: bv.color }}> 최고 {bv.label}</b>}</p>
-                <p className="gl-get-sub">{phase === 'single' && single ? `${single.korean} · ${single.place} · ` : '도감에 등록 · '}기울이면 입체로 보여요</p>
+                <p className="gl-get-sub">{phase === 'single' && single ? `${single.korean} · ${single.place} · ` : '도감에 등록 · '}양·뭉 스타일 아이템으로 저장됐어요</p>
                 <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
                   <button className="ym-press" onClick={() => pull(phase === 'multi' ? 10 : 1)} style={cta(true)}>다시 뽑기</button>
                   <button className="ym-press" onClick={() => { setTab('dex'); reset(); }} style={cta(false)}>도감 보기</button>
@@ -260,7 +267,7 @@ export function GachaLab({ nav, progress, onExit }: Props) {
       ) : (
         <section>
           <p style={{ margin: '0 0 12px', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>
-            장면별 최고 등급 보물을 진열했어요. 카드를 기울여 보세요 (2.5D).
+            장면별 최고 등급 아이템을 양·뭉 진열장에 모았어요.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
             {scenes.map((s) => {
@@ -272,7 +279,7 @@ export function GachaLab({ nav, progress, onExit }: Props) {
                 <div key={s.id} className="gl-shelf" style={{ borderColor: owned ? v.color : 'var(--glass-border)' }}>
                   {owned && item ? <Item25D item={item} size={130} /> : <div className="gl-shelf-empty">？</div>}
                   <p className="gl-shelf-name" style={{ color: owned ? 'var(--ink)' : 'var(--ink-faint)' }}>{owned && item ? item.korean : s.place}</p>
-                  {owned ? <span className="gl-shelf-tag" style={{ color: v.color, borderColor: v.color }}>{v.label} {'★'.repeat(v.stars)}</span>
+                  {owned ? <span className="gl-shelf-tag" style={{ color: v.color, borderColor: v.color }}>{v.label}</span>
                     : <span className="gl-shelf-tag" style={{ color: 'var(--ink-faint)', borderColor: 'var(--glass-border)' }}>미획득</span>}
                 </div>
               );
@@ -302,56 +309,67 @@ function cta(primary: boolean, color?: string): React.CSSProperties {
 }
 
 const STYLE = `
-.gl-root{ --stage:#171019; }
+.gl-root{ --stage:#fff7e9; }
 .gl-stage{ position:relative; height:min(60svh,540px); border-radius:24px; overflow:hidden; display:flex; align-items:center; justify-content:center;
   background:
-    radial-gradient(circle at 50% 16%, rgba(255,241,195,.12), transparent 28%),
-    linear-gradient(180deg, rgba(255,255,255,.04), transparent 34%),
-    radial-gradient(circle at 50% 30%, #2a1f33, #15101b 70%);
-  border:1px solid rgba(255,255,255,.08); box-shadow:inset 0 0 60px rgba(0,0,0,.5), 0 22px 44px rgba(29,18,19,.22); }
+    radial-gradient(circle at 18% 18%, rgba(255,255,255,.92), transparent 18%),
+    radial-gradient(circle at 76% 18%, rgba(91,199,224,.2), transparent 24%),
+    radial-gradient(circle at 50% 40%, rgba(255,221,138,.2), transparent 36%),
+    linear-gradient(180deg, #fffaf0, #f6ecdc 58%, #e5f6fb);
+  border:1.5px solid rgba(80,58,34,.12); box-shadow:inset 0 2px 0 rgba(255,255,255,.82), 0 22px 44px rgba(80,58,34,.14); }
 .gl-stage.is-special{ background:
-    radial-gradient(circle at 50% 18%, rgba(255,215,108,.18), transparent 31%),
-    radial-gradient(circle at 50% 28%, #2c1430, #0e0a14 72%); }
+    radial-gradient(circle at 18% 16%, rgba(255,255,255,.92), transparent 18%),
+    radial-gradient(circle at 50% 24%, color-mix(in srgb, var(--aura,#e8b23a), transparent 64%), transparent 32%),
+    radial-gradient(circle at 78% 18%, rgba(185,150,255,.22), transparent 24%),
+    linear-gradient(180deg, #fffaf0, #fff2ca 54%, #e8f9ff); }
 .gl-stage-light{ position:absolute; inset:0; pointer-events:none;
-  background:radial-gradient(circle at 50% 18%, color-mix(in srgb, var(--aura,#caa15c), transparent 55%), transparent 46%); animation:gl-pulse 2.4s ease-in-out infinite; }
+  background:radial-gradient(circle at 50% 20%, color-mix(in srgb, var(--aura,#caa15c), transparent 62%), transparent 46%); animation:gl-pulse 2.4s ease-in-out infinite; }
 .gl-stage-floor{ position:absolute; left:-20%; right:-20%; bottom:-8%; height:42%; pointer-events:none;
-  background:repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 1px, transparent 1px 42px); transform:perspective(360px) rotateX(64deg); opacity:.5; }
+  background:repeating-linear-gradient(90deg, rgba(107,84,52,.1) 0 1px, transparent 1px 42px); transform:perspective(360px) rotateX(64deg); opacity:.42; }
 .gl-rainbow{ position:absolute; inset:-30%; pointer-events:none; z-index:0; opacity:.5; mix-blend-mode:screen;
   background:conic-gradient(from 0deg, #ff5db1,#ffb14e,#fff36b,#5de2a3,#5db8ff,#b06bff,#ff5db1); animation:gl-spin 8s linear infinite; filter:blur(2px);
   -webkit-mask:radial-gradient(circle at 50% 40%, transparent 0 22%, #000 40%, transparent 72%); mask:radial-gradient(circle at 50% 40%, transparent 0 22%, #000 40%, transparent 72%); }
 @keyframes gl-spin{ to{ transform:rotate(360deg) } }
 @keyframes gl-pulse{ 0%,100%{opacity:.7} 50%{opacity:1} }
-.gl-box{ position:relative; width:168px; height:148px; z-index:2; filter:drop-shadow(0 18px 26px rgba(0,0,0,.5)); transform-style:preserve-3d; }
+.gl-box{ position:relative; width:188px; height:188px; z-index:2; filter:drop-shadow(0 18px 24px rgba(90,64,34,.24)); transform-style:preserve-3d; }
 .gl-box.is-charging{ animation:gl-tremble .18s linear infinite; }
 @keyframes gl-tremble{ 0%,100%{transform:translate(0,0) rotate(0)} 22%{transform:translate(-2px,1px) rotate(-1.4deg)} 54%{transform:translate(2px,-1px) rotate(1.6deg)} 76%{transform:translate(-1px,-1px) rotate(-.8deg)} }
-.gl-box-backlight{ position:absolute; left:50%; top:46%; width:210px; height:210px; transform:translate(-50%,-50%) rotate(0deg); border-radius:50%; opacity:.35;
-  background:conic-gradient(from 0deg, transparent, rgba(255,215,116,.55), transparent 30%, rgba(184,80,62,.38), transparent 64%, rgba(255,241,202,.48), transparent);
+.gl-box-backlight{ position:absolute; left:50%; top:50%; width:250px; height:250px; transform:translate(-50%,-50%) rotate(0deg); border-radius:50%; opacity:.42;
+  background:conic-gradient(from 0deg, transparent, rgba(255,215,116,.56), transparent 30%, rgba(91,199,224,.42), transparent 64%, rgba(185,150,255,.38), transparent);
   filter:blur(1px); animation:gl-spin 7.5s linear infinite; }
 .gl-box.is-charging .gl-box-backlight{ opacity:.72; animation-duration:1.8s; }
 .gl-box-aura{ position:absolute; inset:-42%; border-radius:50%; pointer-events:none;
-  background:radial-gradient(circle, rgba(216,162,74,.48), rgba(185,56,46,.15) 38%, transparent 66%); animation:gl-pulse 1.3s ease-in-out infinite; }
-.gl-box-shadow{ position:absolute; left:3px; right:3px; bottom:-10px; height:28px; border-radius:50%; background:radial-gradient(ellipse, rgba(0,0,0,.42), transparent 72%); filter:blur(5px); }
-.gl-box-body{ position:absolute; left:8px; right:8px; bottom:0; height:78px; border-radius:10px 10px 14px 14px;
-  background:linear-gradient(180deg,#bd4337 0%,#8f2b25 54%,#5f1d18 100%); border:2px solid #2a1810; box-shadow:inset 0 4px 0 rgba(255,255,255,.18), inset 0 -18px 22px rgba(0,0,0,.22); }
-.gl-box-lid{ position:absolute; left:0; right:0; top:18px; height:38px; border-radius:13px;
-  background:linear-gradient(180deg,#f0d98d 0%,#caa14a 46%,#8d6928 100%); border:2px solid #2a1810; box-shadow:inset 0 3px 0 rgba(255,255,255,.38), 0 8px 18px rgba(0,0,0,.22); z-index:2; transform-origin:50% 100%; }
+  background:radial-gradient(circle, rgba(255,201,104,.5), rgba(91,199,224,.18) 38%, transparent 66%); animation:gl-pulse 1.3s ease-in-out infinite; }
+.gl-box-shadow{ position:absolute; left:18px; right:18px; bottom:-10px; height:28px; border-radius:50%; background:radial-gradient(ellipse, rgba(92,67,36,.24), transparent 72%); filter:blur(5px); }
+.gl-box-body{ position:absolute; left:22px; right:22px; bottom:4px; height:104px; border-radius:42px 42px 28px 28px;
+  background:
+    radial-gradient(circle at 28% 20%, rgba(255,255,255,.78), transparent 16%),
+    linear-gradient(180deg,#78d3df 0%,#55b6d0 52%,#438ab2 100%);
+  border:3px solid #3b2b1b; box-shadow:inset 0 5px 0 rgba(255,255,255,.32), inset 0 -18px 22px rgba(63,86,120,.18); }
+.gl-box-lid{ position:absolute; left:8px; right:8px; top:22px; height:72px; border-radius:42px 42px 24px 24px;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255,255,255,.86), transparent 15%),
+    linear-gradient(180deg,#fff7dc 0%,#ffd78c 46%,#f2ad57 100%);
+  border:3px solid #3b2b1b; box-shadow:inset 0 4px 0 rgba(255,255,255,.45), 0 8px 18px rgba(90,64,34,.18); z-index:2; transform-origin:50% 100%; }
 .gl-box.is-charging .gl-box-lid{ animation:gl-lid-crack .92s ease-in-out infinite; }
 @keyframes gl-lid-crack{ 0%,100%{ transform:translateY(0) rotateX(0deg)} 45%{ transform:translateY(-8px) rotateX(-18deg)} 70%{ transform:translateY(-3px) rotateX(-7deg)} }
-.gl-box-slit{ position:absolute; left:18px; right:18px; top:57px; height:8px; border-radius:999px; background:linear-gradient(90deg, transparent, rgba(255,236,138,.95), transparent); z-index:3; opacity:.28; filter:blur(.2px); }
+.gl-box-slit{ position:absolute; left:52px; right:52px; top:96px; height:10px; border-radius:999px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.95), transparent); z-index:3; opacity:.48; filter:blur(.2px); }
 .gl-box.is-charging .gl-box-slit{ animation:gl-slit .72s ease-in-out infinite; }
 @keyframes gl-slit{ 0%,100%{ opacity:.28; transform:scaleX(.72)} 50%{ opacity:1; transform:scaleX(1.08)} }
-.gl-box-rune{ position:absolute; left:50%; bottom:20px; width:76px; height:76px; margin-left:-38px; border-radius:50%; z-index:2; opacity:.5;
-  border:1px solid rgba(255,226,140,.45); box-shadow:inset 0 0 18px rgba(255,226,140,.16), 0 0 12px rgba(255,226,140,.12); }
-.gl-box-rune:before,.gl-box-rune:after{ content:''; position:absolute; inset:12px; border-radius:50%; border:1px dashed rgba(255,239,190,.44); }
+.gl-box-rune{ position:absolute; left:50%; bottom:24px; width:80px; height:80px; margin-left:-40px; border-radius:50%; z-index:2; opacity:.6;
+  border:2px solid rgba(255,255,255,.54); box-shadow:inset 0 0 18px rgba(255,255,255,.28), 0 0 12px rgba(91,199,224,.18); }
+.gl-box-rune:before,.gl-box-rune:after{ content:''; position:absolute; inset:12px; border-radius:50%; border:1px dashed rgba(255,255,255,.58); }
 .gl-box-rune:after{ inset:24px; border-style:solid; }
 .gl-box.is-charging .gl-box-rune{ animation:gl-spin 2.6s linear infinite; opacity:.9; }
-.gl-box-seal{ position:absolute; left:50%; top:65px; transform:translateX(-50%); z-index:4; font-size:24px; font-weight:900; color:#fff2dc; text-shadow:0 1px 2px rgba(0,0,0,.5), 0 0 10px rgba(255,226,140,.45); }
+.gl-box-mascots{ position:absolute; left:50%; top:74px; z-index:5; display:flex; gap:28px; transform:translateX(-50%); pointer-events:none; }
+.gl-box-mascots img{ border-radius:999px; background:rgba(255,255,255,.78); box-shadow:0 8px 15px rgba(64,50,30,.2); }
+.gl-box-seal{ position:absolute; left:50%; top:126px; transform:translateX(-50%); z-index:4; font-size:20px; font-weight:1000; color:#fff8e8; text-shadow:0 1px 2px rgba(45,32,18,.42), 0 0 10px rgba(255,226,140,.45); }
 .gl-cast{ position:absolute; left:0; right:0; bottom:128px; display:flex; justify-content:center; gap:120px; z-index:1; pointer-events:none; animation:gl-walkin .6s ease both; }
 @keyframes gl-walkin{ from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:none} }
 .gl-reveal{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:3; }
-.gl-burst-ring{ position:absolute; left:50%; top:48%; width:90px; height:90px; margin:-45px 0 0 -45px; border-radius:50%; border:3px solid var(--c,#e8b23a); box-shadow:0 0 24px var(--c,#e8b23a), inset 0 0 18px var(--c,#e8b23a); opacity:0; animation:gl-burst .86s cubic-bezier(.16,.9,.24,1) both; }
+.gl-burst-ring{ position:absolute; left:50%; top:48%; width:90px; height:90px; margin:-45px 0 0 -45px; border-radius:50%; border:4px solid var(--c,#e8b23a); box-shadow:0 0 24px var(--c,#e8b23a), inset 0 0 18px var(--c,#e8b23a); opacity:0; animation:gl-burst .86s cubic-bezier(.16,.9,.24,1) both; }
 @keyframes gl-burst{ 0%{opacity:0; transform:scale(.28)} 22%{opacity:1} 100%{opacity:0; transform:scale(4.8)} }
-.gl-pillar{ position:absolute; left:50%; top:-10%; width:120px; height:120%; transform:translateX(-50%);
+.gl-pillar{ position:absolute; left:50%; top:-10%; width:160px; height:120%; transform:translateX(-50%);
   background:linear-gradient(180deg, color-mix(in srgb, var(--c,#e8b23a), transparent 20%), transparent 80%); filter:blur(8px); opacity:.7; animation:gl-pillar .9s ease-out both; mix-blend-mode:screen; }
 @keyframes gl-pillar{ 0%{opacity:0; transform:translateX(-50%) scaleY(.2)} 40%{opacity:.85} 100%{opacity:.55; transform:translateX(-50%) scaleY(1)} }
 .gl-spark{ position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:50%; background:var(--c,#e8b23a); box-shadow:0 0 10px var(--c,#e8b23a);
@@ -359,11 +377,11 @@ const STYLE = `
 @keyframes gl-spark{ 0%{opacity:0; transform:rotate(var(--a)) translateY(0) scale(.4)} 25%{opacity:1} 100%{opacity:0; transform:rotate(var(--a)) translateY(-180px) scale(1)} }
 .gl-rise{ position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; animation:gl-rise .8s cubic-bezier(.16,.9,.24,1.05) both; }
 @keyframes gl-rise{ 0%{opacity:0; transform:translateY(60px) scale(.6)} 60%{opacity:1} 100%{opacity:1; transform:none} }
-.gl-rarity-badge{ position:absolute; top:-10px; left:50%; transform:translateX(-50%); z-index:3; padding:3px 12px; border-radius:999px;
-  color:#1a1208; font-weight:900; font-size:12px; letter-spacing:.05em; box-shadow:0 4px 12px rgba(0,0,0,.4); }
-.gl-stars{ display:block; margin-top:4px; font-size:14px; letter-spacing:2px; text-shadow:0 1px 2px rgba(0,0,0,.5); }
+.gl-rarity-badge{ position:absolute; top:-10px; left:50%; transform:translateX(-50%); z-index:3; padding:4px 13px; border-radius:999px;
+  color:#2d2112; font-weight:1000; font-size:12px; letter-spacing:.05em; box-shadow:0 5px 12px rgba(90,64,34,.22), inset 0 1px 0 rgba(255,255,255,.5); }
+.gl-level-mark{ display:inline-flex; align-items:center; justify-content:center; margin-top:4px; min-width:34px; padding:3px 8px; border:1.5px solid; border-radius:999px; background:rgba(255,255,255,.08); font-size:11px; font-weight:1000; letter-spacing:.08em; text-shadow:0 1px 2px rgba(0,0,0,.5); }
 .gl-special-tag{ position:absolute; top:8%; left:50%; transform:translateX(-50%); z-index:5; font-weight:1000; font-size:18px; letter-spacing:.08em;
-  text-shadow:0 2px 10px rgba(0,0,0,.6); animation:gl-tagpop .6s cubic-bezier(.2,.8,.3,1.2) both; }
+  text-shadow:0 2px 10px rgba(255,255,255,.64); animation:gl-tagpop .6s cubic-bezier(.2,.8,.3,1.2) both; }
 @keyframes gl-tagpop{ 0%{opacity:0; transform:translateX(-50%) scale(.5)} 100%{opacity:1; transform:translateX(-50%) scale(1)} }
 .gl-cameo{ position:absolute; bottom:14%; z-index:4; width:96px; display:flex; flex-direction:column; align-items:center; animation:gl-cameo-in .7s cubic-bezier(.16,.9,.24,1.05) both; }
 .gl-cameo-l{ left:6px; } .gl-cameo-r{ right:6px; }
@@ -385,29 +403,37 @@ const STYLE = `
 .gl-grid{ display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:7px; width:100%; max-width:360px; }
 .gl-cell{ display:flex; flex-direction:column; align-items:center; padding:5px 2px 4px; border-radius:12px; border:1px solid color-mix(in srgb, var(--c,#888), transparent 50%);
   background:color-mix(in srgb, var(--c,#888), transparent 86%); animation:gl-cellpop .4s cubic-bezier(.2,.8,.3,1.1) both; }
-.gl-cell .gl-stars{ font-size:9px; letter-spacing:0; margin-top:1px; }
+.gl-cell .gl-level-mark{ min-width:26px; padding:2px 5px; font-size:8px; letter-spacing:.04em; margin-top:1px; }
 @keyframes gl-cellpop{ 0%{opacity:0; transform:translateY(12px) scale(.7)} 100%{opacity:1; transform:none} }
 .gl-25d-wrap{ perspective:760px; display:inline-flex; align-items:center; justify-content:center; }
 .gl-25d{ position:relative; width:100%; height:100%; transform-style:preserve-3d;
   transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); transition:transform .18s ease; animation:gl-float 3.4s ease-in-out infinite; }
 @keyframes gl-float{ 0%,100%{translate:0 0} 50%{translate:0 -10px} }
 .gl-25d-glow{ position:absolute; inset:-12%; border-radius:50%; transform:translateZ(-40px); filter:blur(6px); }
-.gl-25d-art{ position:absolute; inset:6%; transform:translateZ(28px); border-radius:18px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
-.gl-25d-art img{ width:118%; height:118%; object-fit:contain; filter:drop-shadow(0 10px 16px rgba(0,0,0,.4)); }
+.gl-25d-art{ position:absolute; inset:5%; transform:translateZ(28px); border-radius:32px; overflow:visible; display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.72), transparent 62%); }
+.gl-25d-art img{ width:128%; height:128%; object-fit:contain; filter:drop-shadow(0 10px 14px rgba(84,58,28,.22)); }
 .gl-25d-fallback{ width:90%; height:90%; border-radius:16px; border:2px dashed; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:13px; background:rgba(255,255,255,.06); text-align:center; padding:6px; }
 .gl-25d-holo{ position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen; opacity:.5;
   background:linear-gradient(115deg, transparent 38%, rgba(255,255,255,.5) 46%, transparent 54%); background-size:240% 100%; animation:gl-holo 2.6s linear infinite; }
 @keyframes gl-holo{ from{background-position:180% 0} to{background-position:-80% 0} }
+.gl-25d-sticker{ position:absolute; right:5%; bottom:10%; z-index:5; display:grid; place-items:center; width:24%; height:24%; border-radius:999px;
+  background:rgba(255,255,255,.82); box-shadow:0 8px 15px rgba(82,56,28,.18), inset 0 1px 0 rgba(255,255,255,.82); }
+.gl-25d-sticker img{ width:78%; height:78%; object-fit:contain; }
 .gl-25d-floor{ position:absolute; left:14%; right:14%; bottom:2%; height:10px; border-radius:50%; transform:translateZ(-30px);
-  background:radial-gradient(ellipse, rgba(0,0,0,.42), transparent 70%); filter:blur(3px); }
+  background:radial-gradient(ellipse, rgba(82,56,28,.2), transparent 70%); filter:blur(3px); }
 .gl-panel{ position:absolute; left:14px; right:14px; bottom:14px; z-index:6; padding:14px 16px; border-radius:18px;
-  background:rgba(20,14,11,.66); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,.12); }
-.gl-prompt{ margin:0 0 10px; color:#f4ede0; font-weight:800; font-size:14px; text-align:center; }
+  background:rgba(255,250,239,.82); backdrop-filter:blur(10px); border:1px solid rgba(94,69,38,.12); box-shadow:0 12px 28px rgba(80,58,34,.12); }
+.gl-prompt{ margin:0 0 10px; color:#4a3522; font-weight:850; font-size:14px; text-align:center; }
 .gl-charge-txt{ margin:0; animation:gl-pulse 1s ease-in-out infinite; }
-.gl-get{ margin:0; color:#fff7eb; font-weight:900; font-size:16px; text-align:center; }
-.gl-get-sub{ margin:4px 0 0; color:rgba(244,237,224,.72); font-size:12.5px; font-weight:700; text-align:center; }
+.gl-get{ margin:0; color:#3a2a1b; font-weight:900; font-size:16px; text-align:center; }
+.gl-get-sub{ margin:4px 0 0; color:rgba(74,53,34,.68); font-size:12.5px; font-weight:750; text-align:center; }
 .gl-shelf{ position:relative; border:1.5px solid; border-radius:18px; padding:14px 10px 32px; display:flex; flex-direction:column; align-items:center;
-  background:radial-gradient(circle at 50% 24%, rgba(255,255,255,.05), transparent 60%), var(--glass-bg-strong); min-height:172px; justify-content:center; }
+  background:
+    radial-gradient(circle at 20% 16%, rgba(255,255,255,.88), transparent 18%),
+    radial-gradient(circle at 50% 30%, rgba(255,229,158,.16), transparent 42%),
+    var(--glass-bg-strong);
+  min-height:172px; justify-content:center; box-shadow:inset 0 1px 0 rgba(255,255,255,.72); }
 .gl-shelf-empty{ width:120px; height:120px; border-radius:16px; border:2px dashed var(--glass-border); display:flex; align-items:center; justify-content:center; color:var(--ink-faint); font-size:32px; font-weight:800; }
 .gl-shelf-name{ margin:8px 0 0; font-size:13.5px; font-weight:800; }
 .gl-shelf-tag{ position:absolute; bottom:7px; padding:1px 9px; border-radius:999px; border:1px solid; font-size:10px; font-weight:900; }

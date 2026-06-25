@@ -303,7 +303,6 @@
       .ym-mcard.is-holo::after { content:''; position:absolute; inset:0; pointer-events:none; mix-blend-mode:soft-light; opacity:.85;
         background: linear-gradient(118deg, rgba(216,162,74,.46), rgba(255,240,210,.52) 28%, rgba(226,101,90,.4) 54%, rgba(216,162,74,.46) 80%);
         background-size: 240% 240%; animation: ym-gacha-back-rainbow 2.6s linear infinite; }
-      .ym-mcard-stars { position:relative; z-index:2; display:flex; gap:1px; line-height:1; color:#caa15c; text-shadow:0 1px 1px rgba(33,26,18,.3); }
       .ym-mcard-title { position:relative; z-index:2; color:#211a12; font-weight:850; text-align:center; line-height:1.1; }
       .ym-mcard-sub { position:relative; z-index:2; color:#fdf4e0; background:rgba(33,26,18,.82); border-radius:99px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
       .ym-mcard-art { position:relative; z-index:1; display:flex; align-items:center; justify-content:center;
@@ -562,19 +561,19 @@
         50% { transform: translateX(calc(var(--i) * 14px)) translateY(-6px) rotate(calc(var(--i) * 8deg)); }
       }
       @keyframes ym-shuffle-cut-left {
-        0% { transform: translateX(-24px) rotate(-8deg); opacity: 0; }
-        28%,58% { transform: translateX(-112px) rotate(-16deg); opacity: 1; }
-        100% { transform: translateX(-18px) rotate(-4deg); opacity: 0; }
+        0% { transform: translateX(calc(-.24 * var(--shuffle-cut-distance))) rotate(-8deg); opacity: 0; }
+        24%,68% { transform: translateX(calc(-1 * var(--shuffle-cut-distance))) rotate(-16deg); opacity: 1; }
+        100% { transform: translateX(calc(-.18 * var(--shuffle-cut-distance))) rotate(-4deg); opacity: 0; }
       }
       @keyframes ym-shuffle-cut-right {
-        0% { transform: translateX(24px) rotate(8deg); opacity: 0; }
-        28%,58% { transform: translateX(112px) rotate(16deg); opacity: 1; }
-        100% { transform: translateX(18px) rotate(4deg); opacity: 0; }
+        0% { transform: translateX(calc(.24 * var(--shuffle-cut-distance))) rotate(8deg); opacity: 0; }
+        24%,68% { transform: translateX(var(--shuffle-cut-distance)) rotate(16deg); opacity: 1; }
+        100% { transform: translateX(calc(.18 * var(--shuffle-cut-distance))) rotate(4deg); opacity: 0; }
       }
       @keyframes ym-shuffle-fan-card {
         0% { opacity: 0; transform: translate(-50%, -50%) rotate(0deg) translateY(0) scale(.72); }
-        28% { opacity: 0; }
-        46%,78% { opacity: 1; transform: translate(-50%, -50%) rotate(calc(var(--i) * 10deg)) translateY(-44px) scale(1); }
+        24% { opacity: 0; }
+        42%,82% { opacity: 1; transform: translate(-50%, -50%) rotate(calc(var(--i) * 9deg)) translateY(calc(-1 * var(--shuffle-fan-lift))) scale(1); }
         100% { opacity: 0; transform: translate(-50%, -50%) rotate(calc(var(--i) * 3deg)) translateY(10px) scale(.76); }
       }
       @keyframes ym-shuffle-ring {
@@ -582,31 +581,48 @@
         24% { opacity: .75; }
         100% { opacity: 0; transform: scale(1.5) rotate(28deg); }
       }
+      @keyframes ym-shuffle-orbit-spin {
+        0% { transform: rotate(0deg) scale(.9); opacity: .45; }
+        16% { opacity: 1; }
+        74% { transform: rotate(560deg) scale(1); opacity: 1; }
+        100% { transform: rotate(720deg) scale(.72); opacity: 0; }
+      }
+      @keyframes ym-shuffle-core-cut {
+        0%,100% { transform: translate(-50%, -50%) rotate(calc(var(--i) * 3deg)) translateY(calc(var(--i) * -3px)); }
+        24% { transform: translate(-50%, -50%) rotate(calc(var(--i) * -7deg)) translateX(calc(var(--i) * 12px)) translateY(calc(var(--i) * -5px)); }
+        48% { transform: translate(-50%, -50%) rotate(calc(var(--i) * 8deg)) translateX(calc(var(--i) * -14px)) translateY(calc(var(--i) * -4px)); }
+        72% { transform: translate(-50%, -50%) rotate(calc(var(--i) * 2deg)) translateY(calc(var(--i) * -2px)); }
+      }
       .ym-shuffle-preview {
         position: relative; width: 190px; height: 122px; display: inline-grid; place-items: center;
         filter: drop-shadow(0 18px 22px rgba(0,0,0,.22));
       }
       .ym-shuffle-preview-card {
         position: absolute; left: 50%; top: 50%; margin: -45px 0 0 -35px;
-        animation: ym-shuffle-preview-card 1.8s ease-in-out infinite;
+        animation: ym-shuffle-preview-card 2.8s ease-in-out infinite;
         animation-delay: calc(var(--i) * .04s);
       }
       .ym-shuffle-stage {
-        position: relative; z-index: 3; width: min(92vw, 620px); height: min(56vh, 430px);
-        display: grid; place-items: center; isolation: isolate;
+        --shuffle-card-w: clamp(58px, 15vw, 96px);
+        --shuffle-cut-distance: min(24vw, 112px);
+        --shuffle-fan-lift: min(9svh, 44px);
+        --shuffle-orbit-rx: min(34vw, 178px);
+        --shuffle-orbit-ry: min(17svh, 92px);
+        position: relative; z-index: 3; width: min(94vw, 620px); height: min(62svh, 460px);
+        display: grid; place-items: center; isolation: isolate; overflow: hidden;
       }
       .ym-shuffle-table-ring {
         position: absolute; width: min(78vw, 430px); height: min(78vw, 430px); border-radius: 999px;
         border: 2px solid color-mix(in srgb, var(--gacha-color,#d8a24a), #fff 22%);
         box-shadow: 0 0 24px color-mix(in srgb, var(--gacha-color,#d8a24a), transparent 42%), inset 0 0 28px rgba(255,255,255,.08);
-        animation: ym-shuffle-ring 2.9s ease-out both;
+        animation: ym-shuffle-ring 5.2s ease-out both;
       }
       .ym-shuffle-stage.has-gold .ym-shuffle-table-ring,
       .ym-shuffle-stage.has-diamond .ym-shuffle-table-ring,
       .ym-shuffle-stage.has-xur .ym-shuffle-table-ring {
         border-width: 3px;
         box-shadow: 0 0 36px color-mix(in srgb, var(--gacha-color,#d8a24a), transparent 24%), inset 0 0 36px color-mix(in srgb, var(--gacha-color,#d8a24a), transparent 68%);
-        animation-duration: 3.35s;
+        animation-duration: 5.8s;
       }
       .ym-shuffle-stage.has-diamond,
       .ym-shuffle-stage.has-xur { filter: drop-shadow(0 0 22px color-mix(in srgb, var(--gacha-color,#5bc7e0), transparent 42%)); }
@@ -614,28 +630,70 @@
       .ym-shuffle-fan {
         position: absolute; left: 50%; top: 50%; width: 1px; height: 1px; transform-style: preserve-3d;
       }
-      .ym-shuffle-cut.is-left { animation: ym-shuffle-cut-left 1.8s cubic-bezier(.16,.86,.22,1) both; }
-      .ym-shuffle-cut.is-right { animation: ym-shuffle-cut-right 1.8s cubic-bezier(.16,.86,.22,1) both; }
+      .ym-shuffle-cut.is-left { animation: ym-shuffle-cut-left 4.5s cubic-bezier(.16,.86,.22,1) both; }
+      .ym-shuffle-cut.is-right { animation: ym-shuffle-cut-right 4.5s cubic-bezier(.16,.86,.22,1) both; }
       .ym-shuffle-cut span {
-        position: absolute; left: -46px; top: -62px;
+        position: absolute; left: calc(-.5 * var(--shuffle-card-w)); top: calc(-.64 * var(--shuffle-card-w));
         transform: translateY(calc(var(--i) * -5px)) rotate(calc(var(--i) * .8deg));
         filter: drop-shadow(0 12px 18px rgba(0,0,0,.28));
       }
       .ym-shuffle-fan span {
         position: absolute; left: 0; top: 0;
         transform-origin: 50% 112%;
-        animation: ym-shuffle-fan-card 2.95s cubic-bezier(.16,.86,.22,1) both;
-        animation-delay: calc(.06s * (var(--i) + 5));
+        animation: ym-shuffle-fan-card 5.05s cubic-bezier(.16,.86,.22,1) both;
+        animation-delay: calc(.075s * (var(--i) + 5));
         filter: drop-shadow(0 14px 22px rgba(0,0,0,.32));
+      }
+      .ym-shuffle-stage .ym-mback {
+        width: var(--shuffle-card-w) !important;
+        height: calc(var(--shuffle-card-w) * 1.28) !important;
+        border-radius: calc(var(--shuffle-card-w) * .17) !important;
+      }
+      .ym-shuffle-orbit {
+        position: absolute; left: 50%; top: 45%; width: 1px; height: 1px;
+        animation: ym-shuffle-orbit-spin 5.2s cubic-bezier(.15,.78,.2,1) both;
+      }
+      .ym-shuffle-orbit-card {
+        position: absolute; left: 0; top: 0;
+        transform:
+          translate(-50%, -50%)
+          rotate(calc(var(--i) * 30deg))
+          translateX(var(--shuffle-orbit-rx))
+          scale(.84)
+          rotate(calc(var(--i) * -30deg));
+        filter: drop-shadow(0 14px 20px rgba(0,0,0,.36));
+      }
+      .ym-shuffle-deck-core {
+        position: absolute; left: 50%; top: 45%; width: 1px; height: 1px;
+        filter: drop-shadow(0 20px 30px rgba(0,0,0,.44));
+      }
+      .ym-shuffle-deck-core span {
+        position: absolute; left: 0; top: 0;
+        animation: ym-shuffle-core-cut 4.8s cubic-bezier(.18,.76,.24,1) both;
+        animation-delay: calc(var(--i) * .035s);
       }
       .ym-shuffle-stage strong {
         position: absolute; left: 0; right: 0; bottom: 34px; text-align: center;
-        color: #fff7eb; font-size: clamp(20px, 6vw, 34px); line-height: 1; font-weight: 1000;
+        padding: 0 14px; color: #fff7eb; font-size: clamp(18px, 5.4vw, 34px); line-height: 1.08; font-weight: 1000;
         text-shadow: 0 0 24px color-mix(in srgb, var(--gacha-color,#d8a24a), transparent 32%), 0 3px 0 rgba(0,0,0,.36);
       }
       .ym-shuffle-stage em {
-        position: absolute; left: 0; right: 0; bottom: 7px; text-align: center; font-style: normal;
+        position: absolute; left: 12px; right: 12px; bottom: 7px; text-align: center; font-style: normal;
         color: rgba(255,247,235,.68); font-size: 12px; font-weight: 850;
+      }
+      @media (max-width: 430px) {
+        .ym-shuffle-stage {
+          --shuffle-card-w: clamp(52px, 15.5vw, 64px);
+          --shuffle-cut-distance: min(19vw, 74px);
+          --shuffle-fan-lift: min(7svh, 34px);
+          --shuffle-orbit-rx: min(34vw, 132px);
+          --shuffle-orbit-ry: min(14svh, 64px);
+          width: min(96vw, 390px);
+          height: min(58svh, 430px);
+        }
+        .ym-shuffle-table-ring { width: min(88vw, 340px); height: min(88vw, 340px); }
+        .ym-shuffle-stage strong { bottom: 38px; font-size: clamp(17px, 5vw, 22px); }
+        .ym-shuffle-stage em { bottom: 12px; font-size: 11px; }
       }
       .ym-gacha-card-show .ym-gacha-show-lights {
         position: absolute; inset: 0; pointer-events: none; z-index: 1; opacity: .72;
@@ -676,9 +734,13 @@
         100% { opacity: .44; transform: scale(1.16) rotate(28deg); }
       }
       .ym-item-reveal {
-        position: relative; width: min(86vw, 390px); min-height: 338px; border: 0; border-radius: 28px;
+        position: relative; width: min(86vw, 390px); min-height: 338px; border: 0; border-radius: 32px;
         display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
-        padding: 14px 16px 18px; color: #fff7eb; background: transparent; cursor: pointer;
+        padding: 14px 16px 18px; color: #fff7eb; background:
+          radial-gradient(circle at 18% 16%, rgba(255,255,255,.16), transparent 18%),
+          radial-gradient(circle at 78% 26%, color-mix(in srgb, var(--rarity-color,#d8a24a), transparent 66%), transparent 26%),
+          linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.015));
+        cursor: pointer;
         animation: ym-item-reveal-pop .42s cubic-bezier(.16,.88,.22,1.14) both;
       }
       .ym-item-reveal.is-repeat { animation-duration: .24s; }
@@ -691,6 +753,21 @@
           radial-gradient(circle, color-mix(in srgb, var(--rarity-color,#d8a24a), transparent 34%), transparent 62%);
         filter: blur(.4px); animation: ym-item-reveal-aura .9s ease-out both;
       }
+      .ym-item-reveal-mascots {
+        position: absolute;
+        left: 50%;
+        top: 20px;
+        z-index: 4;
+        display: flex;
+        gap: 180px;
+        transform: translateX(-50%);
+        pointer-events: none;
+      }
+      .ym-item-reveal-mascots img {
+        border-radius: 999px;
+        background: rgba(255,255,255,.86);
+        box-shadow: 0 8px 18px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.72);
+      }
       .ym-item-reveal.is-repeat .ym-item-reveal-aura { opacity: .24; animation-duration: .28s; }
       .ym-item-reveal.is-premium .ym-item-reveal-aura { inset: -2%; animation-duration: 2.1s; animation-iteration-count: 2; mix-blend-mode: screen; }
       .ym-item-reveal-art {
@@ -701,8 +778,10 @@
       .ym-item-reveal-art img { width: 100%; height: 100%; object-fit: contain; display: block; animation: ym-mcard-item-float 2.2s ease-in-out infinite; }
       .ym-item-reveal-copy {
         position: relative; z-index: 3; width: min(100%, 360px); display: flex; flex-direction: column; align-items: center; gap: 4px;
-        padding: 12px 14px; border-radius: 18px;
-        background: linear-gradient(180deg, rgba(20,18,16,.62), rgba(12,13,18,.72));
+        padding: 12px 14px; border-radius: 20px;
+        background:
+          radial-gradient(circle at 12% 14%, rgba(255,255,255,.18), transparent 18%),
+          linear-gradient(180deg, rgba(55,42,28,.7), rgba(21,20,24,.76));
         border: 1px solid color-mix(in srgb, var(--rarity-color,#d8a24a), transparent 42%);
         box-shadow: inset 0 1px 0 rgba(255,255,255,.14), 0 14px 28px rgba(0,0,0,.24);
       }
@@ -712,10 +791,154 @@
       .ym-item-reveal-copy strong { color: #fffdf5; font-size: clamp(24px, 7vw, 40px); line-height: 1.05; font-weight: 1000; text-align: center; text-shadow: 0 0 18px color-mix(in srgb, var(--rarity-color,#d8a24a), transparent 54%); }
       .ym-item-reveal-copy em { font-style: normal; color: rgba(255,247,235,.86); font-size: 14px; font-weight: 900; }
       .ym-item-reveal-copy span:last-child { color: rgba(255,247,235,.72); font-size: 12.5px; line-height: 1.45; font-weight: 760; text-align: center; }
-      .ym-item-reveal-next {
-        position: relative; z-index: 4; min-width: 88px; height: 34px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;
-        color: #231a10; background: linear-gradient(135deg, #fff8df, color-mix(in srgb, var(--rarity-color,#d8a24a), #fff 38%));
-        font-size: 12px; font-weight: 1000; box-shadow: 0 10px 20px rgba(0,0,0,.22);
+      .ym-premium-mystery {
+        position: relative; width: min(84vw, 430px); min-height: min(78vw, 360px); display: flex; flex-direction: column;
+        align-items: center; justify-content: center; gap: 12px; border-radius: 34px; isolation: isolate;
+        background:
+          radial-gradient(circle at 18% 18%, rgba(255,255,255,.22), transparent 18%),
+          radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--rarity-color,#e8c45a), transparent 48%), transparent 48%),
+          linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.025));
+        border: 1px solid color-mix(in srgb, var(--rarity-color,#e8c45a), transparent 34%);
+        box-shadow: 0 0 38px color-mix(in srgb, var(--rarity-color,#e8c45a), transparent 44%), inset 0 1px 0 rgba(255,255,255,.16);
+        animation: ym-item-reveal-premium 1.2s cubic-bezier(.16,.88,.22,1.14) both;
+      }
+      .ym-premium-mystery-ring {
+        position: absolute; width: min(62vw, 260px); height: min(62vw, 260px); border-radius: 999px;
+        border: 2px solid color-mix(in srgb, var(--rarity-color,#e8c45a), #fff 22%);
+        box-shadow: 0 0 28px color-mix(in srgb, var(--rarity-color,#e8c45a), transparent 28%), inset 0 0 36px color-mix(in srgb, var(--rarity-color,#e8c45a), transparent 62%);
+        animation: ym-shuffle-ring 1.9s ease-out infinite;
+      }
+      .ym-premium-mystery-gem {
+        position: relative; z-index: 2; width: min(38vw, 148px); height: min(38vw, 148px); border-radius: 34%;
+        display: grid; place-items: center; color: #fffdf6; font-size: clamp(18px, 6vw, 30px); font-weight: 1000; letter-spacing: .05em;
+        background:
+          linear-gradient(135deg, rgba(255,255,255,.62), transparent 38%, rgba(255,255,255,.28)),
+          radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--rarity-color,#e8c45a), #fff 22%), color-mix(in srgb, var(--rarity-color,#e8c45a), #111 14%));
+        box-shadow: 0 0 34px color-mix(in srgb, var(--rarity-color,#e8c45a), transparent 20%), inset 0 1px 0 rgba(255,255,255,.56);
+      }
+      .ym-premium-mystery-gem img {
+        width: 58%;
+        height: 58%;
+        object-fit: contain;
+        filter: drop-shadow(0 8px 12px rgba(0,0,0,.24));
+      }
+      .ym-premium-mystery-gem b {
+        position: absolute;
+        left: 50%;
+        bottom: 10%;
+        transform: translateX(-50%);
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: rgba(33,25,18,.72);
+        color: #fff7eb;
+        font-size: .5em;
+        line-height: 1.2;
+      }
+      .ym-premium-mystery strong,
+      .ym-premium-mystery em {
+        position: relative; z-index: 2; width: min(92%, 360px); text-align: center; font-style: normal;
+      }
+      .ym-premium-mystery strong {
+        color: #fffdf5; font-size: clamp(22px, 6vw, 34px); line-height: 1.14; font-weight: 1000;
+        text-shadow: 0 0 18px color-mix(in srgb, var(--rarity-color,#e8c45a), transparent 38%);
+      }
+      .ym-premium-mystery em { color: rgba(255,247,235,.76); font-size: 13px; font-weight: 850; line-height: 1.45; }
+      .ym-gacha-result-stage {
+        position: relative; z-index: 3; width: min(100%, 760px); height: min(100%, 720px);
+        display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 12px; align-items: stretch;
+        padding: max(6px, env(safe-area-inset-top)) 0 max(6px, env(safe-area-inset-bottom));
+      }
+      .ym-gacha-result-head {
+        min-height: 48px; display: flex; align-items: center; justify-content: center; gap: 8px;
+        padding: 8px 10px; border-radius: 18px; color: #fff7eb;
+        background: linear-gradient(180deg, rgba(20,18,16,.52), rgba(12,13,18,.58));
+        border: 1px solid rgba(255,255,255,.12); box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+      }
+      .ym-gacha-result-head span,
+      .ym-gacha-result-head em {
+        min-width: 0; height: 32px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;
+        color: rgba(255,247,235,.76); background: rgba(255,255,255,.08); font-size: 11px; font-weight: 950; letter-spacing: .08em; font-style: normal;
+      }
+      .ym-gacha-result-main {
+        position: relative; min-height: 0; display: grid; place-items: center; overflow: hidden; border-radius: 28px;
+        background:
+          radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--rarity-color,#d8a24a), transparent 84%), transparent 48%),
+          linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.015));
+      }
+      .ym-gacha-result-main.is-gold,
+      .ym-gacha-result-main.is-diamond,
+      .ym-gacha-result-main.is-xur {
+        background:
+          radial-gradient(circle at 50% 26%, color-mix(in srgb, var(--rarity-color,#d8a24a), transparent 64%), transparent 54%),
+          radial-gradient(circle at 50% 58%, rgba(255,255,255,.08), transparent 42%),
+          linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015));
+      }
+      .ym-gacha-result-spot {
+        width: 100%; height: 100%; min-height: 0; display: grid; place-items: center; padding: 6px 0;
+      }
+      .ym-gacha-result-stage .ym-item-reveal {
+        width: min(88vw, 430px); min-height: 0; height: min(100%, 470px); max-height: 470px;
+        justify-content: center; gap: 8px; padding: 8px 12px 12px; border-radius: 24px;
+      }
+      .ym-gacha-result-stage .ym-item-reveal.is-premium { min-height: 0; height: min(100%, 500px); max-height: 500px; }
+      .ym-gacha-result-stage .ym-item-reveal-art { width: min(48vw, 196px); height: min(48vw, 196px); }
+      .ym-gacha-result-stage .ym-item-reveal.is-premium .ym-item-reveal-art { width: min(54vw, 230px); height: min(54vw, 230px); }
+      .ym-gacha-result-stage .ym-item-reveal-copy {
+        width: min(100%, 390px); padding: 11px 13px; gap: 4px;
+      }
+      .ym-gacha-result-stage .ym-item-reveal-copy strong {
+        font-size: clamp(22px, 6vw, 34px); max-width: 100%; overflow-wrap: anywhere;
+      }
+      .ym-gacha-result-stage .ym-item-reveal-copy span:last-child {
+        font-size: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+      }
+      .ym-gacha-result-foot {
+        display: grid; gap: 10px; align-items: center; justify-items: center; min-height: 86px;
+      }
+      .ym-collected-strip {
+        width: min(100%, 720px); min-height: 58px; display: flex; align-items: center; justify-content: center; gap: 8px;
+        overflow-x: auto; overflow-y: hidden; padding: 3px 8px 6px; scrollbar-width: thin;
+        -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
+        mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
+      }
+      .ym-item-thumb {
+        position: relative; flex: 0 0 auto; width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center;
+        background:
+          radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--rarity-color,#d8a24a), #fff 28%), transparent 58%),
+          linear-gradient(145deg, rgba(255,255,255,.20), rgba(255,255,255,.06));
+        border: 1px solid color-mix(in srgb, var(--rarity-color,#d8a24a), transparent 24%);
+        box-shadow: 0 10px 18px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.20);
+      }
+      .ym-item-thumb-rarity {
+        position: absolute; left: 4px; top: 4px; z-index: 2; padding: 1px 4px; border-radius: 999px;
+        background: rgba(12,13,18,.62); color: color-mix(in srgb, var(--rarity-color,#d8a24a), #fff 18%);
+        font-size: 8px; font-weight: 1000; line-height: 1.2;
+      }
+      .ym-item-thumb-art { width: 48px; height: 48px; display: grid; place-items: center; }
+      .ym-item-thumb-art img { width: 124%; height: 124%; object-fit: contain; display: block; filter: drop-shadow(0 8px 8px rgba(0,0,0,.22)); }
+      .ym-gacha-result-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; min-height: 42px; }
+      .ym-gacha-summary-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(112px, 1fr)); gap: 12px; align-items: start;
+      }
+      .ym-gacha-summary-item {
+        min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 6px;
+        padding: 10px 6px; border-radius: 16px; background: var(--glass-bg); border: 1px solid var(--glass-border);
+      }
+      .ym-gacha-summary-place {
+        max-width: 100%; color: var(--ink); font-size: 12px; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+      .ym-gacha-summary-count {
+        color: var(--ink-faint); font-size: 11px; font-weight: 900;
+      }
+      @media (max-width: 430px) {
+        .ym-gacha-result-stage { gap: 8px; }
+        .ym-gacha-result-head { min-height: 44px; padding: 6px 8px; }
+        .ym-gacha-result-head span,
+        .ym-gacha-result-head em { height: 28px; font-size: 9px; letter-spacing: .04em; }
+        .ym-gacha-result-stage .ym-item-reveal { height: min(100%, 430px); }
+        .ym-gacha-result-stage .ym-item-reveal-art { width: min(48vw, 174px); height: min(48vw, 174px); }
+        .ym-gacha-result-stage .ym-item-reveal.is-premium .ym-item-reveal-art { width: min(54vw, 206px); height: min(54vw, 206px); }
+        .ym-collected-strip { justify-content: flex-start; }
       }
       @keyframes ym-merge-shuffle-fx {
         0% { opacity: 0; transform: translateY(18px) scale(.78); }
@@ -1098,147 +1321,91 @@
           radial-gradient(circle at 78% 70%, color-mix(in srgb, var(--gacha-color, #d8a24a), transparent 78%), transparent 16%);
       }
       .ym-mcard {
+        box-sizing: border-box;
+        justify-content: flex-start;
+        gap: 0;
+        padding: 7% 0 6%;
         background:
-          linear-gradient(115deg, rgba(255,255,255,.58), transparent 17%, rgba(255,255,255,.18) 53%, transparent 76%),
-          repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 1px, transparent 1px 8px),
-          linear-gradient(180deg, #fffdf5, #eee4cf 64%, #bea979);
-        border: 2px solid color-mix(in srgb, var(--rarity-color,#d78f73), #fff 24%);
-        box-shadow: 0 0 0 1px rgba(255,255,255,.52), 0 0 0 4px #161b25, 0 20px 42px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.72);
+          radial-gradient(circle at 20% 18%, rgba(255,255,255,.96), transparent 18%),
+          radial-gradient(circle at 75% 20%, color-mix(in srgb, var(--rarity-color,#d78f73), #fff 58%), transparent 24%),
+          radial-gradient(circle at 50% 55%, rgba(255,255,255,.78), transparent 44%),
+          linear-gradient(180deg, #fffdf8, #f5eadb 68%, color-mix(in srgb, var(--rarity-color,#d78f73), #fff 42%));
+        border: 2px solid color-mix(in srgb, var(--rarity-color,#d78f73), #3b2a1c 22%);
+        box-shadow:
+          0 0 0 2px rgba(255,255,255,.76),
+          0 12px 0 -6px color-mix(in srgb, var(--rarity-color,#d78f73), #3b2a1c 22%),
+          0 15px 28px rgba(47,35,22,.18),
+          inset 0 2px 0 rgba(255,255,255,.82);
       }
       .ym-mcard::before {
-        background:
-          linear-gradient(90deg, rgba(255,255,255,.48), transparent 26%, rgba(255,255,255,.2) 58%, transparent),
-          linear-gradient(180deg, color-mix(in srgb, var(--rarity-color,#d78f73), #fff 16%), color-mix(in srgb, var(--rarity-color,#d78f73), #000 12%));
+        display: none;
       }
-      .ym-mcard-brand {
+      .ym-mcard-brand,
+      .ym-mcard-serial,
+      .ym-mcard-desc {
+        display: none;
+      }
+      .ym-mcard-top {
         position: relative;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 88%;
+        min-height: 12%;
+        gap: 4px;
+      }
+      .ym-mcard-aura {
+        position: absolute;
+        left: 50%;
+        top: 48%;
+        width: 74%;
+        height: 54%;
+        border-radius: 999px;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(circle, color-mix(in srgb, var(--rarity-color,#d78f73), #fff 40%), transparent 68%);
+        filter: blur(8px);
+        opacity: .58;
+        pointer-events: none;
+      }
+      .ym-mcard-mascot {
+        position: absolute;
+        right: 5%;
+        bottom: 6%;
+        width: 22%;
+        height: 22%;
         z-index: 2;
-        color: rgba(255,255,255,.92);
-        font-weight: 1000;
-        letter-spacing: .13em;
-        line-height: 1;
-        text-shadow: 0 1px 0 rgba(0,0,0,.28);
-        white-space: nowrap;
+        opacity: .78;
+        background: url('/mascots/mung-shiba-face.webp') center / contain no-repeat;
+        filter: drop-shadow(0 4px 6px rgba(44,31,20,.18));
+      }
+      .ym-mcard.is-diamond .ym-mcard-mascot,
+      .ym-mcard.is-xur .ym-mcard-mascot {
+        background-image: url('/mascots/yang-cat-face.webp');
       }
       .ym-mcard-tier {
-        position: absolute;
-        left: 7%;
-        top: 18%;
-        z-index: 3;
-        padding: 2px 5px;
-        border: 1px solid rgba(32,36,47,.24);
-        border-radius: 3px;
-        color: #211a12;
-        background: rgba(255,255,255,.72);
+        position: static;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 2.35em;
+        padding: .28em .58em;
+        border: 1.5px solid color-mix(in srgb, var(--rarity-color,#d78f73), #161b25 18%);
+        border-radius: 999px;
+        color: #fffdf8;
+        background: linear-gradient(180deg, color-mix(in srgb, var(--rarity-color,#d78f73), #fff 12%), color-mix(in srgb, var(--rarity-color,#d78f73), #161b25 18%));
         font-weight: 1000;
-        letter-spacing: .04em;
+        letter-spacing: .03em;
         line-height: 1;
-        box-shadow: 0 1px 0 rgba(255,255,255,.65);
-      }
-      .ym-mcard-serial {
-        position: absolute;
-        right: 7%;
-        top: 18%;
-        z-index: 2;
-        color: rgba(32,36,47,.62);
-        font-weight: 950;
-        letter-spacing: .06em;
-      }
-      .ym-mcard-title {
-        max-width: 88%;
-        min-height: 1.18em;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .ym-mcard-stars {
-        gap: 1px;
-        color: rgba(32,36,47,.18);
-        -webkit-text-stroke: .55px rgba(32,36,47,.74);
-        text-shadow: none;
-      }
-      .ym-mcard-stars .is-on {
-        color: color-mix(in srgb, var(--rarity-color,#d78f73), #fff 12%);
-        -webkit-text-stroke: .7px #211a12;
-        text-shadow: 0 1px 0 rgba(255,255,255,.7), 0 1.5px 0 #211a12;
-      }
-      .ym-mcard-sub {
-        max-width: 86%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .ym-mcard-desc {
-        position: relative;
-        z-index: 2;
-        margin-top: 3px;
-        color: rgba(32,36,47,.68);
-        font-weight: 800;
-        line-height: 1.18;
-        text-align: center;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-      .ym-mcard-place {
-        position: absolute;
-        z-index: 3;
-        left: 7%;
-        bottom: 3.2%;
-        max-width: 86%;
-        color: rgba(32,36,47,.58);
-        font-weight: 950;
-        letter-spacing: .04em;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .ym-mcard.is-basic { --rarity-color:#9aa3ad; }
-      .ym-mcard.is-bronze {
-        background:
-          linear-gradient(115deg, rgba(255,255,255,.4), transparent 26%, rgba(255,230,190,.24) 54%, transparent 78%),
-          radial-gradient(circle at 50% 34%, rgba(255,231,190,.78), transparent 29%),
-          linear-gradient(145deg, #fff4df, #bd7a41 54%, #4b3026);
-      }
-      .ym-mcard.is-silver {
-        background:
-          linear-gradient(115deg, rgba(255,255,255,.66), transparent 26%, rgba(203,225,244,.24) 56%, transparent 80%),
-          radial-gradient(circle at 50% 34%, rgba(255,255,255,.9), transparent 30%),
-          linear-gradient(145deg, #fbfdff, #b5c2d0 54%, #3f4b5e);
-      }
-      .ym-mcard.is-gold {
-        background:
-          linear-gradient(112deg, transparent 0 28%, rgba(255,255,255,.5) 42%, transparent 56%),
-          radial-gradient(circle at 50% 34%, rgba(255,250,203,.94), transparent 30%),
-          linear-gradient(145deg, #fff8c8, #e4b038 45%, #6d4919 72%, #1b1d28 100%);
-        box-shadow: 0 0 0 1px rgba(255,255,255,.62), 0 0 0 4px #181923, 0 0 26px rgba(242,188,67,.34), 0 22px 46px rgba(0,0,0,.46), inset 0 1px 0 rgba(255,255,255,.75);
-      }
-      .ym-mcard.is-diamond {
-        background:
-          linear-gradient(115deg, rgba(255,255,255,.54), transparent 22%, rgba(255,255,255,.32) 50%, transparent 76%),
-          radial-gradient(circle at 50% 34%, rgba(255,255,255,.96), transparent 27%),
-          linear-gradient(120deg, #f2ffff, #73d5e9 34%, #a987f4 58%, #ffe48a 78%, #62d6e9);
-        background-size: 180% 180%;
-        animation: ym-gacha-back-rainbow 2.6s ease-in-out infinite;
-      }
-      .ym-mcard.is-xur {
-        background:
-          linear-gradient(118deg, rgba(255,255,255,.64), transparent 18%, rgba(255,255,255,.36) 44%, transparent 72%),
-          radial-gradient(circle at 50% 34%, rgba(255,255,255,.98), transparent 24%),
-          conic-gradient(from 18deg, #f6ffff, #8ee9ff, #b996ff, #ffe58a, #ff8ad8, #f6ffff);
-        background-size: 180% 180%;
-        animation: ym-gacha-back-rainbow 1.8s ease-in-out infinite;
-        box-shadow: 0 0 0 1px rgba(255,255,255,.7), 0 0 0 4px #181923, 0 0 34px rgba(185,150,255,.48), 0 22px 50px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.8);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 3px 8px color-mix(in srgb, var(--rarity-color,#d78f73), transparent 55%);
       }
       .ym-mcard-art {
-        overflow: hidden;
-        border-radius: 8%;
+        overflow: visible;
+        border-radius: 26% 26% 34% 34%;
         background:
-          linear-gradient(145deg, rgba(255,255,255,.94), rgba(255,255,255,.36)),
-          radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--rarity-color,#d78f73), #fff 58%), rgba(255,255,255,.72) 65%);
-        border: 1.5px solid rgba(21,24,34,.78);
-        box-shadow: inset 0 0 0 2px rgba(255,255,255,.64), 0 4px 0 rgba(21,24,34,.2), 0 10px 16px rgba(0,0,0,.16);
+        radial-gradient(circle at 50% 48%, rgba(255,255,255,.9), rgba(255,255,255,.42) 62%, transparent 72%);
+        border: 0;
+        box-shadow: none;
         isolation: isolate;
       }
       .ym-mcard-art::before {
@@ -1246,31 +1413,107 @@
         position: absolute;
         left: 50%;
         top: 52%;
-        width: 104%;
-        height: 92%;
-        border-radius: 18%;
+        width: 98%;
+        height: 84%;
+        border-radius: 22%;
         z-index: -2;
-        background:
-          radial-gradient(circle, color-mix(in srgb, var(--rarity-color,#d78f73), #fff 34%), transparent 62%);
-        filter: blur(7px);
-        animation: ym-mcard-art-pulse 2.4s ease-in-out infinite;
+        background: radial-gradient(circle, color-mix(in srgb, var(--rarity-color,#d78f73), #fff 42%), transparent 68%);
+        filter: blur(6px);
+        opacity: .72;
       }
       .ym-mcard-art::after {
         content: '';
         position: absolute;
-        left: 8%;
-        right: 8%;
-        bottom: -2%;
-        height: 12%;
+        left: 14%;
+        right: 14%;
+        bottom: 3%;
+        height: 10%;
         border-radius: 999px;
         z-index: -1;
-        background: radial-gradient(ellipse, rgba(28,31,42,.28), transparent 72%);
-        filter: blur(3px);
+        background: radial-gradient(ellipse, rgba(46,32,20,.2), transparent 72%);
+        filter: blur(2px);
       }
+      .ym-mcard-title {
+        position: relative;
+        z-index: 3;
+        max-width: 88%;
+        min-height: 1.05em;
+        color: #332417;
+        font-weight: 1000;
+        line-height: 1.05;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .ym-mcard-sub {
+        position: relative;
+        z-index: 3;
+        color: rgba(32,36,47,.62);
+        background: transparent;
+        border-radius: 0;
+        font-weight: 850;
+        line-height: 1.05;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .ym-mcard-place {
+        position: relative;
+        z-index: 3;
+        width: 86%;
+        margin-top: auto;
+        padding-top: 5%;
+        border-top: 1px solid rgba(32,36,47,.12);
+        color: rgba(32,36,47,.48);
+        font-weight: 950;
+        letter-spacing: .03em;
+        line-height: 1;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .ym-mcard.is-basic { --rarity-color:#8b95a3; }
       .ym-mcard-img {
-        width: 132%; height: 132%; object-fit: contain; object-position: center; display: block;
-        filter: saturate(1.1) contrast(1.06) drop-shadow(0 11px 9px rgba(28,31,42,.3));
+        width: 142%; height: 142%; object-fit: contain; object-position: center; display: block;
+        filter: saturate(1.12) contrast(1.04) drop-shadow(0 10px 8px rgba(54,38,22,.18));
         animation: ym-mcard-item-float 2.8s ease-in-out infinite;
+      }
+      .ym-mcard.is-bronze {
+        background:
+          linear-gradient(150deg, rgba(255,255,255,.88), transparent 32%),
+          radial-gradient(circle at 50% 33%, rgba(255,222,180,.86), transparent 36%),
+          linear-gradient(180deg, #fff8ee, #f2dfc8 68%, #dfb58a);
+      }
+      .ym-mcard.is-silver {
+        background:
+          linear-gradient(150deg, rgba(255,255,255,.92), transparent 32%),
+          radial-gradient(circle at 50% 33%, rgba(232,241,249,.92), transparent 36%),
+          linear-gradient(180deg, #fdfeff, #e7edf2 68%, #becbd8);
+      }
+      .ym-mcard.is-gold {
+        background:
+          radial-gradient(circle at 20% 18%, rgba(255,255,255,.96), transparent 18%),
+          radial-gradient(circle at 70% 18%, rgba(255,240,150,.95), transparent 25%),
+          radial-gradient(circle at 50% 55%, rgba(255,255,255,.82), transparent 42%),
+          linear-gradient(180deg, #fffaf0, #ffeeb2 68%, #e5bc58);
+        box-shadow: 0 0 0 2px rgba(255,255,255,.78), 0 0 22px rgba(231,184,68,.28), 0 15px 30px rgba(47,35,22,.2), inset 0 2px 0 rgba(255,255,255,.84);
+      }
+      .ym-mcard.is-diamond {
+        background:
+          linear-gradient(150deg, rgba(255,255,255,.94), transparent 30%),
+          radial-gradient(circle at 50% 33%, rgba(239,253,255,.98), transparent 35%),
+          linear-gradient(135deg, #fbffff, #dff8ff 36%, #e7dcff 70%, #fdf0c3);
+        box-shadow: 0 0 0 2px rgba(255,255,255,.82), 0 0 26px rgba(121,220,242,.28), 0 15px 32px rgba(47,35,22,.19), inset 0 2px 0 rgba(255,255,255,.86);
+      }
+      .ym-mcard.is-xur {
+        background:
+          linear-gradient(150deg, rgba(255,255,255,.95), transparent 27%),
+          radial-gradient(circle at 50% 33%, rgba(255,255,255,.98), transparent 34%),
+          linear-gradient(135deg, #fbffff, #d7fbff 26%, #eadfff 54%, #fff0bc 76%, #ffe0f2);
+        box-shadow: 0 0 0 2px rgba(255,255,255,.84), 0 0 34px rgba(185,150,255,.32), 0 16px 34px rgba(47,35,22,.2), inset 0 2px 0 rgba(255,255,255,.9);
       }
       .ym-mcard.is-basic .ym-mcard-img { filter: saturate(.9) contrast(1.02) drop-shadow(0 10px 9px rgba(28,31,42,.24)); }
       .ym-mcard.is-bronze .ym-mcard-img { filter: sepia(.18) saturate(1.08) contrast(1.04) drop-shadow(0 11px 9px rgba(122,72,31,.3)); }
@@ -1309,11 +1552,11 @@
       }
       .ym-mback {
         background:
-          linear-gradient(115deg, rgba(255,255,255,.18), transparent 28%, rgba(255,255,255,.08) 55%, transparent 78%),
-          radial-gradient(circle at 50% 45%, rgba(255,255,255,.28), transparent 20%),
-          repeating-conic-gradient(from 8deg at 50% 50%, transparent 0deg 8deg, rgba(255,248,236,.13) 8deg 12deg),
-          linear-gradient(145deg, #3d4a76, #202947 62%, #11182d);
-        box-shadow: 0 0 0 2.5px var(--rarity-color,#6b7a99), 0 8px 0 -1px #1b2030, 0 18px 30px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.34);
+          radial-gradient(circle at 28% 18%, rgba(255,255,255,.34), transparent 16%),
+          radial-gradient(circle at 50% 48%, rgba(255,255,255,.2), transparent 24%),
+          repeating-conic-gradient(from 8deg at 50% 50%, transparent 0deg 8deg, rgba(255,248,236,.16) 8deg 12deg),
+          linear-gradient(145deg, #6fc9d7, #3f88b0 48%, #2f527d);
+        box-shadow: 0 0 0 2.5px #fff7e6, 0 0 0 5px var(--rarity-color,#6b7a99), 0 8px 0 -1px #24385a, 0 18px 30px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.42);
       }
       .ym-mback-mascot {
         position: relative;
@@ -1322,11 +1565,10 @@
         height: 68%;
         display: block;
         background:
-          radial-gradient(circle at 38% 28%, #ffffff 0 14%, transparent 15%),
-          linear-gradient(145deg, #fff7ec 0 30%, #f0c79a 45%, #b9382e 72%, #fff7ec 100%);
+          linear-gradient(145deg, #fff 0 38%, #eefaff 39% 58%, #3f88b0 59% 100%);
         -webkit-mask: url('/mascots/yangmung-duo-logo.webp') center / contain no-repeat;
         mask: url('/mascots/yangmung-duo-logo.webp') center / contain no-repeat;
-        filter: drop-shadow(0 6px 8px rgba(0,0,0,.28)) drop-shadow(0 0 15px rgba(216,162,74,.3));
+        filter: drop-shadow(0 6px 8px rgba(0,0,0,.24)) drop-shadow(0 0 15px rgba(111,201,215,.28));
         user-select: none;
       }
       .ym-mback img {
@@ -1336,8 +1578,7 @@
       .ym-mback.is-diamond .ym-mback-mascot,
       .ym-mback.is-xur .ym-mback-mascot {
         background:
-          radial-gradient(circle at 38% 28%, #ffffff 0 16%, transparent 17%),
-          linear-gradient(145deg, #ffffff 0 24%, #ffe6b0 44%, #cda14a 70%, #ffffff 100%);
+          linear-gradient(145deg, #ffffff 0 28%, #e8fbff 42%, var(--rarity-color,#cda14a) 74%, #ffffff 100%);
       }
       .ym-gacha-item-illustration {
         border-radius: 32% 32% 40% 40%;
