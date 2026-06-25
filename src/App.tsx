@@ -256,26 +256,26 @@ export function App() {
   }
   // 발음 구분 — 최소 페어 듣고 둘 중 고르기 (つ/す·장음·촉음·청탁)
   function startPairSession() {
-    const cards = selectPairCards(allCards, progress, nextSessionId(session));
+    const cards = selectPairCards(allCards, progress, nextSessionId(session), 18);
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true, true, REWARD_PRACTICE);
   }
   // 거리 읽기 — 간판·메뉴·안내·교통 표기 읽기 연습
   function startSignSession() {
     // 학습형 — 간판을 모두 설명·듣기·읽기한 뒤, 듣고 일본어 찾기 3문제.
-    const cards = selectStudyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:hear2ja:'), { studyLimit: 16 });
+    const cards = selectStudyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:hear2ja:'), { studyLimit: 24, quizCount: 6 });
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true, true, REWARD_PRACTICE);
   }
   // 받아쓰기 전용 — 듣고 가나 타일로 쓰기
   function startDictationSession() {
-    const cards = selectDictationCards(allCards, progress, nextSessionId(session));
+    const cards = selectDictationCards(allCards, progress, nextSessionId(session), 18);
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true, true, REWARD_PRACTICE);
   }
   // 한→일 작문 전용 — 한국어 보고 일본어 조립(산출)
   function startComposeSession() {
-    const cards = selectComposeCards(allCards, progress, nextSessionId(session));
+    const cards = selectComposeCards(allCards, progress, nextSessionId(session), 18);
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true, true, REWARD_PRACTICE);
   }
@@ -291,18 +291,18 @@ export function App() {
   function startVocabSession(groupId: string) {
     let cards: Card[];
     if (groupId === 'basics') {
-      cards = selectStudyDeck(allCards, (id) => id.startsWith('basic:study:'), (id) => id.startsWith('basic:hear2ja:'), { studyLimit: 24, quizCount: 4 });
+      cards = selectStudyDeck(allCards, (id) => id.startsWith('basic:study:'), (id) => id.startsWith('basic:hear2ja:'), { studyLimit: 36, quizCount: 8 });
     } else if (groupId === 'all') {
-      cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:') && id.includes(':study:'), (id) => id.startsWith('vocab:') && id.includes(':hear2ja:'), { studyLimit: 24, quizCount: 5 });
+      cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:') && id.includes(':study:'), (id) => id.startsWith('vocab:') && id.includes(':hear2ja:'), { studyLimit: 36, quizCount: 8 });
     } else {
-      cards = selectStudyDeck(allCards, (id) => id.startsWith(`vocab:${groupId}:study:`), (id) => id.startsWith(`vocab:${groupId}:hear2ja:`));
+      cards = selectStudyDeck(allCards, (id) => id.startsWith(`vocab:${groupId}:study:`), (id) => id.startsWith(`vocab:${groupId}:hear2ja:`), { studyLimit: 28, quizCount: 6 });
     }
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true, true, REWARD_PRACTICE);
   }
   // 기본 인사 전용 세션 — 학습형
   function startGreetingSession() {
-    const cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:greetings:study:'), (id) => id.startsWith('vocab:greetings:hear2ja:'));
+    const cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:greetings:study:'), (id) => id.startsWith('vocab:greetings:hear2ja:'), { studyLimit: 24, quizCount: 6 });
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true, true, REWARD_PRACTICE);
   }

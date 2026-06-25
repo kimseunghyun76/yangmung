@@ -745,8 +745,6 @@ export function selectFlashCardsByMode(
   mode: FlashMode,
   limit = 12,
 ): Card[] {
-  const seen: Card[] = [], fresh: Card[] = [];
-
   const isKana = (c: Card) => c.kind === 'quiz' && (
     c.id.endsWith(':read') || c.id.endsWith(':listen') || c.id.endsWith(':confuse') || c.id.startsWith('pair:')
   );
@@ -761,13 +759,47 @@ export function selectFlashCardsByMode(
     c.reviewTarget?.type === 'mission' &&
     !!c.promptPhrase && (c.promptPhrase.kana?.length ?? 99) <= 16;
 
+  const sortWeak = (arr: Card[]) =>
+    [...arr].sort((a, b) => itemMastery(progress[a.id]) - itemMastery(progress[b.id]));
+
+  const prioritized = (test: (c: Card) => boolean, count: number): Card[] => {
+    const seen: Card[] = [], fresh: Card[] = [];
+    for (const c of allCards) {
+      if (c.kind !== 'quiz' || c.choices.length < 2 || !test(c)) continue;
+      (progress[c.id] ? seen : fresh).push(c);
+    }
+    return [...sortWeak(seen), ...shuffleKana(fresh)].slice(0, count);
+  };
+
+  if (mode === 'blitz') {
+    const kanaTarget = Math.ceil(limit * 0.34);
+    const expressionTarget = Math.ceil(limit * 0.33);
+    const situationTarget = Math.max(1, limit - kanaTarget - expressionTarget);
+    const picked: Card[] = [
+      ...prioritized(isKana, kanaTarget),
+      ...prioritized((c) => isExpression(c) && !isKana(c), expressionTarget),
+      ...prioritized((c) => isSituation(c) && !isKana(c) && !isExpression(c), situationTarget),
+    ];
+    const seenIds = new Set(picked.map((c) => c.id));
+    if (picked.length < limit) {
+      for (const c of prioritized((c) => isKana(c) || isExpression(c) || isSituation(c), limit * 2)) {
+        if (seenIds.has(c.id)) continue;
+        picked.push(c);
+        seenIds.add(c.id);
+        if (picked.length >= limit) break;
+      }
+    }
+    return shuffleKana(picked).slice(0, limit);
+  }
+
+  const seen: Card[] = [], fresh: Card[] = [];
+
   const accept = (c: Card): boolean => {
     if (c.kind !== 'quiz' || c.choices.length < 2) return false;
     switch (mode) {
       case 'kana': return isKana(c);
       case 'expression': return isExpression(c);
       case 'situation': return isSituation(c);
-      case 'blitz': return isKana(c) || isExpression(c) || isSituation(c);
     }
   };
 
@@ -777,9 +809,6 @@ export function selectFlashCardsByMode(
   }
 
   // 복습 우선, 부족하면 신규로 채움. 약점(틀린 것) 먼저.
-  const sortWeak = (arr: Card[]) =>
-    [...arr].sort((a, b) => itemMastery(progress[a.id]) - itemMastery(progress[b.id]));
-
   const pool = seen.length >= limit
     ? sortWeak(seen)
     : [...sortWeak(seen), ...shuffleKana(fresh)];
@@ -869,4 +898,3 @@ export function isKanaReadStable(progress: ProgressMap, kanaId: string): boolean
   const p = progress[`kana:${kanaId}:read`];
   return !!p && p.consecutiveCorrect >= 2;
 }
-
