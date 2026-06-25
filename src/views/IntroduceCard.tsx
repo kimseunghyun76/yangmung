@@ -12,9 +12,11 @@ interface Props {
   isKanaFamiliar: (char: string) => boolean;
   onSeen: () => void;
   onNext: () => void;
+  // 타이틀·설명을 배경 장면 하단에 얹는 경우 본문에서는 숨긴다.
+  headerInScene?: boolean;
 }
 
-export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext }: Props) {
+export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, headerInScene }: Props) {
   function next() {
     onSeen();
     onNext();
@@ -22,7 +24,7 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext }: Prop
 
   return (
     <div>
-      <h2 style={{ marginTop: 14, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="discover" size={22} /> 새 표현</h2>
+      {!headerInScene && <h2 style={{ marginTop: 14, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="discover" size={22} /> 새 표현</h2>}
       {hasWordArt(card.id) && (
         <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 8px' }}>
           <span style={{ display: 'inline-flex', padding: 8, borderRadius: 20, background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)', boxShadow: '0 6px 16px rgba(0,0,0,.08)' }}>
@@ -30,7 +32,7 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext }: Prop
           </span>
         </div>
       )}
-      <p style={{ color: 'var(--ink-soft)', marginTop: 0, lineHeight: 1.5 }}>{card.note}</p>
+      {!headerInScene && <p style={{ color: 'var(--ink-soft)', marginTop: 0, lineHeight: 1.5 }}>{card.note}</p>}
 
       {card.answersQuestion && (
         <div style={{ marginTop: 14, padding: 12, borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--surface-2)' }}>

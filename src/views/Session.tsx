@@ -111,12 +111,25 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
                 objectPosition: 'center',
                 filter: 'saturate(.88) contrast(.98)',
               }} />
+              {/* 새 표현 — 타이틀 + 장면 설명을 배경 하단에 얹는다 */}
+              {card.kind === 'introduce' && (
+                <div style={{
+                  position: 'absolute', left: 0, right: 0, bottom: 0, padding: '34px 16px 12px',
+                  background: 'linear-gradient(to top, rgba(20,12,8,.78), rgba(20,12,8,.34) 58%, transparent)',
+                  color: '#fff', textAlign: 'left',
+                }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12.5, fontWeight: 800, letterSpacing: '.02em', color: '#ffe6b0' }}>
+                    <Icon name="discover" size={15} /> 새 표현
+                  </span>
+                  {card.note && <p style={{ margin: '4px 0 0', fontSize: 13, lineHeight: 1.45, fontWeight: 600, color: 'rgba(255,255,255,.94)', textShadow: '0 1px 6px rgba(0,0,0,.5)' }}>{card.note}</p>}
+                </div>
+              )}
             </div>
           )}
           {card.kind === 'tip' ? (
             <TipBody card={card} onNext={onNext} />
           ) : card.kind === 'introduce' ? (
-            <IntroduceCardView key={card.id} card={card} isKanaFamiliar={isKanaFamiliar} onSeen={onIntroduceSeen} onNext={onNext} />
+            <IntroduceCardView key={card.id} card={card} isKanaFamiliar={isKanaFamiliar} onSeen={onIntroduceSeen} onNext={onNext} headerInScene={!!cardBackdrop} />
           ) : card.kind === 'order' ? (
             <OrderCardView key={card.id} card={card} picks={picks} isKanaFamiliar={isKanaFamiliar} onNext={onNext} />
           ) : card.kind === 'speak' ? (
