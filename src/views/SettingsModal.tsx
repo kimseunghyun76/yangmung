@@ -81,7 +81,7 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
           </button>
         ))}
       </div>
-      <p style={{ margin: '6px 2px 0', fontSize: 11.5, color: 'var(--ink-faint)' }}>일본어를 탭하면 이 속도로 들려요. 누르면 바로 미리 들어볼 수 있어요.</p>
+      <p style={{ margin: '6px 2px 0', fontSize: 11.5, color: 'var(--ink-faint)' }}>일본어 문장은 이 속도로 들려요. 누르면 바로 미리 들어볼 수 있어요.</p>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 18 }}>
         <span style={head}><Icon name="fast" size={16} /> 정답이면 자동으로 다음</span>

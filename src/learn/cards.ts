@@ -284,6 +284,16 @@ function buildBasicLifeCards(): Card[] {
   return cards;
 }
 
+// 오답(distractor)이 "헷갈리는 단답"이 되지 않게 거른다.
+// 네/예/아니요/알겠습니다/감사합니다 같은 짧은 반응은 거의 모든 질문에 어중간하게 들어맞아
+// 정답처럼 보인다 → 완전히 다른 '문장형' 표현만 오답 후보로 써서 오해를 없앤다.
+const cleanLen = (s: string) => s.replace(/[\s,.!?·~()]/g, '').length;
+const isAmbiguousReply = (p: Phrase): boolean => {
+  const ko = p.korean.trim();
+  if (cleanLen(ko) <= 5) return true; // 단답형
+  return /^(네|예|응|아니|아뇨|알겠|감사|고마|고맙|괜찮|그래|맞아|좋아|싫|있어요|없어요|부탁(합니다|해요|드려요|드립니다)$)/.test(ko);
+};
+
 // 미션 스텝 → 퀴즈 선택지 풀.
 // 정책: 정답 후보 중 1개만 노출 + 오답 3개. 복구 표현은 보기로 섞지 않고 하단 액션으로만 보여준다.
 // 세션 시작 때마다 다시 뽑아 새 문제처럼 보이게 한다.
@@ -330,7 +340,8 @@ function buildStepChoicePools(stepChoices: MissionStep['choices'], byPhrase: (id
       !usedPhraseIds.has(p.id)
       && !usedLabels.has(p.korean)
       && p.korean.length <= 18
-      && !fallbackRecoveryIds.includes(p.id),
+      && !fallbackRecoveryIds.includes(p.id)
+      && !isAmbiguousReply(p), // 헷갈리는 단답·반응어 제외 → 완전히 다른 문장만 오답으로
     ));
     for (const p of distractors) {
       if (wrong.length >= 3) break;
