@@ -99,7 +99,7 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
       {/* ── 4. 글래스 학습 시트 (flex로 끝까지 채우고, 길면 내부 스크롤) ── */}
       <GlassPanel style={{
         flex: 1, minHeight: 0, overflowY: 'auto', borderRadius: '24px 24px 0 0', borderBottom: 'none',
-        padding: '20px max(20px, env(safe-area-inset-left)) max(24px, calc(env(safe-area-inset-bottom) + 16px))',
+        padding: '14px max(20px, env(safe-area-inset-left)) max(16px, calc(env(safe-area-inset-bottom) + 10px))',
       }}>
         <div key={sceneKey} className="ym-sheet-up" style={{ maxWidth: 540, margin: '0 auto' }}>
           {/* 장면 배경 — 질문 문장 바로 위. 잘리지 않게 전체 표시(contain), 여백은 테마색이 채운다.
@@ -108,27 +108,28 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
             <div key={cardBackdrop} className="ym-scene-bg" style={{
               position: 'relative', overflow: 'hidden', width: 'calc(100% + 40px)', marginLeft: -20, marginRight: -20,
               borderRadius: 16,
-              background: `linear-gradient(135deg, ${hexA(accent, 0.14)}, var(--surface-2))`, marginBottom: 18,
+              background: `linear-gradient(135deg, ${hexA(accent, 0.14)}, var(--surface-2))`, marginBottom: card.kind === 'introduce' ? 10 : 18,
             }}>
               <img src={cardBackdrop} alt="" aria-hidden style={{
                 width: '100%',
-                height: 'auto',
+                // 새 표현 카드는 배너처럼 짧게(스크롤 방지) — 장면명은 오버레이로 부각하므로 컷이 짧아도 OK
+                height: card.kind === 'introduce' ? 100 : 'auto',
                 display: 'block',
-                objectFit: 'contain',
-                objectPosition: 'center',
+                objectFit: card.kind === 'introduce' ? 'cover' : 'contain',
+                objectPosition: card.kind === 'introduce' ? 'center 38%' : 'center',
                 filter: 'saturate(.88) contrast(.98)',
               }} />
-              {/* 새 표현 — 타이틀 + 장면 설명을 배경 하단에 얹는다 */}
+              {/* 새 표현 — 라벨을 크게, 장면명(예: 편의점 계산대)을 부각해 배경 하단에 얹는다 */}
               {card.kind === 'introduce' && (
                 <div style={{
-                  position: 'absolute', left: 0, right: 0, bottom: 0, padding: '34px 16px 12px',
-                  background: 'linear-gradient(to top, rgba(20,12,8,.78), rgba(20,12,8,.34) 58%, transparent)',
+                  position: 'absolute', left: 0, right: 0, bottom: 0, padding: '44px 16px 14px',
+                  background: 'linear-gradient(to top, rgba(20,12,8,.82), rgba(20,12,8,.38) 60%, transparent)',
                   color: '#fff', textAlign: 'left',
                 }}>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12.5, fontWeight: 800, letterSpacing: '.02em', color: '#ffe6b0' }}>
-                    <Icon name="discover" size={15} /> 새 표현
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 850, letterSpacing: '.02em', color: '#ffe6b0' }}>
+                    <Icon name="discover" size={17} /> 새 표현
                   </span>
-                  {card.note && <p style={{ margin: '4px 0 0', fontSize: 13, lineHeight: 1.45, fontWeight: 600, color: 'rgba(255,255,255,.94)', textShadow: '0 1px 6px rgba(0,0,0,.5)' }}>{card.note}</p>}
+                  <p style={{ margin: '3px 0 0', fontSize: 25, lineHeight: 1.14, fontWeight: 900, color: '#fff', textShadow: '0 2px 10px rgba(0,0,0,.55)' }}>{scenario ?? card.note}</p>
                 </div>
               )}
             </div>
