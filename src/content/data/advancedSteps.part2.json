@@ -7,8 +7,8 @@
       "recapPromptKo": "이 약은 하루 세 번, 식후에 드세요",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "식후에 먹으면 되나요?",
+          "phraseId": "p_shokugo_kakunin",
           "correct": true
         },
         {
@@ -259,8 +259,8 @@
       "recapPromptKo": "큰 짐은 700엔짜리 로커를 이용해 주세요",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "그렇게 할게요",
+          "phraseId": "p_sou_shimasu",
           "correct": true
         },
         {
@@ -384,13 +384,13 @@
       "recapPromptKo": "오토시입니다. 자릿세에 포함되어 있습니다",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "잘 먹겠습니다",
+          "phraseId": "p_itadakimasu",
           "correct": true
         },
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "그렇게 할게요",
+          "phraseId": "p_sou_shimasu",
           "correct": true,
           "feedback": "오토시를 받을 때 간단히 감사 인사를 전하면 자연스러워요"
         },
@@ -447,8 +447,8 @@
       "recapPromptKo": "걸으면 20분, 버스면 5분입니다",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "걸어가 볼게요",
+          "phraseId": "p_aruite_mimasu",
           "correct": true
         },
         {
@@ -490,8 +490,8 @@
           "feedback": "식당 위치를 확인해요"
         },
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "기대돼요",
+          "phraseId": "p_tanoshimi_desu",
           "correct": true,
           "feedback": "충분한 정보를 얻었으면 감사로 마무리해요"
         },
@@ -518,8 +518,8 @@
       "recapPromptKo": "건조기는 별도 요금으로, 30분에 100엔입니다",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "기억해 둘게요",
+          "phraseId": "p_oboete_okimasu",
           "correct": true
         },
         {
@@ -549,13 +549,13 @@
       "recapPromptKo": "동전 교환기는 입구 옆에 있어요",
       "choices": [
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "가 볼게요",
+          "phraseId": "p_itte_mimasu",
           "correct": true
         },
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "확인했어요",
+          "phraseId": "p_kakunin_shimashita",
           "correct": true
         },
         {
@@ -612,8 +612,8 @@
       "recapPromptKo": "불꽃놀이는 8시부터, 장소는 강 쪽이에요",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "기대돼요",
+          "phraseId": "p_tanoshimi_desu",
           "correct": true
         },
         {

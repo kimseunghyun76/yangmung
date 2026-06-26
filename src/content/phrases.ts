@@ -430,4 +430,6 @@ export const phrases: Phrase[] = [
   { id: 'p_itadakimasu', kana: 'いただきます', korean: '잘 먹겠습니다', register: 'productive', tip: '「いただきます」— 음식·차를 받을 때 "잘 먹겠습니다". 식사·다과 자리의 기본 인사예요' },
   { id: 'p_renraku_kudasai', kana: 'れんらくしてください', kanji: '連絡してください', displayKana: 'れんらくして、ください', korean: '연락 주세요', register: 'productive', tip: '「連絡(れんらく)してください」— 분실물을 찾으면 알려달라고 부탁하는 표현이에요' },
   { id: 'p_isoide_kudasai', kana: 'いそいでください', kanji: '急いでください', korean: '서둘러 주세요', register: 'productive', tip: '「急(いそ)いでください」— 긴급 상황에서 "서둘러 주세요". 구급차·도움 요청에 분명하게 전달돼요' },
+  { id: 'p_koko_de_orimasu', kana: 'ここでおります', kanji: 'ここで降ります', displayKana: 'ここで、おります', korean: '여기서 내릴게요', register: 'productive', tip: '「ここで降(お)ります」— 버스·전철에서 "여기서 내릴게요". 내릴 곳을 안내받았을 때 행동으로 답해요' },
+  { id: 'p_tadaima', kana: 'ただいま', korean: '다녀왔습니다', register: 'productive', tip: '「ただいま」— 료칸·숙소에 돌아오며 "다녀왔습니다". 직원의 おかえりなさい(어서 오세요)에 짝이 되는 인사예요' },
 ];

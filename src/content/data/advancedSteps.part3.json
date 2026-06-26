@@ -70,8 +70,8 @@
       "recapPromptKo": "참배는 두 번 절, 두 번 박수, 한 번 절이에요",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "그렇게 할게요",
+          "phraseId": "p_sou_shimasu",
           "correct": true
         },
         {
@@ -132,8 +132,8 @@
       "recapPromptKo": "탕은 뜨거운 편입니다. 사우나와 노천탕도 있습니다",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "기대돼요",
+          "phraseId": "p_tanoshimi_desu",
           "correct": true
         },
         {
@@ -168,8 +168,8 @@
           "correct": true
         },
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "기억해 둘게요",
+          "phraseId": "p_oboete_okimasu",
           "correct": true
         },
         {
@@ -195,8 +195,8 @@
       "recapPromptKo": "저녁 식사는 6시에 방으로 준비해 드리겠습니다",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "기억해 둘게요",
+          "phraseId": "p_oboete_okimasu",
           "correct": true
         },
         {
@@ -226,13 +226,13 @@
       "recapPromptKo": "이불은 저녁 식사 동안에 깔아 드리겠습니다",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "그걸로 부탁드려요",
+          "phraseId": "p_sorede_onegai",
           "correct": true
         },
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "기억해 둘게요",
+          "phraseId": "p_oboete_okimasu",
           "correct": true
         },
         {
@@ -321,8 +321,8 @@
       "recapPromptKo": "주문하신 음식은 신칸센 레인으로 도착합니다",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "기대돼요",
+          "phraseId": "p_tanoshimi_desu",
           "correct": true
         },
         {
@@ -357,8 +357,8 @@
           "correct": true
         },
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "그렇게 할게요",
+          "phraseId": "p_sou_shimasu",
           "correct": true
         },
         {
@@ -414,8 +414,8 @@
       "recapPromptKo": "시착은 세 벌까지입니다. 이 바구니를 사용해 주세요",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "그렇게 할게요",
+          "phraseId": "p_sou_shimasu",
           "correct": true
         },
         {
@@ -483,8 +483,8 @@
           "correct": true
         },
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "다녀왔습니다",
+          "phraseId": "p_tadaima",
           "correct": true,
           "feedback": "반납하며 감사 인사를 더하면 완벽해요"
         },
