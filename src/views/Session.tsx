@@ -83,8 +83,10 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
 
       {/* ── 3. 장면·화자 배지 (새 표현 카드는 장면명을 배경 하단 오버레이로 옮겨 숨김) ── */}
       {(() => {
-        const showScenario = !!sv && !!scenario && card.kind !== 'introduce';
-        const showSpeaker = !!sv && !!speaker;
+        // 새 표현·미션 퀴즈(배경 있음)는 장면명·화자를 배경 오버레이로 옮겼으므로 상단 배지는 숨김
+        const inOverlay = !!cardBackdrop && (card.kind === 'introduce' || isMissionStep);
+        const showScenario = !!sv && !!scenario && card.kind !== 'introduce' && !inOverlay;
+        const showSpeaker = !!sv && !!speaker && !inOverlay;
         const showPlain = !sv && !!plainTag;
         if (!showScenario && !showSpeaker && !showPlain) return null;
         return (
@@ -108,15 +110,15 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
             <div key={cardBackdrop} className="ym-scene-bg" style={{
               position: 'relative', overflow: 'hidden', width: 'calc(100% + 40px)', marginLeft: -20, marginRight: -20,
               borderRadius: 16,
-              background: `linear-gradient(135deg, ${hexA(accent, 0.14)}, var(--surface-2))`, marginBottom: card.kind === 'introduce' ? 10 : 18,
+              background: `linear-gradient(135deg, ${hexA(accent, 0.14)}, var(--surface-2))`, marginBottom: (card.kind === 'introduce' || isMissionStep) ? 10 : 18,
             }}>
               <img src={cardBackdrop} alt="" aria-hidden style={{
                 width: '100%',
-                // 새 표현 카드는 배너처럼 짧게(스크롤 방지) — 장면명은 오버레이로 부각하므로 컷이 짧아도 OK
-                height: card.kind === 'introduce' ? 100 : 'auto',
+                // 새 표현·미션 퀴즈 카드는 배너처럼 짧게(스크롤 방지) — 장면명·안내는 오버레이로 부각
+                height: (card.kind === 'introduce' || isMissionStep) ? 100 : 'auto',
                 display: 'block',
-                objectFit: card.kind === 'introduce' ? 'cover' : 'contain',
-                objectPosition: card.kind === 'introduce' ? 'center 38%' : 'center',
+                objectFit: (card.kind === 'introduce' || isMissionStep) ? 'cover' : 'contain',
+                objectPosition: (card.kind === 'introduce' || isMissionStep) ? 'center 38%' : 'center',
                 filter: 'saturate(.88) contrast(.98)',
               }} />
               {/* 새 표현 — 라벨을 크게, 장면명(예: 편의점 계산대)을 부각해 배경 하단에 얹는다 */}
@@ -130,6 +132,22 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
                     <Icon name="discover" size={17} /> 새 표현
                   </span>
                   <p style={{ margin: '3px 0 0', fontSize: 25, lineHeight: 1.14, fontWeight: 900, color: '#fff', textShadow: '0 2px 10px rgba(0,0,0,.55)' }}>{scenario ?? card.note}</p>
+                </div>
+              )}
+              {/* 미션 퀴즈 — 장면명·화자·할 일 안내를 배경 하단에 얹는다 */}
+              {isMissionStep && (
+                <div style={{
+                  position: 'absolute', left: 0, right: 0, bottom: 0, padding: '40px 16px 12px',
+                  background: 'linear-gradient(to top, rgba(20,12,8,.82), rgba(20,12,8,.38) 60%, transparent)',
+                  color: '#fff', textAlign: 'left',
+                }}>
+                  <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
+                    {scenario && <span style={{ padding: '3px 10px', borderRadius: 999, fontSize: 12.5, fontWeight: 800, background: hexA(accent, 0.92), color: '#fff' }}>{scenario}</span>}
+                    {speaker && <span style={{ padding: '3px 10px', borderRadius: 999, fontSize: 12.5, fontWeight: 800, background: 'rgba(255,255,255,.22)', color: '#fff' }}>{speaker}</span>}
+                  </div>
+                  <p style={{ margin: '6px 0 0', fontSize: 14, lineHeight: 1.4, fontWeight: 750, color: 'rgba(255,255,255,.96)', textShadow: '0 1px 6px rgba(0,0,0,.55)' }}>
+                    {speaker ? `${speaker}의 말을 듣고, 아래에서 가장 자연스러운 답을 골라보세요.` : '아래에서 가장 자연스러운 답을 골라보세요.'}
+                  </p>
                 </div>
               )}
             </div>
