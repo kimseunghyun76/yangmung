@@ -35,9 +35,10 @@ interface Props {
   onExit: () => void;
   onKnown: () => void;
   picks: PickMap;
+  quickPractice?: boolean;
 }
 
-export function Session({ card, index, total, picked, onChoose, onIntroduceSeen, onSpeakPracticed, onDictationResult, isKanaFamiliar, onNext, onPrev, onExit, onKnown, picks }: Props) {
+export function Session({ card, index, total, picked, onChoose, onIntroduceSeen, onSpeakPracticed, onDictationResult, isKanaFamiliar, onNext, onPrev, onExit, onKnown, picks, quickPractice }: Props) {
   const missionId = card.kind !== 'tip' && card.kind !== 'discover' && card.reviewTarget?.type === 'mission'
     ? String(card.reviewTarget.id) : undefined;
   const sv = missionId ? sceneVisualByMission(missionId) : null;
@@ -135,7 +136,7 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
           {card.kind === 'tip' ? (
             <TipBody card={card} onNext={onNext} />
           ) : card.kind === 'introduce' ? (
-            <IntroduceCardView key={card.id} card={card} isKanaFamiliar={isKanaFamiliar} onSeen={onIntroduceSeen} onNext={onNext} headerInScene={!!cardBackdrop} />
+            <IntroduceCardView key={card.id} card={card} isKanaFamiliar={isKanaFamiliar} onSeen={onIntroduceSeen} onNext={onNext} headerInScene={!!cardBackdrop} preferImageArt={quickPractice} />
           ) : card.kind === 'order' ? (
             <OrderCardView key={card.id} card={card} picks={picks} isKanaFamiliar={isKanaFamiliar} onNext={onNext} />
           ) : card.kind === 'speak' ? (

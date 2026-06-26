@@ -658,6 +658,7 @@ export function App() {
           onPrev={prev}
           onExit={() => setView('home')}
           onKnown={markKnown}
+          quickPractice={sessionRewardRef.current === REWARD_PRACTICE}
         />
       );
     }

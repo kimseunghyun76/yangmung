@@ -207,10 +207,10 @@ function vocabWordArtSrc(id: string): string | null {
   return `/vocab/word-art/${group}/${item}.png`;
 }
 
-export function WordArt({ id, korean, kana: _kana, size = 96, style }: { id: string; korean: string; kana: string; size?: number; style?: CSSProperties }) {
+export function WordArt({ id, korean, kana: _kana, size = 96, style, preferAsset = false }: { id: string; korean: string; kana: string; size?: number; style?: CSSProperties; preferAsset?: boolean }) {
   const assetSrc = vocabWordArtSrc(id);
   const [assetFailed, setAssetFailed] = useState(false);
-  if (assetSrc && !assetFailed) {
+  if (preferAsset && assetSrc && !assetFailed) {
     return (
       <img
         src={assetSrc}
