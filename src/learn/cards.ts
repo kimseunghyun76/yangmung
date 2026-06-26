@@ -297,7 +297,7 @@ const isAmbiguousReply = (p: Phrase): boolean => {
 // 미션 스텝 → 퀴즈 선택지 풀.
 // 정책: 정답 후보 중 1개만 노출 + 오답 3개. 복구 표현은 보기로 섞지 않고 하단 액션으로만 보여준다.
 // 세션 시작 때마다 다시 뽑아 새 문제처럼 보이게 한다.
-function buildStepChoicePools(stepChoices: MissionStep['choices'], byPhrase: (id: string) => Phrase, allPhrases: Phrase[]): NonNullable<QuizCard['choicePools']> {
+function buildStepChoicePools(stepChoices: MissionStep['choices'], byPhrase: (id: string) => Phrase, allPhrases: Phrase[], promptPhraseId?: string): NonNullable<QuizCard['choicePools']> {
   const built: Choice[] = stepChoices.map((c) => ({
     label: c.text,
     correct: c.correct,
@@ -308,6 +308,12 @@ function buildStepChoicePools(stepChoices: MissionStep['choices'], byPhrase: (id
   }));
   const usedPhraseIds = new Set(stepChoices.map((c) => c.phraseId).filter(Boolean));
   const usedLabels = new Set(built.map((c) => c.label));
+  // 질문(점원 대사) 자체가 오답 보기로 새지 않게 제외 — 같은 문장이 질문이자 답이 되면 안 됨.
+  if (promptPhraseId) {
+    usedPhraseIds.add(promptPhraseId);
+    const pp = byPhrase(promptPhraseId);
+    if (pp) { usedLabels.add(pp.korean); }
+  }
   const correct = built.filter((c) => c.correct && !c.recovery);
   const recovery = built.filter((c) => c.recovery);
   const wrong = built.filter((c) => !c.correct && !c.recovery);
@@ -721,7 +727,7 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
           addIntroduce(ch.phraseId, sceneNote, qInfo, alts);
         }
       }
-      const choicePools = buildStepChoicePools(step.choices, byPhrase, phrases);
+      const choicePools = buildStepChoicePools(step.choices, byPhrase, phrases, step.promptPhraseId);
       // 미션 퀴즈 = "맞는 답 고르기"로 통일 (반전 퀴즈 제거).
       cards.push({
         kind: 'quiz', id: `mission:${m.id}:${idx}`, tag: `${m.id} 미션`,

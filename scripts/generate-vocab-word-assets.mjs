@@ -130,12 +130,20 @@ const has = (text, words) => words.some((w) => text.includes(w));
 const hash = (s) => [...s].reduce((n, ch) => (n * 33 + ch.charCodeAt(0)) >>> 0, 5381);
 
 function base(g, pal, seed) {
-  g.ellipse(256, 434, 150, 26, rgba('#000000', 36));
-  g.circle(110 + seed % 40, 100 + seed % 36, 7, rgba(pal.light, 90));
-  g.circle(410 - seed % 52, 142 + seed % 42, 5, rgba(pal.main, 70));
+  g.roundedRect(18, 18, 476, 476, 62, rgba('#fffaf0', 246));
+  g.roundedRect(32, 32, 448, 448, 52, rgba(pal.light, 78));
+  g.circle(106 + seed % 34, 96 + seed % 28, 76, rgba('#ffffff', 92));
+  g.circle(392 - seed % 46, 122 + seed % 35, 96, rgba(pal.main, 54));
+  g.circle(406, 380, 104, rgba('#ffffff', 54));
+  g.ellipse(256, 430, 168, 34, rgba('#000000', 26));
+  g.roundedRect(82, 360, 348, 58, 29, rgba('#ffffff', 118));
   if (seed % 3 === 0) {
-    g.line(96, 170, 130, 170, 6, rgba(pal.main, 58));
-    g.line(113, 153, 113, 187, 6, rgba(pal.main, 58));
+    g.line(76, 144, 112, 144, 7, rgba(pal.main, 82));
+    g.line(94, 126, 94, 162, 7, rgba(pal.main, 82));
+  }
+  if (seed % 2 === 0) {
+    g.circle(422, 88, 8, rgba(pal.dark, 76));
+    g.circle(452, 148, 5, rgba(pal.main, 80));
   }
 }
 
@@ -148,13 +156,48 @@ function face(g, cx, cy, s = 1, ink = '#3c2b22') {
   g.circle(cx + 33 * s, cy + 8 * s, 8 * s, rgba('#f4a2a2', 120));
 }
 
+function miniMascots(g, pal, seed) {
+  const dogLeft = seed % 2 === 0;
+  const dogX = dogLeft ? 106 : 406;
+  const catX = dogLeft ? 406 : 106;
+  const y = 408;
+  drawMiniDog(g, dogX, y, 0.58, pal);
+  drawMiniCat(g, catX, y + 2, 0.56, pal);
+}
+
+function drawMiniDog(g, x, y, s, pal) {
+  g.ellipse(x, y, 48 * s, 40 * s, rgba('#d9a756', 245));
+  g.ellipse(x - 35 * s, y - 10 * s, 15 * s, 26 * s, rgba('#8c6335', 230));
+  g.ellipse(x + 35 * s, y - 10 * s, 15 * s, 26 * s, rgba('#8c6335', 230));
+  g.ellipse(x, y + 13 * s, 21 * s, 14 * s, rgba('#fff1d8', 235));
+  g.circle(x - 14 * s, y - 5 * s, 4.2 * s, rgba('#37251b'));
+  g.circle(x + 14 * s, y - 5 * s, 4.2 * s, rgba('#37251b'));
+  g.circle(x, y + 5 * s, 4 * s, rgba('#37251b'));
+  g.line(x - 7 * s, y + 14 * s, x, y + 18 * s, 2.8 * s, rgba('#37251b'));
+  g.line(x, y + 18 * s, x + 7 * s, y + 14 * s, 2.8 * s, rgba('#37251b'));
+  g.roundedRect(x - 42 * s, y + 30 * s, 84 * s, 22 * s, 10 * s, rgba(pal.main, 150));
+}
+
+function drawMiniCat(g, x, y, s, pal) {
+  g.ellipse(x, y, 45 * s, 38 * s, rgba('#f4efe6', 245));
+  g.poly([[x - 34 * s, y - 16 * s], [x - 20 * s, y - 50 * s], [x - 6 * s, y - 18 * s]], rgba('#f4efe6', 245));
+  g.poly([[x + 34 * s, y - 16 * s], [x + 20 * s, y - 50 * s], [x + 6 * s, y - 18 * s]], rgba('#f4efe6', 245));
+  g.poly([[x - 27 * s, y - 18 * s], [x - 20 * s, y - 36 * s], [x - 12 * s, y - 18 * s]], rgba('#f0b8c2', 210));
+  g.poly([[x + 27 * s, y - 18 * s], [x + 20 * s, y - 36 * s], [x + 12 * s, y - 18 * s]], rgba('#f0b8c2', 210));
+  g.circle(x - 14 * s, y - 2 * s, 4 * s, rgba('#37251b'));
+  g.circle(x + 14 * s, y - 2 * s, 4 * s, rgba('#37251b'));
+  g.line(x - 7 * s, y + 13 * s, x, y + 18 * s, 2.8 * s, rgba('#37251b'));
+  g.line(x, y + 18 * s, x + 7 * s, y + 13 * s, 2.8 * s, rgba('#37251b'));
+  g.roundedRect(x - 42 * s, y + 29 * s, 84 * s, 22 * s, 10 * s, rgba(pal.light, 170));
+}
+
 function drawSpeech(g, pal, mood = 'hello') {
-  g.roundedRect(112, 142, 288, 176, 52, rgba('#fffaf0', 252));
-  g.poly([[210, 308], [178, 370], [260, 318]], rgba('#fffaf0', 252));
-  g.roundedRect(144, 188, 94, 26, 13, rgba(pal.main, 180));
-  g.roundedRect(144, 238, mood === 'thanks' ? 176 : 132, 22, 11, rgba(pal.dark, 120));
-  g.circle(334, 206, 28, rgba(pal.light, 240));
-  face(g, 334, 206, 0.42);
+  g.roundedRect(104, 116, 304, 184, 58, rgba('#ffffff', 246));
+  g.poly([[202, 292], [168, 354], [258, 304]], rgba('#ffffff', 246));
+  g.roundedRect(146, 170, 104, 26, 13, rgba(pal.main, 190));
+  g.roundedRect(146, 224, mood === 'thanks' ? 188 : 142, 22, 11, rgba(pal.dark, 130));
+  g.circle(338, 190, 30, rgba(pal.light, 240));
+  face(g, 338, 190, 0.42);
 }
 
 function drawBody(g, ko, pal) {
@@ -423,6 +466,7 @@ function drawWord(group, item) {
       case 'feelings': drawFeeling(g, ko, pal); break;
       default: drawSpeech(g, pal); break;
     }
+    miniMascots(g, pal, seed);
   });
 }
 
