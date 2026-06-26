@@ -95,7 +95,7 @@ export const c32: Mission = {
       speaker: '점원',
       promptPhraseId: 'p_shichakushitsu_kochira',
       choices: [
-        { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '피팅룸 안내에 대한 자연스러운 확인+감사 표현. わかりました+ありがとうございます를 한 묶음으로 써요' },
+        { text: '가 볼게요', phraseId: 'p_itte_mimasu', correct: true, feedback: '「行(い)ってみます」— 피팅룸 위치를 안내받고 가 보겠다는 응답' },
         { text: '이걸로 할게요', phraseId: 'p_kore_kudasai_shop', correct: false, feedback: '아직 입어보기 전이에요. 피팅룸 안내에는 확인 응답이 자연스러워요' },
         { text: '입어 봐도 돼요?', phraseId: 'p_shichaku', correct: false, feedback: '피팅룸 안내를 받는 중이에요 — 입어봐도 되는지는 이미 물었어요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
@@ -155,7 +155,7 @@ export const c33: Mission = {
       promptPhraseId: 'p_ame_ga_futteimasu',
       choices: [
         { text: '우산을 빌릴 수 있나요?', phraseId: 'p_kasa_kariremasu_ka', correct: true, feedback: '「傘(かさ)を借りられますか」— 대부분의 일본 호텔은 무료 우산 대여 서비스를 운영해요. 프런트 옆에 비치돼 있어요' },
-        { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '비 소식을 알려준 직원에 대한 감사 표현. 확인+감사를 동시에 전달할 수 있어요' },
+        { text: '덕분에 도움이 됐어요', phraseId: 'p_tasukarimashita', correct: true, feedback: '「助(たす)かりました」— 비 소식을 미리 알려준 데 대한 응답' },
         { text: '우산을 반납하겠습니다', phraseId: 'p_kasa_wo_kaeshimasu', correct: false, feedback: '지금은 막 빌리려는 참이에요 — 반납은 외출 후 돌아와서 해요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
@@ -165,7 +165,7 @@ export const c33: Mission = {
       speaker: '프런트 직원',
       promptPhraseId: 'p_kasa_wa_front_desu',
       choices: [
-        { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '우산 위치 안내에 대한 자연스러운 응답. 일본 호텔 서비스에 감사를 표하는 게 예의예요' },
+        { text: '찾아볼게요', phraseId: 'p_sagashite_mimasu', correct: true, feedback: '「探(さが)してみます」— 우산 둔 곳을 직접 찾아보겠다는 표현' },
         { text: '우산을 반납하겠습니다', phraseId: 'p_kasa_wo_kaeshimasu', correct: false, feedback: '지금은 빌리는 중이에요. 반납 표현은 돌아온 뒤에 써요' },
         { text: '우산을 빌릴 수 있나요?', phraseId: 'p_kasa_kariremasu_ka', correct: false, feedback: '방금 빌렸어요 — 지금은 위치 안내를 듣는 중이에요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
@@ -189,7 +189,7 @@ export const c33: Mission = {
       recapPromptKo: '분실하시면 변상이 됩니다',
       choices: [
         { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「わかりました」— 분실하면 변상(弁償/べんしょう)이 될 수 있어요. 외출 후 꼭 반납해요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 무료 서비스에 감사 인사. 잃어버리지 않게 잘 챙겨요' },
+        { text: '조심할게요', phraseId: 'p_ki_o_tsukemasu', correct: true, feedback: '「気(き)をつけます」— 분실 시 변상 안내를 듣고 "조심하겠습니다"' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
       ],
     },
@@ -199,7 +199,7 @@ export const c33: Mission = {
       recapPromptJa: 'おかえりのときにおねがいします',
       recapPromptKo: '돌아오실 때 부탁드립니다',
       choices: [
-        { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '반납 시점 안내를 이해했다는 표현. 외출 후 돌아왔을 때 반드시 프런트에 반납해요' },
+        { text: '기억해 둘게요', phraseId: 'p_oboete_okimasu', correct: true, feedback: '「覚(おぼ)えておきます」— 반납 시간을 잊지 않게 기억해 두는 응답' },
         { text: '우산을 반납하겠습니다', phraseId: 'p_kasa_wo_kaeshimasu', correct: true, feedback: '「傘を返します」— 돌아와서 직접 반납할 때 쓰는 표현. 약속을 지키는 모습이 일본에서 큰 인상을 줘요' },
         { text: '우산을 빌릴 수 있나요?', phraseId: 'p_kasa_kariremasu_ka', correct: false, feedback: '우산은 이미 빌렸어요 — 지금은 반납 시점을 확인해요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
@@ -245,7 +245,7 @@ export const c34: Mission = {
       speaker: '프런트 직원',
       promptPhraseId: 'p_atarashii_kagi',
       choices: [
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 빠른 대응에 감사. 일본 호텔은 방 변경을 정중히 처리해줘요' },
+        { text: '잘 부탁드려요', phraseId: 'p_yoroshiku_onegai', correct: true, feedback: '「よろしくお願(ねが)いします」— 새 방 키를 받으며 건네는 응답' },
         { text: '방은 어디예요?', phraseId: 'p_heya_doko', correct: true, feedback: '「部屋(へや)はどこですか」— 새 방 위치와 층을 확인. 엘리베이터 방향도 함께 물어봐요' },
         { text: '트윈 침대 방이 있나요?', phraseId: 'p_tsuin_no_heya_arimasu_ka', correct: false, feedback: '이미 새 방을 안내받았어요 — 다른 방 문의는 끝났어요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
@@ -268,7 +268,7 @@ export const c34: Mission = {
       recapPromptJa: 'べつのへやをごよういします',
       recapPromptKo: '다른 방을 준비하겠습니다',
       choices: [
-        { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '새 방 준비 소식에 대한 감사 표현. 일본 호텔 스태프의 노고를 인정해주는 한 마디가 큰 인상을 남겨요' },
+        { text: '그걸로 부탁드려요', phraseId: 'p_sorede_onegai', correct: true, feedback: '「それでお願(ねが)いします」— 안내받은 방으로 하겠다는 수락' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
         { text: '방을 바꿔 주세요', phraseId: 'p_heya_kaete_kudasai', correct: false, feedback: '새 방을 안내받는 마무리예요 — 감사 인사로 답하면 돼요' },
       ],
@@ -336,7 +336,7 @@ export const c35: Mission = {
       speaker: '역무원',
       promptPhraseId: 'p_noriba_wa_jyuunibansen_desu',
       choices: [
-        { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '승강장 번호를 확인했다는 표현. 나리타 공항역은 승강장이 복잡하니 방향 표지도 함께 확인해요' },
+        { text: '가 볼게요', phraseId: 'p_itte_mimasu', correct: true, feedback: '「行(い)ってみます」— 안내받은 승강장으로 가 보겠다는 응답' },
         { text: '몇 번 선이에요?', phraseId: 'p_nanbansen', correct: false, feedback: '방금 12번선이라고 들었어요. 들은 정보를 다시 묻지 않아요' },
         { text: '이 티켓 사용할 수 있나요?', phraseId: 'p_kono_chiketto_tsukaemasu_ka', correct: false, feedback: '승강장 안내를 들었어요 — 표 교환은 이미 끝났어요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
@@ -405,7 +405,7 @@ export const c36: Mission = {
       recapPromptJa: 'もういちどはかります',
       recapPromptKo: '다시 한 번 무게를 재겠습니다',
       choices: [
-        { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '재측정 안내에 대한 확인 표현. 신속하게 처리해 준 직원에게 감사를 전해요' },
+        { text: '확인했어요', phraseId: 'p_kakunin_shimashita', correct: true, feedback: '「確認(かくにん)しました」— 짐 무게를 다시 확인했다는 표현' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
         { text: '이걸 기내수하물로 하겠습니다', phraseId: 'p_kore_tebutsu_ni_shimasu', correct: false, feedback: '짐을 뺀 뒤 다시 무게를 재는 마무리예요 — 확인·감사로 답해요' },
       ],
@@ -441,7 +441,7 @@ export const c37: Mission = {
       promptPhraseId: 'p_sugu_hojuu_shimasu',
       choices: [
         { text: '커피는 어디예요?', phraseId: 'p_koohii_wa_doko', correct: true, feedback: '「コーヒーはどこですか」— 뷔페에서 음료 위치를 확인하는 표현. お茶(おちゃ)=녹차, ジュース=주스로 바꿔도 같은 패턴이에요' },
-        { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '보충 예정 안내에 대한 감사 표현. 일본 호텔 직원의 신속한 서비스에 짧은 감사 인사가 큰 의미를 가져요' },
+        { text: '기다릴게요', phraseId: 'p_matte_imasu', correct: true, feedback: '「待(ま)っています」— 곧 보충하겠다는 안내에 "기다릴게요"' },
         { text: '음식이 부족합니다', phraseId: 'p_ryouri_sukunai', correct: false, feedback: '음식이 부족하다는 건 이미 말했어요 — 안내에 감사하거나 음료 위치를 물어요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
@@ -452,7 +452,7 @@ export const c37: Mission = {
       promptPhraseId: 'p_drink_bar',
       choices: [
         { text: '커피는 어디예요?', phraseId: 'p_koohii_wa_doko', correct: true, feedback: '「コーヒーはどこですか」— ドリンクバー는 음료 무한리필. 커피·주스·お茶를 직접 따라 마셔요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 안내에 감사. 컵은 보통 음료 코너 옆에 있어요' },
+        { text: '가 볼게요', phraseId: 'p_itte_mimasu', correct: true, feedback: '「行(い)ってみます」— 드링크바 위치를 안내받고 가 보겠다는 응답' },
         { text: '음식이 부족합니다', phraseId: 'p_ryouri_sukunai', correct: false, feedback: '지금은 음료 안내를 듣는 중이에요 — 보충 요청은 앞서 했어요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
@@ -474,7 +474,7 @@ export const c37: Mission = {
       recapPromptJa: 'しょうしょうおまちください',
       recapPromptKo: '잠시만 기다려 주세요',
       choices: [
-        { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '기다리겠다는 표현. 일본 호텔 조식 서비스에 대한 감사가 남다른 경험을 만들어요' },
+        { text: '이제 충분해요', phraseId: 'p_mou_juubun', correct: true, feedback: '「もう十分(じゅうぶん)です」— 충분히 받았으면 깔끔하게 마무리' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'partial' },
         { text: '조금 더 받을 수 있나요?', phraseId: 'p_mou_sukoshi_moraemasu_ka', correct: false, feedback: '추가 요청은 이미 했어요 — 기다리겠다는 인사로 마무리해요' },
       ],
@@ -521,7 +521,7 @@ export const c38: Mission = {
       speaker: '점원',
       promptPhraseId: 'p_agari_douzo',
       choices: [
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 스시집의 차를 あがり라고 불러요. 입을 헹궈 다음 초밥 맛을 살려요' },
+        { text: '잘 먹겠습니다', phraseId: 'p_itadakimasu', correct: true, feedback: '「いただきます」— 따뜻한 차를 받을 때의 기본 인사' },
         { text: '맛있어요', phraseId: 'p_oishii', correct: true, feedback: '「おいしい！」— 셰프에게 바로 표현하면 분위기가 좋아져요' },
         { text: '계산 부탁드립니다', phraseId: 'p_okaikei', correct: false, feedback: '아직 식사 중이에요 — 차를 마시며 즐기고 계산은 마지막에 해요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },

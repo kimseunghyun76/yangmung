@@ -27,11 +27,15 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
     <div>
       {!headerInScene && <h2 style={{ marginTop: 14, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="discover" size={22} /> 새 표현</h2>}
       {hasWordArt(card.id) && (
-        <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 8px' }}>
-          <span style={{ display: 'inline-flex', padding: 8, borderRadius: 20, background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)', boxShadow: '0 6px 16px rgba(0,0,0,.08)' }}>
-            <WordArt id={card.id} korean={card.korean} kana={card.kana} size={104} preferAsset={preferImageArt} />
-          </span>
-        </div>
+        preferImageArt ? (
+          <QuickPracticeWordScene card={card} />
+        ) : (
+          <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 8px' }}>
+            <span style={{ display: 'inline-flex', padding: 8, borderRadius: 20, background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)', boxShadow: '0 6px 16px rgba(0,0,0,.08)' }}>
+              <WordArt id={card.id} korean={card.korean} kana={card.kana} size={104} />
+            </span>
+          </div>
+        )
       )}
       {!headerInScene && <p style={{ color: 'var(--ink-soft)', marginTop: 0, lineHeight: 1.5 }}>{card.note}</p>}
 
@@ -73,5 +77,102 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
       </MascotBubble>
       <button style={{ ...PRIMARY, width: '100%', marginTop: 14 }} onClick={next}>알겠어요</button>
     </div>
+  );
+}
+
+function quickPracticeGroup(id: string): string {
+  if (!id.startsWith('vocab:')) return '';
+  return id.split(':')[1] ?? '';
+}
+
+function greetingCopy(card: IntroduceCard): { left: string; right: string } {
+  const kana = card.kana;
+  if (kana.includes('ありがとう')) return { left: 'ありがとう', right: 'どういたしまして' };
+  if (kana.includes('おはよう')) return { left: 'おはよう', right: 'おはようございます' };
+  if (kana.includes('こんばんは')) return { left: 'こんばんは', right: 'こんばんは' };
+  if (kana.includes('さようなら') || kana.includes('また')) return { left: 'またね', right: 'さようなら' };
+  if (kana.includes('ただいま') || kana.includes('おかえり')) return { left: 'ただいま', right: 'おかえりなさい' };
+  if (kana.includes('すみません') || kana.includes('ごめん')) return { left: 'すみません', right: 'だいじょうぶ' };
+  return { left: kana, right: 'よろしくね' };
+}
+
+function QuickPracticeWordScene({ card }: { card: IntroduceCard }) {
+  const group = quickPracticeGroup(card.id);
+  const greeting = group === 'greetings';
+  const copy = greetingCopy(card);
+  const accent = greeting ? '#e7a33e' : '#b9382e';
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center', margin: '8px 0 12px' }}>
+      <div style={{
+        position: 'relative',
+        width: '100%',
+        maxWidth: 360,
+        minHeight: 204,
+        overflow: 'hidden',
+        borderRadius: 24,
+        border: '1px solid var(--glass-border)',
+        background: `linear-gradient(180deg, rgba(255,253,246,.95), rgba(255,247,235,.88)), radial-gradient(circle at 50% 18%, ${accent}33, transparent 54%)`,
+        boxShadow: '0 12px 28px rgba(54,38,20,.12)',
+      }}>
+        <span aria-hidden style={{
+          position: 'absolute', inset: 18, borderRadius: 22,
+          border: '1px dashed rgba(120,84,42,.16)',
+        }} />
+        {greeting && (
+          <>
+            <SpeechBubble text={copy.left} side="left" />
+            <SpeechBubble text={copy.right} side="right" />
+          </>
+        )}
+        <div style={{ position: 'absolute', left: 18, bottom: 8, width: 86, height: 86, display: 'grid', placeItems: 'center' }}>
+          <img src="/mascots/mung-shiba-face.webp" alt="" aria-hidden style={{ width: 78, height: 78, objectFit: 'contain', filter: 'drop-shadow(0 10px 12px rgba(60,38,14,.18))' }} />
+        </div>
+        <div style={{ position: 'absolute', right: 18, bottom: 8, width: 86, height: 86, display: 'grid', placeItems: 'center' }}>
+          <img src="/mascots/yang-cat-face.webp" alt="" aria-hidden style={{ width: 78, height: 78, objectFit: 'contain', filter: 'drop-shadow(0 10px 12px rgba(60,38,14,.18))' }} />
+        </div>
+        <div style={{
+          position: 'relative',
+          zIndex: 1,
+          minHeight: 188,
+          padding: greeting ? '48px 84px 26px' : '22px 86px 20px',
+          display: 'grid',
+          placeItems: 'center',
+        }}>
+          <span style={{
+            display: 'inline-flex',
+            padding: 10,
+            borderRadius: 28,
+            background: 'rgba(255,255,255,.72)',
+            border: '1px solid rgba(255,255,255,.78)',
+            boxShadow: '0 10px 24px rgba(83,56,24,.12)',
+          }}>
+            <WordArt id={card.id} korean={card.korean} kana={card.kana} size={greeting ? 128 : 148} preferAsset />
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SpeechBubble({ text, side }: { text: string; side: 'left' | 'right' }) {
+  return (
+    <span lang="ja" style={{
+      position: 'absolute',
+      top: 18,
+      [side]: 18,
+      zIndex: 2,
+      maxWidth: 148,
+      padding: '8px 11px',
+      borderRadius: 16,
+      background: '#fffdf6',
+      border: '1px solid rgba(168,118,52,.18)',
+      color: '#624126',
+      fontSize: 13,
+      fontWeight: 900,
+      lineHeight: 1.2,
+      textAlign: 'center',
+      boxShadow: '0 8px 18px rgba(76,45,12,.1)',
+      wordBreak: 'keep-all',
+    }}>{text}</span>
   );
 }

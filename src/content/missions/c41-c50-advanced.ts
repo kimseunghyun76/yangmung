@@ -140,7 +140,7 @@ export const c42: Mission = {
       recapPromptKo: '거스름돈 나왔나요?',
       choices: [
         { text: '괜찮아요', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 잔돈이 정상 출금됐을 때. おつり取(と)り忘(わす)れに注意(ちゅうい)！ 잔돈 꼭 챙기고 나오세요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 도와준 사람에게 감사 표현. 작은 친절에 감사를 표하면 일본인도 기분 좋아해요. ありがとうだけでもOK' },
+        { text: '잔돈 확인했어요', phraseId: 'p_kakunin_shimashita', correct: true, feedback: '「確認(かくにん)しました」— 잔돈을 그 자리에서 확인. 자판기·거스름돈은 바로 세어보는 게 좋아요' },
         { text: '잘 모르겠어요', phraseId: 'p_wakarimasen', correct: true, feedback: '「分(わ)かりません」— 잔돈이 제대로 나왔는지 확신이 없을 때. おつりを確認(かくにん)してください라고 주변에 도움을 구할 수도 있어요' },
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '잔돈을 확인하는 마무리예요 — 사용법은 앞서 익혔어요' },
       ],
@@ -343,7 +343,7 @@ export const c45: Mission = {
       choices: [
         { text: '이거 주세요', phraseId: 'p_kore_kudasai', correct: true, feedback: '「これをください」— 추가로 사고 싶은 게 있으면 가리켜 주문해요' },
         { text: '괜찮습니다', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 더 필요 없으면 가볍게 마무리해요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 받으며 인사. 모바일 주문은 결제가 이미 끝나 빠르게 나와요' },
+        { text: '이제 충분해요', phraseId: 'p_mou_juubun', correct: true, feedback: '「もう十分(じゅうぶん)です」— 더 권유받을 때 "이제 충분합니다"로 깔끔하게 마무리' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
       ],
     },
@@ -355,7 +355,7 @@ export const c45: Mission = {
       choices: [
         { text: '포장으로요', phraseId: 'p_mochikaeri_de', correct: true, feedback: '「持(も)ち帰(かえ)りで」— 포장을 명확히 전달하는 표현. スマホアプリで先払(さきばら)いの場合는 회계가 이미 완료된 상태예요' },
         { text: '매장에서요', phraseId: 'p_tennai_de', correct: true, feedback: '「店内(てんない)で」— 카페나 음식점에서 매장 이용 선택. 앉을 자리가 있을 때 선택하면 도자기 컵으로 서비스받을 수 있어요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 픽업 마무리에 자연스러운 감사 인사. 日本語での一言(ひとこと)が 직원에게 좋은 인상을 줍니다' },
+        { text: '포장으로 부탁해요', phraseId: 'p_mochikaeri_de', correct: true, feedback: '「持(も)ち帰(かえ)りでお願いします」— 매장에서 먹으면 「店内(てんない)で」. 픽업 상품은 포장이 기본이에요' },
         { text: '예약했어요', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '이미 예약 확인이 끝난 상황 — 같은 말을 반복할 필요가 없어요' },
       ],
     },
@@ -403,7 +403,7 @@ export const c46: Mission = {
       promptPhraseId: 'p_sainyuujou',
       choices: [
         { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「わかりました」— 再入場(さいにゅうじょう) 스탬프가 있으면 잠깐 나갔다 올 수 있어요. 손등에 찍어줘요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 화장실·매점 다녀올 때 유용해요' },
+        { text: '또 올게요', phraseId: 'p_mata_kimasu', correct: true, feedback: '「また来(き)ます」— 재입장 도장을 받고 잠깐 나갈 때 "다시 올게요"' },
         { text: '여권은 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: false, feedback: '스탬프 안내 중이에요 — 여권은 필요하지 않아요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
@@ -472,7 +472,7 @@ export const c47: Mission = {
       speaker: '직원',
       promptPhraseId: 'p_elevator',
       choices: [
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— エレベーター 위치를 안내받으면 감사 인사. 짐이 많으면 엘리베이터가 편해요' },
+        { text: '가 볼게요', phraseId: 'p_itte_mimasu', correct: true, feedback: '「行(い)ってみます」— 엘리베이터 위치를 안내받고 바로 가 보겠다는 응답' },
         { text: '어디예요?', phraseId: 'p_doko_desu_ka', correct: true, feedback: '「どこですか」— 정확한 방향을 한 번 더 확인. フロアマップ도 함께 보면 좋아요' },
         { text: '이거 주세요', phraseId: 'p_kore_kudasai', correct: false, feedback: '안내소에서는 위치를 묻는 단계예요 — 물건 주문이 아니에요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
@@ -483,7 +483,7 @@ export const c47: Mission = {
       speaker: '직원',
       promptPhraseId: 'p_menzei_counter8',
       choices: [
-        { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '「わかりました、ありがとうございます」— 免税(めんぜい)カウンター에서 일괄 면세 처리하는 몰도 많아요. 영수증·여권을 챙겨 가요' },
+        { text: '찾아볼게요', phraseId: 'p_sagashite_mimasu', correct: true, feedback: '「探(さが)してみます」— 면세 카운터를 직접 찾아보겠다는 표현' },
         { text: '어디예요?', phraseId: 'p_doko_desu_ka', correct: true, feedback: '「どこですか」— 면세 카운터 층·위치를 확인. 폐점 1시간 전 마감인 곳도 있어요' },
         { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
       ],
@@ -494,7 +494,7 @@ export const c47: Mission = {
       recapPromptJa: 'ご案内できましたでしょうか',
       recapPromptKo: '안내가 되셨나요?',
       choices: [
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 안내받은 후 자연스러운 감사 표현. 안내소 직원에게 감사를 전하면 일본인에게 좋은 인상을 줘요' },
+        { text: '덕분에 도움이 됐어요', phraseId: 'p_tasukarimashita', correct: true, feedback: '「助(たす)かりました」— 여러 번 안내해 준 데 대한 자연스러운 응답' },
         { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 이해했음을 간결하게 전달. ありがとうございます를 더하면 이해+감사를 한 번에 표현할 수 있어요' },
         { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: false, feedback: '이미 안내가 끝난 상황 — 속도 요청은 맥락에 맞지 않아요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: false, feedback: '이미 대화가 마무리된 시점에 언어를 바꾸자는 건 어색해요' },
@@ -564,7 +564,7 @@ export const c48: Mission = {
       speaker: '약사',
       promptPhraseId: 'p_shokugo_nonde',
       choices: [
-        { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '「分(わ)かりました、ありがとうございます」— 복약 지도를 이해하고 감사를 한 번에 전할 때. 일본 약사(薬剤師)는 복약 설명을 매우 철저하게 해줘요' },
+        { text: '식후에 먹으면 되나요?', phraseId: 'p_shokugo_kakunin', correct: true, feedback: '「食後(しょくご)に飲(の)めばいいですか」— 복약법을 되물어 확인. 감사보다 안전하게 먹는 게 먼저예요' },
         { text: '이 약은 뭐예요?', phraseId: 'p_kono_kusuri', correct: true, feedback: '「この薬(くすり)は何(なに)ですか」— 약의 용도나 성분이 궁금할 때. 약 봉투에 薬の説明書(せつめいしょ)が入(はい)っている경우가 많아요' },
         { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
         { text: '영수증 주세요', phraseId: 'p_reshiito_kudasai', correct: false, feedback: '복약 설명을 듣는 상황에서 영수증 요청은 시기상 어색해요' },
@@ -695,7 +695,7 @@ export const c50: Mission = {
       promptPhraseId: 'p_meijirushi',
       choices: [
         { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「わかりました」— 일본은 コンビニ가 곳곳에 있어 좋은 目印(めじるし)가 돼요. 간판을 기준으로 이동해요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 친절한 안내에 감사. 또 헤매면 다른 편의점에서 물어봐요' },
+        { text: '가 볼게요', phraseId: 'p_itte_mimasu', correct: true, feedback: '「行(い)ってみます」— 편의점을 표지 삼아 가 보겠다는 응답' },
         { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
       ],
     },
@@ -705,8 +705,8 @@ export const c50: Mission = {
       recapPromptJa: '歩いて5分ほどです。あちらの方向です',
       recapPromptKo: '걸어서 5분 정도예요. 저쪽 방향입니다',
       choices: [
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 도움받은 후 가장 자연스러운 마무리. 일본인의 친절에 감사를 전하면 双方(そうほう)이 기분 좋게 헤어질 수 있어요' },
-        { text: '알겠습니다, 감사합니다', phraseId: 'p_wakarimashita_arigatou', correct: true, feedback: '「分(わ)かりました、ありがとうございます」— 이해와 감사를 한 번에. 방향 설명을 받고 고마움을 표하는 가장 완전한 마무리 표현이에요' },
+        { text: '덕분에 도움이 됐어요', phraseId: 'p_tasukarimashita', correct: true, feedback: '「助(たす)かりました」— 방향을 알려준 데 대한 응답' },
+        { text: '걸어가 볼게요', phraseId: 'p_aruite_mimasu', correct: true, feedback: '「歩(ある)いてみます」— 도보 5분이면 걸어가 보겠다는 응답' },
         { text: '어느 쪽이에요?', phraseId: 'p_dochira_desu_ka', correct: true, feedback: '「どちらですか」— 상대가 가리키는 방향을 재확인할 때. 손으로 방향을 가리키며 함께 쓰면 더 자연스러워요. まっすぐ(직진)·右(오른쪽)·左(왼쪽)도 함께 알아두세요' },
         { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: false, feedback: '이미 안내가 끝난 상황 — 속도 요청은 시기가 맞지 않아요' },
       ],

@@ -131,6 +131,11 @@ export const units: Unit[] = [
       'p_kippu_nimai_kudasai', 'p_sumimasen_koko_doko', 'p_nihon_go_muzukashii',
       'p_nihongo_sukoshi_dake', 'p_chiketto_wa_kochira_desu', 'p_basho_o_oshiete_kudasai',
       'p_saifu_nakushita', 'p_ugokemasen', 'p_kusuri_nondeimasu', 'p_sentaku_de', 'p_kansou_de',
+      // 개편 2/N — 단답 「감사합니다」 대체 응답
+      'p_itte_mimasu', 'p_sagashite_mimasu', 'p_kakunin_shimashita', 'p_sou_shimasu',
+      'p_ki_o_tsukemasu', 'p_tanoshimi_desu', 'p_sorede_onegai', 'p_oboete_okimasu',
+      'p_mou_juubun', 'p_aruite_mimasu', 'p_matte_imasu', 'p_itadakimasu',
+      'p_renraku_kudasai', 'p_isoide_kudasai',
     ],
   },
   {
