@@ -297,7 +297,7 @@ const isAmbiguousReply = (p: Phrase): boolean => {
 // 미션 스텝 → 퀴즈 선택지 풀.
 // 정책: 정답 후보 중 1개만 노출 + 오답 3개. 복구 표현은 보기로 섞지 않고 하단 액션으로만 보여준다.
 // 세션 시작 때마다 다시 뽑아 새 문제처럼 보이게 한다.
-function buildStepChoicePools(stepChoices: MissionStep['choices'], byPhrase: (id: string) => Phrase, allPhrases: Phrase[], promptPhraseId?: string): NonNullable<QuizCard['choicePools']> {
+function buildStepChoicePools(stepChoices: MissionStep['choices'], byPhrase: (id: string) => Phrase, allPhrases: Phrase[], promptPhraseId?: string, preferred?: Phrase[]): NonNullable<QuizCard['choicePools']> {
   const built: Choice[] = stepChoices.map((c) => ({
     label: c.text,
     correct: c.correct,
@@ -342,21 +342,26 @@ function buildStepChoicePools(stepChoices: MissionStep['choices'], byPhrase: (id
   }
 
   if (wrong.length < 3) {
-    const distractors = shuffle(allPhrases.filter((p) =>
+    const eligible = (p: Phrase) =>
       !usedPhraseIds.has(p.id)
       && !usedLabels.has(p.korean)
       && p.korean.length <= 18
       && !fallbackRecoveryIds.includes(p.id)
-      && !isAmbiguousReply(p), // 헷갈리는 단답·반응어 제외 → 완전히 다른 문장만 오답으로
-    ));
-    for (const p of distractors) {
+      && !isAmbiguousReply(p); // 헷갈리는 단답·반응어 제외
+    // 같은 장면(미션)의 표현을 먼저 오답으로 — 현실 대화처럼 자연스럽지만 이번 질문엔 안 맞는 답.
+    // 모자라면 전체 표현에서 보충(다른 장면이 섞이는 빈도를 크게 낮춤).
+    const pool: Phrase[] = [...shuffle((preferred ?? []).filter(eligible)), ...shuffle(allPhrases.filter(eligible))];
+    const taken = new Set<string>();
+    for (const p of pool) {
       if (wrong.length >= 3) break;
+      if (taken.has(p.id) || usedPhraseIds.has(p.id) || usedLabels.has(p.korean)) continue;
+      taken.add(p.id);
       wrong.push({
         label: p.korean,
         correct: false,
         ja: ttsText(p),
         phrase: phraseInfo(p),
-        feedback: '이번 상황에서 요구된 답은 아니에요.',
+        feedback: '지금 질문에 대한 답은 아니에요.',
       });
       usedPhraseIds.add(p.id);
       usedLabels.add(p.korean);
@@ -700,6 +705,14 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
       addIntroduce(pid, sceneNote);
     }
 
+    // 같은 장면(미션)에서 쓰이는 표현들 — 자동 오답을 이 안에서 우선 뽑아 "현실 대화"에 맞춘다.
+    // (다른 장면 문장이 보기로 튀어나오는 어색함 제거. 이번 질문엔 안 맞지만 같은 가게에서 할 법한 말.)
+    const missionChoicePhrases: Phrase[] = (() => {
+      const ids = new Set<string>();
+      for (const s of m.steps) for (const ch of s.choices) if (ch.phraseId) ids.add(ch.phraseId);
+      return [...ids].map((id) => byPhrase(id)).filter((p): p is Phrase => !!p);
+    })();
+
     m.steps.forEach((step, idx) => {
       const prompt = step.promptPhraseId ? byPhrase(step.promptPhraseId) : undefined;
       const recapPrompt = !prompt && step.recapPromptJa
@@ -727,7 +740,7 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
           addIntroduce(ch.phraseId, sceneNote, qInfo, alts);
         }
       }
-      const choicePools = buildStepChoicePools(step.choices, byPhrase, phrases, step.promptPhraseId);
+      const choicePools = buildStepChoicePools(step.choices, byPhrase, phrases, step.promptPhraseId, missionChoicePhrases);
       // 미션 퀴즈 = "맞는 답 고르기"로 통일 (반전 퀴즈 제거).
       cards.push({
         kind: 'quiz', id: `mission:${m.id}:${idx}`, tag: `${m.id} 미션`,
