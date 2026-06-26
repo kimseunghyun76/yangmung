@@ -162,25 +162,23 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
           <p style={{ margin: 0, ...label }}>빠른 연습</p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 12 }}>
             {([
-              { label: '히라가나', sub: '청음·탁음·요음 전체', examples: ['あ', 'きゃ', 'ぱ'], icon: 'kana', onClick: () => onPracticeKana('hiragana') },
-              { label: '가타카나', sub: '외래어 표기까지 읽기', examples: ['ア', 'チャ', 'ー'], icon: 'kana', onClick: () => onPracticeKana('katakana') },
-              { label: '기본 인사', sub: '첫 만남·감사·부탁', examples: ['こんにちは', 'ありがとう'], icon: 'speak', onClick: onPracticeGreetings },
-              { label: '어휘 커리큘럼', sub: '그림으로 익히는 필수 단어', examples: ['음식', '교통', '감정'], icon: 'target', onClick: onPracticeVocab },
-              { label: '간판·메뉴', sub: '역·식당·주의 표지 읽기', examples: ['入口', '会計', '禁煙'], icon: 'sign', onClick: onPracticeSigns },
-              { label: '받아쓰기', sub: '듣고 가나로 직접 입력', examples: ['듣기', '조립', '확인'], icon: 'dictation', onClick: onPracticeDictation },
-              { label: '한→일 작문', sub: '뜻을 보고 일본어 만들기', examples: ['주세요', '어디예요'], icon: 'speak', onClick: onPracticeCompose },
-              { label: '가나 쓰기', sub: '손으로 따라 쓰며 기억', examples: ['획순', '반복'], icon: 'dictation', onClick: onPracticeWrite },
-              { label: '발음 구분', sub: '비슷한 소리 즉시 구분', examples: ['つ/す', 'っ', 'ー'], icon: 'listen', onClick: onPracticePairs },
-              { label: '동사 형태', sub: 'ます·たい·ながら 활용', examples: ['食べます', '行きたい'], icon: 'flow', onClick: onPracticeVerbs },
-            ] as { label: string; sub: string; examples: string[]; icon: IconName; onClick: () => void }[]).map((t) => (
+              { label: '히라가나', sub: '청음·탁음·요음 전체', examples: ['あ', 'きゃ', 'ぱ'], icon: 'kana', art: 'hiragana', onClick: () => onPracticeKana('hiragana') },
+              { label: '가타카나', sub: '외래어 표기까지 읽기', examples: ['ア', 'チャ', 'ー'], icon: 'kana', art: 'katakana', onClick: () => onPracticeKana('katakana') },
+              { label: '기본 인사', sub: '첫 만남·감사·부탁', examples: ['こんにちは', 'ありがとう'], icon: 'speak', art: 'greetings', onClick: onPracticeGreetings },
+              { label: '어휘 커리큘럼', sub: '그림으로 익히는 필수 단어', examples: ['음식', '교통', '감정'], icon: 'target', art: 'vocab', onClick: onPracticeVocab },
+              { label: '간판·메뉴', sub: '역·식당·주의 표지 읽기', examples: ['入口', '会計', '禁煙'], icon: 'sign', art: 'signs', onClick: onPracticeSigns },
+              { label: '받아쓰기', sub: '듣고 가나로 직접 입력', examples: ['듣기', '조립', '확인'], icon: 'dictation', art: 'dictation', onClick: onPracticeDictation },
+              { label: '한→일 작문', sub: '뜻을 보고 일본어 만들기', examples: ['주세요', '어디예요'], icon: 'speak', art: 'compose', onClick: onPracticeCompose },
+              { label: '가나 쓰기', sub: '손으로 따라 쓰며 기억', examples: ['획순', '반복'], icon: 'dictation', art: 'kana-write', onClick: onPracticeWrite },
+              { label: '발음 구분', sub: '비슷한 소리 즉시 구분', examples: ['つ/す', 'っ', 'ー'], icon: 'listen', art: 'pairs', onClick: onPracticePairs },
+              { label: '동사 형태', sub: 'ます·たい·ながら 활용', examples: ['食べます', '行きたい'], icon: 'flow', art: 'verbs', onClick: onPracticeVerbs },
+            ] as { label: string; sub: string; examples: string[]; icon: IconName; art: string; onClick: () => void }[]).map((t) => (
               <button key={t.label} className="ym-press" onClick={t.onClick} style={{
                 display: 'flex', alignItems: 'flex-start', gap: 11, textAlign: 'left', minWidth: 0,
                 border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
                 borderRadius: 16, padding: '12px 12px', cursor: 'pointer',
               }}>
-                <span style={{ width: 38, height: 38, flex: '0 0 38px', borderRadius: 11, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: hexA('#b9382e', 0.13), color: 'var(--accent)' }}>
-                  <Icon name={t.icon} size={20} />
-                </span>
+                <QuickPracticeIcon art={t.art} icon={t.icon} />
                 <span style={{ minWidth: 0 }}>
                   <span style={{ display: 'block', fontSize: 14, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.label}</span>
                   <span style={{ display: 'block', fontSize: 11, color: 'var(--ink-faint)', fontWeight: 700, marginTop: 1 }}>{t.sub}</span>
@@ -279,6 +277,64 @@ function nextOneAction({ scenes, progress, allCards, hira, kata, kanaPct, onPrac
     return { label: `${weaker === 'hiragana' ? '히라가나' : '가타카나'} 다지기`, sub: '아직 흔들리는 가나를 무작위로', icon: 'kana', onClick: () => onPracticeKana(weaker) };
   }
   return { label: '받아쓰기로 복습', sub: '듣고 가나로 써보기', icon: 'dictation', onClick: onPracticeDictation };
+}
+
+
+function QuickPracticeIcon({ art, icon }: { art: string; icon: IconName }) {
+  return (
+    <span style={{
+      position: 'relative',
+      width: 52,
+      height: 52,
+      flex: '0 0 52px',
+      overflow: 'hidden',
+      borderRadius: 15,
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'var(--glass-bg-strong)',
+      border: '1px solid rgba(255,255,255,.7)',
+      boxShadow: '0 8px 18px rgba(42,28,18,.12)',
+    }}>
+      <img
+        src={`/scenes/quick-practice/${art}.webp`}
+        alt=""
+        aria-hidden
+        loading="lazy"
+        decoding="async"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          filter: 'saturate(.94) brightness(1.03)',
+          transform: 'scale(1.45)',
+          transformOrigin: 'center 58%',
+        }}
+      />
+      <span aria-hidden style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'linear-gradient(180deg, rgba(255,255,255,.08), rgba(35,20,8,.22))',
+      }} />
+      <span style={{
+        position: 'relative',
+        zIndex: 1,
+        width: 28,
+        height: 28,
+        borderRadius: 10,
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(255,253,246,.84)',
+        color: 'var(--accent)',
+        boxShadow: '0 5px 12px rgba(35,20,8,.18)',
+      }}>
+        <Icon name={icon} size={17} />
+      </span>
+    </span>
+  );
 }
 
 
