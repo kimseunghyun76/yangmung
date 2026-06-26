@@ -58,8 +58,8 @@
           "feedback": "「いいえ、結構(けっこう)です」— 영수증이 필요 없을 때 정중한 거절. レシートはいりません도 OK"
         },
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "거스름돈 확인했어요",
+          "phraseId": "p_kakunin_shimashita",
           "correct": true,
           "feedback": "「ありがとうございます」— 거스름돈을 받으며 마무리 인사. 짧아도 일본어로 하면 인상이 좋아요"
         },
@@ -145,13 +145,13 @@
       "recapPromptKo": "여기가 신주쿠예요. 내리세요?",
       "choices": [
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "여기서 내릴게요",
+          "phraseId": "p_koko_de_orimasu",
           "correct": true
         },
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "네, 확인했어요",
+          "phraseId": "p_kakunin_shimashita",
           "correct": true
         },
         {
@@ -175,8 +175,8 @@
       "recapPromptKo": "막차는 0시 10분, 3번선에서 출발합니다",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "기억해 둘게요",
+          "phraseId": "p_oboete_okimasu",
           "correct": true
         },
         {
@@ -238,8 +238,8 @@
       "recapPromptKo": "조식은 7시부터 10시까지, 최상층 레스토랑입니다",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "기억해 둘게요",
+          "phraseId": "p_oboete_okimasu",
           "correct": true
         },
         {
@@ -271,8 +271,8 @@
       "recapPromptKo": "저 신호를 건너서 두 번째 모퉁이에서 왼쪽이에요",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "가 볼게요",
+          "phraseId": "p_itte_mimasu",
           "correct": true
         },
         {
@@ -302,8 +302,8 @@
       "recapPromptKo": "가까우니까 제가 안내해 드릴게요",
       "choices": [
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "덕분에 도움이 됐어요",
+          "phraseId": "p_tasukarimashita",
           "correct": true
         },
         {
@@ -494,13 +494,13 @@
       "recapPromptKo": "설탕과 우유는 저쪽에 있습니다. 천천히 즐기세요",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "잘 마실게요",
+          "phraseId": "p_itadakimasu",
           "correct": true
         },
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "저쪽으로 가 볼게요",
+          "phraseId": "p_itte_mimasu",
           "correct": true
         },
         {
@@ -587,8 +587,8 @@
       "recapPromptKo": "내리실 때 IC카드를 한 번 더 터치해 주세요",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "기억해 둘게요",
+          "phraseId": "p_oboete_okimasu",
           "correct": true
         },
         {
@@ -617,13 +617,13 @@
       "recapPromptKo": "시부야라면 여기예요. 하차 버튼은 눌러 뒀어요",
       "choices": [
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "여기서 내릴게요",
+          "phraseId": "p_koko_de_orimasu",
           "correct": true
         },
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "확인했어요",
+          "phraseId": "p_kakunin_shimashita",
           "correct": true
         },
         {

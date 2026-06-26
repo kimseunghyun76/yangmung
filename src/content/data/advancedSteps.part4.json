@@ -37,8 +37,8 @@
       "recapPromptKo": "반납은 가득 주유해서 6시까지 부탁드립니다",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "기억해 둘게요",
+          "phraseId": "p_oboete_okimasu",
           "correct": true
         },
         {
@@ -99,8 +99,8 @@
       "recapPromptKo": "약을 3일치 처방하겠습니다. 몸조리 잘하세요",
       "choices": [
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "조심할게요",
+          "phraseId": "p_ki_o_tsukemasu",
           "correct": true
         },
         {
@@ -164,13 +164,13 @@
       "recapPromptKo": "찾으면 호텔로 연락드리겠습니다",
       "choices": [
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "연락 주세요",
+          "phraseId": "p_renraku_kudasai",
           "correct": true
         },
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "잘 부탁드려요",
+          "phraseId": "p_yoroshiku_onegai",
           "correct": true
         },
         {
@@ -201,8 +201,8 @@
           "correct": true
         },
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "서둘러 주세요",
+          "phraseId": "p_isoide_kudasai",
           "correct": true
         },
         {
@@ -265,8 +265,8 @@
           "correct": true
         },
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "확인했어요",
+          "phraseId": "p_kakunin_shimashita",
           "correct": true
         },
         {
@@ -290,8 +290,8 @@
       "recapPromptKo": "30일 후 자동으로 끊깁니다. 연장도 가능해요",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "기억해 둘게요",
+          "phraseId": "p_oboete_okimasu",
           "correct": true
         },
         {
@@ -353,13 +353,13 @@
       "recapPromptKo": "짐은 담당 직원이 옮겨 드립니다. 10분 정도 기다려 주세요",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "기다릴게요",
+          "phraseId": "p_matte_imasu",
           "correct": true
         },
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "기억해 둘게요",
+          "phraseId": "p_oboete_okimasu",
           "correct": true
         },
         {
@@ -415,8 +415,8 @@
       "recapPromptKo": "승차는 12번선, 출발은 10시 20분입니다",
       "choices": [
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "기억해 둘게요",
+          "phraseId": "p_oboete_okimasu",
           "correct": true
         },
         {

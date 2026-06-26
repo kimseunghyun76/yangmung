@@ -109,8 +109,8 @@
       "recapPromptKo": "돈이 돌아왔어요",
       "choices": [
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "확인했어요",
+          "phraseId": "p_kakunin_shimashita",
           "correct": true,
           "feedback": "도움에 감사 인사로 마무리"
         },
@@ -189,8 +189,8 @@
           "feedback": "한도 금액이 정확히 얼마인지 재확인할 때"
         },
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "그렇게 할게요",
+          "phraseId": "p_sou_shimasu",
           "correct": true,
           "feedback": "도움에 감사하며 마무리"
         },
@@ -258,8 +258,8 @@
           "feedback": "영수증이 필요 없을 때"
         },
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "거스름돈 확인했어요",
+          "phraseId": "p_kakunin_shimashita",
           "correct": true,
           "feedback": "도움에 감사하며 마무리"
         },
@@ -314,8 +314,8 @@
       "recapPromptKo": "오래 기다리셨습니다",
       "choices": [
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "덕분에 도움이 됐어요",
+          "phraseId": "p_tasukarimashita",
           "correct": true,
           "feedback": "음료를 받으며 감사 인사"
         },
@@ -382,8 +382,8 @@
       "recapPromptKo": "오늘 방문해 주셔서 감사합니다. 출구는 이쪽입니다",
       "choices": [
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "또 올게요",
+          "phraseId": "p_mata_kimasu",
           "correct": true,
           "feedback": "관람 마무리에 가장 자연스러운 인사"
         },
@@ -450,8 +450,8 @@
       "recapPromptKo": "무사히 도착하셨나요?",
       "choices": [
         {
-          "text": "네, 감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "덕분에 도움이 됐어요",
+          "phraseId": "p_tasukarimashita",
           "correct": true,
           "feedback": "도움받아 잘 도착했을 때 자연스러운 마무리"
         },
@@ -562,8 +562,8 @@
           "feedback": "음식을 기대하며 감탄하는 표현"
         },
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "잘 먹겠습니다",
+          "phraseId": "p_itadakimasu",
           "correct": true,
           "feedback": "설명에 감사 인사"
         },
@@ -632,8 +632,8 @@
           "feedback": "도움 제안을 수락할 때 간결하게"
         },
         {
-          "text": "감사합니다",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "그걸로 부탁드려요",
+          "phraseId": "p_sorede_onegai",
           "correct": true,
           "feedback": "친절한 제안에 감사 인사"
         },
@@ -660,8 +660,8 @@
       "recapPromptKo": "같이 갈까요?",
       "choices": [
         {
-          "text": "감사합니다, 부탁드려요",
-          "phraseId": "p_arigatou_gozaimasu",
+          "text": "잘 부탁드려요",
+          "phraseId": "p_yoroshiku_onegai",
           "correct": true,
           "feedback": "친절한 제안을 수락하며 감사를 전달"
         },
@@ -672,8 +672,8 @@
           "feedback": "혼자 가도 된다고 정중히 거절할 때"
         },
         {
-          "text": "알겠습니다, 감사합니다",
-          "phraseId": "p_wakarimashita_arigatou",
+          "text": "덕분에 도움이 됐어요",
+          "phraseId": "p_tasukarimashita",
           "correct": true,
           "feedback": "동행 제안을 수락하며 감사를 함께 전달"
         },
