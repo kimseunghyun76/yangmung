@@ -27,7 +27,7 @@ export const phrases: Phrase[] = [
 
   // ── C2 식당 주문 한 조각 (NPC + 학습자 발화) ──
   { id: 'p_gochuumon', kana: 'ごちゅうもんはおきまりですか', kanji: 'ご注文はお決まりですか', displayKana: 'ごちゅうもんは、おきまりですか？', korean: '주문 정하셨어요?', register: 'receptive' },
-  { id: 'p_kore_kudasai', kana: 'これください', kanji: 'これ下さい', korean: '이거 주세요', register: 'productive', tip: '「これください」— 메뉴나 상품을 가리키며 하는 가장 간단한 주문 표현. 일본어를 잘 몰라도 가리키며 이 한 마디로 주문 OK예요' },
+  { id: 'p_kore_kudasai', kana: 'これをください', displayKana: 'これを、ください', korean: '이거 주세요', register: 'productive', tip: '「これをください」— 메뉴나 상품을 가리키며 하는 가장 간단한 주문 표현. 일본어를 잘 몰라도 가리키며 이 한 마디로 주문 OK예요' },
   { id: 'p_osusume_wa', kana: 'おすすめはなんですか', kanji: 'お勧めは何ですか', displayKana: 'おすすめは、なんですか？', korean: '추천이 뭐예요?', register: 'productive', tip: '「お勧(すす)めは何(なに)ですか」— 메뉴 모를 때 이 한 마디면 점원이 인기 메뉴를 알려줘요. 일본어 메뉴판이 어려울 때 가장 유용한 표현 중 하나예요' },
   { id: 'p_menu_misete', kana: 'メニューをみせてください', kanji: 'メニューを見せてください', displayKana: 'メニューを、みせてください', korean: '메뉴 좀 보여 주세요', register: 'productive', tip: '「メニューを見(み)せてください」— 사진 메뉴가 있는 식당은 가리켜서 주문할 수 있어요. 영어 메뉴도 있냐고 묻고 싶으면 英語(えいご)のメニューはありますか라고 해봐요' },
   { id: 'p_nomimono', kana: 'おのみものは', kanji: 'お飲み物は', displayKana: 'おのみものは？', korean: '음료는요?', register: 'receptive' },
