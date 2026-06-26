@@ -297,16 +297,21 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
       ) : isMissionStep ? (
         <button onClick={() => card.bannerJa && speak(card.bannerJa)} disabled={!card.bannerJa || !ttsSupported()}
           style={{ display: 'block', width: '100%', textAlign: 'center', marginBottom: 4, border: 'none', background: 'none', cursor: card.bannerJa ? 'pointer' : 'default', color: 'var(--ink)' }}>
-          <span style={{ fontSize: 22, verticalAlign: 'bottom', color: 'var(--ink-faint)' }}>「</span>
           <ReadingAid text={card.promptPhrase!.kana} isFamiliar={isKanaFamiliar} fontSize={28} />
-          <span style={{ fontSize: 22, verticalAlign: 'bottom', color: 'var(--ink-faint)' }}>」</span>
         </button>
       ) : (
         <button onClick={() => card.bannerJa && speak(card.bannerJa)} disabled={!card.bannerJa || !ttsSupported()}
           style={{ display: 'block', width: '100%', fontSize: big, fontWeight: 700, textAlign: 'center', margin: '4px 0', border: 'none', background: 'none', cursor: card.bannerJa ? 'pointer' : 'default', color: 'var(--ink)' }}>{card.banner}</button>
       )}
 
-      {/* 2. 힌트 (일본어 탭=듣기 안내는 화면 하단 공통 문구로 통일) */}
+      {/* 2. 한국어 해석 — 일본어 바로 아래(힌트 위). ko2ja(뜻→일본어)는 질문을 또렷이. */}
+      {isMissionStep ? (
+        <p style={{ textAlign: 'center', color: 'var(--ink-soft)', fontSize: 14, margin: '8px 0 0' }}>{card.promptPhrase!.korean}</p>
+      ) : card.listen ? null : card.sub ? (
+        <p style={{ textAlign: 'center', color: isKo2Ja ? 'var(--ink)' : 'var(--ink-faint)', fontSize: isKo2Ja ? 15.5 : 14, fontWeight: isKo2Ja ? 800 : 400, margin: '8px 0 0' }}>{card.sub}</p>
+      ) : null}
+
+      {/* 3. 힌트 (일본어 탭=듣기 안내는 화면 하단 공통 문구로 통일) */}
       {card.bannerJa && !card.listen && hasHint && !reveal && (
         <div style={{ display: 'flex', gap: 8, justifyContent: 'center', alignItems: 'center', marginTop: 6, flexWrap: 'wrap' }}>
           <HintBtn open={hintOpen} onClick={() => setHintOpen((o) => !o)} />
@@ -326,13 +331,6 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
       {/* 힌트 ON → 문법 규칙(있으면) 또는 정답 표현의 설명. 답하면 닫히고 결과 피드백으로 대체. */}
       {hintOpen && !reveal && (hintGrammar ? <WrongTip g={hintGrammar} /> : hintFallback ? <HintExplain {...hintFallback} /> : null)}
 
-      {/* 3. 한국어 (보조) — 질문/뜻. 듣기 카드는 위 타이틀로 대체. ko2ja(뜻→일본어)는 질문을 또렷이. */}
-      {isMissionStep ? (
-        <p style={{ textAlign: 'center', color: 'var(--ink-soft)', fontSize: 14, margin: '8px 0 0' }}>{card.promptPhrase!.korean}</p>
-      ) : card.listen ? null : card.sub ? (
-        <p style={{ textAlign: 'center', color: isKo2Ja ? 'var(--ink)' : 'var(--ink-faint)', fontSize: isKo2Ja ? 15.5 : 14, fontWeight: isKo2Ja ? 800 : 400, margin: '8px 0 0' }}>{card.sub}</p>
-      ) : null}
-
       {/* 반전 퀴즈 안내 — 어색한 답 고르기 */}
       {card.inverted && !reveal && (
         <div style={{ marginTop: 14, padding: '10px 12px', borderRadius: 12, border: '1px solid var(--warn)', background: 'var(--warn-soft)', textAlign: 'center' }}>
@@ -349,6 +347,17 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
           return (
             <button key={idx} className={`${anim} ym-press`} disabled={reveal} onClick={() => onChoose(idx, c)} style={choiceStyle(state)}>
               <ChoiceText c={c} mode={choiceMode} kanaQuiz={isKanaQuiz} />
+              {/* 답변 듣기 — 답을 고르면 들을 수 없으므로 미션 스텝 보기에만 제공.
+                  탭=듣기, 답 선택과 겹치지 않게 이벤트 전파를 막는다(stopPropagation). */}
+              {isMissionStep && !!c.ja && !reveal && (
+                <span role="button" tabIndex={0} aria-label="이 답변 듣기"
+                  onClick={(e) => { e.stopPropagation(); speak(c.ja!); }}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); e.preventDefault(); speak(c.ja!); } }}
+                  style={{ flex: '0 0 auto', width: 34, height: 34, borderRadius: 10, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface)', border: '1px solid var(--glass-border)', color: 'var(--accent)', cursor: 'pointer' }}>
+                  <Icon name="listen" size={16} />
+                </span>
+              )}
               {reveal && c.recovery && <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--warn)' }}>복구</span>}
               {reveal && c.correct && <Icon name="check" size={18} style={{ color: 'var(--ok)' }} />}
             </button>
