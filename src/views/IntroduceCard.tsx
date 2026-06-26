@@ -14,9 +14,10 @@ interface Props {
   onNext: () => void;
   // 타이틀·설명을 배경 장면 하단에 얹는 경우 본문에서는 숨긴다.
   headerInScene?: boolean;
+  preferImageArt?: boolean;
 }
 
-export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, headerInScene }: Props) {
+export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, headerInScene, preferImageArt }: Props) {
   function next() {
     onSeen();
     onNext();
@@ -28,7 +29,7 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
       {hasWordArt(card.id) && (
         <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 8px' }}>
           <span style={{ display: 'inline-flex', padding: 8, borderRadius: 20, background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)', boxShadow: '0 6px 16px rgba(0,0,0,.08)' }}>
-            <WordArt id={card.id} korean={card.korean} kana={card.kana} size={104} />
+            <WordArt id={card.id} korean={card.korean} kana={card.kana} size={104} preferAsset={preferImageArt} />
           </span>
         </div>
       )}
