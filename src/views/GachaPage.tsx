@@ -1,7 +1,6 @@
 // 가챠 전용 페이지 — 학습 보상 가챠 + 여행 도감.
 import { useMemo, useState } from 'react';
 import { CONTENT } from '../content';
-import { isMissionUnlocked, type ProgressMap } from '../learn/progress';
 import { WRAP } from '../ui/styles';
 import { NavBar, type NavBarProps } from './NavBar';
 import { PageHead } from './ui';
@@ -12,7 +11,7 @@ import { sceneVisualByMission } from './scene';
 
 interface Props {
   nav: NavBarProps;
-  progress: ProgressMap;
+  openMissions: string[];
 }
 
 const DAILY_KEY = 'yangmung:gacha:daily:v1';
@@ -47,7 +46,7 @@ function saveDailyClaimCount(key: string, count: number): void {
   try { window.localStorage.setItem(DAILY_KEY, JSON.stringify({ date: key, count })); } catch { /* noop */ }
 }
 
-export function GachaPage({ nav, progress }: Props) {
+export function GachaPage({ nav, openMissions }: Props) {
   const key = todayKey();
   const [claimedCount, setClaimedCount] = useState(() => loadDailyClaimCount(key));
   const [dailyRun, setDailyRun] = useState(0);
@@ -58,10 +57,10 @@ export function GachaPage({ nav, progress }: Props) {
   const nextFreeOrdinal = Math.min(DAILY_FREE_LIMIT, claimedCount + 1);
   const unlockedSceneIds = useMemo(() => {
     const ids = CONTENT.missions
-      .filter((m) => m.id !== 'C0' && isMissionUnlocked(m.id, progress))
+      .filter((m) => m.id !== 'C0' && openMissions.includes(m.id))
       .map((m) => m.id);
     return ids.length ? ids : ['C1'];
-  }, [progress]);
+  }, [openMissions]);
   const previewScenes = unlockedSceneIds.slice(0, 4).map((id) => {
     const mission = CONTENT.missions.find((m) => m.id === id);
     return { id, label: mission?.place ?? mission?.scenario ?? id, visual: sceneVisualByMission(id) };
