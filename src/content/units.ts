@@ -136,6 +136,7 @@ export const units: Unit[] = [
       'p_ki_o_tsukemasu', 'p_tanoshimi_desu', 'p_sorede_onegai', 'p_oboete_okimasu',
       'p_mou_juubun', 'p_aruite_mimasu', 'p_matte_imasu', 'p_itadakimasu',
       'p_renraku_kudasai', 'p_isoide_kudasai', 'p_koko_de_orimasu', 'p_tadaima',
+      'p_koukan_shitai', 'p_henkin_de',
     ],
   },
   {

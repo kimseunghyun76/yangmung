@@ -21,7 +21,7 @@ export const c41: Mission = {
       recapPromptJa: 'いらっしゃいませ。本日はどのようなご用件でしょうか',
       recapPromptKo: '어서 오세요. 오늘은 어떤 용건이신가요?',
       choices: [
-        { text: '이걸 교환하고 싶어요', phraseId: 'p_hoka_no_iro_arimasu_ka', correct: true, feedback: '「これを交換(こうかん)したいです / 他(ほか)の色(いろ)はありますか」— 환불·교환 데스크에서 용건을 명확히 전달하는 첫 마디. 영수증(レシート)을 함께 제시하면 빠르게 진행돼요' },
+        { text: '이걸 교환하고 싶어요', phraseId: 'p_koukan_shitai', correct: true, feedback: '「これを交換(こうかん)したいです」— 환불·교환 데스크에서 용건을 명확히 전달하는 첫 마디. 영수증(レシート)을 함께 제시하면 빠르게 진행돼요' },
         { text: '영수증 주세요', phraseId: 'p_reshiito_kudasai', correct: false, feedback: '영수증은 내가 가져와야 합니다 — 직원에게 달라는 말이 아니에요' },
         { text: '조금 작아요', phraseId: 'p_chotto_chiisai_desu', correct: false, feedback: '먼저 무슨 용건인지 말해요 — 사이즈 같은 이유는 그다음에 설명해요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
@@ -69,7 +69,7 @@ export const c41: Mission = {
       choices: [
         { text: 'M 사이즈로요', phraseId: 'p_emu_saizu_de', correct: true, feedback: '「Mサイズで」— 교환 사이즈를 결정할 때. ～で는 선택을 나타내는 조사예요. Sサイズで·Lサイズで로 바꿔서도 그대로 쓸 수 있어요' },
         { text: 'S 사이즈로요', phraseId: 'p_esu_saizu_de', correct: true, feedback: '「Sサイズで」— S 사이즈 교환 선택. 일본 의류 사이즈는 한국보다 작은 경향이 있으니 교환 전 꼭 착용해보세요' },
-        { text: '취소 부탁드려요', phraseId: 'p_kore_de', correct: true, feedback: '「これでお願(ねが)いします」— 교환/환불 처리 결정을 마무리할 때. 返金(へんきん)の場合(ばあい)는 카드 환불인지 현금 환불인지 확인돼요' },
+        { text: '환불로 부탁드려요', phraseId: 'p_henkin_de', correct: true, feedback: '「返金(へんきん)でお願(ねが)いします」— 교환 대신 환불을 택할 때. 카드 결제는 보통 카드로 돌려받아요' },
         { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: false, feedback: '교환/환불 선택 상황에서 속도 요청은 맥락과 맞지 않아요' },
       ],
     },
