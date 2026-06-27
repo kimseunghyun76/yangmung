@@ -3,7 +3,6 @@ import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
 import { kanaReadMastery, missionProgress, type ProgressMap } from '../learn/progress';
 import { isSceneOpen } from '../learn/unlocks';
-import { ROUTES } from '../content/routes';
 import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
@@ -51,21 +50,24 @@ export function Map({ nav, allCards, progress, openMissions, devUnlockAll, onPra
     return { m, sv: sceneVisualByMission(m.id), unlocked, done: unlocked && p.total > 0 && p.mastered === p.total, started: p.started, mastered: p.mastered, total: p.total };
   });
   const open = items.filter((x) => x.unlocked);
+  const locked = items.filter((x) => !x.unlocked);
+  // 열린 장면 정렬: 진행 중 → 시작 전 → 완료
+  const rank = (x: SceneItem) => (x.done ? 2 : x.started ? 0 : 1);
+  const openSorted = [...open].sort((a, b) => rank(a) - rank(b));
   // 추천: 진행 중(미완료) 우선 → 시작 전 → (없으면) 첫 열린 장면
   const recommended = open.find((x) => x.started && !x.done) ?? open.find((x) => !x.started) ?? open[0];
-  const routeGroups = ROUTES.map((route) => ({ ...route, items: route.ids.map((id) => items.find((x) => x.m.id === id)).filter((x): x is SceneItem => !!x) }));
 
   return (
     <main style={WRAP}>
       <NavBar {...nav} />
-      <PageHead title="학습 지도" sub="공항에서 출발해 장면을 하나씩 열어가요" />
+      <PageHead title="학습 지도" sub="열린 장면을 골라 연습하고, 학습할수록 새 장면이 무작위로 열려요" />
       <div style={{ position: 'relative', overflow: 'hidden', height: 150, borderRadius: 20, marginBottom: 12, border: '1px solid var(--glass-border)', boxShadow: 'var(--glass-shadow)' }}>
         <img src="/map/travel-routes.webp" alt="Yang과 Mung이 안내하는 일본 여행 루트" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 45%, rgba(10,12,18,0.48))' }} />
-        <strong style={{ position: 'absolute', left: 14, bottom: 12, color: '#fff', fontSize: 16, textShadow: '0 2px 10px rgba(0,0,0,.5)' }}>다음 여행 장면을 골라요</strong>
+        <strong style={{ position: 'absolute', left: 14, bottom: 12, color: '#fff', fontSize: 16, textShadow: '0 2px 10px rgba(0,0,0,.5)' }}>열린 장면을 골라 연습해요</strong>
       </div>
-      <p style={{ margin: '-4px 0 14px', color: 'var(--ink-soft)', fontSize: 13, fontWeight: 700 }}>{scenes.length}개 장면 · {ROUTES.length}개 여행 루트</p>
-      <MascotBubble who="duo" size={44} style={{ marginBottom: 14 }}>가고 싶은 여행 루트를 골라 하나씩 열어봐요.</MascotBubble>
+      <p style={{ margin: '-4px 0 14px', color: 'var(--ink-soft)', fontSize: 13, fontWeight: 700 }}>열린 장면 {open.length} · 잠긴 장면 {locked.length} (전체 {scenes.length})</p>
+      <MascotBubble who="duo" size={44} style={{ marginBottom: 14 }}>지금 열린 장면을 충분히 학습하면 다음 장면이 무작위로 열려요.</MascotBubble>
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14, marginTop: -8 }}>
         <DeckButton />
@@ -96,27 +98,41 @@ export function Map({ nav, allCards, progress, openMissions, devUnlockAll, onPra
         </section>
       )}
 
-      {routeGroups.map((route) => (
-        <section key={route.label} style={{ marginBottom: 18 }}>
-          <p style={{ ...kicker, marginBottom: 10 }}>{route.label}</p>
-          <GlassPanel style={{ padding: 10 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8 }}>
-              {route.items.map((x) => {
-                const place = x.m.place ?? x.m.scenario ?? '이 장면';
-                return (
-                  <button key={x.m.id} className="ym-press" disabled={!x.unlocked} title={x.unlocked ? undefined : lockHint()}
-                    onClick={() => x.unlocked && onPracticeScene(x.m.id)}
-                    style={{ minWidth: 0, padding: '10px 6px', borderRadius: 14, border: x.unlocked ? '1px solid var(--glass-border)' : '1px dashed var(--glass-border)', background: x.unlocked ? 'var(--glass-bg-strong)' : 'transparent', color: 'var(--ink)', cursor: x.unlocked ? 'pointer' : 'default', opacity: x.unlocked ? 1 : 0.5 }}>
-                    <SceneImageThumb src={x.sv.backdrop ?? x.sv.thumb} icon={x.sv.icon} accent={x.sv.accent} size={42} muted={!x.unlocked} />
-                    <span style={{ display: 'block', marginTop: 6, fontSize: 12.5, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{x.unlocked ? place : '🔒 ???'}</span>
-                    <span style={{ display: 'block', marginTop: 3, fontSize: 10.5, color: x.done ? 'var(--ok)' : 'var(--ink-faint)', fontWeight: 700 }}>{x.done ? '완료' : x.unlocked ? `${x.mastered}/${x.total}` : '🔒 잠김'}</span>
-                  </button>
-                );
-              })}
+      {/* 열린 장면 — 진행 중 → 시작 전 → 완료 순 */}
+      <section style={{ marginBottom: 18 }}>
+        <p style={{ ...kicker, marginBottom: 10 }}>열린 장면 · {open.length}</p>
+        <GlassPanel style={{ padding: 10 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8 }}>
+            {openSorted.map((x) => {
+              const place = x.m.place ?? x.m.scenario ?? '이 장면';
+              return (
+                <button key={x.m.id} className="ym-press" onClick={() => onPracticeScene(x.m.id)}
+                  style={{ minWidth: 0, padding: '10px 6px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', cursor: 'pointer' }}>
+                  <SceneImageThumb src={x.sv.backdrop ?? x.sv.thumb} icon={x.sv.icon} accent={x.sv.accent} size={42} />
+                  <span style={{ display: 'block', marginTop: 6, fontSize: 12.5, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{place}</span>
+                  <span style={{ display: 'block', marginTop: 3, fontSize: 10.5, color: x.done ? 'var(--ok)' : !x.started ? x.sv.accent : 'var(--ink-faint)', fontWeight: 700 }}>{x.done ? '완료' : !x.started ? '아직 안 함' : `${x.mastered}/${x.total}`}</span>
+                </button>
+              );
+            })}
+          </div>
+        </GlassPanel>
+      </section>
+
+      {/* 아직 안 열린 장면 — 무작위로 열림. 미스터리 카드로만 표시 */}
+      {locked.length > 0 && (
+        <section style={{ marginBottom: 18 }}>
+          <p style={{ ...kicker, marginBottom: 10 }}>아직 안 열린 장면 · {locked.length}</p>
+          <GlassPanel style={{ padding: 12 }}>
+            <p style={{ fontSize: 12.5, color: 'var(--ink-soft)', margin: '0 0 10px', fontWeight: 700 }}>열린 장면을 충분히 학습하면, 이 중 하나가 <b style={{ color: 'var(--accent)' }}>무작위로</b> 열려요.</p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 8 }}>
+              {locked.map((x) => (
+                <div key={x.m.id} aria-hidden title={lockHint()}
+                  style={{ minWidth: 0, aspectRatio: '1', borderRadius: 12, border: '1px dashed var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, color: 'var(--ink-faint)', opacity: 0.6 }}>🔒</div>
+              ))}
             </div>
           </GlassPanel>
         </section>
-      ))}
+      )}
 
       {/* 복구 도구 */}
       <GlassPanel>
