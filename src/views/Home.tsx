@@ -1,16 +1,12 @@
 // 홈 — Immersive Scene Coach. 오늘의 루트 + 장면 히어로 + 가나/여행 루트 진입.
-import { useState } from 'react';
 import { CONTENT } from '../content';
-import { getCash, canClaimDaily, claimDaily, DAILY_BONUS, formatCash } from '../learn/wallet';
 import type { Card } from '../learn/cards';
 import type { Diagnosis } from '../learn/adaptive';
 import { LEVEL_LABEL } from '../learn/adaptive';
 import {
-  isMissionUnlocked, kanaReadMastery, missionProgress, nextSessionId, planSession,
+  kanaReadMastery, missionProgress, nextSessionId, planSession,
   type ProgressMap, type SessionConfig, type SessionState,
 } from '../learn/progress';
-import { bestRarity, loadCollection, totalItems } from '../learn/collection';
-import { gachaItemForPlace } from '../learn/gachaItems';
 import { ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { isMangaSceneImage, sceneVisualByMission, sceneVisualByPlace } from './scene';
@@ -26,6 +22,7 @@ interface Props {
   progress: ProgressMap;
   session: SessionState;
   sessionConfig: SessionConfig;
+  openMissions: string[];
   diagnosis: Diagnosis;
   modeLabel: string;
   onStart: () => void;
@@ -46,7 +43,7 @@ interface Props {
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' };
 
-export function Home({ nav, allCards, progress, session, sessionConfig, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation, onPracticeCompose, onPracticeFlash, onPracticeWrite, onPracticePairs, onPracticeVocab, onPracticeGreetings, onPracticeVerbs, onPlacement, placementDone }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation, onPracticeCompose, onPracticeFlash, onPracticeWrite, onPracticePairs, onPracticeVocab, onPracticeGreetings, onPracticeVerbs, onPlacement, placementDone }: Props) {
   const upcomingId = nextSessionId(session);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
   const planned = plan.size;
@@ -56,8 +53,11 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
   const kata = kanaReadMastery(progress, kataIds);
   const kanaPct = Math.round(((hira.mastered + kata.mastered) / Math.max(1, hira.total + kata.total)) * 100);
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
-  const routeScenes = scenes.filter((m) => isMissionUnlocked(m.id, progress)).slice(0, 3);
-  const collection = loadCollection();
+  // 여행 루트 — 열린 미션 중 "아직 진행하지 않은(미시작)" 것을 앞세워 3개.
+  const openScenes = scenes.filter((m) => openMissions.includes(m.id));
+  const routeScenes = [...openScenes]
+    .sort((a, b) => Number(missionProgress(allCards, progress, a.id).started) - Number(missionProgress(allCards, progress, b.id).started))
+    .slice(0, 3);
 
   // 오늘의 장면 = goal과 동일 기준(튜토리얼 C0 제외한 첫 장면). 없으면 가나 위주의 날.
   const primary = plan.missions.find((m) => m.id !== 'C0') ?? plan.missions[0];
@@ -68,13 +68,11 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
   const heroChips = heroMission ? phraseChips(heroMission.id).slice(0, 3) : kanaChips(allCards);
   const outcome = outcomeLine(heroMission, planned);
   const coach = coachForHome(diagnosis, heroMission, plan.breakdown.B + plan.breakdown.C);
-  const nextAction = nextOneAction({ scenes, progress, allCards, hira, kata, kanaPct, onPracticeScene, onPracticeKana, onPracticeDictation });
+  const nextAction = nextOneAction({ scenes, progress, allCards, openMissions, hira, kata, kanaPct, onPracticeScene, onPracticeKana, onPracticeDictation });
 
   return (
     <main style={WRAP}>
       <NavBar {...nav} />
-
-      <AttendanceBanner onGoGacha={() => nav.onNavigate('gachalab')} />
 
       {/* 슬림 헤더 — 난이도 칩(누르면 수준 진단으로 재조정) */}
       <div className="ym-rise" style={{ display: 'flex', justifyContent: 'flex-end', margin: '0 0 12px' }}>
@@ -178,7 +176,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
                 border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
                 borderRadius: 16, padding: '12px 12px', cursor: 'pointer',
               }}>
-                <QuickPracticeIcon art={t.art} icon={t.icon} />
+                <QuickPracticeIcon icon={t.icon} />
                 <span style={{ minWidth: 0 }}>
                   <span style={{ display: 'block', fontSize: 14, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.label}</span>
                   <span style={{ display: 'block', fontSize: 11, color: 'var(--ink-faint)', fontWeight: 700, marginTop: 1 }}>{t.sub}</span>
@@ -230,10 +228,6 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
               const sv = sceneVisualByMission(m.id);
               const p = missionProgress(allCards, progress, m.id);
               const done = p.total > 0 && p.mastered === p.total;
-              const card = collection.cards[m.id];
-              const owned = totalItems(card);
-              const rarity = bestRarity(card);
-              const reward = gachaItemForPlace(m.place, rarity);
               return (
                 <button key={m.id} className="ym-press" onClick={() => onPracticeScene(m.id)} style={{
                   minWidth: 0, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)',
@@ -241,10 +235,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
                 }}>
                   <SceneImageThumb src={sv.backdrop ?? sv.thumb} icon={sv.icon} accent={sv.accent} size={42} />
                   <span style={{ display: 'block', marginTop: 7, fontSize: 13, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.place ?? m.scenario}</span>
-                  <span style={{ display: 'block', marginTop: 3, fontSize: 11, color: done ? 'var(--ok)' : 'var(--ink-faint)', fontWeight: 750 }}>{done ? '완료' : `${p.mastered}/${p.total}`}</span>
-                  <span style={{ display: 'block', marginTop: 6, padding: '4px 6px', borderRadius: 8, background: owned ? 'var(--accent-soft)' : 'var(--glass-bg)', color: owned ? 'var(--accent)' : 'var(--ink-faint)', fontSize: 10.5, fontWeight: 850, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {owned ? reward.title : `선물: ${reward.title}`}
-                  </span>
+                  <span style={{ display: 'block', marginTop: 3, fontSize: 11, color: done ? 'var(--ok)' : !p.started ? 'var(--accent)' : 'var(--ink-faint)', fontWeight: 750 }}>{done ? '완료' : !p.started ? '아직 안 함' : `${p.mastered}/${p.total}`}</span>
                 </button>
               );
             })}
@@ -257,13 +248,13 @@ export function Home({ nav, allCards, progress, session, sessionConfig, diagnosi
 }
 
 // 이어서 할 "한 가지" 행동 — 시작 전 진행중 장면 > 흔들리는 가나 > 받아쓰기 복습 순.
-function nextOneAction({ scenes, progress, allCards, hira, kata, kanaPct, onPracticeScene, onPracticeKana, onPracticeDictation }: {
-  scenes: typeof CONTENT.missions; progress: ProgressMap; allCards: Card[];
+function nextOneAction({ scenes, progress, allCards, openMissions, hira, kata, kanaPct, onPracticeScene, onPracticeKana, onPracticeDictation }: {
+  scenes: typeof CONTENT.missions; progress: ProgressMap; allCards: Card[]; openMissions: string[];
   hira: { mastered: number; total: number }; kata: { mastered: number; total: number }; kanaPct: number;
   onPracticeScene: (id: string) => void; onPracticeKana: (s: 'hiragana' | 'katakana') => void; onPracticeDictation: () => void;
 }): { label: string; sub: string; icon: IconName; onClick: () => void } | null {
   const resume = scenes.find((m) => {
-    if (m.id === 'C0' || !isMissionUnlocked(m.id, progress)) return false;
+    if (m.id === 'C0' || !openMissions.includes(m.id)) return false;
     const p = missionProgress(allCards, progress, m.id);
     return p.started && !(p.total > 0 && p.mastered === p.total);
   });
@@ -280,59 +271,22 @@ function nextOneAction({ scenes, progress, allCards, hira, kata, kanaPct, onPrac
 }
 
 
-function QuickPracticeIcon({ art, icon }: { art: string; icon: IconName }) {
+// 빠른 연습 아이콘 — 배너 이미지는 티가 안 나서 아이콘만 깔끔하게.
+function QuickPracticeIcon({ icon }: { icon: IconName }) {
   return (
     <span style={{
-      position: 'relative',
-      width: 52,
-      height: 52,
-      flex: '0 0 52px',
-      overflow: 'hidden',
-      borderRadius: 15,
+      width: 46,
+      height: 46,
+      flex: '0 0 46px',
+      borderRadius: 14,
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'var(--glass-bg-strong)',
-      border: '1px solid rgba(255,255,255,.7)',
-      boxShadow: '0 8px 18px rgba(42,28,18,.12)',
+      background: hexA('#b9382e', 0.12),
+      color: 'var(--accent)',
+      border: '1px solid var(--glass-border)',
     }}>
-      <img
-        src={`/scenes/quick-practice/${art}.webp`}
-        alt=""
-        aria-hidden
-        loading="lazy"
-        decoding="async"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          filter: 'saturate(.94) brightness(1.03)',
-          transform: 'scale(1.45)',
-          transformOrigin: 'center 58%',
-        }}
-      />
-      <span aria-hidden style={{
-        position: 'absolute',
-        inset: 0,
-        background: 'linear-gradient(180deg, rgba(255,255,255,.08), rgba(35,20,8,.22))',
-      }} />
-      <span style={{
-        position: 'relative',
-        zIndex: 1,
-        width: 28,
-        height: 28,
-        borderRadius: 10,
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'rgba(255,253,246,.84)',
-        color: 'var(--accent)',
-        boxShadow: '0 5px 12px rgba(35,20,8,.18)',
-      }}>
-        <Icon name={icon} size={17} />
-      </span>
+      <Icon name={icon} size={22} />
     </span>
   );
 }
@@ -636,29 +590,4 @@ function coachForHome(d: Diagnosis, mission: ReturnType<typeof CONTENT.missions.
     if (p) return { who: 'yang', line: `오늘은 「${p.kanji ?? p.displayKana ?? p.kana}」를 먼저 귀에 익혀요.` };
   }
   return { who: 'mung', line: '짧게 한 판만 해도 다음 장면이 훨씬 덜 낯설어요.' };
-}
-
-// 일일 출석 + 캐시 잔액 — 하루 1회 5000원, 탭하면 가챠로.
-function AttendanceBanner({ onGoGacha }: { onGoGacha: () => void }) {
-  const [cash, setCash] = useState(() => getCash());
-  const [claimable, setClaimable] = useState(() => canClaimDaily());
-  function claim() {
-    const got = claimDaily();
-    if (got != null) { setCash(getCash()); setClaimable(false); }
-  }
-  return (
-    <div className="ym-rise" style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '0 0 12px', padding: '10px 14px', borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)' }}>
-      <button className="ym-press" onClick={onGoGacha} title="보물 뽑기로" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, border: 'none', background: 'none', cursor: 'pointer', color: '#caa15c', fontWeight: 900, fontSize: 15 }}>
-        💰 {formatCash(cash)}
-      </button>
-      <span style={{ flex: 1 }} />
-      {claimable ? (
-        <button className="ym-press" onClick={claim} style={{ padding: '8px 14px', borderRadius: 999, border: 'none', background: 'var(--accent)', color: '#fff', fontWeight: 850, fontSize: 13, cursor: 'pointer', boxShadow: '0 6px 16px rgba(185,56,46,.3)' }}>
-          🎁 출석 +{formatCash(DAILY_BONUS)}
-        </button>
-      ) : (
-        <span style={{ fontSize: 12.5, fontWeight: 750, color: 'var(--ink-faint)' }}>오늘 출석 완료 ✓</span>
-      )}
-    </div>
-  );
 }
