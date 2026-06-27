@@ -9,8 +9,8 @@ import {
   selectFlashCardsByMode, selectMissionCards, selectPairCards, selectScriptKanaCards, selectSessionCards, selectSignCards, selectStudyDeck,
   type FlashMode, type SeenKana, type SessionLogEntry,
 } from './learn/progress';
-import { loadCollection, saveCollection, fillDevCards, spendSceneCards, unlockCost } from './learn/collection';
-import { loadCardUnlocks, saveCardUnlocks, addCardUnlock, resetCardUnlocks, isSceneOpen } from './learn/unlocks';
+import { loadCollection, saveCollection, fillDevCards } from './learn/collection';
+import { loadOpenMissions, saveOpenMissions, resetOpenMissions, reconcileOpenMissions, isSceneOpen } from './learn/unlocks';
 import { resetFlashBest } from './learn/flashScores';
 import { earn, REWARD_SESSION, REWARD_PRACTICE } from './learn/wallet';
 import { adaptSessionConfig, diagnose } from './learn/adaptive';
@@ -71,7 +71,12 @@ export function App() {
   const [placementCards, setPlacementCards] = useState<Card[]>([]); // 수준 진단(배치) 문항
   const [seenKana, setSeenKana] = useState<SeenKana>(() => loadSeenKana());
   const [discovered, setDiscovered] = useState<string[]>(() => loadDiscovered());
-  const [cardUnlocks, setCardUnlocks] = useState<string[]>(() => loadCardUnlocks()); // 카드로 해제한 장면
+  // 열린 미션(랜덤 순차 오픈) — 최초 1개 랜덤, 앞 미션 학습할수록 다음 미션 랜덤 추첨 오픈
+  const [openMissions, setOpenMissions] = useState<string[]>(() => {
+    const o = reconcileOpenMissions(loadOpenMissions(), loadProgress());
+    saveOpenMissions(o);
+    return o;
+  });
   const [showGuide, setShowGuide] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const cardStartRef = useRef<number>(Date.now());     // 현재 카드 표시 시각 (빠른 정답 판정)
@@ -122,7 +127,7 @@ export function App() {
     const t = missionTierMap.get(mid) ?? 1;
     return t >= tierRange[0] && t <= tierRange[1];
   };
-  const baseConfig = { quotas: { ...MODE_PRESETS[settings.mode].quotas, tip: tierTipQuota }, minFresh: MODE_PRESETS[settings.mode].minFresh, missionTierFilter, cardTierRange: tierRange };
+  const baseConfig = { quotas: { ...MODE_PRESETS[settings.mode].quotas, tip: tierTipQuota }, minFresh: MODE_PRESETS[settings.mode].minFresh, missionTierFilter, cardTierRange: tierRange, openMissions };
   // 복습 전용 구성(신규 0 · 틀린·오래된 것 우선) — Done 화면 "복습하기" 제안용. 현재 모드와 무관.
   const reviewConfig = { quotas: MODE_PRESETS.review.quotas, minFresh: MODE_PRESETS.review.minFresh };
   const diag = useMemo(
@@ -169,6 +174,15 @@ export function App() {
   useEffect(() => { document.documentElement.dataset.theme = settings.theme; }, [settings.theme]);
   // 듣기 속도 — 설정값을 tts 전역에 반영 (마운트 시 포함)
   useEffect(() => { setListenRate(settings.listenRate); }, [settings.listenRate]);
+  // 미션 오픈 — 진척이 바뀔 때마다 보충(앞 미션을 충분히 학습하면 다음 미션을 랜덤 오픈)
+  useEffect(() => {
+    setOpenMissions((prev) => {
+      const next = reconcileOpenMissions(prev, progress);
+      if (next.length === prev.length) return prev;
+      saveOpenMissions(next);
+      return next;
+    });
+  }, [progress]);
 
   // 카드가 바뀌면 표시 시각 리셋 + 이전 자동넘김 타이머 정리
   useEffect(() => {
@@ -515,23 +529,13 @@ export function App() {
     setSession({ lastCompletedSessionId: 0 });
     setSeenKana({});
     setDiscovered([]);
-    resetCardUnlocks();
-    setCardUnlocks([]);
+    resetOpenMissions();
+    setOpenMissions(reconcileOpenMissions([], {}));
     resetFlashBest();
   }
 
-  // 카드로 장면 해제 — 그 장면 카드를 tier별 비용만큼 소모. 부족하면 false.
-  function unlockScene(id: string): boolean {
-    const need = unlockCost(missionTierMap.get(id) ?? 1);
-    const next = spendSceneCards(loadCollection(), id, need);
-    if (!next) return false;
-    saveCollection(next);
-    const u = addCardUnlock(cardUnlocks, id);
-    setCardUnlocks(u); saveCardUnlocks(u);
-    return true;
-  }
-  // lock만 초기화(진척은 유지) — 설정의 개발 도구.
-  function resetUnlocks() { resetCardUnlocks(); setCardUnlocks([]); }
+  // 미션 오픈만 초기화(진척은 유지) — 설정의 개발 도구. 다시 랜덤 1개부터.
+  function resetUnlocks() { resetOpenMissions(); setOpenMissions(reconcileOpenMissions([], progress)); }
   // 개발용: 모든 미션 장면에 가챠 카드 30장씩 채움(테스트 편의).
   function fillDevCardsAll() {
     const ids = CONTENT.missions.filter((m) => m.id !== 'C0').map((m) => m.id);
@@ -550,10 +554,10 @@ export function App() {
 
   function renderView() {
     if (view === 'map') {
-      return <MapView nav={{ ...nav, current: 'map' }} allCards={allCards} progress={progress} cardUnlocks={cardUnlocks} devUnlockAll={!!settings.devUnlockAll} onUnlockScene={unlockScene} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
+      return <MapView nav={{ ...nav, current: 'map' }} allCards={allCards} progress={progress} openMissions={openMissions} devUnlockAll={!!settings.devUnlockAll} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
     }
     if (view === 'review') {
-      return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} cardUnlocks={cardUnlocks} devUnlockAll={!!settings.devUnlockAll} onUnlockScene={unlockScene} onStartReview={startReviewSession} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
+      return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} openMissions={openMissions} devUnlockAll={!!settings.devUnlockAll} onStartReview={startReviewSession} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
     }
     if (view === 'gacha') {
       return <GachaPage nav={{ ...nav, current: 'gacha' }} progress={progress} />;
@@ -562,7 +566,7 @@ export function App() {
       return <GachaLab nav={{ ...nav, current: 'gachalab' }} progress={progress} onExit={() => setView('home')} />;
     }
     if (view === 'flash') {
-      const unlockedSceneIds = CONTENT.missions.filter((m) => m.id !== 'C0' && isSceneOpen(m.id, progress, cardUnlocks, !!settings.devUnlockAll)).map((m) => m.id);
+      const unlockedSceneIds = CONTENT.missions.filter((m) => m.id !== 'C0' && isSceneOpen(m.id, openMissions, !!settings.devUnlockAll)).map((m) => m.id);
       return <Flash cards={flashCards} unlockedSceneIds={unlockedSceneIds} onExit={() => setView('home')} onReplay={(mode, count) => startFlashSession(mode, count)} />;
     }
     if (view === 'placement') {
@@ -595,7 +599,7 @@ export function App() {
       const nextSceneId = planSession(allCards, progress, nextId, sessionConfig)
         .missions.find((m) => m.id !== 'C0')?.id;
       // 연습 세션(장면 없음)용 보상 장면 — 해금 장면에서 세션 id로 결정적 선택(2개)
-      const unlockedForReward = CONTENT.missions.filter((m) => m.id !== 'C0' && isSceneOpen(m.id, progress, cardUnlocks, !!settings.devUnlockAll)).map((m) => m.id);
+      const unlockedForReward = CONTENT.missions.filter((m) => m.id !== 'C0' && isSceneOpen(m.id, openMissions, !!settings.devUnlockAll)).map((m) => m.id);
       const fallbackSceneIds = unlockedForReward.length
         ? [...new Set([unlockedForReward[sessionId % unlockedForReward.length], unlockedForReward[(sessionId + 1) % unlockedForReward.length]])]
         : [];
@@ -666,6 +670,7 @@ export function App() {
       <Home
         nav={{ ...nav, current: 'home' }}
         allCards={allCards} progress={progress} session={session} sessionConfig={sessionConfig}
+        openMissions={openMissions}
         diagnosis={diag}
         modeLabel={MODE_PRESETS[settings.mode].label}
         onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession} onPracticeCompose={startComposeSession} onPracticeFlash={startFlashSession} onPracticeWrite={startKanaWrite} onPracticePairs={startPairSession} onPracticeVocab={() => setView('vocab')} onPracticeGreetings={startGreetingSession} onPracticeVerbs={() => setView('verbs')} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}

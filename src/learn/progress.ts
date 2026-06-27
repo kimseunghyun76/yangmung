@@ -286,6 +286,8 @@ export interface SessionConfig {
   minFresh: { K: number; B: number; C: number };
   /** 미션 ID → 해당 세션에 포함 여부. undefined면 전체 포함. */
   missionTierFilter?: (missionId: string) => boolean;
+  /** 열린 미션 ID 목록(랜덤 순차 오픈). 주어지면 이 안의 미션만 세션에 포함. */
+  openMissions?: string[];
   /** 듣기·받아쓰기·발음구분 카드의 레벨(티어) 범위 [min,max]. 범위 밖은 제외. 태그 없는 카드는 항상 포함. */
   cardTierRange?: [number, number];
 }
@@ -491,7 +493,8 @@ export function selectSessionCards(
     else if (t === 'phrase') pushByStatus(b, rep, status);
     else if (t === 'mission') {
       const mid = String(rep.reviewTarget!.id);
-      if (!isMissionUnlocked(mid, progress)) continue; // 잠긴 장면(C3 등)은 제외
+      // 잠긴 장면 제외 — openMissions(랜덤 순차)가 주어지면 그 기준, 없으면 기존 경험치 해제 기준.
+      if (config.openMissions ? !config.openMissions.includes(mid) : !isMissionUnlocked(mid, progress)) continue;
       if (!cByMission.has(mid)) cByMission.set(mid, { due: [], fresh: [] });
       pushByStatus(cByMission.get(mid)!, rep, status);
     }
