@@ -10,7 +10,7 @@ function check(name: string, cond: boolean) {
   console.log(`  ${cond ? 'PASS' : 'FAIL'} ${name}`);
 }
 
-const POOL = CONTENT.missions.filter((m) => m.id !== 'C0').map((m) => m.id);
+const POOL: string[] = CONTENT.missions.filter((m) => m.id !== 'C0').map((m) => m.id);
 const cp = (): CardProgress => ({ attempts: 1, correct: 1, consecutiveCorrect: 1, lastResult: 'correct', lastSeenAt: '', lastSessionId: 1, usedRecoveryEver: false });
 // 미션을 n번 학습한 progress (키: mission:ID:i)
 function studied(id: string, n: number): ProgressMap {

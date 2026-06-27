@@ -432,4 +432,6 @@ export const phrases: Phrase[] = [
   { id: 'p_isoide_kudasai', kana: 'いそいでください', kanji: '急いでください', korean: '서둘러 주세요', register: 'productive', tip: '「急(いそ)いでください」— 긴급 상황에서 "서둘러 주세요". 구급차·도움 요청에 분명하게 전달돼요' },
   { id: 'p_koko_de_orimasu', kana: 'ここでおります', kanji: 'ここで降ります', displayKana: 'ここで、おります', korean: '여기서 내릴게요', register: 'productive', tip: '「ここで降(お)ります」— 버스·전철에서 "여기서 내릴게요". 내릴 곳을 안내받았을 때 행동으로 답해요' },
   { id: 'p_tadaima', kana: 'ただいま', korean: '다녀왔습니다', register: 'productive', tip: '「ただいま」— 료칸·숙소에 돌아오며 "다녀왔습니다". 직원의 おかえりなさい(어서 오세요)에 짝이 되는 인사예요' },
+  { id: 'p_koukan_shitai', kana: 'これをこうかんしたいです', kanji: 'これを交換したいです', displayKana: 'これを、こうかんしたいです', korean: '이걸 교환하고 싶어요', register: 'productive', tip: '「これを交換(こうかん)したいです」— 교환·환불 데스크에서 용건을 밝히는 첫 마디. 영수증(レシート)을 함께 내면 빠르게 진행돼요' },
+  { id: 'p_henkin_de', kana: 'へんきんでおねがいします', kanji: '返金でお願いします', displayKana: 'へんきんで、おねがいします', korean: '환불로 부탁드려요', register: 'productive', tip: '「返金(へんきん)でお願(ねが)いします」— 교환 대신 환불을 택할 때. 카드 결제는 보통 카드로 돌려받아요' },
 ];
