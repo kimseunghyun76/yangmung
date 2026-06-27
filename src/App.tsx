@@ -40,7 +40,6 @@ const Guide = lazy(() => import('./views/Guide').then((m) => ({ default: m.Guide
 const SettingsModal = lazy(() => import('./views/SettingsModal').then((m) => ({ default: m.SettingsModal })));
 const VocabMenu = lazy(() => import('./views/VocabMenu').then((m) => ({ default: m.VocabMenu })));
 const VocabTable = lazy(() => import('./views/VocabTable').then((m) => ({ default: m.VocabTable })));
-const GachaLab = lazy(() => import('./views/GachaLab').then((m) => ({ default: m.GachaLab })));
 const VerbForms = lazy(() => import('./views/VerbForms').then((m) => ({ default: m.VerbForms })));
 
 function AppFallback() {
@@ -560,10 +559,7 @@ export function App() {
       return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} openMissions={openMissions} devUnlockAll={!!settings.devUnlockAll} onStartReview={startReviewSession} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
     }
     if (view === 'gacha') {
-      return <GachaPage nav={{ ...nav, current: 'gacha' }} progress={progress} />;
-    }
-    if (view === 'gachalab') {
-      return <GachaLab nav={{ ...nav, current: 'gachalab' }} progress={progress} onExit={() => setView('home')} />;
+      return <GachaPage nav={{ ...nav, current: 'gacha' }} openMissions={openMissions} />;
     }
     if (view === 'flash') {
       const unlockedSceneIds = CONTENT.missions.filter((m) => m.id !== 'C0' && isSceneOpen(m.id, openMissions, !!settings.devUnlockAll)).map((m) => m.id);
