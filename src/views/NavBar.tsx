@@ -1,6 +1,6 @@
 // 상단 네비게이션 — 에디토리얼: 텍스트 탭 + 朱 언더라인, 모노 컨트롤.
 import { Icon } from '../ui/Icon';
-type NavView = 'home' | 'map' | 'review' | 'gacha' | 'gachalab';
+type NavView = 'home' | 'map' | 'review' | 'gacha';
 
 export interface NavBarProps {
   current: NavView;

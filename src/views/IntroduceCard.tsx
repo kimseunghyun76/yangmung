@@ -32,7 +32,7 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
         ) : (
           <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 8px' }}>
             <span style={{ display: 'inline-flex', padding: 8, borderRadius: 20, background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)', boxShadow: '0 6px 16px rgba(0,0,0,.08)' }}>
-              <WordArt id={card.id} korean={card.korean} kana={card.kana} size={104} />
+              <WordArt id={card.id} korean={card.korean} kana={card.kana} ja={card.ja} size={104} />
             </span>
           </div>
         )
@@ -182,7 +182,7 @@ function QuickPracticeWordScene({ card }: { card: IntroduceCard }) {
             border: '1px solid rgba(255,255,255,.78)',
             boxShadow: '0 10px 24px rgba(83,56,24,.12)',
           }}>
-            <WordArt id={card.id} korean={card.korean} kana={card.kana} size={greeting ? 128 : 148} preferAsset />
+            <WordArt id={card.id} korean={card.korean} kana={card.kana} ja={card.ja} size={greeting ? 128 : 148} preferAsset />
           </span>
         </div>
       </div>
