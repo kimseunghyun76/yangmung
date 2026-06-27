@@ -207,9 +207,65 @@ function vocabWordArtSrc(id: string): string | null {
   return `/vocab/word-art/${group}/${item}.png`;
 }
 
-export function WordArt({ id, korean, kana: _kana, size = 96, style, preferAsset = false }: { id: string; korean: string; kana: string; size?: number; style?: CSSProperties; preferAsset?: boolean }) {
+function signWordArtBg(id: string): string | null {
+  return id === 'sign:study:deguchi' ? '/vocab/sign-art/deguchi-bg.png' : null;
+}
+
+export function WordArt({ id, korean, kana: _kana, ja, size = 96, style, preferAsset = false }: { id: string; korean: string; kana: string; ja?: string; size?: number; style?: CSSProperties; preferAsset?: boolean }) {
   const assetSrc = vocabWordArtSrc(id);
   const [assetFailed, setAssetFailed] = useState(false);
+  const signBg = signWordArtBg(id);
+  const [signBgFailed, setSignBgFailed] = useState(false);
+  if (signBg && !signBgFailed) {
+    return (
+      <span
+        role="img"
+        aria-label={korean}
+        style={{
+          position: 'relative',
+          display: 'inline-block',
+          width: size,
+          height: size,
+          overflow: 'hidden',
+          borderRadius: Math.max(14, size * 0.08),
+          ...style,
+        }}
+      >
+        <img
+          src={signBg}
+          alt=""
+          aria-hidden
+          loading="lazy"
+          decoding="async"
+          onError={() => setSignBgFailed(true)}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+        />
+        <span
+          lang="ja"
+          aria-hidden
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '35%',
+            transform: 'translate(-50%, -50%)',
+            padding: `${Math.max(4, size * 0.035)}px ${Math.max(10, size * 0.07)}px`,
+            borderRadius: Math.max(8, size * 0.055),
+            background: 'rgba(255,255,255,.92)',
+            color: '#135d45',
+            fontSize: Math.max(26, size * 0.27),
+            fontWeight: 950,
+            lineHeight: 1,
+            letterSpacing: 0,
+            boxShadow: '0 8px 20px rgba(6,47,35,.18)',
+            textShadow: '0 1px 0 rgba(255,255,255,.7)',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {ja ?? '出口'}
+        </span>
+      </span>
+    );
+  }
   if (preferAsset && assetSrc && !assetFailed) {
     return (
       <img

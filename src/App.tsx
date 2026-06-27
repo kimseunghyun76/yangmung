@@ -12,7 +12,6 @@ import {
 import { loadCollection, saveCollection, fillDevCards } from './learn/collection';
 import { loadOpenMissions, saveOpenMissions, resetOpenMissions, reconcileOpenMissions, isSceneOpen } from './learn/unlocks';
 import { resetFlashBest } from './learn/flashScores';
-import { earn, REWARD_SESSION, REWARD_PRACTICE } from './learn/wallet';
 import { adaptSessionConfig, diagnose } from './learn/adaptive';
 import { extractKanaChars } from './learn/kanaReading';
 import { loadSettings, MODE_PRESETS, saveSettings, sceneSentenceLevelForMode, type Settings } from './learn/settings';
@@ -24,7 +23,7 @@ import type { PickMap } from './views/OrderCard';
 import type { KanaItem } from './content/types';
 import { MascotEmpty } from './views/mascot';
 
-type View = 'home' | 'map' | 'review' | 'gacha' | 'gachalab' | 'intro' | 'session' | 'done' | 'flash' | 'write' | 'placement' | 'vocab' | 'vocabTable' | 'verbs';
+type View = 'home' | 'map' | 'review' | 'gacha' | 'intro' | 'session' | 'done' | 'flash' | 'write' | 'placement' | 'vocab' | 'vocabTable' | 'verbs';
 
 const Home = lazy(() => import('./views/Home').then((m) => ({ default: m.Home })));
 const Intro = lazy(() => import('./views/Intro').then((m) => ({ default: m.Intro })));
@@ -62,9 +61,7 @@ export function App() {
   const [sessionLog, setSessionLog] = useState<SessionLogEntry[]>([]);
   const [picks, setPicks] = useState<PickMap>({}); // 미션 스텝별 내가 고른 답변 (대화 리캡용)
   const [gachaEligible, setGachaEligible] = useState(true); // 약점 재도전 세션은 보석함 제외
-  const [cashEarned, setCashEarned] = useState(0);          // 이번 세션 완료 보상(캐시)
-  const sessionRewardRef = useRef(REWARD_SESSION);          // 세션 종류별 보상액(미션·퀴즈 1000 / 빠른연습 300)
-  const awardedSessionRef = useRef(-1);                     // 중복 보상 방지
+  const practiceSessionRef = useRef(false);                 // 이번 세션이 빠른 연습인지(미션 X) — 표시 구분용
   const [flashCards, setFlashCards] = useState<Card[]>([]); // 속도전 플래시(세션 SRS와 분리)
   const [writeItems, setWriteItems] = useState<KanaItem[]>([]); // 가나 쓰기(따라쓰기)
   const [placementCards, setPlacementCards] = useState<Card[]>([]); // 수준 진단(배치) 문항
@@ -194,13 +191,6 @@ export function App() {
   // 세션 중 카드 소진되면 done으로 (render 중 setState 금지)
   useEffect(() => {
     if (view === 'session' && sessionCards.length > 0 && i >= sessionCards.length) {
-      // 세션 완료 보상(캐시) — 세션당 1회.
-      if (awardedSessionRef.current !== sessionId) {
-        awardedSessionRef.current = sessionId;
-        const reward = sessionRewardRef.current;
-        if (reward > 0) earn(reward);
-        setCashEarned(reward);
-      }
       const ns = { lastCompletedSessionId: sessionId };
       setSession(ns); saveSession(ns); setView('done');
     }
@@ -208,9 +198,9 @@ export function App() {
 
   // ── 액션 ─────────────────────────────────────────
   // showIntro: 새 "한 판"이면 인트로부터(목표↔첫 카드 정렬), 약점 재출제는 바로 세션.
-  function beginSession(id: number, cards: Card[], showIntro: boolean, gacha = true, reward = REWARD_SESSION) {
+  function beginSession(id: number, cards: Card[], showIntro: boolean, gacha = true, isPractice = false) {
     resetMangaBackdrops(); // 세션마다 장면 배경을 3컷 중 새 랜덤으로
-    sessionRewardRef.current = reward;
+    practiceSessionRef.current = isPractice;
     const materialized = cards.map(materializeQuizCard);
     setSessionId(id);
     setSessionCards(materialized);
@@ -265,32 +255,32 @@ export function App() {
     // 전체 학습: 스크립트 전체를 한 세션에(끊김 없이). limit 크게.
     const cards = selectScriptKanaCards(allCards, progress, nextSessionId(session), ids, 999);
     if (cards.length === 0) return;
-    beginSession(nextSessionId(session), cards, true, true, REWARD_PRACTICE);
+    beginSession(nextSessionId(session), cards, true, true, true);
   }
   // 발음 구분 — 최소 페어 듣고 둘 중 고르기 (つ/す·장음·촉음·청탁)
   function startPairSession() {
     const cards = selectPairCards(allCards, progress, nextSessionId(session), 18);
     if (cards.length === 0) return;
-    beginSession(nextSessionId(session), cards, true, true, REWARD_PRACTICE);
+    beginSession(nextSessionId(session), cards, true, true, true);
   }
   // 거리 읽기 — 간판·메뉴·안내·교통 표기 읽기 연습
   function startSignSession() {
     // 학습형 — 간판을 모두 설명·듣기·읽기한 뒤, 듣고 일본어 찾기 3문제.
     const cards = selectStudyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:hear2ja:'), { studyLimit: 24, quizCount: 6 });
     if (cards.length === 0) return;
-    beginSession(nextSessionId(session), cards, true, true, REWARD_PRACTICE);
+    beginSession(nextSessionId(session), cards, true, true, true);
   }
   // 받아쓰기 전용 — 듣고 가나 타일로 쓰기
   function startDictationSession() {
     const cards = selectDictationCards(allCards, progress, nextSessionId(session), 18);
     if (cards.length === 0) return;
-    beginSession(nextSessionId(session), cards, true, true, REWARD_PRACTICE);
+    beginSession(nextSessionId(session), cards, true, true, true);
   }
   // 한→일 작문 전용 — 한국어 보고 일본어 조립(산출)
   function startComposeSession() {
     const cards = selectComposeCards(allCards, progress, nextSessionId(session), 18);
     if (cards.length === 0) return;
-    beginSession(nextSessionId(session), cards, true, true, REWARD_PRACTICE);
+    beginSession(nextSessionId(session), cards, true, true, true);
   }
   // 속도전 플래시 — 모드별 카드 풀 선택 + 제한시간 즉답 게임(세션/SRS와 분리).
   function startFlashSession(mode: FlashMode = 'blitz', count = 15) {
@@ -311,13 +301,13 @@ export function App() {
       cards = selectStudyDeck(allCards, (id) => id.startsWith(`vocab:${groupId}:study:`), (id) => id.startsWith(`vocab:${groupId}:hear2ja:`), { studyLimit: 28, quizCount: 6 });
     }
     if (cards.length === 0) return;
-    beginSession(nextSessionId(session), cards, true, true, REWARD_PRACTICE);
+    beginSession(nextSessionId(session), cards, true, true, true);
   }
   // 기본 인사 전용 세션 — 학습형
   function startGreetingSession() {
     const cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:greetings:study:'), (id) => id.startsWith('vocab:greetings:hear2ja:'), { studyLimit: 24, quizCount: 6 });
     if (cards.length === 0) return;
-    beginSession(nextSessionId(session), cards, true, true, REWARD_PRACTICE);
+    beginSession(nextSessionId(session), cards, true, true, true);
   }
   // 가나 쓰기(따라쓰기) — 히라/가타 섞어 무작위 10자(유추 방지). 세션/SRS와 분리.
   function startKanaWrite() {
@@ -411,7 +401,7 @@ export function App() {
     const weakIds = new Set(sessionLog.filter((r) => r.result !== 'correct').map((r) => r.id));
     const weak = sessionCards.filter((c) => c.kind === 'quiz' && weakIds.has(c.id));
     if (weak.length === 0) return;
-    beginSession(nextSessionId(session), weak, false, false, 0); // 약점 재도전 = 보석함·보상 X
+    beginSession(nextSessionId(session), weak, false, false, false); // 약점 재도전 = 보석함 X
   }
   // "이미 알아요": 현재 카드를 즉시 익숙 처리 + 가나 보조 끔 → 다음으로 (점수·약점 집계 X)
   function markKnown() {
@@ -544,7 +534,7 @@ export function App() {
   // ── 라우팅 ───────────────────────────────────────
   // 허브 화면(홈·지도·복습)엔 상단 네비게이션 — 자유 이동 + 가이드/설정.
   const nav = {
-    onNavigate: (v: 'home' | 'map' | 'review' | 'gacha' | 'gachalab') => setView(v),
+    onNavigate: (v: 'home' | 'map' | 'review' | 'gacha') => setView(v),
     onOpenGuide: () => setShowGuide(true),
     onOpenSettings: () => setShowSettings(true),
     theme: settings.theme,
@@ -610,7 +600,6 @@ export function App() {
           progress={progress} canContinue={canContinue}
           clearedSceneIds={clearedSceneIds} fallbackSceneIds={fallbackSceneIds} nextSceneId={nextSceneId} showGacha={gachaEligible}
           reviewCount={reviewCount} dictationCount={dictationCount} composeCount={composeCount} signCount={signCount}
-          cashEarned={cashEarned}
           speakCount={sessionCards.filter((c) => c.kind === 'speak').length}
           onRetryWeak={retryWeakSession} onContinue={startSession}
           onReview={startReviewSession} onDictation={startDictationSession} onCompose={startComposeSession} onSigns={startSignSession} onFlash={startFlashSession}
@@ -658,7 +647,7 @@ export function App() {
           onPrev={prev}
           onExit={() => setView('home')}
           onKnown={markKnown}
-          quickPractice={sessionRewardRef.current === REWARD_PRACTICE}
+          quickPractice={practiceSessionRef.current}
         />
       );
     }
