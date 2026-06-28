@@ -98,7 +98,7 @@ export function App() {
   }
   // 적응형: 진척을 진단해 약점·난이도를 판단하고, 세션 신규/복습 비율을 동적으로 조정.
   // (복습 모드는 사용자가 명시적으로 고른 것이라 적응 조정 제외 — 의도 존중)
-  // 미션 티어 기반 팁 쿼터: 입문(1)=3개, 기본(2)=2개, 실용·심화(3·4)=1개, 고급심화(5)=0개
+  // 미션 티어 기반 문법(팁) 쿼터 — 퀴즈 전에 레벨별로 더 풍부하게: 입문 3 → 고급심화 4~5개.
   const userMissionTier = useMemo(() => {
     const seenMissions = new Set<string>();
     for (const k of Object.keys(progress)) {
@@ -111,7 +111,7 @@ export function App() {
     }
     return maxTier;
   }, [progress]);
-  const tierTipQuota = userMissionTier <= 1 ? 3 : userMissionTier === 2 ? 2 : userMissionTier >= 5 ? 0 : 1;
+  const tierTipQuota = userMissionTier <= 1 ? 3 : userMissionTier === 2 ? 3 : userMissionTier === 3 ? 4 : userMissionTier === 4 ? 4 : 5;
   // 미션 티어 맵 — 레벨 필터용 (CONTENT.missions의 tier 값 사용)
   const missionTierMap = useMemo<Map<string, number>>(
     () => new Map(CONTENT.missions.map((m) => [m.id as string, m.tier ?? 1])),
