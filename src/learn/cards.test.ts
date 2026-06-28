@@ -1,7 +1,9 @@
 // cards.ts 통합 테스트 — buildCards()가 만든 전체 카드 세트의 구조 무결성.
 // id 유일성(진척 추적의 전제), 카드별 필수 필드, 퀴즈 정답 보장 등을 검증한다.
 // 실행: npm run test:cards  (실패 시 exit 1)
+import { CONTENT } from '../content';
 import { buildCards, materializeQuizCard, type Card } from './cards';
+import { selectMissionCards } from './progress';
 
 let pass = 0, total = 0;
 function check(name: string, cond: boolean, detail = '') {
@@ -63,10 +65,65 @@ console.log('\n=== reviewTarget 무결성 ===');
   check('reviewTarget 있으면 type·id 유효', badRt.length === 0, `불량: ${badRt.map((c) => c.id).slice(0, 5).join(', ')}`);
 }
 
+console.log('\n=== 미션 새표현 선행 규칙 ===');
+{
+  const introKey = (missionId: string, phraseId: string) => `intro:${missionId}:${phraseId}`;
+  const introIds = new Set(cards.filter((c) => c.kind === 'introduce').map((c) => c.id));
+  const missingIntro: string[] = [];
+  const orderViolations: string[] = [];
+  for (const m of CONTENT.missions.filter((mission) => mission.id !== 'C0')) {
+    const required = new Set<string>();
+    for (const pid of m.speakPhraseIds ?? []) required.add(pid);
+    for (const step of m.steps) {
+      if (step.promptPhraseId) required.add(step.promptPhraseId);
+      for (const choice of step.choices) if (choice.phraseId) required.add(choice.phraseId);
+    }
+    for (const pid of required) {
+      if (!introIds.has(introKey(m.id, pid))) missingIntro.push(`${m.id}:${pid}`);
+    }
+
+    const deck = selectMissionCards(cards, m.id, {});
+    const firstNonIntro = deck.findIndex((c) => c.kind !== 'introduce');
+    if (firstNonIntro >= 0 && deck.slice(firstNonIntro).some((c) => c.kind === 'introduce')) {
+      orderViolations.push(m.id);
+    }
+  }
+  check('모든 미션 표현은 같은 미션의 introduce 카드를 가진다', missingIntro.length === 0, `누락: ${missingIntro.slice(0, 5).join(', ')}`);
+  check('단독 미션 덱은 introduce를 모두 끝낸 뒤 퀴즈로 넘어간다', orderViolations.length === 0, `위반: ${orderViolations.slice(0, 5).join(', ')}`);
+}
+
 console.log('\n=== 안정성: materializeQuizCard 멱등(비퀴즈 무변) ===');
 {
   const tip = cards.find((c) => c.kind === 'tip');
   check('비퀴즈 카드는 materialize해도 동일 참조', !tip || materializeQuizCard(tip) === tip);
+}
+
+console.log('\n=== 규칙: 미션 퀴즈는 정답 표현을 새 표현으로 학습한 뒤에만 나온다 ===');
+{
+  // 모든 미션을 첫 방문부터 끝까지(8개씩 새 표현 소개) 시뮬레이션 — 어떤 방문에서도
+  // "그 시점까지 학습한 표현"에 없는 정답을 가진 퀴즈가 나오면 안 된다.
+  const phraseIdOf = (id: string) => id.split(':').slice(2).join(':');
+  const introExistsFor = new Set(cards.filter((c) => c.kind === 'introduce').map((c) => phraseIdOf(c.id)));
+  let violations = 0; let exhausted = 0;
+  for (const m of CONTENT.missions) {
+    const seen: Record<string, { attempts: number }> = {};
+    for (let guard = 0; guard < 40; guard++) {
+      const deck = selectMissionCards(cards, m.id, seen as never);
+      const learned = new Set<string>(Object.keys(seen).filter((k) => k.startsWith('intro:')).map(phraseIdOf));
+      for (const c of deck) if (c.kind === 'introduce') learned.add(phraseIdOf(c.id));
+      for (const c of deck) {
+        if (c.kind !== 'quiz' || !c.answerPhraseIds) continue;
+        for (const pid of c.answerPhraseIds) {
+          if (introExistsFor.has(pid) && !learned.has(pid)) { violations++; if (violations <= 5) console.log(`    위반: ${m.id} ${c.id} → ${pid}`); }
+        }
+      }
+      const fresh = deck.filter((c) => c.kind === 'introduce' && !seen[c.id]);
+      if (fresh.length === 0) { exhausted++; break; }
+      for (const c of fresh) seen[c.id] = { attempts: 1 };
+    }
+  }
+  check('모든 미션·모든 방문에서 미학습 정답 퀴즈 0건', violations === 0, `위반 ${violations}건`);
+  check(`모든 미션이 새 표현을 끝까지 소진(${exhausted}/${CONTENT.missions.length})`, exhausted === CONTENT.missions.length);
 }
 
 console.log(`\n결과: ${pass}/${total} ${pass === total ? 'PASS' : 'FAIL'}`);

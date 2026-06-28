@@ -61,6 +61,8 @@ export interface QuizCard {
   listen?: boolean;
   /** 레벨(난이도) 태그 — 미션 티어에서 유도. 세션 레벨 필터용. 없으면 모든 레벨에 노출. */
   tier?: 1 | 2 | 3 | 4 | 5;
+  /** 이 퀴즈의 정답으로 학습돼야 하는 표현 ids — 새 표현 학습 전엔 퀴즈를 내지 않기 위한 게이트. */
+  answerPhraseIds?: string[];
   reviewTarget?: ReviewTarget; // SRS 대상 (없으면 추적 X)
 }
 
@@ -183,9 +185,10 @@ function makeStudyCard(opts: { id: string; tag: string; ja: string; kana: string
 // "듣고 일본어 찾기" 퀴즈 — 소리(kana)를 듣고 알맞은 일본어 표기를 고른다.
 function makeHearToJaCard(opts: {
   id: string; tag: string; reviewId: string;
-  item: { ja: string; kana: string };
-  distract: { ja: string; kana: string }[];
+  item: { ja: string; kana: string; korean: string; tip?: string };
+  distract: { ja: string; kana: string; korean: string; tip?: string }[];
 }): QuizCard {
+  const phrase = (item: { ja: string; kana: string; korean: string; tip?: string }) => ({ kana: item.kana, kanji: item.ja, korean: item.korean, tip: item.tip });
   return {
     kind: 'quiz',
     id: opts.id,
@@ -196,8 +199,8 @@ function makeHearToJaCard(opts: {
     listen: true,
     reviewTarget: { type: 'phrase', id: opts.reviewId },
     choices: shuffle([
-      { label: opts.item.ja, correct: true, ja: opts.item.kana },
-      ...opts.distract.map((d) => ({ label: d.ja, correct: false, ja: d.kana })),
+      { label: opts.item.ja, correct: true, ja: opts.item.kana, phrase: phrase(opts.item) },
+      ...opts.distract.map((d) => ({ label: d.ja, correct: false, ja: d.kana, phrase: phrase(d) })),
     ]),
   };
 }
@@ -276,8 +279,8 @@ function buildBasicLifeCards(): Card[] {
       sub: `뜻에 맞는 ${group} 일본어를 고르세요`,
       reviewTarget: { type: 'phrase', id: `basic:${item.id}` },
       choices: shuffle([
-        { label: item.ja, correct: true, ja: item.kana },
-        ...distract.map((d) => ({ label: d.ja, correct: false, ja: d.kana })),
+        { label: item.ja, correct: true, ja: item.kana, phrase: phrase(item) },
+        ...distract.map((d) => ({ label: d.ja, correct: false, ja: d.kana, phrase: phrase(d) })),
       ]),
     });
   }
@@ -673,10 +676,10 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
   cards.push(...buildBasicLifeCards());
 
   // 미션 — 콘텐츠에 정의된 순서대로 전부 (새 장면 추가 시 자동 포함)
-  // introduced는 미션 전체에 걸쳐 전역 — 한 표현은 "처음 등장하는 미션·스텝"에서 딱 한 번만 새 표현으로 소개.
-  // (한번이라도 새 표현으로 본 문장은 다시 소개 카드로 나오지 않음)
-  const introduced = new Set<string>();
+  // 각 미션에서 쓰이는 표현은 그 미션 안에서 반드시 먼저 소개한다.
+  // 같은 표현이 여러 미션에 나오더라도, 해당 장면 퀴즈 전에 다시 학습 카드로 노출한다.
   for (const m of missions) {
+    const introduced = new Set<string>();
     // 구체적인 상황(scenario)을 우선 — 「편의점 계산대」에서 쓸 수 있는 표현들을 익혀봅시다.
     const sceneLabel = (m.scenario ?? m.place) as string;
     const sceneNote = `「${sceneLabel}」에서 쓸 수 있는 표현들을 익혀봅시다.`;
@@ -726,19 +729,19 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
         : recapPrompt
           ? { ja: recapPrompt.kana, kana: recapPrompt.kana, korean: recapPrompt.korean }
           : undefined;
+      if (step.promptPhraseId) {
+        addIntroduce(step.promptPhraseId, sceneNote);
+      }
       // 같은 질문에 대한 정답(productive·correct·복구 아님)들 — 답변이 둘 이상이면 함께 보여준다.
       const isAns = (c: typeof step.choices[number]) =>
         !!c.phraseId && c.correct && !c.recoveryType && ['productive', 'both'].includes(byPhrase(c.phraseId).register);
       const correctAnswers = step.choices.filter(isAns);
       for (const ch of step.choices) {
         if (!ch.phraseId) continue;
-        const reg = byPhrase(ch.phraseId).register;
-        if (reg === 'productive' || reg === 'both') {
-          const alts = isAns(ch)
-            ? correctAnswers.filter((o) => o.phraseId !== ch.phraseId).map((o) => { const ap = byPhrase(o.phraseId!); return { ja: ttsText(ap) ?? ap.kana, kana: ap.displayKana ?? ap.kana, korean: ap.korean }; })
-            : undefined;
-          addIntroduce(ch.phraseId, sceneNote, qInfo, alts);
-        }
+        const alts = isAns(ch)
+          ? correctAnswers.filter((o) => o.phraseId !== ch.phraseId).map((o) => { const ap = byPhrase(o.phraseId!); return { ja: ttsText(ap) ?? ap.kana, kana: ap.displayKana ?? ap.kana, korean: ap.korean }; })
+          : undefined;
+        addIntroduce(ch.phraseId, sceneNote, qInfo, alts);
       }
       const choicePools = buildStepChoicePools(step.choices, byPhrase, phrases, step.promptPhraseId, missionChoicePhrases);
       // 미션 퀴즈 = "맞는 답 고르기"로 통일 (반전 퀴즈 제거).
@@ -751,6 +754,8 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
         sub: step.speaker ?? '',
         promptPhrase: phraseInfo(prompt) ?? recapPrompt,
         reviewTarget: { type: 'mission', id: m.id as CLevel },
+        // 이 스텝 정답(productive)들 — 새 표현 학습 전엔 이 퀴즈를 내지 않기 위한 게이트
+        answerPhraseIds: correctAnswers.map((c) => c.phraseId!).filter(Boolean),
         choicePools,
         choices: materializeChoicePools(choicePools, false),
       });
