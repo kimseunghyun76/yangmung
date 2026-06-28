@@ -25,6 +25,7 @@ interface Props {
   dictationCount?: number;
   composeCount?: number;
   signCount?: number;
+  isQuickPractice?: boolean;
   onRetryWeak: () => void;
   onContinue: () => void;
   onReview?: () => void;
@@ -32,13 +33,20 @@ interface Props {
   onCompose?: () => void;
   onSigns?: () => void;
   onFlash?: () => void;
+  onPracticeVocab?: () => void;
+  onPracticeGreetings?: () => void;
+  onPracticeKanaHiragana?: () => void;
+  onPracticeKanaKatakana?: () => void;
+  onPracticePairs?: () => void;
+  onPracticeWrite?: () => void;
+  onPracticeVerbs?: () => void;
   onHome: () => void;
 }
 
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place
   ?? CONTENT.missions.find((m) => m.id === id)?.scenario ?? id;
 
-export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, fallbackSceneIds = [], nextSceneId, showGacha = true, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, onRetryWeak, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onHome }: Props) {
+export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, fallbackSceneIds = [], nextSceneId, showGacha = true, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, isQuickPractice = false, onRetryWeak, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onPracticeVocab, onPracticeGreetings, onPracticeKanaHiragana, onPracticeKanaKatakana, onPracticePairs, onPracticeWrite, onPracticeVerbs, onHome }: Props) {
   const stars = quizSeen ? Math.max(1, Math.round((score / quizSeen) * 3)) : 0;
   const s = summarize(progress);
   const sr = sessionResult(progress, sessionId);
@@ -46,7 +54,20 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
   const wrongCount = sessionLog.filter((r) => r.result === 'wrong').length;
   const weak = new Set(sessionLog.filter((r) => r.result !== 'correct').map((r) => r.id)).size;
   const stamps = clearedSceneIds.slice(0, 3);
-  const nextActions: NextAction[] = [
+  const quickPracticeActions: NextAction[] = [
+    ...(onPracticeVocab ? [{ icon: 'kana' as const, accent: 'var(--accent)', title: '어휘 커리큘럼', sub: '단어 그림·표기·뜻 다시 회전', onClick: onPracticeVocab, preferred: true }] : []),
+    ...(onPracticeGreetings ? [{ icon: 'speak' as const, accent: 'var(--ok)', title: '기본 인사', sub: '듣고 바로 반응하기', onClick: onPracticeGreetings }] : []),
+    ...(onSigns ? [{ icon: 'sign' as const, accent: 'var(--accent)', title: '거리 읽기', sub: '간판·메뉴·안내 읽기', onClick: onSigns }] : []),
+    ...(onDictation ? [{ icon: 'dictation' as const, accent: 'var(--warn)', title: '받아쓰기', sub: '듣고 가나 타일로 쓰기', onClick: onDictation }] : []),
+    ...(onCompose ? [{ icon: 'speak' as const, accent: 'var(--accent)', title: '한→일 작문', sub: '뜻을 보고 일본어 만들기', onClick: onCompose }] : []),
+    ...(onPracticeKanaHiragana ? [{ icon: 'kana' as const, accent: 'var(--accent)', title: '히라가나', sub: '글자 읽기 빠른 회전', onClick: onPracticeKanaHiragana }] : []),
+    ...(onPracticeKanaKatakana ? [{ icon: 'kana' as const, accent: 'var(--accent)', title: '가타카나', sub: '외래어 표기 읽기', onClick: onPracticeKanaKatakana }] : []),
+    ...(onPracticePairs ? [{ icon: 'listen' as const, accent: 'var(--warn)', title: '발음 구분', sub: '비슷한 소리 듣고 고르기', onClick: onPracticePairs }] : []),
+    ...(onPracticeVerbs ? [{ icon: 'flow' as const, accent: 'var(--accent)', title: '동사 형태', sub: '자주 쓰는 활용 패턴', onClick: onPracticeVerbs }] : []),
+    ...(onPracticeWrite ? [{ icon: 'kana' as const, accent: 'var(--ok)', title: '가나 쓰기', sub: '손으로 따라 쓰기', onClick: onPracticeWrite }] : []),
+    ...(onFlash ? [{ icon: 'fast' as const, accent: 'var(--accent)', title: '속도전 플래시', sub: '제한시간 안에 빠르게 복습', onClick: onFlash }] : []),
+  ];
+  const nextActions: NextAction[] = isQuickPractice ? quickPracticeActions : [
     ...(weak > 0 ? [{
       icon: 'target' as const,
       accent: 'var(--accent)',
@@ -114,7 +135,7 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
       <div className="ym-rise" style={{ animationDelay: '.16s', marginTop: 24 }}>
         <div className="ym-next-action-head">
           <p style={{ ...kicker, margin: 0 }}>다음엔 무엇을 할까요?</p>
-          <span>{weak > 0 ? '막힌 곳을 먼저 잡거나, 바로 다음 장면으로 갈 수 있어요.' : '흐름을 끊지 않고 바로 이어갈 추천이에요.'}</span>
+          <span>{isQuickPractice ? '빠른 연습 안에서 바로 이어갈 수 있어요.' : weak > 0 ? '막힌 곳을 먼저 잡거나, 바로 다음 장면으로 갈 수 있어요.' : '흐름을 끊지 않고 바로 이어갈 추천이에요.'}</span>
         </div>
         <div className="ym-next-action-board">
           {primaryNext && <NextStep {...primaryNext} primary />}

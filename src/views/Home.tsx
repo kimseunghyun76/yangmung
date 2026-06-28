@@ -11,7 +11,6 @@ import { ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { isMangaSceneImage, sceneVisualByMission, sceneVisualByPlace } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
-import { SceneImageThumb } from './ui';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
 import { MascotBubble, MascotEmpty, MascotFace, type Who } from './mascot';
 import { Icon, type IconName } from '../ui/Icon';
@@ -53,11 +52,11 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
   const kata = kanaReadMastery(progress, kataIds);
   const kanaPct = Math.round(((hira.mastered + kata.mastered) / Math.max(1, hira.total + kata.total)) * 100);
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
-  // 여행 루트 — 열린 미션 중 "아직 진행하지 않은(미시작)" 것을 앞세워 3개.
+  // 여행 루트 — 열린 미션 중 "아직 진행하지 않은(미시작)" 것을 앞세워 최대 4개.
   const openScenes = scenes.filter((m) => openMissions.includes(m.id));
   const routeScenes = [...openScenes]
     .sort((a, b) => Number(missionProgress(allCards, progress, a.id).started) - Number(missionProgress(allCards, progress, b.id).started))
-    .slice(0, 3);
+    .slice(0, 4);
 
   // 오늘의 장면 = goal과 동일 기준(튜토리얼 C0 제외한 첫 장면). 없으면 가나 위주의 날.
   const primary = plan.missions.find((m) => m.id !== 'C0') ?? plan.missions[0];
@@ -146,10 +145,15 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
         background: 'linear-gradient(135deg, #b9382e, #e0564a 60%, #f0a23a)',
         boxShadow: '0 12px 30px rgba(185,56,46,0.34)',
       }}>
-        <span style={{ fontSize: 34, lineHeight: 1 }}>⚡</span>
+        <span style={{
+          width: 42, height: 42, borderRadius: 14, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          background: 'rgba(255,255,255,.14)', color: '#fff', border: '1px solid rgba(255,255,255,.24)', flex: '0 0 42px',
+        }}>
+          <Icon name="fast" size={21} />
+        </span>
         <span style={{ flex: 1 }}>
           <span style={{ display: 'block', fontSize: 18, fontWeight: 900, letterSpacing: '-0.02em' }}>속도전 대결</span>
-          <span style={{ display: 'block', fontSize: 12.5, fontWeight: 700, color: 'rgba(255,255,255,0.9)', marginTop: 2 }}>제한시간 안에 빠르게! 높은 점수로 보석함 획득 🎁</span>
+          <span style={{ display: 'block', fontSize: 12.5, fontWeight: 700, color: 'rgba(255,255,255,0.9)', marginTop: 2 }}>제한시간 안에 빠르게! 높은 점수로 보석함 획득</span>
         </span>
         <Icon name="flow" size={20} style={{ color: 'rgba(255,255,255,0.85)' }} />
       </button>
@@ -160,24 +164,30 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
           <p style={{ margin: 0, ...label }}>빠른 연습</p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 12 }}>
             {([
-              { label: '히라가나', sub: '청음·탁음·요음 전체', examples: ['あ', 'きゃ', 'ぱ'], icon: 'kana', art: 'hiragana', onClick: () => onPracticeKana('hiragana') },
-              { label: '가타카나', sub: '외래어 표기까지 읽기', examples: ['ア', 'チャ', 'ー'], icon: 'kana', art: 'katakana', onClick: () => onPracticeKana('katakana') },
-              { label: '기본 인사', sub: '첫 만남·감사·부탁', examples: ['こんにちは', 'ありがとう'], icon: 'speak', art: 'greetings', onClick: onPracticeGreetings },
-              { label: '어휘 커리큘럼', sub: '그림으로 익히는 필수 단어', examples: ['음식', '교통', '감정'], icon: 'target', art: 'vocab', onClick: onPracticeVocab },
-              { label: '간판·메뉴', sub: '역·식당·주의 표지 읽기', examples: ['入口', '会計', '禁煙'], icon: 'sign', art: 'signs', onClick: onPracticeSigns },
-              { label: '받아쓰기', sub: '듣고 가나로 직접 입력', examples: ['듣기', '조립', '확인'], icon: 'dictation', art: 'dictation', onClick: onPracticeDictation },
-              { label: '한→일 작문', sub: '뜻을 보고 일본어 만들기', examples: ['주세요', '어디예요'], icon: 'speak', art: 'compose', onClick: onPracticeCompose },
-              { label: '가나 쓰기', sub: '손으로 따라 쓰며 기억', examples: ['획순', '반복'], icon: 'dictation', art: 'kana-write', onClick: onPracticeWrite },
-              { label: '발음 구분', sub: '비슷한 소리 즉시 구분', examples: ['つ/す', 'っ', 'ー'], icon: 'listen', art: 'pairs', onClick: onPracticePairs },
-              { label: '동사 형태', sub: 'ます·たい·ながら 활용', examples: ['食べます', '行きたい'], icon: 'flow', art: 'verbs', onClick: onPracticeVerbs },
-            ] as { label: string; sub: string; examples: string[]; icon: IconName; art: string; onClick: () => void }[]).map((t) => (
+              { label: '히라가나', sub: '청음·탁음·요음 전체', examples: ['あ', 'きゃ', 'ぱ'], art: 'hiragana', onClick: () => onPracticeKana('hiragana') },
+              { label: '가타카나', sub: '외래어 표기까지 읽기', examples: ['ア', 'チャ', 'ー'], art: 'katakana', onClick: () => onPracticeKana('katakana') },
+              { label: '기본 인사', sub: '첫 만남·감사·부탁', examples: ['こんにちは', 'ありがとう'], art: 'greetings', onClick: onPracticeGreetings },
+              { label: '어휘 커리큘럼', sub: '그림으로 익히는 필수 단어', examples: ['음식', '교통', '감정'], art: 'vocab', onClick: onPracticeVocab },
+              { label: '간판·메뉴', sub: '역·식당·주의 표지 읽기', examples: ['入口', '会計', '禁煙'], art: 'signs', onClick: onPracticeSigns },
+              { label: '받아쓰기', sub: '듣고 가나로 직접 입력', examples: ['듣기', '조립', '확인'], art: 'dictation', onClick: onPracticeDictation },
+              { label: '한→일 작문', sub: '뜻을 보고 일본어 만들기', examples: ['주세요', '어디예요'], art: 'compose', onClick: onPracticeCompose },
+              { label: '가나 쓰기', sub: '손으로 따라 쓰며 기억', examples: ['획순', '반복'], art: 'kana-write', onClick: onPracticeWrite },
+              { label: '발음 구분', sub: '비슷한 소리 즉시 구분', examples: ['つ/す', 'っ', 'ー'], art: 'pairs', onClick: onPracticePairs },
+              { label: '동사 형태', sub: 'ます·たい·ながら 활용', examples: ['食べます', '行きたい'], art: 'verbs', onClick: onPracticeVerbs },
+            ] as { label: string; sub: string; examples: string[]; art: string; onClick: () => void }[]).map((t) => (
               <button key={t.label} className="ym-press" onClick={t.onClick} style={{
-                display: 'flex', alignItems: 'flex-start', gap: 11, textAlign: 'left', minWidth: 0,
+                position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', textAlign: 'left', minWidth: 0,
                 border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
-                borderRadius: 16, padding: '12px 12px', cursor: 'pointer',
+                borderRadius: 14, padding: 0, cursor: 'pointer', boxShadow: '0 7px 16px rgba(89,58,28,.06)',
               }}>
-                <QuickPracticeIcon icon={t.icon} />
-                <span style={{ minWidth: 0 }}>
+                <span aria-hidden style={{ position: 'relative', display: 'block', width: '100%', aspectRatio: '4 / 3', overflow: 'hidden', background: 'rgba(255,247,235,.64)' }}>
+                  <img src={`/scenes/quick-practice/${t.art}.webp`} alt="" loading="lazy" decoding="async" style={{
+                    width: '100%', height: '100%', objectFit: 'cover', display: 'block',
+                    filter: 'saturate(.9) contrast(.97) brightness(1.02)',
+                  }} />
+                  <span style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(255,247,235,.02), transparent 58%, rgba(48,34,18,.26))' }} />
+                </span>
+                <span style={{ minWidth: 0, display: 'block', padding: '10px 11px 11px' }}>
                   <span style={{ display: 'block', fontSize: 14, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.label}</span>
                   <span style={{ display: 'block', fontSize: 11, color: 'var(--ink-faint)', fontWeight: 700, marginTop: 1 }}>{t.sub}</span>
                   <span style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 7 }}>
@@ -223,19 +233,127 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
               borderRadius: 999, padding: '8px 12px', fontSize: 12.5, fontWeight: 800, cursor: 'pointer',
             }}>지도 보기</button>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8, marginTop: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: routeScenes.length > 1 ? 'repeat(2, minmax(0, 1fr))' : '1fr', gap: 10, marginTop: 12 }}>
             {routeScenes.map((m) => {
               const sv = sceneVisualByMission(m.id);
               const p = missionProgress(allCards, progress, m.id);
               const done = p.total > 0 && p.mastered === p.total;
+              const src = sv.backdrop ?? sv.thumb;
+              const statusText = done ? '완료' : !p.started ? '아직 안 함' : `${p.mastered}/${p.total}`;
+              const compact = routeScenes.length > 1;
+              const statusBg = done ? 'rgba(35,134,82,.94)' : p.started ? 'rgba(185,56,46,.96)' : 'rgba(255,255,255,.94)';
+              const statusColor = done || p.started ? '#fff' : 'var(--accent)';
               return (
                 <button key={m.id} className="ym-press" onClick={() => onPracticeScene(m.id)} style={{
-                  minWidth: 0, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)',
-                  color: 'var(--ink)', borderRadius: 16, padding: '11px 8px', cursor: 'pointer', textAlign: 'center',
+                  position: 'relative',
+                  minWidth: 0,
+                  overflow: 'hidden',
+                  border: '1px solid var(--glass-border)',
+                  background: 'var(--glass-bg-strong)',
+                  color: '#fff',
+                  borderRadius: compact ? 16 : 18,
+                  padding: 0,
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  aspectRatio: compact ? '4 / 3' : '16 / 9',
+                  boxShadow: '0 10px 22px rgba(89,58,28,.09)',
                 }}>
-                  <SceneImageThumb src={sv.backdrop ?? sv.thumb} icon={sv.icon} accent={sv.accent} size={42} />
-                  <span style={{ display: 'block', marginTop: 7, fontSize: 13, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.place ?? m.scenario}</span>
-                  <span style={{ display: 'block', marginTop: 3, fontSize: 11, color: done ? 'var(--ok)' : !p.started ? 'var(--accent)' : 'var(--ink-faint)', fontWeight: 750 }}>{done ? '완료' : !p.started ? '아직 안 함' : `${p.mastered}/${p.total}`}</span>
+                  {src ? (
+                    <img src={src} alt="" loading="lazy" decoding="async" style={{
+                      position: 'absolute',
+                      inset: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block',
+                      filter: 'saturate(.94) contrast(1.02)',
+                    }} />
+                  ) : (
+                    <span aria-hidden style={{
+                      position: 'absolute',
+                      inset: 0,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: `linear-gradient(135deg, ${hexA(sv.accent, 0.18)}, var(--glass-bg-strong))`,
+                      color: sv.accent,
+                    }}>
+                      <Icon name={sv.icon} size={42} />
+                    </span>
+                  )}
+                  <span aria-hidden style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.34) 50%, rgba(0,0,0,.74))',
+                  }} />
+                  <span style={{
+                    position: 'relative',
+                    zIndex: 1,
+                    minHeight: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-end',
+                    padding: compact ? 10 : 14,
+                  }}>
+                    <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: compact ? 6 : 10 }}>
+                      <span style={{
+                        display: compact ? 'none' : 'inline-flex',
+                        alignItems: 'center',
+                        gap: 6,
+                        minWidth: 0,
+                        padding: '6px 9px',
+                        borderRadius: 999,
+                        background: 'rgba(255,255,255,.18)',
+                        border: '1px solid rgba(255,255,255,.22)',
+                        backdropFilter: 'blur(10px)',
+                        WebkitBackdropFilter: 'blur(10px)',
+                        color: '#fff',
+                        fontSize: 12,
+                        fontWeight: 850,
+                      }}>
+                        <Icon name={sv.icon} size={14} />
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.scenario}</span>
+                      </span>
+                      <span style={{
+                        flex: '0 0 auto',
+                        padding: compact ? '5px 7px' : '6px 9px',
+                        borderRadius: 999,
+                        background: statusBg,
+                        color: statusColor,
+                        border: done || p.started ? '1px solid rgba(255,255,255,.24)' : '1px solid rgba(255,255,255,.9)',
+                        boxShadow: '0 4px 14px rgba(0,0,0,.22)',
+                        fontSize: compact ? 11 : 12,
+                        fontWeight: 900,
+                        fontVariantNumeric: 'tabular-nums',
+                        lineHeight: 1,
+                        whiteSpace: 'nowrap',
+                        textShadow: done || p.started ? '0 1px 4px rgba(0,0,0,.22)' : 'none',
+                      }}>{statusText}</span>
+                    </span>
+                    <span style={{
+                      display: 'block',
+                      marginTop: compact ? 7 : 9,
+                      fontSize: compact ? 17 : 22,
+                      lineHeight: 1.12,
+                      fontWeight: 900,
+                      letterSpacing: '-0.02em',
+                      textShadow: '0 2px 14px rgba(0,0,0,.38)',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}>{m.place ?? m.scenario}</span>
+                    <span style={{
+                      display: '-webkit-box',
+                      marginTop: 4,
+                      color: 'rgba(255,255,255,.86)',
+                      fontSize: compact ? 11.5 : 12.5,
+                      fontWeight: 750,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      WebkitLineClamp: compact ? 2 : 1,
+                      WebkitBoxOrient: 'vertical',
+                    }}>{m.canDo}</span>
+                  </span>
                 </button>
               );
             })}
@@ -268,27 +386,6 @@ function nextOneAction({ scenes, progress, allCards, openMissions, hira, kata, k
     return { label: `${weaker === 'hiragana' ? '히라가나' : '가타카나'} 다지기`, sub: '아직 흔들리는 가나를 무작위로', icon: 'kana', onClick: () => onPracticeKana(weaker) };
   }
   return { label: '받아쓰기로 복습', sub: '듣고 가나로 써보기', icon: 'dictation', onClick: onPracticeDictation };
-}
-
-
-// 빠른 연습 아이콘 — 배너 이미지는 티가 안 나서 아이콘만 깔끔하게.
-function QuickPracticeIcon({ icon }: { icon: IconName }) {
-  return (
-    <span style={{
-      width: 46,
-      height: 46,
-      flex: '0 0 46px',
-      borderRadius: 14,
-      display: 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: hexA('#b9382e', 0.12),
-      color: 'var(--accent)',
-      border: '1px solid var(--glass-border)',
-    }}>
-      <Icon name={icon} size={22} />
-    </span>
-  );
 }
 
 

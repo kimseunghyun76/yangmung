@@ -6,7 +6,7 @@ import { CONTENT } from '../content';
 import { WRAP } from '../ui/styles';
 import { quickPracticeBackdrop, sceneVisualByMission } from './scene';
 import { PrimaryAction, hexA } from './shell';
-import { MascotBubble, MascotFace, MascotLine } from './mascot';
+import { MascotFace, MascotLine } from './mascot';
 
 interface IntroProps {
   cards: Card[];
@@ -240,11 +240,6 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
           </section>
           {place && (
             <MascotLine key={firstMissionId} copyKey="introYang" place={place} size={38} style={{ marginTop: 16 }} />
-          )}
-          {!place && (
-            <MascotBubble who="duo" mood="correct" size={38} style={{ marginTop: 16 }}>
-              빠른 연습도 한 판의 작은 미션처럼 준비했어요. 짧게 끝내고 바로 다음 카드로 이어가요.
-            </MascotBubble>
           )}
           <PrimaryAction onClick={onStart} style={{ marginTop: 16, width: '100%', fontSize: 17 }}>
             시작

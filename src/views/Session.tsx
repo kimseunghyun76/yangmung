@@ -16,7 +16,7 @@ import { ReadingAid } from './ReadingAid';
 import { sceneVisualByMission, sceneBackdropForCard } from './scene';
 import { Icon } from '../ui/Icon';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
-import { MascotLine, mascotShows } from './mascot';
+import { MascotLine } from './mascot';
 import { CONTENT } from '../content';
 
 interface Props {
@@ -165,7 +165,7 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
           ) : card.kind === 'discover' ? (
             <DiscoverCardView key={card.id} card={card} onNext={onNext} />
           ) : (
-            <QuizBody key={card.id} card={card} index={index} picked={picked} isMissionStep={isMissionStep} isKanaFamiliar={isKanaFamiliar} onChoose={onChoose} onNext={onNext} onKnown={onKnown} />
+            <QuizBody key={card.id} card={card} picked={picked} isMissionStep={isMissionStep} isKanaFamiliar={isKanaFamiliar} onChoose={onChoose} onNext={onNext} onKnown={onKnown} />
           )}
         </div>
       </GlassPanel>
@@ -223,15 +223,15 @@ function TipDetail({ label, text, tone }: { label: string; text: string; tone: s
   return <div style={{ marginTop: 10, padding: '11px 13px', borderRadius: 13, borderLeft: `3px solid ${tone}`, background: 'var(--surface-2)' }}><strong style={{ display: 'block', fontSize: 12, color: tone }}>{label}</strong><span style={{ display: 'block', marginTop: 3, fontSize: 13.5, lineHeight: 1.5, color: 'var(--ink-soft)' }}>{text}</span></div>;
 }
 // 보기 텍스트 — 가나 퀴즈는 소리(한글) 그대로, 표현/미션 보기는 난이도별 일본어 표기.
-function ChoiceText({ c, mode, kanaQuiz }: { c: Choice; mode: 'kana_ko' | 'kana' | 'kanji'; kanaQuiz: boolean }) {
+function ChoiceText({ c, mode, kanaQuiz, reveal }: { c: Choice; mode: 'kana_ko' | 'kana' | 'kanji'; kanaQuiz: boolean; reveal: boolean }) {
   const p = c.phrase;
   if (kanaQuiz || !p) return <span style={{ flex: 1 }}>{c.label}</span>;
   const primary = mode === 'kanji' ? (p.kanji ?? p.kana) : p.kana;
-  const showKo = mode === 'kana_ko';
+  const showKo = reveal;
   return (
     <span style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 2 }}>
       <span lang="ja" style={{ fontWeight: 750, lineHeight: 1.2 }}>{primary}</span>
-      {showKo && <span style={{ fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 600 }}>{c.label}</span>}
+      {showKo && <span style={{ fontSize: reveal ? 13.5 : 12.5, color: reveal ? 'var(--ink)' : 'var(--ink-soft)', fontWeight: reveal ? 800 : 600 }}>{p.korean}</span>}
     </span>
   );
 }
@@ -259,8 +259,8 @@ function Dots({ i, total, onScene }: { i: number; total: number; onScene: boolea
 }
 
 // 퀴즈/듣기 본문 — 일본어(주인공) → 듣기(1급) → 선택(행동) → 한국어(보조)
-function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose, onNext, onKnown }: {
-  card: Extract<Card, { kind: 'quiz' }>; index: number; picked: number | null; isMissionStep: boolean;
+function QuizBody({ card, picked, isMissionStep, isKanaFamiliar, onChoose, onNext, onKnown }: {
+  card: Extract<Card, { kind: 'quiz' }>; picked: number | null; isMissionStep: boolean;
   isKanaFamiliar: (c: string) => boolean; onChoose: (i: number, c: Choice) => void; onNext: () => void; onKnown: () => void;
 }) {
   const reveal = picked !== null;
@@ -346,7 +346,7 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
           const anim = state === 'correct' ? 'ym-correct' : state === 'wrong' ? 'ym-wrong' : '';
           return (
             <button key={idx} className={`${anim} ym-press`} disabled={reveal} onClick={() => onChoose(idx, c)} style={choiceStyle(state)}>
-              <ChoiceText c={c} mode={choiceMode} kanaQuiz={isKanaQuiz} />
+              <ChoiceText c={c} mode={choiceMode} kanaQuiz={isKanaQuiz} reveal={reveal} />
               {/* 답변 듣기 — 답을 고르면 들을 수 없으므로 미션 스텝 보기에만 제공.
                   탭=듣기, 답 선택과 겹치지 않게 이벤트 전파를 막는다(stopPropagation). */}
               {isMissionStep && !!c.ja && !reveal && (
@@ -365,7 +365,7 @@ function QuizBody({ card, index, picked, isMissionStep, isKanaFamiliar, onChoose
         })}
       </div>
 
-      {reveal && <ChoiceFeedback card={card} picked={picked!} cardIndex={index} onNext={onNext} />}
+      {reveal && <ChoiceFeedback card={card} picked={picked!} onNext={onNext} />}
       {!reveal && (
         recoveryChoice
           ? <RecoverySkipAction choice={recoveryChoice} onClick={onKnown} />
@@ -426,7 +426,7 @@ function choiceStyle(state: 'idle' | 'correct' | 'wrong' | 'dim'): React.CSSProp
 }
 
 // 선택 후 피드백 — 정답 / 오답 / 복구
-function ChoiceFeedback({ card, picked, cardIndex, onNext }: { card: Extract<Card, { kind: 'quiz' }>; picked: number; cardIndex: number; onNext: () => void }) {
+function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 'quiz' }>; picked: number; onNext: () => void }) {
   const inverted = !!card.inverted;
   const c = card.choices[picked];
   const isRecovery = !!c.recovery;
@@ -435,7 +435,6 @@ function ChoiceFeedback({ card, picked, cardIndex, onNext }: { card: Extract<Car
   const isWrong = !inverted && !c.correct;
   const invSuccess = inverted && !!c.correct;  // 어색한 답(정답)을 골랐다
   const invFail = inverted && !c.correct;       // 자연스러운 답을 골랐다(실패)
-  const event = isRecovery ? 'recovery' : (isCorrect || invSuccess) ? 'correct' : 'wrong';
   const correctRef = card.choices.find((x) => x.correct && !x.recovery && x.phrase);
   const target = inverted ? card.choices.find((x) => x.correct) : undefined; // 어색한 답(타깃)
   const ja = c.phrase ? (c.phrase.kanji ?? c.phrase.kana) : undefined;
@@ -495,7 +494,6 @@ function ChoiceFeedback({ card, picked, cardIndex, onNext }: { card: Extract<Car
       {card.listen && card.bannerJa && (
         <p style={{ background: 'var(--surface-2)', padding: 12, borderRadius: 12, fontSize: 16, color: 'var(--ink-soft)' }}>들린 표현: <strong style={{ color: 'var(--ink)' }}>{card.bannerJa}</strong></p>
       )}
-      {mascotShows(event, cardIndex) && <MascotLine key={`${card.id}:${picked}`} copyKey={event} who="mung" style={{ marginBottom: 12 }} />}
       <PrimaryAction onClick={onNext} style={{ marginTop: 4 }}>다음</PrimaryAction>
     </div>
   );
