@@ -72,14 +72,15 @@ export interface ModePreset {
 
 export const MODE_PRESETS: Record<LearnMode, ModePreset> = {
   // B=단어, C=장면미션, P=발음구분, tip=문법/문화 팁
-  // 총량 13~15장. tip은 레벨이 낮을수록 많이(입문 3개 → 고급 0개) — 설명이 필요한 단계에 집중.
+  // 미션 세션 = 새 표현 + 문법(tip) + 장면 미션(C)에 집중. 발음 구분(P)·어휘 퀴즈(B)는
+  // 빠른 연습으로 분리(미션엔 넣지 않음). 문법(tip)은 App에서 레벨별로 더 풍부하게 산정.
   // tierRange: 해당 모드에서 세션에 포함할 미션 티어 [최소, 최대]
   // tier 1=입문(생존), 2=기본(생활), 3=응용(문화), 4=고급(트러블), 5=고급심화(복합)
-  beginner: { label: '입문', desc: '발음 보조 항상 · 일본어+한글 · 단어+발음+팁 집중', readingAid: 'always', choiceMode: 'kana_ko', quotas: { K: 0, B: 3, C: 5, P: 2, tip: 3 }, minFresh: { K: 0, B: 1, C: 1 }, tierRange: [1, 1] },
-  default:  { label: '기본', desc: '모르는 가나만 보조 · 일본어+한글 · 균형',          readingAid: 'auto',   choiceMode: 'kana_ko', quotas: { K: 0, B: 3, C: 8, P: 2, tip: 2 }, minFresh: { K: 0, B: 1, C: 2 }, tierRange: [1, 2] },
-  express:  { label: '중급', desc: '보조 끔 · 일본어(가나) 보기 · 문장+발음 위주',     readingAid: 'off',    choiceMode: 'kana',    quotas: { K: 0, B: 2, C: 8, P: 3, tip: 1 }, minFresh: { K: 0, B: 1, C: 3 }, tierRange: [2, 3] },
-  advanced: { label: '고급', desc: '한자 보기 · 보조 끔 · 빠르게 · 문장 집중',         readingAid: 'off',    choiceMode: 'kanji',   quotas: { K: 0, B: 2, C: 10, P: 3, tip: 0 }, minFresh: { K: 0, B: 1, C: 4 }, tierRange: [3, 5] },
-  review:   { label: '복습', desc: '틀린 것 · 오래 안 본 것 우선',                     readingAid: 'auto',   choiceMode: 'kana_ko', quotas: { K: 0, B: 3, C: 8, P: 2, tip: 1 }, minFresh: { K: 0, B: 0, C: 0 }, tierRange: [1, 5] },
+  beginner: { label: '입문', desc: '발음 보조 항상 · 일본어+한글 · 장면+문법 집중', readingAid: 'always', choiceMode: 'kana_ko', quotas: { K: 0, B: 0, C: 5, P: 0, tip: 3 }, minFresh: { K: 0, B: 0, C: 1 }, tierRange: [1, 1] },
+  default:  { label: '기본', desc: '모르는 가나만 보조 · 일본어+한글 · 장면+문법',     readingAid: 'auto',   choiceMode: 'kana_ko', quotas: { K: 0, B: 0, C: 8, P: 0, tip: 2 }, minFresh: { K: 0, B: 0, C: 2 }, tierRange: [1, 2] },
+  express:  { label: '중급', desc: '보조 끔 · 일본어(가나) 보기 · 장면+문법 위주',     readingAid: 'off',    choiceMode: 'kana',    quotas: { K: 0, B: 0, C: 8, P: 0, tip: 1 }, minFresh: { K: 0, B: 0, C: 3 }, tierRange: [2, 3] },
+  advanced: { label: '고급', desc: '한자 보기 · 보조 끔 · 빠르게 · 장면+문법 집중',     readingAid: 'off',    choiceMode: 'kanji',   quotas: { K: 0, B: 0, C: 10, P: 0, tip: 0 }, minFresh: { K: 0, B: 0, C: 4 }, tierRange: [3, 5] },
+  review:   { label: '복습', desc: '틀린 것 · 오래 안 본 것 우선',                     readingAid: 'auto',   choiceMode: 'kana_ko', quotas: { K: 0, B: 0, C: 8, P: 0, tip: 1 }, minFresh: { K: 0, B: 0, C: 0 }, tierRange: [1, 5] },
   kana:     { label: '가나만', desc: '히라가나·가타카나만 집중 (미션 X)',               readingAid: 'auto',   choiceMode: 'kana_ko', quotas: { K: 12, B: 0, C: 0, P: 0, tip: 0 }, minFresh: { K: 4, B: 0, C: 0 }, tierRange: [1, 5] },
 };
 

@@ -520,9 +520,10 @@ export function selectSessionCards(
     .slice(0, config.quotas.tip);
   // 흐름: 새 표현 소개가 있으면 맨 앞 → 단어(B)·발음(P) 워밍업 → 장면 미션(C) → 팁.
   const warmup = interleave(kSel, interleave(bSel, pSel));
+  // 흐름: 새 표현 → 문법(tip) → (워밍업) → 장면 미션 퀴즈. 문법을 퀴즈 앞에 둔다.
   return sceneIntroduces.length
-    ? [...sceneIntroduces, ...warmup, ...tutorialIntroduces, ...sceneRest, ...tipsSel]
-    : [...warmup, ...scene, ...tipsSel];
+    ? [...sceneIntroduces, ...tutorialIntroduces, ...tipsSel, ...warmup, ...sceneRest]
+    : [...tipsSel, ...warmup, ...scene];
 }
 
 // 홈에서 "시작 버튼이 정확히 몇 카드 시작인지" 표시용 (Done의 "한 세션 더" 가능 여부 판단에도 사용)
@@ -605,6 +606,9 @@ export function selectMissionCards(allCards: Card[], missionId: string, progress
   const batchIntros = introCards.filter((c) => !(progress && progress[c.id])).slice(0, MAX_NEW_INTROS);
   // 이번 세션 기준 "학습된 표현" = 이전에 본 것 + 이번에 새로 소개하는 묶음
   const learned = new Set<string>([...seenPhrases, ...batchIntros.map((c) => phraseIdOf(c.id))]);
+  // 이번 세션으로 이 미션의 새 표현이 전부 소개되는가(= 마지막 학습 회차/복습)
+  const unseenCount = introCards.filter((c) => !(progress && progress[c.id])).length;
+  const fullyIntroduced = unseenCount <= MAX_NEW_INTROS;
   // 규칙: 새 표현으로 학습하지 않은 표현의 퀴즈/말하기는 절대 내지 않는다.
   // (새 표현 카드가 있는 표현만 게이트 대상 — 새 표현이 없는 receptive 등은 통과)
   const requires = (c: Card): string[] => {
@@ -614,6 +618,8 @@ export function selectMissionCards(allCards: Card[], missionId: string, progress
   };
   const rest = cards
     .filter((c) => c.kind !== 'introduce')
+    // 대화 전체 리캡(order)은 미션의 모든 표현을 학습한 뒤에만 — 미학습 대화가 섞이지 않게
+    .filter((c) => c.kind !== 'order' || fullyIntroduced)
     .filter((c) => requires(c).every((pid) => learned.has(pid)));
   return [...batchIntros, ...rest];
 }
