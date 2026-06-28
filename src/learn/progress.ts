@@ -594,13 +594,13 @@ export function selectMissionCards(allCards: Card[], missionId: string, progress
     (c) => (c.kind === 'introduce' || c.kind === 'quiz' || c.kind === 'order' || c.kind === 'speak')
       && c.reviewTarget?.type === 'mission' && String(c.reviewTarget.id) === missionId,
   );
-  // 미션은 "새 표현(introduce)"을 가장 먼저 보여준다. 단, 한 번에 너무 많지 않게 앞쪽은 소수만,
-  // 나머지(있으면)는 연습 뒤로. (introduce는 전역에서 표현당 1회만 생성되므로 처음 제공되는 표현만 등장)
-  const MAX_INTRO_FIRST = 4;
-  // 복습(progress 제공)이면 이미 본 새 표현은 빼고, 안 본 새 표현만 앞쪽 소수 유지.
-  const intros = cards.filter((c) => c.kind === 'introduce' && !(progress && progress[c.id]));
+  // 새 표현(introduce)은 안 본 것을 앞에 두되, 한 세션에 너무 많이 쏟지 않게 N개로 끊어 분산.
+  // (이번에 본 새 표현은 progress에 남아, 다음 방문에 그 다음 묶음이 이어서 나온다.)
+  // 복습(이미 다 본 상태)이면 새 표현은 0개가 되어 퀴즈·말하기만 가볍게 돈다.
+  const MAX_NEW_INTROS = 8;
+  const intros = cards.filter((c) => c.kind === 'introduce' && !(progress && progress[c.id])).slice(0, MAX_NEW_INTROS);
   const rest = cards.filter((c) => c.kind !== 'introduce');
-  return [...intros.slice(0, MAX_INTRO_FIRST), ...rest, ...intros.slice(MAX_INTRO_FIRST)];
+  return [...intros, ...rest];
 }
 
 // 발음 구분 전용 덱 — 최소 페어(듣고 둘 중 고르기)만, 약점/안 본 것 먼저. (직접 진입)
