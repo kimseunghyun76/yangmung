@@ -55,6 +55,7 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
           </div>
         )}
 
+        <TipBlock card={card} />
         <button style={{ ...PRIMARY, width: '100%', marginTop: 10 }} onClick={next}>알겠어요</button>
       </div>
     );
@@ -110,7 +111,20 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
         </div>
       )}
 
+      <TipBlock card={card} />
       <button style={{ ...PRIMARY, width: '100%', marginTop: 10 }} onClick={next}>알겠어요</button>
+    </div>
+  );
+}
+
+// 표현 설명·팁 — 이 표현을 언제·어떻게 쓰는지 한 단락. (없으면 짧은 기본 안내)
+function TipBlock({ card }: { card: IntroduceCard }) {
+  const text = card.tip ?? card.note;
+  if (!text) return null;
+  return (
+    <div style={{ marginTop: 12, padding: '12px 13px', borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--surface-2)', display: 'flex', gap: 9 }}>
+      <span style={{ flex: '0 0 auto', marginTop: 1, color: 'var(--accent)' }} aria-hidden>💡</span>
+      <p style={{ margin: 0, fontSize: 13, lineHeight: 1.6, color: 'var(--ink-soft)', fontWeight: 600 }}>{text}</p>
     </div>
   );
 }
@@ -252,7 +266,6 @@ function WrittenFormHint({ card }: { card: IntroduceCard }) {
         <span style={{ fontSize: 12, fontWeight: 800, color: 'var(--ink-soft)' }}>{label}</span>
         <span lang="ja" style={{ fontSize: 22, fontWeight: 900, color: 'var(--ink)', letterSpacing: 0 }}>{card.ja}</span>
       </div>
-      {card.tip && <p style={{ margin: '5px 0 0', fontSize: 12, lineHeight: 1.45, color: 'var(--ink-faint)', fontWeight: 650 }}>{card.tip}</p>}
     </div>
   );
 }
