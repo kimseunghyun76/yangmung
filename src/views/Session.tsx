@@ -115,7 +115,7 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
               <img src={cardBackdrop} alt="" aria-hidden style={{
                 width: '100%',
                 // 새 표현·미션 퀴즈 카드는 배너처럼 짧게(스크롤 방지) — 장면명·안내는 오버레이로 부각
-                height: (card.kind === 'introduce' || isMissionStep) ? 100 : 'auto',
+                height: card.kind === 'introduce' ? 184 : isMissionStep ? 100 : 'auto',
                 display: 'block',
                 objectFit: (card.kind === 'introduce' || isMissionStep) ? 'cover' : 'contain',
                 objectPosition: (card.kind === 'introduce' || isMissionStep) ? 'center 38%' : 'center',
