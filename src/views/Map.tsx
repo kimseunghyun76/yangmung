@@ -8,7 +8,7 @@ import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
 import { sceneVisualByMission, type SceneVisual } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
-import { PageHead, SceneImageThumb } from './ui';
+import { PageHead } from './ui';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
 import { DeckButton } from './Gacha';
 import { MascotBubble } from './mascot';
@@ -83,18 +83,7 @@ export function Map({ nav, allCards, progress, openMissions, devUnlockAll, onPra
       {recommended && (
         <section style={{ marginBottom: 18 }}>
           <p style={{ ...kicker, marginBottom: 12 }}>오늘의 추천</p>
-          <button className="ym-glass ym-press" onClick={() => onPracticeScene(recommended.m.id)}
-            style={{ display: 'flex', alignItems: 'center', gap: 14, width: '100%', padding: 14, textAlign: 'left', cursor: 'pointer', color: 'var(--ink)', borderRadius: 20, border: `1.5px solid ${hexA(recommended.sv.accent, 0.5)}` }}>
-            <SceneImageThumb src={recommended.sv.backdrop ?? recommended.sv.thumb} icon={recommended.sv.icon} accent={recommended.sv.accent} size={64} />
-            <span style={{ flex: 1, minWidth: 0 }}>
-              <span style={{ display: 'block', fontSize: 18, fontWeight: 800 }}>{recommended.m.place ?? recommended.m.scenario}</span>
-              <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 600, marginTop: 2 }}>{recommended.m.scenario}</span>
-              <span style={{ display: 'inline-block', marginTop: 6, fontSize: 12, fontWeight: 800, color: recommended.sv.accent }}>
-                {recommended.started ? `이어서 · ${recommended.mastered}/${recommended.total}` : '바로 시작'}
-              </span>
-            </span>
-            <Icon name="flow" size={20} style={{ color: 'var(--ink-faint)' }} />
-          </button>
+          <RouteSceneCard item={recommended} featured onPracticeScene={onPracticeScene} />
         </section>
       )}
 
@@ -102,18 +91,10 @@ export function Map({ nav, allCards, progress, openMissions, devUnlockAll, onPra
       <section style={{ marginBottom: 18 }}>
         <p style={{ ...kicker, marginBottom: 10 }}>열린 장면 · {open.length}</p>
         <GlassPanel style={{ padding: 10 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8 }}>
-            {openSorted.map((x) => {
-              const place = x.m.place ?? x.m.scenario ?? '이 장면';
-              return (
-                <button key={x.m.id} className="ym-press" onClick={() => onPracticeScene(x.m.id)}
-                  style={{ minWidth: 0, padding: '10px 6px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', cursor: 'pointer' }}>
-                  <SceneImageThumb src={x.sv.backdrop ?? x.sv.thumb} icon={x.sv.icon} accent={x.sv.accent} size={42} />
-                  <span style={{ display: 'block', marginTop: 6, fontSize: 12.5, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{place}</span>
-                  <span style={{ display: 'block', marginTop: 3, fontSize: 10.5, color: x.done ? 'var(--ok)' : !x.started ? x.sv.accent : 'var(--ink-faint)', fontWeight: 700 }}>{x.done ? '완료' : !x.started ? '아직 안 함' : `${x.mastered}/${x.total}`}</span>
-                </button>
-              );
-            })}
+          <div style={{ display: 'grid', gridTemplateColumns: openSorted.length > 1 ? 'repeat(2, minmax(0, 1fr))' : '1fr', gap: 10 }}>
+            {openSorted.map((x) => (
+              <RouteSceneCard key={x.m.id} item={x} compact={openSorted.length > 1} onPracticeScene={onPracticeScene} />
+            ))}
           </div>
         </GlassPanel>
       </section>
@@ -149,6 +130,130 @@ export function Map({ nav, allCards, progress, openMissions, devUnlockAll, onPra
 
       <PrimaryAction onClick={onBack} style={{ marginTop: 20 }}>홈으로</PrimaryAction>
     </main>
+  );
+}
+
+function RouteSceneCard({ item, onPracticeScene, featured = false, compact = false }: { item: SceneItem; onPracticeScene: (missionId: string) => void; featured?: boolean; compact?: boolean }) {
+  const src = item.sv.backdrop ?? item.sv.thumb;
+  const place = item.m.place ?? item.m.scenario ?? '이 장면';
+  const statusText = item.done ? '완료' : !item.started ? '바로 시작' : `이어서 · ${item.mastered}/${item.total}`;
+  const statusBg = item.done ? 'rgba(35,134,82,.94)' : item.started ? 'rgba(185,56,46,.96)' : 'rgba(255,255,255,.94)';
+  const statusColor = item.done || item.started ? '#fff' : 'var(--accent)';
+  return (
+    <button className="ym-press" onClick={() => onPracticeScene(item.m.id)} style={{
+      position: 'relative',
+      minWidth: 0,
+      overflow: 'hidden',
+      width: '100%',
+      border: featured ? `1.5px solid ${hexA(item.sv.accent, 0.5)}` : '1px solid var(--glass-border)',
+      background: 'var(--glass-bg-strong)',
+      color: '#fff',
+      borderRadius: featured ? 22 : compact ? 16 : 18,
+      padding: 0,
+      cursor: 'pointer',
+      textAlign: 'left',
+      aspectRatio: featured ? '16 / 10' : compact ? '4 / 3' : '16 / 9',
+      boxShadow: featured ? '0 14px 32px rgba(89,58,28,.14)' : '0 10px 22px rgba(89,58,28,.09)',
+    }}>
+      {src ? (
+        <img src={src} alt="" loading="lazy" decoding="async" style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          display: 'block',
+          filter: 'saturate(.94) contrast(1.02)',
+        }} />
+      ) : (
+        <span aria-hidden style={{
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: `linear-gradient(135deg, ${hexA(item.sv.accent, 0.18)}, var(--glass-bg-strong))`,
+          color: item.sv.accent,
+        }}>
+          <Icon name={item.sv.icon} size={48} />
+        </span>
+      )}
+      <span aria-hidden style={{
+        position: 'absolute',
+        inset: 0,
+        background: featured
+          ? 'linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.32) 46%, rgba(0,0,0,.78))'
+          : 'linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.34) 50%, rgba(0,0,0,.74))',
+      }} />
+      <span style={{
+        position: 'relative',
+        zIndex: 1,
+        minHeight: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+        padding: featured ? 16 : compact ? 10 : 14,
+      }}>
+        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: compact ? 6 : 10 }}>
+          <span style={{
+            display: compact ? 'none' : 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            minWidth: 0,
+            padding: '6px 9px',
+            borderRadius: 999,
+            background: 'rgba(255,255,255,.18)',
+            border: '1px solid rgba(255,255,255,.22)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            color: '#fff',
+            fontSize: 12,
+            fontWeight: 850,
+          }}>
+            <Icon name={item.sv.icon} size={14} />
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.m.scenario}</span>
+          </span>
+          <span style={{
+            flex: '0 0 auto',
+            padding: compact ? '5px 7px' : '6px 9px',
+            borderRadius: 999,
+            background: statusBg,
+            color: statusColor,
+            border: item.done || item.started ? '1px solid rgba(255,255,255,.24)' : '1px solid rgba(255,255,255,.9)',
+            boxShadow: '0 4px 14px rgba(0,0,0,.22)',
+            fontSize: compact ? 11 : 12,
+            fontWeight: 900,
+            fontVariantNumeric: 'tabular-nums',
+            lineHeight: 1,
+            whiteSpace: 'nowrap',
+            textShadow: item.done || item.started ? '0 1px 4px rgba(0,0,0,.22)' : 'none',
+          }}>{statusText}</span>
+        </span>
+        <span style={{
+          display: 'block',
+          marginTop: compact ? 7 : featured ? 10 : 9,
+          fontSize: featured ? 25 : compact ? 17 : 22,
+          lineHeight: 1.12,
+          fontWeight: 900,
+          letterSpacing: '-0.02em',
+          textShadow: '0 2px 14px rgba(0,0,0,.38)',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}>{place}</span>
+        <span style={{
+          display: '-webkit-box',
+          marginTop: 4,
+          color: 'rgba(255,255,255,.86)',
+          fontSize: featured ? 13.5 : compact ? 11.5 : 12.5,
+          fontWeight: 750,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          WebkitLineClamp: compact ? 2 : 1,
+          WebkitBoxOrient: 'vertical',
+        }}>{item.m.canDo}</span>
+      </span>
+    </button>
   );
 }
 

@@ -17,7 +17,7 @@ export interface Settings {
 }
 
 const KEY = 'yangmung:settings:v1';
-const DEFAULTS: Settings = { mode: 'default', readingAid: 'auto', choiceMode: 'kana_ko', fastForward: true, theme: 'light', listenRate: 1, devUnlockAll: false };
+const DEFAULTS: Settings = { mode: 'default', readingAid: 'auto', choiceMode: 'kana_ko', fastForward: false, theme: 'light', listenRate: 1, devUnlockAll: false };
 
 // 듣기 속도 선택지 — 설정 UI + 검증 공용.
 export const LISTEN_RATES = [0.5, 0.8, 1, 1.2, 1.5, 2] as const;

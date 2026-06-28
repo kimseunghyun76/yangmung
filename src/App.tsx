@@ -477,7 +477,7 @@ export function App() {
       if (advanceTimerRef.current !== null) return;
       advanceTimerRef.current = window.setTimeout(() => { advanceTimerRef.current = null; next(); }, 500);
     };
-    const willAuto = c.correct && !c.recovery && settings.fastForward;
+    const willAuto = false;
     pendingAdvanceKeyRef.current = willAuto ? advanceKey : null;
     // 정답을 고르면 그 정답의 음성을, 오답이면 올바른 정답의 음성을 들려준다(→ "다 읽은 뒤 0.5초"에 넘어감).
     const correctChoice = card.choices.find((x) => x.correct && !x.recovery);
@@ -601,8 +601,16 @@ export function App() {
           clearedSceneIds={clearedSceneIds} fallbackSceneIds={fallbackSceneIds} nextSceneId={nextSceneId} showGacha={gachaEligible}
           reviewCount={reviewCount} dictationCount={dictationCount} composeCount={composeCount} signCount={signCount}
           speakCount={sessionCards.filter((c) => c.kind === 'speak').length}
+          isQuickPractice={practiceSessionRef.current}
           onRetryWeak={retryWeakSession} onContinue={startSession}
           onReview={startReviewSession} onDictation={startDictationSession} onCompose={startComposeSession} onSigns={startSignSession} onFlash={startFlashSession}
+          onPracticeVocab={() => setView('vocab')}
+          onPracticeGreetings={startGreetingSession}
+          onPracticeKanaHiragana={() => startKanaSession('hiragana')}
+          onPracticeKanaKatakana={() => startKanaSession('katakana')}
+          onPracticePairs={startPairSession}
+          onPracticeWrite={startKanaWrite}
+          onPracticeVerbs={() => setView('verbs')}
           onHome={() => setView('home')}
         />
       );

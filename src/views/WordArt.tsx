@@ -1,6 +1,7 @@
 // 단어 일러스트 — 어휘 "새 표현" 카드에서 단어를 이미지로 보여준다.
 // 생성 PNG를 우선 사용하고, 누락 시 SVG 폴백으로 내려간다.
 import { useState, type CSSProperties } from 'react';
+import { signs } from '../content/signs';
 
 // 카드 id에서 그룹 추출: vocab:<group>:study:..., basic:study:..., sign:study:...
 function groupOf(id: string): string {
@@ -207,8 +208,24 @@ function vocabWordArtSrc(id: string): string | null {
   return `/vocab/word-art/${group}/${item}.png`;
 }
 
+const SIGN_BG_BY_CATEGORY: Record<string, string> = {
+  '표지': '/vocab/sign-art/sign-bg.png',
+  '메뉴': '/vocab/sign-art/menu-bg.png',
+  '안내': '/vocab/sign-art/guide-bg.png',
+  '교통': '/vocab/sign-art/transport-bg.png',
+  '결제': '/vocab/sign-art/payment-bg.png',
+  '주의': '/vocab/sign-art/warning-bg.png',
+};
+
 function signWordArtBg(id: string): string | null {
-  return id === 'sign:study:deguchi' ? '/vocab/sign-art/deguchi-bg.png' : null;
+  const match = /^sign:study:([^:]+)$/.exec(id);
+  if (!match) return null;
+  const sign = signs.find((item) => item.id === match[1]);
+  return sign ? SIGN_BG_BY_CATEGORY[sign.category] ?? '/vocab/sign-art/sign-bg.png' : '/vocab/sign-art/sign-bg.png';
+}
+
+export function wordArtAssetSrcForId(id: string): string | null {
+  return vocabWordArtSrc(id) ?? signWordArtBg(id);
 }
 
 export function WordArt({ id, korean, kana: _kana, ja, size = 96, style, preferAsset = false }: { id: string; korean: string; kana: string; ja?: string; size?: number; style?: CSSProperties; preferAsset?: boolean }) {
