@@ -596,11 +596,26 @@ export function selectMissionCards(allCards: Card[], missionId: string, progress
   );
   // 새 표현(introduce)은 안 본 것을 앞에 두되, 한 세션에 너무 많이 쏟지 않게 N개로 끊어 분산.
   // (이번에 본 새 표현은 progress에 남아, 다음 방문에 그 다음 묶음이 이어서 나온다.)
-  // 복습(이미 다 본 상태)이면 새 표현은 0개가 되어 퀴즈·말하기만 가볍게 돈다.
   const MAX_NEW_INTROS = 8;
-  const intros = cards.filter((c) => c.kind === 'introduce' && !(progress && progress[c.id])).slice(0, MAX_NEW_INTROS);
-  const rest = cards.filter((c) => c.kind !== 'introduce');
-  return [...intros, ...rest];
+  const introCards = cards.filter((c) => c.kind === 'introduce');
+  // 카드 id에서 표현 id 추출: intro:Cx:pid / speak:Cx:pid → pid
+  const phraseIdOf = (id: string) => id.split(':').slice(2).join(':');
+  const allIntroPhrases = new Set(introCards.map((c) => phraseIdOf(c.id)));
+  const seenPhrases = new Set(introCards.filter((c) => progress && progress[c.id]).map((c) => phraseIdOf(c.id)));
+  const batchIntros = introCards.filter((c) => !(progress && progress[c.id])).slice(0, MAX_NEW_INTROS);
+  // 이번 세션 기준 "학습된 표현" = 이전에 본 것 + 이번에 새로 소개하는 묶음
+  const learned = new Set<string>([...seenPhrases, ...batchIntros.map((c) => phraseIdOf(c.id))]);
+  // 규칙: 새 표현으로 학습하지 않은 표현의 퀴즈/말하기는 절대 내지 않는다.
+  // (새 표현 카드가 있는 표현만 게이트 대상 — 새 표현이 없는 receptive 등은 통과)
+  const requires = (c: Card): string[] => {
+    if (c.kind === 'quiz') return (c.answerPhraseIds ?? []).filter((pid) => allIntroPhrases.has(pid));
+    if (c.kind === 'speak') { const pid = phraseIdOf(c.id); return allIntroPhrases.has(pid) ? [pid] : []; }
+    return [];
+  };
+  const rest = cards
+    .filter((c) => c.kind !== 'introduce')
+    .filter((c) => requires(c).every((pid) => learned.has(pid)));
+  return [...batchIntros, ...rest];
 }
 
 // 발음 구분 전용 덱 — 최소 페어(듣고 둘 중 고르기)만, 약점/안 본 것 먼저. (직접 진입)
