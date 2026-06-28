@@ -196,24 +196,8 @@ export function drawGacha(prev: Collection, sceneIds: string[], draws = 1): { co
   return { collection: { ...normalized, cards }, results };
 }
 
-// ── 장면 lock 해제 (그 장면의 수집 카드 소모) ──────────────
-// tier별 필요한 "그 장면" 카드 수. 레벨이 높을수록 더 많이.
-export const UNLOCK_COST: Record<number, number> = { 1: 3, 2: 5, 3: 8, 4: 10, 5: 12 };
-export const unlockCost = (tier = 1): number => UNLOCK_COST[Math.min(5, Math.max(1, Math.round(tier)))] ?? 5;
-
-// 그 장면 카드를 n장 소모(낮은 등급부터 — 희귀 카드는 보존). 부족하면 null.
-export function spendSceneCards(prev: Collection, sceneId: string, n: number): Collection | null {
-  const c = normalizeCollection(prev);
-  const items = itemsOf(c.cards[sceneId]);
-  if (RARITIES.reduce((s, r) => s + items[r.key], 0) < n) return null;
-  let remaining = n;
-  for (const r of RARITIES) {
-    if (remaining <= 0) break;
-    const take = Math.min(items[r.key], remaining);
-    items[r.key] -= take; remaining -= take;
-  }
-  return { ...c, cards: { ...c.cards, [sceneId]: { items } } };
-}
+// (장면 lock 해제용 카드 소모 로직(unlockCost·spendSceneCards)은 미션 오픈이
+//  랜덤 순차 모델로 바뀌며 제거됨 — 가챠는 수집 전용.)
 
 // 개발용: 각 장면에 카드를 등급 분배로 채운다(테스트 편의 — 해제·병합 확인용).
 export function fillDevCards(prev: Collection, sceneIds: string[]): Collection {
