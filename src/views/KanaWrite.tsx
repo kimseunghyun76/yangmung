@@ -40,12 +40,12 @@ export function KanaWrite({ items, onExit, onReplay, onKanaWritten }: Props) {
           <div className="ym-burst" style={{ width: 76, height: 76, margin: '0 auto', borderRadius: 99, background: 'var(--accent)', color: 'var(--accent-ink)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Icon name="dictation" size={36} />
           </div>
-          <h1 style={{ margin: '16px 0 0', fontSize: 26 }}>쓰기 연습 끝!</h1>
+          <h1 style={{ margin: '16px 0 0', fontSize: 26 }}>쓰기 시험 끝!</h1>
           <p style={{ margin: '10px 0 0', fontSize: 40, fontWeight: 900, color: 'var(--accent)', fontVariantNumeric: 'tabular-nums' }}>{passed}<span style={{ fontSize: 20, color: 'var(--ink-faint)' }}> / {scores.length}</span></p>
           <p style={{ margin: '6px 0 0', color: 'var(--ink-soft)', fontWeight: 700 }}>합격 {passed}자 · 평균 정확도 {avg}%</p>
         </div>
         <div className="ym-rise" style={{ animationDelay: '.08s', marginTop: 26, display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <PrimaryAction onClick={onReplay}><Icon name="dictation" size={18} /> 다시 연습</PrimaryAction>
+          <PrimaryAction onClick={onReplay}><Icon name="dictation" size={18} /> 다시 시험</PrimaryAction>
           <button className="ym-press" onClick={onExit} style={homeBtn}><Icon name="nav-home" size={18} /> 홈으로</button>
         </div>
       </main>
@@ -108,7 +108,7 @@ function buildMask(char: string): { core: Uint8Array; band: Uint8Array; coreCoun
   return { core, band, coreCount };
 }
 
-function TraceCanvas({ char, onComplete }: { char: string; onComplete: (score: number) => void }) {
+export function TraceCanvas({ char, onComplete, nextLabel = '다음' }: { char: string; onComplete: (score: number) => void; nextLabel?: string }) {
   const viewRef = useRef<HTMLCanvasElement>(null);
   const inkRef = useRef<HTMLCanvasElement | null>(null);
   const maskRef = useRef<ReturnType<typeof buildMask> | null>(null);
@@ -219,7 +219,7 @@ function TraceCanvas({ char, onComplete }: { char: string; onComplete: (score: n
           </p>
           <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
             <button className="ym-press" onClick={clear} style={{ flex: 1, padding: '13px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 700, cursor: 'pointer' }}>다시 쓰기</button>
-            <button className="ym-press" onClick={() => onComplete(checked)} style={{ flex: 2, padding: '13px', borderRadius: 14, border: 'none', background: 'var(--accent)', color: 'var(--accent-ink)', fontWeight: 800, fontSize: 16, cursor: 'pointer' }}>다음</button>
+            <button className="ym-press" onClick={() => onComplete(checked)} style={{ flex: 2, padding: '13px', borderRadius: 14, border: 'none', background: 'var(--accent)', color: 'var(--accent-ink)', fontWeight: 800, fontSize: 16, cursor: 'pointer' }}>{nextLabel}</button>
           </div>
         </div>
       )}
