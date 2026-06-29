@@ -17,7 +17,7 @@ interface Props {
   progress: ProgressMap;
   script: 'hiragana' | 'katakana';
   onScriptChange: (script: 'hiragana' | 'katakana') => void;
-  onQuiz: () => void;
+  onQuiz: (count: number) => void;
   onBack: () => void;
   onKanaWritten?: (char: string) => void; // 쓰기 합격 시 '본 가나'로 기록
 }
@@ -57,8 +57,13 @@ function groupRows(items: KanaItem[]): { group: string; cells: KanaItem[] }[] {
 
 export function KanaTable({ nav, progress, script, onScriptChange, onQuiz, onBack, onKanaWritten }: Props) {
   const [detailIdx, setDetailIdx] = useState<number | null>(null);
+  const [quizCount, setQuizCount] = useState(15); // 퀴즈 문항 수 (15·30·50·전체)
   const items = CONTENT.kana.filter((k) => k.script === script);
   const scriptKo = script === 'hiragana' ? '히라가나' : '가타카나';
+  const total = items.length;
+  const COUNT_OPTIONS: { label: string; value: number }[] = [
+    { label: '15자', value: 15 }, { label: '30자', value: 30 }, { label: '50자', value: 50 }, { label: '전체', value: total },
+  ];
 
   return (
     <main style={WRAP}>
@@ -127,8 +132,21 @@ export function KanaTable({ nav, progress, script, onScriptChange, onQuiz, onBac
       </div>
 
       <div style={{ marginTop: 18 }}>
-        <PrimaryAction onClick={onQuiz}>
-          <Icon name="fast" size={18} /> 표 다 봤어요 — 퀴즈로 확인
+        <p style={{ margin: '0 0 8px', ...label }}>퀴즈 문항 수</p>
+        <div style={{ display: 'flex', gap: 6, padding: 4, borderRadius: 14, background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', marginBottom: 12 }}>
+          {COUNT_OPTIONS.map((opt) => {
+            const active = quizCount === opt.value;
+            return (
+              <button key={opt.label} className="ym-press" onClick={() => setQuizCount(opt.value)} style={{
+                flex: 1, padding: '9px 4px', borderRadius: 11, border: 'none', cursor: 'pointer',
+                background: active ? 'var(--accent)' : 'transparent', color: active ? 'var(--accent-ink)' : 'var(--ink-soft)',
+                fontWeight: 800, fontSize: 13.5,
+              }}>{opt.label}</button>
+            );
+          })}
+        </div>
+        <PrimaryAction onClick={() => onQuiz(quizCount)}>
+          <Icon name="fast" size={18} /> {Math.min(quizCount, total)}자 퀴즈로 확인
         </PrimaryAction>
       </div>
 
