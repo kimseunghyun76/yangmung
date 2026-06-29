@@ -12,7 +12,7 @@ import { WRAP } from '../ui/styles';
 import { isMangaSceneImage, sceneVisualByMission, sceneVisualByPlace } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
-import { MascotBubble, MascotEmpty, MascotFace, type Who } from './mascot';
+import { MascotEmpty } from './mascot';
 import { Icon, type IconName } from '../ui/Icon';
 
 interface Props {
@@ -73,18 +73,21 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
     <main style={WRAP}>
       <NavBar {...nav} />
 
-      {/* 슬림 헤더 — 난이도 칩(누르면 수준 진단으로 재조정) */}
-      <div className="ym-rise" style={{ display: 'flex', justifyContent: 'flex-end', margin: '0 0 12px' }}>
-        <button className="ym-press" onClick={onPlacement} title="수준 진단으로 난이도 재조정" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '7px 12px', borderRadius: 999, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontSize: 12.5, fontWeight: 750, cursor: 'pointer' }}>
-          <span style={{ width: 7, height: 7, borderRadius: 99, background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)' }} />
-          {modeLabel} · 진단
-        </button>
+      {/* ⓪ 내 학습 현황 — 상태 분석(코치·학습 상태·가나 안정도·난이도)을 한 카드에 */}
+      <div className="ym-rise">
+        <GlassPanel>
+          <StatusDashboard
+            d={diagnosis} line={coach.line}
+            hira={hira} kata={kata} kanaPct={kanaPct}
+            modeLabel={modeLabel} onPlacement={onPlacement}
+          />
+        </GlassPanel>
       </div>
 
       {/* 첫 실행: 수준 진단 권유 배너 */}
       {!placementDone && (
         <button className="ym-rise ym-press" onClick={onPlacement} style={{
-          width: '100%', textAlign: 'left', cursor: 'pointer', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 13,
+          width: '100%', textAlign: 'left', cursor: 'pointer', margin: '14px 0 0', display: 'flex', alignItems: 'center', gap: 13,
           padding: '14px 16px', borderRadius: 18, border: '1px solid var(--accent)', color: 'var(--ink)',
           background: 'linear-gradient(135deg, var(--accent-soft), var(--glass-bg-strong))',
         }}>
@@ -97,8 +100,8 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
         </button>
       )}
 
-      {/* ① 오늘의 장면 — 듀오 여행 안내자 + 히어로 + 시작 CTA */}
-      <div className="ym-rise" style={{ animationDelay: '.04s' }}>
+      {/* ① 오늘의 가이드 — 오늘의 여행 미션 히어로 + 시작 CTA */}
+      <div className="ym-rise" style={{ animationDelay: '.04s', marginTop: 14 }}>
         <HomeSceneCard
           hero={primary ? (heroSv.backdrop ?? heroSv.hero) : undefined}
           accent={heroSv.accent}
@@ -106,7 +109,6 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
           title={heroTitle}
           chips={heroChips}
           planned={planned}
-          guideLine={coach.line}
           onStart={onStart}
         />
       </div>
@@ -199,27 +201,6 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
               </button>
             ))}
           </div>
-        </GlassPanel>
-      </div>
-
-      {/* ⑤ 가나 안정도 */}
-      <div className="ym-rise" style={{ animationDelay: '.2s', marginTop: 14 }}>
-        <GlassPanel>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <Ring pct={kanaPct} size={58} />
-            <div style={{ flex: 1 }}>
-              <p style={{ margin: 0, ...label }}>가나 안정도</p>
-              <KanaRow label="히라가나" m={hira} />
-              <KanaRow label="가타카나" m={kata} />
-            </div>
-          </div>
-        </GlassPanel>
-      </div>
-
-      {/* ⑥ 오늘의 코치 */}
-      <div className="ym-rise" style={{ animationDelay: '.23s', marginTop: 14 }}>
-        <GlassPanel>
-          <HomeCoachBody d={diagnosis} who={coach.who} line={coach.line} />
         </GlassPanel>
       </div>
 
@@ -389,14 +370,13 @@ function nextOneAction({ scenes, progress, allCards, openMissions, hira, kata, k
 }
 
 
-function HomeSceneCard({ hero, accent, kicker, title, chips, planned, guideLine, onStart }: {
+function HomeSceneCard({ hero, accent, kicker, title, chips, planned, onStart }: {
   hero?: string;
   accent: string;
   kicker: string;
   title: string;
   chips: string[];
   planned: number;
-  guideLine?: string;
   onStart: () => void;
 }) {
   const showFullBackdrop = isMangaSceneImage(hero);
@@ -477,11 +457,13 @@ function HomeSceneCard({ hero, accent, kicker, title, chips, planned, guideLine,
         <p style={{ ...label, color: kickerColor, margin: 0 }}>{kicker}</p>
         <h2 style={{
           margin: '10px 0 0',
-          maxWidth: 300,
-          fontSize: 29,
-          lineHeight: 1.12,
+          fontSize: 'clamp(16px, 4.8vw, 24px)',
+          lineHeight: 1.15,
           letterSpacing: '-0.035em',
           color: foreground,
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
           textShadow: generatedBackdrop ? '0 2px 18px rgba(0,0,0,0.28)' : undefined,
         }}>{title}</h2>
         {chips.length > 0 && (
@@ -502,17 +484,7 @@ function HomeSceneCard({ hero, accent, kicker, title, chips, planned, guideLine,
           </div>
         )}
         <div style={{ flex: 1 }} />
-        {guideLine && planned > 0 && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginTop: 16 }}>
-            <MascotFace who="duo" size={34} style={{ filter: 'drop-shadow(0 6px 14px rgba(0,0,0,0.22))' }} />
-            <p style={{
-              margin: 0, fontSize: 13, fontWeight: 700, lineHeight: 1.4,
-              color: generatedBackdrop ? 'rgba(255,255,255,0.92)' : 'var(--ink-soft)',
-              textShadow: generatedBackdrop ? '0 1px 10px rgba(0,0,0,0.3)' : undefined,
-            }}>{guideLine}</p>
-          </div>
-        )}
-        <PrimaryAction onClick={onStart} disabled={planned === 0} style={{ marginTop: 14 }}>
+        <PrimaryAction onClick={onStart} disabled={planned === 0} style={{ marginTop: 16 }}>
           {planned === 0 ? '오늘 학습할 카드가 없어요' : `시작 · ${planned}장`}
         </PrimaryAction>
         {planned === 0 && (
@@ -525,27 +497,64 @@ function HomeSceneCard({ hero, accent, kicker, title, chips, planned, guideLine,
   );
 }
 
-function HomeCoachBody({ d, who, line }: { d: Diagnosis; who: Who; line: string }) {
+// 상태 대시보드 — 코치·학습 상태·가나 안정도·난이도(진단)를 한 카드로 묶어 "한눈에".
+function StatusDashboard({ d, line, hira, kata, kanaPct, modeLabel, onPlacement }: {
+  d: Diagnosis; line: string;
+  hira: { mastered: number; total: number }; kata: { mastered: number; total: number };
+  kanaPct: number; modeLabel: string; onPlacement: () => void;
+}) {
   const tone = d.level === 'struggling' ? 'var(--warn)' : d.level === 'cruising' ? 'var(--ok)' : 'var(--accent)';
   return (
     <>
-      <MascotBubble who={who} size={38} style={{ animationDelay: '0s' }}>
-        <strong style={{ display: 'block', fontSize: 14, marginBottom: 3 }}>오늘의 코치</strong>
-        <span>{line}</span>
-      </MascotBubble>
-      <div style={{ marginTop: 12, paddingTop: 11, borderTop: '1px solid var(--glass-border)' }}>
-        <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, fontWeight: 700, color: 'var(--ink-faint)' }}>
-          <span style={{ width: 8, height: 8, borderRadius: 99, background: tone, boxShadow: `0 0 8px ${tone}` }} />
-          학습 상태{d.level ? ` · ${LEVEL_LABEL[d.level]}` : ''}
-        </p>
+      {/* 헤더: 제목 + 난이도/진단 칩 */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+        <p style={{ margin: 0, ...label }}>내 학습 현황</p>
+        <button className="ym-press" onClick={onPlacement} title="수준 진단으로 난이도 재조정" style={{
+          display: 'inline-flex', alignItems: 'center', gap: 7, padding: '7px 12px', borderRadius: 999,
+          border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
+          fontSize: 12.5, fontWeight: 750, cursor: 'pointer',
+        }}>
+          <span style={{ width: 7, height: 7, borderRadius: 99, background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)' }} />
+          {modeLabel} · 진단
+        </button>
+      </div>
+
+      {/* 상태 분석: 가나 링 + 코치 한 줄 (캐릭터 없이 공간 활용) */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 14 }}>
+        <Ring pct={kanaPct} size={62} />
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{ margin: 0, fontSize: 12, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.04em' }}>오늘의 코치</p>
+          <p style={{ margin: '5px 0 0', fontSize: 13.5, fontWeight: 650, lineHeight: 1.5, color: 'var(--ink)' }}>{line}</p>
+        </div>
+      </div>
+
+      {/* 학습 상태 + 직전 정답률 */}
+      <div style={{ marginTop: 13, paddingTop: 12, borderTop: '1px solid var(--glass-border)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+          <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, fontWeight: 700, color: 'var(--ink-faint)' }}>
+            <span style={{ width: 8, height: 8, borderRadius: 99, background: tone, boxShadow: `0 0 8px ${tone}` }} />
+            학습 상태{d.level ? ` · ${LEVEL_LABEL[d.level]}` : ''}
+          </p>
+          {d.level !== null && d.recentAccuracy !== null && (
+            <span style={{ fontSize: 12, color: 'var(--ink-faint)', fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>직전 정답률 {Math.round(d.recentAccuracy * 100)}%</span>
+          )}
+        </div>
         <p style={{ margin: '7px 0 0', fontSize: 15, fontWeight: 750, letterSpacing: '-0.01em' }}>{d.focus}</p>
         <p style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--ink-soft)', lineHeight: 1.5 }}>{d.message}</p>
       </div>
-      {d.level !== null && d.recentAccuracy !== null && (
-        <p style={{ margin: '8px 0 0', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>직전 세션 정답률 {Math.round(d.recentAccuracy * 100)}%</p>
-      )}
+
+      {/* 가나 안정도 — 히라/가타 나란히 */}
+      <div style={{ marginTop: 13, paddingTop: 12, borderTop: '1px solid var(--glass-border)' }}>
+        <p style={{ margin: 0, ...label }}>가나 안정도</p>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 18px' }}>
+          <KanaRow label="히라가나" m={hira} />
+          <KanaRow label="가타카나" m={kata} />
+        </div>
+      </div>
+
+      {/* 약점 */}
       {(d.weakKana.length > 0 || d.weakScenes.length > 0) && (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 12, alignItems: 'center' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 13, alignItems: 'center' }}>
           <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-faint)' }}>약점</span>
           {d.weakKana.map((w) => (
             <span key={w.key} style={{ minWidth: 28, height: 28, padding: '0 6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', borderRadius: 8, fontSize: 15, fontWeight: 700, color: 'var(--accent)' }}>{w.label}</span>
@@ -678,13 +687,13 @@ function outcomeLine(mission: ReturnType<typeof CONTENT.missions.find>, planned:
   return `오늘 ${planned}장이면 「${ko}」에 답할 수 있어요.`;
 }
 
-function coachForHome(d: Diagnosis, mission: ReturnType<typeof CONTENT.missions.find>, sceneWeight: number): { who: Who; line: string } {
+function coachForHome(d: Diagnosis, mission: ReturnType<typeof CONTENT.missions.find>, sceneWeight: number): { line: string } {
   if (d.level === 'struggling') {
-    return { who: 'mung', line: '막히면 「もう一度お願いします」만 기억해도 대화는 이어져요.' };
+    return { line: '막히면 「もう一度お願いします」만 기억해도 대화는 이어져요.' };
   }
   if (sceneWeight >= 4 && mission) {
     const p = phraseById(mission.steps.find((s) => s.promptPhraseId)?.promptPhraseId);
-    if (p) return { who: 'yang', line: `오늘은 「${p.kanji ?? p.displayKana ?? p.kana}」를 먼저 귀에 익혀요.` };
+    if (p) return { line: `오늘은 「${p.kanji ?? p.displayKana ?? p.kana}」를 먼저 귀에 익혀요.` };
   }
-  return { who: 'mung', line: '짧게 한 판만 해도 다음 장면이 훨씬 덜 낯설어요.' };
+  return { line: '짧게 한 판만 해도 다음 장면이 훨씬 덜 낯설어요.' };
 }
