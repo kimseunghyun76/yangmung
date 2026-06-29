@@ -27,6 +27,7 @@ interface Props {
   onStart: () => void;
   onPracticeScene: (missionId: string) => void;
   onPracticeKana: (script: 'hiragana' | 'katakana') => void;
+  onOpenKanaTable: (script: 'hiragana' | 'katakana') => void;
   onPracticeSigns: () => void;
   onPracticeDictation: () => void;
   onPracticeCompose: () => void;
@@ -42,7 +43,7 @@ interface Props {
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' };
 
-export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeSigns, onPracticeDictation, onPracticeCompose, onPracticeFlash, onPracticeWrite, onPracticePairs, onPracticeVocab, onPracticeGreetings, onPracticeVerbs, onPlacement, placementDone }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onOpenKanaTable, onPracticeSigns, onPracticeDictation, onPracticeCompose, onPracticeFlash, onPracticeWrite, onPracticePairs, onPracticeVocab, onPracticeGreetings, onPracticeVerbs, onPlacement, placementDone }: Props) {
   const upcomingId = nextSessionId(session);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
   const planned = plan.size;
@@ -166,14 +167,14 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
           <p style={{ margin: 0, ...label }}>빠른 연습</p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 12 }}>
             {([
-              { label: '히라가나', sub: '청음·탁음·요음 전체', examples: ['あ', 'きゃ', 'ぱ'], art: 'hiragana', onClick: () => onPracticeKana('hiragana') },
-              { label: '가타카나', sub: '외래어 표기까지 읽기', examples: ['ア', 'チャ', 'ー'], art: 'katakana', onClick: () => onPracticeKana('katakana') },
+              { label: '히라가나', sub: '표에서 읽기·듣기·쓰기·말하기', examples: ['あ', 'きゃ', 'ぱ'], art: 'hiragana', onClick: () => onOpenKanaTable('hiragana') },
+              { label: '가타카나', sub: '표에서 읽기·듣기·쓰기·말하기', examples: ['ア', 'チャ', 'ー'], art: 'katakana', onClick: () => onOpenKanaTable('katakana') },
               { label: '기본 인사', sub: '첫 만남·감사·부탁', examples: ['こんにちは', 'ありがとう'], art: 'greetings', onClick: onPracticeGreetings },
               { label: '어휘 커리큘럼', sub: '그림으로 익히는 필수 단어', examples: ['음식', '교통', '감정'], art: 'vocab', onClick: onPracticeVocab },
               { label: '간판·메뉴', sub: '역·식당·주의 표지 읽기', examples: ['入口', '会計', '禁煙'], art: 'signs', onClick: onPracticeSigns },
               { label: '받아쓰기', sub: '듣고 가나로 직접 입력', examples: ['듣기', '조립', '확인'], art: 'dictation', onClick: onPracticeDictation },
               { label: '한→일 작문', sub: '뜻을 보고 일본어 만들기', examples: ['주세요', '어디예요'], art: 'compose', onClick: onPracticeCompose },
-              { label: '가나 쓰기', sub: '손으로 따라 쓰며 기억', examples: ['획순', '반복'], art: 'kana-write', onClick: onPracticeWrite },
+              { label: '쓰기 시험', sub: '듣고 보고 직접 가나 쓰기', examples: ['듣기', '쓰기', '채점'], art: 'kana-write', onClick: onPracticeWrite },
               { label: '발음 구분', sub: '비슷한 소리 즉시 구분', examples: ['つ/す', 'っ', 'ー'], art: 'pairs', onClick: onPracticePairs },
               { label: '동사 형태', sub: 'ます·たい·ながら 활용', examples: ['食べます', '行きたい'], art: 'verbs', onClick: onPracticeVerbs },
             ] as { label: string; sub: string; examples: string[]; art: string; onClick: () => void }[]).map((t) => (

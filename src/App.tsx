@@ -23,7 +23,7 @@ import type { PickMap } from './views/OrderCard';
 import type { KanaItem } from './content/types';
 import { MascotEmpty } from './views/mascot';
 
-type View = 'home' | 'map' | 'review' | 'gacha' | 'intro' | 'session' | 'done' | 'flash' | 'write' | 'placement' | 'vocab' | 'vocabTable' | 'verbs';
+type View = 'home' | 'map' | 'review' | 'gacha' | 'intro' | 'session' | 'done' | 'flash' | 'write' | 'placement' | 'vocab' | 'vocabTable' | 'verbs' | 'kana';
 
 const Home = lazy(() => import('./views/Home').then((m) => ({ default: m.Home })));
 const Intro = lazy(() => import('./views/Intro').then((m) => ({ default: m.Intro })));
@@ -40,6 +40,7 @@ const SettingsModal = lazy(() => import('./views/SettingsModal').then((m) => ({ 
 const VocabMenu = lazy(() => import('./views/VocabMenu').then((m) => ({ default: m.VocabMenu })));
 const VocabTable = lazy(() => import('./views/VocabTable').then((m) => ({ default: m.VocabTable })));
 const VerbForms = lazy(() => import('./views/VerbForms').then((m) => ({ default: m.VerbForms })));
+const KanaTable = lazy(() => import('./views/KanaTable').then((m) => ({ default: m.KanaTable })));
 
 function AppFallback() {
   return <main style={WRAP}><MascotEmpty who="yang" mood="loading" title="화면을 준비하고 있어요">잠시만 기다려 주세요.</MascotEmpty></main>;
@@ -65,6 +66,7 @@ export function App() {
   const [flashCards, setFlashCards] = useState<Card[]>([]); // 속도전 플래시(세션 SRS와 분리)
   const [writeItems, setWriteItems] = useState<KanaItem[]>([]); // 가나 쓰기(따라쓰기)
   const [placementCards, setPlacementCards] = useState<Card[]>([]); // 수준 진단(배치) 문항
+  const [kanaScript, setKanaScript] = useState<'hiragana' | 'katakana'>('hiragana'); // 가나 표 학습 스크립트
   const [seenKana, setSeenKana] = useState<SeenKana>(() => loadSeenKana());
   const [discovered, setDiscovered] = useState<string[]>(() => loadDiscovered());
   // 열린 미션(랜덤 순차 오픈) — 최초 1개 랜덤, 앞 미션 학습할수록 다음 미션 랜덤 추첨 오픈
@@ -249,6 +251,8 @@ export function App() {
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true); // 미션 = 1000
   }
+  // 가나 표 학습 — 전체 표를 한 화면에 보고, 글자를 누르면 읽기·듣기·쓰기·말하기 상세
+  function openKanaTable(script: 'hiragana' | 'katakana') { setKanaScript(script); setView('kana'); }
   // 히라가나/가타카나 직접 연습 — 현재 모드와 무관하게 그 스크립트 가나만
   function startKanaSession(script: 'hiragana' | 'katakana') {
     const ids = new Set(CONTENT.kana.filter((k) => k.script === script).map((k) => k.id));
@@ -558,6 +562,19 @@ export function App() {
     if (view === 'placement') {
       return <Placement cards={placementCards} onDone={finishPlacement} onSkip={() => setView('home')} />;
     }
+    if (view === 'kana') {
+      return (
+        <KanaTable
+          nav={{ ...nav, current: 'home' }}
+          progress={progress}
+          script={kanaScript}
+          onScriptChange={setKanaScript}
+          onQuiz={() => startKanaSession(kanaScript)}
+          onBack={() => setView('home')}
+          onKanaWritten={(char) => setSeenKana((prev) => { const nx = markKanaSeen(prev, [char]); saveSeenKana(nx); return nx; })}
+        />
+      );
+    }
     if (view === 'verbs') {
       return <VerbForms onExit={() => setView('home')} progress={progress} onAnswer={(id, correct) => {
         setProgress((m) => { const np = recordAttempt(m, id, { correct, usedRecovery: false, sessionId }); saveProgress(np); return np; });
@@ -666,7 +683,7 @@ export function App() {
         openMissions={openMissions}
         diagnosis={diag}
         modeLabel={MODE_PRESETS[settings.mode].label}
-        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession} onPracticeCompose={startComposeSession} onPracticeFlash={startFlashSession} onPracticeWrite={startKanaWrite} onPracticePairs={startPairSession} onPracticeVocab={() => setView('vocab')} onPracticeGreetings={startGreetingSession} onPracticeVerbs={() => setView('verbs')} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
+        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onOpenKanaTable={openKanaTable} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession} onPracticeCompose={startComposeSession} onPracticeFlash={startFlashSession} onPracticeWrite={startKanaWrite} onPracticePairs={startPairSession} onPracticeVocab={() => setView('vocab')} onPracticeGreetings={startGreetingSession} onPracticeVerbs={() => setView('verbs')} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
       />
     );
   }
