@@ -110,3 +110,42 @@ export const grammar: GrammarPoint[] = [
   { id: 'g_cherry_blossom', category: '장면', label: '벚꽃 명소는 자리 경쟁', tipKo: '봄 벚꽃 시즌(오다이)(3~4월)에는 인기 공원에 이른 아침부터 돗자리로 자리를 맡아 두는 문화(場所取り)가 있습니다. 늦게 도착하면 좋은 자리를 구하기 어렵고 쓰레기는 직접 가져가세요.', action: '벚꽃 명소 방문 시 봉투와 비닐 시트를 준비하고 쓰레기는 직접 수거하세요.' },
   { id: 'g_pharmacy_otc', category: '장면', label: '약국 일반의약품 구매', tipKo: '편의점에도 기본 상비약이 있지만 종류는 적어요. 드럭스토어(薬局·ドラッグストア)에서 감기약·진통제·위장약·반창고 등을 구매할 수 있습니다.', exampleJa: 'かぜぐすりはありますか', exampleKo: '감기약 있나요?', action: '약 봉투의 用法用量(용법용량)을 번역앱으로 찍어 확인하세요.' },
 ];
+
+// ── 팁 난이도(레벨) — 1 입문 … 5 고급심화 ──
+// 세션이 사용자 레벨(미션 티어 범위)에 맞는 문법·문화·실전 팁만 고르도록 각 팁에 난이도를 부여한다.
+// 입문엔 기초 조사·정중체, 고급엔 て형·추량·트러블 장면 등 심화 내용이 나오게 한다.
+const GRAMMAR_LEVEL: Record<string, 1 | 2 | 3 | 4 | 5> = {
+  // 문법 — 기초 조사·정중체(1) → 억양·て형·있다(2) → 허가·정도(3) → 추량(4)
+  g_masuka: 1, g_kudasai: 1, g_wo: 1, g_desu: 1, g_counting: 1, g_onegai: 1, g_kosoado: 1,
+  g_intonation: 2, g_te_kudasai: 2, g_ga_arimasu: 2, g_nai_desu: 2,
+  g_mo_ii: 3, g_dono_kurai: 3, g_to_omoimasu: 4,
+  // 문화·매너
+  g_no_tip: 1, g_bow: 1, g_quiet_train: 1, g_cash: 1, g_itadakimasu: 1,
+  g_queue: 2, g_shoes: 2, g_oshibori: 2, g_garbage: 2, g_chopstick_manners: 2,
+  g_omotenashi: 3, g_sound_bath: 3, g_department_store: 3,
+  // 발음
+  g_long_vowel: 1, g_vowel_length: 1,
+  g_sokuon: 2, g_r_sound: 2, g_fu: 2, g_small_tsu: 2, g_n_sound: 2,
+  g_pitch_accent: 3,
+  // 여행 실전
+  g_konbini: 1, g_translate: 1, g_toilet: 1, g_vending_machine: 1,
+  g_ic_card: 2, g_passport_carry: 2, g_train_door: 2,
+  g_menzei: 3, g_shinkansen_seat: 3, g_taximeter: 3,
+  // 회화 학습법
+  g_body_language: 1, g_sumimasen_uses: 1,
+  g_conversation_shadowing: 2, g_conversation_chunk: 2, g_echo_technique: 2, g_simple_japanese: 2,
+  g_conversation_roleplay: 3, g_conversation_recovery: 3, g_conversation_my_case: 3,
+  // 확장 장면 — 기본 장면(1~2) → 문화·응용(3) → 트러블·복합(4)
+  g_cafe: 1, g_bakery: 1,
+  g_izakaya: 2, g_sushi: 2, g_tourist_info: 2, g_shrine: 2, g_bus: 2, g_shinkansen: 2,
+  g_festival: 2, g_kaiten_sushi_panel: 2, g_hotel_umbrella: 2, g_narita_ticket: 2,
+  g_buffet_refill: 2, g_food_court: 2, g_izakaya_order: 2, g_cherry_blossom: 2,
+  g_onsen: 3, g_ryokan: 3, g_sim: 3, g_laundry: 3, g_fitting_room: 3,
+  g_baggage_weight: 3, g_pasta_options: 3, g_tax_free_checkout: 3,
+  g_rental: 4, g_hospital: 4, g_police: 4, g_emergency: 4, g_room_change: 4, g_pharmacy_otc: 4,
+};
+
+/** 팁 난이도(레벨). 매핑이 없으면 기본 2(생활)로 둔다 — 항상 안전한 폴백. */
+export function grammarLevel(g: GrammarPoint): 1 | 2 | 3 | 4 | 5 {
+  return GRAMMAR_LEVEL[g.id] ?? 2;
+}

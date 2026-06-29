@@ -3,6 +3,7 @@
 import { CONTENT } from '../content';
 import type { CLevel, KanaItem, ReviewTarget, Phrase, MissionStep } from '../content/types';
 import { signs } from '../content/signs';
+import { grammarLevel } from '../content/grammar';
 import { minimalPairs } from '../content/minimalPairs';
 import { VOCAB_GROUPS, type VocabItem } from '../content/thematicVocab';
 import { BASIC_LIFE_ITEMS, BASIC_GROUP_LABEL, type BasicLifeItem } from '../content/basicLife';
@@ -72,6 +73,7 @@ export interface TipCard {
   tag: string;
   label: string;
   tipKo: string;
+  tier?: 1 | 2 | 3 | 4 | 5; // 팁 난이도 — 세션 레벨(미션 티어 범위)에 맞춰 필터링
 }
 
 // 새 표현 소개 카드 — 퀴즈 전에 의미·소리·쪼개보기를 먼저 제공.
@@ -932,7 +934,7 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
   // 정확성 팁 (디브리프) — 전체 풀 생성, 세션 선별에서 안 본 것 1개씩 회전
   for (const g of grammar) {
     if (!g.tipKo) continue;
-    cards.push({ kind: 'tip', id: `tip:${g.id}`, tag: g.category ?? '팁', label: g.label, tipKo: g.tipKo });
+    cards.push({ kind: 'tip', id: `tip:${g.id}`, tag: g.category ?? '팁', label: g.label, tipKo: g.tipKo, tier: grammarLevel(g) });
   }
 
   return cards;
