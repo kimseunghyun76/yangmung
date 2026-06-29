@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { PrimaryAction } from './shell';
 
-export function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
+export function Modal({ title, onClose, children, footer }: { title: string; onClose: () => void; children: React.ReactNode; footer?: React.ReactNode }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -37,7 +37,9 @@ export function Modal({ title, onClose, children }: { title: string; onClose: ()
           <button aria-label="닫기" onClick={onClose} style={{ border: 'none', background: 'none', fontSize: 22, cursor: 'pointer', color: 'var(--ink-faint)' }}>✕</button>
         </div>
         <div style={{ marginTop: 12 }}>{children}</div>
-        <PrimaryAction onClick={onClose} style={{ marginTop: 16 }}>닫기</PrimaryAction>
+        {footer !== undefined
+          ? <div style={{ marginTop: 16 }}>{footer}</div>
+          : <PrimaryAction onClick={onClose} style={{ marginTop: 16 }}>닫기</PrimaryAction>}
       </div>
     </div>,
     document.body,

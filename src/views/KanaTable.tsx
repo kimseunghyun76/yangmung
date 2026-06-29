@@ -56,7 +56,7 @@ function groupRows(items: KanaItem[]): { group: string; cells: KanaItem[] }[] {
 }
 
 export function KanaTable({ nav, progress, script, onScriptChange, onQuiz, onBack, onKanaWritten }: Props) {
-  const [detail, setDetail] = useState<KanaItem | null>(null);
+  const [detailIdx, setDetailIdx] = useState<number | null>(null);
   const items = CONTENT.kana.filter((k) => k.script === script);
   const scriptKo = script === 'hiragana' ? '히라가나' : '가타카나';
 
@@ -110,7 +110,7 @@ export function KanaTable({ nav, progress, script, onScriptChange, onQuiz, onBac
                       const border = st === 'mastered' ? 'var(--ok)' : st === 'seen' ? 'var(--accent)' : 'var(--glass-border)';
                       const bg = st === 'mastered' ? 'var(--ok-soft)' : st === 'seen' ? 'var(--accent-soft)' : 'var(--glass-bg-strong)';
                       return (
-                        <button key={it.id} className="ym-press" onClick={() => setDetail(it)}
+                        <button key={it.id} className="ym-press" onClick={() => setDetailIdx(items.indexOf(it))}
                           title={st === 'mastered' ? '익힘' : st === 'seen' ? '본 적 있음' : '아직'}
                           style={{ padding: '8px 3px', borderRadius: 11, cursor: 'pointer', textAlign: 'center', border: `1px solid ${border}`, background: bg, color: 'var(--ink)', minWidth: 0 }}>
                           <div lang="ja" style={{ fontSize: 22, fontWeight: 800, lineHeight: 1.1 }}>{it.char}</div>
@@ -132,11 +132,15 @@ export function KanaTable({ nav, progress, script, onScriptChange, onQuiz, onBac
         </PrimaryAction>
       </div>
 
-      {detail && (
+      {detailIdx !== null && items[detailIdx] && (
         <KanaDetail
-          key={detail.id}
-          item={detail}
-          onClose={() => setDetail(null)}
+          key={items[detailIdx].id}
+          item={items[detailIdx]}
+          prev={items[detailIdx - 1] ?? null}
+          next={items[detailIdx + 1] ?? null}
+          onPrev={() => setDetailIdx((i) => (i !== null && i > 0 ? i - 1 : i))}
+          onNext={() => setDetailIdx((i) => (i !== null && i < items.length - 1 ? i + 1 : i))}
+          onClose={() => setDetailIdx(null)}
           onKanaWritten={onKanaWritten}
         />
       )}
@@ -145,15 +149,44 @@ export function KanaTable({ nav, progress, script, onScriptChange, onQuiz, onBac
 }
 
 // ── 상세 팝업 — 한 글자의 읽기·듣기·쓰기·말하기를 한 장에 ──────────────
-function KanaDetail({ item, onClose, onKanaWritten }: {
+function KanaDetail({ item, prev, next, onPrev, onNext, onClose, onKanaWritten }: {
   item: KanaItem;
+  prev: KanaItem | null;
+  next: KanaItem | null;
+  onPrev: () => void;
+  onNext: () => void;
   onClose: () => void;
   onKanaWritten?: (char: string) => void;
 }) {
   const [written, setWritten] = useState(false);
   const confus = (item.confusables ?? []).filter((c) => c !== item.char);
+  // 팝업이 뜨면(=글자가 바뀌면) 바로 소리를 들려준다.
+  useEffect(() => {
+    if (!ttsSupported()) return;
+    const t = window.setTimeout(() => speak(item.char), 150);
+    return () => window.clearTimeout(t);
+  }, [item.char]);
+
+  const navBtn = (disabled: boolean): React.CSSProperties => ({
+    flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+    padding: '13px 12px', borderRadius: 14, fontWeight: 800, fontSize: 15,
+    border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)',
+    color: disabled ? 'var(--ink-faint)' : 'var(--ink)', cursor: disabled ? 'default' : 'pointer',
+    opacity: disabled ? 0.5 : 1,
+  });
+  const footer = (
+    <div style={{ display: 'flex', gap: 8 }}>
+      <button className="ym-press" onClick={onPrev} disabled={!prev} style={navBtn(!prev)}>
+        ← 이전{prev && <span lang="ja" style={{ fontWeight: 900, color: 'var(--accent)' }}>{prev.char}</span>}
+      </button>
+      <button className="ym-press" onClick={onNext} disabled={!next} style={navBtn(!next)}>
+        {next && <span lang="ja" style={{ fontWeight: 900, color: 'var(--accent)' }}>{next.char}</span>}다음 →
+      </button>
+    </div>
+  );
+
   return (
-    <Modal title={`${item.char} · ${item.romaji}`} onClose={onClose}>
+    <Modal title={`${item.char} · ${item.romaji}`} onClose={onClose} footer={footer}>
       {/* ① 읽기 · 쓰기 — 보고 읽고, 바로 따라 써본다 */}
       <Section icon="kana" title="읽기 · 쓰기">
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -177,19 +210,9 @@ function KanaDetail({ item, onClose, onKanaWritten }: {
         {written && <p style={{ margin: '8px 0 0', textAlign: 'center', fontSize: 12.5, color: 'var(--ok)', fontWeight: 800 }}>✓ 익힌 가나로 기록했어요</p>}
       </Section>
 
-      {/* ② 듣기 · 말하기 — 원음을 듣고, 녹음해 비교한다 */}
+      {/* ② 듣기 · 말하기 — 다시 듣기 + 녹음/비교를 한 줄에 */}
       <Section icon="listen" title="듣기 · 말하기">
-        <button className="ym-press" onClick={() => speak(item.char)} disabled={!ttsSupported()} style={{
-          width: '100%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-          padding: '12px 18px', borderRadius: 14, cursor: 'pointer', fontWeight: 800, fontSize: 15,
-          border: '1px solid var(--glass-border)', background: 'var(--accent-soft)', color: 'var(--accent)',
-        }}>
-          <Icon name="listen" size={18} /> 듣기
-        </button>
-        {!ttsSupported() && <p style={{ margin: '8px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>이 브라우저는 음성을 지원하지 않아요.</p>}
-        <div style={{ marginTop: 10 }}>
-          <KanaSpeak char={item.char} />
-        </div>
+        <KanaSpeak char={item.char} />
       </Section>
     </Modal>
   );
@@ -255,24 +278,35 @@ function KanaSpeak({ char }: { char: string }) {
     audio.play().catch(() => {});
   }
 
-  if (!recSupported || recErr) {
-    return (
-      <p style={{ margin: 0, fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>
-        원음을 듣고 소리 내어 따라 말해보세요{recErr ? ' (마이크를 쓸 수 없어 녹음 없이 진행)' : ''}.
-      </p>
-    );
-  }
+  const canRec = recSupported && !recErr;
   return (
     <div>
-      <button className="ym-press" onClick={recording ? () => mrRef.current?.stop() : startRec} style={{
-        width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-        padding: '13px', borderRadius: 14, border: 'none', cursor: 'pointer', fontWeight: 800, fontSize: 15,
-        background: 'var(--accent)', color: 'var(--accent-ink)',
-      }}>
-        {recording
-          ? (<><span style={{ width: 10, height: 10, borderRadius: 99, background: '#fff' }} /> 녹음 중 — 탭해서 멈추기</>)
-          : (<><Icon name="speak" size={18} /> {hasRec ? '다시 녹음' : '녹음하고 비교하기'}</>)}
-      </button>
+      {/* 다시 듣기 + 녹음/비교 — 한 줄 */}
+      <div style={{ display: 'flex', gap: 8 }}>
+        <button className="ym-press" onClick={() => speak(char)} disabled={!ttsSupported()} style={{
+          flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+          padding: '13px 10px', borderRadius: 14, cursor: 'pointer', fontWeight: 800, fontSize: 14.5, whiteSpace: 'nowrap',
+          border: '1px solid var(--glass-border)', background: 'var(--accent-soft)', color: 'var(--accent)',
+        }}>
+          <Icon name="listen" size={17} /> 다시 듣기
+        </button>
+        {canRec && (
+          <button className="ym-press" onClick={recording ? () => mrRef.current?.stop() : startRec} style={{
+            flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+            padding: '13px 10px', borderRadius: 14, border: 'none', cursor: 'pointer', fontWeight: 800, fontSize: 14.5, whiteSpace: 'nowrap',
+            background: 'var(--accent)', color: 'var(--accent-ink)',
+          }}>
+            {recording
+              ? (<><span style={{ width: 10, height: 10, borderRadius: 99, background: '#fff' }} /> 멈추기</>)
+              : (<><Icon name="speak" size={17} /> {hasRec ? '다시 녹음' : '녹음하고 비교'}</>)}
+          </button>
+        )}
+      </div>
+      {!canRec && (
+        <p style={{ margin: '8px 0 0', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 700 }}>
+          소리 내어 따라 말해보세요{recErr ? ' (마이크를 쓸 수 없어 녹음 없이 진행)' : ''}.
+        </p>
+      )}
       {hasRec && !recording && (
         <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
           <button className="ym-press" onClick={playMine} style={{ flex: 1, padding: '11px', borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 750, cursor: 'pointer' }}>▶ 내 발음</button>
