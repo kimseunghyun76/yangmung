@@ -253,11 +253,11 @@ export function App() {
   }
   // 가나 표 학습 — 전체 표를 한 화면에 보고, 글자를 누르면 읽기·듣기·쓰기·말하기 상세
   function openKanaTable(script: 'hiragana' | 'katakana') { setKanaScript(script); setView('kana'); }
-  // 히라가나/가타카나 직접 연습 — 현재 모드와 무관하게 그 스크립트 가나만
-  function startKanaSession(script: 'hiragana' | 'katakana') {
+  // 히라가나/가타카나 직접 연습 — 현재 모드와 무관하게 그 스크립트 가나만.
+  // limit = 퀴즈에 낼 글자 수(15·30·50·전체). 기본은 전체.
+  function startKanaSession(script: 'hiragana' | 'katakana', limit = 999) {
     const ids = new Set(CONTENT.kana.filter((k) => k.script === script).map((k) => k.id));
-    // 전체 학습: 스크립트 전체를 한 세션에(끊김 없이). limit 크게.
-    const cards = selectScriptKanaCards(allCards, progress, nextSessionId(session), ids, 999);
+    const cards = selectScriptKanaCards(allCards, progress, nextSessionId(session), ids, limit);
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true, true, true);
   }
@@ -570,7 +570,7 @@ export function App() {
           progress={progress}
           script={kanaScript}
           onScriptChange={setKanaScript}
-          onQuiz={() => startKanaSession(kanaScript)}
+          onQuiz={(count) => startKanaSession(kanaScript, count)}
           onBack={() => setView('home')}
           onKanaWritten={(char) => setSeenKana((prev) => { const nx = markKanaSeen(prev, [char]); saveSeenKana(nx); return nx; })}
         />
