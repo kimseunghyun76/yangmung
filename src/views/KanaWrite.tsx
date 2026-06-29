@@ -77,8 +77,14 @@ const homeBtn: React.CSSProperties = {
   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
 };
 
-function setGlyphFont(ctx: CanvasRenderingContext2D) {
-  ctx.font = `700 ${Math.round(SIZE * 0.72)}px "Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif`;
+// 글자 수에 맞춰 폰트 크기 — 요음(きゃ 등 2자)은 작게 해 쓰기 영역을 벗어나지 않게.
+function glyphPx(char: string): number {
+  const n = Array.from(char).length;
+  if (n >= 2) return Math.round(SIZE * 0.42);
+  return Math.round(SIZE * 0.72);
+}
+function setGlyphFont(ctx: CanvasRenderingContext2D, char: string) {
+  ctx.font = `700 ${glyphPx(char)}px "Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 }
@@ -87,13 +93,13 @@ function setGlyphFont(ctx: CanvasRenderingContext2D) {
 function buildMask(char: string): { core: Uint8Array; band: Uint8Array; coreCount: number } {
   const c = document.createElement('canvas'); c.width = SIZE; c.height = SIZE;
   const ctx = c.getContext('2d')!;
-  setGlyphFont(ctx);
+  setGlyphFont(ctx, char);
   ctx.fillStyle = '#000';
   ctx.fillText(char, SIZE / 2, SIZE / 2);
   const coreImg = ctx.getImageData(0, 0, SIZE, SIZE).data;
 
   ctx.clearRect(0, 0, SIZE, SIZE);
-  setGlyphFont(ctx);
+  setGlyphFont(ctx, char);
   ctx.lineJoin = 'round'; ctx.lineWidth = 30; ctx.strokeStyle = '#000'; ctx.fillStyle = '#000';
   ctx.strokeText(char, SIZE / 2, SIZE / 2);
   ctx.fillText(char, SIZE / 2, SIZE / 2);
@@ -132,7 +138,7 @@ export function TraceCanvas({ char, onComplete, nextLabel = '다음' }: { char: 
   function redraw() {
     const ctx = viewRef.current?.getContext('2d'); if (!ctx) return;
     ctx.clearRect(0, 0, SIZE, SIZE);
-    setGlyphFont(ctx);
+    setGlyphFont(ctx, char);
     ctx.fillStyle = 'rgba(125,130,160,0.22)';
     ctx.fillText(char, SIZE / 2, SIZE / 2);
     if (inkRef.current) ctx.drawImage(inkRef.current, 0, 0);

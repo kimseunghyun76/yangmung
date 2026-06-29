@@ -154,10 +154,10 @@ function KanaDetail({ item, onClose, onKanaWritten }: {
   const confus = (item.confusables ?? []).filter((c) => c !== item.char);
   return (
     <Modal title={`${item.char} · ${item.romaji}`} onClose={onClose}>
-      {/* ① 읽기 */}
-      <Section icon="kana" title="읽기">
+      {/* ① 읽기 · 쓰기 — 보고 읽고, 바로 따라 써본다 */}
+      <Section icon="kana" title="읽기 · 쓰기">
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div lang="ja" style={{ fontSize: 64, fontWeight: 900, lineHeight: 1, color: 'var(--ink)' }}>{item.char}</div>
+          <div lang="ja" style={{ fontSize: 56, fontWeight: 900, lineHeight: 1, color: 'var(--ink)' }}>{item.char}</div>
           <div>
             <p style={{ margin: 0, fontSize: 20, fontWeight: 800 }}>{item.romaji}</p>
             <p style={{ margin: '2px 0 0', fontSize: 15, color: 'var(--ink-soft)', fontWeight: 700 }}>한글 소리 「{item.koreanSound}」</p>
@@ -168,24 +168,7 @@ function KanaDetail({ item, onClose, onKanaWritten }: {
             ⚠️ 비슷한 글자: <span lang="ja" style={{ color: 'var(--accent)', fontWeight: 800 }}>{confus.join(' · ')}</span>
           </p>
         )}
-      </Section>
-
-      {/* ② 듣기 */}
-      <Section icon="listen" title="듣기">
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button className="ym-press" onClick={() => speak(item.char)} disabled={!ttsSupported()} style={listenBtn(false)}>
-            <Icon name="listen" size={18} /> 듣기
-          </button>
-          <button className="ym-press" onClick={() => speak(item.char, { rate: 0.6 })} disabled={!ttsSupported()} style={listenBtn(true)}>
-            천천히
-          </button>
-        </div>
-        {!ttsSupported() && <p style={{ margin: '8px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>이 브라우저는 음성을 지원하지 않아요.</p>}
-      </Section>
-
-      {/* ③ 쓰기 */}
-      <Section icon="dictation" title="쓰기">
-        <p style={{ margin: '0 0 4px', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 700 }}>흐린 글자를 따라 써보세요.</p>
+        <p style={{ margin: '12px 0 4px', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 700 }}>흐린 글자를 따라 써보세요.</p>
         <TraceCanvas
           char={item.char}
           nextLabel="기록하기"
@@ -194,9 +177,19 @@ function KanaDetail({ item, onClose, onKanaWritten }: {
         {written && <p style={{ margin: '8px 0 0', textAlign: 'center', fontSize: 12.5, color: 'var(--ok)', fontWeight: 800 }}>✓ 익힌 가나로 기록했어요</p>}
       </Section>
 
-      {/* ④ 말하기 */}
-      <Section icon="speak" title="말하기">
-        <KanaSpeak char={item.char} />
+      {/* ② 듣기 · 말하기 — 원음을 듣고, 녹음해 비교한다 */}
+      <Section icon="listen" title="듣기 · 말하기">
+        <button className="ym-press" onClick={() => speak(item.char)} disabled={!ttsSupported()} style={{
+          width: '100%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+          padding: '12px 18px', borderRadius: 14, cursor: 'pointer', fontWeight: 800, fontSize: 15,
+          border: '1px solid var(--glass-border)', background: 'var(--accent-soft)', color: 'var(--accent)',
+        }}>
+          <Icon name="listen" size={18} /> 듣기
+        </button>
+        {!ttsSupported() && <p style={{ margin: '8px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>이 브라우저는 음성을 지원하지 않아요.</p>}
+        <div style={{ marginTop: 10 }}>
+          <KanaSpeak char={item.char} />
+        </div>
       </Section>
     </Modal>
   );
@@ -212,15 +205,6 @@ function Section({ icon, title, children }: { icon: React.ComponentProps<typeof 
     </div>
   );
 }
-
-const listenBtn = (ghost: boolean): React.CSSProperties => ({
-  flex: ghost ? '0 0 auto' : 1,
-  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-  padding: '12px 18px', borderRadius: 14, cursor: 'pointer', fontWeight: 800, fontSize: 15,
-  border: '1px solid var(--glass-border)',
-  background: ghost ? 'var(--glass-bg-strong)' : 'var(--accent-soft)',
-  color: ghost ? 'var(--ink-soft)' : 'var(--accent)',
-});
 
 // 말하기 — 원음 듣고 → 녹음 → 내 발음/원음 번갈아 비교 (채점 없음, iOS 인식 불안정 대비).
 const recSupported = typeof navigator !== 'undefined'
