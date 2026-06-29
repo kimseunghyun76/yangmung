@@ -514,10 +514,18 @@ export function selectSessionCards(
   const sceneIntroduces = scene.filter((c) => c.kind === 'introduce' && String(c.reviewTarget?.id) !== 'C0');
   const tutorialIntroduces = scene.filter((c) => c.kind === 'introduce' && String(c.reviewTarget?.id) === 'C0');
   const sceneRest = scene.filter((c) => c.kind !== 'introduce');
-  // 팁: 안 본 것/오래된 것부터 1개씩 회전 (매번 같은 팁 X)
-  const tipsSel = [...tips]
-    .sort((a, b2) => (progress[a.id]?.lastSeenAt ?? '') < (progress[b2.id]?.lastSeenAt ?? '') ? -1 : 1)
-    .slice(0, config.quotas.tip);
+  // 팁: 레벨(미션 티어 범위)에 맞는 팁만 — 입문엔 기초 문법, 고급엔 심화. 그 뒤 안 본 것/오래된 것부터 회전.
+  // 폴백: 범위 내 팁이 quota보다 적으면 범위 밖 팁으로 채워 빈 자리 방지.
+  const tipInRange = (c: Card) => {
+    if (!config.cardTierRange) return true;
+    const t = (c as { tier?: number }).tier;
+    return t === undefined || (t >= config.cardTierRange[0] && t <= config.cardTierRange[1]);
+  };
+  const byFreshness = (a: Card, b2: Card) =>
+    (progress[a.id]?.lastSeenAt ?? '') < (progress[b2.id]?.lastSeenAt ?? '') ? -1 : 1;
+  const inRangeTips = [...tips].filter(tipInRange).sort(byFreshness);
+  const outRangeTips = [...tips].filter((c) => !tipInRange(c)).sort(byFreshness);
+  const tipsSel = [...inRangeTips, ...outRangeTips].slice(0, config.quotas.tip);
   // 흐름: 새 표현 소개가 있으면 맨 앞 → 단어(B)·발음(P) 워밍업 → 장면 미션(C) → 팁.
   const warmup = interleave(kSel, interleave(bSel, pSel));
   // 흐름: 새 표현 → 문법(tip) → (워밍업) → 장면 미션 퀴즈. 문법을 퀴즈 앞에 둔다.
