@@ -269,8 +269,8 @@ export function App() {
   }
   // 거리 읽기 — 간판·메뉴·안내·교통 표기 읽기 연습
   function startSignSession() {
-    // 학습형 — 간판을 모두 설명·듣기·읽기한 뒤, 듣고 일본어 찾기 3문제.
-    const cards = selectStudyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:hear2ja:'), { studyLimit: 24, quizCount: 6 });
+    // 학습형 — 간판을 모두 설명·듣기·읽기한 뒤, 다양한 변형 퀴즈(표기→뜻·듣고 일본어 등).
+    const cards = selectStudyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:') && !id.startsWith('sign:study:'), { studyLimit: 24, quizCount: 6 });
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true, true, true);
   }
@@ -294,22 +294,23 @@ export function App() {
     return cards;
   }
   // 어휘 커리큘럼 — 그룹별 또는 전체. 생활 기초(basics)도 여기에 병합.
-  // 모두 학습형: 설명·듣기·읽기 후 듣고 일본어 찾기 3문제.
+  // 모두 학습형: 설명·듣기·읽기 후 다양한 변형 퀴즈(일본어→뜻·뜻→일본어·듣고 일본어·듣고 뜻).
+  const isVocabStudy = (id: string) => id.includes(':study:');
   function startVocabSession(groupId: string) {
     let cards: Card[];
     if (groupId === 'basics') {
-      cards = selectStudyDeck(allCards, (id) => id.startsWith('basic:study:'), (id) => id.startsWith('basic:hear2ja:'), { studyLimit: 36, quizCount: 8 });
+      cards = selectStudyDeck(allCards, (id) => id.startsWith('basic:study:'), (id) => id.startsWith('basic:') && !isVocabStudy(id), { studyLimit: 36, quizCount: 8 });
     } else if (groupId === 'all') {
-      cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:') && id.includes(':study:'), (id) => id.startsWith('vocab:') && id.includes(':hear2ja:'), { studyLimit: 36, quizCount: 8 });
+      cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:') && isVocabStudy(id), (id) => id.startsWith('vocab:') && !isVocabStudy(id), { studyLimit: 36, quizCount: 8 });
     } else {
-      cards = selectStudyDeck(allCards, (id) => id.startsWith(`vocab:${groupId}:study:`), (id) => id.startsWith(`vocab:${groupId}:hear2ja:`), { studyLimit: 28, quizCount: 6 });
+      cards = selectStudyDeck(allCards, (id) => id.startsWith(`vocab:${groupId}:study:`), (id) => id.startsWith(`vocab:${groupId}:`) && !isVocabStudy(id), { studyLimit: 28, quizCount: 6 });
     }
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true, true, true);
   }
   // 기본 인사 전용 세션 — 학습형
   function startGreetingSession() {
-    const cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:greetings:study:'), (id) => id.startsWith('vocab:greetings:hear2ja:'), { studyLimit: 24, quizCount: 6 });
+    const cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:greetings:study:'), (id) => id.startsWith('vocab:greetings:') && !isVocabStudy(id), { studyLimit: 24, quizCount: 6 });
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true, true, true);
   }
