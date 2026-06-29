@@ -656,6 +656,48 @@ export function selectPairCards(allCards: Card[], progress: ProgressMap, current
 
 // 학습형 덱 — 항목을 모두 설명·듣기·읽기(introduce)한 뒤, 마지막에 "듣고 일본어 찾기" 퀴즈 몇 개만.
 // 기본 인사·어휘 커리큘럼·간판은 뜻 고르기 퀴즈가 아니라 이 흐름으로 학습한다.
+// 퀴즈 변형 타입 — id 토큰으로 식별. (vocab:food:read:apple, sign:hear2ja:x, sign:x 등)
+const QUIZ_VARIANT_TYPES = ['read', 'listen', 'ko2ja', 'hear2ja', 'image'];
+function quizVariantType(id: string): string {
+  const parts = id.split(':');
+  for (const t of QUIZ_VARIANT_TYPES) if (parts.includes(t)) return t;
+  return 'plain'; // 예: sign:id (표기 보고 뜻)
+}
+function quizConceptKey(id: string): string {
+  return id.split(':').filter((p) => !QUIZ_VARIANT_TYPES.includes(p)).join(':');
+}
+// 학습 후 퀴즈 — 변형 타입을 라운드로빈으로 섞어 다양하게. 한 개념은 최대 2변형까지.
+function pickVariedQuiz(quiz: Card[], count: number): Card[] {
+  if (quiz.length <= count) return shuffleKana(quiz);
+  const buckets = new Map<string, Card[]>();
+  for (const c of shuffleKana(quiz)) {
+    const t = quizVariantType(c.id);
+    const arr = buckets.get(t);
+    if (arr) arr.push(c); else buckets.set(t, [c]);
+  }
+  const order = shuffleKana([...buckets.keys()]);
+  const picked: Card[] = [];
+  const conceptCount = new Map<string, number>();
+  let progressed = true;
+  while (picked.length < count && progressed) {
+    progressed = false;
+    for (const t of order) {
+      if (picked.length >= count) break;
+      const arr = buckets.get(t)!;
+      while (arr.length) {
+        const c = arr.shift()!;
+        const ck = quizConceptKey(c.id);
+        if ((conceptCount.get(ck) ?? 0) >= 2) continue; // 같은 개념 과다 방지
+        conceptCount.set(ck, (conceptCount.get(ck) ?? 0) + 1);
+        picked.push(c);
+        progressed = true;
+        break;
+      }
+    }
+  }
+  return picked;
+}
+
 export function selectStudyDeck(
   allCards: Card[],
   studyTest: (id: string) => boolean,
@@ -668,7 +710,8 @@ export function selectStudyDeck(
   const isEx = (c: Card) => /:study:ex\d+$/.test(c.id);
   const words = shuffleKana(study.filter((c) => !isEx(c))).slice(0, opts.studyLimit ?? study.length);
   const examples = study.filter(isEx);
-  const quizPick = shuffleKana(quiz).slice(0, opts.quizCount ?? 3);
+  // 퀴즈는 변형(일본어→뜻 / 뜻→일본어 / 듣고 일본어 / 듣고 뜻 …)을 섞어 다양하게 낸다.
+  const quizPick = pickVariedQuiz(quiz, opts.quizCount ?? 3);
   return [...words, ...examples, ...quizPick];
 }
 

@@ -54,7 +54,7 @@ export function VocabMenu({ nav, allCards, progress, onSelectGroup, onBack }: Pr
           반드시 외울 단어
         </h1>
         <p style={{ margin: 0, fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.5 }}>
-          주제별로 설명·듣기·읽기로 익히고, 마지막에 듣고 일본어 찾기.
+          주제별로 설명·듣기·읽기로 익히고, 다양한 변형 퀴즈(뜻↔일본어·듣기)로 확인.
         </p>
       </div>
 
