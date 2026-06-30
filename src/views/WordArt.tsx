@@ -260,16 +260,16 @@ function panelOverlay(id: string): { left: number; top: number; width: number; m
   const signScene = signSceneOf(id);
   if (signScene) {
     const byScene: Record<string, { left: number; top: number; width: number; maxFont: number; minFont: number }> = {
-      restroom: { left: 0.5, top: 0.42, width: 0.42, maxFont: 0.2, minFont: 0.08 },
-      mallEntrance: { left: 0.5, top: 0.43, width: 0.46, maxFont: 0.21, minFont: 0.075 },
-      stationWayfinding: { left: 0.5, top: 0.34, width: 0.58, maxFont: 0.2, minFont: 0.07 },
-      construction: { left: 0.5, top: 0.43, width: 0.5, maxFont: 0.18, minFont: 0.05 },
-      transitBoard: { left: 0.5, top: 0.36, width: 0.52, maxFont: 0.18, minFont: 0.055 },
-      shopNotice: { left: 0.5, top: 0.43, width: 0.42, maxFont: 0.18, minFont: 0.065 },
-      receipt: { left: 0.5, top: 0.42, width: 0.34, maxFont: 0.17, minFont: 0.06 },
-      restaurantMenu: { left: 0.5, top: 0.42, width: 0.44, maxFont: 0.19, minFont: 0.065 },
-      checkout: { left: 0.5, top: 0.43, width: 0.34, maxFont: 0.17, minFont: 0.06 },
-      storePromo: { left: 0.5, top: 0.42, width: 0.44, maxFont: 0.19, minFont: 0.065 },
+      restroom: { left: 0.5, top: 0.42, width: 0.36, maxFont: 0.17, minFont: 0.052 },
+      mallEntrance: { left: 0.5, top: 0.43, width: 0.4, maxFont: 0.17, minFont: 0.052 },
+      stationWayfinding: { left: 0.5, top: 0.34, width: 0.52, maxFont: 0.17, minFont: 0.05 },
+      construction: { left: 0.5, top: 0.43, width: 0.43, maxFont: 0.15, minFont: 0.044 },
+      transitBoard: { left: 0.5, top: 0.36, width: 0.46, maxFont: 0.15, minFont: 0.044 },
+      shopNotice: { left: 0.5, top: 0.43, width: 0.36, maxFont: 0.15, minFont: 0.048 },
+      receipt: { left: 0.5, top: 0.42, width: 0.29, maxFont: 0.14, minFont: 0.046 },
+      restaurantMenu: { left: 0.5, top: 0.42, width: 0.38, maxFont: 0.16, minFont: 0.048 },
+      checkout: { left: 0.5, top: 0.43, width: 0.29, maxFont: 0.14, minFont: 0.046 },
+      storePromo: { left: 0.5, top: 0.42, width: 0.38, maxFont: 0.16, minFont: 0.048 },
     };
     return byScene[signScene] ?? byScene.storePromo;
   }
@@ -277,14 +277,14 @@ function panelOverlay(id: string): { left: number; top: number; width: number; m
   const basicGroup = basicGroupOf(id);
   if (basicGroup) {
     const byGroup: Record<string, { left: number; top: number; width: number; maxFont: number; minFont: number }> = {
-      number: { left: 0.5, top: 0.43, width: 0.48, maxFont: 0.22, minFont: 0.075 },
-      counter: { left: 0.5, top: 0.43, width: 0.46, maxFont: 0.2, minFont: 0.07 },
-      order: { left: 0.5, top: 0.43, width: 0.46, maxFont: 0.2, minFont: 0.07 },
-      weekday: { left: 0.5, top: 0.43, width: 0.48, maxFont: 0.19, minFont: 0.065 },
-      month: { left: 0.5, top: 0.43, width: 0.47, maxFont: 0.2, minFont: 0.07 },
-      calendar: { left: 0.5, top: 0.43, width: 0.46, maxFont: 0.2, minFont: 0.07 },
-      time: { left: 0.5, top: 0.43, width: 0.5, maxFont: 0.19, minFont: 0.065 },
-      money: { left: 0.5, top: 0.42, width: 0.34, maxFont: 0.16, minFont: 0.055 },
+      number: { left: 0.5, top: 0.43, width: 0.42, maxFont: 0.18, minFont: 0.052 },
+      counter: { left: 0.5, top: 0.43, width: 0.4, maxFont: 0.17, minFont: 0.05 },
+      order: { left: 0.5, top: 0.43, width: 0.4, maxFont: 0.17, minFont: 0.05 },
+      weekday: { left: 0.5, top: 0.43, width: 0.42, maxFont: 0.16, minFont: 0.048 },
+      month: { left: 0.5, top: 0.43, width: 0.4, maxFont: 0.17, minFont: 0.05 },
+      calendar: { left: 0.5, top: 0.43, width: 0.4, maxFont: 0.17, minFont: 0.05 },
+      time: { left: 0.5, top: 0.43, width: 0.44, maxFont: 0.16, minFont: 0.048 },
+      money: { left: 0.5, top: 0.42, width: 0.29, maxFont: 0.135, minFont: 0.044 },
     };
     return byGroup[basicGroup] ?? byGroup.number;
   }
@@ -306,7 +306,7 @@ export function WordArt({ id, korean, kana: _kana, ja, size = 96, style, preferA
     const compactLen = overlayText.replace(/\s/g, '').length;
     const overlay = panelOverlay(id);
     const panelWidth = size * overlay.width;
-    const fontByWidth = (panelWidth * 0.88) / Math.max(1, compactLen * 0.95);
+    const fontByWidth = (panelWidth * 0.78) / Math.max(1, compactLen * 1.08);
     const minFontRatio = compactLen >= 7 ? Math.min(overlay.minFont, 0.045) : overlay.minFont;
     const fontSize = Math.max(size * minFontRatio, Math.min(size * overlay.maxFont, fontByWidth));
     return (
