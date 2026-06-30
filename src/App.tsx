@@ -13,6 +13,10 @@ import { loadCollection, saveCollection, fillDevCards } from './learn/collection
 import { loadOpenMissions, saveOpenMissions, resetOpenMissions, reconcileOpenMissions, isSceneOpen } from './learn/unlocks';
 import { resetFlashBest } from './learn/flashScores';
 import { adaptSessionConfig, diagnose } from './learn/adaptive';
+import {
+  coreLevelOf, loadProgression, markStageComplete, nextLevel,
+  saveProgression, stageKey, PROMO_COUNT, PROMO_PASS, STAGE_PASS, type ProgStage,
+} from './learn/progression';
 import { extractKanaChars } from './learn/kanaReading';
 import { loadSettings, MODE_PRESETS, saveSettings, sceneSentenceLevelForMode, type Settings } from './learn/settings';
 import { sessionGoalText } from './views/goal';
@@ -67,6 +71,13 @@ export function App() {
   const [writeItems, setWriteItems] = useState<KanaItem[]>([]); // 가나 쓰기(따라쓰기)
   const [placementCards, setPlacementCards] = useState<Card[]>([]); // 수준 진단(배치) 문항
   const [kanaScript, setKanaScript] = useState<'hiragana' | 'katakana'>('hiragana'); // 가나 표 학습 스크립트
+  const [progression, setProgression] = useState(() => loadProgression()); // 레벨별 순차 진도
+  const coreLevel = coreLevelOf(settings.mode);                            // 현재 진도 레벨(입문~고급)
+  const sessionStageKeyRef = useRef<string | null>(null);                  // 이번 세션이 통과시킬 단계 키
+  const promotionRef = useRef<typeof coreLevel | null>(null);             // 이번 세션이 승급 시험인지(대상 레벨)
+  const verbsStageKeyRef = useRef<string | null>(null);                    // 동사 형태 단계 키
+  const verbsScoreRef = useRef<{ ok: number; n: number }>({ ok: 0, n: 0 }); // 동사 형태 정답 누적
+  const pendingMenuStageRef = useRef<string | null>(null);                  // 메뉴 경유(어휘) 단계 키
   const [seenKana, setSeenKana] = useState<SeenKana>(() => loadSeenKana());
   const [discovered, setDiscovered] = useState<string[]>(() => loadDiscovered());
   // 열린 미션(랜덤 순차 오픈) — 최초 1개 랜덤, 앞 미션 학습할수록 다음 미션 랜덤 추첨 오픈
@@ -194,15 +205,30 @@ export function App() {
   useEffect(() => {
     if (view === 'session' && sessionCards.length > 0 && i >= sessionCards.length) {
       const ns = { lastCompletedSessionId: sessionId };
-      setSession(ns); saveSession(ns); setView('done');
+      setSession(ns); saveSession(ns);
+      // 단계/승급 통과 평가 — 정답률 기준(단계 ≥80%, 승급 ≥90%)
+      const acc = quizSeen > 0 ? score / quizSeen : 0;
+      const promo = promotionRef.current;
+      const stage = sessionStageKeyRef.current;
+      if (promo) {
+        if (acc >= PROMO_PASS) { const nx = nextLevel(promo); if (nx) selectMode(nx); }
+        promotionRef.current = null;
+      } else if (stage) {
+        if (acc >= STAGE_PASS) {
+          setProgression((p) => { const np = markStageComplete(p, stage); saveProgression(np); return np; });
+        }
+        sessionStageKeyRef.current = null;
+      }
+      setView('done');
     }
   }, [view, sessionCards.length, i, sessionId]);
 
   // ── 액션 ─────────────────────────────────────────
   // showIntro: 새 "한 판"이면 인트로부터(목표↔첫 카드 정렬), 약점 재출제는 바로 세션.
-  function beginSession(id: number, cards: Card[], showIntro: boolean, gacha = true, isPractice = false) {
+  function beginSession(id: number, cards: Card[], showIntro: boolean, gacha = true, isPractice = false, stage?: string | null) {
     resetMangaBackdrops(); // 세션마다 장면 배경을 3컷 중 새 랜덤으로
     practiceSessionRef.current = isPractice;
+    sessionStageKeyRef.current = stage ?? null;
     const materialized = cards.map(materializeQuizCard);
     setSessionId(id);
     setSessionCards(materialized);
@@ -253,38 +279,76 @@ export function App() {
   }
   // 가나 표 학습 — 전체 표를 한 화면에 보고, 글자를 누르면 읽기·듣기·쓰기·말하기 상세
   function openKanaTable(script: 'hiragana' | 'katakana') { setKanaScript(script); setView('kana'); }
+
+  // ── 레벨 진도 ───────────────────────────────────────
+  // 단계 진입 — 단계별 빠른 연습으로 라우팅(통과 시 해당 단계 완료 기록).
+  function startStage(stage: ProgStage) {
+    const key = stageKey(coreLevel, stage.id);
+    switch (stage.practice) {
+      case 'kana': openKanaTable(stage.script ?? 'hiragana'); break; // 표 → 퀴즈가 단계 통과
+      case 'pairs': startPairSession(key); break;
+      case 'dictation': startDictationSession(key); break;
+      case 'greetings': startGreetingSession(key); break;
+      case 'signs': startSignSession(key); break;
+      case 'vocab': pendingMenuStageRef.current = key; setView('vocab'); break;
+      case 'compose': startComposeSession(key); break;
+      case 'verbs': verbsStageKeyRef.current = key; verbsScoreRef.current = { ok: 0, n: 0 }; setView('verbs'); break;
+    }
+  }
+  // 승급 시험 — 현재 레벨 내용에서 20문항, ≥90% 통과 시 다음 레벨로.
+  function promotionPool(level: typeof coreLevel): Card[] {
+    if (level === 'beginner') return allCards.filter((c) =>
+      (c.kind === 'quiz' && /^kana:.*:(read|listen)$/.test(c.id))
+      || (c.kind === 'quiz' && c.id.startsWith('pair:'))
+      || c.kind === 'dictation');
+    if (level === 'default') return allCards.filter((c) =>
+      c.kind === 'quiz' && (c.id.startsWith('vocab:') || c.id.startsWith('sign:') || c.id.startsWith('basic:')) && !c.id.includes(':study:'));
+    if (level === 'express') return selectComposeCards(allCards, progress, nextSessionId(session), 40);
+    return [];
+  }
+  function startPromotionQuiz() {
+    const pool = promotionPool(coreLevel);
+    if (pool.length === 0) return;
+    const shuffled = [...pool];
+    for (let k = shuffled.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [shuffled[k], shuffled[j]] = [shuffled[j], shuffled[k]]; }
+    const cards = shuffled.slice(0, PROMO_COUNT);
+    promotionRef.current = coreLevel;
+    beginSession(nextSessionId(session), cards, false, false, true, null); // 인트로 없이, 보석함 X
+  }
   // 히라가나/가타카나 직접 연습 — 현재 모드와 무관하게 그 스크립트 가나만.
   // limit = 퀴즈에 낼 글자 수(15·30·50·전체). 기본은 전체.
   function startKanaSession(script: 'hiragana' | 'katakana', limit = 999) {
     const ids = new Set(CONTENT.kana.filter((k) => k.script === script).map((k) => k.id));
     const cards = selectScriptKanaCards(allCards, progress, nextSessionId(session), ids, limit);
     if (cards.length === 0) return;
-    beginSession(nextSessionId(session), cards, true, true, true);
+    // 입문 단계에서 친 가나 읽기 퀴즈는 해당 스크립트 단계를 통과시킨다.
+    const stage = coreLevel === 'beginner' ? stageKey('beginner', script) : null;
+    beginSession(nextSessionId(session), cards, true, true, true, stage);
   }
   // 발음 구분 — 최소 페어 듣고 둘 중 고르기 (つ/す·장음·촉음·청탁)
-  function startPairSession() {
+  function startPairSession(stage?: string | null) {
     const cards = selectPairCards(allCards, progress, nextSessionId(session), 18);
     if (cards.length === 0) return;
-    beginSession(nextSessionId(session), cards, true, true, true);
+    beginSession(nextSessionId(session), cards, true, true, true, stage);
   }
   // 거리 읽기 — 간판·메뉴·안내·교통 표기 읽기 연습
-  function startSignSession() {
+  function startSignSession(stage?: string | null) {
     // 학습형 — 간판을 모두 설명·듣기·읽기한 뒤, 다양한 변형 퀴즈(표기→뜻·듣고 일본어 등).
     const cards = selectStudyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:') && !id.startsWith('sign:study:'), { studyLimit: 24, quizCount: 6 });
     if (cards.length === 0) return;
-    beginSession(nextSessionId(session), cards, true, true, true);
+    beginSession(nextSessionId(session), cards, true, true, true, stage);
   }
   // 받아쓰기 전용 — 듣고 가나 타일로 쓰기
-  function startDictationSession() {
+  function startDictationSession(stage?: string | null) {
     const cards = selectDictationCards(allCards, progress, nextSessionId(session), 18);
     if (cards.length === 0) return;
-    beginSession(nextSessionId(session), cards, true, true, true);
+    beginSession(nextSessionId(session), cards, true, true, true, stage);
   }
   // 한→일 작문 전용 — 한국어 보고 일본어 조립(산출)
-  function startComposeSession() {
+  function startComposeSession(stage?: string | null) {
     const cards = selectComposeCards(allCards, progress, nextSessionId(session), 18);
     if (cards.length === 0) return;
-    beginSession(nextSessionId(session), cards, true, true, true);
+    beginSession(nextSessionId(session), cards, true, true, true, stage);
   }
   // 속도전 플래시 — 모드별 카드 풀 선택 + 제한시간 즉답 게임(세션/SRS와 분리).
   function startFlashSession(mode: FlashMode = 'blitz', count = 15) {
@@ -306,13 +370,16 @@ export function App() {
       cards = selectStudyDeck(allCards, (id) => id.startsWith(`vocab:${groupId}:study:`), (id) => id.startsWith(`vocab:${groupId}:`) && !isVocabStudy(id), { studyLimit: 28, quizCount: 6 });
     }
     if (cards.length === 0) return;
-    beginSession(nextSessionId(session), cards, true, true, true);
+    // 어휘 단계로 진입한 경우, 어휘 세션을 통과하면 단계 완료(메뉴 경유라 ref로 전달).
+    const stage = pendingMenuStageRef.current;
+    pendingMenuStageRef.current = null;
+    beginSession(nextSessionId(session), cards, true, true, true, stage);
   }
   // 기본 인사 전용 세션 — 학습형
-  function startGreetingSession() {
+  function startGreetingSession(stage?: string | null) {
     const cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:greetings:study:'), (id) => id.startsWith('vocab:greetings:') && !isVocabStudy(id), { studyLimit: 24, quizCount: 6 });
     if (cards.length === 0) return;
-    beginSession(nextSessionId(session), cards, true, true, true);
+    beginSession(nextSessionId(session), cards, true, true, true, stage);
   }
   // 가나 쓰기(따라쓰기) — 히라/가타 섞어 무작위 10자(유추 방지). 세션/SRS와 분리.
   function startKanaWrite() {
@@ -577,7 +644,17 @@ export function App() {
       );
     }
     if (view === 'verbs') {
-      return <VerbForms onExit={() => setView('home')} progress={progress} onAnswer={(id, correct) => {
+      return <VerbForms onExit={() => {
+        // 동사 형태 단계 — 충분히 풀고(≥6) 정답률 ≥80%면 단계 완료.
+        const { ok, n } = verbsScoreRef.current;
+        const key = verbsStageKeyRef.current;
+        if (key && n >= 6 && ok / n >= STAGE_PASS) {
+          setProgression((p) => { const np = markStageComplete(p, key); saveProgression(np); return np; });
+        }
+        verbsStageKeyRef.current = null;
+        setView('home');
+      }} progress={progress} onAnswer={(id, correct) => {
+        verbsScoreRef.current = { ok: verbsScoreRef.current.ok + (correct ? 1 : 0), n: verbsScoreRef.current.n + 1 };
         setProgress((m) => { const np = recordAttempt(m, id, { correct, usedRecovery: false, sessionId }); saveProgress(np); return np; });
       }} />;
     }
@@ -684,7 +761,8 @@ export function App() {
         openMissions={openMissions}
         diagnosis={diag}
         modeLabel={MODE_PRESETS[settings.mode].label}
-        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onOpenKanaTable={openKanaTable} onPracticeSigns={startSignSession} onPracticeDictation={startDictationSession} onPracticeCompose={startComposeSession} onPracticeFlash={startFlashSession} onPracticeWrite={startKanaWrite} onPracticePairs={startPairSession} onPracticeVocab={() => setView('vocab')} onPracticeGreetings={startGreetingSession} onPracticeVerbs={() => setView('verbs')} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
+        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeDictation={startDictationSession} onPracticeFlash={startFlashSession} onPracticeWrite={startKanaWrite} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
+        coreLevel={coreLevel} progression={progression} onStartStage={startStage} onStartPromotion={startPromotionQuiz}
       />
     );
   }

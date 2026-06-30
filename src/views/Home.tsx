@@ -4,6 +4,10 @@ import type { Card } from '../learn/cards';
 import type { Diagnosis } from '../learn/adaptive';
 import { LEVEL_LABEL } from '../learn/adaptive';
 import {
+  CORE_LEVEL_LABEL, LEVEL_STAGES, isStageComplete, isStageUnlocked, levelAllComplete, nextLevel,
+  type CoreLevel, type ProgStage, type ProgressionState,
+} from '../learn/progression';
+import {
   kanaReadMastery, missionProgress, nextSessionId, planSession,
   type ProgressMap, type SessionConfig, type SessionState,
 } from '../learn/progress';
@@ -27,23 +31,21 @@ interface Props {
   onStart: () => void;
   onPracticeScene: (missionId: string) => void;
   onPracticeKana: (script: 'hiragana' | 'katakana') => void;
-  onOpenKanaTable: (script: 'hiragana' | 'katakana') => void;
-  onPracticeSigns: () => void;
   onPracticeDictation: () => void;
-  onPracticeCompose: () => void;
   onPracticeFlash: () => void;
   onPracticeWrite: () => void;
-  onPracticePairs: () => void;
-  onPracticeVocab: () => void;
-  onPracticeGreetings: () => void;
-  onPracticeVerbs: () => void;
   onPlacement: () => void;
   placementDone: boolean;
+  // 레벨 진도
+  coreLevel: CoreLevel;
+  progression: ProgressionState;
+  onStartStage: (stage: ProgStage) => void;
+  onStartPromotion: () => void;
 }
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' };
 
-export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onOpenKanaTable, onPracticeSigns, onPracticeDictation, onPracticeCompose, onPracticeFlash, onPracticeWrite, onPracticePairs, onPracticeVocab, onPracticeGreetings, onPracticeVerbs, onPlacement, placementDone }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeDictation, onPracticeFlash, onPracticeWrite, onPlacement, placementDone, coreLevel, progression, onStartStage, onStartPromotion }: Props) {
   const upcomingId = nextSessionId(session);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
   const planned = plan.size;
@@ -161,48 +163,13 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
         <Icon name="flow" size={20} style={{ color: 'rgba(255,255,255,0.85)' }} />
       </button>
 
-      {/* ④ 빠른 연습 — 꽉 찬 타일 그리드 */}
+      {/* ④ 레벨 진도 — 수준별 순차 잠금 + 승급 시험 */}
       <div className="ym-rise" style={{ animationDelay: '.17s', marginTop: 14 }}>
-        <GlassPanel>
-          <p style={{ margin: 0, ...label }}>빠른 연습</p>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 12 }}>
-            {([
-              { label: '히라가나', sub: '표에서 읽기·듣기·쓰기·말하기', examples: ['あ', 'きゃ', 'ぱ'], art: 'hiragana', onClick: () => onOpenKanaTable('hiragana') },
-              { label: '가타카나', sub: '표에서 읽기·듣기·쓰기·말하기', examples: ['ア', 'チャ', 'ー'], art: 'katakana', onClick: () => onOpenKanaTable('katakana') },
-              { label: '기본 인사', sub: '첫 만남·감사·부탁', examples: ['こんにちは', 'ありがとう'], art: 'greetings', onClick: onPracticeGreetings },
-              { label: '어휘 커리큘럼', sub: '그림으로 익히는 필수 단어', examples: ['음식', '교통', '감정'], art: 'vocab', onClick: onPracticeVocab },
-              { label: '간판·메뉴', sub: '역·식당·주의 표지 읽기', examples: ['入口', '会計', '禁煙'], art: 'signs', onClick: onPracticeSigns },
-              { label: '받아쓰기', sub: '듣고 가나로 직접 입력', examples: ['듣기', '조립', '확인'], art: 'dictation', onClick: onPracticeDictation },
-              { label: '한→일 작문', sub: '뜻을 보고 일본어 만들기', examples: ['주세요', '어디예요'], art: 'compose', onClick: onPracticeCompose },
-              { label: '쓰기 시험', sub: '듣고 보고 직접 가나 쓰기', examples: ['듣기', '쓰기', '채점'], art: 'kana-write', onClick: onPracticeWrite },
-              { label: '발음 구분', sub: '비슷한 소리 즉시 구분', examples: ['つ/す', 'っ', 'ー'], art: 'pairs', onClick: onPracticePairs },
-              { label: '동사 형태', sub: 'ます·たい·ながら 활용', examples: ['食べます', '行きたい'], art: 'verbs', onClick: onPracticeVerbs },
-            ] as { label: string; sub: string; examples: string[]; art: string; onClick: () => void }[]).map((t) => (
-              <button key={t.label} className="ym-press" onClick={t.onClick} style={{
-                position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', textAlign: 'left', minWidth: 0,
-                border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
-                borderRadius: 14, padding: 0, cursor: 'pointer', boxShadow: '0 7px 16px rgba(89,58,28,.06)',
-              }}>
-                <span aria-hidden style={{ position: 'relative', display: 'block', width: '100%', aspectRatio: '4 / 3', overflow: 'hidden', background: 'rgba(255,247,235,.64)' }}>
-                  <img src={`/scenes/quick-practice/${t.art}.webp`} alt="" loading="lazy" decoding="async" style={{
-                    width: '100%', height: '100%', objectFit: 'cover', display: 'block',
-                    filter: 'saturate(.9) contrast(.97) brightness(1.02)',
-                  }} />
-                  <span style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(255,247,235,.02), transparent 58%, rgba(48,34,18,.26))' }} />
-                </span>
-                <span style={{ minWidth: 0, display: 'block', padding: '10px 11px 11px' }}>
-                  <span style={{ display: 'block', fontSize: 14, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.label}</span>
-                  <span style={{ display: 'block', fontSize: 11, color: 'var(--ink-faint)', fontWeight: 700, marginTop: 1 }}>{t.sub}</span>
-                  <span style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 7 }}>
-                    {t.examples.slice(0, 3).map((ex) => (
-                      <span key={ex} style={{ maxWidth: '100%', padding: '3px 6px', borderRadius: 999, background: 'var(--glass-bg)', color: 'var(--ink-soft)', border: '1px solid var(--glass-border)', fontSize: 10.5, fontWeight: 850, lineHeight: 1.1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ex}</span>
-                    ))}
-                  </span>
-                </span>
-              </button>
-            ))}
-          </div>
-        </GlassPanel>
+        <LevelProgress
+          coreLevel={coreLevel} progression={progression}
+          onStartStage={onStartStage} onStartPromotion={onStartPromotion}
+          onPracticeWrite={onPracticeWrite}
+        />
       </div>
 
       {/* ⑦ 여행 루트 */}
@@ -566,6 +533,88 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, modeLabel, onPlacement 
         </div>
       )}
     </>
+  );
+}
+
+// 레벨 진도 패널 — 현재 레벨의 단계를 순서대로, 잠금/완료 상태로. 모두 통과 시 승급 시험.
+function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion, onPracticeWrite }: {
+  coreLevel: CoreLevel; progression: ProgressionState;
+  onStartStage: (stage: ProgStage) => void; onStartPromotion: () => void; onPracticeWrite: () => void;
+}) {
+  const stages = LEVEL_STAGES[coreLevel];
+  const allDone = levelAllComplete(progression, coreLevel);
+  const nx = nextLevel(coreLevel);
+  const artOf = (s: ProgStage) => s.script ?? s.practice;
+  return (
+    <GlassPanel>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10 }}>
+        <p style={{ margin: 0, ...label }}>레벨 진도 · {CORE_LEVEL_LABEL[coreLevel]}</p>
+        <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--ink-faint)' }}>통과하면 다음이 열려요</span>
+      </div>
+
+      {coreLevel === 'advanced' ? (
+        <p style={{ margin: '12px 0 0', fontSize: 13.5, color: 'var(--ink-soft)', fontWeight: 700, lineHeight: 1.5 }}>
+          고급은 단계 없이 아래 <strong style={{ color: 'var(--ink)' }}>여행 미션</strong>으로 진행해요.
+        </p>
+      ) : (
+        <>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 12 }}>
+            {stages.map((st, idx) => (
+              <StageTile
+                key={st.id} order={idx + 1} stage={st} art={artOf(st)}
+                done={isStageComplete(progression, coreLevel, st.id)}
+                unlocked={isStageUnlocked(progression, coreLevel, idx)}
+                onClick={() => onStartStage(st)}
+              />
+            ))}
+          </div>
+          <button className="ym-press" onClick={onStartPromotion} disabled={!allDone} style={{
+            width: '100%', marginTop: 12, padding: '14px 16px', borderRadius: 14, cursor: allDone ? 'pointer' : 'default',
+            fontWeight: 850, fontSize: 14.5, opacity: allDone ? 1 : 0.55,
+            background: allDone ? 'linear-gradient(135deg, #b9382e, #e0564a)' : 'var(--glass-bg-strong)',
+            color: allDone ? '#fff' : 'var(--ink-faint)', border: allDone ? 'none' : '1px solid var(--glass-border)',
+          }}>
+            {allDone ? `🎯 ${nx ? CORE_LEVEL_LABEL[nx] : ''} 승급 시험 — 20문항·90%` : '🔒 모든 단계를 통과하면 승급 시험이 열려요'}
+          </button>
+        </>
+      )}
+
+      <button className="ym-press" onClick={onPracticeWrite} style={{
+        width: '100%', marginTop: 10, padding: '11px 14px', borderRadius: 12, cursor: 'pointer',
+        border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink-soft)', fontWeight: 750, fontSize: 13,
+      }}>✍️ 쓰기 시험 — 가나 따라쓰기 (자유 연습)</button>
+    </GlassPanel>
+  );
+}
+
+function StageTile({ order, stage, art, done, unlocked, onClick }: {
+  order: number; stage: ProgStage; art: string; done: boolean; unlocked: boolean; onClick: () => void;
+}) {
+  return (
+    <button key={stage.id} className="ym-press" onClick={onClick} disabled={!unlocked} style={{
+      position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', textAlign: 'left', minWidth: 0,
+      border: done ? '1.5px solid var(--ok)' : '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
+      borderRadius: 14, padding: 0, cursor: unlocked ? 'pointer' : 'default', opacity: unlocked ? 1 : 0.62, boxShadow: '0 7px 16px rgba(89,58,28,.06)',
+    }}>
+      <span aria-hidden style={{ position: 'relative', display: 'block', width: '100%', aspectRatio: '4 / 3', overflow: 'hidden', background: 'rgba(255,247,235,.64)' }}>
+        <img src={`/scenes/quick-practice/${art}.webp`} alt="" loading="lazy" decoding="async" style={{
+          width: '100%', height: '100%', objectFit: 'cover', display: 'block',
+          filter: unlocked ? 'saturate(.9) contrast(.97) brightness(1.02)' : 'grayscale(.85) brightness(.92)',
+        }} />
+        <span style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(255,247,235,.02), transparent 58%, rgba(48,34,18,.26))' }} />
+        {/* 순서 배지 */}
+        <span style={{ position: 'absolute', top: 7, left: 7, width: 22, height: 22, borderRadius: 99, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,.5)', color: '#fff', fontSize: 12, fontWeight: 900 }}>{order}</span>
+        {/* 상태 배지 */}
+        {done && <span style={{ position: 'absolute', top: 7, right: 7, padding: '3px 7px', borderRadius: 999, background: 'rgba(35,134,82,.96)', color: '#fff', fontSize: 10.5, fontWeight: 900 }}>완료 ✓</span>}
+        {!unlocked && (
+          <span style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>🔒</span>
+        )}
+      </span>
+      <span style={{ minWidth: 0, display: 'block', padding: '10px 11px 11px' }}>
+        <span style={{ display: 'block', fontSize: 14, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{stage.label}</span>
+        <span style={{ display: 'block', fontSize: 11, color: 'var(--ink-faint)', fontWeight: 700, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{stage.sub}</span>
+      </span>
+    </button>
   );
 }
 
