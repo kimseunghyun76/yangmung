@@ -28,13 +28,14 @@ import type { PickMap } from './views/OrderCard';
 import type { KanaItem } from './content/types';
 import { MascotEmpty } from './views/mascot';
 
-type View = 'home' | 'map' | 'review' | 'gacha' | 'intro' | 'session' | 'done' | 'flash' | 'write' | 'placement' | 'vocab' | 'vocabTable' | 'verbs' | 'kana';
+type View = 'home' | 'practice' | 'map' | 'review' | 'gacha' | 'intro' | 'session' | 'done' | 'flash' | 'write' | 'placement' | 'vocab' | 'vocabTable' | 'verbs' | 'kana';
 
 const Home = lazy(() => import('./views/Home').then((m) => ({ default: m.Home })));
 const Intro = lazy(() => import('./views/Intro').then((m) => ({ default: m.Intro })));
 const Session = lazy(() => import('./views/Session').then((m) => ({ default: m.Session })));
 const Done = lazy(() => import('./views/Done').then((m) => ({ default: m.Done })));
 const MapView = lazy(() => import('./views/Map').then((m) => ({ default: m.Map })));
+const Practice = lazy(() => import('./views/Practice').then((m) => ({ default: m.Practice })));
 const GachaPage = lazy(() => import('./views/GachaPage').then((m) => ({ default: m.GachaPage })));
 const Flash = lazy(() => import('./views/Flash').then((m) => ({ default: m.Flash })));
 const KanaWrite = lazy(() => import('./views/KanaWrite').then((m) => ({ default: m.KanaWrite })));
@@ -625,7 +626,7 @@ export function App() {
   // ── 라우팅 ───────────────────────────────────────
   // 허브 화면(홈·지도·복습)엔 상단 네비게이션 — 자유 이동 + 가이드/설정.
   const nav = {
-    onNavigate: (v: 'home' | 'map' | 'review' | 'gacha') => setView(v),
+    onNavigate: (v: 'home' | 'practice' | 'map' | 'review' | 'gacha') => setView(v),
     onOpenGuide: () => setShowGuide(true),
     onOpenSettings: () => setShowSettings(true),
     theme: settings.theme,
@@ -633,6 +634,20 @@ export function App() {
   };
 
   function renderView() {
+    if (view === 'practice') {
+      return (
+        <Practice
+          nav={{ ...nav, current: 'practice' }}
+          coreLevel={coreLevel}
+          progression={progression}
+          devUnlockAll={!!settings.devUnlockAll}
+          onStartStage={startStage}
+          onPracticeWrite={startKanaWrite}
+          onPracticeFlash={startFlashSession}
+          onOpenBasics={() => setView('vocabTable')}
+        />
+      );
+    }
     if (view === 'map') {
       return <MapView nav={{ ...nav, current: 'map' }} allCards={allCards} progress={progress} openMissions={openMissions} devUnlockAll={!!settings.devUnlockAll} onPracticeScene={startSceneSession} onBack={() => setView('home')} />;
     }
@@ -652,7 +667,7 @@ export function App() {
     if (view === 'kana') {
       return (
         <KanaTable
-          nav={{ ...nav, current: 'home' }}
+          nav={{ ...nav, current: 'practice' }}
           progress={progress}
           script={kanaScript}
           onScriptChange={setKanaScript}
@@ -716,6 +731,7 @@ export function App() {
           reviewCount={reviewCount} dictationCount={dictationCount} composeCount={composeCount} signCount={signCount}
           speakCount={sessionCards.filter((c) => c.kind === 'speak').length}
           isQuickPractice={practiceSessionRef.current}
+          coreLevel={coreLevel} progression={progression} devUnlockAll={!!settings.devUnlockAll}
           onRetryWeak={retryWeakSession} onContinue={startSession}
           onReview={startReviewSession} onDictation={startDictationSession} onCompose={startComposeSession} onSigns={startSignSession} onFlash={startFlashSession}
           onPracticeVocab={() => setView('vocab')}
@@ -732,7 +748,7 @@ export function App() {
     if (view === 'vocab') {
       return (
         <VocabMenu
-          nav={{ ...nav, current: 'home' }}
+          nav={{ ...nav, current: 'practice' }}
           allCards={allCards}
           progress={progress}
           onSelectGroup={(groupId) => { if (groupId === 'basics') setView('vocabTable'); else startVocabSession(groupId); }}
@@ -743,7 +759,7 @@ export function App() {
     if (view === 'vocabTable') {
       return (
         <VocabTable
-          nav={{ ...nav, current: 'home' }}
+          nav={{ ...nav, current: 'practice' }}
           progress={progress}
           onQuiz={() => startVocabSession('basics')}
           onBack={() => setView('vocab')}
@@ -780,8 +796,8 @@ export function App() {
         openMissions={openMissions}
         diagnosis={diag}
         modeLabel={MODE_PRESETS[settings.mode].label}
-        onStart={startSession} onPracticeScene={startSceneSession} onPracticeKana={startKanaSession} onPracticeDictation={startDictationSession} onPracticeFlash={startFlashSession} onPracticeWrite={startKanaWrite} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
-        coreLevel={coreLevel} progression={progression} onStartStage={startStage} onStartPromotion={startPromotionQuiz}
+        onStart={startSession} onPracticeScene={startSceneSession} onPracticeFlash={startFlashSession} onPracticeWrite={startKanaWrite} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
+        coreLevel={coreLevel} progression={progression} devUnlockAll={!!settings.devUnlockAll} onStartStage={startStage} onStartPromotion={startPromotionQuiz}
       />
     );
   }

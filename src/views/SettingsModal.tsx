@@ -120,9 +120,10 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
       {/* ── 개발자 도구 (테스트용) ── */}
       <p style={{ ...head, marginTop: 22, color: 'var(--ink-faint)' }}>🛠 개발자 도구</p>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-soft)' }}>모든 장면 lock 해제</span>
+        <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-soft)' }}>접근 제한 해제</span>
         <button className="ym-press" style={toggle(!!settings.devUnlockAll)} onClick={() => onChange({ ...settings, devUnlockAll: !settings.devUnlockAll })}>{settings.devUnlockAll ? '켜짐' : '꺼짐'}</button>
       </div>
+      <p style={{ margin: '6px 2px 0', fontSize: 11.5, color: 'var(--ink-faint)', lineHeight: 1.45 }}>장면과 연습 메뉴의 잠금을 임시로 무시합니다.</p>
       <button className="ym-press" style={{ ...gbtn, width: '100%', marginTop: 10, textAlign: 'center' }}
         onClick={() => { onFillDevCards(); onClose(); }}>
         가챠 카드 미션별 30장 채우기

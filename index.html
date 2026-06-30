@@ -163,7 +163,7 @@
       @keyframes ym-gacha-rare-aura { 0%,100%{opacity:.48; transform:scale(.92) rotate(0)} 50%{opacity:.95; transform:scale(1.1) rotate(8deg)} }
       @keyframes ym-gacha-rare-flip { 0%{opacity:.7; transform:perspective(760px) rotateY(0) scale(.96)} 42%{opacity:1; transform:perspective(760px) rotateY(88deg) scale(1.035)} 58%{transform:perspective(760px) rotateY(92deg) scale(1.06); filter:drop-shadow(0 0 18px var(--rarity-color,#f0a23a))} 100%{opacity:1; transform:perspective(760px) rotateY(0) scale(1); filter:drop-shadow(0 0 10px color-mix(in srgb, var(--rarity-color,#f0a23a), transparent 30%))} }
       @keyframes ym-gacha-rare-sheen { from{background-position:-180% 0, 0 0, 0 0} to{background-position:220% 0, 0 0, 0 0} }
-      @keyframes ym-gacha-rare-burst { 0%{opacity:0; transform:translate(-50%,-50%) scale(.45) rotate(-7deg)} 22%{opacity:1; transform:translate(-50%,-50%) scale(1.16) rotate(2deg)} 62%{opacity:1; transform:translate(-50%,-50%) scale(1) rotate(0)} 100%{opacity:0; transform:translate(-50%,-58%) scale(1.08) rotate(0)} }
+      @keyframes ym-gacha-rare-burst { 0%{opacity:0; transform:translate(-50%,-50%) scale(.34) rotate(-5deg); filter:blur(8px) brightness(.75)} 18%{opacity:.82; transform:translate(-50%,-50%) scale(.92) rotate(1deg); filter:blur(1px) brightness(1.18)} 46%{opacity:1; transform:translate(-50%,-50%) scale(1.08) rotate(0); filter:blur(0) brightness(1.38)} 78%{opacity:1; transform:translate(-50%,-50%) scale(1) rotate(0); filter:brightness(1.08)} 100%{opacity:0; transform:translate(-50%,-56%) scale(1.08) rotate(0); filter:brightness(1)} }
       @keyframes ym-gacha-rare-back { 0%,100%{filter:brightness(1) saturate(1); transform:translateY(0) rotate(-.4deg)} 50%{filter:brightness(1.32) saturate(1.35); transform:translateY(-2px) rotate(.5deg)} }
       @keyframes ym-gacha-back-rainbow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
       @keyframes ym-gacha-starfall { 0%{opacity:0; transform:translateY(-20px) scale(.4) rotate(0)} 20%{opacity:1} 100%{opacity:0; transform:translateY(80px) scale(1.05) rotate(160deg)} }
@@ -1326,16 +1326,16 @@
         gap: 0;
         padding: 7% 0 6%;
         background:
-          radial-gradient(circle at 20% 18%, rgba(255,255,255,.96), transparent 18%),
-          radial-gradient(circle at 75% 20%, color-mix(in srgb, var(--rarity-color,#d78f73), #fff 58%), transparent 24%),
-          radial-gradient(circle at 50% 55%, rgba(255,255,255,.78), transparent 44%),
-          linear-gradient(180deg, #fffdf8, #f5eadb 68%, color-mix(in srgb, var(--rarity-color,#d78f73), #fff 42%));
-        border: 2px solid color-mix(in srgb, var(--rarity-color,#d78f73), #3b2a1c 22%);
+          linear-gradient(142deg, rgba(255,255,255,.22), transparent 24%),
+          radial-gradient(circle at 76% 18%, color-mix(in srgb, var(--rarity-color,#d78f73), #fff 36%), transparent 22%),
+          radial-gradient(circle at 50% 46%, rgba(255,255,255,.22), transparent 42%),
+          linear-gradient(180deg, #2a2018, #14151c 58%, color-mix(in srgb, var(--rarity-color,#d78f73), #10131a 78%));
+        border: 2px solid color-mix(in srgb, var(--rarity-color,#d78f73), #fff 18%);
         box-shadow:
-          0 0 0 2px rgba(255,255,255,.76),
-          0 12px 0 -6px color-mix(in srgb, var(--rarity-color,#d78f73), #3b2a1c 22%),
-          0 15px 28px rgba(47,35,22,.18),
-          inset 0 2px 0 rgba(255,255,255,.82);
+          0 0 0 1px rgba(255,255,255,.22),
+          0 0 24px color-mix(in srgb, var(--rarity-color,#d78f73), transparent 72%),
+          0 16px 34px rgba(0,0,0,.28),
+          inset 0 1px 0 rgba(255,255,255,.22);
       }
       .ym-mcard::before {
         display: none;
@@ -1368,21 +1368,7 @@
         opacity: .58;
         pointer-events: none;
       }
-      .ym-mcard-mascot {
-        position: absolute;
-        right: 5%;
-        bottom: 6%;
-        width: 22%;
-        height: 22%;
-        z-index: 2;
-        opacity: .78;
-        background: url('/mascots/mung-shiba-face.webp') center / contain no-repeat;
-        filter: drop-shadow(0 4px 6px rgba(44,31,20,.18));
-      }
-      .ym-mcard.is-diamond .ym-mcard-mascot,
-      .ym-mcard.is-xur .ym-mcard-mascot {
-        background-image: url('/mascots/yang-cat-face.webp');
-      }
+      .ym-mcard-mascot { display: none !important; }
       .ym-mcard-tier {
         position: static;
         display: inline-flex;
@@ -1438,7 +1424,7 @@
         z-index: 3;
         max-width: 88%;
         min-height: 1.05em;
-        color: #332417;
+        color: #fff8e5;
         font-weight: 1000;
         line-height: 1.05;
         text-align: center;
@@ -1449,7 +1435,7 @@
       .ym-mcard-sub {
         position: relative;
         z-index: 3;
-        color: rgba(32,36,47,.62);
+        color: rgba(255,248,229,.66);
         background: transparent;
         border-radius: 0;
         font-weight: 850;
@@ -1483,37 +1469,37 @@
       }
       .ym-mcard.is-bronze {
         background:
-          linear-gradient(150deg, rgba(255,255,255,.88), transparent 32%),
-          radial-gradient(circle at 50% 33%, rgba(255,222,180,.86), transparent 36%),
-          linear-gradient(180deg, #fff8ee, #f2dfc8 68%, #dfb58a);
+          linear-gradient(150deg, rgba(255,255,255,.16), transparent 32%),
+          radial-gradient(circle at 50% 33%, rgba(255,180,110,.28), transparent 36%),
+          linear-gradient(180deg, #38251b, #17151a 68%, #6e3b1f);
       }
       .ym-mcard.is-silver {
         background:
-          linear-gradient(150deg, rgba(255,255,255,.92), transparent 32%),
-          radial-gradient(circle at 50% 33%, rgba(232,241,249,.92), transparent 36%),
-          linear-gradient(180deg, #fdfeff, #e7edf2 68%, #becbd8);
+          linear-gradient(150deg, rgba(255,255,255,.18), transparent 32%),
+          radial-gradient(circle at 50% 33%, rgba(232,241,249,.30), transparent 36%),
+          linear-gradient(180deg, #303846, #151820 68%, #56616e);
       }
       .ym-mcard.is-gold {
         background:
-          radial-gradient(circle at 20% 18%, rgba(255,255,255,.96), transparent 18%),
-          radial-gradient(circle at 70% 18%, rgba(255,240,150,.95), transparent 25%),
-          radial-gradient(circle at 50% 55%, rgba(255,255,255,.82), transparent 42%),
-          linear-gradient(180deg, #fffaf0, #ffeeb2 68%, #e5bc58);
-        box-shadow: 0 0 0 2px rgba(255,255,255,.78), 0 0 22px rgba(231,184,68,.28), 0 15px 30px rgba(47,35,22,.2), inset 0 2px 0 rgba(255,255,255,.84);
+          radial-gradient(circle at 20% 18%, rgba(255,255,255,.24), transparent 18%),
+          radial-gradient(circle at 70% 18%, rgba(255,218,90,.42), transparent 25%),
+          radial-gradient(circle at 50% 55%, rgba(255,255,255,.18), transparent 42%),
+          linear-gradient(180deg, #402b15, #191612 68%, #7a5318);
+        box-shadow: 0 0 0 1px rgba(255,255,255,.25), 0 0 28px rgba(231,184,68,.34), 0 17px 34px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.24);
       }
       .ym-mcard.is-diamond {
         background:
-          linear-gradient(150deg, rgba(255,255,255,.94), transparent 30%),
-          radial-gradient(circle at 50% 33%, rgba(239,253,255,.98), transparent 35%),
-          linear-gradient(135deg, #fbffff, #dff8ff 36%, #e7dcff 70%, #fdf0c3);
-        box-shadow: 0 0 0 2px rgba(255,255,255,.82), 0 0 26px rgba(121,220,242,.28), 0 15px 32px rgba(47,35,22,.19), inset 0 2px 0 rgba(255,255,255,.86);
+          linear-gradient(150deg, rgba(255,255,255,.22), transparent 30%),
+          radial-gradient(circle at 50% 33%, rgba(121,220,242,.34), transparent 35%),
+          linear-gradient(135deg, #152536, #111827 36%, #2f274c 70%, #5a481b);
+        box-shadow: 0 0 0 1px rgba(255,255,255,.25), 0 0 32px rgba(121,220,242,.36), 0 17px 36px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.26);
       }
       .ym-mcard.is-xur {
         background:
-          linear-gradient(150deg, rgba(255,255,255,.95), transparent 27%),
-          radial-gradient(circle at 50% 33%, rgba(255,255,255,.98), transparent 34%),
-          linear-gradient(135deg, #fbffff, #d7fbff 26%, #eadfff 54%, #fff0bc 76%, #ffe0f2);
-        box-shadow: 0 0 0 2px rgba(255,255,255,.84), 0 0 34px rgba(185,150,255,.32), 0 16px 34px rgba(47,35,22,.2), inset 0 2px 0 rgba(255,255,255,.9);
+          linear-gradient(150deg, rgba(255,255,255,.24), transparent 27%),
+          radial-gradient(circle at 50% 33%, rgba(255,255,255,.30), transparent 34%),
+          linear-gradient(135deg, #102b35, #18172a 26%, #382957 54%, #6d5221 76%, #563248);
+        box-shadow: 0 0 0 1px rgba(255,255,255,.26), 0 0 38px rgba(185,150,255,.4), 0 18px 38px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.3);
       }
       .ym-mcard.is-basic .ym-mcard-img { filter: saturate(.9) contrast(1.02) drop-shadow(0 10px 9px rgba(28,31,42,.24)); }
       .ym-mcard.is-bronze .ym-mcard-img { filter: sepia(.18) saturate(1.08) contrast(1.04) drop-shadow(0 11px 9px rgba(122,72,31,.3)); }

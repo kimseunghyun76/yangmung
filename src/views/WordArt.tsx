@@ -1,7 +1,6 @@
 // 단어 일러스트 — 어휘 "새 표현" 카드에서 단어를 이미지로 보여준다.
 // 생성 PNG를 우선 사용하고, 누락 시 SVG 폴백으로 내려간다.
 import { useState, type CSSProperties } from 'react';
-import { signSceneFor, signs } from '../content/signs';
 
 // 카드 id에서 그룹 추출: vocab:<group>:study:..., basic:study:..., sign:study:...
 function groupOf(id: string): string {
@@ -208,19 +207,6 @@ function vocabWordArtSrc(id: string): string | null {
   return `/vocab/word-art/${group}/${item}.png`;
 }
 
-const SIGN_BG_BY_SCENE: Record<string, string> = {
-  restroom: '/vocab/sign-art/restroom-bg.png',
-  mallEntrance: '/vocab/sign-art/mall-entrance-bg.png',
-  stationWayfinding: '/vocab/sign-art/station-wayfinding-bg.png',
-  construction: '/vocab/sign-art/construction-bg.png',
-  transitBoard: '/vocab/sign-art/transit-board-bg.png',
-  shopNotice: '/vocab/sign-art/shop-notice-bg.png',
-  receipt: '/vocab/sign-art/receipt-bg.png',
-  restaurantMenu: '/vocab/sign-art/restaurant-menu-bg.png',
-  checkout: '/vocab/sign-art/checkout-bg.png',
-  storePromo: '/vocab/sign-art/store-promo-bg.png',
-};
-
 const BASIC_BG_BY_GROUP: Record<string, string> = {
   number: '/vocab/word-art/basic/number.png',
   counter: '/vocab/word-art/basic/counter.png',
@@ -242,38 +228,12 @@ function basicGroupOf(id: string): string | null {
   return match?.[1] ?? null;
 }
 
-function signSceneOf(id: string): string | null {
+function signWordArtPngAsset(id: string): string | null {
   const match = /^sign:study:([^:]+)$/.exec(id);
-  if (!match) return null;
-  const sign = signs.find((item) => item.id === match[1]);
-  return sign ? signSceneFor(sign) : null;
-}
-
-function signWordArtBg(id: string): string | null {
-  const match = /^sign:study:([^:]+)$/.exec(id);
-  if (!match) return null;
-  const sign = signs.find((item) => item.id === match[1]);
-  return sign ? SIGN_BG_BY_SCENE[signSceneFor(sign)] ?? '/vocab/sign-art/store-promo-bg.png' : '/vocab/sign-art/store-promo-bg.png';
+  return match ? `/vocab/sign-art/generated-png/${match[1]}.png` : null;
 }
 
 function panelOverlay(id: string): { left: number; top: number; width: number; maxFont: number; minFont: number } {
-  const signScene = signSceneOf(id);
-  if (signScene) {
-    const byScene: Record<string, { left: number; top: number; width: number; maxFont: number; minFont: number }> = {
-      restroom: { left: 0.5, top: 0.42, width: 0.36, maxFont: 0.17, minFont: 0.052 },
-      mallEntrance: { left: 0.5, top: 0.43, width: 0.4, maxFont: 0.17, minFont: 0.052 },
-      stationWayfinding: { left: 0.5, top: 0.34, width: 0.52, maxFont: 0.17, minFont: 0.05 },
-      construction: { left: 0.5, top: 0.43, width: 0.43, maxFont: 0.15, minFont: 0.044 },
-      transitBoard: { left: 0.5, top: 0.36, width: 0.46, maxFont: 0.15, minFont: 0.044 },
-      shopNotice: { left: 0.5, top: 0.43, width: 0.36, maxFont: 0.15, minFont: 0.048 },
-      receipt: { left: 0.5, top: 0.42, width: 0.29, maxFont: 0.14, minFont: 0.046 },
-      restaurantMenu: { left: 0.5, top: 0.42, width: 0.38, maxFont: 0.16, minFont: 0.048 },
-      checkout: { left: 0.5, top: 0.43, width: 0.29, maxFont: 0.14, minFont: 0.046 },
-      storePromo: { left: 0.5, top: 0.42, width: 0.38, maxFont: 0.16, minFont: 0.048 },
-    };
-    return byScene[signScene] ?? byScene.storePromo;
-  }
-
   const basicGroup = basicGroupOf(id);
   if (basicGroup) {
     const byGroup: Record<string, { left: number; top: number; width: number; maxFont: number; minFont: number }> = {
@@ -293,14 +253,29 @@ function panelOverlay(id: string): { left: number; top: number; width: number; m
 }
 
 export function wordArtAssetSrcForId(id: string): string | null {
-  return vocabWordArtSrc(id) ?? signWordArtBg(id) ?? basicWordArtBg(id);
+  return vocabWordArtSrc(id) ?? signWordArtPngAsset(id) ?? basicWordArtBg(id);
 }
 
 export function WordArt({ id, korean, kana: _kana, ja, size = 96, style, preferAsset = false }: { id: string; korean: string; kana: string; ja?: string; size?: number; style?: CSSProperties; preferAsset?: boolean }) {
-  const assetSrc = vocabWordArtSrc(id);
+  const signPngSrc = signWordArtPngAsset(id);
+  const assetSrc = vocabWordArtSrc(id) ?? signPngSrc;
   const [assetFailed, setAssetFailed] = useState(false);
-  const panelBg = signWordArtBg(id) ?? basicWordArtBg(id);
+  const panelBg = basicWordArtBg(id);
   const [panelBgFailed, setPanelBgFailed] = useState(false);
+  if (signPngSrc && !assetFailed) {
+    return (
+      <img
+        src={signPngSrc}
+        width={size}
+        height={size}
+        alt={korean}
+        loading="lazy"
+        decoding="async"
+        onError={() => setAssetFailed(true)}
+        style={{ width: size, height: size, objectFit: 'cover', display: 'block', borderRadius: Math.max(14, size * 0.08), ...style }}
+      />
+    );
+  }
   if (panelBg && !panelBgFailed) {
     const overlayText = ja ?? '出口';
     const compactLen = overlayText.replace(/\s/g, '').length;

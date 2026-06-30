@@ -17,7 +17,7 @@ import { isMangaSceneImage, sceneVisualByMission, sceneVisualByPlace } from './s
 import { NavBar, type NavBarProps } from './NavBar';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
 import { MascotEmpty } from './mascot';
-import { Icon, type IconName } from '../ui/Icon';
+import { Icon } from '../ui/Icon';
 
 interface Props {
   nav: NavBarProps;
@@ -30,8 +30,6 @@ interface Props {
   modeLabel: string;
   onStart: () => void;
   onPracticeScene: (missionId: string) => void;
-  onPracticeKana: (script: 'hiragana' | 'katakana') => void;
-  onPracticeDictation: () => void;
   onPracticeFlash: () => void;
   onPracticeWrite: () => void;
   onPlacement: () => void;
@@ -46,7 +44,7 @@ interface Props {
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' };
 
-export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeDictation, onPracticeFlash, onPracticeWrite, onPlacement, placementDone, coreLevel, progression, devUnlockAll, onStartStage, onStartPromotion }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeFlash, onPracticeWrite, onPlacement, placementDone, coreLevel, progression, devUnlockAll, onStartStage, onStartPromotion }: Props) {
   const upcomingId = nextSessionId(session);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
   const planned = plan.size;
@@ -67,7 +65,6 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
   const heroChips = heroMission ? phraseChips(heroMission.id).slice(0, 3) : kanaChips(allCards);
   const outcome = outcomeLine(heroMission, planned);
   const coach = coachForHome(diagnosis, heroMission, plan.breakdown.B + plan.breakdown.C);
-  const nextAction = nextOneAction({ scenes, progress, allCards, openMissions, hira, kata, kanaPct, onPracticeScene, onPracticeKana, onPracticeDictation });
 
   // 여행 루트 — 오늘의 미션(hero)과 중복되지 않게 나머지 열린 미션을 앞세워 최대 4개.
   // 열린 미션이 없으면 잠긴(다음) 미션을 잠금 카드로 보여준다(클릭 시 지도로 이동).
@@ -76,6 +73,39 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
   const routeScenes = routeLocked
     ? scenes.filter((m) => !openMissions.includes(m.id)).slice(0, 4)
     : [...openOther].sort((a, b) => Number(missionProgress(allCards, progress, a.id).started) - Number(missionProgress(allCards, progress, b.id).started)).slice(0, 4);
+
+  // 레벨이 낮은 사람(입문·기본)은 레벨 진도(빠른 연습)를 오늘의 미션보다 위에 둔다.
+  const lowLevel = coreLevel === 'beginner' || coreLevel === 'default';
+
+  const missionPanel = (
+    <>
+      {/* 오늘의 여행 미션 히어로 + 시작 CTA */}
+      <div className="ym-rise" style={{ marginTop: 14 }}>
+        <HomeSceneCard
+          hero={primary ? (heroSv.backdrop ?? heroSv.hero) : undefined}
+          accent={heroSv.accent}
+          kicker={primary ? `오늘의 여행 미션 · ${heroPlace}` : '오늘 한 판'}
+          title={heroTitle}
+          chips={heroChips}
+          planned={planned}
+          onStart={onStart}
+        />
+      </div>
+      {outcome && (
+        <p className="ym-rise" style={{ fontSize: 13, color: 'var(--ink-soft)', margin: '10px 2px 0', textAlign: 'center', fontWeight: 700, lineHeight: 1.45 }}>{outcome}</p>
+      )}
+      {/* 오늘의 미션과 한 묶음 — 다른 열린 장면 또는 잠긴 다음 미션 */}
+      <div className="ym-rise" style={{ marginTop: 14 }}>
+        <TravelRoute routeScenes={routeScenes} locked={routeLocked} allCards={allCards} progress={progress} onPracticeScene={onPracticeScene} onMap={() => nav.onNavigate('map')} />
+      </div>
+    </>
+  );
+
+  const levelPanel = (
+    <div className="ym-rise" style={{ marginTop: 14 }}>
+      <LevelProgress coreLevel={coreLevel} progression={progression} onStartStage={onStartStage} onStartPromotion={onStartPromotion} onPracticeWrite={onPracticeWrite} devUnlockAll={devUnlockAll} />
+    </div>
+  );
 
   return (
     <main style={WRAP}>
@@ -108,57 +138,12 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
         </button>
       )}
 
-      {/* ① 오늘의 가이드 — 오늘의 여행 미션 히어로 + 시작 CTA */}
-      <div className="ym-rise" style={{ animationDelay: '.04s', marginTop: 14 }}>
-        <HomeSceneCard
-          hero={primary ? (heroSv.backdrop ?? heroSv.hero) : undefined}
-          accent={heroSv.accent}
-          kicker={primary ? `오늘의 여행 미션 · ${heroPlace}` : '오늘 한 판'}
-          title={heroTitle}
-          chips={heroChips}
-          planned={planned}
-          onStart={onStart}
-        />
-      </div>
-      {outcome && (
-        <p className="ym-rise" style={{ animationDelay: '.07s', fontSize: 13, color: 'var(--ink-soft)', margin: '10px 2px 0', textAlign: 'center', fontWeight: 700, lineHeight: 1.45 }}>
-          {outcome}
-        </p>
-      )}
+      {/* 레벨이 낮으면 빠른 연습(레벨 진도)을 오늘의 미션 위에, 높으면 미션을 위에 */}
+      {lowLevel ? (<>{levelPanel}{missionPanel}</>) : (<>{missionPanel}{levelPanel}</>)}
 
-      {/* 오늘의 미션과 한 묶음 — 다른 열린 장면(중복 제외) 또는 잠긴 다음 미션 */}
-      <div className="ym-rise" style={{ animationDelay: '.1s', marginTop: 14 }}>
-        <TravelRoute
-          routeScenes={routeScenes} locked={routeLocked}
-          allCards={allCards} progress={progress}
-          onPracticeScene={onPracticeScene} onMap={() => nav.onNavigate('map')}
-        />
-      </div>
-
-      {/* ② 이어서 할 한 가지 행동 */}
-      {nextAction && (
-        <div className="ym-rise" style={{ animationDelay: '.1s', marginTop: 14 }}>
-          <button className="ym-press" onClick={nextAction.onClick} style={{
-            width: '100%', display: 'flex', alignItems: 'center', gap: 13, textAlign: 'left',
-            padding: '15px 16px', borderRadius: 18, cursor: 'pointer',
-            border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
-          }}>
-            <span style={{ width: 42, height: 42, flex: '0 0 42px', borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: hexA('#b9382e', 0.14), color: 'var(--accent)' }}>
-              <Icon name={nextAction.icon} size={23} />
-            </span>
-            <span style={{ flex: 1 }}>
-              <span style={{ display: 'block', fontSize: 12, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.04em' }}>이어서 할 한 가지</span>
-              <span style={{ display: 'block', fontSize: 16, fontWeight: 750, marginTop: 2 }}>{nextAction.label}</span>
-              <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 1 }}>{nextAction.sub}</span>
-            </span>
-            <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)' }} />
-          </button>
-        </div>
-      )}
-
-      {/* ③ 속도전 대결 배너 — 점수로 보석함 획득 */}
+      {/* 속도전 대결 — 메인 제일 하단 */}
       <button className="ym-rise ym-press" onClick={onPracticeFlash} style={{
-        animationDelay: '.14s', width: '100%', marginTop: 14, textAlign: 'left', cursor: 'pointer',
+        width: '100%', marginTop: 14, textAlign: 'left', cursor: 'pointer',
         display: 'flex', alignItems: 'center', gap: 14, padding: '16px 18px', borderRadius: 20,
         border: '1px solid var(--accent)', color: '#fff',
         background: 'linear-gradient(135deg, #b9382e, #e0564a 60%, #f0a23a)',
@@ -176,16 +161,6 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
         </span>
         <Icon name="flow" size={20} style={{ color: 'rgba(255,255,255,0.85)' }} />
       </button>
-
-      {/* ④ 레벨 진도 — 수준별 순차 잠금 + 승급 시험 */}
-      <div className="ym-rise" style={{ animationDelay: '.17s', marginTop: 14 }}>
-        <LevelProgress
-          coreLevel={coreLevel} progression={progression}
-          onStartStage={onStartStage} onStartPromotion={onStartPromotion}
-          onPracticeWrite={onPracticeWrite}
-          devUnlockAll={devUnlockAll}
-        />
-      </div>
 
       {!ttsSupported() && <p style={{ color: 'var(--warn)', fontSize: 13, marginTop: 16, fontWeight: 600 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
     </main>
@@ -258,30 +233,6 @@ function RouteCard({ m, locked, compact, allCards, progress, onClick }: {
     </button>
   );
 }
-
-// 이어서 할 "한 가지" 행동 — 시작 전 진행중 장면 > 흔들리는 가나 > 받아쓰기 복습 순.
-function nextOneAction({ scenes, progress, allCards, openMissions, hira, kata, kanaPct, onPracticeScene, onPracticeKana, onPracticeDictation }: {
-  scenes: typeof CONTENT.missions; progress: ProgressMap; allCards: Card[]; openMissions: string[];
-  hira: { mastered: number; total: number }; kata: { mastered: number; total: number }; kanaPct: number;
-  onPracticeScene: (id: string) => void; onPracticeKana: (s: 'hiragana' | 'katakana') => void; onPracticeDictation: () => void;
-}): { label: string; sub: string; icon: IconName; onClick: () => void } | null {
-  const resume = scenes.find((m) => {
-    if (m.id === 'C0' || !openMissions.includes(m.id)) return false;
-    const p = missionProgress(allCards, progress, m.id);
-    return p.started && !(p.total > 0 && p.mastered === p.total);
-  });
-  if (resume) {
-    return { label: `${resume.place ?? resume.scenario} 마저 하기`, sub: '시작한 장면을 마무리해요', icon: 'flow', onClick: () => onPracticeScene(resume.id) };
-  }
-  if (kanaPct < 100) {
-    const hr = hira.mastered / Math.max(1, hira.total);
-    const kr = kata.mastered / Math.max(1, kata.total);
-    const weaker: 'hiragana' | 'katakana' = hr <= kr ? 'hiragana' : 'katakana';
-    return { label: `${weaker === 'hiragana' ? '히라가나' : '가타카나'} 다지기`, sub: '아직 흔들리는 가나를 무작위로', icon: 'kana', onClick: () => onPracticeKana(weaker) };
-  }
-  return { label: '받아쓰기로 복습', sub: '듣고 가나로 써보기', icon: 'dictation', onClick: onPracticeDictation };
-}
-
 
 function HomeSceneCard({ hero, accent, kicker, title, chips, planned, onStart }: {
   hero?: string;

@@ -11,6 +11,7 @@
     "assets:generate": "node scripts/generate-scene-assets.mjs",
     "assets:variants": "tsx scripts/generate-session-variants.mjs",
     "assets:vocab": "node scripts/generate-vocab-word-assets.mjs",
+    "assets:signs": "tsx scripts/generate-sign-art-assets.ts",
     "audio": "tsx scripts/generate-audio.mjs",
     "audio:dry": "tsx scripts/generate-audio.mjs --dry",
     "typecheck": "tsc --noEmit",
