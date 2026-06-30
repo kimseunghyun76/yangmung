@@ -8,14 +8,13 @@ import {
   mergeSceneRarity, nextMergeRarity, ownedCount, rarityMeta, rarityToTier, saveCollection, totalItems,
   type BoxGrade, type Collection, type DropResult, type Rarity,
 } from '../learn/collection';
-import { gachaItemForPlace, gachaLabItemForPlace } from '../learn/gachaItems';
+import { gachaItemForPlace, gachaLabItemForPlace, type GachaItemArt } from '../learn/gachaItems';
 import { loadProgress } from '../learn/progress';
 import { Icon } from '../ui/Icon';
 import { speakSequence, ttsSupported } from '../tts';
 import { loadSettings, sceneSentenceLevelForMode } from '../learn/settings';
 import { Modal } from './Modal';
 import { sceneVisualByMission } from './scene';
-import { MascotBubble, MascotFace } from './mascot';
 
 const SCENES = CONTENT.missions.filter((m) => m.id !== 'C0');
 const MAX_GACHA_DRAWS = 30;
@@ -39,11 +38,13 @@ function ItemArt({ sceneId, rarity, size }: { sceneId: string; rarity: Rarity; s
   const sv = sceneVisualByMission(sceneId);
   const item = gachaLabItemForPlace(placeOf(sceneId), rarity);
   const [failed, setFailed] = useState(false);
-  const src = !failed ? item.image : undefined;
+  const [sourceIndex, setSourceIndex] = useState(0);
+  const sources = itemImageSources(item);
+  const src = !failed ? sources[sourceIndex] : undefined;
   if (!src) {
     return <span className={`ym-gacha-item-illustration is-${item.motif} is-${rarity}`} style={{ ['--scene-accent' as string]: sv.accent, position: 'relative', left: 'auto', top: 'auto', width: Math.round(size * 0.72), height: Math.round(size * 0.72) }} />;
   }
-  return <img className="ym-mcard-img" src={src} alt="" draggable={false} onError={() => setFailed(true)} />;
+  return <img className="ym-mcard-img" src={src} alt="" draggable={false} onError={() => advanceImageSource(sourceIndex, sources, setSourceIndex, setFailed)} />;
 }
 
 // 도감 카드 — 상세 설명은 팝업으로 넘기고, 아이템과 등급만 또렷하게 보인다.
@@ -59,7 +60,6 @@ function DeckCardFace({ sceneId, rarity, size = 56 }: { sceneId: string; rarity:
       borderRadius: Math.round(size * 0.13),
     }}>
       <span className="ym-mcard-aura" aria-hidden />
-      <span className="ym-mcard-mascot" aria-hidden />
       <span className="ym-mcard-top">
         <span className="ym-mcard-tier" aria-hidden style={{ fontSize: Math.max(8, Math.round(size * 0.09)) }}>{meta.label}</span>
       </span>
@@ -79,7 +79,7 @@ function CardBack({ rarity = 'basic', size = 82 }: { rarity?: Rarity; size?: num
       ['--rarity-color' as string]: meta.color,
       width: size, height: Math.round(size * 1.28), borderRadius: Math.round(size * 0.17),
     }}>
-      <span className="ym-mback-mascot" aria-hidden />
+      <span className="ym-mback-emblem" aria-hidden>旅</span>
     </span>
   );
 }
@@ -88,6 +88,9 @@ function ItemReveal({ item, index, onNext }: { item: DropResult; index: number; 
   const meta = rarityMeta(item.rarity);
   const art = gachaLabItemForPlace(placeOf(item.sceneId), item.rarity);
   const [failed, setFailed] = useState(false);
+  const [sourceIndex, setSourceIndex] = useState(0);
+  const sources = itemImageSources(art);
+  const src = !failed ? sources[sourceIndex] : undefined;
   const premium = isPremiumReveal(item.rarity);
   const className = `ym-item-reveal is-${item.rarity} ${item.isNew ? 'is-new' : 'is-repeat'} ${premium ? 'is-premium' : ''}`;
   return (
@@ -97,13 +100,9 @@ function ItemReveal({ item, index, onNext }: { item: DropResult; index: number; 
       style={{ ['--rarity-color' as string]: meta.color, ['--intro-index' as string]: index }}
     >
       <span className="ym-item-reveal-aura" aria-hidden />
-      <span className="ym-item-reveal-mascots" aria-hidden>
-        <MascotFace who="yang" mood={premium ? 'tip' : 'default'} size={42} />
-        <MascotFace who="mung" mood={item.isNew ? 'correct' : 'default'} size={42} />
-      </span>
       <span className="ym-item-reveal-art">
-        {!failed && art.image ? (
-          <img src={art.image} alt="" draggable={false} onError={() => setFailed(true)} />
+        {src ? (
+          <img src={src} alt="" draggable={false} onError={() => advanceImageSource(sourceIndex, sources, setSourceIndex, setFailed)} />
         ) : (
           <span className={`ym-gacha-item-illustration is-${art.motif} is-${item.rarity}`} />
         )}
@@ -120,13 +119,12 @@ function ItemReveal({ item, index, onNext }: { item: DropResult; index: number; 
 
 function PremiumMysteryReveal({ rarity }: { rarity: Rarity }) {
   const meta = rarityMeta(rarity);
-  const lead = rarity === 'xur' ? '양·뭉의 초월 선물이 열립니다' : rarity === 'diamond' ? '양·뭉의 푸른 선물빛이 모입니다' : '덱 안에서 특별한 선물이 반짝입니다';
-  const sub = rarity === 'xur' ? '병합으로만 닿는 XUR 아이템이 모습을 드러내요' : rarity === 'diamond' ? 'UR 아이템이 잠시 후 공개됩니다' : 'SSR 아이템이 귀엽게 등장합니다';
+  const lead = rarity === 'xur' ? '초월 등급의 봉인이 열립니다' : rarity === 'diamond' ? '푸른 보석빛이 카드에 모입니다' : '덱 안에서 황금빛이 천천히 깨어납니다';
+  const sub = rarity === 'xur' ? '병합으로만 닿는 XUR 아이템이 잠시 후 모습을 드러냅니다' : rarity === 'diamond' ? 'UR 아이템이 천천히 공개됩니다' : 'SSR 아이템이 천천히 공개됩니다';
   return (
     <div className={`ym-premium-mystery is-${rarity}`} style={{ ['--rarity-color' as string]: meta.color }}>
       <span className="ym-premium-mystery-ring" aria-hidden />
       <span className="ym-premium-mystery-gem" aria-hidden>
-        <MascotFace who="duo" mood="done" size={86} />
         <b>{meta.label}</b>
       </span>
       <strong>{lead}</strong>
@@ -139,12 +137,15 @@ function ItemThumb({ item }: { item: DropResult }) {
   const meta = rarityMeta(item.rarity);
   const art = gachaLabItemForPlace(placeOf(item.sceneId), item.rarity);
   const [failed, setFailed] = useState(false);
+  const [sourceIndex, setSourceIndex] = useState(0);
+  const sources = itemImageSources(art);
+  const src = !failed ? sources[sourceIndex] : undefined;
   return (
     <span className={`ym-item-thumb is-${item.rarity}`} style={{ ['--rarity-color' as string]: meta.color }}>
       <span className="ym-item-thumb-rarity">{meta.label}</span>
       <span className="ym-item-thumb-art">
-        {!failed && art.image ? (
-          <img src={art.image} alt="" draggable={false} onError={() => setFailed(true)} />
+        {src ? (
+          <img src={src} alt="" draggable={false} onError={() => advanceImageSource(sourceIndex, sources, setSourceIndex, setFailed)} />
         ) : (
           <span className={`ym-gacha-item-illustration is-${art.motif} is-${item.rarity}`} />
         )}
@@ -168,6 +169,7 @@ function CardShuffleStage({ color, count, hint }: { color: string; count: number
   const premium = hint && isPremiumReveal(hint);
   return (
     <div className={`ym-shuffle-stage ${premium ? `has-${hint}` : ''}`} aria-hidden style={{ ['--gacha-color' as string]: hintMeta?.color ?? color }}>
+      <span className="ym-shuffle-veil" />
       <span className="ym-shuffle-table-ring" />
       <span className="ym-shuffle-orbit">
         {Array.from({ length: 12 }).map((_, i) => (
@@ -183,10 +185,19 @@ function CardShuffleStage({ color, count, hint }: { color: string; count: number
           </span>
         ))}
       </span>
-      <strong>{count}장의 여행 카드 셔플 중</strong>
-      <em>{premium && hintMeta ? `덱 안에서 ${hintMeta.label}의 강한 빛이 느껴집니다` : '잠시 후 한 장씩 공개됩니다'}</em>
+      <strong>{count}장의 여행 카드가 섞이는 중</strong>
+      <em>{premium && hintMeta ? `덱 안에서 ${hintMeta.label}의 빛이 천천히 번집니다` : '어떤 아이템이 나올지 잠시 후 공개됩니다'}</em>
     </div>
   );
+}
+
+function itemImageSources(item: GachaItemArt): string[] {
+  return [item.image, item.fallbackImage].filter((src): src is string => !!src);
+}
+
+function advanceImageSource(index: number, sources: string[], setSourceIndex: (n: number) => void, setFailed: (v: boolean) => void) {
+  if (index + 1 < sources.length) setSourceIndex(index + 1);
+  else setFailed(true);
 }
 
 function RevealCards({ results, animate }: { results: DropResult[]; animate?: boolean }) {
@@ -280,8 +291,8 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
       setRareBurst({ index: activeIndex, rarity: activeResult.rarity, key: Date.now() });
       setPremiumIntro({ index: activeIndex, rarity: activeResult.rarity, key: Date.now() });
       playSfx(activeResult.rarity === 'diamond' ? 'UR REVEAL' : activeResult.rarity === 'xur' ? 'XUR REVEAL' : 'SSR REVEAL', activeResult.rarity === 'diamond' || activeResult.rarity === 'xur' ? 48 : 42);
-      const hold = activeResult.rarity === 'xur' ? 4200 : activeResult.rarity === 'diamond' ? 3400 : 2600;
-      const introHold = activeResult.rarity === 'xur' ? 2300 : activeResult.rarity === 'diamond' ? 2000 : 1600;
+      const hold = activeResult.rarity === 'xur' ? 6200 : activeResult.rarity === 'diamond' ? 5200 : 4300;
+      const introHold = activeResult.rarity === 'xur' ? 3800 : activeResult.rarity === 'diamond' ? 3200 : 2700;
       after(introHold, () => setPremiumIntro((cur) => (cur?.index === activeIndex ? null : cur)));
       after(hold, () => setRareBurst((cur) => (cur?.index === activeIndex ? null : cur)));
     } else if (activeResult.isNew) {
@@ -320,10 +331,13 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
     setRareBurst(null);
     setPremiumIntro(null);
     setPhase('open');
-    playSfx('SHUFFLE', 36);
-    after(1800, () => playSfx('CUT', 30));
-    after(3600, () => playSfx('DRAW', 38));
-    after(5200, () => {
+    const best = r.reduce<Rarity | undefined>((acc, item) => !acc || rarityToTier(item.rarity) > rarityToTier(acc) ? item.rarity : acc, undefined);
+    const premium = !!best && isPremiumReveal(best);
+    const revealDelay = premium ? 6900 : 5600;
+    playSfx('SHUFFLE', 34);
+    after(2100, () => playSfx('CUT', 28));
+    after(premium ? 4500 : 3800, () => playSfx(premium ? 'LIGHT' : 'DRAW', premium ? 40 : 36));
+    after(revealDelay, () => {
       setStage('cards');
       setVisibleCount(r.length > 0 ? 1 : 0);
     });
@@ -366,7 +380,10 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
       {phase === 'revealed' && (
         <div style={{ position: 'relative', overflow: 'hidden', padding: 18, borderRadius: 22, border: '1px solid var(--glass-border)', background: `radial-gradient(circle at 50% 18%, ${box.colors[1]}24, transparent 50%), var(--glass-bg-strong)` }}>
           <GachaGlow color={box.colors[1]} strong />
-          <MascotBubble who="duo" mood="done" size={42} style={{ marginBottom: 14 }}>오늘 얻은 카드가 여행 도감에 들어갔어요.</MascotBubble>
+          <div style={{ marginBottom: 14, textAlign: 'center' }}>
+            <strong style={{ display: 'block', color: 'var(--ink)', fontSize: 16 }}>오늘 얻은 카드</strong>
+            <span style={{ display: 'block', marginTop: 4, color: 'var(--ink-soft)', fontSize: 12.5, fontWeight: 750 }}>획득한 아이템이 여행 도감에 저장되었습니다.</span>
+          </div>
           <RevealCards results={results} />
           <button className="ym-press" onClick={() => setDeck(true)}
             style={{ width: '100%', marginTop: 16, padding: '12px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)', fontWeight: 750, fontSize: 14, cursor: 'pointer' }}>

@@ -8,6 +8,7 @@ export interface GachaItemArt {
   sub: string;
   motif: ItemMotif;
   image?: string;
+  fallbackImage?: string;
 }
 
 const JA_TITLE: Record<string, string> = {
@@ -129,6 +130,10 @@ export function gachaItemAssetPath(title: string, rarity: Rarity, motif: ItemMot
   return `/gacha/items/generated-v2/${gachaItemAssetSlug(title, rarity, motif)}.png`;
 }
 
+export function gachaLuxuryItemAssetPath(title: string, rarity: Rarity, motif: ItemMotif): string {
+  return `/gacha/items/luxury/${gachaItemAssetSlug(title, rarity, motif)}.png`;
+}
+
 function withLegacyImage(item: GachaItemArt): GachaItemArt {
   return {
     ...item,
@@ -136,10 +141,11 @@ function withLegacyImage(item: GachaItemArt): GachaItemArt {
   };
 }
 
-function withLabImage(item: GachaItemArt, rarity: Rarity): GachaItemArt {
+function withLuxuryImage(item: GachaItemArt, rarity: Rarity): GachaItemArt {
   return {
     ...item,
-    image: gachaItemAssetPath(item.title, rarity, item.motif),
+    image: gachaLuxuryItemAssetPath(item.title, rarity, item.motif),
+    fallbackImage: gachaItemAssetPath(item.title, rarity, item.motif),
   };
 }
 
@@ -517,5 +523,5 @@ export function gachaItemForPlace(place: string | undefined, rarity: Rarity): Ga
 
 export function gachaLabItemForPlace(place: string | undefined, rarity: Rarity): GachaItemArt {
   const key = place && (BY_PLACE[place] ? place : PLACE_ALIAS[place]);
-  return withJa(withLabImage(itemForKey(key, rarity), rarity));
+  return withJa(withLuxuryImage(itemForKey(key, rarity), rarity));
 }
