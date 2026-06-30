@@ -1,7 +1,8 @@
 // 세션 — Immersive Scene Coach v1. 상단 장면 헤더 + 하단 글래스 학습 시트.
 // 시각 위계: 일본어 > 듣기 > 행동(선택/말하기) > 한국어. (UI_REDESIGN_PROPOSAL.md §4-2)
 import { useState } from 'react';
-import type { Card, Choice } from '../learn/cards';
+import type { Card, Choice, DifficultyLabel } from '../learn/cards';
+import { cardDifficulty } from '../learn/cards';
 import type { CardStatus } from '../learn/progress';
 import type { GrammarPoint } from '../content/types';
 import { loadSettings } from '../learn/settings';
@@ -88,9 +89,11 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
         const showScenario = !!sv && !!scenario && card.kind !== 'introduce' && !inOverlay;
         const showSpeaker = !!sv && !!speaker && !inOverlay;
         const showPlain = !sv && !!plainTag;
-        if (!showScenario && !showSpeaker && !showPlain) return null;
+        const diff = cardDifficulty(card); // 난이도 배지 (입문·기본·중급·고급)
+        if (!diff && !showScenario && !showSpeaker && !showPlain) return null;
         return (
           <div style={{ padding: '0 16px 10px', display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap', background: 'var(--surface-2)', flexShrink: 0 }}>
+            {diff && <DiffBadge level={diff} />}
             {showScenario && <span style={{ padding: '4px 11px', borderRadius: 999, fontSize: 12, fontWeight: 700, background: hexA(accent, 0.9), color: '#fff' }}>{scenario}</span>}
             {showSpeaker && <span style={{ padding: '4px 10px', borderRadius: 999, fontSize: 12, fontWeight: 700, background: 'var(--accent-soft)', color: 'var(--accent)' }}>{speaker}</span>}
             {showPlain && <span style={{ padding: '5px 11px', borderRadius: 999, fontSize: 12, fontWeight: 800, background: 'var(--accent-soft)', color: 'var(--accent)' }}>{plainTag}</span>}
@@ -255,6 +258,22 @@ function Dots({ i, total, onScene }: { i: number; total: number; onScene: boolea
         {cur}/{total}{left > 0 ? ` · ${left}개 남음` : ' · 마지막'}
       </span>
     </div>
+  );
+}
+
+// 난이도 배지 — 입문·기본·중급·고급. 레벨별 색으로 한눈에.
+const DIFF_COLOR: Record<DifficultyLabel, { bg: string; fg: string }> = {
+  입문: { bg: 'var(--ok-soft)', fg: 'var(--ok)' },
+  기본: { bg: 'var(--accent-soft)', fg: 'var(--accent)' },
+  중급: { bg: 'var(--warn-soft)', fg: 'var(--warn)' },
+  고급: { bg: 'rgba(120,90,200,.16)', fg: '#7a5ac8' },
+};
+function DiffBadge({ level }: { level: DifficultyLabel }) {
+  const c = DIFF_COLOR[level];
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 999, fontSize: 11.5, fontWeight: 850, background: c.bg, color: c.fg, border: `1px solid ${c.fg}` }}>
+      <span style={{ width: 6, height: 6, borderRadius: 99, background: c.fg }} />난이도 {level}
+    </span>
   );
 }
 

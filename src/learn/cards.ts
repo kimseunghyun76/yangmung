@@ -224,6 +224,27 @@ export function materializeQuizCard(card: Card): Card {
   return { ...card, choices: materializeChoicePools(card.choicePools, card.inverted) };
 }
 
+// 퀴즈 난이도 라벨 — 모든 퀴즈/받아쓰기 카드에 입문·기본·중급·고급 표기.
+// 미션은 tier(1~5)로, 빠른 연습은 콘텐츠 종류(가나/어휘/작문…)로 매핑.
+export type DifficultyLabel = '입문' | '기본' | '중급' | '고급';
+const TIER_TO_DIFF: DifficultyLabel[] = ['입문', '기본', '중급', '고급', '고급'];
+export function cardDifficulty(card: Card): DifficultyLabel | null {
+  if (card.kind === 'quiz' && card.reviewTarget?.type === 'mission') {
+    return TIER_TO_DIFF[(card.tier ?? 1) - 1] ?? '입문';
+  }
+  if (card.kind === 'dictation') {
+    return card.promptKind === 'korean' ? '중급' : '입문'; // 한→일 작문=중급, 받아쓰기=입문
+  }
+  if (card.kind === 'quiz') {
+    const id = card.id;
+    if (id.startsWith('kana:') || id.startsWith('pair:')) return '입문';
+    if (id.startsWith('vocab:') || id.startsWith('sign:') || id.startsWith('basic:')) return '기본';
+    if (card.tier) return TIER_TO_DIFF[card.tier - 1] ?? '기본';
+    return '기본';
+  }
+  return null;
+}
+
 const fallbackRecoveryIds = ['p_mou_ichido', 'p_yukkuri', 'p_yasashii_nihongo', 'p_eigo_de'];
 
 
@@ -750,6 +771,7 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
       cards.push({
         kind: 'quiz', id: `mission:${m.id}:${idx}`, tag: `${m.id} 미션`,
         scenario: m.scenario,
+        tier: (m.tier ?? 1) as 1 | 2 | 3 | 4 | 5, // 난이도 배지(미션 tier → 입문~고급)
         banner: step.situationKo,
         bannerJa: ttsText(prompt) ?? step.recapPromptJa,
         // prompt이 있으면 kana는 promptPhrase로 분리(발음 보조 렌더). sub엔 화자만.
@@ -918,7 +940,7 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
     const pool = signs.filter((x) => x.category === sg.category && x.korean !== sg.korean);
     const distract = shuffle(pool.length >= 2 ? pool : signs.filter((x) => x.korean !== sg.korean)).slice(0, 3);
     // 학습형 — 설명·듣기·읽기 + 듣고 일본어 찾기
-    cards.push(makeStudyCard({ id: `sign:study:${sg.id}`, tag: `${sg.category} 읽기`, ja: sg.ja, kana: sg.kana, korean: sg.korean }));
+    cards.push(makeStudyCard({ id: `sign:study:${sg.id}`, tag: `${sg.category} 읽기`, ja: sg.ja, kana: sg.kana, korean: sg.korean, tip: sg.tip }));
     cards.push(makeHearToJaCard({ id: `sign:hear2ja:${sg.id}`, tag: `${sg.category} 읽기`, reviewId: `sign:${sg.id}`, item: sg, distract }));
     cards.push({
       kind: 'quiz', id: `sign:${sg.id}`, tag: `${sg.category} 읽기`,
