@@ -14,8 +14,8 @@ import { loadOpenMissions, saveOpenMissions, resetOpenMissions, reconcileOpenMis
 import { resetFlashBest } from './learn/flashScores';
 import { adaptSessionConfig, diagnose } from './learn/adaptive';
 import {
-  coreLevelOf, loadProgression, markStageComplete, nextLevel,
-  saveProgression, stageKey, PROMO_COUNT, PROMO_PASS, STAGE_PASS, type ProgStage,
+  coreLevelOf, loadProgression, markStageComplete, nextLevel, resetProgression,
+  saveProgression, stageKey, PROMO_COUNT, PROMO_PASS, STAGE_PASS, type CoreLevel, type ProgStage,
 } from './learn/progression';
 import { extractKanaChars } from './learn/kanaReading';
 import { loadSettings, MODE_PRESETS, saveSettings, sceneSentenceLevelForMode, type Settings } from './learn/settings';
@@ -179,6 +179,18 @@ export function App() {
     return () => { clearTimeout(t); stopSpeaking(); };
   }, [i, view, card]);
 
+  // 최초 접속/초기화 → 통합 수준 진단을 강제로 시작(한 번만 권유). 건너뛰어도 설정에서 재응시 가능.
+  useEffect(() => {
+    if (typeof localStorage === 'undefined') return;
+    const done = localStorage.getItem('yangmung:placement:v1');
+    const prompted = localStorage.getItem('yangmung:placement:prompted');
+    if (!done && !prompted) {
+      try { localStorage.setItem('yangmung:placement:prompted', '1'); } catch { /* noop */ }
+      startPlacement();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // 주간/야간 테마를 <html data-theme>에 반영
   useEffect(() => { document.documentElement.dataset.theme = settings.theme; }, [settings.theme]);
   // 듣기 속도 — 설정값을 tts 전역에 반영 (마운트 시 포함)
@@ -306,13 +318,13 @@ export function App() {
     if (level === 'express') return selectComposeCards(allCards, progress, nextSessionId(session), 40);
     return [];
   }
-  function startPromotionQuiz() {
-    const pool = promotionPool(coreLevel);
+  function startPromotionQuiz(level: CoreLevel = coreLevel) {
+    const pool = promotionPool(level);
     if (pool.length === 0) return;
     const shuffled = [...pool];
     for (let k = shuffled.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [shuffled[k], shuffled[j]] = [shuffled[j], shuffled[k]]; }
     const cards = shuffled.slice(0, PROMO_COUNT);
-    promotionRef.current = coreLevel;
+    promotionRef.current = level;
     beginSession(nextSessionId(session), cards, false, false, true, null); // 인트로 없이, 보석함 X
   }
   // 히라가나/가타카나 직접 연습 — 현재 모드와 무관하게 그 스크립트 가나만.
@@ -593,6 +605,11 @@ export function App() {
     resetOpenMissions();
     setOpenMissions(reconcileOpenMissions([], {}));
     resetFlashBest();
+    resetProgression();
+    setProgression({ completed: [] });
+    // 진단 플래그 초기화 후 통합 수준 진단을 다시 시작(초기화 = 처음 접속과 동일).
+    try { localStorage.removeItem('yangmung:placement:v1'); localStorage.setItem('yangmung:placement:prompted', '1'); } catch { /* noop */ }
+    startPlacement();
   }
 
   // 미션 오픈만 초기화(진척은 유지) — 설정의 개발 도구. 다시 랜덤 1개부터.
@@ -772,7 +789,7 @@ export function App() {
       {renderView()}
       {showGuide && <Guide onClose={() => setShowGuide(false)} />}
       {showSettings && (
-        <SettingsModal settings={settings} onChange={updateSettings} onSelectMode={selectMode} onMarkKanaKnown={markAllKanaKnown} onReset={resetAll} onResetUnlocks={resetUnlocks} onFillDevCards={fillDevCardsAll} onClose={() => setShowSettings(false)} />
+        <SettingsModal settings={settings} onChange={updateSettings} onSelectMode={selectMode} onMarkKanaKnown={markAllKanaKnown} onReset={resetAll} onResetUnlocks={resetUnlocks} onFillDevCards={fillDevCardsAll} onPlacement={startPlacement} onStartPromotion={startPromotionQuiz} onClose={() => setShowSettings(false)} />
       )}
     </Suspense>
   );

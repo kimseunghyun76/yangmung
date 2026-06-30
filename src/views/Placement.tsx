@@ -158,6 +158,19 @@ export function Placement({ cards, onDone, onSkip }: Props) {
       if (idx + 1 >= cards.length) setDone(true); else setIdx((n) => n + 1);
     }, 650);
   }
+  // 모르는 문제 패스 — 오답(미숙)으로 집계하되, 정답을 잠깐 보여주고 넘어간다.
+  function passQuestion() {
+    if (picked !== null || !card || card.kind !== 'quiz') return;
+    setPicked(-1); // 정답만 강조(고른 오답 없음)
+    const axis = axisOf(card);
+    setHits((h) => ({ ...h, [axis]: { ok: h[axis].ok, total: h[axis].total + 1 } }));
+    const correct = card.choices.find((x) => x.correct && !x.recovery);
+    if (correct?.ja) speak(correct.ja);
+    window.setTimeout(() => {
+      setPicked(null);
+      if (idx + 1 >= cards.length) setDone(true); else setIdx((n) => n + 1);
+    }, 650);
+  }
 
   if (done) {
     const pct = (a: SkillAxis) => (hits[a].total ? hits[a].ok / hits[a].total : 0);
@@ -312,6 +325,12 @@ export function Placement({ cards, onDone, onSkip }: Props) {
           );
         })}
       </div>
+
+      {/* 이 문제 패스 — 모르는 질문은 넘어가도 돼요 */}
+      <button className="ym-press" onClick={passQuestion} disabled={picked !== null}
+        style={{ width: '100%', marginTop: 12, padding: '12px', borderRadius: 14, border: '1px dashed var(--glass-border)', background: 'transparent', color: 'var(--ink-soft)', fontWeight: 700, fontSize: 13.5, cursor: picked === null ? 'pointer' : 'default' }}>
+        모르겠어요 · 이 문제 패스 →
+      </button>
     </main>
   );
 }
