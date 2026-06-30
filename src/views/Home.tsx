@@ -39,13 +39,14 @@ interface Props {
   // 레벨 진도
   coreLevel: CoreLevel;
   progression: ProgressionState;
+  devUnlockAll: boolean;
   onStartStage: (stage: ProgStage) => void;
   onStartPromotion: () => void;
 }
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' };
 
-export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeDictation, onPracticeFlash, onPracticeWrite, onPlacement, placementDone, coreLevel, progression, onStartStage, onStartPromotion }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeKana, onPracticeDictation, onPracticeFlash, onPracticeWrite, onPlacement, placementDone, coreLevel, progression, devUnlockAll, onStartStage, onStartPromotion }: Props) {
   const upcomingId = nextSessionId(session);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
   const planned = plan.size;
@@ -55,11 +56,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
   const kata = kanaReadMastery(progress, kataIds);
   const kanaPct = Math.round(((hira.mastered + kata.mastered) / Math.max(1, hira.total + kata.total)) * 100);
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
-  // 여행 루트 — 열린 미션 중 "아직 진행하지 않은(미시작)" 것을 앞세워 최대 4개.
   const openScenes = scenes.filter((m) => openMissions.includes(m.id));
-  const routeScenes = [...openScenes]
-    .sort((a, b) => Number(missionProgress(allCards, progress, a.id).started) - Number(missionProgress(allCards, progress, b.id).started))
-    .slice(0, 4);
 
   // 오늘의 장면 = goal과 동일 기준(튜토리얼 C0 제외한 첫 장면). 없으면 가나 위주의 날.
   const primary = plan.missions.find((m) => m.id !== 'C0') ?? plan.missions[0];
@@ -71,6 +68,14 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
   const outcome = outcomeLine(heroMission, planned);
   const coach = coachForHome(diagnosis, heroMission, plan.breakdown.B + plan.breakdown.C);
   const nextAction = nextOneAction({ scenes, progress, allCards, openMissions, hira, kata, kanaPct, onPracticeScene, onPracticeKana, onPracticeDictation });
+
+  // 여행 루트 — 오늘의 미션(hero)과 중복되지 않게 나머지 열린 미션을 앞세워 최대 4개.
+  // 열린 미션이 없으면 잠긴(다음) 미션을 잠금 카드로 보여준다(클릭 시 지도로 이동).
+  const openOther = openScenes.filter((m) => m.id !== primary?.id);
+  const routeLocked = openOther.length === 0;
+  const routeScenes = routeLocked
+    ? scenes.filter((m) => !openMissions.includes(m.id)).slice(0, 4)
+    : [...openOther].sort((a, b) => Number(missionProgress(allCards, progress, a.id).started) - Number(missionProgress(allCards, progress, b.id).started)).slice(0, 4);
 
   return (
     <main style={WRAP}>
@@ -121,6 +126,15 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
         </p>
       )}
 
+      {/* 오늘의 미션과 한 묶음 — 다른 열린 장면(중복 제외) 또는 잠긴 다음 미션 */}
+      <div className="ym-rise" style={{ animationDelay: '.1s', marginTop: 14 }}>
+        <TravelRoute
+          routeScenes={routeScenes} locked={routeLocked}
+          allCards={allCards} progress={progress}
+          onPracticeScene={onPracticeScene} onMap={() => nav.onNavigate('map')}
+        />
+      </div>
+
       {/* ② 이어서 할 한 가지 행동 */}
       {nextAction && (
         <div className="ym-rise" style={{ animationDelay: '.1s', marginTop: 14 }}>
@@ -169,148 +183,79 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
           coreLevel={coreLevel} progression={progression}
           onStartStage={onStartStage} onStartPromotion={onStartPromotion}
           onPracticeWrite={onPracticeWrite}
+          devUnlockAll={devUnlockAll}
         />
       </div>
 
-      {/* ⑦ 여행 루트 */}
-      <div className="ym-rise" style={{ animationDelay: '.26s', marginTop: 14 }}>
-        <GlassPanel>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-            <p style={{ margin: 0, ...label }}>여행 루트</p>
-            <button className="ym-press" onClick={() => nav.onNavigate('map')} style={{
-              border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
-              borderRadius: 999, padding: '8px 12px', fontSize: 12.5, fontWeight: 800, cursor: 'pointer',
-            }}>지도 보기</button>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: routeScenes.length > 1 ? 'repeat(2, minmax(0, 1fr))' : '1fr', gap: 10, marginTop: 12 }}>
-            {routeScenes.map((m) => {
-              const sv = sceneVisualByMission(m.id);
-              const p = missionProgress(allCards, progress, m.id);
-              const done = p.total > 0 && p.mastered === p.total;
-              const src = sv.backdrop ?? sv.thumb;
-              const statusText = done ? '완료' : !p.started ? '아직 안 함' : `${p.mastered}/${p.total}`;
-              const compact = routeScenes.length > 1;
-              const statusBg = done ? 'rgba(35,134,82,.94)' : p.started ? 'rgba(185,56,46,.96)' : 'rgba(255,255,255,.94)';
-              const statusColor = done || p.started ? '#fff' : 'var(--accent)';
-              return (
-                <button key={m.id} className="ym-press" onClick={() => onPracticeScene(m.id)} style={{
-                  position: 'relative',
-                  minWidth: 0,
-                  overflow: 'hidden',
-                  border: '1px solid var(--glass-border)',
-                  background: 'var(--glass-bg-strong)',
-                  color: '#fff',
-                  borderRadius: compact ? 16 : 18,
-                  padding: 0,
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  aspectRatio: compact ? '4 / 3' : '16 / 9',
-                  boxShadow: '0 10px 22px rgba(89,58,28,.09)',
-                }}>
-                  {src ? (
-                    <img src={src} alt="" loading="lazy" decoding="async" style={{
-                      position: 'absolute',
-                      inset: 0,
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      display: 'block',
-                      filter: 'saturate(.94) contrast(1.02)',
-                    }} />
-                  ) : (
-                    <span aria-hidden style={{
-                      position: 'absolute',
-                      inset: 0,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      background: `linear-gradient(135deg, ${hexA(sv.accent, 0.18)}, var(--glass-bg-strong))`,
-                      color: sv.accent,
-                    }}>
-                      <Icon name={sv.icon} size={42} />
-                    </span>
-                  )}
-                  <span aria-hidden style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.34) 50%, rgba(0,0,0,.74))',
-                  }} />
-                  <span style={{
-                    position: 'relative',
-                    zIndex: 1,
-                    minHeight: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-end',
-                    padding: compact ? 10 : 14,
-                  }}>
-                    <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: compact ? 6 : 10 }}>
-                      <span style={{
-                        display: compact ? 'none' : 'inline-flex',
-                        alignItems: 'center',
-                        gap: 6,
-                        minWidth: 0,
-                        padding: '6px 9px',
-                        borderRadius: 999,
-                        background: 'rgba(255,255,255,.18)',
-                        border: '1px solid rgba(255,255,255,.22)',
-                        backdropFilter: 'blur(10px)',
-                        WebkitBackdropFilter: 'blur(10px)',
-                        color: '#fff',
-                        fontSize: 12,
-                        fontWeight: 850,
-                      }}>
-                        <Icon name={sv.icon} size={14} />
-                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.scenario}</span>
-                      </span>
-                      <span style={{
-                        flex: '0 0 auto',
-                        padding: compact ? '5px 7px' : '6px 9px',
-                        borderRadius: 999,
-                        background: statusBg,
-                        color: statusColor,
-                        border: done || p.started ? '1px solid rgba(255,255,255,.24)' : '1px solid rgba(255,255,255,.9)',
-                        boxShadow: '0 4px 14px rgba(0,0,0,.22)',
-                        fontSize: compact ? 11 : 12,
-                        fontWeight: 900,
-                        fontVariantNumeric: 'tabular-nums',
-                        lineHeight: 1,
-                        whiteSpace: 'nowrap',
-                        textShadow: done || p.started ? '0 1px 4px rgba(0,0,0,.22)' : 'none',
-                      }}>{statusText}</span>
-                    </span>
-                    <span style={{
-                      display: 'block',
-                      marginTop: compact ? 7 : 9,
-                      fontSize: compact ? 17 : 22,
-                      lineHeight: 1.12,
-                      fontWeight: 900,
-                      letterSpacing: '-0.02em',
-                      textShadow: '0 2px 14px rgba(0,0,0,.38)',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                    }}>{m.place ?? m.scenario}</span>
-                    <span style={{
-                      display: '-webkit-box',
-                      marginTop: 4,
-                      color: 'rgba(255,255,255,.86)',
-                      fontSize: compact ? 11.5 : 12.5,
-                      fontWeight: 750,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      WebkitLineClamp: compact ? 2 : 1,
-                      WebkitBoxOrient: 'vertical',
-                    }}>{m.canDo}</span>
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </GlassPanel>
-      </div>
       {!ttsSupported() && <p style={{ color: 'var(--warn)', fontSize: 13, marginTop: 16, fontWeight: 600 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
     </main>
+  );
+}
+
+// 여행 루트 — 오늘의 미션과 한 묶음. 열린 다른 장면(중복 제외) 또는 잠긴 다음 미션(클릭 시 지도).
+function TravelRoute({ routeScenes, locked, allCards, progress, onPracticeScene, onMap }: {
+  routeScenes: typeof CONTENT.missions; locked: boolean; allCards: Card[]; progress: ProgressMap;
+  onPracticeScene: (id: string) => void; onMap: () => void;
+}) {
+  const compact = routeScenes.length > 1;
+  return (
+    <GlassPanel>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+        <p style={{ margin: 0, ...label }}>{locked ? '다음 여행 미션' : '여행 루트'}</p>
+        <button className="ym-press" onClick={onMap} style={{ border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', borderRadius: 999, padding: '8px 12px', fontSize: 12.5, fontWeight: 800, cursor: 'pointer' }}>지도 보기</button>
+      </div>
+      {locked && <p style={{ margin: '8px 0 0', fontSize: 12.5, color: 'var(--ink-faint)', fontWeight: 700 }}>아직 열린 장면이 없어요. 눌러서 지도에서 다음 미션을 열어보세요.</p>}
+      {routeScenes.length > 0 ? (
+        <div style={{ display: 'grid', gridTemplateColumns: compact ? 'repeat(2, minmax(0, 1fr))' : '1fr', gap: 10, marginTop: 12 }}>
+          {routeScenes.map((m) => (
+            <RouteCard key={m.id} m={m} locked={locked} compact={compact} allCards={allCards} progress={progress}
+              onClick={() => (locked ? onMap() : onPracticeScene(m.id))} />
+          ))}
+        </div>
+      ) : (
+        <p style={{ margin: '12px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>모든 미션을 열었어요! 지도에서 골라 진행해요.</p>
+      )}
+    </GlassPanel>
+  );
+}
+
+function RouteCard({ m, locked, compact, allCards, progress, onClick }: {
+  m: typeof CONTENT.missions[number]; locked: boolean; compact: boolean; allCards: Card[]; progress: ProgressMap; onClick: () => void;
+}) {
+  const sv = sceneVisualByMission(m.id);
+  const p = missionProgress(allCards, progress, m.id);
+  const done = p.total > 0 && p.mastered === p.total;
+  const src = sv.backdrop ?? sv.thumb;
+  const statusText = locked ? '잠김' : done ? '완료' : !p.started ? '아직 안 함' : `${p.mastered}/${p.total}`;
+  const statusBg = locked ? 'rgba(40,40,52,.92)' : done ? 'rgba(35,134,82,.94)' : p.started ? 'rgba(185,56,46,.96)' : 'rgba(255,255,255,.94)';
+  const statusColor = locked || done || p.started ? '#fff' : 'var(--accent)';
+  return (
+    <button className="ym-press" onClick={onClick} style={{
+      position: 'relative', minWidth: 0, overflow: 'hidden', border: '1px solid var(--glass-border)',
+      background: 'var(--glass-bg-strong)', color: '#fff', borderRadius: compact ? 16 : 18, padding: 0,
+      cursor: 'pointer', textAlign: 'left', aspectRatio: compact ? '4 / 3' : '16 / 9', boxShadow: '0 10px 22px rgba(89,58,28,.09)',
+    }}>
+      {src ? (
+        <img src={src} alt="" loading="lazy" decoding="async" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: locked ? 'grayscale(.9) brightness(.7)' : 'saturate(.94) contrast(1.02)' }} />
+      ) : (
+        <span aria-hidden style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: `linear-gradient(135deg, ${hexA(sv.accent, 0.18)}, var(--glass-bg-strong))`, color: sv.accent }}>
+          <Icon name={sv.icon} size={42} />
+        </span>
+      )}
+      <span aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.34) 50%, rgba(0,0,0,.74))' }} />
+      {locked && <span aria-hidden style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30 }}>🔒</span>}
+      <span style={{ position: 'relative', zIndex: 1, minHeight: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: compact ? 10 : 14 }}>
+        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: compact ? 6 : 10 }}>
+          <span style={{ display: compact ? 'none' : 'inline-flex', alignItems: 'center', gap: 6, minWidth: 0, padding: '6px 9px', borderRadius: 999, background: 'rgba(255,255,255,.18)', border: '1px solid rgba(255,255,255,.22)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', color: '#fff', fontSize: 12, fontWeight: 850 }}>
+            <Icon name={sv.icon} size={14} />
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.scenario}</span>
+          </span>
+          <span style={{ flex: '0 0 auto', padding: compact ? '5px 7px' : '6px 9px', borderRadius: 999, background: statusBg, color: statusColor, border: locked || done || p.started ? '1px solid rgba(255,255,255,.24)' : '1px solid rgba(255,255,255,.9)', boxShadow: '0 4px 14px rgba(0,0,0,.22)', fontSize: compact ? 11 : 12, fontWeight: 900, fontVariantNumeric: 'tabular-nums', lineHeight: 1, whiteSpace: 'nowrap' }}>{statusText}</span>
+        </span>
+        <span style={{ display: 'block', marginTop: compact ? 7 : 9, fontSize: compact ? 17 : 22, lineHeight: 1.12, fontWeight: 900, letterSpacing: '-0.02em', textShadow: '0 2px 14px rgba(0,0,0,.38)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.place ?? m.scenario}</span>
+        <span style={{ display: '-webkit-box', marginTop: 4, color: 'rgba(255,255,255,.86)', fontSize: compact ? 11.5 : 12.5, fontWeight: 750, overflow: 'hidden', textOverflow: 'ellipsis', WebkitLineClamp: compact ? 2 : 1, WebkitBoxOrient: 'vertical' }}>{m.canDo}</span>
+      </span>
+    </button>
   );
 }
 
@@ -537,12 +482,14 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, modeLabel, onPlacement 
 }
 
 // 레벨 진도 패널 — 현재 레벨의 단계를 순서대로, 잠금/완료 상태로. 모두 통과 시 승급 시험.
-function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion, onPracticeWrite }: {
+function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion, onPracticeWrite, devUnlockAll }: {
   coreLevel: CoreLevel; progression: ProgressionState;
   onStartStage: (stage: ProgStage) => void; onStartPromotion: () => void; onPracticeWrite: () => void;
+  devUnlockAll: boolean;
 }) {
   const stages = LEVEL_STAGES[coreLevel];
   const allDone = levelAllComplete(progression, coreLevel);
+  const promotionUnlocked = allDone || devUnlockAll;
   const nx = nextLevel(coreLevel);
   const artOf = (s: ProgStage) => s.script ?? s.practice;
   return (
@@ -563,18 +510,18 @@ function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion,
               <StageTile
                 key={st.id} order={idx + 1} stage={st} art={artOf(st)}
                 done={isStageComplete(progression, coreLevel, st.id)}
-                unlocked={isStageUnlocked(progression, coreLevel, idx)}
+                unlocked={devUnlockAll || isStageUnlocked(progression, coreLevel, idx)}
                 onClick={() => onStartStage(st)}
               />
             ))}
           </div>
-          <button className="ym-press" onClick={onStartPromotion} disabled={!allDone} style={{
-            width: '100%', marginTop: 12, padding: '14px 16px', borderRadius: 14, cursor: allDone ? 'pointer' : 'default',
-            fontWeight: 850, fontSize: 14.5, opacity: allDone ? 1 : 0.55,
-            background: allDone ? 'linear-gradient(135deg, #b9382e, #e0564a)' : 'var(--glass-bg-strong)',
-            color: allDone ? '#fff' : 'var(--ink-faint)', border: allDone ? 'none' : '1px solid var(--glass-border)',
+          <button className="ym-press" onClick={onStartPromotion} disabled={!promotionUnlocked} style={{
+            width: '100%', marginTop: 12, padding: '14px 16px', borderRadius: 14, cursor: promotionUnlocked ? 'pointer' : 'default',
+            fontWeight: 850, fontSize: 14.5, opacity: promotionUnlocked ? 1 : 0.55,
+            background: promotionUnlocked ? 'linear-gradient(135deg, #b9382e, #e0564a)' : 'var(--glass-bg-strong)',
+            color: promotionUnlocked ? '#fff' : 'var(--ink-faint)', border: promotionUnlocked ? 'none' : '1px solid var(--glass-border)',
           }}>
-            {allDone ? `🎯 ${nx ? CORE_LEVEL_LABEL[nx] : ''} 승급 시험 — 20문항·90%` : '🔒 모든 단계를 통과하면 승급 시험이 열려요'}
+            {promotionUnlocked ? `🎯 ${nx ? CORE_LEVEL_LABEL[nx] : ''} 승급 시험 — 20문항·90%` : '🔒 모든 단계를 통과하면 승급 시험이 열려요'}
           </button>
         </>
       )}
