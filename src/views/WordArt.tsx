@@ -1,7 +1,7 @@
 // 단어 일러스트 — 어휘 "새 표현" 카드에서 단어를 이미지로 보여준다.
 // 생성 PNG를 우선 사용하고, 누락 시 SVG 폴백으로 내려간다.
 import { useState, type CSSProperties } from 'react';
-import { signs } from '../content/signs';
+import { signSceneFor, signs } from '../content/signs';
 
 // 카드 id에서 그룹 추출: vocab:<group>:study:..., basic:study:..., sign:study:...
 function groupOf(id: string): string {
@@ -208,32 +208,107 @@ function vocabWordArtSrc(id: string): string | null {
   return `/vocab/word-art/${group}/${item}.png`;
 }
 
-const SIGN_BG_BY_CATEGORY: Record<string, string> = {
-  '표지': '/vocab/sign-art/sign-bg.png',
-  '메뉴': '/vocab/sign-art/menu-bg.png',
-  '안내': '/vocab/sign-art/guide-bg.png',
-  '교통': '/vocab/sign-art/transport-bg.png',
-  '결제': '/vocab/sign-art/payment-bg.png',
-  '주의': '/vocab/sign-art/warning-bg.png',
+const SIGN_BG_BY_SCENE: Record<string, string> = {
+  restroom: '/vocab/sign-art/restroom-bg.png',
+  mallEntrance: '/vocab/sign-art/mall-entrance-bg.png',
+  stationWayfinding: '/vocab/sign-art/station-wayfinding-bg.png',
+  construction: '/vocab/sign-art/construction-bg.png',
+  transitBoard: '/vocab/sign-art/transit-board-bg.png',
+  shopNotice: '/vocab/sign-art/shop-notice-bg.png',
+  receipt: '/vocab/sign-art/receipt-bg.png',
+  restaurantMenu: '/vocab/sign-art/restaurant-menu-bg.png',
+  checkout: '/vocab/sign-art/checkout-bg.png',
+  storePromo: '/vocab/sign-art/store-promo-bg.png',
 };
+
+const BASIC_BG_BY_GROUP: Record<string, string> = {
+  number: '/vocab/word-art/basic/number.png',
+  counter: '/vocab/word-art/basic/counter.png',
+  order: '/vocab/word-art/basic/order.png',
+  weekday: '/vocab/word-art/basic/weekday.png',
+  month: '/vocab/word-art/basic/month.png',
+  calendar: '/vocab/word-art/basic/calendar.png',
+  time: '/vocab/word-art/basic/time.png',
+  money: '/vocab/word-art/basic/money.png',
+};
+
+function basicWordArtBg(id: string): string | null {
+  const match = /^basic:study:([^:]+):/.exec(id);
+  return match ? BASIC_BG_BY_GROUP[match[1]] ?? null : null;
+}
+
+function basicGroupOf(id: string): string | null {
+  const match = /^basic:study:([^:]+):/.exec(id);
+  return match?.[1] ?? null;
+}
+
+function signSceneOf(id: string): string | null {
+  const match = /^sign:study:([^:]+)$/.exec(id);
+  if (!match) return null;
+  const sign = signs.find((item) => item.id === match[1]);
+  return sign ? signSceneFor(sign) : null;
+}
 
 function signWordArtBg(id: string): string | null {
   const match = /^sign:study:([^:]+)$/.exec(id);
   if (!match) return null;
   const sign = signs.find((item) => item.id === match[1]);
-  return sign ? SIGN_BG_BY_CATEGORY[sign.category] ?? '/vocab/sign-art/sign-bg.png' : '/vocab/sign-art/sign-bg.png';
+  return sign ? SIGN_BG_BY_SCENE[signSceneFor(sign)] ?? '/vocab/sign-art/store-promo-bg.png' : '/vocab/sign-art/store-promo-bg.png';
+}
+
+function panelOverlay(id: string): { left: number; top: number; width: number; maxFont: number; minFont: number } {
+  const signScene = signSceneOf(id);
+  if (signScene) {
+    const byScene: Record<string, { left: number; top: number; width: number; maxFont: number; minFont: number }> = {
+      restroom: { left: 0.5, top: 0.42, width: 0.42, maxFont: 0.2, minFont: 0.08 },
+      mallEntrance: { left: 0.5, top: 0.43, width: 0.46, maxFont: 0.21, minFont: 0.075 },
+      stationWayfinding: { left: 0.5, top: 0.34, width: 0.58, maxFont: 0.2, minFont: 0.07 },
+      construction: { left: 0.5, top: 0.43, width: 0.5, maxFont: 0.18, minFont: 0.05 },
+      transitBoard: { left: 0.5, top: 0.36, width: 0.52, maxFont: 0.18, minFont: 0.055 },
+      shopNotice: { left: 0.5, top: 0.43, width: 0.42, maxFont: 0.18, minFont: 0.065 },
+      receipt: { left: 0.5, top: 0.42, width: 0.34, maxFont: 0.17, minFont: 0.06 },
+      restaurantMenu: { left: 0.5, top: 0.42, width: 0.44, maxFont: 0.19, minFont: 0.065 },
+      checkout: { left: 0.5, top: 0.43, width: 0.34, maxFont: 0.17, minFont: 0.06 },
+      storePromo: { left: 0.5, top: 0.42, width: 0.44, maxFont: 0.19, minFont: 0.065 },
+    };
+    return byScene[signScene] ?? byScene.storePromo;
+  }
+
+  const basicGroup = basicGroupOf(id);
+  if (basicGroup) {
+    const byGroup: Record<string, { left: number; top: number; width: number; maxFont: number; minFont: number }> = {
+      number: { left: 0.5, top: 0.43, width: 0.48, maxFont: 0.22, minFont: 0.075 },
+      counter: { left: 0.5, top: 0.43, width: 0.46, maxFont: 0.2, minFont: 0.07 },
+      order: { left: 0.5, top: 0.43, width: 0.46, maxFont: 0.2, minFont: 0.07 },
+      weekday: { left: 0.5, top: 0.43, width: 0.48, maxFont: 0.19, minFont: 0.065 },
+      month: { left: 0.5, top: 0.43, width: 0.47, maxFont: 0.2, minFont: 0.07 },
+      calendar: { left: 0.5, top: 0.43, width: 0.46, maxFont: 0.2, minFont: 0.07 },
+      time: { left: 0.5, top: 0.43, width: 0.5, maxFont: 0.19, minFont: 0.065 },
+      money: { left: 0.5, top: 0.42, width: 0.34, maxFont: 0.16, minFont: 0.055 },
+    };
+    return byGroup[basicGroup] ?? byGroup.number;
+  }
+
+  return { left: 0.5, top: 0.42, width: 0.46, maxFont: 0.2, minFont: 0.07 };
 }
 
 export function wordArtAssetSrcForId(id: string): string | null {
-  return vocabWordArtSrc(id) ?? signWordArtBg(id);
+  return vocabWordArtSrc(id) ?? signWordArtBg(id) ?? basicWordArtBg(id);
 }
 
 export function WordArt({ id, korean, kana: _kana, ja, size = 96, style, preferAsset = false }: { id: string; korean: string; kana: string; ja?: string; size?: number; style?: CSSProperties; preferAsset?: boolean }) {
   const assetSrc = vocabWordArtSrc(id);
   const [assetFailed, setAssetFailed] = useState(false);
-  const signBg = signWordArtBg(id);
-  const [signBgFailed, setSignBgFailed] = useState(false);
-  if (signBg && !signBgFailed) {
+  const panelBg = signWordArtBg(id) ?? basicWordArtBg(id);
+  const [panelBgFailed, setPanelBgFailed] = useState(false);
+  if (panelBg && !panelBgFailed) {
+    const overlayText = ja ?? '出口';
+    const compactLen = overlayText.replace(/\s/g, '').length;
+    const overlay = panelOverlay(id);
+    const panelWidth = size * overlay.width;
+    const fontByWidth = (panelWidth * 0.88) / Math.max(1, compactLen * 0.95);
+    const minFontRatio = compactLen >= 7 ? Math.min(overlay.minFont, 0.045) : overlay.minFont;
+    const fontSize = Math.max(size * minFontRatio, Math.min(size * overlay.maxFont, fontByWidth));
     return (
       <span
         role="img"
@@ -249,12 +324,12 @@ export function WordArt({ id, korean, kana: _kana, ja, size = 96, style, preferA
         }}
       >
         <img
-          src={signBg}
+          src={panelBg}
           alt=""
           aria-hidden
           loading="lazy"
           decoding="async"
-          onError={() => setSignBgFailed(true)}
+          onError={() => setPanelBgFailed(true)}
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
         <span
@@ -262,23 +337,28 @@ export function WordArt({ id, korean, kana: _kana, ja, size = 96, style, preferA
           aria-hidden
           style={{
             position: 'absolute',
-            left: '50%',
-            top: '35%',
+            left: `${overlay.left * 100}%`,
+            top: `${overlay.top * 100}%`,
             transform: 'translate(-50%, -50%)',
-            padding: `${Math.max(4, size * 0.035)}px ${Math.max(10, size * 0.07)}px`,
-            borderRadius: Math.max(8, size * 0.055),
-            background: 'rgba(255,255,255,.92)',
+            width: panelWidth,
+            maxWidth: panelWidth,
+            height: size * 0.2,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxSizing: 'border-box',
+            padding: `0 ${Math.max(2, size * 0.015)}px`,
             color: '#135d45',
-            fontSize: Math.max(26, size * 0.27),
+            fontSize,
             fontWeight: 950,
             lineHeight: 1,
             letterSpacing: 0,
-            boxShadow: '0 8px 20px rgba(6,47,35,.18)',
             textShadow: '0 1px 0 rgba(255,255,255,.7)',
             whiteSpace: 'nowrap',
+            overflow: 'hidden',
           }}
         >
-          {ja ?? '出口'}
+          {overlayText}
         </span>
       </span>
     );

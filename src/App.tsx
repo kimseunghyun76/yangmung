@@ -18,6 +18,7 @@ import {
   saveProgression, stageKey, PROMO_COUNT, PROMO_PASS, STAGE_PASS, type CoreLevel, type ProgStage,
 } from './learn/progression';
 import { extractKanaChars } from './learn/kanaReading';
+import { missionDifficultyWindow } from './learn/missionMix';
 import { loadSettings, MODE_PRESETS, saveSettings, sceneSentenceLevelForMode, type Settings } from './learn/settings';
 import { sessionGoalText } from './views/goal';
 import { resetMangaBackdrops } from './views/scene';
@@ -130,13 +131,14 @@ export function App() {
     () => new Map(CONTENT.missions.map((m) => [m.id as string, m.tier ?? 1])),
     [],
   );
-  // 현재 모드의 tierRange에 맞는 미션만 세션에 포함 (폴백: 해당 티어 미션 없으면 전체)
-  const { tierRange } = MODE_PRESETS[settings.mode];
+  // 미션 난이도 이동 창 — 모드 고정 범위 대신 실력(미션 tier별 숙련도)으로 동적 산정.
+  // 하위 tier를 익히면 빼고 상위 tier를 추가 → 인접 2단계를 섞어 복습+도전(학습 효과↑).
+  const missionWindow = useMemo<[number, number]>(() => missionDifficultyWindow(allCards, progress), [allCards, progress]);
   const missionTierFilter = (mid: string) => {
     const t = missionTierMap.get(mid) ?? 1;
-    return t >= tierRange[0] && t <= tierRange[1];
+    return t >= missionWindow[0] && t <= missionWindow[1];
   };
-  const baseConfig = { quotas: { ...MODE_PRESETS[settings.mode].quotas, tip: tierTipQuota }, minFresh: MODE_PRESETS[settings.mode].minFresh, missionTierFilter, cardTierRange: tierRange, openMissions };
+  const baseConfig = { quotas: { ...MODE_PRESETS[settings.mode].quotas, tip: tierTipQuota }, minFresh: MODE_PRESETS[settings.mode].minFresh, missionTierFilter, cardTierRange: missionWindow, openMissions };
   // 복습 전용 구성(신규 0 · 틀린·오래된 것 우선) — Done 화면 "복습하기" 제안용. 현재 모드와 무관.
   const reviewConfig = { quotas: MODE_PRESETS.review.quotas, minFresh: MODE_PRESETS.review.minFresh };
   const diag = useMemo(

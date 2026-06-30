@@ -371,7 +371,7 @@ function ImageCornerOverlay({ card }: { card: IntroduceCard }) {
 
 function QuickPracticeWordScene({ card }: { card: IntroduceCard }) {
   const art = quickPracticeArtForCard(card);
-  const imageSrc = card.id.startsWith('sign:') ? null : wordArtSrcForCard(card);
+  const imageSrc = card.id.startsWith('sign:') || card.id.startsWith('basic:') ? null : wordArtSrcForCard(card);
   const [imageFailed, setImageFailed] = useState(false);
   if (imageSrc && !imageFailed) {
     return (

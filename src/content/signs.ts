@@ -5,7 +5,20 @@ export interface Sign {
   kana: string;     // 읽기
   korean: string;   // 뜻
   category: '표지' | '메뉴' | '안내' | '교통' | '결제' | '주의';
+  tip?: string;      // 어디서 자주 보는지, 표기 맥락
 }
+
+export type SignScene =
+  | 'restroom'
+  | 'mallEntrance'
+  | 'stationWayfinding'
+  | 'construction'
+  | 'transitBoard'
+  | 'shopNotice'
+  | 'receipt'
+  | 'restaurantMenu'
+  | 'checkout'
+  | 'storePromo';
 
 export const signs: Sign[] = [
   // ── 표지·시설 ──
@@ -32,7 +45,7 @@ export const signs: Sign[] = [
   { id: 'lunch', ja: 'ランチ', kana: 'ランチ', korean: '런치(점심)', category: '메뉴' },
   { id: 'nomihoudai', ja: '飲み放題', kana: 'のみほうだい', korean: '음료 무한리필', category: '메뉴' },
   { id: 'tabehoudai', ja: '食べ放題', kana: 'たべほうだい', korean: '음식 무한리필', category: '메뉴' },
-  { id: 'zeikomi', ja: '税込', kana: 'ぜいこみ', korean: '세금 포함', category: '메뉴' },
+  { id: 'zeikomi', ja: '税込', kana: 'ぜいこみ', korean: '세금 포함', category: '결제', tip: '영수증이나 가격표에서 세금이 포함된 금액이라는 뜻으로 자주 보여요.' },
   { id: 'mochikaeri', ja: 'お持ち帰り', kana: 'おもちかえり', korean: '포장(테이크아웃)', category: '메뉴' },
   { id: 'urikire', ja: '売り切れ', kana: 'うりきれ', korean: '품절', category: '메뉴' },
   { id: 'gentei_menu', ja: '数量限定', kana: 'すうりょうげんてい', korean: '수량 한정', category: '메뉴' },
@@ -66,7 +79,8 @@ export const signs: Sign[] = [
   { id: 'ryougae_sign', ja: '両替', kana: 'りょうがえ', korean: '환전/잔돈 교환', category: '결제' },
   { id: 'baiten', ja: '売店', kana: 'ばいてん', korean: '매점', category: '결제' },
   { id: 'eigyoujikan', ja: '営業時間', kana: 'えいぎょうじかん', korean: '영업시간', category: '결제' },
-  { id: 'teikyuubi', ja: '定休日', kana: 'ていきゅうび', korean: '정기 휴일', category: '결제' },
+  { id: 'teikyuubi', ja: '定休日', kana: 'ていきゅうび', korean: '정기 휴일', category: '안내', tip: '가게 입구에 붙은 휴무 안내에서 자주 보는 표기예요.' },
+  { id: 'rinji_kyuugyou', ja: '臨時休業', kana: 'りんじきゅうぎょう', korean: '임시 휴업', category: '안내', tip: '가게가 예정에 없던 휴무일 때 입구 안내문에 붙는 표현이에요.' },
   { id: 'manshitsu', ja: '満室', kana: 'まんしつ', korean: '만실(방 없음)', category: '결제' },
   { id: 'kuushitsu', ja: '空室', kana: 'くうしつ', korean: '빈방 있음', category: '결제' },
 
@@ -135,17 +149,30 @@ export const signs: Sign[] = [
   // ── 주의·경고 추가 ──
   { id: 'nohumi', ja: '踏まないでください', kana: 'ふまないでください', korean: '밟지 마세요', category: '주의' },
   { id: 'nosmoke_area', ja: '禁煙エリア', kana: 'きんえんエリア', korean: '금연 구역', category: '주의' },
-  { id: 'setsubi', ja: '工事中につき', kana: 'こうじちゅうにつき', korean: '공사 중으로 인해', category: '주의' },
+  { id: 'setsubi', ja: '工事中につき', kana: 'こうじちゅうにつき', korean: '공사 중으로 인해(통행·이용 제한 안내)', category: '주의', tip: '공사장 앞 안내문에서 뒤에 “통행할 수 없습니다”, “우회해 주세요” 같은 이유 설명이 이어지는 시작 표현이에요.' },
   { id: 'kiken_takaatsu', ja: '高電圧危険', kana: 'こうでんあつきけん', korean: '고전압 위험', category: '주의' },
   { id: 'hizashi', ja: '日差しに注意', kana: 'ひざしにちゅうい', korean: '햇볕 주의', category: '주의' },
   { id: 'kinshi_shinnyu', ja: '立入厳禁', kana: 'たちいりげんきん', korean: '출입 엄금', category: '주의' },
 
   // ── 안내 추가 ──
-  { id: 'info_here', ja: 'こちら', kana: 'こちら', korean: '이쪽', category: '안내' },
-  { id: 'info_acchi', ja: 'あちら', kana: 'あちら', korean: '저쪽', category: '안내' },
   { id: 'mannaka', ja: '中央', kana: 'ちゅうおう', korean: '중앙', category: '안내' },
   { id: 'kami', ja: '上', kana: 'うえ', korean: '위', category: '안내' },
   { id: 'shita', ja: '下', kana: 'した', korean: '아래', category: '안내' },
   { id: 'toiu_koto', ja: 'ただいま混雑中', kana: 'ただいまこんざつちゅう', korean: '지금 혼잡 중', category: '안내' },
-  { id: 'go_annai', ja: 'ご案内', kana: 'ごあんない', korean: '안내해 드립니다', category: '안내' },
+  { id: 'go_annai', ja: 'ご案内', kana: 'ごあんない', korean: '안내 드립니다', category: '안내', tip: '역이나 공항 전광판·방송 안내에서 공지 제목처럼 보이는 표현이에요.' },
 ];
+
+const hasId = (sign: Sign, ids: string[]) => ids.includes(sign.id);
+
+export function signSceneFor(sign: Sign): SignScene {
+  if (hasId(sign, ['men_toilet', 'women_toilet', 'danshi', 'josei', 'otearai'])) return 'restroom';
+  if (hasId(sign, ['deguchi', 'iriguchi', 'osu', 'hiku', 'eigyouchu', 'junbichu', 'koshouchu', 'uketsuke', 'shokuji', 'kaigi', 'locker_sign', 'kintsuen', 'floor_sign', 'chikashitsu', 'exit_floor'])) return 'mallEntrance';
+  if (hasId(sign, ['kaisatsu', 'hijouguchi', 'annai', 'kinen', 'kakueki', 'kyuukou', 'tokkyuu', 'noriba', 'norikae_sign', 'kitaguchi', 'minamiguchi', 'higashiguchi', 'nishiguchi', 'terminal', 'jikoku', 'unchin', 'jiyuuseki', 'shitei_seki', 'green_sha', 'kinkyu_teishi', 'mannaka', 'kami', 'shita'])) return 'stationWayfinding';
+  if (hasId(sign, ['tachiiri', 'chuui', 'kiken', 'ashimoto', 'koujichu', 'satsuei_kinshi', 'ichiji_teishi', 'tachiiri_kinshi2', 'nohumi', 'nosmoke_area', 'setsubi', 'kiken_takaatsu', 'hizashi', 'kinshi_shinnyu'])) return 'construction';
+  if (hasId(sign, ['chien', 'untenkeshi', 'toiu_koto', 'go_annai'])) return 'transitBoard';
+  if (hasId(sign, ['teikyuubi', 'rinji_kyuugyou', 'eigyoujikan', 'manshitsu', 'kuushitsu', 'baiten'])) return 'shopNotice';
+  if (hasId(sign, ['zeikomi', 'shohizei', 'receipt'])) return 'receipt';
+  if (hasId(sign, ['genkin_sign', 'card_taiou', 'koutsuukei', 'tsurisen', 'ryougae_sign', 'menzei', 'pointcard', 'fukuro_yoru', 'nouki'])) return 'checkout';
+  if (sign.category === '메뉴') return 'restaurantMenu';
+  return 'storePromo';
+}
