@@ -33,7 +33,12 @@ export function VerbForms({ onExit, progress, onAnswer }: {
         <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--ink-soft)' }}>동사 {VERB_FORMS.length}개</span>
       </div>
 
-      <h1 style={{ margin: '10px 0 2px', fontSize: 24 }}>동사 형태</h1>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '10px 0 2px' }}>
+        <h1 style={{ margin: 0, fontSize: 24 }}>동사 형태</h1>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 999, fontSize: 11.5, fontWeight: 850, background: 'var(--warn-soft)', color: 'var(--warn)', border: '1px solid var(--warn)' }}>
+          <span style={{ width: 6, height: 6, borderRadius: 99, background: 'var(--warn)' }} />난이도 중급
+        </span>
+      </div>
       <p style={{ margin: '0 0 14px', color: 'var(--ink-soft)', fontSize: 13, fontWeight: 600 }}>여행 빈출 동사를 정중형·동시동작·희망표현으로</p>
 
       <div style={{ overflow: 'hidden', width: '100%', aspectRatio: '4 / 3', marginBottom: 16, borderRadius: 18, background: 'var(--surface-2)', border: '1px solid var(--glass-border)' }}>
