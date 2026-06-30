@@ -21,7 +21,8 @@
     "test:progress": "tsx src/learn/progress.test.ts",
     "test:cards": "tsx src/learn/cards.test.ts",
     "test:unlocks": "tsx src/learn/unlocks.test.ts",
-    "test": "npm run test:content && npm run test:adaptive && npm run test:progress && npm run test:cards && npm run test:unlocks"
+    "test:progression": "tsx src/learn/progression.test.ts",
+    "test": "npm run test:content && npm run test:adaptive && npm run test:progress && npm run test:cards && npm run test:unlocks && npm run test:progression"
   },
   "dependencies": {
     "react": "^18.3.1",
