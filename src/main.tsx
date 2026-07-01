@@ -1,6 +1,7 @@
 import { StrictMode, lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
+import { ErrorBoundary } from './app/ErrorBoundary';
 import { applyOverrides } from './content/overrides';
 
 // admin 편집 내용을 런타임 콘텐츠에 먼저 반영(앱·admin 공통)
@@ -15,9 +16,11 @@ const Admin = lazy(() => import('./views/Admin').then((m) => ({ default: m.Admin
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    {isAdmin
-      ? <Suspense fallback={<p style={{ padding: 24, fontFamily: 'sans-serif' }}>검수 페이지 로딩…</p>}><Admin /></Suspense>
-      : <App />}
+    <ErrorBoundary>
+      {isAdmin
+        ? <Suspense fallback={<p style={{ padding: 24, fontFamily: 'sans-serif' }}>검수 페이지 로딩…</p>}><Admin /></Suspense>
+        : <App />}
+    </ErrorBoundary>
   </StrictMode>,
 );
 
