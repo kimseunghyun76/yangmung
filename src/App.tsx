@@ -287,7 +287,7 @@ export function App() {
   // 거리 읽기 — 간판·메뉴·안내·교통 표기 읽기 연습
   function startSignSession(stage?: string | null) {
     // 학습형 — 간판을 모두 설명·듣기·읽기한 뒤, 다양한 변형 퀴즈(표기→뜻·듣고 일본어 등).
-    const cards = selectStudyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:') && !id.startsWith('sign:study:'), { studyLimit: 24, quizCount: 6 });
+    const cards = selectStudyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:') && !id.startsWith('sign:study:'), { studyLimit: 24, quizCount: 6, progress });
     if (cards.length === 0) return;
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
   }
@@ -316,11 +316,11 @@ export function App() {
   function startVocabSession(groupId: string) {
     let cards: Card[];
     if (groupId === 'basics') {
-      cards = selectStudyDeck(allCards, (id) => id.startsWith('basic:study:'), (id) => id.startsWith('basic:') && !isVocabStudy(id), { studyLimit: 36, quizCount: 8 });
+      cards = selectStudyDeck(allCards, (id) => id.startsWith('basic:study:'), (id) => id.startsWith('basic:') && !isVocabStudy(id), { studyLimit: 36, quizCount: 8, progress });
     } else if (groupId === 'all') {
-      cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:') && isVocabStudy(id), (id) => id.startsWith('vocab:') && !isVocabStudy(id), { studyLimit: 36, quizCount: 8 });
+      cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:') && isVocabStudy(id), (id) => id.startsWith('vocab:') && !isVocabStudy(id), { studyLimit: 36, quizCount: 8, progress });
     } else {
-      cards = selectStudyDeck(allCards, (id) => id.startsWith(`vocab:${groupId}:study:`), (id) => id.startsWith(`vocab:${groupId}:`) && !isVocabStudy(id), { studyLimit: 28, quizCount: 6 });
+      cards = selectStudyDeck(allCards, (id) => id.startsWith(`vocab:${groupId}:study:`), (id) => id.startsWith(`vocab:${groupId}:`) && !isVocabStudy(id), { studyLimit: 28, quizCount: 6, progress });
     }
     if (cards.length === 0) return;
     // 어휘 단계로 진입한 경우, 어휘 세션을 통과하면 단계 완료(메뉴 경유라 ref로 전달).
@@ -330,7 +330,7 @@ export function App() {
   }
   // 기본 인사 전용 세션 — 학습형
   function startGreetingSession(stage?: string | null) {
-    const cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:greetings:study:'), (id) => id.startsWith('vocab:greetings:') && !isVocabStudy(id), { studyLimit: 24, quizCount: 6 });
+    const cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:greetings:study:'), (id) => id.startsWith('vocab:greetings:') && !isVocabStudy(id), { studyLimit: 24, quizCount: 6, progress });
     if (cards.length === 0) return;
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
   }

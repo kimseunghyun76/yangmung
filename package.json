@@ -26,7 +26,8 @@
     "test:unlocks": "tsx src/learn/unlocks.test.ts",
     "test:progression": "tsx src/learn/progression.test.ts",
     "test:missionmix": "tsx src/learn/missionMix.test.ts",
-    "test": "npm run test:content && npm run test:adaptive && npm run test:progress && npm run test:cards && npm run test:unlocks && npm run test:progression && npm run test:missionmix"
+    "test:studyfirst": "tsx src/learn/studyFirst.test.ts",
+    "test": "npm run test:content && npm run test:adaptive && npm run test:progress && npm run test:cards && npm run test:unlocks && npm run test:progression && npm run test:missionmix && npm run test:studyfirst"
   },
   "dependencies": {
     "react": "^18.3.1",
