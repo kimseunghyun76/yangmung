@@ -47,6 +47,15 @@ function flushPendingStorage(): void {
   for (const key of [...pendingWrites.keys()]) flushStorageKey(key);
 }
 
+// 대기 중인 지연 저장을 기록하지 않고 폐기 — 백업 복원 직전에 사용
+// (복원 후 새로고침 시 pagehide flush가 옛 값을 복원본 위에 덮어쓰는 것을 방지)
+export function discardPendingStorage(): void {
+  if (typeof window === 'undefined') return;
+  pendingWrites.clear();
+  for (const t of pendingTimers.values()) window.clearTimeout(t);
+  pendingTimers.clear();
+}
+
 function saveDeferred(key: string, value: unknown): void {
   if (typeof window === 'undefined') return;
   pendingWrites.set(key, value);

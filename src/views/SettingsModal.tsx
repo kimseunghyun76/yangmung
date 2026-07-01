@@ -1,6 +1,8 @@
-// 설정 — 글래스 하단 시트. 학습 모드·발음 보조·듣기 속도·자동 진행·초기화.
-import { type CSSProperties } from 'react';
+// 설정 — 글래스 하단 시트. 학습 모드·발음 보조·듣기 속도·자동 진행·백업·초기화.
+import { useRef, type CSSProperties } from 'react';
 import { MODE_PRESETS, LISTEN_RATES, type ChoiceMode, type LearnMode, type ReadingAidMode, type Settings } from '../learn/settings';
+import { downloadBackup, parseBackup, applyBackup } from '../learn/backup';
+import { mirrorSnapshot } from '../learn/idbMirror';
 import { CORE_LEVEL_LABEL, nextLevel, type CoreLevel } from '../learn/progression';
 import { speak, setListenRate } from '../tts';
 import { Modal } from './Modal';
@@ -36,6 +38,21 @@ const head: CSSProperties = { margin: '0 0 8px', fontWeight: 700, fontSize: 14, 
 const toggle = (on: boolean): CSSProperties => ({ ...gbtn, padding: '8px 16px', borderRadius: 999, background: on ? 'var(--accent)' : 'var(--glass-bg-strong)', color: on ? 'var(--accent-ink)' : 'var(--ink-soft)', border: `1px solid ${on ? 'var(--ink)' : 'var(--glass-border)'}` });
 
 export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnown, onReset, onResetUnlocks, onFillDevCards, onPlacement, onStartPromotion, onClose }: Props) {
+  const importInputRef = useRef<HTMLInputElement | null>(null);
+  // 백업 파일 복원 — 검증 → 확인 → 덮어쓰기 → 미러 갱신 → 새로고침(모든 상태 재로드)
+  async function handleImportFile(file: File) {
+    const text = await file.text();
+    const parsed = parseBackup(text);
+    if (!parsed.ok) { alert(`복원할 수 없어요 — ${parsed.error}`); return; }
+    const when = new Date(parsed.file.exportedAt);
+    const label = Number.isNaN(when.getTime()) ? '' : `\n(${when.getFullYear()}.${when.getMonth() + 1}.${when.getDate()} 내보낸 파일)`;
+    if (!confirm(`백업 ${parsed.count}개 항목으로 복원할까요?${label}\n지금 기기의 학습 기록을 백업 내용으로 덮어씁니다.`)) return;
+    const n = applyBackup(parsed.file);
+    if (n === 0) { alert('복원에 실패했어요. 파일을 다시 확인해 주세요.'); return; }
+    await mirrorSnapshot(); // 복원본을 미러에도 반영
+    alert(`${n}개 항목을 복원했어요. 앱을 새로 불러옵니다.`);
+    window.location.reload();
+  }
   const seg = (active: boolean): CSSProperties => ({
     ...gbtn, flex: 1, textAlign: 'center', fontSize: 13, padding: '9px 6px',
     background: active ? 'var(--accent)' : 'var(--glass-bg-strong)', color: active ? 'var(--accent-ink)' : 'var(--ink-soft)',
@@ -107,6 +124,31 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
         <span style={head}><Icon name="fast" size={16} /> 정답이면 자동으로 다음</span>
         <button className="ym-press" style={toggle(settings.fastForward)} onClick={() => onChange({ ...settings, fastForward: !settings.fastForward })}>{settings.fastForward ? '켜짐' : '꺼짐'}</button>
       </div>
+
+      {/* ── 데이터 백업 — 기기·브라우저를 옮기거나 만일의 소실에 대비 ── */}
+      <p style={{ ...head, marginTop: 18 }}><Icon name="chart" size={16} /> 데이터 백업</p>
+      <div style={{ display: 'flex', gap: 8 }}>
+        <button className="ym-press" style={{ ...gbtn, flex: 1, textAlign: 'center' }} onClick={() => downloadBackup()}>
+          💾 내보내기
+        </button>
+        <button className="ym-press" style={{ ...gbtn, flex: 1, textAlign: 'center' }} onClick={() => importInputRef.current?.click()}>
+          📂 파일에서 복원
+        </button>
+        <input
+          ref={importInputRef}
+          type="file"
+          accept="application/json,.json"
+          style={{ display: 'none' }}
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            e.target.value = ''; // 같은 파일 재선택 허용
+            if (f) void handleImportFile(f);
+          }}
+        />
+      </div>
+      <p style={{ margin: '6px 2px 0', fontSize: 11.5, color: 'var(--ink-faint)', lineHeight: 1.45 }}>
+        학습 기록 전체를 파일 하나로 저장해요. 다른 기기·브라우저에서 복원하면 이어서 학습할 수 있어요.
+      </p>
 
       <button className="ym-press" style={{ ...gbtn, width: '100%', marginTop: 18, textAlign: 'center' }}
         onClick={() => { if (confirm('히라가나·가타카나를 모두 안다고 표시할까요? (가나 드릴을 건너뛰고 발음 보조도 꺼집니다)')) { onMarkKanaKnown(); onClose(); } }}>
