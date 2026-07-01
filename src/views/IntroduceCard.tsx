@@ -319,7 +319,7 @@ function wordArtSrcForCard(card: IntroduceCard): string | null {
       koreanCandidates.some((ko) => ko.length > 0 && koreanText.includes(ko));
   });
 
-  return matched ? `/vocab/word-art/${group.id}/${matched.id}.png` : null;
+  return matched ? `/vocab/word-art/${group.id}/${matched.id}.webp` : null;
 }
 
 function ImageCornerOverlay({ card }: { card: IntroduceCard }) {

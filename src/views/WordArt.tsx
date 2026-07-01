@@ -204,18 +204,18 @@ function vocabWordArtSrc(id: string): string | null {
   if (!id.startsWith('vocab:') || !id.includes(':study:')) return null;
   const [, group, kind, item] = id.split(':');
   if (!group || kind !== 'study' || !item || item.startsWith('ex')) return null;
-  return `/vocab/word-art/${group}/${item}.png`;
+  return `/vocab/word-art/${group}/${item}.webp`;
 }
 
 const BASIC_BG_BY_GROUP: Record<string, string> = {
-  number: '/vocab/word-art/basic/number.png',
-  counter: '/vocab/word-art/basic/counter.png',
-  order: '/vocab/word-art/basic/order.png',
-  weekday: '/vocab/word-art/basic/weekday.png',
-  month: '/vocab/word-art/basic/month.png',
-  calendar: '/vocab/word-art/basic/calendar.png',
-  time: '/vocab/word-art/basic/time.png',
-  money: '/vocab/word-art/basic/money.png',
+  number: '/vocab/word-art/basic/number.webp',
+  counter: '/vocab/word-art/basic/counter.webp',
+  order: '/vocab/word-art/basic/order.webp',
+  weekday: '/vocab/word-art/basic/weekday.webp',
+  month: '/vocab/word-art/basic/month.webp',
+  calendar: '/vocab/word-art/basic/calendar.webp',
+  time: '/vocab/word-art/basic/time.webp',
+  money: '/vocab/word-art/basic/money.webp',
 };
 
 function basicWordArtBg(id: string): string | null {
@@ -230,7 +230,7 @@ function basicGroupOf(id: string): string | null {
 
 function signWordArtPngAsset(id: string): string | null {
   const match = /^sign:study:([^:]+)$/.exec(id);
-  return match ? `/vocab/sign-art/generated-png/${match[1]}.png` : null;
+  return match ? `/vocab/sign-art/generated/${match[1]}.webp` : null;
 }
 
 function panelOverlay(id: string): { left: number; top: number; width: number; maxFont: number; minFont: number } {

@@ -8,7 +8,7 @@ const require = createRequire(import.meta.url);
 const { chromium } = require('/Users/dennis/kana-master/kana-master/node_modules/playwright');
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const outDir = join(root, 'public', 'vocab', 'sign-art', 'generated-png');
+const outDir = join(root, '.asset-tmp', 'sign-art-generated-png');
 mkdirSync(outDir, { recursive: true });
 
 const W = 768;
