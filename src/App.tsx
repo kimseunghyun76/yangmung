@@ -19,6 +19,9 @@ import {
 } from './learn/progression';
 import { extractKanaChars } from './learn/kanaReading';
 import { missionDifficultyWindow } from './learn/missionMix';
+import { selectAnnouncementDeck } from './learn/announcementCards';
+import type { AnnouncementCategory } from './content/announcements';
+import { selectDialogueDeck, selectSongDeck } from './learn/entertainmentCards';
 import { loadSettings, MODE_PRESETS, saveSettings, sceneSentenceLevelForMode, type Settings } from './learn/settings';
 import { sessionGoalText } from './views/goal';
 import { resetMangaBackdrops } from './views/scene';
@@ -28,7 +31,7 @@ import type { PickMap } from './views/OrderCard';
 import type { KanaItem } from './content/types';
 import { MascotEmpty } from './views/mascot';
 
-type View = 'home' | 'practice' | 'map' | 'review' | 'gacha' | 'intro' | 'session' | 'done' | 'flash' | 'write' | 'placement' | 'vocab' | 'vocabTable' | 'verbs' | 'kana';
+type View = 'home' | 'practice' | 'map' | 'review' | 'gacha' | 'intro' | 'session' | 'done' | 'flash' | 'write' | 'placement' | 'vocab' | 'vocabTable' | 'verbs' | 'kana' | 'public' | 'ent';
 
 const Home = lazy(() => import('./views/Home').then((m) => ({ default: m.Home })));
 const Intro = lazy(() => import('./views/Intro').then((m) => ({ default: m.Intro })));
@@ -47,6 +50,8 @@ const VocabMenu = lazy(() => import('./views/VocabMenu').then((m) => ({ default:
 const VocabTable = lazy(() => import('./views/VocabTable').then((m) => ({ default: m.VocabTable })));
 const VerbForms = lazy(() => import('./views/VerbForms').then((m) => ({ default: m.VerbForms })));
 const KanaTable = lazy(() => import('./views/KanaTable').then((m) => ({ default: m.KanaTable })));
+const PublicExpressions = lazy(() => import('./views/PublicExpressions').then((m) => ({ default: m.PublicExpressions })));
+const EntertainmentLearning = lazy(() => import('./views/EntertainmentLearning').then((m) => ({ default: m.EntertainmentLearning })));
 
 function AppFallback() {
   return <main style={WRAP}><MascotEmpty who="yang" mood="loading" title="화면을 준비하고 있어요">잠시만 기다려 주세요.</MascotEmpty></main>;
@@ -396,6 +401,23 @@ export function App() {
     if (cards.length === 0) return;
     beginSession(nextSessionId(session), cards, true, true, true, stage);
   }
+  // 방송 메시지 — 전철·공항·버스 등 공공 방송 듣고 학습(독립 콘텐츠 덱).
+  function startAnnouncementSession(category?: AnnouncementCategory) {
+    const cards = selectAnnouncementDeck(category);
+    if (cards.length === 0) return;
+    beginSession(nextSessionId(session), cards, true, true, true);
+  }
+  // 명장면 대화 / 노래 가사 — 오리지널 샘플 덱.
+  function startDialogueSession(sceneId: string) {
+    const cards = selectDialogueDeck(sceneId);
+    if (cards.length === 0) return;
+    beginSession(nextSessionId(session), cards, true, true, true);
+  }
+  function startSongSession(songId: string) {
+    const cards = selectSongDeck(songId);
+    if (cards.length === 0) return;
+    beginSession(nextSessionId(session), cards, true, true, true);
+  }
   // 가나 쓰기(따라쓰기) — 히라/가타 섞어 무작위 10자(유추 방지). 세션/SRS와 분리.
   function startKanaWrite() {
     const pool = CONTENT.kana.filter((k) => (k.script === 'hiragana' || k.script === 'katakana') && k.char.length === 1);
@@ -645,6 +667,28 @@ export function App() {
           onPracticeWrite={startKanaWrite}
           onPracticeFlash={startFlashSession}
           onOpenBasics={() => setView('vocabTable')}
+          onOpenPublic={() => setView('public')}
+          onOpenEntertainment={() => setView('ent')}
+        />
+      );
+    }
+    if (view === 'public') {
+      return (
+        <PublicExpressions
+          nav={{ ...nav, current: 'practice' }}
+          onBack={() => setView('practice')}
+          onStartSigns={startSignSession}
+          onStartAnnouncements={startAnnouncementSession}
+        />
+      );
+    }
+    if (view === 'ent') {
+      return (
+        <EntertainmentLearning
+          nav={{ ...nav, current: 'practice' }}
+          onBack={() => setView('practice')}
+          onStartDialogue={startDialogueSession}
+          onStartSong={startSongSession}
         />
       );
     }
