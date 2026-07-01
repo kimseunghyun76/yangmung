@@ -1,8 +1,9 @@
 // 설정 — 글래스 하단 시트. 학습 모드·발음 보조·듣기 속도·자동 진행·백업·초기화.
-import { useRef, type CSSProperties } from 'react';
+import { useRef } from 'react';
 import { MODE_PRESETS, LISTEN_RATES, type ChoiceMode, type LearnMode, type ReadingAidMode, type Settings } from '../learn/settings';
 import { downloadBackup, parseBackup, applyBackup } from '../learn/backup';
 import { mirrorSnapshot } from '../learn/idbMirror';
+import { GLASS_BTN, SECTION_HEAD, glassSeg, glassToggle } from '../ui/styles';
 import { CORE_LEVEL_LABEL, nextLevel, type CoreLevel } from '../learn/progression';
 import { speak, setListenRate } from '../tts';
 import { Modal } from './Modal';
@@ -33,9 +34,10 @@ const CHOICE_OPTIONS: { v: ChoiceMode; label: string }[] = [
   { v: 'kanji', label: '한자' },
 ];
 
-const gbtn: CSSProperties = { borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', cursor: 'pointer', fontWeight: 600, fontSize: 14, padding: '12px 14px', textAlign: 'left' };
-const head: CSSProperties = { margin: '0 0 8px', fontWeight: 700, fontSize: 14, display: 'flex', alignItems: 'center', gap: 7 };
-const toggle = (on: boolean): CSSProperties => ({ ...gbtn, padding: '8px 16px', borderRadius: 999, background: on ? 'var(--accent)' : 'var(--glass-bg-strong)', color: on ? 'var(--accent-ink)' : 'var(--ink-soft)', border: `1px solid ${on ? 'var(--ink)' : 'var(--glass-border)'}` });
+// 공용 프리미티브(src/ui/styles.ts)의 로컬 별칭 — 이 파일의 기존 사용처 이름 유지
+const gbtn = GLASS_BTN;
+const head = SECTION_HEAD;
+const toggle = glassToggle;
 
 export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnown, onReset, onResetUnlocks, onFillDevCards, onPlacement, onStartPromotion, onClose }: Props) {
   const importInputRef = useRef<HTMLInputElement | null>(null);
@@ -53,11 +55,7 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
     alert(`${n}개 항목을 복원했어요. 앱을 새로 불러옵니다.`);
     window.location.reload();
   }
-  const seg = (active: boolean): CSSProperties => ({
-    ...gbtn, flex: 1, textAlign: 'center', fontSize: 13, padding: '9px 6px',
-    background: active ? 'var(--accent)' : 'var(--glass-bg-strong)', color: active ? 'var(--accent-ink)' : 'var(--ink-soft)',
-    border: `1px solid ${active ? 'var(--ink)' : 'var(--glass-border)'}`,
-  });
+  const seg = glassSeg;
   return (
     <Modal title="설정" onClose={onClose}>
       <p style={head}><Icon name="mode" size={16} /> 학습 모드</p>
