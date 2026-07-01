@@ -374,7 +374,6 @@ export const phrases: Phrase[] = [
   { id: 'p_shoujou_o_oshiete_kudasai', kana: 'しょうじょうをおしえてください', kanji: '症状を教えてください', displayKana: 'しょうじょうを、おしえてください。', korean: '증상을 알려 주세요', register: 'receptive' },
   { id: 'p_hokenshou_wa_arimasu_ka', kana: 'ほけんしょうはありますか', kanji: '保険証はありますか', displayKana: 'ほけんしょうは、ありますか？', korean: '보험증이 있나요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_sensei_ga_setsumei_shimasu', kana: 'せんせいがせつめいします', kanji: '先生が説明します', korean: '의사가 설명할 겁니다', register: 'receptive' },
-  { id: 'p_nani_o_nakushimashita_ka', kana: 'なにをなくしましたか', kanji: '何をなくしましたか', displayKana: 'なにを、なくしましたか？', korean: '무엇을 잃어버리셨나요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_itsu_nakushimashita_ka', kana: 'いつなくしましたか', kanji: 'いつなくしましたか', displayKana: 'いつ、なくしましたか？', korean: '언제 잃어버리셨나요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_renrakusaki_o_kaite_kudasai', kana: 'れんらくさきをかいてください', kanji: '連絡先を書いてください', displayKana: 'れんらくさきを、かいてください。', korean: '연락처를 적어 주세요', register: 'receptive' },
   { id: 'p_daijoubu_desu_ka', kana: 'だいじょうぶですか', kanji: '大丈夫ですか', displayKana: 'だいじょうぶですか？', korean: '괜찮으세요?', register: 'receptive', grammarRefs: ['g_masuka'] },

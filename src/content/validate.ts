@@ -5,6 +5,8 @@
 
 import type { ContentBundle } from './types';
 import { CONTENT } from './index';
+import { VOCAB_GROUPS } from './thematicVocab';
+import { signs } from './signs';
 
 export interface Issue {
   rule: string;
@@ -55,6 +57,16 @@ export function validateContent(d: ContentBundle): Issue[] {
     if (p.displayKana && !DISPLAY_RE.test(p.displayKana)) add('V2', 'fail', `Phrase.displayKana 문자집합 위반: ${p.id} ("${p.displayKana}")`);
     for (const r of p.grammarRefs ?? []) if (!grammarIds.has(r)) add('V3', 'fail', `Phrase ${p.id} grammarRefs 깨짐: ${r}`);
     for (const r of p.n5Refs ?? []) if (!n5Ids.has(r)) add('V3', 'fail', `Phrase ${p.id} n5Refs 깨짐: ${r}`);
+  }
+
+  // V20: 중복 콘텐츠 금지 — 같은 kana의 Phrase가 2개 이상이면 실패 (id만 다르고 내용이 겹치는 항목 차단)
+  const kanaCount = new Map<string, string[]>();
+  for (const p of d.phrases) {
+    const arr = kanaCount.get(p.kana);
+    if (arr) arr.push(p.id); else kanaCount.set(p.kana, [p.id]);
+  }
+  for (const [kana, ids] of kanaCount) {
+    if (ids.length > 1) add('V20', 'fail', `Phrase kana 중복: "${kana}" (${ids.join(', ')})`);
   }
 
   // N5
@@ -140,8 +152,39 @@ export function validateContent(d: ContentBundle): Issue[] {
   return issues;
 }
 
+// ── V20 보조: 번들 밖 컬렉션(어휘·간판)의 중복 검사 ─────────
+// 같은 그룹 안 kana 중복 = fail. 그룹 간 같은 kana+같은 한자 = warn(魚 물고기/생선처럼 의도된 재사용 가능).
+// 같은 kana라도 한자가 다르면 동음이의어(鼻/花)라 정상.
+export function validateAuxDuplicates(): Issue[] {
+  const issues: Issue[] = [];
+  const add = (sev: Issue['sev'], msg: string) => issues.push({ rule: 'V20', sev, msg });
+  for (const g of VOCAB_GROUPS) {
+    const seen = new Map<string, string>();
+    for (const it of g.items) {
+      const prev = seen.get(it.kana);
+      if (prev) add('fail', `어휘 그룹 ${g.id} 내 kana 중복: "${it.kana}" (${prev}, ${it.id})`);
+      seen.set(it.kana, it.id);
+    }
+  }
+  const crossSeen = new Map<string, string>();
+  for (const g of VOCAB_GROUPS) for (const it of g.items) {
+    const key = `${it.kana}|${it.ja}`;
+    const prev = crossSeen.get(key);
+    if (prev) add('warn', `어휘 그룹 간 중복(같은 kana+한자): "${it.ja}" (${prev} ↔ ${g.id}:${it.id})`);
+    crossSeen.set(key, `${g.id}:${it.id}`);
+  }
+  const signSeen = new Map<string, string>();
+  for (const s of signs) {
+    const key = `${s.kana}|${s.ja}`;
+    const prev = signSeen.get(key);
+    if (prev) add('fail', `간판 중복(같은 kana+한자): "${s.ja}" (${prev}, ${s.id})`);
+    signSeen.set(key, s.id);
+  }
+  return issues;
+}
+
 // ── CLI 게이트 ──────────────────────────────
-const issues = validateContent(CONTENT);
+const issues = [...validateContent(CONTENT), ...validateAuxDuplicates()];
 const fails = issues.filter((i) => i.sev === 'fail');
 const warns = issues.filter((i) => i.sev === 'warn');
 

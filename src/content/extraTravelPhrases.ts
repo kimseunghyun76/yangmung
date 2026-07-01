@@ -11,7 +11,6 @@ export const extraTravelPhrases: Phrase[] = [
   { id: 'p_kauntaa_de_onegai', kana: 'カウンターでおねがいします', kanji: 'カウンターでお願いします', korean: '카운터석으로 부탁합니다', register: 'productive' },
 
   // C32 편집샵 피팅
-  { id: 'p_nanika_osagashi_fashion', kana: 'なにかおさがしですか', kanji: '何かお探しですか', displayKana: 'なにか、おさがしですか？', korean: '찾으시는 게 있으세요?', register: 'receptive' },
   { id: 'p_shichakushitsu_kochira', kana: 'しちゃくしつはこちらです', kanji: '試着室はこちらです', korean: '피팅룸은 이쪽입니다', register: 'receptive' },
   { id: 'p_emu_saizu_arimasu_ka', kana: 'エムサイズはありますか', kanji: 'Mサイズはありますか', displayKana: 'エムサイズは、ありますか？', korean: 'M 사이즈 있나요?', register: 'productive' },
   { id: 'p_hoka_no_iro_arimasu_ka', kana: 'ほかのいろはありますか', kanji: '他の色はありますか', displayKana: 'ほかのいろは、ありますか？', korean: '다른 색 있나요?', register: 'productive' },
