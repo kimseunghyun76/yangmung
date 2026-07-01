@@ -13,6 +13,7 @@
     "assets:vocab": "node scripts/generate-vocab-word-assets.mjs && node scripts/optimize-vocab-assets.mjs --remove-png",
     "assets:signs": "tsx scripts/generate-sign-art-assets.ts && node scripts/optimize-vocab-assets.mjs --remove-png",
     "assets:vocab:optimize": "node scripts/optimize-vocab-assets.mjs --remove-png",
+    "assets:gacha:optimize": "node scripts/optimize-gacha-assets.mjs --remove-png",
     "audio": "tsx scripts/generate-audio.mjs",
     "audio:dry": "tsx scripts/generate-audio.mjs --dry",
     "typecheck": "tsc --noEmit",
