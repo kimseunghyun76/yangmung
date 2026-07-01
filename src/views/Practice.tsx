@@ -16,6 +16,8 @@ interface Props {
   onPracticeWrite: () => void;
   onPracticeFlash: () => void;
   onOpenBasics: () => void;
+  onOpenPublic: () => void;
+  onOpenEntertainment: () => void;
 }
 
 interface PracticeItem {
@@ -89,7 +91,7 @@ function itemDone(item: PracticeItem, progression: ProgressionState): boolean {
   return !!item.stage && isStageComplete(progression, item.level, item.stage.id);
 }
 
-export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartStage, onPracticeWrite, onPracticeFlash, onOpenBasics }: Props) {
+export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartStage, onPracticeWrite, onPracticeFlash, onOpenBasics, onOpenPublic, onOpenEntertainment }: Props) {
   const items: PracticeItem[] = [
     ...stageItems(onStartStage),
     {
@@ -121,6 +123,26 @@ export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartSta
       icon: 'fast',
       accent: '#b9382e',
       onClick: onPracticeFlash,
+    },
+    {
+      key: 'express:public',
+      label: '공공 표현',
+      sub: '간판·방송 메시지',
+      level: 'express',
+      art: 'signs',
+      icon: 'sign',
+      accent: LEVEL_ACCENT.express,
+      onClick: onOpenPublic,
+    },
+    {
+      key: 'advanced:entertainment',
+      label: '명장면·가사',
+      sub: '대화와 노래 표현',
+      level: 'advanced',
+      art: 'greetings',
+      icon: 'speak',
+      accent: LEVEL_ACCENT.advanced,
+      onClick: onOpenEntertainment,
     },
   ];
 
