@@ -711,16 +711,25 @@ export function selectStudyDeck(
   allCards: Card[],
   studyTest: (id: string) => boolean,
   quizTest: (id: string) => boolean,
-  opts: { studyLimit?: number; quizCount?: number } = {},
+  opts: { studyLimit?: number; quizCount?: number; progress?: ProgressMap } = {},
 ): Card[] {
   const study = allCards.filter((c) => c.kind === 'introduce' && studyTest(c.id));
-  const quiz = allCards.filter((c) => c.kind === 'quiz' && quizTest(c.id));
+  const quiz = allCards.filter((c): c is QuizCard => c.kind === 'quiz' && quizTest(c.id));
   // 단어 먼저, 예문(:study:ex…) 나중에 — 단어를 익힌 뒤 문장에서 확인.
   const isEx = (c: Card) => /:study:ex\d+$/.test(c.id);
   const words = shuffleKana(study.filter((c) => !isEx(c))).slice(0, opts.studyLimit ?? study.length);
   const examples = study.filter(isEx);
+  // 절대 룰: 학습 먼저 → 퀴즈. 배우지 않은 항목은 퀴즈로 내지 않는다.
+  // 허용 개념 = 이번 덱에서 학습하는 단어 + 이전 세션에서 이미 학습(introduce)한 단어.
+  // (studyLimit로 잘려 이번에 안 배우는 단어가 퀴즈로 새던 구멍을 막는다)
+  const progress = opts.progress ?? {};
+  const learned = new Set(words.map((c) => c.id.replace(':study:', ':')));
+  for (const c of study) {
+    if (progress[c.id]?.attempts) learned.add(c.id.replace(':study:', ':'));
+  }
+  const allowedQuiz = quiz.filter((c) => c.reviewTarget && learned.has(String(c.reviewTarget.id)));
   // 퀴즈는 변형(일본어→뜻 / 뜻→일본어 / 듣고 일본어 / 듣고 뜻 …)을 섞어 다양하게 낸다.
-  const quizPick = pickVariedQuiz(quiz, opts.quizCount ?? 3);
+  const quizPick = pickVariedQuiz(allowedQuiz, opts.quizCount ?? 3);
   return [...words, ...examples, ...quizPick];
 }
 
