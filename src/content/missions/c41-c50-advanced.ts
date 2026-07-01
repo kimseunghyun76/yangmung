@@ -440,7 +440,7 @@ export const c47: Mission = {
   scenario: '쇼핑몰 안내소',
   place: '복합쇼핑몰',
   sequence: ['층 안내 확인', '목표 매장 위치', '화장실·편의시설 확인'],
-  speakPhraseIds: ['p_nanika_osagashi_fashion', 'p_toire_doko'],
+  speakPhraseIds: ['p_nanika_osagashi_desu_ka', 'p_toire_doko'],
   canDo: '복합쇼핑몰 안내소에서 원하는 매장 위치와 편의시설을 물어볼 수 있다',
   unlockAfter: ['C40'],
   steps: [

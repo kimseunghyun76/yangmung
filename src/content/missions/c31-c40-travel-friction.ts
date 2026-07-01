@@ -82,7 +82,7 @@ export const c32: Mission = {
     {
       situationKo: '직원이 찾는 상품이 있는지 묻는다',
       speaker: '점원',
-      promptPhraseId: 'p_nanika_osagashi_fashion',
+      promptPhraseId: 'p_nanika_osagashi_desu_ka',
       choices: [
         { text: '입어 봐도 돼요?', phraseId: 'p_shichaku', correct: true, feedback: '「試着(しちゃく)してもいいですか」— 허락 없이 입어보면 실례예요. 피팅룸 이용 수는 보통 3벌 이내로 제한돼요' },
         { text: 'M 사이즈 있나요?', phraseId: 'p_emu_saizu_arimasu_ka', correct: true, feedback: '「Mサイズありますか」— 일본 S≒한국 M, 일본 M≒한국 L인 경우가 많아요. 사이즈 표기를 반드시 확인하세요' },

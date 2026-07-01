@@ -125,7 +125,6 @@ export const signs: Sign[] = [
   { id: 'kintsuen', ja: '喫煙所', kana: 'きつえんじょ', korean: '흡연 구역', category: '표지' },
   { id: 'floor_sign', ja: '〜階', kana: 'かい', korean: '~층', category: '표지' },
   { id: 'chikashitsu', ja: '地下', kana: 'ちか', korean: '지하', category: '표지' },
-  { id: 'exit_floor', ja: '出口', kana: 'でぐち', korean: '출구(층)', category: '표지' },
 
   // ── 교통 추가 ──
   { id: 'terminal', ja: '終点', kana: 'しゅうてん', korean: '종착역', category: '교통' },
@@ -166,7 +165,7 @@ const hasId = (sign: Sign, ids: string[]) => ids.includes(sign.id);
 
 export function signSceneFor(sign: Sign): SignScene {
   if (hasId(sign, ['men_toilet', 'women_toilet', 'danshi', 'josei', 'otearai'])) return 'restroom';
-  if (hasId(sign, ['deguchi', 'iriguchi', 'osu', 'hiku', 'eigyouchu', 'junbichu', 'koshouchu', 'uketsuke', 'shokuji', 'kaigi', 'locker_sign', 'kintsuen', 'floor_sign', 'chikashitsu', 'exit_floor'])) return 'mallEntrance';
+  if (hasId(sign, ['deguchi', 'iriguchi', 'osu', 'hiku', 'eigyouchu', 'junbichu', 'koshouchu', 'uketsuke', 'shokuji', 'kaigi', 'locker_sign', 'kintsuen', 'floor_sign', 'chikashitsu'])) return 'mallEntrance';
   if (hasId(sign, ['kaisatsu', 'hijouguchi', 'annai', 'kinen', 'kakueki', 'kyuukou', 'tokkyuu', 'noriba', 'norikae_sign', 'kitaguchi', 'minamiguchi', 'higashiguchi', 'nishiguchi', 'terminal', 'jikoku', 'unchin', 'jiyuuseki', 'shitei_seki', 'green_sha', 'kinkyu_teishi', 'mannaka', 'kami', 'shita'])) return 'stationWayfinding';
   if (hasId(sign, ['tachiiri', 'chuui', 'kiken', 'ashimoto', 'koujichu', 'satsuei_kinshi', 'ichiji_teishi', 'tachiiri_kinshi2', 'nohumi', 'nosmoke_area', 'setsubi', 'kiken_takaatsu', 'hizashi', 'kinshi_shinnyu'])) return 'construction';
   if (hasId(sign, ['chien', 'untenkeshi', 'toiu_koto', 'go_annai'])) return 'transitBoard';
