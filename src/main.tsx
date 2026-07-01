@@ -1,3 +1,4 @@
+import './styles/app.css'; // 디자인 토큰 + 앱 전역 스타일 (index.html에서 추출 — 해시 캐싱)
 import { StrictMode, lazy, Suspense } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { App } from './App';
