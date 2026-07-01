@@ -127,11 +127,11 @@ export function gachaItemAssetSlug(title: string, rarity: Rarity, motif: ItemMot
 }
 
 export function gachaItemAssetPath(title: string, rarity: Rarity, motif: ItemMotif): string {
-  return `/gacha/items/generated-v2/${gachaItemAssetSlug(title, rarity, motif)}.png`;
+  return `/gacha/items/generated-v2/${gachaItemAssetSlug(title, rarity, motif)}.webp`;
 }
 
 export function gachaLuxuryItemAssetPath(title: string, rarity: Rarity, motif: ItemMotif): string {
-  return `/gacha/items/luxury/${gachaItemAssetSlug(title, rarity, motif)}.png`;
+  return `/gacha/items/luxury/${gachaItemAssetSlug(title, rarity, motif)}.webp`;
 }
 
 function withLegacyImage(item: GachaItemArt): GachaItemArt {
@@ -151,25 +151,25 @@ function withLuxuryImage(item: GachaItemArt, rarity: Rarity): GachaItemArt {
 
 const BY_PLACE: Record<string, Partial<Record<Rarity, GachaItemArt>>> = {
   편의점: {
-    basic: { title: '삼각김밥', sub: '입문', motif: 'food', image: '/gacha/items/generated/onigiri.png' },
-    bronze: { title: '핫스낵', sub: '계산대', motif: 'food', image: '/gacha/items/generated/hot-snack.png' },
-    silver: { title: '도시락 세트', sub: '데우기', motif: 'food', image: '/gacha/items/generated/bento-box.png' },
-    gold: { title: '프리미엄 벤토', sub: '완벽 주문', motif: 'food', image: '/gacha/items/generated/premium-bento.png' },
-    diamond: { title: '심야 콤보', sub: '로컬 고수', motif: 'food', image: '/gacha/items/generated/late-night-combo.png' },
+    basic: { title: '삼각김밥', sub: '입문', motif: 'food', image: '/gacha/items/generated/onigiri.webp' },
+    bronze: { title: '핫스낵', sub: '계산대', motif: 'food', image: '/gacha/items/generated/hot-snack.webp' },
+    silver: { title: '도시락 세트', sub: '데우기', motif: 'food', image: '/gacha/items/generated/bento-box.webp' },
+    gold: { title: '프리미엄 벤토', sub: '완벽 주문', motif: 'food', image: '/gacha/items/generated/premium-bento.webp' },
+    diamond: { title: '심야 콤보', sub: '로컬 고수', motif: 'food', image: '/gacha/items/generated/late-night-combo.webp' },
   },
   식당: {
-    basic: { title: '물컵', sub: '착석', motif: 'drink', image: '/gacha/items/generated/water-glass.png' },
-    bronze: { title: '정식 메뉴', sub: '주문', motif: 'food', image: '/gacha/items/generated/teishoku-menu.png' },
-    silver: { title: '추천 세트', sub: '응대', motif: 'food', image: '/gacha/items/generated/recommended-set.png' },
-    gold: { title: '셰프 플레이트', sub: '자연 주문', motif: 'food', image: '/gacha/items/generated/chef-plate.png' },
-    diamond: { title: '오마카세 코스', sub: '완전 적응', motif: 'food', image: '/gacha/items/generated/omakase-course.png' },
+    basic: { title: '물컵', sub: '착석', motif: 'drink', image: '/gacha/items/generated/water-glass.webp' },
+    bronze: { title: '정식 메뉴', sub: '주문', motif: 'food', image: '/gacha/items/generated/teishoku-menu.webp' },
+    silver: { title: '추천 세트', sub: '응대', motif: 'food', image: '/gacha/items/generated/recommended-set.webp' },
+    gold: { title: '셰프 플레이트', sub: '자연 주문', motif: 'food', image: '/gacha/items/generated/chef-plate.webp' },
+    diamond: { title: '오마카세 코스', sub: '완전 적응', motif: 'food', image: '/gacha/items/generated/omakase-course.webp' },
   },
   전철: {
-    basic: { title: '승차권', sub: '기본', motif: 'ticket', image: '/gacha/items/generated/train-ticket.png' },
-    bronze: { title: '교통카드', sub: '개찰', motif: 'ticket', image: '/gacha/items/generated/ic-card.png' },
-    silver: { title: '급행 패스', sub: '환승', motif: 'ticket', image: '/gacha/items/generated/express-pass.png' },
-    gold: { title: '지정석권', sub: '정확 이동', motif: 'ticket', image: '/gacha/items/generated/reserved-seat-ticket.png' },
-    diamond: { title: '여행 레일패스', sub: '마스터', motif: 'ticket', image: '/gacha/items/generated/rail-pass.png' },
+    basic: { title: '승차권', sub: '기본', motif: 'ticket', image: '/gacha/items/generated/train-ticket.webp' },
+    bronze: { title: '교통카드', sub: '개찰', motif: 'ticket', image: '/gacha/items/generated/ic-card.webp' },
+    silver: { title: '급행 패스', sub: '환승', motif: 'ticket', image: '/gacha/items/generated/express-pass.webp' },
+    gold: { title: '지정석권', sub: '정확 이동', motif: 'ticket', image: '/gacha/items/generated/reserved-seat-ticket.webp' },
+    diamond: { title: '여행 레일패스', sub: '마스터', motif: 'ticket', image: '/gacha/items/generated/rail-pass.webp' },
   },
   호텔: {
     basic: { title: '룸키', sub: '체크인', motif: 'stay' },
