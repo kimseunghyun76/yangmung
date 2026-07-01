@@ -68,6 +68,54 @@ export const CARD: CSSProperties = {
 };
 
 
+// ── Liquid Glass 프리미티브 — 설정·모달·시트 계열 공용 (SettingsModal에서 승격) ──
+// 개별 뷰에서 로컬로 복제하지 말 것: 여기서 가져다 쓰거나 필요한 변형을 여기에 추가.
+
+// 글래스 버튼 — 반투명 배경 + 얇은 글래스 테두리
+export const GLASS_BTN: CSSProperties = {
+  borderRadius: RADIUS.md,
+  border: '1px solid var(--glass-border)',
+  background: 'var(--glass-bg-strong)',
+  color: COLORS.ink,
+  cursor: 'pointer',
+  fontWeight: 600,
+  fontSize: 14,
+  padding: '12px 14px',
+  textAlign: 'left',
+};
+
+// 섹션 헤더 — 아이콘 + 소제목 한 줄
+export const SECTION_HEAD: CSSProperties = {
+  margin: '0 0 8px',
+  fontWeight: 700,
+  fontSize: 14,
+  display: 'flex',
+  alignItems: 'center',
+  gap: 7,
+};
+
+// 온/오프 토글(필) — 켜짐 = 朱 솔리드
+export const glassToggle = (on: boolean): CSSProperties => ({
+  ...GLASS_BTN,
+  padding: '8px 16px',
+  borderRadius: RADIUS.pill,
+  background: on ? 'var(--accent)' : 'var(--glass-bg-strong)',
+  color: on ? 'var(--accent-ink)' : COLORS.inkSoft,
+  border: `1px solid ${on ? 'var(--ink)' : 'var(--glass-border)'}`,
+});
+
+// 세그먼트 선택 버튼 — 활성 = 朱 솔리드 (여러 개를 flex로 나란히)
+export const glassSeg = (active: boolean): CSSProperties => ({
+  ...GLASS_BTN,
+  flex: 1,
+  textAlign: 'center',
+  fontSize: 13,
+  padding: '9px 6px',
+  background: active ? 'var(--accent)' : 'var(--glass-bg-strong)',
+  color: active ? 'var(--accent-ink)' : COLORS.inkSoft,
+  border: `1px solid ${active ? 'var(--ink)' : 'var(--glass-border)'}`,
+});
+
 // iOS Safe Area 대응 (노치·홈 인디케이터). HIG: 콘텐츠가 안전 영역 안에 들어오게.
 export const WRAP: CSSProperties = {
   maxWidth: 540,
