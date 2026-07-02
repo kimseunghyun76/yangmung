@@ -6,6 +6,7 @@ import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
 import { NavBar, type NavBarProps } from './NavBar';
 import { GlassPanel, PrimaryAction } from './shell';
+import { WordArt } from './WordArt';
 
 interface Props {
   nav: NavBarProps;
@@ -41,6 +42,9 @@ export function PublicExpressions({ nav, onBack, onStartSigns, onStartAnnounceme
       {/* 간판·메뉴 */}
       <GlassPanel>
         <p style={{ margin: 0, ...label }}>간판 · 메뉴 읽기</p>
+        <div style={{ marginTop: 12, display: 'flex', justifyContent: 'center' }}>
+          <WordArt id="sign:study:deguchi" korean="출구" kana="でぐち" ja="出口" size={210} />
+        </div>
         <button className="ym-press" onClick={() => onStartSigns()} style={{
           width: '100%', marginTop: 10, display: 'flex', alignItems: 'center', gap: 13, textAlign: 'left',
           padding: '14px 14px', borderRadius: 14, cursor: 'pointer', border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',

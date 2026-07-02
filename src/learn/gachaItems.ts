@@ -131,7 +131,8 @@ export function gachaItemAssetPath(title: string, rarity: Rarity, motif: ItemMot
 }
 
 export function gachaLuxuryItemAssetPath(title: string, rarity: Rarity, motif: ItemMotif): string {
-  return `/gacha/items/luxury/${gachaItemAssetSlug(title, rarity, motif)}.webp`;
+  void title;
+  return `/gacha/items/luxury/${rarity}-${motif}.webp`;
 }
 
 function withLegacyImage(item: GachaItemArt): GachaItemArt {
