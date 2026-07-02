@@ -131,7 +131,8 @@ export interface GrammarPoint {
 export interface N5Entry {
   id: string;
   type: 'vocab' | 'grammar' | 'kanji';
-  value: string;
+  value: string;      // 대표 표기 (한자가 일반적이면 한자, 아니면 가나)
+  reading?: string;   // 가나 읽기 — 커버리지 매칭용 (value가 한자일 때)
   source: 'unofficial';
 }
 
