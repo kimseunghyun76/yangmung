@@ -1,7 +1,7 @@
 // 상태·라우팅 허브 — 화면 렌더링은 src/views/*, 세션 카드 진행은 src/app/useSessionFlow,
 // URL(해시) 라우팅은 src/app/routing 에 위임. 여기는 "어떤 세션을 어떻게 구성할지"만.
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { buildCards, type Card, type DiscoverCard } from './learn/cards';
+import { buildCards, type Card, type DiscoverCard, type IntroduceCard } from './learn/cards';
 import { CONTENT } from './content';
 import {
   classifyCard, clearProgress, isKanaFamiliar, loadDiscovered, loadProgress, loadSeenKana, loadSession,
@@ -21,7 +21,7 @@ import {
 import { extractKanaChars } from './learn/kanaReading';
 import { missionDifficultyWindow } from './learn/missionMix';
 import { selectAnnouncementDeck } from './learn/announcementCards';
-import type { AnnouncementCategory } from './content/announcements';
+import { ANNOUNCEMENT_CATEGORIES, type AnnouncementCategory } from './content/announcements';
 import { selectDialogueDeck, selectSongDeck } from './learn/entertainmentCards';
 import { buildPlacementCards } from './learn/placementCards';
 import { loadSettings, MODE_PRESETS, saveSettings, sceneSentenceLevelForMode, type Settings } from './learn/settings';
@@ -52,6 +52,7 @@ const VerbForms = lazy(() => import('./views/VerbForms').then((m) => ({ default:
 const KanaTable = lazy(() => import('./views/KanaTable').then((m) => ({ default: m.KanaTable })));
 const PublicExpressions = lazy(() => import('./views/PublicExpressions').then((m) => ({ default: m.PublicExpressions })));
 const EntertainmentLearning = lazy(() => import('./views/EntertainmentLearning').then((m) => ({ default: m.EntertainmentLearning })));
+const SequencePreview = lazy(() => import('./views/SequencePreview').then((m) => ({ default: m.SequencePreview })));
 
 function AppFallback() {
   return <main style={WRAP}><MascotEmpty who="yang" mood="loading" title="화면을 준비하고 있어요">잠시만 기다려 주세요.</MascotEmpty></main>;
@@ -67,6 +68,12 @@ export function App() {
   const [flashCards, setFlashCards] = useState<Card[]>([]); // 속도전 플래시(세션 SRS와 분리)
   const [writeItems, setWriteItems] = useState<KanaItem[]>([]); // 가나 쓰기(따라쓰기)
   const [placementCards, setPlacementCards] = useState<Card[]>([]); // 수준 진단(배치) 문항
+  // 명장면 대화·노래 가사·간판·방송처럼 사용자가 항목을 직접 고른 학습 — Intro 대신
+  // 배울 문장 전체를 한 번 듣고 시작. begin은 "학습 시작" 클릭 시 실행할 세션 진입 액션.
+  const [preview, setPreview] = useState<{
+    title: string; subtitle?: string; lines: { ja: string; kana: string; korean: string }[];
+    returnView: 'ent' | 'public'; begin: () => void;
+  } | null>(null);
   const [kanaScript, setKanaScript] = useState<'hiragana' | 'katakana'>('hiragana'); // 가나 표 학습 스크립트
   const [progression, setProgression] = useState(() => loadProgression()); // 레벨별 순차 진도
   const coreLevel = coreLevelOf(settings.mode);                            // 현재 진도 레벨(입문~고급)
@@ -155,6 +162,7 @@ export function App() {
   // 최초 접속/초기화 → 통합 수준 진단을 강제로 시작(한 번만 권유). 건너뛰어도 설정에서 재응시 가능.
   useEffect(() => {
     if (typeof localStorage === 'undefined') return;
+    if (view !== 'home') return;
     const done = localStorage.getItem('yangmung:placement:v1');
     const prompted = localStorage.getItem('yangmung:placement:prompted');
     if (!done && !prompted) {
@@ -170,9 +178,10 @@ export function App() {
       (view === 'flash' && flashCards.length === 0)
       || (view === 'write' && writeItems.length === 0)
       || (view === 'placement' && placementCards.length === 0)
+      || (view === 'preview' && !preview)
       || ((view === 'intro' || view === 'session' || view === 'done') && sessionCards.length === 0);
     if (empty) navigate('home', { replace: true });
-  }, [view, flashCards.length, writeItems.length, placementCards.length, sessionCards.length, navigate]);
+  }, [view, flashCards.length, writeItems.length, placementCards.length, preview, sessionCards.length, navigate]);
 
   // 주간/야간 테마를 <html data-theme>에 반영
   useEffect(() => { document.documentElement.dataset.theme = settings.theme; }, [settings.theme]);
@@ -233,6 +242,20 @@ export function App() {
   // 가나 표 학습 — 전체 표를 한 화면에 보고, 글자를 누르면 읽기·듣기·쓰기·말하기 상세
   function openKanaTable(script: 'hiragana' | 'katakana') { setKanaScript(script); navigate('kana'); }
 
+  // 사용자가 항목을 직접 골라 들어오는 학습(명장면 대화·노래 가사·간판·방송) 진입 —
+  // Intro 화면 대신 전체 문장을 한 번 듣는 미리보기를 거친 뒤 곧장 세션으로.
+  function beginWithPreview(title: string, subtitle: string | undefined, cards: Card[], returnView: 'ent' | 'public', opts: { practice?: boolean } = {}) {
+    const id = nextSessionId(session);
+    const lines = cards
+      .filter((c): c is IntroduceCard => c.kind === 'introduce')
+      .map((c) => ({ ja: c.ja, kana: c.kana, korean: c.korean }));
+    setPreview({
+      title, subtitle, lines, returnView,
+      begin: () => flow.beginSession(id, cards, { intro: false, replace: true, ...opts }),
+    });
+    navigate('preview');
+  }
+
   // ── 레벨 진도 ───────────────────────────────────────
   // 단계 진입 — 단계별 빠른 연습으로 라우팅(통과 시 해당 단계 완료 기록).
   function startStage(stage: ProgStage) {
@@ -285,10 +308,14 @@ export function App() {
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
   }
   // 거리 읽기 — 간판·메뉴·안내·교통 표기 읽기 연습
+  // stage 없이 호출(공공 표현 메뉴에서 직접 선택)되면 Intro 대신 전체 미리듣기로.
+  // stage가 있으면(레벨 진도 단계 진입) 기존처럼 Intro를 거친다.
   function startSignSession(stage?: string | null) {
     // 학습형 — 간판을 모두 설명·듣기·읽기한 뒤, 다양한 변형 퀴즈(표기→뜻·듣고 일본어 등).
     const cards = selectStudyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:') && !id.startsWith('sign:study:'), { studyLimit: 24, quizCount: 6, progress });
     if (cards.length === 0) return;
+    // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 stage로 흘러들 수 있어(방어)
+    if (typeof stage !== 'string') { beginWithPreview('간판·메뉴 읽기', undefined, cards, 'public', { practice: true }); return; }
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
   }
   // 받아쓰기 전용 — 듣고 가나 타일로 쓰기
@@ -338,18 +365,21 @@ export function App() {
   function startAnnouncementSession(category?: AnnouncementCategory) {
     const cards = selectAnnouncementDeck(category);
     if (cards.length === 0) return;
-    flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true });
+    const title = category
+      ? `방송 · ${ANNOUNCEMENT_CATEGORIES.find((c) => c.id === category)?.label ?? '방송'}`
+      : '방송 메시지 모아 듣기';
+    beginWithPreview(title, undefined, cards, 'public', { practice: true });
   }
-  // 명장면 대화 / 노래 가사 — 오리지널 샘플 덱.
+  // 명장면 대화 / 노래 가사 — 오리지널 샘플 덱. cards[0].tag에 이미 "명장면 · 제목"이 담겨 있어 그대로 제목으로.
   function startDialogueSession(sceneId: string) {
     const cards = selectDialogueDeck(sceneId);
     if (cards.length === 0) return;
-    flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true });
+    beginWithPreview(cards[0].tag, undefined, cards, 'ent', { practice: true });
   }
   function startSongSession(songId: string) {
     const cards = selectSongDeck(songId);
     if (cards.length === 0) return;
-    flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true });
+    beginWithPreview(cards[0].tag, undefined, cards, 'ent', { practice: true });
   }
   // 가나 쓰기(따라쓰기) — 히라/가타 섞어 무작위 10자(유추 방지). 세션/SRS와 분리.
   function startKanaWrite() {
@@ -509,6 +539,18 @@ export function App() {
         onKanaWritten={(item, score) => {
           if (score >= 55 && item.char) setSeenKana((prev) => { const nx = markKanaSeen(prev, [item.char]); saveSeenKana(nx); return nx; });
         }} />;
+    }
+    if (view === 'preview') {
+      if (!preview) return <main style={WRAP}><MascotEmpty who="yang" mood="loading" title="화면을 준비하고 있어요">잠시만 기다려 주세요.</MascotEmpty></main>;
+      return (
+        <SequencePreview
+          title={preview.title}
+          subtitle={preview.subtitle}
+          lines={preview.lines}
+          onStart={preview.begin}
+          onBack={() => navigate(preview.returnView)}
+        />
+      );
     }
     if (view === 'intro') {
       const missions = missionsFromCards(sessionCards, progress, sessionId);

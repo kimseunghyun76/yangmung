@@ -21,6 +21,8 @@ export interface BeginSessionOpts {
   practice?: boolean;           // 빠른 연습(미션 X) 표시 구분 (기본 false)
   stage?: string | null;        // 통과 시 완료 처리할 진도 단계 키
   promotion?: CoreLevel | null; // 승급 시험이면 대상 레벨
+  /** 세션 진입 시 히스토리를 push 대신 replace — 직전 화면(미리보기 등)이 뒤로가기에 남지 않게. */
+  replace?: boolean;
 }
 
 export interface SessionFlowDeps {
@@ -133,7 +135,7 @@ export function useSessionFlow(deps: SessionFlowDeps) {
     setSessionCards(materialized);
     setI(0); setPicked(null); setScore(0); setQuizSeen(0); setSessionLog([]); setPicks({});
     setGachaEligible(opts.gacha ?? true);
-    navigate((opts.intro ?? true) ? 'intro' : 'session');
+    navigate((opts.intro ?? true) ? 'intro' : 'session', { replace: opts.replace });
   }
 
   function retryWeak() {
