@@ -1,0 +1,1143 @@
+{
+  "style": "word-art high-quality warm 3D mascot scene, no cropped subject, generated raster image, optimized to webp after approval",
+  "bodyCount": 18,
+  "signCount": 114,
+  "body": [
+    {
+      "id": "b_atama",
+      "kana": "あたま",
+      "korean": "머리",
+      "path": "public/vocab/word-art/body/b_atama.webp"
+    },
+    {
+      "id": "b_me",
+      "kana": "め",
+      "korean": "눈",
+      "path": "public/vocab/word-art/body/b_me.webp"
+    },
+    {
+      "id": "b_hana",
+      "kana": "はな",
+      "korean": "코",
+      "path": "public/vocab/word-art/body/b_hana.webp"
+    },
+    {
+      "id": "b_mimi",
+      "kana": "みみ",
+      "korean": "귀",
+      "path": "public/vocab/word-art/body/b_mimi.webp"
+    },
+    {
+      "id": "b_kuchi",
+      "kana": "くち",
+      "korean": "입",
+      "path": "public/vocab/word-art/body/b_kuchi.webp"
+    },
+    {
+      "id": "b_ha",
+      "kana": "は",
+      "korean": "치아",
+      "path": "public/vocab/word-art/body/b_ha.webp"
+    },
+    {
+      "id": "b_nodo",
+      "kana": "のど",
+      "korean": "목(구멍)",
+      "path": "public/vocab/word-art/body/b_nodo.webp"
+    },
+    {
+      "id": "b_kata",
+      "kana": "かた",
+      "korean": "어깨",
+      "path": "public/vocab/word-art/body/b_kata.webp"
+    },
+    {
+      "id": "b_mune",
+      "kana": "むね",
+      "korean": "가슴",
+      "path": "public/vocab/word-art/body/b_mune.webp"
+    },
+    {
+      "id": "b_onaka",
+      "kana": "おなか",
+      "korean": "배",
+      "path": "public/vocab/word-art/body/b_onaka.webp"
+    },
+    {
+      "id": "b_senaka",
+      "kana": "せなか",
+      "korean": "등",
+      "path": "public/vocab/word-art/body/b_senaka.webp"
+    },
+    {
+      "id": "b_te",
+      "kana": "て",
+      "korean": "손",
+      "path": "public/vocab/word-art/body/b_te.webp"
+    },
+    {
+      "id": "b_ude",
+      "kana": "うで",
+      "korean": "팔",
+      "path": "public/vocab/word-art/body/b_ude.webp"
+    },
+    {
+      "id": "b_yubi",
+      "kana": "ゆび",
+      "korean": "손가락",
+      "path": "public/vocab/word-art/body/b_yubi.webp"
+    },
+    {
+      "id": "b_ashi",
+      "kana": "あし",
+      "korean": "발 / 다리",
+      "path": "public/vocab/word-art/body/b_ashi.webp"
+    },
+    {
+      "id": "b_hiza",
+      "kana": "ひざ",
+      "korean": "무릎",
+      "path": "public/vocab/word-art/body/b_hiza.webp"
+    },
+    {
+      "id": "b_karada",
+      "kana": "からだ",
+      "korean": "몸",
+      "path": "public/vocab/word-art/body/b_karada.webp"
+    },
+    {
+      "id": "b_koshi",
+      "kana": "こし",
+      "korean": "허리",
+      "path": "public/vocab/word-art/body/b_koshi.webp"
+    }
+  ],
+  "sign": [
+    {
+      "id": "deguchi",
+      "ja": "出口",
+      "kana": "でぐち",
+      "korean": "출구",
+      "category": "표지",
+      "scene": "mallEntrance",
+      "path": "public/vocab/sign-art/generated/deguchi.webp"
+    },
+    {
+      "id": "iriguchi",
+      "ja": "入口",
+      "kana": "いりぐち",
+      "korean": "입구",
+      "category": "표지",
+      "scene": "mallEntrance",
+      "path": "public/vocab/sign-art/generated/iriguchi.webp"
+    },
+    {
+      "id": "osu",
+      "ja": "押",
+      "kana": "おす",
+      "korean": "미세요",
+      "category": "표지",
+      "scene": "mallEntrance",
+      "path": "public/vocab/sign-art/generated/osu.webp"
+    },
+    {
+      "id": "hiku",
+      "ja": "引",
+      "kana": "ひく",
+      "korean": "당기세요",
+      "category": "표지",
+      "scene": "mallEntrance",
+      "path": "public/vocab/sign-art/generated/hiku.webp"
+    },
+    {
+      "id": "otearai",
+      "ja": "お手洗い",
+      "kana": "おてあらい",
+      "korean": "화장실",
+      "category": "표지",
+      "scene": "restroom",
+      "path": "public/vocab/sign-art/generated/otearai.webp"
+    },
+    {
+      "id": "kaisatsu",
+      "ja": "改札口",
+      "kana": "かいさつぐち",
+      "korean": "개찰구",
+      "category": "표지",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/kaisatsu.webp"
+    },
+    {
+      "id": "hijouguchi",
+      "ja": "非常口",
+      "kana": "ひじょうぐち",
+      "korean": "비상구",
+      "category": "표지",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/hijouguchi.webp"
+    },
+    {
+      "id": "uketsuke",
+      "ja": "受付",
+      "kana": "うけつけ",
+      "korean": "접수처",
+      "category": "표지",
+      "scene": "mallEntrance",
+      "path": "public/vocab/sign-art/generated/uketsuke.webp"
+    },
+    {
+      "id": "annai",
+      "ja": "案内",
+      "kana": "あんない",
+      "korean": "안내",
+      "category": "표지",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/annai.webp"
+    },
+    {
+      "id": "eigyouchu",
+      "ja": "営業中",
+      "kana": "えいぎょうちゅう",
+      "korean": "영업 중",
+      "category": "표지",
+      "scene": "mallEntrance",
+      "path": "public/vocab/sign-art/generated/eigyouchu.webp"
+    },
+    {
+      "id": "junbichu",
+      "ja": "準備中",
+      "kana": "じゅんびちゅう",
+      "korean": "준비 중",
+      "category": "표지",
+      "scene": "mallEntrance",
+      "path": "public/vocab/sign-art/generated/junbichu.webp"
+    },
+    {
+      "id": "kinen",
+      "ja": "禁煙",
+      "kana": "きんえん",
+      "korean": "금연",
+      "category": "표지",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/kinen.webp"
+    },
+    {
+      "id": "tachiiri",
+      "ja": "立入禁止",
+      "kana": "たちいりきんし",
+      "korean": "출입 금지",
+      "category": "표지",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/tachiiri.webp"
+    },
+    {
+      "id": "koshouchu",
+      "ja": "故障中",
+      "kana": "こしょうちゅう",
+      "korean": "고장(사용 불가)",
+      "category": "표지",
+      "scene": "mallEntrance",
+      "path": "public/vocab/sign-art/generated/koshouchu.webp"
+    },
+    {
+      "id": "teishoku",
+      "ja": "定食",
+      "kana": "ていしょく",
+      "korean": "정식(세트)",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/teishoku.webp"
+    },
+    {
+      "id": "oomori_menu",
+      "ja": "大盛り",
+      "kana": "おおもり",
+      "korean": "곱빼기",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/oomori_menu.webp"
+    },
+    {
+      "id": "osusume_menu",
+      "ja": "おすすめ",
+      "kana": "おすすめ",
+      "korean": "추천",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/osusume_menu.webp"
+    },
+    {
+      "id": "honjitsu",
+      "ja": "本日",
+      "kana": "ほんじつ",
+      "korean": "오늘",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/honjitsu.webp"
+    },
+    {
+      "id": "lunch",
+      "ja": "ランチ",
+      "kana": "ランチ",
+      "korean": "런치(점심)",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/lunch.webp"
+    },
+    {
+      "id": "nomihoudai",
+      "ja": "飲み放題",
+      "kana": "のみほうだい",
+      "korean": "음료 무한리필",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/nomihoudai.webp"
+    },
+    {
+      "id": "tabehoudai",
+      "ja": "食べ放題",
+      "kana": "たべほうだい",
+      "korean": "음식 무한리필",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/tabehoudai.webp"
+    },
+    {
+      "id": "zeikomi",
+      "ja": "税込",
+      "kana": "ぜいこみ",
+      "korean": "세금 포함",
+      "category": "결제",
+      "scene": "receipt",
+      "path": "public/vocab/sign-art/generated/zeikomi.webp"
+    },
+    {
+      "id": "mochikaeri",
+      "ja": "お持ち帰り",
+      "kana": "おもちかえり",
+      "korean": "포장(테이크아웃)",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/mochikaeri.webp"
+    },
+    {
+      "id": "urikire",
+      "ja": "売り切れ",
+      "kana": "うりきれ",
+      "korean": "품절",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/urikire.webp"
+    },
+    {
+      "id": "gentei_menu",
+      "ja": "数量限定",
+      "kana": "すうりょうげんてい",
+      "korean": "수량 한정",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/gentei_menu.webp"
+    },
+    {
+      "id": "hangaku",
+      "ja": "半額",
+      "kana": "はんがく",
+      "korean": "반값",
+      "category": "안내",
+      "scene": "storePromo",
+      "path": "public/vocab/sign-art/generated/hangaku.webp"
+    },
+    {
+      "id": "waribiki",
+      "ja": "割引",
+      "kana": "わりびき",
+      "korean": "할인",
+      "category": "안내",
+      "scene": "storePromo",
+      "path": "public/vocab/sign-art/generated/waribiki.webp"
+    },
+    {
+      "id": "muryou",
+      "ja": "無料",
+      "kana": "むりょう",
+      "korean": "무료",
+      "category": "안내",
+      "scene": "storePromo",
+      "path": "public/vocab/sign-art/generated/muryou.webp"
+    },
+    {
+      "id": "sale",
+      "ja": "セール",
+      "kana": "セール",
+      "korean": "세일",
+      "category": "안내",
+      "scene": "storePromo",
+      "path": "public/vocab/sign-art/generated/sale.webp"
+    },
+    {
+      "id": "shinhatsubai",
+      "ja": "新発売",
+      "kana": "しんはつばい",
+      "korean": "신발매",
+      "category": "안내",
+      "scene": "storePromo",
+      "path": "public/vocab/sign-art/generated/shinhatsubai.webp"
+    },
+    {
+      "id": "kikan_gentei",
+      "ja": "期間限定",
+      "kana": "きかんげんてい",
+      "korean": "기간 한정",
+      "category": "안내",
+      "scene": "storePromo",
+      "path": "public/vocab/sign-art/generated/kikan_gentei.webp"
+    },
+    {
+      "id": "zenpin",
+      "ja": "全品",
+      "kana": "ぜんぴん",
+      "korean": "전 품목",
+      "category": "안내",
+      "scene": "storePromo",
+      "path": "public/vocab/sign-art/generated/zenpin.webp"
+    },
+    {
+      "id": "tasuku",
+      "ja": "無料Wi-Fi",
+      "kana": "むりょうWi-Fi",
+      "korean": "무료 와이파이",
+      "category": "안내",
+      "scene": "storePromo",
+      "path": "public/vocab/sign-art/generated/tasuku.webp"
+    },
+    {
+      "id": "kakueki",
+      "ja": "各駅停車",
+      "kana": "かくえきていしゃ",
+      "korean": "각역 정차(완행)",
+      "category": "교통",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/kakueki.webp"
+    },
+    {
+      "id": "kyuukou",
+      "ja": "急行",
+      "kana": "きゅうこう",
+      "korean": "급행",
+      "category": "교통",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/kyuukou.webp"
+    },
+    {
+      "id": "tokkyuu",
+      "ja": "特急",
+      "kana": "とっきゅう",
+      "korean": "특급",
+      "category": "교통",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/tokkyuu.webp"
+    },
+    {
+      "id": "noriba",
+      "ja": "のりば",
+      "kana": "のりば",
+      "korean": "타는 곳(승강장)",
+      "category": "교통",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/noriba.webp"
+    },
+    {
+      "id": "norikae_sign",
+      "ja": "乗り換え",
+      "kana": "のりかえ",
+      "korean": "환승",
+      "category": "교통",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/norikae_sign.webp"
+    },
+    {
+      "id": "kitaguchi",
+      "ja": "北口",
+      "kana": "きたぐち",
+      "korean": "북쪽 출구",
+      "category": "교통",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/kitaguchi.webp"
+    },
+    {
+      "id": "minamiguchi",
+      "ja": "南口",
+      "kana": "みなみぐち",
+      "korean": "남쪽 출구",
+      "category": "교통",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/minamiguchi.webp"
+    },
+    {
+      "id": "higashiguchi",
+      "ja": "東口",
+      "kana": "ひがしぐち",
+      "korean": "동쪽 출구",
+      "category": "교통",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/higashiguchi.webp"
+    },
+    {
+      "id": "nishiguchi",
+      "ja": "西口",
+      "kana": "にしぐち",
+      "korean": "서쪽 출구",
+      "category": "교통",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/nishiguchi.webp"
+    },
+    {
+      "id": "genkin_sign",
+      "ja": "現金",
+      "kana": "げんきん",
+      "korean": "현금",
+      "category": "결제",
+      "scene": "checkout",
+      "path": "public/vocab/sign-art/generated/genkin_sign.webp"
+    },
+    {
+      "id": "card_taiou",
+      "ja": "カード対応",
+      "kana": "カードたいおう",
+      "korean": "카드 가능",
+      "category": "결제",
+      "scene": "checkout",
+      "path": "public/vocab/sign-art/generated/card_taiou.webp"
+    },
+    {
+      "id": "koutsuukei",
+      "ja": "交通系IC",
+      "kana": "こうつうけいアイシー",
+      "korean": "교통카드(Suica 등)",
+      "category": "결제",
+      "scene": "checkout",
+      "path": "public/vocab/sign-art/generated/koutsuukei.webp"
+    },
+    {
+      "id": "tsurisen",
+      "ja": "つり銭",
+      "kana": "つりせん",
+      "korean": "거스름돈",
+      "category": "결제",
+      "scene": "checkout",
+      "path": "public/vocab/sign-art/generated/tsurisen.webp"
+    },
+    {
+      "id": "ryougae_sign",
+      "ja": "両替",
+      "kana": "りょうがえ",
+      "korean": "환전/잔돈 교환",
+      "category": "결제",
+      "scene": "checkout",
+      "path": "public/vocab/sign-art/generated/ryougae_sign.webp"
+    },
+    {
+      "id": "baiten",
+      "ja": "売店",
+      "kana": "ばいてん",
+      "korean": "매점",
+      "category": "결제",
+      "scene": "shopNotice",
+      "path": "public/vocab/sign-art/generated/baiten.webp"
+    },
+    {
+      "id": "eigyoujikan",
+      "ja": "営業時間",
+      "kana": "えいぎょうじかん",
+      "korean": "영업시간",
+      "category": "결제",
+      "scene": "shopNotice",
+      "path": "public/vocab/sign-art/generated/eigyoujikan.webp"
+    },
+    {
+      "id": "teikyuubi",
+      "ja": "定休日",
+      "kana": "ていきゅうび",
+      "korean": "정기 휴일",
+      "category": "안내",
+      "scene": "shopNotice",
+      "path": "public/vocab/sign-art/generated/teikyuubi.webp"
+    },
+    {
+      "id": "rinji_kyuugyou",
+      "ja": "臨時休業",
+      "kana": "りんじきゅうぎょう",
+      "korean": "임시 휴업",
+      "category": "안내",
+      "scene": "shopNotice",
+      "path": "public/vocab/sign-art/generated/rinji_kyuugyou.webp"
+    },
+    {
+      "id": "manshitsu",
+      "ja": "満室",
+      "kana": "まんしつ",
+      "korean": "만실(방 없음)",
+      "category": "결제",
+      "scene": "shopNotice",
+      "path": "public/vocab/sign-art/generated/manshitsu.webp"
+    },
+    {
+      "id": "kuushitsu",
+      "ja": "空室",
+      "kana": "くうしつ",
+      "korean": "빈방 있음",
+      "category": "결제",
+      "scene": "shopNotice",
+      "path": "public/vocab/sign-art/generated/kuushitsu.webp"
+    },
+    {
+      "id": "chuui",
+      "ja": "注意",
+      "kana": "ちゅうい",
+      "korean": "주의",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/chuui.webp"
+    },
+    {
+      "id": "kiken",
+      "ja": "危険",
+      "kana": "きけん",
+      "korean": "위험",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/kiken.webp"
+    },
+    {
+      "id": "ashimoto",
+      "ja": "足元注意",
+      "kana": "あしもとちゅうい",
+      "korean": "발밑 주의",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/ashimoto.webp"
+    },
+    {
+      "id": "koujichu",
+      "ja": "工事中",
+      "kana": "こうじちゅう",
+      "korean": "공사 중",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/koujichu.webp"
+    },
+    {
+      "id": "satsuei_kinshi",
+      "ja": "撮影禁止",
+      "kana": "さつえいきんし",
+      "korean": "촬영 금지",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/satsuei_kinshi.webp"
+    },
+    {
+      "id": "shizukani",
+      "ja": "お静かに",
+      "kana": "おしずかに",
+      "korean": "조용히",
+      "category": "주의",
+      "scene": "storePromo",
+      "path": "public/vocab/sign-art/generated/shizukani.webp"
+    },
+    {
+      "id": "ichiji_teishi",
+      "ja": "一時停止",
+      "kana": "いちじていし",
+      "korean": "일단 정지",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/ichiji_teishi.webp"
+    },
+    {
+      "id": "tachiiri_kinshi2",
+      "ja": "関係者以外立入禁止",
+      "kana": "かんけいしゃいがいたちいりきんし",
+      "korean": "관계자 외 출입 금지",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/tachiiri_kinshi2.webp"
+    },
+    {
+      "id": "tanpin",
+      "ja": "単品",
+      "kana": "たんぴん",
+      "korean": "단품",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/tanpin.webp"
+    },
+    {
+      "id": "set_menu",
+      "ja": "セット",
+      "kana": "セット",
+      "korean": "세트",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/set_menu.webp"
+    },
+    {
+      "id": "karakuchi",
+      "ja": "辛口",
+      "kana": "からくち",
+      "korean": "매운맛",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/karakuchi.webp"
+    },
+    {
+      "id": "amakuchi",
+      "ja": "甘口",
+      "kana": "あまくち",
+      "korean": "순한맛",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/amakuchi.webp"
+    },
+    {
+      "id": "tsumetai",
+      "ja": "冷たい",
+      "kana": "つめたい",
+      "korean": "차가운",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/tsumetai.webp"
+    },
+    {
+      "id": "atatakai",
+      "ja": "温かい",
+      "kana": "あたたかい",
+      "korean": "따뜻한",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/atatakai.webp"
+    },
+    {
+      "id": "niku_menu",
+      "ja": "肉",
+      "kana": "にく",
+      "korean": "고기",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/niku_menu.webp"
+    },
+    {
+      "id": "sakana_menu",
+      "ja": "魚",
+      "kana": "さかな",
+      "korean": "생선",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/sakana_menu.webp"
+    },
+    {
+      "id": "yasai_menu",
+      "ja": "野菜",
+      "kana": "やさい",
+      "korean": "채소",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/yasai_menu.webp"
+    },
+    {
+      "id": "nashi_menu",
+      "ja": "なし",
+      "kana": "なし",
+      "korean": "없음(재료 제외)",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/nashi_menu.webp"
+    },
+    {
+      "id": "allergy",
+      "ja": "アレルギー",
+      "kana": "アレルギー",
+      "korean": "알레르기",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/allergy.webp"
+    },
+    {
+      "id": "vege",
+      "ja": "ベジタリアン",
+      "kana": "ベジタリアン",
+      "korean": "채식",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/vege.webp"
+    },
+    {
+      "id": "halal",
+      "ja": "ハラール",
+      "kana": "ハラール",
+      "korean": "할랄",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/halal.webp"
+    },
+    {
+      "id": "refill",
+      "ja": "おかわり自由",
+      "kana": "おかわりじゆう",
+      "korean": "리필 자유",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/refill.webp"
+    },
+    {
+      "id": "last_order",
+      "ja": "ラストオーダー",
+      "kana": "ラストオーダー",
+      "korean": "라스트 오더",
+      "category": "메뉴",
+      "scene": "restaurantMenu",
+      "path": "public/vocab/sign-art/generated/last_order.webp"
+    },
+    {
+      "id": "tsugi_no_kata",
+      "ja": "次の方どうぞ",
+      "kana": "つぎのかたどうぞ",
+      "korean": "다음 분 오세요",
+      "category": "안내",
+      "scene": "storePromo",
+      "path": "public/vocab/sign-art/generated/tsugi_no_kata.webp"
+    },
+    {
+      "id": "men_toilet",
+      "ja": "男性",
+      "kana": "だんせい",
+      "korean": "남성(화장실)",
+      "category": "표지",
+      "scene": "restroom",
+      "path": "public/vocab/sign-art/generated/men_toilet.webp"
+    },
+    {
+      "id": "women_toilet",
+      "ja": "女性",
+      "kana": "じょせい",
+      "korean": "여성(화장실)",
+      "category": "표지",
+      "scene": "restroom",
+      "path": "public/vocab/sign-art/generated/women_toilet.webp"
+    },
+    {
+      "id": "danshi",
+      "ja": "男",
+      "kana": "おとこ",
+      "korean": "남(남자)",
+      "category": "표지",
+      "scene": "restroom",
+      "path": "public/vocab/sign-art/generated/danshi.webp"
+    },
+    {
+      "id": "josei",
+      "ja": "女",
+      "kana": "おんな",
+      "korean": "여(여자)",
+      "category": "표지",
+      "scene": "restroom",
+      "path": "public/vocab/sign-art/generated/josei.webp"
+    },
+    {
+      "id": "shokuji",
+      "ja": "食事",
+      "kana": "しょくじ",
+      "korean": "식사",
+      "category": "표지",
+      "scene": "mallEntrance",
+      "path": "public/vocab/sign-art/generated/shokuji.webp"
+    },
+    {
+      "id": "kaigi",
+      "ja": "会議室",
+      "kana": "かいぎしつ",
+      "korean": "회의실",
+      "category": "표지",
+      "scene": "mallEntrance",
+      "path": "public/vocab/sign-art/generated/kaigi.webp"
+    },
+    {
+      "id": "locker_sign",
+      "ja": "コインロッカー",
+      "kana": "コインロッカー",
+      "korean": "코인로커",
+      "category": "표지",
+      "scene": "mallEntrance",
+      "path": "public/vocab/sign-art/generated/locker_sign.webp"
+    },
+    {
+      "id": "kintsuen",
+      "ja": "喫煙所",
+      "kana": "きつえんじょ",
+      "korean": "흡연 구역",
+      "category": "표지",
+      "scene": "mallEntrance",
+      "path": "public/vocab/sign-art/generated/kintsuen.webp"
+    },
+    {
+      "id": "floor_sign",
+      "ja": "〜階",
+      "kana": "かい",
+      "korean": "~층",
+      "category": "표지",
+      "scene": "mallEntrance",
+      "path": "public/vocab/sign-art/generated/floor_sign.webp"
+    },
+    {
+      "id": "chikashitsu",
+      "ja": "地下",
+      "kana": "ちか",
+      "korean": "지하",
+      "category": "표지",
+      "scene": "mallEntrance",
+      "path": "public/vocab/sign-art/generated/chikashitsu.webp"
+    },
+    {
+      "id": "exit_floor",
+      "ja": "出口",
+      "kana": "でぐち",
+      "korean": "출구(층)",
+      "category": "표지",
+      "scene": "mallEntrance",
+      "path": "public/vocab/sign-art/generated/exit_floor.webp"
+    },
+    {
+      "id": "terminal",
+      "ja": "終点",
+      "kana": "しゅうてん",
+      "korean": "종착역",
+      "category": "교통",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/terminal.webp"
+    },
+    {
+      "id": "jikoku",
+      "ja": "時刻表",
+      "kana": "じこくひょう",
+      "korean": "시각표",
+      "category": "교통",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/jikoku.webp"
+    },
+    {
+      "id": "unchin",
+      "ja": "運賃",
+      "kana": "うんちん",
+      "korean": "운임(교통 요금)",
+      "category": "교통",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/unchin.webp"
+    },
+    {
+      "id": "jiyuuseki",
+      "ja": "自由席",
+      "kana": "じゆうせき",
+      "korean": "자유석",
+      "category": "교통",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/jiyuuseki.webp"
+    },
+    {
+      "id": "shitei_seki",
+      "ja": "指定席",
+      "kana": "していせき",
+      "korean": "지정석",
+      "category": "교통",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/shitei_seki.webp"
+    },
+    {
+      "id": "green_sha",
+      "ja": "グリーン車",
+      "kana": "グリーンしゃ",
+      "korean": "그린카(일등칸)",
+      "category": "교통",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/green_sha.webp"
+    },
+    {
+      "id": "kinkyu_teishi",
+      "ja": "緊急停止",
+      "kana": "きんきゅうていし",
+      "korean": "긴급 정지",
+      "category": "교통",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/kinkyu_teishi.webp"
+    },
+    {
+      "id": "chien",
+      "ja": "遅延",
+      "kana": "ちえん",
+      "korean": "지연",
+      "category": "교통",
+      "scene": "transitBoard",
+      "path": "public/vocab/sign-art/generated/chien.webp"
+    },
+    {
+      "id": "untenkeshi",
+      "ja": "運転見合わせ",
+      "kana": "うんてんみあわせ",
+      "korean": "운행 중단",
+      "category": "교통",
+      "scene": "transitBoard",
+      "path": "public/vocab/sign-art/generated/untenkeshi.webp"
+    },
+    {
+      "id": "menzei",
+      "ja": "免税",
+      "kana": "めんぜい",
+      "korean": "면세",
+      "category": "결제",
+      "scene": "checkout",
+      "path": "public/vocab/sign-art/generated/menzei.webp"
+    },
+    {
+      "id": "shohizei",
+      "ja": "消費税",
+      "kana": "しょうひぜい",
+      "korean": "소비세(소비자 세금)",
+      "category": "결제",
+      "scene": "receipt",
+      "path": "public/vocab/sign-art/generated/shohizei.webp"
+    },
+    {
+      "id": "pointcard",
+      "ja": "ポイントカード",
+      "kana": "ポイントカード",
+      "korean": "포인트 카드",
+      "category": "결제",
+      "scene": "checkout",
+      "path": "public/vocab/sign-art/generated/pointcard.webp"
+    },
+    {
+      "id": "fukuro_yoru",
+      "ja": "袋",
+      "kana": "ふくろ",
+      "korean": "봉투",
+      "category": "결제",
+      "scene": "checkout",
+      "path": "public/vocab/sign-art/generated/fukuro_yoru.webp"
+    },
+    {
+      "id": "receipt",
+      "ja": "レシート",
+      "kana": "レシート",
+      "korean": "영수증",
+      "category": "결제",
+      "scene": "receipt",
+      "path": "public/vocab/sign-art/generated/receipt.webp"
+    },
+    {
+      "id": "nouki",
+      "ja": "お会計",
+      "kana": "おかいけい",
+      "korean": "계산(식당에서)",
+      "category": "결제",
+      "scene": "checkout",
+      "path": "public/vocab/sign-art/generated/nouki.webp"
+    },
+    {
+      "id": "nohumi",
+      "ja": "踏まないでください",
+      "kana": "ふまないでください",
+      "korean": "밟지 마세요",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/nohumi.webp"
+    },
+    {
+      "id": "nosmoke_area",
+      "ja": "禁煙エリア",
+      "kana": "きんえんエリア",
+      "korean": "금연 구역",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/nosmoke_area.webp"
+    },
+    {
+      "id": "setsubi",
+      "ja": "工事中につき",
+      "kana": "こうじちゅうにつき",
+      "korean": "공사 중으로 인해(통행·이용 제한 안내)",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/setsubi.webp"
+    },
+    {
+      "id": "kiken_takaatsu",
+      "ja": "高電圧危険",
+      "kana": "こうでんあつきけん",
+      "korean": "고전압 위험",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/kiken_takaatsu.webp"
+    },
+    {
+      "id": "hizashi",
+      "ja": "日差しに注意",
+      "kana": "ひざしにちゅうい",
+      "korean": "햇볕 주의",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/hizashi.webp"
+    },
+    {
+      "id": "kinshi_shinnyu",
+      "ja": "立入厳禁",
+      "kana": "たちいりげんきん",
+      "korean": "출입 엄금",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/kinshi_shinnyu.webp"
+    },
+    {
+      "id": "mannaka",
+      "ja": "中央",
+      "kana": "ちゅうおう",
+      "korean": "중앙",
+      "category": "안내",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/mannaka.webp"
+    },
+    {
+      "id": "kami",
+      "ja": "上",
+      "kana": "うえ",
+      "korean": "위",
+      "category": "안내",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/kami.webp"
+    },
+    {
+      "id": "shita",
+      "ja": "下",
+      "kana": "した",
+      "korean": "아래",
+      "category": "안내",
+      "scene": "stationWayfinding",
+      "path": "public/vocab/sign-art/generated/shita.webp"
+    },
+    {
+      "id": "toiu_koto",
+      "ja": "ただいま混雑中",
+      "kana": "ただいまこんざつちゅう",
+      "korean": "지금 혼잡 중",
+      "category": "안내",
+      "scene": "transitBoard",
+      "path": "public/vocab/sign-art/generated/toiu_koto.webp"
+    },
+    {
+      "id": "go_annai",
+      "ja": "ご案内",
+      "kana": "ごあんない",
+      "korean": "안내 드립니다",
+      "category": "안내",
+      "scene": "transitBoard",
+      "path": "public/vocab/sign-art/generated/go_annai.webp"
+    }
+  ]
+}

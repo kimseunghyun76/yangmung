@@ -1,6 +1,6 @@
 // 단어 일러스트 — 어휘 "새 표현" 카드에서 단어를 이미지로 보여준다.
 // 생성 PNG를 우선 사용하고, 누락 시 SVG 폴백으로 내려간다.
-import { useState, type CSSProperties } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 
 // 카드 id에서 그룹 추출: vocab:<group>:study:..., basic:study:..., sign:study:...
 function groupOf(id: string): string {
@@ -233,6 +233,50 @@ function signWordArtPngAsset(id: string): string | null {
   return match ? `/vocab/sign-art/generated/${match[1]}.webp` : null;
 }
 
+function signConceptAsset(id: string): string | null {
+  const match = /^sign:study:([^:]+)$/.exec(id);
+  return match ? `/vocab/sign-art/concept/${match[1]}.webp` : null;
+}
+
+function SignArtConceptImage({
+  conceptSrc,
+  fallbackSrc,
+  label,
+  size,
+  style,
+}: {
+  conceptSrc: string;
+  fallbackSrc: string | null;
+  label: string;
+  size: number;
+  style?: CSSProperties;
+}) {
+  const [src, setSrc] = useState(conceptSrc);
+  useEffect(() => setSrc(conceptSrc), [conceptSrc]);
+  return (
+    <img
+      src={src}
+      width={size}
+      height={size}
+      alt={label}
+      loading="lazy"
+      decoding="async"
+      onError={() => {
+        if (fallbackSrc && src !== fallbackSrc) setSrc(fallbackSrc);
+      }}
+      style={{
+        width: size,
+        height: size,
+        objectFit: 'cover',
+        display: 'block',
+        borderRadius: Math.max(14, size * 0.08),
+        boxShadow: 'inset 0 0 0 1px rgba(58,38,22,.08)',
+        ...style,
+      }}
+    />
+  );
+}
+
 function panelOverlay(id: string): { left: number; top: number; width: number; maxFont: number; minFont: number } {
   const basicGroup = basicGroupOf(id);
   if (basicGroup) {
@@ -253,11 +297,15 @@ function panelOverlay(id: string): { left: number; top: number; width: number; m
 }
 
 export function wordArtAssetSrcForId(id: string): string | null {
-  return vocabWordArtSrc(id) ?? signWordArtPngAsset(id) ?? basicWordArtBg(id);
+  return vocabWordArtSrc(id) ?? signConceptAsset(id) ?? signWordArtPngAsset(id) ?? basicWordArtBg(id);
 }
 
 export function WordArt({ id, korean, kana: _kana, ja, size = 96, style, preferAsset = false }: { id: string; korean: string; kana: string; ja?: string; size?: number; style?: CSSProperties; preferAsset?: boolean }) {
+  const signConceptSrc = signConceptAsset(id);
   const signPngSrc = signWordArtPngAsset(id);
+  if (signConceptSrc) {
+    return <SignArtConceptImage conceptSrc={signConceptSrc} fallbackSrc={signPngSrc} label={korean} size={size} style={style} />;
+  }
   const assetSrc = vocabWordArtSrc(id) ?? signPngSrc;
   const [assetFailed, setAssetFailed] = useState(false);
   const panelBg = basicWordArtBg(id);
