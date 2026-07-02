@@ -41,7 +41,7 @@ export function PublicExpressions({ nav, onBack, onStartSigns, onStartAnnounceme
       {/* 간판·메뉴 */}
       <GlassPanel>
         <p style={{ margin: 0, ...label }}>간판 · 메뉴 읽기</p>
-        <button className="ym-press" onClick={onStartSigns} style={{
+        <button className="ym-press" onClick={() => onStartSigns()} style={{
           width: '100%', marginTop: 10, display: 'flex', alignItems: 'center', gap: 13, textAlign: 'left',
           padding: '14px 14px', borderRadius: 14, cursor: 'pointer', border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
         }}>
