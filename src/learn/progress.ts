@@ -361,24 +361,46 @@ function conceptKey(c: ReviewableCard): string {
   return id; // 미션 스텝·소개·말하기·흐름은 묶지 않음
 }
 
-// 처음 만날 때 형태 우선순위(읽기 → 듣기 → 구분/받아쓰기). 같은 "안 본" 형태 중 가장 부드러운 것부터.
-function formRank(id: string): number {
+// 형태 난이도 등급 — 읽기(인지) → 듣기(청해) → 한→일/받아쓰기(산출). SPIRAL_DIFFICULTY_BRIEF.md 설계 2.
+// 처음 만날 때도 이 순서로(가장 부드러운 것부터), 숙련도가 오르면 사다리를 타고 어려운 형태로 이동.
+export function formRank(id: string): number {
   if (id.endsWith(':read')) return 0;
-  if (id.startsWith('listen:') || id.endsWith(':listen')) return 1;
-  if (id.startsWith('ko2ja:')) return 2;   // 한→일 고르기 — 듣기 다음 난이도
+  if (id.startsWith('listen:') || id.endsWith(':listen') || id.startsWith('hear2ja:')) return 1;
+  if (id.startsWith('ko2ja:')) return 2;   // 한→일 고르기 — 산출 방향, 듣기 다음 난이도
   if (id.startsWith('dictation:')) return 3;
   if (id.endsWith(':confuse')) return 4;
   return 1;
 }
 
-// 개념의 여러 형태 중 "가장 안 본" 대표 1장 — 안 본 것(lastSeenAt 없음) 우선, 그다음 오래된 것.
-// → 복습이 매번 같은 카드가 아니라 읽기↔듣기↔받아쓰기로 회전.
-function pickFreshestVariant(variants: ReviewableCard[], progress: ProgressMap): ReviewableCard {
-  return [...variants].sort((a, b) => {
+// 개념 전체의 숙련도 — 이미 시도한 형태들의 평균. 한 형태도 안 봤으면 0(신규 취급).
+export function conceptMastery(variants: ReviewableCard[], progress: ProgressMap): number {
+  const seen = variants.filter((v) => progress[v.id]);
+  if (seen.length === 0) return 0;
+  return seen.reduce((sum, v) => sum + itemMastery(progress[v.id]), 0) / seen.length;
+}
+
+// 숙련도 구간이 요구하는 최소 형태 난이도 — 낮음(신규~미숙)엔 읽기, 중간엔 듣기, 높음(익힘)엔 산출형.
+export function desiredFormRank(mastery: number): number {
+  if (mastery < 0.3) return 0;
+  if (mastery < 0.6) return 1;
+  return 2;
+}
+
+// 개념의 여러 형태 중 다음에 낼 대표 1장.
+// 숙련도가 낮으면 기존과 동일(안 본 것 우선, 부드러운 형태부터) — 신규 학습자 경험 불변.
+// 숙련도가 오르면 사다리를 타고 더 어려운 형태(듣기→산출)로 자연히 이동 → 복습이 도전으로 심화.
+export function pickFreshestVariant(variants: ReviewableCard[], progress: ProgressMap): ReviewableCard {
+  const mastery = conceptMastery(variants, progress);
+  const wantRank = desiredFormRank(mastery);
+  const rank = (v: ReviewableCard) => formRank(v.id);
+  // 숙련도가 사다리를 요구하면: 그 등급 이상인 형태 중에서 먼저 고른다(없으면 전체 폴백).
+  const ladder = wantRank > 0 ? variants.filter((v) => rank(v) >= wantRank) : variants;
+  const pool = ladder.length > 0 ? ladder : variants;
+  return [...pool].sort((a, b) => {
     const ta = progress[a.id]?.lastSeenAt ?? '';
     const tb = progress[b.id]?.lastSeenAt ?? '';
     if (ta !== tb) return ta < tb ? -1 : 1;       // 덜 최근에 본 것 먼저
-    return formRank(a.id) - formRank(b.id);         // 동률이면 부드러운 형태 먼저
+    return rank(a) - rank(b);                      // 동률이면 사다리 안에서 부드러운 형태 먼저
   })[0];
 }
 
