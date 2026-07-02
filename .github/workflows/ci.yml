@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: 타입체크
+        run: npm run typecheck
+
+      - name: 콘텐츠 검증 (V1~V20)
+        run: npm run lint:content
+
+      - name: 장면 문장 검증
+        run: npm run lint:sentences
+
+      - name: 단위 테스트 (학습 엔진 · 콘텐츠 · 나선형 난이도)
+        run: npm test
+
+      - name: 프로덕션 빌드
+        run: npm run build
