@@ -26,12 +26,14 @@ export interface ProgStage {
 }
 
 // 3-1 ~ 3-4: 레벨별 순차 단계
+// 작문(한→일)은 짧고 쉬운 문장 위주라 입문에 배치, 받아쓰기(듣고 그대로 받아적기)는
+// 청해+표기 정확도를 동시에 요구해 체감 난이도가 높아 고급으로 옮겼다.
 export const LEVEL_STAGES: Record<CoreLevel, ProgStage[]> = {
   beginner: [
     { id: 'hiragana', label: '히라가나', sub: '표 학습 → 읽기 퀴즈', practice: 'kana', script: 'hiragana' },
     { id: 'katakana', label: '가타카나', sub: '표 학습 → 읽기 퀴즈', practice: 'kana', script: 'katakana' },
     { id: 'pairs', label: '발음 구분', sub: '비슷한 소리 변별', practice: 'pairs' },
-    { id: 'dictation', label: '받아쓰기', sub: '듣고 가나로 쓰기', practice: 'dictation' },
+    { id: 'compose', label: '한→일 작문', sub: '뜻을 보고 일본어 만들기', practice: 'compose' },
   ],
   default: [
     { id: 'greetings', label: '기본 인사', sub: '첫 만남·감사·부탁', practice: 'greetings' },
@@ -39,10 +41,11 @@ export const LEVEL_STAGES: Record<CoreLevel, ProgStage[]> = {
     { id: 'vocab', label: '어휘 커리큘럼', sub: '주제별 필수 단어', practice: 'vocab' },
   ],
   express: [
-    { id: 'compose', label: '한→일 작문', sub: '뜻을 보고 일본어 만들기', practice: 'compose' },
     { id: 'verbs', label: '동사 형태', sub: 'ます·たい·ながら 활용', practice: 'verbs' },
   ],
-  advanced: [], // 고급은 단계 없이 미션으로 진행
+  advanced: [
+    { id: 'dictation', label: '받아쓰기', sub: '듣고 가나로 쓰기', practice: 'dictation' },
+  ],
 };
 
 // settings.mode → 진도 레벨(핵심 4단계). 유틸 모드(review/kana)는 입문으로 간주.
@@ -99,7 +102,7 @@ export function isStageUnlocked(s: ProgressionState, level: CoreLevel, idx: numb
 
 export function levelAllComplete(s: ProgressionState, level: CoreLevel): boolean {
   const stages = LEVEL_STAGES[level];
-  if (stages.length === 0) return true; // 고급 = 단계 없음
+  if (stages.length === 0) return true; // 단계 없는 레벨(현재는 없음, 안전 폴백)
   return stages.every((st) => isStageComplete(s, level, st.id));
 }
 
