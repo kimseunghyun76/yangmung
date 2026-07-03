@@ -41,7 +41,11 @@ console.log('=== 멱등성/승급 ===');
 }
 check('nextLevel: beginner→default', nextLevel('beginner') === 'default');
 check('nextLevel: advanced→null', nextLevel('advanced') === null);
-check('고급은 단계 없음 → 항상 levelAllComplete', levelAllComplete(empty, 'advanced'));
+check('고급(받아쓰기) 빈 상태는 미완료', !levelAllComplete(empty, 'advanced'));
+{
+  const s = markStageComplete(empty, stageKey('advanced', 'dictation'));
+  check('고급 받아쓰기 완료 → levelAllComplete', levelAllComplete(s, 'advanced'));
+}
 
 console.log('=== coreLevelOf ===');
 check('express 그대로', coreLevelOf('express') === 'express');

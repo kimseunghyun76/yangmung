@@ -276,10 +276,13 @@ export function App() {
     if (level === 'beginner') return allCards.filter((c) =>
       (c.kind === 'quiz' && /^kana:.*:(read|listen)$/.test(c.id))
       || (c.kind === 'quiz' && c.id.startsWith('pair:'))
-      || c.kind === 'dictation');
+      || (c.kind === 'dictation' && c.promptKind === 'korean')); // 작문만 — 받아쓰기는 고급으로 이동
     if (level === 'default') return allCards.filter((c) =>
       c.kind === 'quiz' && (c.id.startsWith('vocab:') || c.id.startsWith('sign:') || c.id.startsWith('basic:')) && !c.id.includes(':study:'));
-    if (level === 'express') return selectComposeCards(allCards, progress, nextSessionId(session), 40);
+    // express는 이제 동사 형태(verbs)만 남았는데, verbs는 자체 퀴즈 시스템이라 세션 카드로 못 씀 —
+    // 대신 이 레벨에서 실전 검증 의미가 통하는 초중급 미션 회화(tier 1~2)로 승급 시험을 구성.
+    if (level === 'express') return allCards.filter((c) =>
+      c.kind === 'quiz' && c.reviewTarget?.type === 'mission' && (c.tier ?? 1) <= 2);
     return [];
   }
   function startPromotionQuiz(level: CoreLevel = coreLevel) {

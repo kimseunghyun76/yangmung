@@ -233,7 +233,7 @@ export function cardDifficulty(card: Card): DifficultyLabel | null {
     return TIER_TO_DIFF[(card.tier ?? 1) - 1] ?? '입문';
   }
   if (card.kind === 'dictation') {
-    return card.promptKind === 'korean' ? '중급' : '입문'; // 한→일 작문=중급, 받아쓰기=입문
+    return card.promptKind === 'korean' ? '입문' : '고급'; // 한→일 작문=입문, 받아쓰기=고급
   }
   if (card.kind === 'quiz') {
     const id = card.id;
