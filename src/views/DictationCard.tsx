@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import type { DictationCard } from '../learn/cards';
 import type { SegPos } from '../learn/jaSegment';
+import { composeContextFor, type ComposeContext } from '../learn/composeContext';
 import { speak, ttsSupported } from '../tts';
 import { BTN, PRIMARY } from '../ui/styles';
 import { Icon } from '../ui/Icon';
@@ -190,10 +191,18 @@ function ComposeBody({ card, onResult, onNext }: Props) {
   const builtText = built.map((i) => card.tiles[i]);
   const slotCount = Math.max(card.answer.length, built.length);
 
+  const phraseId = card.reviewTarget?.type === 'phrase' ? card.reviewTarget.id : undefined;
+  const ctx = phraseId ? composeContextFor(phraseId) : null;
+
   function tap(i: number) { if (checked === null && usable[i]) setBuilt((b) => [...b, i]); }
   function removeAt(slot: number) { if (checked === null && slot < built.length) setBuilt((b) => [...b.slice(0, slot), ...b.slice(slot + 1)]); }
   function undo() { if (checked === null) setBuilt((b) => b.slice(0, -1)); }
-  function check() { const ok = builtText.length === card.answer.length && builtText.every((t, i) => t === card.answer[i]); setChecked(ok); onResult(ok); }
+  function check() {
+    const ok = builtText.length === card.answer.length && builtText.every((t, i) => t === card.answer[i]);
+    setChecked(ok);
+    onResult(ok);
+    if (ttsSupported()) speak(card.ja); // 정답 여부와 무관하게 올바른 문장을 바로 들려준다
+  }
 
   return (
     <div>
@@ -250,9 +259,31 @@ function ComposeBody({ card, onResult, onNext }: Props) {
             </p>
           )}
           <button style={{ ...BTN, marginTop: 10, width: '100%' }} onClick={() => speak(card.ja)} disabled={!ttsSupported()}><Icon name="listen" size={16} /> 발음 듣기</button>
+          {ctx && <ComposeContextHint ctx={ctx} />}
           <button style={{ ...PRIMARY, marginTop: 10, width: '100%' }} onClick={onNext}>다음</button>
         </div>
       )}
+    </div>
+  );
+}
+
+// 작문 하단 힌트 — 이 표현이 미션에서 어떤 역할인지.
+// 질문이면 실제로 쓰이는 답변 예시들, 답변이면 어떤 질문에 대한 답인지 보여줘 미션 대비.
+function ComposeContextHint({ ctx }: { ctx: ComposeContext }) {
+  return (
+    <div style={{ marginTop: 10, padding: 12, borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)' }}>
+      <p style={{ margin: 0, fontSize: 11, fontWeight: 800, color: 'var(--ink-faint)', letterSpacing: '.03em', display: 'flex', alignItems: 'center', gap: 5 }}>
+        <Icon name="tip" size={14} /> {ctx.role === 'question' ? '이렇게 답할 수 있어요' : '이런 질문에 대한 답이에요'}
+      </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 6 }}>
+        {ctx.related.map((p) => (
+          <button key={p.id} onClick={() => speak(p.displayKana ?? p.kana)} disabled={!ttsSupported()}
+            style={{ display: 'block', width: '100%', padding: 0, border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer', color: 'var(--ink)' }}>
+            <span lang="ja" style={{ display: 'block', fontSize: 14, fontWeight: 700 }}>{p.displayKana ?? p.kana}</span>
+            <span style={{ display: 'block', fontSize: 11.5, color: 'var(--ink-soft)' }}>{p.korean}</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
