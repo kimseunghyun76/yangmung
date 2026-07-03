@@ -1,4 +1,4 @@
-// 가챠 이미지 PNG → WebP 변환 — optimize-vocab-assets.mjs와 같은 cwebp 파이프라인.
+// 가챠 이미지 PNG -> WebP 변환 — optimize-vocab-assets.mjs와 같은 cwebp 파이프라인.
 // 사용자 이미지 생성 파이프라인이 PNG를 다시 만들면 이 스크립트를 재실행하면 된다.
 // 실행: node scripts/optimize-gacha-assets.mjs [--remove-png]
 import { existsSync, mkdirSync, readdirSync, rmSync, statSync } from 'node:fs';
@@ -12,13 +12,6 @@ const removePng = process.argv.includes('--remove-png');
 const cwebp = process.env.CWEBP_BIN || 'cwebp';
 
 const jobs = [
-  {
-    name: 'gacha-items-generated',
-    source: join(publicDir, 'gacha', 'items', 'generated'),
-    target: join(publicDir, 'gacha', 'items', 'generated'),
-    size: 512,   // 카드 표시 크기 대비 충분 (원본 768)
-    quality: 80,
-  },
   {
     name: 'gacha-items-generated-v2',
     source: join(publicDir, 'gacha', 'items', 'generated-v2'),
