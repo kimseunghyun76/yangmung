@@ -15,15 +15,23 @@ export interface PreviewLine {
   speaker?: string;
 }
 
+// 퀴즈 개수 선택 — 있으면 프리뷰 상단에 세그먼트로 노출, 고르면 목록·개수가 다시 계산돼 렌더링됨.
+export interface CountControl {
+  value: number;
+  options: number[];
+  onChange: (n: number) => void;
+}
+
 interface Props {
   title: string;
   subtitle?: string;
   lines: PreviewLine[];
   onStart: () => void;
   onBack: () => void;
+  countControl?: CountControl;
 }
 
-export function SequencePreview({ title, subtitle, lines, onStart, onBack }: Props) {
+export function SequencePreview({ title, subtitle, lines, onStart, onBack, countControl }: Props) {
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const tokenRef = useRef(0);
 
@@ -62,6 +70,26 @@ export function SequencePreview({ title, subtitle, lines, onStart, onBack }: Pro
         {subtitle && <p style={{ margin: 0, fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.5 }}>{subtitle}</p>}
         <p style={{ margin: '6px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>먼저 전체를 한 번 들어본 뒤, 문장별로 학습하고 퀴즈를 풀어요.</p>
       </div>
+
+      {countControl && (
+        <div style={{ marginBottom: 14 }}>
+          <p style={{ margin: '0 0 8px', fontSize: 12, fontWeight: 700, color: 'var(--ink-soft)' }}>퀴즈 개수</p>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {countControl.options.map((n) => {
+              const active = n === countControl.value;
+              return (
+                <button key={n} className="ym-press" onClick={() => countControl.onChange(n)} style={{
+                  flex: 1, padding: '10px 6px', borderRadius: 12, textAlign: 'center', cursor: 'pointer',
+                  fontWeight: 800, fontSize: 14,
+                  border: `1px solid ${active ? 'var(--ink)' : 'var(--glass-border)'}`,
+                  background: active ? 'var(--accent)' : 'var(--glass-bg-strong)',
+                  color: active ? 'var(--accent-ink)' : 'var(--ink-soft)',
+                }}>{n}개</button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <GlassPanel>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

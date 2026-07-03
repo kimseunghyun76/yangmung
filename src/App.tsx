@@ -1,7 +1,7 @@
 // 상태·라우팅 허브 — 화면 렌더링은 src/views/*, 세션 카드 진행은 src/app/useSessionFlow,
 // URL(해시) 라우팅은 src/app/routing 에 위임. 여기는 "어떤 세션을 어떻게 구성할지"만.
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { buildCards, type Card, type DiscoverCard, type IntroduceCard } from './learn/cards';
+import { buildCards, type Card, type DictationCard, type DiscoverCard, type IntroduceCard } from './learn/cards';
 import { CONTENT } from './content';
 import {
   classifyCard, clearProgress, isKanaFamiliar, loadDiscovered, loadProgress, loadSeenKana, loadSession,
@@ -30,7 +30,8 @@ import { setListenRate } from './tts';
 import { WRAP } from './ui/styles';
 import type { KanaItem } from './content/types';
 import { MascotEmpty } from './views/mascot';
-import { useHashView } from './app/routing';
+import { useHashView, type View } from './app/routing';
+import type { CountControl } from './views/SequencePreview';
 import { useSessionFlow } from './app/useSessionFlow';
 
 const Home = lazy(() => import('./views/Home').then((m) => ({ default: m.Home })));
@@ -68,11 +69,12 @@ export function App() {
   const [flashCards, setFlashCards] = useState<Card[]>([]); // 속도전 플래시(세션 SRS와 분리)
   const [writeItems, setWriteItems] = useState<KanaItem[]>([]); // 가나 쓰기(따라쓰기)
   const [placementCards, setPlacementCards] = useState<Card[]>([]); // 수준 진단(배치) 문항
-  // 명장면 대화·노래 가사·간판·방송처럼 사용자가 항목을 직접 고른 학습 — Intro 대신
-  // 배울 문장 전체를 한 번 듣고 시작. begin은 "학습 시작" 클릭 시 실행할 세션 진입 액션.
+  // 명장면 대화·노래 가사·간판·방송·작문처럼 사용자가 항목을 직접 고르거나(또는 확정된) 학습 —
+  // Intro 대신 배울 문장 전체를 한 번 듣고 시작. begin은 "학습 시작" 클릭 시 실행할 세션 진입 액션.
+  // countControl이 있으면(작문) 프리뷰에서 퀴즈 개수를 바꿀 수 있고, 바뀌면 프리뷰 자체가 재계산됨.
   const [preview, setPreview] = useState<{
     title: string; subtitle?: string; lines: { ja: string; kana: string; korean: string }[];
-    returnView: 'ent' | 'public'; begin: () => void;
+    returnView: View; begin: () => void; countControl?: CountControl;
   } | null>(null);
   const [kanaScript, setKanaScript] = useState<'hiragana' | 'katakana'>('hiragana'); // 가나 표 학습 스크립트
   const [progression, setProgression] = useState(() => loadProgression()); // 레벨별 순차 진도
@@ -327,11 +329,29 @@ export function App() {
     if (cards.length === 0) return;
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
   }
-  // 한→일 작문 전용 — 한국어 보고 일본어 조립(산출)
-  function startComposeSession(stage?: string | null) {
-    const cards = selectComposeCards(allCards, progress, nextSessionId(session), 18);
+  // 한→일 작문 전용 — 한국어 보고 일본어 조립(산출).
+  // 시작하면 먼저 이번에 나올 문장 전체를 미리 듣는 선행학습 화면을 거친 뒤 곧장 세션으로
+  // (Intro 생략, beginWithPreview와 동일한 replace 패턴) — 여기서는 퀴즈 개수도 고를 수 있다.
+  const COMPOSE_COUNT_OPTIONS = [8, 12, 18, 24];
+  function openComposePreview(count: number, stage?: string | null) {
+    const id = nextSessionId(session);
+    const cards = selectComposeCards(allCards, progress, id, count);
     if (cards.length === 0) return;
-    flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
+    const lines = cards
+      .filter((c): c is DictationCard => c.kind === 'dictation')
+      .map((c) => ({ ja: c.ja, kana: c.answer.join(''), korean: c.korean }));
+    setPreview({
+      title: '한→일 작문',
+      subtitle: '이번에 나올 문장을 먼저 듣고 뜻을 익힌 뒤, 직접 조립해 봐요.',
+      lines,
+      returnView: stage ? 'practice' : 'home', // 레벨 진도 단계면 연습 메뉴로, 강화학습 경유면 홈으로
+      begin: () => flow.beginSession(id, cards, { intro: false, replace: true, practice: true, stage }),
+      countControl: { value: count, options: COMPOSE_COUNT_OPTIONS, onChange: (n) => openComposePreview(n, stage) },
+    });
+    navigate('preview');
+  }
+  function startComposeSession(stage?: string | null) {
+    openComposePreview(18, stage);
   }
   // 속도전 플래시 — 모드별 카드 풀 선택 + 제한시간 즉답 게임(세션/SRS와 분리).
   function startFlashSession(mode: FlashMode = 'blitz', count = 15) {
@@ -552,6 +572,7 @@ export function App() {
           lines={preview.lines}
           onStart={preview.begin}
           onBack={() => navigate(preview.returnView)}
+          countControl={preview.countControl}
         />
       );
     }
