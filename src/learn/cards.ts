@@ -25,6 +25,35 @@ const DICTATION_IDS = [
 ];
 const DICTATION_DISTRACTORS = ['つ', 'ん', 'を', 'ぬ', 'ふ', 'ね', 'ろ', 'む'];
 
+// 작문(한→일) 전용 큐레이션 — 받아쓰기(위 DICTATION_IDS + 전체 자동편입)와 분리.
+// 기준: ① 앱 미션에서 실제 학습자 답변으로 가장 자주 등장(promotionPool 분석) ② はい/すみません 등
+// 일본인이 일상에서 아주 흔하게 쓰는 both 표현 ③ 미션에 나오는 짧고 쉬운 점원 질문(답변과 짝지어
+// 나중에 미션 학습에 바로 도움이 되도록). 받아쓰기처럼 전체 자동편입을 하지 않는다 — 여기서 벗어난
+// 표현이 무작위로 섞이면 "가장 흔한 문장" 취지가 흐려지기 때문.
+const COMPOSE_IDS = [
+  // 핵심 상시 표현(register: both) — 가장 흔한 인사·응답
+  'p_hai', 'p_iie', 'p_arigatou', 'p_daijoubu', 'p_konnichiwa', 'p_sumimasen',
+  'p_onegai_shimasu', 'p_kore', 'p_arimasu', 'p_arimasen', 'p_sou_desu',
+  'p_daijoubu_desu', 'p_kippu',
+  // 여행 실전 필수 표현
+  'p_oishii', 'p_genkin_de', 'p_card_de', 'p_mizu_kudasai', 'p_kore_kudasai',
+  'p_wakarimashita', 'p_eki', 'p_irasshai', 'p_fukuro', 'p_doko_made',
+  'p_nomimono', 'p_gochuumon', 'p_onamae_wa', 'p_nanmeisama', 'p_norikae_kudasai',
+  'p_kagi_desu', 'p_yukkuri', 'p_mou_ichido', 'p_eigo_de', 'p_yasashii_nihongo',
+  'p_chotto_matte', 'p_wakarimasen', 'p_ikura_desu_ka', 'p_osusume_wa',
+  // 미션 최다빈출 답변(3회 이상 등장) — 미션 학습 시 바로 도움
+  'p_oboete_okimasu', 'p_hitotsu_kudasai', 'p_sou_shimasu', 'p_itte_mimasu',
+  'p_kakunin_shimashita', 'p_tasukarimashita', 'p_iie_arimasen', 'p_kore_to_kore',
+  'p_dochira_desu_ka', 'p_hai_wakarimashita', 'p_hai_arimasu', 'p_yoyaku_shiteimasu',
+  'p_tasukete', 'p_kore_kudasai_shop', 'p_kore_nani', 'p_tanoshimi_desu',
+  'p_futari_desu', 'p_itadakimasu', 'p_iie_irimasen', 'p_futatsu_kudasai',
+  'p_betsubetsu_de', 'p_mochikaeri_de', 'p_suica_de', 'p_ki_o_tsukemasu',
+  'p_heya_doko', 'p_choushoku_wa', 'p_mata_kimasu', 'p_doko_desu_ka',
+  // 미션에 자주 나오는 짧은 점원 질문 — 답변(위 항목)과 짝을 이뤄 미션 회화 감각을 미리 익힘
+  'p_atatamemasu_ka', 'p_hashi_irimasu_ka', 'p_yoyaku_wa_arimasu_ka',
+  'p_dou_nasaimashita_ka', 'p_nanika_osagashi_desu_ka',
+];
+
 export interface ChoicePhrase {
   id?: string;
   kana: string;
@@ -822,6 +851,9 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
     const extra = phrases.filter((p) => p.kana && !seen.has(p.id) && fitLen(p)).map((p) => p.id);
     return [...curated, ...extra];
   })();
+  // 작문 대상 — 받아쓰기와 달리 전체 자동편입 없이 COMPOSE_IDS 큐레이션만 사용.
+  // "가장 흔하게 쓰이는 문장" 취지를 지키기 위해 풀을 넓히지 않는다.
+  const composeTargetIds: string[] = COMPOSE_IDS.filter((id) => phrases.some((p) => p.id === id));
 
   // 받아쓰기 레벨 — 미션에 쓰이는 표현이면 그 미션 티어, 아니면 길이로 추정(짧으면 입문).
   const dictTier = (id: string, units: number): 1 | 2 | 3 | 4 | 5 => {
@@ -907,9 +939,9 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
     });
   };
 
-  // 받아쓰기(듣고 쓰기) + 한→일 작문(뜻 보고 조립) — 같은 풀, dictation UI 재사용
+  // 받아쓰기(듣고 쓰기, 전체 풀) + 한→일 작문(뜻 보고 조립, 큐레이션 풀) — dictation UI 재사용
   for (const id of dictationTargetIds) pushTileCard(id, 'dictation');
-  for (const id of dictationTargetIds) pushTileCard(id, 'compose');
+  for (const id of composeTargetIds) pushTileCard(id, 'compose');
 
   // 한→일 고르기 — 한국어 뜻을 보고 알맞은 일본어 보기를 고르기(역방향 인식). 표현 변형으로 회전 출제.
   const jaShort = (q: Phrase) => q.displayKana ?? q.kana;
