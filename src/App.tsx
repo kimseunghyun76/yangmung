@@ -82,6 +82,7 @@ export function App() {
   const verbsStageKeyRef = useRef<string | null>(null);                    // 동사 형태 단계 키
   const verbsScoreRef = useRef<{ ok: number; n: number }>({ ok: 0, n: 0 }); // 동사 형태 정답 누적
   const pendingMenuStageRef = useRef<string | null>(null);                  // 메뉴 경유(어휘) 단계 키
+  const lastPracticeRef = useRef<(() => void) | null>(null);                // Done "다시 한번 학습" — 방금 시작한 빠른 연습 재현
   const [seenKana, setSeenKana] = useState<SeenKana>(() => loadSeenKana());
   const [discovered, setDiscovered] = useState<string[]>(() => loadDiscovered());
   // 열린 미션(랜덤 순차 오픈) — 최초 1개 랜덤, 앞 미션 학습할수록 다음 미션 랜덤 추첨 오픈
@@ -218,6 +219,7 @@ export function App() {
     const id = nextSessionId(session);
     const cards = selectSessionCards(allCards, progress, id, sessionConfig);
     if (cards.length === 0) return;
+    lastPracticeRef.current = null; // 미션/오늘의 세션 — "다시 한번 학습"(연습 전용) 대상 아님
     // 발견 카드가 있으면 세션 끝(팁 앞)에 보상으로 삽입 + 축하 기록
     const disc = pickDiscovery();
     if (disc) {
@@ -234,9 +236,11 @@ export function App() {
     const id = nextSessionId(session);
     const cards = selectSessionCards(allCards, progress, id, reviewConfig);
     if (cards.length === 0) return;
+    lastPracticeRef.current = null;
     flow.beginSession(id, cards, { intro: true });
   }
   function startSceneSession(missionId: string) {
+    lastPracticeRef.current = null; // 미션 세션 — "다시 한번 학습" 대상 아님
     const cards = selectMissionCards(allCards, missionId, progress);
     if (cards.length === 0) return;
     flow.beginSession(nextSessionId(session), cards, { intro: true }); // 미션 = 1000
@@ -302,6 +306,7 @@ export function App() {
     const ids = new Set(CONTENT.kana.filter((k) => k.script === script).map((k) => k.id));
     const cards = selectScriptKanaCards(allCards, progress, nextSessionId(session), ids, limit);
     if (cards.length === 0) return;
+    lastPracticeRef.current = () => startKanaSession(script, limit);
     // 입문 단계에서 친 가나 읽기 퀴즈는 해당 스크립트 단계를 통과시킨다.
     const stage = coreLevel === 'beginner' ? stageKey('beginner', script) : null;
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
@@ -310,6 +315,7 @@ export function App() {
   function startPairSession(stage?: string | null) {
     const cards = selectPairCards(allCards, progress, nextSessionId(session), 18);
     if (cards.length === 0) return;
+    lastPracticeRef.current = () => startPairSession(stage);
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
   }
   // 거리 읽기 — 간판·메뉴·안내·교통 표기 읽기 연습
@@ -319,6 +325,7 @@ export function App() {
     // 학습형 — 간판을 모두 설명·듣기·읽기한 뒤, 다양한 변형 퀴즈(표기→뜻·듣고 일본어 등).
     const cards = selectStudyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:') && !id.startsWith('sign:study:'), { studyLimit: 24, quizCount: 6, progress });
     if (cards.length === 0) return;
+    lastPracticeRef.current = () => startSignSession(stage);
     // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 stage로 흘러들 수 있어(방어)
     if (typeof stage !== 'string') { beginWithPreview('간판·메뉴 읽기', undefined, cards, 'public', { practice: true }); return; }
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
@@ -327,6 +334,7 @@ export function App() {
   function startDictationSession(stage?: string | null) {
     const cards = selectDictationCards(allCards, progress, nextSessionId(session), 18);
     if (cards.length === 0) return;
+    lastPracticeRef.current = () => startDictationSession(stage);
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
   }
   // 한→일 작문 전용 — 한국어 보고 일본어 조립(산출).
@@ -337,6 +345,7 @@ export function App() {
     const id = nextSessionId(session);
     const cards = selectComposeCards(allCards, progress, id, count);
     if (cards.length === 0) return;
+    lastPracticeRef.current = () => startComposeSession(stage);
     const lines = cards
       .filter((c): c is DictationCard => c.kind === 'dictation')
       .map((c) => ({ ja: c.ja, kana: c.answer.join(''), korean: c.korean }));
@@ -376,18 +385,21 @@ export function App() {
     // 어휘 단계로 진입한 경우, 어휘 세션을 통과하면 단계 완료(메뉴 경유라 ref로 전달).
     const stage = pendingMenuStageRef.current;
     pendingMenuStageRef.current = null;
+    lastPracticeRef.current = () => startVocabSession(groupId);
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
   }
   // 기본 인사 전용 세션 — 학습형
   function startGreetingSession(stage?: string | null) {
     const cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:greetings:study:'), (id) => id.startsWith('vocab:greetings:') && !isVocabStudy(id), { studyLimit: 24, quizCount: 6, progress });
     if (cards.length === 0) return;
+    lastPracticeRef.current = () => startGreetingSession(stage);
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
   }
   // 방송 메시지 — 전철·공항·버스 등 공공 방송 듣고 학습(독립 콘텐츠 덱).
   function startAnnouncementSession(category?: AnnouncementCategory) {
     const cards = selectAnnouncementDeck(category);
     if (cards.length === 0) return;
+    lastPracticeRef.current = () => startAnnouncementSession(category);
     const title = category
       ? `방송 · ${ANNOUNCEMENT_CATEGORIES.find((c) => c.id === category)?.label ?? '방송'}`
       : '방송 메시지 모아 듣기';
@@ -397,11 +409,13 @@ export function App() {
   function startDialogueSession(sceneId: string) {
     const cards = selectDialogueDeck(sceneId);
     if (cards.length === 0) return;
+    lastPracticeRef.current = () => startDialogueSession(sceneId);
     beginWithPreview(cards[0].tag, undefined, cards, 'ent', { practice: true });
   }
   function startSongSession(songId: string) {
     const cards = selectSongDeck(songId);
     if (cards.length === 0) return;
+    lastPracticeRef.current = () => startSongSession(songId);
     beginWithPreview(cards[0].tag, undefined, cards, 'ent', { practice: true });
   }
   // 가나 쓰기(따라쓰기) — 히라/가타 섞어 무작위 10자(유추 방지). 세션/SRS와 분리.
@@ -591,11 +605,6 @@ export function App() {
       )];
       const nextSceneId = planSession(allCards, progress, nextId, sessionConfig)
         .missions.find((m) => m.id !== 'C0')?.id;
-      // 연습 세션(장면 없음)용 보상 장면 — 해금 장면에서 세션 id로 결정적 선택(2개)
-      const unlockedForReward = CONTENT.missions.filter((m) => m.id !== 'C0' && isSceneOpen(m.id, openMissions, !!settings.devUnlockAll)).map((m) => m.id);
-      const fallbackSceneIds = unlockedForReward.length
-        ? [...new Set([unlockedForReward[sessionId % unlockedForReward.length], unlockedForReward[(sessionId + 1) % unlockedForReward.length]])]
-        : [];
       // 다음 단계 제안: 복습·받아쓰기·거리읽기 가용 개수(반복되는 "다음 장면" 대신 다른 선택지)
       const reviewCount = selectSessionCards(allCards, progress, nextId, reviewConfig).length;
       const dictationCount = selectDictationCards(allCards, progress, nextId).length;
@@ -605,12 +614,12 @@ export function App() {
         <Done
           sessionId={sessionId} score={flow.score} quizSeen={flow.quizSeen} sessionLog={flow.sessionLog}
           progress={progress} canContinue={canContinue}
-          clearedSceneIds={clearedSceneIds} fallbackSceneIds={fallbackSceneIds} nextSceneId={nextSceneId} showGacha={flow.gachaEligible}
+          clearedSceneIds={clearedSceneIds} nextSceneId={nextSceneId}
           reviewCount={reviewCount} dictationCount={dictationCount} composeCount={composeCount} signCount={signCount}
           speakCount={sessionCards.filter((c) => c.kind === 'speak').length}
           isQuickPractice={flow.isPractice}
           coreLevel={coreLevel} progression={progression} devUnlockAll={!!settings.devUnlockAll}
-          onRetryWeak={flow.retryWeak} onContinue={startSession}
+          onRetryWeak={flow.retryWeak} onRetrySame={flow.isPractice ? lastPracticeRef.current ?? undefined : undefined} onContinue={startSession}
           onReview={startReviewSession} onDictation={startDictationSession} onCompose={startComposeSession} onSigns={startSignSession} onFlash={startFlashSession}
           onPracticeVocab={() => navigate('vocab')}
           onPracticeGreetings={startGreetingSession}

@@ -6,8 +6,6 @@ import { Icon } from '../ui/Icon';
 import { GlassPanel, hexA } from './shell';
 import { quickPracticeBackdrop, sceneVisualByMission } from './scene';
 import { MascotLine } from './mascot';
-import { GachaBox } from './Gacha';
-import { boxGrade } from '../learn/collection';
 import {
   CORE_LEVEL_LABEL,
   LEVEL_STAGES,
@@ -27,9 +25,7 @@ interface Props {
   speakCount: number;
   canContinue: boolean;
   clearedSceneIds: string[];
-  fallbackSceneIds?: string[]; // 장면이 없는 연습 세션(간판·받아쓰기·작문…)에서 점수 좋으면 줄 보상 장면
   nextSceneId?: string;
-  showGacha?: boolean;
   reviewCount?: number;
   dictationCount?: number;
   composeCount?: number;
@@ -39,6 +35,7 @@ interface Props {
   progression: ProgressionState;
   devUnlockAll?: boolean;
   onRetryWeak: () => void;
+  onRetrySame?: () => void; // 방금 한 연습을 처음부터 다시(연습 완료 화면 전용)
   onContinue: () => void;
   onReview?: () => void;
   onDictation?: () => void;
@@ -58,7 +55,7 @@ interface Props {
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place
   ?? CONTENT.missions.find((m) => m.id === id)?.scenario ?? id;
 
-export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, fallbackSceneIds = [], nextSceneId, showGacha = true, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, isQuickPractice = false, coreLevel, progression, devUnlockAll = false, onRetryWeak, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onPracticeVocab, onPracticeGreetings, onPracticeKanaHiragana, onPracticeKanaKatakana, onPracticePairs, onPracticeWrite, onPracticeVerbs, onHome }: Props) {
+export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, isQuickPractice = false, coreLevel, progression, devUnlockAll = false, onRetryWeak, onRetrySame, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onPracticeVocab, onPracticeGreetings, onPracticeKanaHiragana, onPracticeKanaKatakana, onPracticePairs, onPracticeWrite, onPracticeVerbs, onHome }: Props) {
   const stars = quizSeen ? Math.max(1, Math.round((score / quizSeen) * 3)) : 0;
   const s = summarize(progress);
   const sr = sessionResult(progress, sessionId);
@@ -67,7 +64,9 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
   const weak = new Set(sessionLog.filter((r) => r.result !== 'correct').map((r) => r.id)).size;
   const stamps = clearedSceneIds.slice(0, 3);
   const quickPracticeActions: NextAction[] = [
-    ...(onPracticeVocab ? [quickAction('vocab', 'kana', 'var(--accent)', '어휘 커리큘럼', '단어 그림·표기·뜻 다시 회전', onPracticeVocab, true)] : []),
+    // 방금 한 연습을 처음부터 다시 — 항상 맨 앞(가장 예상되는 다음 행동)
+    ...(onRetrySame ? [quickAction('retry-same', 'flow', 'var(--ok)', '다시 한번 학습', '방금 한 연습을 처음부터 다시', onRetrySame, true)] : []),
+    ...(onPracticeVocab ? [quickAction('vocab', 'kana', 'var(--accent)', '어휘 커리큘럼', '단어 그림·표기·뜻 다시 회전', onPracticeVocab, !onRetrySame)] : []),
     ...(onPracticeGreetings ? [quickAction('greetings', 'speak', 'var(--ok)', '기본 인사', '듣고 바로 반응하기', onPracticeGreetings)] : []),
     ...(onSigns ? [quickAction('signs', 'sign', 'var(--accent)', '거리 읽기', '간판·메뉴·안내 읽기', onSigns)] : []),
     ...(onDictation ? [quickAction('dictation', 'dictation', 'var(--warn)', '받아쓰기', '듣고 가나 타일로 쓰기', onDictation)] : []),
@@ -125,11 +124,13 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
     ...(onSigns && signCount > 0 ? [quickAction('signs', 'sign', 'var(--accent)', '거리 읽기', '간판·메뉴·안내 읽기', onSigns)] : []),
     ...(onFlash ? [quickAction('flash', 'fast', 'var(--accent)', '속도전 플래시', '제한시간 안에 빠르게 복습', onFlash)] : []),
   ].map((a) => ({ ...a, section: 'next' as const, badge: a.badge ?? '강화' }));
+  // 연습 완료 화면엔 "오답과 복습" + "연습" 부분만(미션 다음 단계 가이드 X), 미션 완료 화면엔
+  // 반대로 "오답과 복습" + 미션 다음 단계 가이드만(다른 연습 목록 X) — 서로의 다음 행동을 섞지 않는다.
   const actionSections = buildActionSections(CORE_LEVEL_LABEL[coreLevel], {
     recovery: weakActions,
-    guide: levelGuideActions,
+    guide: isQuickPractice ? [] : levelGuideActions,
     quick: isQuickPractice ? quickPracticeActions : [],
-    next: [nextSceneAction, ...reinforcementActions].filter((action): action is NextAction => !!action),
+    next: isQuickPractice ? [] : [nextSceneAction, ...reinforcementActions].filter((action): action is NextAction => !!action),
   });
 
   function actionForStage(stage: ProgStage, idx: number): NextAction | null {
@@ -191,10 +192,6 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
           <Icon name="recovery" size={16} /> 복구 {recoveryUsed}회 — 막혀도 끝까지 이어갔어요
         </p>
       )}
-
-      {/* 가챠 박스 — 세션 장면별 카드 10장 드롭 (학습 로직과 분리). 약점 재도전 세션 제외 */}
-      {/* 장면 세션은 클리어 장면으로 보상. 연습 세션(장면 없음)은 별 2개↑일 때만 보상(점수 기준). */}
-      {showGacha && <GachaBox sessionId={sessionId} sceneIds={clearedSceneIds.length ? clearedSceneIds : (stars >= 2 ? fallbackSceneIds : [])} grade={boxGrade(stars, recoveryUsed)} />}
 
       {/* 다음 단계 추천 — 매번 같은 다음 장면 대신 신규·복습·다른 연습을 골라가며 */}
       <div className="ym-rise" style={{ animationDelay: '.16s', marginTop: 24 }}>
