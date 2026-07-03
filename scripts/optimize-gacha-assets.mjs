@@ -18,6 +18,7 @@ const jobs = [
     target: join(publicDir, 'gacha', 'items', 'generated-v2'),
     size: 512,
     quality: 80,
+    keyColor: '0x00ff00',
   },
   {
     name: 'gacha-fx',
@@ -56,7 +57,20 @@ for (const job of jobs) {
     mkdirSync(dirname(output), { recursive: true });
     before += statSync(input).size;
 
-    const result = spawnSync(cwebp, [
+    const result = job.keyColor ? spawnSync('ffmpeg', [
+      '-y',
+      '-loglevel',
+      'error',
+      '-i',
+      input,
+      '-vf',
+      `scale=${job.size}:${job.size},colorkey=${job.keyColor}:0.22:0.08,despill=type=green:mix=0.86:expand=0.18,format=rgba`,
+      '-c:v',
+      'libwebp',
+      '-quality',
+      String(job.quality),
+      output,
+    ], { stdio: 'inherit' }) : spawnSync(cwebp, [
       '-quiet',
       '-q', String(job.quality),
       '-m', '6',
