@@ -370,6 +370,10 @@ function ImageCornerOverlay({ card }: { card: IntroduceCard }) {
 }
 
 function QuickPracticeWordScene({ card }: { card: IntroduceCard }) {
+  // 명장면 대화·노래 가사·방송 메시지는 매칭되는 이미지가 없어 항상 같은 일반 배경(vocab.webp)만
+  // 뜨게 된다 — 내용과 무관한 의미 없는 이미지라 아예 표시하지 않는다.
+  if (card.id.startsWith('dlg:') || card.id.startsWith('song:') || card.id.startsWith('announce:')) return null;
+
   const art = quickPracticeArtForCard(card);
   const imageSrc = card.id.startsWith('sign:') || card.id.startsWith('basic:') ? null : wordArtSrcForCard(card);
   const [imageFailed, setImageFailed] = useState(false);
