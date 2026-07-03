@@ -16,7 +16,7 @@ interface Props {
 
 const SIZE = 300;        // 캔버스 내부 해상도
 const PASS = 55;         // 합격 커버리지(%)
-const INK_WIDTH = 17;    // 펜 굵기
+const INK_WIDTH = 26;    // 펜 굵기
 const DILATE_R = 11;     // 채점 시 잉크를 부풀리는 반경(px) — 가는 펜으로 두꺼운 글자를 따라가도 공정하게
 
 export function KanaWrite({ items, onExit, onReplay, onKanaWritten }: Props) {
