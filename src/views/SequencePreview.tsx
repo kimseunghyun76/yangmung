@@ -63,7 +63,7 @@ export function SequencePreview({ title, subtitle, lines, onStart, onBack }: Pro
         <p style={{ margin: '6px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>먼저 전체를 한 번 들어본 뒤, 문장별로 학습하고 퀴즈를 풀어요.</p>
       </div>
 
-      <GlassPanel scroll>
+      <GlassPanel>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {lines.map((l, i) => {
             const active = playingIndex === i;
