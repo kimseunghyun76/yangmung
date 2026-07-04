@@ -99,11 +99,22 @@ function svgWrap(body, item, rarity) {
     <stop offset=".65" stop-color="#e8463d"/>
     <stop offset="1" stop-color="#9e1f2a"/>
   </linearGradient>
+  <linearGradient id="berry" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#ffd7e8"/>
+    <stop offset=".48" stop-color="#ff8eb8"/>
+    <stop offset="1" stop-color="#d84f8a"/>
+  </linearGradient>
+  <linearGradient id="mint" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#f5fff3"/>
+    <stop offset=".52" stop-color="#9ee4ba"/>
+    <stop offset="1" stop-color="#4d9f82"/>
+  </linearGradient>
 </defs>
 <rect width="${SIZE}" height="${SIZE}" fill="#00ff00"/>
 <title>${esc(item.title)}</title>
 ${ambient(item, rarity)}
 <g filter="url(#ds)">${body}</g>
+${cuteAccents(item, rarity)}
 ${surfaceGlints(item, rarity)}
 ${sparkles(item, rarity)}
 </svg>`;
@@ -119,14 +130,26 @@ ${showAura ? `<ellipse cx="384" cy="382" rx="${226 + t * 18}" ry="${170 + t * 14
 function sparkles(item, rarity) {
   const h = hash(item.title + rarity);
   const t = tier(rarity);
-  if (t < 4) return '';
-  const count = t - 1;
+  if (t < 5) return '';
+  const anchorsByMotif = {
+    food: [[286, 484], [528, 322], [478, 454]],
+    drink: [[438, 282], [338, 510], [432, 418]],
+    ticket: [[512, 354], [284, 430], [492, 494]],
+    stay: [[450, 320], [302, 478], [506, 498]],
+    shopping: [[316, 360], [454, 360], [384, 500]],
+    safety: [[330, 306], [432, 306], [452, 468]],
+    festival: [[455, 330], [520, 450], [312, 424]],
+    service: [[450, 320], [318, 330], [488, 472]],
+  };
+  const anchors = anchorsByMotif[item.motif] ?? anchorsByMotif.service;
+  const count = Math.min(anchors.length, t - 3);
   const colors = ['#ffe184', '#ffffff', '#b997ff', '#7ee6f2', '#ff93ba'];
   let out = '';
   for (let i = 0; i < count; i++) {
-    const x = 150 + ((h >>> (i * 4)) % 468);
-    const y = 140 + ((h >>> (i * 5)) % 392);
-    const s = 6 + ((h >>> (i + 3)) % 8) + t;
+    const [ax, ay] = anchors[(h + i) % anchors.length];
+    const x = ax + (((h >> (i + 2)) % 21) - 10);
+    const y = ay + (((h >> (i + 5)) % 19) - 9);
+    const s = 6 + ((h >>> (i + 3)) % 6) + t;
     const c = colors[(h + i) % colors.length];
     out += `<g opacity="${0.32 + Math.min(t, 5) * 0.06}">
       <path d="M${x - s} ${y}H${x + s}M${x} ${y - s}V${y + s}" stroke="${c}" stroke-width="${Math.max(3, s * 0.25)}" stroke-linecap="round"/>
@@ -146,6 +169,70 @@ function shine(x, y, w, rot = -14) {
 
 function gem(x, y, s) {
   return `<path d="M${x} ${y - s}L${x + s * 0.72} ${y}L${x} ${y + s}L${x - s * 0.72} ${y}Z" fill="url(#glow)" stroke="url(#dark)" stroke-width="${Math.max(4, s * 0.12)}"/>`;
+}
+
+function heart(x, y, s, fill = 'url(#berry)') {
+  return `<path d="M${x} ${y + s * .48}C${x - s * 1.16} ${y - s * .24} ${x - s * .62} ${y - s * 1.2} ${x} ${y - s * .55}C${x + s * .62} ${y - s * 1.2} ${x + s * 1.16} ${y - s * .24} ${x} ${y + s * .48}Z" fill="${fill}" stroke="url(#dark)" stroke-width="${Math.max(3, s * .15)}" stroke-linejoin="round"/>`;
+}
+
+function miniStar(x, y, s, fill = '#fff0a0') {
+  const r = s * 0.42;
+  return `<path d="M${x} ${y - s}L${x + r} ${y - r}L${x + s} ${y}L${x + r} ${y + r}L${x} ${y + s}L${x - r} ${y + r}L${x - s} ${y}L${x - r} ${y - r}Z" fill="${fill}" stroke="url(#dark)" stroke-width="${Math.max(2.5, s * .12)}" stroke-linejoin="round"/>`;
+}
+
+function bow(x, y, s) {
+  return `<g>
+    <path d="M${x} ${y}C${x - s * 1.5} ${y - s * .85} ${x - s * 1.7} ${y + s * .9} ${x - s * .16} ${y + s * .2}Z" fill="url(#berry)" stroke="url(#dark)" stroke-width="${Math.max(4, s * .18)}" stroke-linejoin="round"/>
+    <path d="M${x} ${y}C${x + s * 1.5} ${y - s * .85} ${x + s * 1.7} ${y + s * .9} ${x + s * .16} ${y + s * .2}Z" fill="url(#berry)" stroke="url(#dark)" stroke-width="${Math.max(4, s * .18)}" stroke-linejoin="round"/>
+    <circle cx="${x}" cy="${y}" r="${s * .34}" fill="url(#gold)" stroke="url(#dark)" stroke-width="${Math.max(3, s * .13)}"/>
+  </g>`;
+}
+
+function bead(x, y, r, fill = 'url(#mint)') {
+  return `<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="url(#dark)" stroke-width="${Math.max(2.5, r * .28)}"/><circle cx="${x - r * .28}" cy="${y - r * .32}" r="${Math.max(2, r * .24)}" fill="#ffffff" opacity=".74"/>`;
+}
+
+function stitchPath(d, color = '#fff5d4') {
+  return `<path d="${d}" fill="none" stroke="${color}" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 18" opacity=".78"/>`;
+}
+
+function cuteAccents(item, rarity) {
+  const t = tier(rarity);
+  const h = hash(`${item.title}:${rarity}:cute`);
+  const palette = ['url(#berry)', 'url(#mint)', 'url(#gold)', '#d7e9ff', '#ffe6ae'];
+  const anchorsByMotif = {
+    food: [[302, 486], [462, 326], [536, 454], [238, 418]],
+    drink: [[315, 515], [446, 282], [435, 421], [338, 338]],
+    ticket: [[256, 430], [512, 360], [496, 496], [326, 328]],
+    stay: [[302, 478], [452, 330], [508, 502], [282, 340]],
+    shopping: [[315, 362], [454, 362], [384, 500], [478, 482]],
+    safety: [[330, 308], [430, 308], [322, 492], [452, 468]],
+    festival: [[312, 424], [455, 330], [516, 454], [354, 282]],
+    service: [[318, 330], [450, 320], [488, 472], [292, 494]],
+  };
+  const anchors = anchorsByMotif[item.motif] ?? anchorsByMotif.service;
+  const count = Math.min(anchors.length, 1 + Math.floor(t / 2));
+  let out = '';
+  for (let i = 0; i < count; i++) {
+    const [ax, ay] = anchors[(h + i) % anchors.length];
+    const x = ax + (((h >> (i + 3)) % 25) - 12);
+    const y = ay + (((h >> (i + 6)) % 21) - 10);
+    const s = 8 + ((h >> (i + 7)) % 6) + t * 0.55;
+    if (i % 3 === 0) out += heart(x, y, s * .75, palette[(h + i) % palette.length]);
+    else if (i % 3 === 1) out += miniStar(x, y, s * .72, palette[(h + i) % palette.length]);
+    else out += bead(x, y, s * .48, palette[(h + i) % palette.length]);
+  }
+  const bowAnchors = {
+    shopping: [440, 326],
+    stay: [456, 318],
+    festival: [482, 318],
+    safety: [432, 302],
+  };
+  if (t >= 4 && bowAnchors[item.motif]) {
+    const [bx, by] = bowAnchors[item.motif];
+    out += bow(bx, by, 14 + t);
+  }
+  return `<g opacity=".82">${out}</g>`;
 }
 
 function surfaceGlints(item, rarity) {
@@ -252,6 +339,10 @@ function drawRamen(item, rarity) {
     <ellipse cx="384" cy="409" rx="194" ry="72" fill="${soup}" opacity=".9"/>
     ${noodles}
     <circle cx="312" cy="382" r="34" fill="#fff2aa" stroke="#d69b4e" stroke-width="5"/>
+    <path d="M300 382h24M312 370v24" stroke="#d99b4b" stroke-width="5" stroke-linecap="round" opacity=".5"/>
+    <circle cx="382" cy="382" r="10" fill="#5ea85b"/>
+    <circle cx="412" cy="424" r="8" fill="#5ea85b"/>
+    <path d="M270 424c31 16 65 17 104 0" fill="none" stroke="#fff3af" stroke-width="7" stroke-linecap="round" opacity=".52"/>
     ${t >= 3 ? `<rect x="448" y="360" width="100" height="42" rx="21" fill="#cc6c50" stroke="#8f3b2f" stroke-width="5"/>` : ''}
     ${t >= 5 ? `<circle cx="523" cy="332" r="31" fill="#f46d55" stroke="#b64135" stroke-width="5"/>` : ''}
     <path d="M504 243L310 348M548 261L350 365" stroke="#704328" stroke-width="17" stroke-linecap="round"/>`;
@@ -263,9 +354,16 @@ function drawBento(item, rarity) {
     <rect x="242" y="302" width="284" height="224" rx="34" fill="url(#paper)" stroke="#8b613d" stroke-width="8"/>
     <path d="M384 312v204M252 414h264" stroke="#8b613d" stroke-width="10" opacity=".55"/>
     <circle cx="318" cy="365" r="46" fill="#f9f0df" stroke="#dbc8a8" stroke-width="5"/>
+    <circle cx="300" cy="354" r="4" fill="#d8c5ad"/>
+    <circle cx="326" cy="380" r="4" fill="#d8c5ad"/>
+    <circle cx="337" cy="350" r="3.5" fill="#d8c5ad"/>
     <circle cx="454" cy="365" r="38" fill="#e85f4a" stroke="#9f352d" stroke-width="5"/>
+    <path d="M438 356c18-9 37-7 50 6" fill="none" stroke="#ffb09b" stroke-width="6" stroke-linecap="round" opacity=".58"/>
     <circle cx="320" cy="468" r="35" fill="#58a660" stroke="#327641" stroke-width="5"/>
+    <path d="M299 462c17 8 35 8 53-1" fill="none" stroke="#bdf0a1" stroke-width="5" stroke-linecap="round" opacity=".7"/>
     <circle cx="453" cy="466" r="43" fill="url(#main)" stroke="url(#dark)" stroke-width="6"/>
+    ${heart(452, 463, 14, '#fff0a0')}
+    ${stitchPath('M276 318H492M276 512H492', '#fff8df')}
     ${t >= 4 ? `${gem(520, 292, 28)}${shine(272, 327, 98, -8)}` : ''}`;
 }
 
@@ -276,6 +374,10 @@ function drawBread(item, rarity) {
     <ellipse cx="306" cy="352" rx="82" ry="63" fill="#f0b96c"/>
     <ellipse cx="403" cy="339" rx="96" ry="68" fill="#f0b96c"/>
     <ellipse cx="495" cy="378" rx="78" ry="64" fill="#e7a65d"/>
+    <path d="M288 350c16 20 45 26 74 17M384 340c22 25 64 25 94 3M457 384c19 17 42 21 67 8" fill="none" stroke="#9c5d2c" stroke-width="7" stroke-linecap="round" opacity=".38"/>
+    <circle cx="330" cy="333" r="5" fill="#fff1bf" opacity=".72"/>
+    <circle cx="408" cy="314" r="5" fill="#fff1bf" opacity=".72"/>
+    <circle cx="485" cy="354" r="5" fill="#fff1bf" opacity=".72"/>
     ${shine(303, 330, 112, -10)}
     ${t >= 4 ? `<circle cx="477" cy="304" r="24" fill="url(#gold)"/>` : ''}`;
 }
@@ -291,6 +393,10 @@ function drawFood(item, rarity) {
     return `<path d="M384 176L591 554H177Z" fill="url(#dark)"/>
       <path d="M384 205L556 532H212Z" fill="#fff9ee" stroke="#d8cbb7" stroke-width="8"/>
       <path d="M384 315L460 528H308Z" fill="#263729" stroke="#142018" stroke-width="7"/>
+      <circle cx="365" cy="336" r="6" fill="#d8c8ad"/>
+      <circle cx="416" cy="377" r="5" fill="#d8c8ad"/>
+      <circle cx="337" cy="429" r="5" fill="#d8c8ad"/>
+      <circle cx="384" cy="284" r="24" fill="url(#berry)" opacity=".86"/>
       ${shine(302, 414, 120, -4)}`;
   }
   return drawBento(item, rarity);
@@ -308,6 +414,8 @@ function drawPasta(item, rarity) {
     <ellipse cx="384" cy="440" rx="236" ry="89" fill="url(#paper)" stroke="url(#dark)" stroke-width="8"/>
     ${noodles}
     <circle cx="451" cy="394" r="32" fill="${sauce}" opacity=".92"/>
+    <circle cx="452" cy="394" r="12" fill="#fff0c6" opacity=".26"/>
+    <path d="M287 458c48 17 126 19 194 0" fill="none" stroke="#fff7c1" stroke-width="7" stroke-linecap="round" opacity=".42"/>
     ${t >= 3 ? `<circle cx="318" cy="438" r="25" fill="#4f9b56"/>` : ''}
     ${has(title, ['해산물']) ? `<circle cx="515" cy="430" r="31" fill="#f06f54" stroke="#b44335" stroke-width="5"/>` : ''}`;
 }
@@ -341,6 +449,8 @@ function drawTicket(item, rarity) {
       <rect x="232" y="307" width="304" height="184" rx="32" fill="url(#main)" stroke="#ffffff" stroke-width="4" opacity=".98"/>
       <rect x="274" y="354" width="100" height="66" rx="17" fill="url(#paper)" opacity=".88"/>
       <circle cx="480" cy="438" r="35" fill="url(#glow)" stroke="url(#dark)" stroke-width="6"/>
+      <path d="M402 356h84M402 386h58" stroke="#ffffff" stroke-width="8" stroke-linecap="round" opacity=".36"/>
+      ${miniStar(292, 455, 16, '#fff0a0')}
       ${shine(260, 329, 148, -8)}`;
   }
   if (has(title, ['영수증', '서류', '신청서', '확인서', '신고서', '송장', '라벨', '번호표', '예약표'])) return drawDocument(item, rarity);
