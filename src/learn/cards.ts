@@ -28,8 +28,9 @@ const DICTATION_DISTRACTORS = ['つ', 'ん', 'を', 'ぬ', 'ふ', 'ね', 'ろ', 
 // 작문(한→일) 전용 큐레이션 — 받아쓰기(위 DICTATION_IDS + 전체 자동편입)와 분리.
 // 기준: ① 앱 미션에서 실제 학습자 답변으로 가장 자주 등장(promotionPool 분석) ② はい/すみません 등
 // 일본인이 일상에서 아주 흔하게 쓰는 both 표현 ③ 미션에 나오는 짧고 쉬운 점원 질문(답변과 짝지어
-// 나중에 미션 학습에 바로 도움이 되도록). 받아쓰기처럼 전체 자동편입을 하지 않는다 — 여기서 벗어난
-// 표현이 무작위로 섞이면 "가장 흔한 문장" 취지가 흐려지기 때문.
+// 나중에 미션 학습에 바로 도움이 되도록). 무작위 전체 자동편입은 여전히 안 한다 — 이 배열에 없는
+// 표현이 섞이면 "가장 흔한 문장" 취지가 흐려지기 때문. 대신 2026-07-05에 사용자 요청으로 큐레이션
+// 기준(미션 실사용 ≥1회 + productive/both 또는 짧은 점원 질문)은 유지한 채 70→265개(약 3.8배)로 확장.
 const COMPOSE_IDS = [
   // 핵심 상시 표현(register: both) — 가장 흔한 인사·응답
   'p_hai', 'p_iie', 'p_arigatou', 'p_daijoubu', 'p_konnichiwa', 'p_sumimasen',
@@ -52,6 +53,50 @@ const COMPOSE_IDS = [
   // 미션에 자주 나오는 짧은 점원 질문 — 답변(위 항목)과 짝을 이뤄 미션 회화 감각을 미리 익힘
   'p_atatamemasu_ka', 'p_hashi_irimasu_ka', 'p_yoyaku_wa_arimasu_ka',
   'p_dou_nasaimashita_ka', 'p_nanika_osagashi_desu_ka',
+  // ── 4배 확장(2026-07-05) — 미션 실사용 빈도순 답변(register productive/both) ──
+  'p_hai_onegai', 'p_okaikei', 'p_pasupooto_arimasu', 'p_tsukaikata', 'p_card_tsukaemasu_ka',
+  'p_ryoushuusho', 'p_reshiito_kudasai', 'p_michi_oshiete', 'p_kore_de', 'p_wakarimashita_arigatou',
+  'p_gochisousama', 'p_yoroshiku_onegai', 'p_kippu_kudasai', 'p_nanbansen', 'p_komakaku',
+  'p_kore_ikura', 'p_arerugi', 'p_kore_nuite', 'p_toire_doko', 'p_shashin_ii',
+  'p_sorede_onegai', 'p_fukuro_iranai', 'p_shinjuku_doko', 'p_tsugi_wa_shibuya', 'p_mikka',
+  'p_kono_botan_oshite', 'p_oomori', 'p_atama_itai', 'p_onaka_itai', 'p_kaze_desu',
+  'p_kusuri_kudasai', 'p_kono_kusuri', 'p_basho_o_oshiete_kudasai', 'p_sagashite_mimasu', 'p_iie_kekkou',
+  'p_hai_sou_desu', 'p_iie_nanimoarimasen', 'p_menu_misete', 'p_arigatou_gozaimasu', 'p_atatamete',
+  'p_irimasen', 'p_sono_mama_de', 'p_ichiman_de', 'p_isshuukan', 'p_hoteru_desu',
+  'p_shichaku', 'p_made_onegai', 'p_koko_de_tomete', 'p_aruite_nanpun', 'p_ookii_no_de',
+  'p_shashin_onegai', 'p_hitori_desu', 'p_checkin_onegai', 'p_wifi_arimasu_ka', 'p_tennai_de',
+  'p_esu_saizu_de', 'p_emu_saizu_de', 'p_hotto_de', 'p_aisu_de', 'p_kippu_nimai_kudasai',
+  'p_sumimasen_koko_doko', 'p_nihongo_sukoshi_dake', 'p_shokugo_kakunin', 'p_mou_juubun', 'p_aruite_mimasu',
+  'p_matte_imasu', 'p_koko_de_orimasu', 'p_hai_atatamete', 'p_are', 'p_eki_wa_doko',
+  'p_hashi_kudasai', 'p_oden_hitotsu', 'p_karaage_kudasai', 'p_ijou_desu', 'p_hatachi_ijou_desu',
+  'p_ookii_fukuro', 'p_supuun_kudasai', 'p_card_de_onegai', 'p_suica_de_onegai', 'p_sen_en_chaaji',
+  'p_karai_desu_ka', 'p_chaaji_onegai', 'p_kaisatsu_doko', 'p_kankou_desu', 'p_shigoto_desu',
+  'p_ryougae', 'p_koinrokkaa', 'p_okuritai', 'p_takkyubin', 'p_kenbaiki',
+  'p_kaedama', 'p_men_katame', 'p_ajitama_tsuika', 'p_chaashuu_tsuika', 'p_menzei_dekimasu_ka',
+  'p_takushi_onegai', 'p_chikai_desu_ka', 'p_hidari_migi', 'p_netsu_arimasu', 'p_seki_ga_demasu',
+  'p_ninshin_chuu', 'p_ippan_michi_de', 'p_kaishain_desu', 'p_gakusei_desu', 'p_ichiman_ryougae',
+  'p_zenbu_de', 'p_chiisai_no_de', 'p_nanji_made', 'p_maebarai_de', 'p_chakubarai_de',
+  'p_nan_gousha', 'p_tsugi_de_orimasu', 'p_saifu_nakushita', 'p_ugokemasen', 'p_kusuri_nondeimasu',
+  'p_sentaku_de', 'p_kansou_de', 'p_chiketto_wa_kochira_desu', 'p_shotto_tsuika', 'p_nihon_go_muzukashii',
+  'p_kado_de_ii_desu_ka', 'p_otsuri_daijoubu', 'p_yubi_okimasu', 'p_kingaku_kakunin', 'p_tsukaikata_wakatta',
+  'p_bangou_memo', 'p_counter_de_ii', 'p_renraku_kudasai', 'p_isoide_kudasai', 'p_tadaima',
+  'p_koukan_shitai', 'p_henkin_de', 'p_nigate_na_mono_arimasu_ka', 'p_kore_hitotsu_de_yoroshii_desu_ka', 'p_hot_ice_dochira',
+  'p_pointo_arimasu_ka', 'p_ijou_de_yoroshii', 'p_doko_tomaru', 'p_reshiito_irimasu_ka', 'p_topping_ikaga',
+  'p_netsu_arimasu_ka', 'p_saizu_ikaga', 'p_ikaga_desu_ka', 'p_otsutsumi_shimasu_ka', 'p_nimotsu_arimasu_ka',
+  'p_kousoku_tsukaimasu_ka', 'p_oshigoto_wa', 'p_kaeri_koukuuken', 'p_ikura_ryougae', 'p_sen_en_satsu',
+  'p_locker_size', 'p_yokujitsu_de_ii', 'p_chakubarai_ka', 'p_oryouri_ikaga', 'p_tattoo_arimasu_ka',
+  'p_yukata_size', 'p_ekiben', 'p_hoken_dou', 'p_funshitsu_todoke', 'p_ugokemasu_ka',
+  'p_jibyou', 'p_data_youryou', 'p_nannichikan', 'p_sentaku_kansou', 'p_kingyo_sukui',
+  'p_nanbon_kasa', 'p_jiyuuseki_shitei', 'p_size_dou', 'p_fukuro_iru', 'p_reshiito_omochi',
+  'p_meisai', 'p_nanbu', 'p_ryoumen', 'p_megaphone', 'p_hokenshou_omochi',
+  'p_generic', 'p_omakase_course', 'p_aruku_densha',
+  // ── 4배 확장 — 짧은 점원 질문(register receptive, ですか/ますか 형) ──
+  'p_kochira_de_meshiagarimasu_ka', 'p_saizu_wa_dou_shimasu_ka', 'p_dore_ni_shimasu_ka',
+  'p_fukuro_otsuke_shimasu_ka', 'p_betsubetsu_tsutsumi', 'p_nomimono_wa_dou_shimasu_ka',
+  'p_kauntaa_de_yoroshii_desu_ka', 'p_sabi_wa_daijoubu_desu_ka', 'p_chizu_wa_irimasu_ka',
+  'p_taoru_wa_irimasu_ka', 'p_dochira_made_ikimasu_ka', 'p_jiyuuseki_desu_ka',
+  'p_hokenshou_wa_arimasu_ka', 'p_daijoubu_desu_ka', 'p_dono_puran_ni_shimasu_ka',
+  'p_nanmai_desu_ka', 'p_custom_arimasu',
 ];
 
 export interface ChoicePhrase {
@@ -352,7 +397,7 @@ const isAmbiguousReply = (p: Phrase): boolean => {
 // 미션 스텝 → 퀴즈 선택지 풀.
 // 정책: 정답 후보 중 1개만 노출 + 오답 3개. 복구 표현은 보기로 섞지 않고 하단 액션으로만 보여준다.
 // 세션 시작 때마다 다시 뽑아 새 문제처럼 보이게 한다.
-function buildStepChoicePools(stepChoices: MissionStep['choices'], byPhrase: (id: string) => Phrase, allPhrases: Phrase[], promptPhraseId?: string, preferred?: Phrase[]): NonNullable<QuizCard['choicePools']> {
+function buildStepChoicePools(stepChoices: MissionStep['choices'], byPhrase: (id: string) => Phrase, allPhrases: Phrase[], promptPhraseId?: string, preferred?: Phrase[], missionId?: string, phraseOwnerMissions?: Map<string, Set<string>>): NonNullable<QuizCard['choicePools']> {
   const built: Choice[] = stepChoices.map((c) => ({
     label: c.text,
     correct: c.correct,
@@ -403,9 +448,24 @@ function buildStepChoicePools(stepChoices: MissionStep['choices'], byPhrase: (id
       && p.korean.length <= 18
       && !fallbackRecoveryIds.includes(p.id)
       && !isAmbiguousReply(p); // 헷갈리는 단답·반응어 제외
-    // 같은 장면(미션)의 표현을 먼저 오답으로 — 현실 대화처럼 자연스럽지만 이번 질문엔 안 맞는 답.
-    // 모자라면 전체 표현에서 보충(다른 장면이 섞이는 빈도를 크게 낮춤).
-    const pool: Phrase[] = [...shuffle((preferred ?? []).filter(eligible)), ...shuffle(allPhrases.filter(eligible))];
+    // 다른 장면 하나에만 강하게 묶인 표현(예: 료칸 전용 "유카타 사이즈는…")은 주제가 어긋나 보이므로 최후순위로 미룬다.
+    const otherOwnerCount = (p: Phrase): number => {
+      if (!missionId || !phraseOwnerMissions) return 0;
+      const owners = phraseOwnerMissions.get(p.id);
+      if (!owners || owners.has(missionId)) return 0; // 이 미션 소유거나 무소속(범용) → 교차 아님
+      return owners.size;
+    };
+    const ownedByOtherMission = (p: Phrase): boolean => otherOwnerCount(p) > 0;
+    // 교차 미션 표현은 "여러 장면에 두루 쓰이는(=범용적)" 것을 먼저, "특정 한 장면 전용(=엉뚱)"을 최후로.
+    // 예: 약국 오답으로 코인세탁 전용 "완료까지 30분입니다"(1곳 소유)보다, 여러 가게에서 쓰는 표현을 우선.
+    const crossMission = shuffle(allPhrases.filter((p) => eligible(p) && ownedByOtherMission(p)))
+      .sort((a, b) => otherOwnerCount(b) - otherOwnerCount(a));
+    // 우선순위: ①같은 장면(미션) 표현 → ②특정 장면에 안 묶인 범용 표현 → ③교차(범용적인 것부터, 전용은 최후).
+    const pool: Phrase[] = [
+      ...shuffle((preferred ?? []).filter(eligible)),
+      ...shuffle(allPhrases.filter((p) => eligible(p) && !ownedByOtherMission(p))),
+      ...crossMission,
+    ];
     const taken = new Set<string>();
     for (const p of pool) {
       if (wrong.length >= 3) break;
@@ -605,6 +665,24 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
     }
   }
 
+  // ── 표현 → 소유 미션 집합 — 오답 보기가 "다른 장면 전용" 표현을 끌어와 주제가 어긋나는 것을 막는 데 사용. ──
+  // 특정 미션 1곳에만 묶인 표현(예: 료칸의 "유카타 사이즈는 어떠세요?")은 다른 장면 오답으로 쓰면 엉뚱해진다.
+  const phraseOwnerMissions = new Map<string, Set<string>>();
+  {
+    const addOwner = (pid: string | undefined, missionId: string) => {
+      if (!pid) return;
+      if (!phraseOwnerMissions.has(pid)) phraseOwnerMissions.set(pid, new Set());
+      phraseOwnerMissions.get(pid)!.add(missionId);
+    };
+    for (const m of missions) {
+      for (const pid of m.speakPhraseIds ?? []) addOwner(pid, m.id);
+      for (const step of m.steps) {
+        addOwner(step.promptPhraseId, m.id);
+        for (const ch of step.choices ?? []) addOwner(ch.phraseId, m.id);
+      }
+    }
+  }
+
   // 가나 드릴 — Unit 기반 자동 생성, 글자당 3종 (읽기 / 듣기 / 구분)
   // 단계(K1, K2, …) 드릴 Unit을 순서대로 처리. 각 Unit 안에서는
   // read 전체 → listen 전체 → confuse 전체 순 (한 글자에 3종이 몰리지 않게).
@@ -613,14 +691,32 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
     cards.push(...buildKanaCards(unit.stage, unit.kanaIds ?? [], { byKana, byKanaChar, kana }));
   }
 
-  // 최소 페어 구분 — 헷갈리는 음을 듣고 둘 중 고르기 (발음 변별, LEARNING_METHODS_PLAN §2).
+  // 최소 페어 구분 — 헷갈리는 음을 듣고 4지선다로 고르기 (발음 변별, LEARNING_METHODS_PLAN §2).
   // 쌍마다 a·b 각각 정답인 카드 2장 생성. 보기 순서는 shuffle로 매번 달라진다.
+  // 2지선다(자기 쌍만)는 너무 쉽게 찍을 수 있어, 다른 쌍의 표현 2개를 오답으로 더해 4지선다로 확장.
+  const allPairSides = minimalPairs.flatMap((p) => [
+    { kana: p.a.kana, korean: p.a.korean, tier: p.tier },
+    { kana: p.b.kana, korean: p.b.korean, tier: p.tier },
+  ]);
   for (const mp of minimalPairs) {
     const sides = [
       { key: 'a' as const, self: mp.a, other: mp.b },
       { key: 'b' as const, self: mp.b, other: mp.a },
     ];
     for (const { key, self, other } of sides) {
+      // 오답 2개 추가 — 같은 쌍(self·other)은 제외, 같은 tier(비슷한 난이도)를 우선.
+      const excludeKana = new Set([self.kana, other.kana]);
+      const pool = allPairSides.filter((s) => !excludeKana.has(s.kana));
+      const sameTier = shuffle(pool.filter((s) => (s.tier ?? 1) === (mp.tier ?? 1)));
+      const otherTier = shuffle(pool.filter((s) => (s.tier ?? 1) !== (mp.tier ?? 1)));
+      const extra: typeof pool = [];
+      const takenKana = new Set<string>();
+      for (const cand of [...sameTier, ...otherTier]) {
+        if (extra.length >= 2) break;
+        if (takenKana.has(cand.kana)) continue;
+        takenKana.add(cand.kana);
+        extra.push(cand);
+      }
       cards.push({
         kind: 'quiz', id: `pair:${mp.id}:${key}`, tag: '발음 구분',
         banner: '듣기', bannerJa: self.kana, sub: '듣고 들린 쪽을 고르세요',
@@ -630,6 +726,7 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
         choices: shuffle([
           { label: self.kana, correct: true, ja: self.kana, phrase: { kana: self.kana, korean: self.korean, tip: mp.focus } },
           { label: other.kana, correct: false, ja: other.kana, phrase: { kana: other.kana, korean: other.korean, tip: mp.focus } },
+          ...extra.map((e) => ({ label: e.kana, correct: false, ja: e.kana, phrase: { kana: e.kana, korean: e.korean } })),
         ]),
       });
     }
@@ -793,9 +890,11 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
         const alts = isAns(ch)
           ? correctAnswers.filter((o) => o.phraseId !== ch.phraseId).map((o) => { const ap = byPhrase(o.phraseId!); return { ja: ttsText(ap) ?? ap.kana, kana: ap.displayKana ?? ap.kana, korean: ap.korean }; })
           : undefined;
-        addIntroduce(ch.phraseId, sceneNote, qInfo, alts);
+        // 오답(ch.correct===false) 보기는 "이 질문엔 이렇게 답해요" 틀로 소개하면 안 됨 —
+        // 정답이 아닌 걸 정답처럼 가르치는 꼴이 된다. qInfo는 correct인 보기에만 붙인다.
+        addIntroduce(ch.phraseId, sceneNote, ch.correct ? qInfo : undefined, alts);
       }
-      const choicePools = buildStepChoicePools(step.choices, byPhrase, phrases, step.promptPhraseId, missionChoicePhrases);
+      const choicePools = buildStepChoicePools(step.choices, byPhrase, phrases, step.promptPhraseId, missionChoicePhrases, m.id, phraseOwnerMissions);
       // 미션 퀴즈 = "맞는 답 고르기"로 통일 (반전 퀴즈 제거).
       cards.push({
         kind: 'quiz', id: `mission:${m.id}:${idx}`, tag: `${m.id} 미션`,

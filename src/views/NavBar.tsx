@@ -14,8 +14,8 @@ type Props = NavBarProps;
 
 const items: { key: NavView; label: string }[] = [
   { key: 'home', label: '홈' },
-  { key: 'practice', label: '연습' },
-  { key: 'map', label: '지도' },
+  { key: 'practice', label: '학습' },
+  { key: 'map', label: '미션' },
   { key: 'review', label: '복습' },
   { key: 'gacha', label: '가챠' },
 ];

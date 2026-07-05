@@ -25,6 +25,22 @@ export interface BeginSessionOpts {
   replace?: boolean;
 }
 
+// 마지막으로 "완료된" 세션의 결과 스냅숏 — Done 화면은 반드시 이걸로만 렌더링한다.
+// 이유: Done에서 빠른 연습 배너를 누르면 beginSession()이 즉시 sessionCards/score 등 공유 상태를
+// 다음 세션 것으로 덮어쓴다. 그 상태에서 인트로 화면의 "뒤로"로 실제 history.back()을 하면 URL은
+// Done으로 돌아오지만, 라이브 상태는 이미 다음(보통 텅 빈) 세션 것이라 "세션 2 완료 0/0"처럼
+// 엉뚱한 결과가 보이는 버그가 있었다. Done은 이 스냅숏만 읽어 그 문제를 원천 차단한다.
+export interface DoneSnapshot {
+  sessionId: number;
+  score: number;
+  quizSeen: number;
+  sessionLog: SessionLogEntry[];
+  sessionCards: Card[];
+  isPractice: boolean;
+  /** "다시 한번 학습" 재현 함수 — App의 lastPracticeRef도 같은 이유로 스냅숏 시점에 얼려둔다. */
+  retrySame: (() => void) | null;
+}
+
 export interface SessionFlowDeps {
   view: View;
   navigate: Navigate;
@@ -36,6 +52,7 @@ export interface SessionFlowDeps {
   creditKanaKnown: (chars: string[]) => void;  // "이미 알아요" 즉시 익숙 처리
   onStagePass: (stageKey: string) => void;         // 단계 통과(정답률 ≥80%)
   onPromotionPass: (level: CoreLevel) => void;     // 승급 통과(정답률 ≥90%)
+  getRetrySame: () => (() => void) | null;         // 완료 시점의 "다시 한번 학습" 재현 함수(App의 lastPracticeRef)
 }
 
 // 카드에서 "본 가나"로 적립할 가나 문자 — 깔끔한 가나 필드가 있는 카드만.
@@ -59,6 +76,7 @@ export function useSessionFlow(deps: SessionFlowDeps) {
   const [sessionLog, setSessionLog] = useState<SessionLogEntry[]>([]);
   const [picks, setPicks] = useState<PickMap>({}); // 미션 스텝별 내가 고른 답변 (대화 리캡용)
   const [gachaEligible, setGachaEligible] = useState(true); // 약점 재도전 세션은 보석함 제외
+  const [doneSnapshot, setDoneSnapshot] = useState<DoneSnapshot | null>(null); // 마지막 완료 세션 결과(Done 전용)
   const practiceRef = useRef(false);                    // 이번 세션이 빠른 연습인지(미션 X)
   const stageKeyRef = useRef<string | null>(null);      // 이번 세션이 통과시킬 단계 키
   const promotionRef = useRef<CoreLevel | null>(null);  // 이번 세션이 승급 시험인지(대상 레벨)
@@ -118,6 +136,7 @@ export function useSessionFlow(deps: SessionFlowDeps) {
         if (acc >= STAGE_PASS) deps.onStagePass(stage);
         stageKeyRef.current = null;
       }
+      setDoneSnapshot({ sessionId, score, quizSeen, sessionLog, sessionCards, isPractice: practiceRef.current, retrySame: deps.getRetrySame() });
       navigate('done', { replace: true }); // 자동 전환 — 뒤로가기로 세션에 재진입하지 않게
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -139,8 +158,12 @@ export function useSessionFlow(deps: SessionFlowDeps) {
   }
 
   function retryWeak() {
-    const weakIds = new Set(sessionLog.filter((r) => r.result !== 'correct').map((r) => r.id));
-    const weak = sessionCards.filter((c) => c.kind === 'quiz' && weakIds.has(c.id));
+    // 항상 "마지막으로 완료된" 세션 기준(스냅숏) — 그사이 다른 빠른 연습을 잠깐 열었다 뒤로가도
+    // (라이브 sessionLog/sessionCards는 그 연습 것으로 바뀌어 있을 수 있음) 원래 세션의 오답을 잡는다.
+    const log = doneSnapshot?.sessionLog ?? sessionLog;
+    const cards = doneSnapshot?.sessionCards ?? sessionCards;
+    const weakIds = new Set(log.filter((r) => r.result !== 'correct').map((r) => r.id));
+    const weak = cards.filter((c) => c.kind === 'quiz' && weakIds.has(c.id));
     if (weak.length === 0) return;
     // 약점 재도전 = 인트로 X · 보석함 X
     beginSession(nextSessionId(deps.session), weak, { intro: false, gacha: false });
@@ -244,7 +267,7 @@ export function useSessionFlow(deps: SessionFlowDeps) {
   return {
     // 상태
     card, i, sessionCards, sessionId, picked, score, quizSeen, sessionLog, picks, gachaEligible,
-    isPractice: practiceRef.current,
+    isPractice: practiceRef.current, doneSnapshot,
     // 액션
     beginSession, retryWeak, next, prev, choose, markKnown,
     introduceSeen, dictationResult, speakPracticed,

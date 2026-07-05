@@ -19,7 +19,8 @@ function buildIndex(): Map<string, ComposeContext> {
   for (const m of CONTENT.missions) {
     for (const step of m.steps) {
       const qId = step.promptPhraseId;
-      const answerIds = step.choices.filter((c) => c.correct && c.phraseId).map((c) => c.phraseId!);
+      // 복구 표현("다시 말씀해주세요" 등)은 어느 질문에나 붙는 범용 응답이라 이 질문 전용 답변 예시로는 부적절 — 제외.
+      const answerIds = step.choices.filter((c) => c.correct && c.phraseId && !c.recoveryType).map((c) => c.phraseId!);
       if (qId) {
         const set = questionToAnswers.get(qId) ?? new Set<string>();
         for (const a of answerIds) set.add(a);

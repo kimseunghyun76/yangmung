@@ -67,6 +67,22 @@ export function parseBackup(text: string): ParseResult {
   return { ok: true, file: f as BackupFile, count: entries.length };
 }
 
+// 전체 초기화 — 모든 yangmung:* localStorage 키를 삭제(처음 접속 상태로). 대기 중 지연 저장도 폐기.
+// 주의: IndexedDB 미러는 별도로 지워야 재부팅 시 복원되지 않는다(idbMirror.clearMirror). 호출 후 새로고침 권장.
+export function clearAllYangmung(): number {
+  discardPendingStorage();
+  let n = 0;
+  try {
+    const stale: string[] = [];
+    for (let i = 0; i < window.localStorage.length; i++) {
+      const key = window.localStorage.key(i);
+      if (key && key.startsWith(YM_PREFIX)) stale.push(key);
+    }
+    for (const k of stale) { window.localStorage.removeItem(k); n++; }
+  } catch { /* noop */ }
+  return n;
+}
+
 // 복원 — 기존 yangmung:* 키를 지우고 백업 내용으로 교체. 호출 후 반드시 새로고침.
 export function applyBackup(file: BackupFile): number {
   discardPendingStorage(); // 대기 중인 지연 저장이 복원본을 덮어쓰지 않게 먼저 폐기

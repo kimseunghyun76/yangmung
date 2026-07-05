@@ -30,7 +30,7 @@ export function EntertainmentLearning({ nav, onBack, onStartDialogue, onStartSon
       <button onClick={onBack} style={{
         display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none',
         color: 'var(--ink-soft)', fontSize: 14, fontWeight: 700, cursor: 'pointer', padding: '4px 0', marginBottom: 12,
-      }}>← 홈으로</button>
+      }}>← 뒤로</button>
 
       <div style={{ marginBottom: 16 }}>
         <p style={{ margin: 0, ...label }}>엔터테인먼트로 배우기</p>

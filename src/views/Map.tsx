@@ -60,7 +60,7 @@ export function Map({ nav, allCards, progress, openMissions, devUnlockAll, onPra
   return (
     <main style={WRAP}>
       <NavBar {...nav} />
-      <PageHead title="학습 지도" sub="열린 장면을 골라 연습하고, 학습할수록 새 장면이 무작위로 열려요" />
+      <PageHead title="미션 지도" sub="열린 장면을 골라 연습하고, 학습할수록 새 장면이 무작위로 열려요" />
       <div style={{ position: 'relative', overflow: 'hidden', height: 150, borderRadius: 20, marginBottom: 12, border: '1px solid var(--glass-border)', boxShadow: 'var(--glass-shadow)' }}>
         <img src="/map/travel-routes.webp" alt="Yang과 Mung이 안내하는 일본 여행 루트" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 45%, rgba(10,12,18,0.48))' }} />

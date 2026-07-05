@@ -22,6 +22,7 @@ export const c41: Mission = {
       recapPromptKo: '어서 오세요. 오늘은 어떤 용건이신가요?',
       choices: [
         { text: '이걸 교환하고 싶어요', phraseId: 'p_koukan_shitai', correct: true, feedback: '「これを交換(こうかん)したいです」— 환불·교환 데스크에서 용건을 명확히 전달하는 첫 마디. 영수증(レシート)을 함께 제시하면 빠르게 진행돼요' },
+        { text: '환불로 부탁드려요', phraseId: 'p_henkin_de', correct: true, feedback: '「返金(へんきん)でお願(ねが)いします」— 교환 대신 환불을 원할 때도 첫 마디로 바로 말할 수 있어요' },
         { text: '영수증 주세요', phraseId: 'p_reshiito_kudasai', correct: false, feedback: '영수증은 내가 가져와야 합니다 — 직원에게 달라는 말이 아니에요' },
         { text: '조금 작아요', phraseId: 'p_chotto_chiisai_desu', correct: false, feedback: '먼저 무슨 용건인지 말해요 — 사이즈 같은 이유는 그다음에 설명해요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
@@ -321,8 +322,8 @@ export const c45: Mission = {
       choices: [
         { text: '스이카로요', phraseId: 'p_suica_de', correct: false, feedback: '이름 확인 상황에서 결제 방법을 말하는 건 맥락이 어긋납니다' },
         { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: false, feedback: '이름을 알려줘야 할 상황 — 알겠다는 말은 흐름이 맞지 않아요' },
-        { text: '잘 부탁드립니다', phraseId: 'p_kore_de', correct: true, feedback: '「これでお願(ねが)いします」— 주문 화면이나 예약 정보를 보여주며 픽업을 확인할 때. スマホの画面(がめん)を一緒に見せると 더 빠르게 처리돼요' },
-        { text: '포장으로요', phraseId: 'p_mochikaeri_de', correct: true, feedback: '「持(も)ち帰(かえ)りで」— 매장 내 취식이 아닌 테이크아웃 확인. テイクアウトで라고도 해요. 포장 용기나 봉투에 담아줘요' },
+        { text: '이걸로 부탁드려요', phraseId: 'p_kore_de', correct: true, feedback: '「これでお願(ねが)いします」— 이름 대신 예약 화면을 보여주며 확인시킬 때. スマホの画面(がめん)を一緒に見せると 더 빠르게 처리돼요' },
+        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -330,7 +331,7 @@ export const c45: Mission = {
       speaker: '직원',
       promptPhraseId: 'p_chuumon_bangou',
       choices: [
-        { text: '잘 부탁드립니다', phraseId: 'p_kore_de', correct: true, feedback: '「これでお願(ねが)いします」— 앱 화면의 注文番号나 QR을 보여줘요. 화면을 밝게 하면 스캔이 빨라요' },
+        { text: '이걸로 부탁드려요', phraseId: 'p_kore_de', correct: true, feedback: '「これでお願(ねが)いします」— 앱 화면의 注文番号나 QR을 보여줘요. 화면을 밝게 하면 스캔이 빨라요' },
         { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「わかりました」— 번호를 확인하고 화면을 제시해요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
@@ -449,7 +450,7 @@ export const c47: Mission = {
       speaker: '직원',
       promptPhraseId: 'p_nanika_osagashi_desu_ka',
       choices: [
-        { text: '이쪽이요?', phraseId: 'p_are', correct: false, feedback: '안내소에서 구체적인 장소나 물건을 말해야 합니다' },
+        { text: '저거요', phraseId: 'p_are', correct: false, feedback: '안내소에서는 「あれ(저거)」처럼 막연하게 가리키지 말고 구체적인 장소나 물건을 말해야 합니다' },
         { text: '화장실 어디예요?', phraseId: 'p_toire_doko', correct: true, feedback: '「トイレはどこですか」— 화장실 위치 확인. 대형 쇼핑몰은 층별(フロアマップ)을 보거나 안내소에 物어보는 게 빠르기도 해요' },
         { text: '커피는 어디예요?', phraseId: 'p_koohii_wa_doko', correct: true, feedback: '「コーヒーはどこですか」— 안내소에서 특정 매장이나 상품 위치 확인. ○○はどこですか 패턴으로 어떤 매장이든 물어볼 수 있어요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },

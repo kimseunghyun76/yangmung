@@ -12,9 +12,36 @@ import {
   isStageComplete,
   isStageUnlocked,
   type CoreLevel,
+  type PracticeKey,
   type ProgStage,
   type ProgressionState,
 } from '../learn/progression';
+
+// 레벨 순위 — Practice.tsx(학습 탭)와 동일한 규칙: 현재+지난 레벨은 자유 연습, 미래 레벨은 잠금.
+const CORE_LEVEL_RANK: Record<CoreLevel, number> = { beginner: 0, default: 1, express: 2, advanced: 3 };
+
+// 이 연습(practice/script)이 어느 레벨의 몇 번째 단계인지 찾는다(스테이지에 없는 자유 연습은 null).
+function findStageLevel(practice: PracticeKey, script?: 'hiragana' | 'katakana'): { level: CoreLevel; idx: number } | null {
+  for (const level of Object.keys(LEVEL_STAGES) as CoreLevel[]) {
+    const idx = LEVEL_STAGES[level].findIndex((s) => s.practice === practice && (script === undefined || s.script === script));
+    if (idx !== -1) return { level, idx };
+  }
+  return null;
+}
+
+// 빠른 연습 배너가 실제로 도달 가능한 단계인지 — 미래 레벨은 항상 잠금, 현재 레벨은 순차 잠금(이전 단계 완료 필요),
+// 지난 레벨은 이미 통과했으므로 자유 연습 허용. 세션 완료 화면에서 "아직 배울 단계가 아닌" 연습이
+// 한꺼번에 풀려서 나오고 실제로 클릭하면 들어가지던 버그를 막는다.
+function stageReachable(coreLevel: CoreLevel, progression: ProgressionState, devUnlockAll: boolean, practice: PracticeKey, script?: 'hiragana' | 'katakana'): boolean {
+  if (devUnlockAll) return true;
+  const found = findStageLevel(practice, script);
+  if (!found) return true; // 어느 레벨에도 속하지 않는 자유 연습(가나 쓰기·속도전 등)은 항상 허용
+  const foundRank = CORE_LEVEL_RANK[found.level];
+  const curRank = CORE_LEVEL_RANK[coreLevel];
+  if (foundRank > curRank) return false; // 아직 도달 못한 레벨
+  if (foundRank < curRank) return true;  // 이미 지나온 레벨 — 자유 연습
+  return isStageUnlocked(progression, found.level, found.idx); // 현재 레벨 — 순차 잠금
+}
 
 interface Props {
   sessionId: number;
@@ -56,25 +83,31 @@ const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place
   ?? CONTENT.missions.find((m) => m.id === id)?.scenario ?? id;
 
 export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, isQuickPractice = false, coreLevel, progression, devUnlockAll = false, onRetryWeak, onRetrySame, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onPracticeVocab, onPracticeGreetings, onPracticeKanaHiragana, onPracticeKanaKatakana, onPracticePairs, onPracticeWrite, onPracticeVerbs, onHome }: Props) {
-  const stars = quizSeen ? Math.max(1, Math.round((score / quizSeen) * 3)) : 0;
+  // 정답률을 있는 그대로 보여준다 — 예전엔 0점이어도 최소 1성으로 올려 보여줘서(Math.max(1,…))
+  // "하나도 못 맞혔는데 완료 축하"처럼 결과를 왜곡했다. 이젠 별점이 실제 정답률을 그대로 반영한다.
+  const accuracy = quizSeen ? score / quizSeen : null;
+  const stars = quizSeen ? Math.round((score / quizSeen) * 3) : 0;
+  const strugglingResult = accuracy !== null && accuracy < 0.34; // 3분의 1도 못 맞힘 — 축하보다 재학습 권유가 맞다
   const s = summarize(progress);
   const sr = sessionResult(progress, sessionId);
   const recoveryUsed = sessionLog.filter((r) => r.result === 'recovery').length;
   const wrongCount = sessionLog.filter((r) => r.result === 'wrong').length;
   const weak = new Set(sessionLog.filter((r) => r.result !== 'correct').map((r) => r.id)).size;
   const stamps = clearedSceneIds.slice(0, 3);
+  // 아직 도달 못한 레벨의 연습은 배너 자체를 안 보여준다(전엔 항상 다 보이고 눌리면 실제로 들어가지는 버그였음).
+  const reach = (practice: PracticeKey, script?: 'hiragana' | 'katakana') => stageReachable(coreLevel, progression, devUnlockAll, practice, script);
   const quickPracticeActions: NextAction[] = [
     // 방금 한 연습을 처음부터 다시 — 항상 맨 앞(가장 예상되는 다음 행동)
     ...(onRetrySame ? [quickAction('retry-same', 'flow', 'var(--ok)', '다시 한번 학습', '방금 한 연습을 처음부터 다시', onRetrySame, true)] : []),
-    ...(onPracticeVocab ? [quickAction('vocab', 'kana', 'var(--accent)', '어휘 커리큘럼', '단어 그림·표기·뜻 다시 회전', onPracticeVocab, !onRetrySame)] : []),
-    ...(onPracticeGreetings ? [quickAction('greetings', 'speak', 'var(--ok)', '기본 인사', '듣고 바로 반응하기', onPracticeGreetings)] : []),
-    ...(onSigns ? [quickAction('signs', 'sign', 'var(--accent)', '거리 읽기', '간판·메뉴·안내 읽기', onSigns)] : []),
-    ...(onDictation ? [quickAction('dictation', 'dictation', 'var(--warn)', '받아쓰기', '듣고 가나 타일로 쓰기', onDictation)] : []),
-    ...(onCompose ? [quickAction('compose', 'speak', 'var(--accent)', '한→일 작문', '뜻을 보고 일본어 만들기', onCompose)] : []),
-    ...(onPracticeKanaHiragana ? [quickAction('hiragana', 'kana', 'var(--accent)', '히라가나', '글자 읽기 빠른 회전', onPracticeKanaHiragana)] : []),
-    ...(onPracticeKanaKatakana ? [quickAction('katakana', 'kana', 'var(--accent)', '가타카나', '외래어 표기 읽기', onPracticeKanaKatakana)] : []),
-    ...(onPracticePairs ? [quickAction('pairs', 'listen', 'var(--warn)', '발음 구분', '비슷한 소리 듣고 고르기', onPracticePairs)] : []),
-    ...(onPracticeVerbs ? [quickAction('verbs', 'flow', 'var(--accent)', '동사 형태', '자주 쓰는 활용 패턴', onPracticeVerbs)] : []),
+    ...(onPracticeVocab && reach('vocab') ? [quickAction('vocab', 'kana', 'var(--accent)', '전체 어휘 세션', '모든 주제를 SRS 방식으로 복습', onPracticeVocab, !onRetrySame)] : []),
+    ...(onPracticeGreetings && reach('greetings') ? [quickAction('greetings', 'speak', 'var(--ok)', '기본 인사', '듣고 바로 반응하기', onPracticeGreetings)] : []),
+    ...(onSigns && reach('signs') ? [quickAction('signs', 'sign', 'var(--accent)', '거리 읽기', '간판·메뉴·안내 읽기', onSigns)] : []),
+    ...(onDictation && reach('dictation') ? [quickAction('dictation', 'dictation', 'var(--warn)', '받아쓰기', '듣고 가나 타일로 쓰기', onDictation)] : []),
+    ...(onCompose && reach('compose') ? [quickAction('compose', 'speak', 'var(--accent)', '한→일 작문', '뜻을 보고 일본어 만들기', onCompose)] : []),
+    ...(onPracticeKanaHiragana && reach('kana', 'hiragana') ? [quickAction('hiragana', 'kana', 'var(--accent)', '히라가나', '글자 읽기 빠른 회전', onPracticeKanaHiragana)] : []),
+    ...(onPracticeKanaKatakana && reach('kana', 'katakana') ? [quickAction('katakana', 'kana', 'var(--accent)', '가타카나', '외래어 표기 읽기', onPracticeKanaKatakana)] : []),
+    ...(onPracticePairs && reach('pairs') ? [quickAction('pairs', 'listen', 'var(--warn)', '발음 구분', '비슷한 소리 듣고 고르기', onPracticePairs)] : []),
+    ...(onPracticeVerbs && reach('verbs') ? [quickAction('verbs', 'flow', 'var(--accent)', '동사 형태', '자주 쓰는 활용 패턴', onPracticeVerbs)] : []),
     ...(onPracticeWrite ? [quickAction('kana-write', 'kana', 'var(--ok)', '가나 쓰기', '손으로 따라 쓰기', onPracticeWrite)] : []),
     ...(onFlash ? [quickAction('flash', 'fast', 'var(--accent)', '속도전 플래시', '제한시간 안에 빠르게 복습', onFlash)] : []),
   ];
@@ -119,9 +152,9 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
     };
   })() : null;
   const reinforcementActions: NextAction[] = isQuickPractice ? [] : [
-    ...(onDictation && dictationCount > 0 ? [quickAction('dictation', 'dictation', 'var(--warn)', '받아쓰기', '듣고 가나 타일로 쓰기', onDictation)] : []),
-    ...(onCompose && composeCount > 0 ? [quickAction('compose', 'speak', 'var(--accent)', '한→일 작문', '뜻을 보고 일본어로 만들기', onCompose)] : []),
-    ...(onSigns && signCount > 0 ? [quickAction('signs', 'sign', 'var(--accent)', '거리 읽기', '간판·메뉴·안내 읽기', onSigns)] : []),
+    ...(onDictation && dictationCount > 0 && reach('dictation') ? [quickAction('dictation', 'dictation', 'var(--warn)', '받아쓰기', '듣고 가나 타일로 쓰기', onDictation)] : []),
+    ...(onCompose && composeCount > 0 && reach('compose') ? [quickAction('compose', 'speak', 'var(--accent)', '한→일 작문', '뜻을 보고 일본어로 만들기', onCompose)] : []),
+    ...(onSigns && signCount > 0 && reach('signs') ? [quickAction('signs', 'sign', 'var(--accent)', '거리 읽기', '간판·메뉴·안내 읽기', onSigns)] : []),
     ...(onFlash ? [quickAction('flash', 'fast', 'var(--accent)', '속도전 플래시', '제한시간 안에 빠르게 복습', onFlash)] : []),
   ].map((a) => ({ ...a, section: 'next' as const, badge: a.badge ?? '강화' }));
   // 연습 완료 화면엔 "오답과 복습" + "연습" 부분만(미션 다음 단계 가이드 X), 미션 완료 화면엔
@@ -144,7 +177,6 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
       if (stage.practice === 'dictation' && onDictation) return quickAction('dictation', 'dictation', 'var(--warn)', stage.label, stage.sub, onDictation);
       if (stage.practice === 'greetings' && onPracticeGreetings) return quickAction('greetings', 'speak', 'var(--ok)', stage.label, stage.sub, onPracticeGreetings);
       if (stage.practice === 'signs' && onSigns) return quickAction('signs', 'sign', 'var(--accent)', stage.label, stage.sub, onSigns);
-      if (stage.practice === 'vocab' && onPracticeVocab) return quickAction('vocab', 'kana', 'var(--accent)', stage.label, stage.sub, onPracticeVocab);
       if (stage.practice === 'compose' && onCompose) return quickAction('compose', 'speak', 'var(--accent)', stage.label, stage.sub, onCompose);
       if (stage.practice === 'verbs' && onPracticeVerbs) return quickAction('verbs', 'flow', 'var(--accent)', stage.label, stage.sub, onPracticeVerbs);
       return null;
@@ -164,7 +196,7 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
       {/* 축하 헤드 */}
       <div className="ym-rise" style={{ textAlign: 'center', paddingTop: 8 }}>
         <div className="ym-burst" style={{ width: 76, height: 76, margin: '0 auto', borderRadius: 99, background: 'var(--accent)', color: 'var(--accent-ink)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 28px rgba(185,56,46,0.4)' }}>
-          <Icon name={stars >= 3 ? 'trophy' : 'check'} size={38} />
+          <Icon name={stars >= 3 ? 'trophy' : strugglingResult ? 'target' : 'check'} size={38} />
         </div>
         <h1 style={{ margin: '16px 0 0', fontSize: 28 }}>세션 {sessionId} 완료</h1>
         <p style={{ fontSize: 22, margin: '10px 0 0', letterSpacing: 2, color: 'var(--accent)' }}>
@@ -173,6 +205,11 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
         <p style={{ color: 'var(--ink-soft)', fontSize: 14, margin: '8px 0 0', fontWeight: 600 }}>
           첫 시도 {score}/{quizSeen}{speakCount > 0 ? ` · 말하기 ${speakCount}` : ''}
         </p>
+        {strugglingResult && (
+          <p style={{ color: 'var(--warn)', fontSize: 13, margin: '10px 0 0', fontWeight: 700 }}>
+            이번엔 많이 낯설었어요 — 아래에서 다시 배우고 도전하면 훨씬 쉬워져요.
+          </p>
+        )}
       </div>
 
       {/* 여권 스탬프 — 오늘 해낸 장면 */}

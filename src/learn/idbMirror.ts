@@ -51,6 +51,26 @@ function idbSet(db: IDBDatabase, key: string, value: unknown): Promise<boolean> 
   });
 }
 
+function idbDelete(db: IDBDatabase, key: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    try {
+      const tx = db.transaction(STORE, 'readwrite');
+      tx.objectStore(STORE).delete(key);
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => resolve(false);
+      tx.onabort = () => resolve(false);
+    } catch { resolve(false); }
+  });
+}
+
+// 미러 스냅숏 삭제 — 전체 초기화 시 호출해야 재부팅 복원이 지워진 데이터를 되살리지 않는다.
+export async function clearMirror(): Promise<void> {
+  const db = await openDb();
+  if (!db) return;
+  await idbDelete(db, SNAPSHOT_KEY);
+  db.close();
+}
+
 function collectLocal(): Record<string, string> {
   const data: Record<string, string> = {};
   try {

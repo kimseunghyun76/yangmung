@@ -25,27 +25,27 @@ export interface ProgStage {
   script?: 'hiragana' | 'katakana'; // practice === 'kana'일 때
 }
 
-// 3-1 ~ 3-4: 레벨별 순차 단계
-// 작문(한→일)은 짧고 쉬운 문장 위주라 입문에 배치, 받아쓰기(듣고 그대로 받아적기)는
-// 청해+표기 정확도를 동시에 요구해 체감 난이도가 높아 고급으로 옮겼다.
+// 3-1 ~ 3-4: 레벨별 순차 단계 (2026-07-06 개편)
+// 기본 인사는 가나 직후 바로 쓰는 생존 표현이라 입문으로, 발음 구분·한→일 작문은
+// 가나를 넘어서는 산출 난이도라 중급으로, 받아쓰기(청해+표기 동시 요구)도 중급에 모았다.
+// 어휘 커리큘럼은 더 이상 하나의 단계가 아니라(주제 그룹이 서로 선후행 관계가 없어)
+// 기본 레벨 안에 배너로 펼쳐 자유 연습으로 노출한다(Practice.tsx의 VOCAB_GROUPS 참고).
 export const LEVEL_STAGES: Record<CoreLevel, ProgStage[]> = {
   beginner: [
     { id: 'hiragana', label: '히라가나', sub: '표 학습 → 읽기 퀴즈', practice: 'kana', script: 'hiragana' },
     { id: 'katakana', label: '가타카나', sub: '표 학습 → 읽기 퀴즈', practice: 'kana', script: 'katakana' },
-    { id: 'pairs', label: '발음 구분', sub: '비슷한 소리 변별', practice: 'pairs' },
-    { id: 'compose', label: '한→일 작문', sub: '뜻을 보고 일본어 만들기', practice: 'compose' },
+    { id: 'greetings', label: '기본 인사', sub: '첫 만남·감사·부탁', practice: 'greetings' },
   ],
   default: [
-    { id: 'greetings', label: '기본 인사', sub: '첫 만남·감사·부탁', practice: 'greetings' },
     { id: 'signs', label: '간판·메뉴', sub: '역·식당·주의 표지 읽기', practice: 'signs' },
-    { id: 'vocab', label: '어휘 커리큘럼', sub: '주제별 필수 단어', practice: 'vocab' },
   ],
   express: [
+    { id: 'pairs', label: '발음 구분', sub: '비슷한 소리 변별', practice: 'pairs' },
+    { id: 'compose', label: '한→일 작문', sub: '뜻을 보고 일본어 만들기', practice: 'compose' },
     { id: 'verbs', label: '동사 형태', sub: 'ます·たい·ながら 활용', practice: 'verbs' },
-  ],
-  advanced: [
     { id: 'dictation', label: '받아쓰기', sub: '듣고 가나로 쓰기', practice: 'dictation' },
   ],
+  advanced: [],
 };
 
 // settings.mode → 진도 레벨(핵심 4단계). 유틸 모드(review/kana)는 입문으로 간주.

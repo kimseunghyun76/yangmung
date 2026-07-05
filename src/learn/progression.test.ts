@@ -19,7 +19,7 @@ check('두 번째 단계는 처음엔 잠김', !isStageUnlocked(empty, 'beginner
 {
   const s = markStageComplete(empty, stageKey('beginner', 'hiragana'));
   check('히라가나 완료 → 가타카나 열림', isStageUnlocked(s, 'beginner', 1));
-  check('히라가나 완료 → 발음구분(2)은 아직 잠김', !isStageUnlocked(s, 'beginner', 2));
+  check('히라가나 완료 → 기본 인사(2)는 아직 잠김', !isStageUnlocked(s, 'beginner', 2));
   check('isStageComplete 반영', isStageComplete(s, 'beginner', 'hiragana'));
 }
 
@@ -35,16 +35,19 @@ check('빈 상태 nextStageIndex=0', nextStageIndex(empty, 'beginner') === 0);
 
 console.log('=== 멱등성/승급 ===');
 {
-  const s1 = markStageComplete(empty, stageKey('beginner', 'pairs'));
-  const s2 = markStageComplete(s1, stageKey('beginner', 'pairs'));
+  const s1 = markStageComplete(empty, stageKey('beginner', 'greetings'));
+  const s2 = markStageComplete(s1, stageKey('beginner', 'greetings'));
   check('중복 완료 무시(멱등)', s2.completed.length === 1);
 }
 check('nextLevel: beginner→default', nextLevel('beginner') === 'default');
 check('nextLevel: advanced→null', nextLevel('advanced') === null);
-check('고급(받아쓰기) 빈 상태는 미완료', !levelAllComplete(empty, 'advanced'));
+// 고급(2026-07-06 개편)은 더 이상 단계가 없다(받아쓰기는 중급으로 이동) — 단계 없는 레벨은
+// levelAllComplete가 항상 true(승급 시험 없이 여행 미션으로 계속 진행하는 설계, Home.tsx 참고).
+check('고급은 단계가 없어 항상 완료(승급 시험 없음)', levelAllComplete(empty, 'advanced'));
+check('중급(받아쓰기 포함) 빈 상태는 미완료', !levelAllComplete(empty, 'express'));
 {
-  const s = markStageComplete(empty, stageKey('advanced', 'dictation'));
-  check('고급 받아쓰기 완료 → levelAllComplete', levelAllComplete(s, 'advanced'));
+  const s = LEVEL_STAGES.express.reduce((acc, st) => markStageComplete(acc, stageKey('express', st.id)), empty);
+  check('중급 모든 단계(발음구분·작문·동사형태·받아쓰기) 완료 → levelAllComplete', levelAllComplete(s, 'express'));
 }
 
 console.log('=== coreLevelOf ===');

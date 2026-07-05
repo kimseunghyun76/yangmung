@@ -72,7 +72,7 @@ export function KanaTable({ nav, progress, script, onScriptChange, onQuiz, onBac
       <button onClick={onBack} style={{
         display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none',
         color: 'var(--ink-soft)', fontSize: 14, fontWeight: 700, cursor: 'pointer', padding: '4px 0', marginBottom: 12,
-      }}>← 홈으로</button>
+      }}>← 뒤로</button>
 
       <div style={{ marginBottom: 14 }}>
         <p style={{ margin: 0, ...label }}>가나 · 표 학습</p>

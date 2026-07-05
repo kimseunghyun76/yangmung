@@ -2,6 +2,7 @@ import {
   CORE_LEVEL_LABEL, CORE_LEVELS, LEVEL_STAGES, isStageComplete, isStageUnlocked,
   type CoreLevel, type ProgStage, type ProgressionState,
 } from '../learn/progression';
+import { VOCAB_GROUPS } from '../content/thematicVocab';
 import { WRAP } from '../ui/styles';
 import { Icon, type IconName } from '../ui/Icon';
 import { NavBar, type NavBarProps } from './NavBar';
@@ -18,6 +19,7 @@ interface Props {
   onOpenBasics: () => void;
   onOpenPublic: () => void;
   onOpenEntertainment: () => void;
+  onStartVocabGroup: (groupId: string) => void;
 }
 
 interface PracticeItem {
@@ -91,7 +93,20 @@ function itemDone(item: PracticeItem, progression: ProgressionState): boolean {
   return !!item.stage && isStageComplete(progression, item.level, item.stage.id);
 }
 
-export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartStage, onPracticeWrite, onPracticeFlash, onOpenBasics, onOpenPublic, onOpenEntertainment }: Props) {
+export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartStage, onPracticeWrite, onPracticeFlash, onOpenBasics, onOpenPublic, onOpenEntertainment, onStartVocabGroup }: Props) {
+  // 어휘 커리큘럼 — 예전엔 "어휘 커리큘럼" 배너 하나로 뭉쳐 그 안의 하위 메뉴(/vocab)로 들어가야 했는데,
+  // 그 메뉴 안에 기본 인사·생활 기초가 이미 별도 배너로 있는 내용과 중복돼 혼란스러웠다.
+  // 이제 기본 인사(입문 단계로 이동)를 뺀 나머지 주제 그룹을 기본 레벨에 개별 배너로 바로 펼쳐 놓는다.
+  const vocabGroupItems: PracticeItem[] = VOCAB_GROUPS.filter((g) => g.id !== 'greetings').map((g) => ({
+    key: `default:vocab:${g.id}`,
+    label: g.label,
+    sub: g.description,
+    level: 'default',
+    art: 'vocab',
+    icon: 'kana',
+    accent: LEVEL_ACCENT.default,
+    onClick: () => onStartVocabGroup(g.id),
+  }));
   const items: PracticeItem[] = [
     ...stageItems(onStartStage),
     {
@@ -104,6 +119,7 @@ export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartSta
       accent: LEVEL_ACCENT.default,
       onClick: onOpenBasics,
     },
+    ...vocabGroupItems,
     {
       key: 'beginner:kana-write',
       label: '가나 쓰기',
@@ -125,13 +141,23 @@ export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartSta
       onClick: onPracticeFlash,
     },
     {
-      key: 'express:public',
+      key: 'express:vocab-all',
+      label: '전체 어휘 세션',
+      sub: '모든 주제를 SRS 방식으로 복습',
+      level: 'express',
+      art: 'vocab',
+      icon: 'kana',
+      accent: LEVEL_ACCENT.express,
+      onClick: () => onStartVocabGroup('all'),
+    },
+    {
+      key: 'advanced:public',
       label: '공공 표현',
       sub: '간판·방송 메시지',
-      level: 'express',
+      level: 'advanced',
       art: 'signs',
       icon: 'sign',
-      accent: LEVEL_ACCENT.express,
+      accent: LEVEL_ACCENT.advanced,
       onClick: onOpenPublic,
     },
     {
@@ -152,8 +178,8 @@ export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartSta
       <GlassPanel>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
           <div>
-            <p style={{ margin: 0, fontSize: 12, fontWeight: 900, color: 'var(--accent)', letterSpacing: '.06em' }}>PRACTICE</p>
-            <h1 style={{ margin: '5px 0 0', fontSize: 25, lineHeight: 1.12, letterSpacing: 0 }}>연습</h1>
+            <p style={{ margin: 0, fontSize: 12, fontWeight: 900, color: 'var(--accent)', letterSpacing: '.06em' }}>STUDY</p>
+            <h1 style={{ margin: '5px 0 0', fontSize: 25, lineHeight: 1.12, letterSpacing: 0 }}>학습</h1>
           </div>
           <span style={{
             flex: '0 0 auto',
