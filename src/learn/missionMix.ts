@@ -22,17 +22,21 @@ export function missionTierRatios(allCards: Card[], progress: ProgressMap): numb
 }
 
 // 숙련 비율 → 포함할 tier 창 [min, max] (1~5). 하위 숙련 tier는 빠지고 다음 tier가 들어온다.
-export function missionTierWindow(ratios: number[]): [number, number] {
-  // tier1부터 연속으로 익힌 단계 수
-  let done = 0;
+// floorTier(1~5): 레벨별 시작 하한 — 고급 사용자는 앞 tier를 건너뛰고 상위 미션부터 시작한다.
+// floor 미만 tier는 "이미 통과"로 간주(done을 floor부터 카운트)해, 창은 floor에서 시작하되
+// 실력이 쌓이면 위로 계속 전진한다(하한이 창을 위로만 밀어 올리고, 아래로 되돌리지 않음).
+export function missionTierWindow(ratios: number[], floorTier = 1): [number, number] {
+  const floorIndex = Math.max(0, Math.min(4, floorTier - 1)); // 0-index 시작 tier
+  // 시작 tier부터 연속으로 익힌 단계 수 (그 아래는 통과 처리)
+  let done = floorIndex;
   while (done < ratios.length && (ratios[done] ?? 0) >= TIER_MASTER_RATIO) done++;
-  // 아직 tier1도 거의 안 한 시작 단계 → 초급(tier1)만
-  if (done === 0 && (ratios[0] ?? 0) < 0.35) return [1, 1];
+  // 아직 시작 tier도 거의 안 한 단계 → 시작 tier 하나만(부담 없는 진입)
+  if (done === floorIndex && (ratios[floorIndex] ?? 0) < 0.35) return [floorIndex + 1, floorIndex + 1];
   const base = Math.min(5, done + 1);          // 현재 주력 tier (첫 미숙련)
   return [base, Math.min(5, base + 1)];          // 주력 + 다음 단계(도전)
 }
 
-// 편의: 카드+진척에서 바로 창을 계산.
-export function missionDifficultyWindow(allCards: Card[], progress: ProgressMap): [number, number] {
-  return missionTierWindow(missionTierRatios(allCards, progress));
+// 편의: 카드+진척에서 바로 창을 계산. floorTier는 레벨별 시작 하한(기본 1=처음부터).
+export function missionDifficultyWindow(allCards: Card[], progress: ProgressMap, floorTier = 1): [number, number] {
+  return missionTierWindow(missionTierRatios(allCards, progress), floorTier);
 }

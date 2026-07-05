@@ -4,18 +4,17 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { buildCards, type Card, type DictationCard, type DiscoverCard, type IntroduceCard } from './learn/cards';
 import { CONTENT } from './content';
 import {
-  classifyCard, clearProgress, isKanaFamiliar, loadDiscovered, loadProgress, loadSeenKana, loadSession,
-  markKanaKnown, markKanaSeen, missionsFromCards, nextSessionId, planSession, plannedSessionSize, recordAttempt, recordKnown,
+  classifyCard, isKanaFamiliar, loadDiscovered, loadProgress, loadSeenKana, loadSession,
+  markKanaKnown, markKanaSeen, missionExperiencedCount, missionsFromCards, nextSessionId, planSession, plannedSessionSize, recordAttempt, recordKnown,
   saveDiscovered, saveProgress, saveSeenKana, saveSession, selectComposeCards, selectDictationCards,
   selectFlashCardsByMode, selectMissionCards, selectPairCards, selectScriptKanaCards, selectSessionCards, selectSignCards, selectStudyDeck,
   type FlashMode, type ProgressMap, type SeenKana, type SessionState,
 } from './learn/progress';
 import { loadCollection, saveCollection, fillDevCards } from './learn/collection';
 import { loadOpenMissions, saveOpenMissions, resetOpenMissions, reconcileOpenMissions, isSceneOpen } from './learn/unlocks';
-import { resetFlashBest } from './learn/flashScores';
 import { adaptSessionConfig, diagnose } from './learn/adaptive';
 import {
-  coreLevelOf, loadProgression, markStageComplete, nextLevel, resetProgression,
+  coreLevelOf, loadProgression, markStageComplete, nextLevel,
   saveProgression, stageKey, PROMO_COUNT, STAGE_PASS, type CoreLevel, type ProgStage,
 } from './learn/progression';
 import { extractKanaChars } from './learn/kanaReading';
@@ -24,6 +23,8 @@ import { selectAnnouncementDeck } from './learn/announcementCards';
 import { ANNOUNCEMENT_CATEGORIES, type AnnouncementCategory } from './content/announcements';
 import { selectDialogueDeck, selectSongDeck } from './learn/entertainmentCards';
 import { buildPlacementCards } from './learn/placementCards';
+import { clearAllYangmung } from './learn/backup';
+import { clearMirror } from './learn/idbMirror';
 import { loadSettings, MODE_PRESETS, saveSettings, sceneSentenceLevelForMode, type Settings } from './learn/settings';
 import { sessionGoalText } from './views/goal';
 import { setListenRate } from './tts';
@@ -46,8 +47,8 @@ const KanaWrite = lazy(() => import('./views/KanaWrite').then((m) => ({ default:
 const Placement = lazy(() => import('./views/Placement').then((m) => ({ default: m.Placement })));
 const Review = lazy(() => import('./views/Review').then((m) => ({ default: m.Review })));
 const Guide = lazy(() => import('./views/Guide').then((m) => ({ default: m.Guide })));
+const WelcomeGuide = lazy(() => import('./views/WelcomeGuide').then((m) => ({ default: m.WelcomeGuide })));
 const SettingsModal = lazy(() => import('./views/SettingsModal').then((m) => ({ default: m.SettingsModal })));
-const VocabMenu = lazy(() => import('./views/VocabMenu').then((m) => ({ default: m.VocabMenu })));
 const VocabTable = lazy(() => import('./views/VocabTable').then((m) => ({ default: m.VocabTable })));
 const VerbForms = lazy(() => import('./views/VerbForms').then((m) => ({ default: m.VerbForms })));
 const KanaTable = lazy(() => import('./views/KanaTable').then((m) => ({ default: m.KanaTable })));
@@ -63,7 +64,7 @@ export function App() {
   const [settings, setSettings] = useState<Settings>(() => loadSettings());
   const difficulty = sceneSentenceLevelForMode(settings.mode); // 1~4 — 레벨에 맞춘 난이도
   const allCards = useMemo<Card[]>(() => buildCards(difficulty), [difficulty]); // 모드 바뀌면 난이도 반영해 재생성
-  const [view, navigate] = useHashView(); // URL(해시) ↔ 화면 동기화 — 뒤로가기/새로고침/딥링크 지원
+  const [view, navigate, goBack] = useHashView(); // URL(해시) ↔ 화면 동기화 — 뒤로가기/새로고침/딥링크 지원
   const [progress, setProgress] = useState<ProgressMap>(() => loadProgress());
   const [session, setSession] = useState<SessionState>(() => loadSession());
   const [flashCards, setFlashCards] = useState<Card[]>([]); // 속도전 플래시(세션 SRS와 분리)
@@ -79,19 +80,22 @@ export function App() {
   const [kanaScript, setKanaScript] = useState<'hiragana' | 'katakana'>('hiragana'); // 가나 표 학습 스크립트
   const [progression, setProgression] = useState(() => loadProgression()); // 레벨별 순차 진도
   const coreLevel = coreLevelOf(settings.mode);                            // 현재 진도 레벨(입문~고급)
+  const missionFloor = MODE_PRESETS[settings.mode].missionFloorTier;       // 레벨별 미션 시작 tier 하한(고급은 상위부터)
   const verbsStageKeyRef = useRef<string | null>(null);                    // 동사 형태 단계 키
   const verbsScoreRef = useRef<{ ok: number; n: number }>({ ok: 0, n: 0 }); // 동사 형태 정답 누적
-  const pendingMenuStageRef = useRef<string | null>(null);                  // 메뉴 경유(어휘) 단계 키
   const lastPracticeRef = useRef<(() => void) | null>(null);                // Done "다시 한번 학습" — 방금 시작한 빠른 연습 재현
   const [seenKana, setSeenKana] = useState<SeenKana>(() => loadSeenKana());
   const [discovered, setDiscovered] = useState<string[]>(() => loadDiscovered());
-  // 열린 미션(랜덤 순차 오픈) — 최초 1개 랜덤, 앞 미션 학습할수록 다음 미션 랜덤 추첨 오픈
+  // 열린 미션(랜덤 순차 오픈) — 최초 1개 랜덤(단, 실력 tier 범위 우선), 앞 미션 학습할수록 다음 미션 랜덤 추첨 오픈.
+  // 초기값 계산 시점엔 아직 missionWindow(useMemo, 아래 선언)를 못 쓰므로 동일 로직을 직접 호출.
   const [openMissions, setOpenMissions] = useState<string[]>(() => {
-    const o = reconcileOpenMissions(loadOpenMissions(), loadProgress());
+    const initProgress = loadProgress();
+    const o = reconcileOpenMissions(loadOpenMissions(), initProgress, missionDifficultyWindow(allCards, initProgress, missionFloor), missionFloor);
     saveOpenMissions(o);
     return o;
   });
   const [showGuide, setShowGuide] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
   function updateSettings(s: Settings) { setSettings(s); saveSettings(s); }
@@ -116,6 +120,7 @@ export function App() {
     onStagePass: (key) => setProgression((p) => { const np = markStageComplete(p, key); saveProgression(np); return np; }),
     // 승급 통과(정답률 ≥90%) → 다음 레벨 모드로
     onPromotionPass: (level) => { const nx = nextLevel(level); if (nx) selectMode(nx); },
+    getRetrySame: () => lastPracticeRef.current,
   });
   const { card, sessionCards, sessionId } = flow;
 
@@ -148,57 +153,78 @@ export function App() {
   );
   // 미션 난이도 이동 창 — 모드 고정 범위 대신 실력(미션 tier별 숙련도)으로 동적 산정.
   // 하위 tier를 익히면 빼고 상위 tier를 추가 → 인접 2단계를 섞어 복습+도전(학습 효과↑).
-  const missionWindow = useMemo<[number, number]>(() => missionDifficultyWindow(allCards, progress), [allCards, progress]);
+  const missionWindow = useMemo<[number, number]>(() => missionDifficultyWindow(allCards, progress, missionFloor), [allCards, progress, missionFloor]);
   const missionTierFilter = (mid: string) => {
     const t = missionTierMap.get(mid) ?? 1;
     return t >= missionWindow[0] && t <= missionWindow[1];
   };
   const baseConfig = { quotas: { ...MODE_PRESETS[settings.mode].quotas, tip: tierTipQuota }, minFresh: MODE_PRESETS[settings.mode].minFresh, missionTierFilter, cardTierRange: missionWindow, openMissions };
   // 복습 전용 구성(신규 0 · 틀린·오래된 것 우선) — Done 화면 "복습하기" 제안용. 현재 모드와 무관.
-  const reviewConfig = { quotas: MODE_PRESETS.review.quotas, minFresh: MODE_PRESETS.review.minFresh };
+  // openMissions를 안 넘기면 selectSessionCards가 구식 isMissionUnlocked로 폴백하는데,
+  // 그 함수는 "각 루트의 첫 장면은 항상 열림"이라 진척이 전무해도 미시작 미션을 "열림"으로 침 —
+  // 그 결과 "복습 큐"가 실제 열린 미션이 아니라 전혀 배운 적 없는 엉뚱한 미션을 끌어오는 버그가 있었다.
+  // openMissions(실제 tier창 게이팅)로 후보를 제한하고, missionTierFilter로 "한 번이라도 경험한 미션"만
+  // 남겨 신규 미션이 "복습"으로 둔갑하지 않게 한다("신규 0" 의도를 미션에도 실제로 적용).
+  // strictMissionFilter: 경험한 미션이 0개(완전 신규 유저)면 selectSessionCards가 보통 "전체로 폴백"하는데,
+  // 복습에선 그 폴백이 정확히 이 버그를 재현시킨다 — 여기선 0개면 정말 0개(복습할 미션 없음)가 맞다.
+  const reviewConfig = {
+    quotas: MODE_PRESETS.review.quotas,
+    minFresh: MODE_PRESETS.review.minFresh,
+    openMissions,
+    missionTierFilter: (mid: string) => missionExperiencedCount(progress, mid) > 0,
+    strictMissionFilter: true,
+  };
   const diag = useMemo(
     () => diagnose(allCards, progress, session.lastCompletedSessionId),
     [allCards, progress, session.lastCompletedSessionId],
   );
   const sessionConfig = settings.mode === 'review' ? baseConfig : adaptSessionConfig(baseConfig, diag).config;
 
-  // 최초 접속/초기화 → 통합 수준 진단을 강제로 시작(한 번만 권유). 건너뛰어도 설정에서 재응시 가능.
+  // 최초 접속/초기화 → 환영 팝업으로 앱을 간단히 소개하고 수준 진단으로 안내(한 번만 권유).
+  // 건너뛰어도 설정에서 재응시 가능.
   useEffect(() => {
     if (typeof localStorage === 'undefined') return;
     if (view !== 'home') return;
     const done = localStorage.getItem('yangmung:placement:v1');
     const prompted = localStorage.getItem('yangmung:placement:prompted');
-    if (!done && !prompted) {
-      try { localStorage.setItem('yangmung:placement:prompted', '1'); } catch { /* noop */ }
-      startPlacement();
-    }
+    if (!done && !prompted) setShowWelcome(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  function dismissWelcome() {
+    try { localStorage.setItem('yangmung:placement:prompted', '1'); } catch { /* noop */ }
+    setShowWelcome(false);
+  }
+
   // 새로고침/딥링크로 세션 데이터 없이 흐름 화면에 진입하면 홈으로 (메모리 상태라 복원 불가)
+  // done은 라이브 sessionCards가 아니라 doneSnapshot 유무로 판단 — 빠른 연습 배너를 눌러 라이브
+  // sessionCards가 이미 다음(대기 중) 세션 것으로 바뀌어 있어도 완료된 세션의 스냅숏은 남아있다.
   useEffect(() => {
     const empty =
       (view === 'flash' && flashCards.length === 0)
       || (view === 'write' && writeItems.length === 0)
       || (view === 'placement' && placementCards.length === 0)
       || (view === 'preview' && !preview)
-      || ((view === 'intro' || view === 'session' || view === 'done') && sessionCards.length === 0);
+      || ((view === 'intro' || view === 'session') && sessionCards.length === 0)
+      || (view === 'done' && !flow.doneSnapshot);
     if (empty) navigate('home', { replace: true });
-  }, [view, flashCards.length, writeItems.length, placementCards.length, preview, sessionCards.length, navigate]);
+  }, [view, flashCards.length, writeItems.length, placementCards.length, preview, sessionCards.length, flow.doneSnapshot, navigate]);
 
   // 주간/야간 테마를 <html data-theme>에 반영
   useEffect(() => { document.documentElement.dataset.theme = settings.theme; }, [settings.theme]);
   // 듣기 속도 — 설정값을 tts 전역에 반영 (마운트 시 포함)
   useEffect(() => { setListenRate(settings.listenRate); }, [settings.listenRate]);
-  // 미션 오픈 — 진척이 바뀔 때마다 보충(앞 미션을 충분히 학습하면 다음 미션을 랜덤 오픈)
+  // 미션 오픈 — 진척·난이도창이 바뀔 때마다 보충(앞 미션을 충분히 학습하면 다음 미션 랜덤 오픈).
+  // missionWindow도 의존 — 레벨 변경(예: 고급 배치)으로 하한이 오르면 하한 미만 미시작 미션을 상위로 교체.
   useEffect(() => {
     setOpenMissions((prev) => {
-      const next = reconcileOpenMissions(prev, progress);
-      if (next.length === prev.length) return prev;
+      const next = reconcileOpenMissions(prev, progress, missionWindow, missionFloor);
+      const same = next.length === prev.length && next.every((id) => prev.includes(id));
+      if (same) return prev;
       saveOpenMissions(next);
       return next;
     });
-  }, [progress]);
+  }, [progress, missionWindow, missionFloor]);
 
   // ── 세션 시작 액션 ─────────────────────────────────
   // 발견 카드: 배운 가나로만 된(2자 이상) 아직 축하 안 한 표현 1개 → 세션 끝 보상으로
@@ -272,7 +298,6 @@ export function App() {
       case 'dictation': startDictationSession(key); break;
       case 'greetings': startGreetingSession(key); break;
       case 'signs': startSignSession(key); break;
-      case 'vocab': pendingMenuStageRef.current = key; navigate('vocab'); break;
       case 'compose': startComposeSession(key); break;
       case 'verbs': verbsStageKeyRef.current = key; verbsScoreRef.current = { ok: 0, n: 0 }; navigate('verbs'); break;
     }
@@ -292,6 +317,8 @@ export function App() {
     return [];
   }
   function startPromotionQuiz(level: CoreLevel = coreLevel) {
+    // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 level로 흘러들 수 있어(방어)
+    if (typeof level !== 'string') level = coreLevel;
     const pool = promotionPool(level);
     if (pool.length === 0) return;
     const shuffled = [...pool];
@@ -311,9 +338,14 @@ export function App() {
     const stage = coreLevel === 'beginner' ? stageKey('beginner', script) : null;
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
   }
-  // 발음 구분 — 최소 페어 듣고 둘 중 고르기 (つ/す·장음·촉음·청탁)
+  // 발음 구분 — 최소 페어 듣고 4지선다로 고르기 (つ/す·장음·촉음·청탁)
+  // 매번 같은 개수로 고정되지 않게 무작위(12/18/24)로 — 세션마다 분량이 조금씩 달라짐.
+  const PAIR_COUNT_OPTIONS = [12, 18, 24];
   function startPairSession(stage?: string | null) {
-    const cards = selectPairCards(allCards, progress, nextSessionId(session), 18);
+    // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 stage로 흘러들 수 있어(방어)
+    if (typeof stage !== 'string') stage = undefined;
+    const count = PAIR_COUNT_OPTIONS[Math.floor(Math.random() * PAIR_COUNT_OPTIONS.length)];
+    const cards = selectPairCards(allCards, progress, nextSessionId(session), count);
     if (cards.length === 0) return;
     lastPracticeRef.current = () => startPairSession(stage);
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
@@ -332,6 +364,8 @@ export function App() {
   }
   // 받아쓰기 전용 — 듣고 가나 타일로 쓰기
   function startDictationSession(stage?: string | null) {
+    // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 stage로 흘러들 수 있어(방어)
+    if (typeof stage !== 'string') stage = undefined;
     const cards = selectDictationCards(allCards, progress, nextSessionId(session), 18);
     if (cards.length === 0) return;
     lastPracticeRef.current = () => startDictationSession(stage);
@@ -359,20 +393,33 @@ export function App() {
     });
     navigate('preview');
   }
+  // 매번 같은 개수로 고정되지 않게 무작위로 시작 — 선호하는 개수는 프리뷰의 개수 선택으로 바꿀 수 있음.
   function startComposeSession(stage?: string | null) {
-    openComposePreview(18, stage);
+    // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 stage로 흘러들 수 있어(방어)
+    if (typeof stage !== 'string') stage = undefined;
+    const count = COMPOSE_COUNT_OPTIONS[Math.floor(Math.random() * COMPOSE_COUNT_OPTIONS.length)];
+    openComposePreview(count, stage);
   }
+  const FLASH_MODES: FlashMode[] = ['kana', 'expression', 'situation', 'blitz'];
   // 속도전 플래시 — 모드별 카드 풀 선택 + 제한시간 즉답 게임(세션/SRS와 분리).
   function startFlashSession(mode: FlashMode = 'blitz', count = 15) {
+    // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 mode로 흘러들 수 있어(방어) —
+    // 실제로 Home/Done의 속도전 배너가 이 함수를 그대로 onClick에 넘겨써 발생했던 버그:
+    // 유효하지 않은 mode가 들어오면 selectFlashCardsByMode의 switch가 아무 것도 못 골라
+    // 카드 0장 → 화면이 조용히 홈으로 튕겨나갔다.
+    if (typeof mode !== 'string' || !FLASH_MODES.includes(mode)) mode = 'blitz';
     const cards = selectFlashCardsByMode(allCards, progress, mode, count);
     setFlashCards(cards);
     navigate('flash');
     return cards;
   }
-  // 어휘 커리큘럼 — 그룹별 또는 전체. 생활 기초(basics)도 여기에 병합.
+  // 어휘 커리큘럼 — 주제 그룹별 또는 전체(SRS). 생활 기초(basics)도 여기에 병합.
+  // 기본 레벨에 배너로 펼쳐져 있어 순서 없는 자유 연습(단계 완료 추적 대상 아님).
   // 모두 학습형: 설명·듣기·읽기 후 다양한 변형 퀴즈(일본어→뜻·뜻→일본어·듣고 일본어·듣고 뜻).
   const isVocabStudy = (id: string) => id.includes(':study:');
   function startVocabSession(groupId: string) {
+    // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 groupId로 흘러들 수 있어(방어)
+    if (typeof groupId !== 'string') groupId = 'all';
     let cards: Card[];
     if (groupId === 'basics') {
       cards = selectStudyDeck(allCards, (id) => id.startsWith('basic:study:'), (id) => id.startsWith('basic:') && !isVocabStudy(id), { studyLimit: 36, quizCount: 8, progress });
@@ -382,14 +429,13 @@ export function App() {
       cards = selectStudyDeck(allCards, (id) => id.startsWith(`vocab:${groupId}:study:`), (id) => id.startsWith(`vocab:${groupId}:`) && !isVocabStudy(id), { studyLimit: 28, quizCount: 6, progress });
     }
     if (cards.length === 0) return;
-    // 어휘 단계로 진입한 경우, 어휘 세션을 통과하면 단계 완료(메뉴 경유라 ref로 전달).
-    const stage = pendingMenuStageRef.current;
-    pendingMenuStageRef.current = null;
     lastPracticeRef.current = () => startVocabSession(groupId);
-    flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
+    flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true });
   }
   // 기본 인사 전용 세션 — 학습형
   function startGreetingSession(stage?: string | null) {
+    // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 stage로 흘러들 수 있어(방어)
+    if (typeof stage !== 'string') stage = undefined;
     const cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:greetings:study:'), (id) => id.startsWith('vocab:greetings:') && !isVocabStudy(id), { studyLimit: 24, quizCount: 6, progress });
     if (cards.length === 0) return;
     lastPracticeRef.current = () => startGreetingSession(stage);
@@ -456,24 +502,19 @@ export function App() {
     setProgress(prog); saveProgress(prog);
     setSeenKana((prev) => { const nx = markKanaKnown(prev, chars); saveSeenKana(nx); return nx; });
   }
-  function resetAll() {
-    clearProgress();
-    setProgress({});
-    setSession({ lastCompletedSessionId: 0 });
-    setSeenKana({});
-    setDiscovered([]);
-    resetOpenMissions();
-    setOpenMissions(reconcileOpenMissions([], {}));
-    resetFlashBest();
-    resetProgression();
-    setProgression({ completed: [] });
-    // 진단 플래그 초기화 후 통합 수준 진단을 다시 시작(초기화 = 처음 접속과 동일).
-    try { localStorage.removeItem('yangmung:placement:v1'); localStorage.setItem('yangmung:placement:prompted', '1'); } catch { /* noop */ }
-    startPlacement();
+  // 전체 초기화 — 진척·계급(가챠 컬렉션)·설정·진단 등 모든 yangmung 데이터를 지우고 새로고침.
+  // 계급은 가챠 컬렉션에서 계산되므로 컬렉션까지 지워야 "처음 접속 사용자(이등병)"와 동일해진다.
+  // IndexedDB 미러도 지워 재부팅 복원이 지워진 데이터를 되살리지 않게 한다. 순서:
+  //  ① localStorage 전체 삭제(이후 스냅숏은 빈 상태라 미러를 덮어쓰지 않음) → ② 미러 삭제 → ③ 새로고침.
+  // 새로고침 후엔 저장 데이터가 전혀 없어 웰컴 팝업+수준 진단이 처음 접속과 동일하게 시작된다.
+  async function resetAll() {
+    clearAllYangmung();
+    try { await clearMirror(); } catch { /* noop */ }
+    window.location.reload();
   }
 
   // 미션 오픈만 초기화(진척은 유지) — 설정의 개발 도구. 다시 랜덤 1개부터.
-  function resetUnlocks() { resetOpenMissions(); setOpenMissions(reconcileOpenMissions([], progress)); }
+  function resetUnlocks() { resetOpenMissions(); setOpenMissions(reconcileOpenMissions([], progress, missionWindow, missionFloor)); }
   // 개발용: 모든 미션 장면에 가챠 카드 30장씩 채움(테스트 편의).
   function fillDevCardsAll() {
     const ids = CONTENT.missions.filter((m) => m.id !== 'C0').map((m) => m.id);
@@ -504,6 +545,7 @@ export function App() {
           onOpenBasics={() => navigate('vocabTable')}
           onOpenPublic={() => navigate('public')}
           onOpenEntertainment={() => navigate('ent')}
+          onStartVocabGroup={startVocabSession}
         />
       );
     }
@@ -511,7 +553,7 @@ export function App() {
       return (
         <PublicExpressions
           nav={{ ...nav, current: 'practice' }}
-          onBack={() => navigate('practice')}
+          onBack={() => goBack('practice')}
           onStartSigns={startSignSession}
           onStartAnnouncements={startAnnouncementSession}
         />
@@ -521,24 +563,24 @@ export function App() {
       return (
         <EntertainmentLearning
           nav={{ ...nav, current: 'practice' }}
-          onBack={() => navigate('practice')}
+          onBack={() => goBack('practice')}
           onStartDialogue={startDialogueSession}
           onStartSong={startSongSession}
         />
       );
     }
     if (view === 'map') {
-      return <MapView nav={{ ...nav, current: 'map' }} allCards={allCards} progress={progress} openMissions={openMissions} devUnlockAll={!!settings.devUnlockAll} onPracticeScene={startSceneSession} onBack={() => navigate('home')} />;
+      return <MapView nav={{ ...nav, current: 'map' }} allCards={allCards} progress={progress} openMissions={openMissions} devUnlockAll={!!settings.devUnlockAll} onPracticeScene={startSceneSession} onBack={() => goBack('home')} />;
     }
     if (view === 'review') {
-      return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} openMissions={openMissions} devUnlockAll={!!settings.devUnlockAll} onStartReview={startReviewSession} onPracticeScene={startSceneSession} onBack={() => navigate('home')} />;
+      return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} openMissions={openMissions} devUnlockAll={!!settings.devUnlockAll} onStartReview={startReviewSession} onPracticeScene={startSceneSession} onBack={() => goBack('home')} />;
     }
     if (view === 'gacha') {
       return <GachaPage nav={{ ...nav, current: 'gacha' }} openMissions={openMissions} />;
     }
     if (view === 'flash') {
       const unlockedSceneIds = CONTENT.missions.filter((m) => m.id !== 'C0' && isSceneOpen(m.id, openMissions, !!settings.devUnlockAll)).map((m) => m.id);
-      return <Flash cards={flashCards} unlockedSceneIds={unlockedSceneIds} onExit={() => navigate('home')} onReplay={(mode, count) => startFlashSession(mode, count)} />;
+      return <Flash cards={flashCards} unlockedSceneIds={unlockedSceneIds} onExit={() => goBack('home')} onReplay={(mode, count) => startFlashSession(mode, count)} />;
     }
     if (view === 'placement') {
       return <Placement cards={placementCards} onDone={finishPlacement} onSkip={() => navigate('home')} />;
@@ -551,7 +593,7 @@ export function App() {
           script={kanaScript}
           onScriptChange={setKanaScript}
           onQuiz={(count) => startKanaSession(kanaScript, count)}
-          onBack={() => navigate('home')}
+          onBack={() => goBack('home')}
           onKanaWritten={(char) => setSeenKana((prev) => { const nx = markKanaSeen(prev, [char]); saveSeenKana(nx); return nx; })}
         />
       );
@@ -565,14 +607,14 @@ export function App() {
           setProgression((p) => { const np = markStageComplete(p, key); saveProgression(np); return np; });
         }
         verbsStageKeyRef.current = null;
-        navigate('home');
+        goBack('home');
       }} progress={progress} onAnswer={(id, correct) => {
         verbsScoreRef.current = { ok: verbsScoreRef.current.ok + (correct ? 1 : 0), n: verbsScoreRef.current.n + 1 };
         setProgress((m) => { const np = recordAttempt(m, id, { correct, usedRecovery: false, sessionId }); saveProgress(np); return np; });
       }} />;
     }
     if (view === 'write') {
-      return <KanaWrite items={writeItems} onExit={() => navigate('home')} onReplay={startKanaWrite}
+      return <KanaWrite items={writeItems} onExit={() => goBack('home')} onReplay={startKanaWrite}
         onKanaWritten={(item, score) => {
           if (score >= 55 && item.char) setSeenKana((prev) => { const nx = markKanaSeen(prev, [item.char]); saveSeenKana(nx); return nx; });
         }} />;
@@ -585,7 +627,7 @@ export function App() {
           subtitle={preview.subtitle}
           lines={preview.lines}
           onStart={preview.begin}
-          onBack={() => navigate(preview.returnView)}
+          onBack={() => goBack(preview.returnView)}
           countControl={preview.countControl}
         />
       );
@@ -594,14 +636,18 @@ export function App() {
       const missions = missionsFromCards(sessionCards, progress, sessionId);
       const hasKana = sessionCards.some((c) => c.kind === 'quiz' && c.reviewTarget?.type === 'kana');
       const hasBasics = sessionCards.some((c) => c.kind === 'quiz' && c.id.startsWith('basic:'));
-      return <Intro cards={sessionCards} allCards={allCards} progress={progress} goal={sessionGoalText(missions, hasKana, hasBasics)} onStart={() => navigate('session', { replace: true })} onBack={() => navigate('home')} />;
+      return <Intro cards={sessionCards} allCards={allCards} progress={progress} goal={sessionGoalText(missions, hasKana, hasBasics)} onStart={() => navigate('session', { replace: true })} onBack={() => goBack('home')} />;
     }
     if (view === 'done') {
+      const snap = flow.doneSnapshot;
+      if (!snap) return <main style={WRAP}><MascotEmpty who="yang" mood="loading" title="결과를 준비하고 있어요">잠시만 기다려 주세요.</MascotEmpty></main>;
       const nextId = nextSessionId(session);
       const canContinue = plannedSessionSize(allCards, progress, nextId, sessionConfig) > 0;
       // 표시용 파생(로직 불변): 이번 세션에 등장한 장면 / 다음 세션의 첫 장면
+      // 스냅숏 기준 — 라이브 sessionCards/sessionId는 이 화면에 있는 동안 다른 빠른 연습을 눌러
+      // 이미 다음 세션 것으로 바뀌어 있을 수 있다(그 상태로 뒤로가기를 하면 예전엔 엉뚱한 결과가 보였음).
       const clearedSceneIds = [...new Set(
-        missionsFromCards(sessionCards, progress, sessionId).filter((m) => m.id !== 'C0').map((m) => m.id),
+        missionsFromCards(snap.sessionCards, progress, snap.sessionId).filter((m) => m.id !== 'C0').map((m) => m.id),
       )];
       const nextSceneId = planSession(allCards, progress, nextId, sessionConfig)
         .missions.find((m) => m.id !== 'C0')?.id;
@@ -612,16 +658,16 @@ export function App() {
       const signCount = selectSignCards(allCards, progress, nextId).length;
       return (
         <Done
-          sessionId={sessionId} score={flow.score} quizSeen={flow.quizSeen} sessionLog={flow.sessionLog}
+          sessionId={snap.sessionId} score={snap.score} quizSeen={snap.quizSeen} sessionLog={snap.sessionLog}
           progress={progress} canContinue={canContinue}
           clearedSceneIds={clearedSceneIds} nextSceneId={nextSceneId}
           reviewCount={reviewCount} dictationCount={dictationCount} composeCount={composeCount} signCount={signCount}
-          speakCount={sessionCards.filter((c) => c.kind === 'speak').length}
-          isQuickPractice={flow.isPractice}
+          speakCount={snap.sessionCards.filter((c) => c.kind === 'speak').length}
+          isQuickPractice={snap.isPractice}
           coreLevel={coreLevel} progression={progression} devUnlockAll={!!settings.devUnlockAll}
-          onRetryWeak={flow.retryWeak} onRetrySame={flow.isPractice ? lastPracticeRef.current ?? undefined : undefined} onContinue={startSession}
+          onRetryWeak={flow.retryWeak} onRetrySame={snap.isPractice ? snap.retrySame ?? undefined : undefined} onContinue={startSession}
           onReview={startReviewSession} onDictation={startDictationSession} onCompose={startComposeSession} onSigns={startSignSession} onFlash={startFlashSession}
-          onPracticeVocab={() => navigate('vocab')}
+          onPracticeVocab={() => startVocabSession('all')}
           onPracticeGreetings={startGreetingSession}
           onPracticeKanaHiragana={() => startKanaSession('hiragana')}
           onPracticeKanaKatakana={() => startKanaSession('katakana')}
@@ -632,24 +678,13 @@ export function App() {
         />
       );
     }
-    if (view === 'vocab') {
-      return (
-        <VocabMenu
-          nav={{ ...nav, current: 'practice' }}
-          allCards={allCards}
-          progress={progress}
-          onSelectGroup={(groupId) => { if (groupId === 'basics') navigate('vocabTable'); else startVocabSession(groupId); }}
-          onBack={() => navigate('home')}
-        />
-      );
-    }
     if (view === 'vocabTable') {
       return (
         <VocabTable
           nav={{ ...nav, current: 'practice' }}
           progress={progress}
           onQuiz={() => startVocabSession('basics')}
-          onBack={() => navigate('vocab')}
+          onBack={() => goBack('practice')}
         />
       );
     }
@@ -670,7 +705,7 @@ export function App() {
           isKanaFamiliar={kanaFamiliar}
           onNext={flow.next}
           onPrev={flow.prev}
-          onExit={() => navigate('home')}
+          onExit={() => goBack('home')}
           onKnown={flow.markKnown}
           quickPractice={flow.isPractice}
         />
@@ -693,6 +728,12 @@ export function App() {
     <Suspense fallback={<AppFallback />}>
       {renderView()}
       {showGuide && <Guide onClose={() => setShowGuide(false)} />}
+      {showWelcome && (
+        <WelcomeGuide
+          onStart={() => { dismissWelcome(); startPlacement(); }}
+          onSkip={dismissWelcome}
+        />
+      )}
       {showSettings && (
         <SettingsModal settings={settings} onChange={updateSettings} onSelectMode={selectMode} onMarkKanaKnown={markAllKanaKnown} onReset={resetAll} onResetUnlocks={resetUnlocks} onFillDevCards={fillDevCardsAll} onPlacement={startPlacement} onStartPromotion={startPromotionQuiz} onClose={() => setShowSettings(false)} />
       )}

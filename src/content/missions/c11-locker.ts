@@ -50,6 +50,7 @@ export const c11: Mission = {
       promptPhraseId: 'p_price',
       choices: [
         { text: '카드로요', phraseId: 'p_card_de', correct: true, feedback: '「カードで」— IC카드(Suica·PASMO) 결제가 되는 로커가 늘고 있어요. 동전이 없을 때 특히 유용해요' },
+        { text: '현금으로요', phraseId: 'p_genkin_de', correct: true, feedback: '「現金(げんきん)で」— 코인로커는 이름 그대로 동전 결제가 기본이에요. 소액 동전을 미리 준비해두면 편해요' },
         { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: false, feedback: '방금 요금을 들었어요. 들은 뒤에는 결제 수단을 말해요' },
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '사용법은 이미 안내받았어요 — 지금은 요금 결제 수단을 말해요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },

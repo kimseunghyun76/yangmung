@@ -1,5 +1,5 @@
 // 가챠 카드 도감 — 세션별 아이템 카드 수집 + 병합.
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CONTENT } from '../content';
 import {
@@ -9,7 +9,6 @@ import {
   type BoxGrade, type Collection, type DropResult, type Rarity,
 } from '../learn/collection';
 import { gachaItemForPlace, gachaLabItemForPlace, type GachaItemArt } from '../learn/gachaItems';
-import { loadProgress } from '../learn/progress';
 import { Icon } from '../ui/Icon';
 import { speakSequence, ttsSupported } from '../tts';
 import { loadSettings, sceneSentenceLevelForMode } from '../learn/settings';
@@ -634,44 +633,11 @@ function finalGiftProgress(collection: Collection): { have: number; total: numbe
   return { have, total: SCENES.length, ready: have >= SCENES.length };
 }
 
-const RANKS = ['이등병', '일병', '상병', '병장', '하사', '중사', '상사', '원사', '소위', '중위', '대위', '소령', '중령', '대령', '준장', '소장', '중장', '대장', '원수'];
-function storageSizeKb(): number {
-  if (typeof window === 'undefined') return 0;
-  let n = 0;
-  for (let i = 0; i < window.localStorage.length; i++) {
-    const k = window.localStorage.key(i) ?? '';
-    if (!k.startsWith('yangmung:')) continue;
-    n += k.length + (window.localStorage.getItem(k)?.length ?? 0);
-  }
-  return Math.round((n * 2) / 1024);
-}
-function useLearningStats(collection: Collection) {
-  return useMemo(() => {
-    const progress = loadProgress();
-    const attempts = Object.values(progress).reduce((sum, p) => sum + p.attempts, 0);
-    const correct = Object.values(progress).reduce((sum, p) => sum + p.correct, 0);
-    const dayCounts = Object.values(progress).reduce<Record<string, number>>((acc, p) => {
-      const d = p.lastSeenAt?.slice(0, 10);
-      if (d) acc[d] = (acc[d] ?? 0) + p.attempts;
-      return acc;
-    }, {});
-    const dates = Object.keys(dayCounts).sort();
-    const rankScore = attempts + totalItemsAll(collection) * 4 + honorTrophyCount(collection) * 140;
-    const rankIndex = Math.min(RANKS.length - 1, Math.floor(rankScore / 120));
-    const nextAt = (rankIndex + 1) * 120;
-    return { attempts, correct, dates, dayCounts, rank: RANKS[rankIndex], rankScore, nextAt, storageKb: storageSizeKb() };
-  }, [collection]);
-}
-function totalItemsAll(c: Collection): number {
-  return Object.values(c.cards).reduce((sum, card) => sum + totalItems(card), 0);
-}
-
 export function DeckBrowser() {
   const [collection, setCollection] = useState<Collection>(() => loadCollection());
   const [selected, setSelected] = useState<string>();
   const [selectedDetail, setSelectedDetail] = useState<{ sceneId: string; rarity: Rarity } | null>(null);
   const [mergeFx, setMergeFx] = useState<{ from: Rarity; to: Rarity; key: number } | null>(null);
-  const stats = useLearningStats(collection);
 
   function runMerge(sceneId: string, rarity: Rarity) {
     const merged = mergeSceneRarity(collection, sceneId, rarity);
@@ -767,12 +733,6 @@ export function DeckBrowser() {
           모든 장면 선물을 모으면 큰 선물이 열려요. 관리자랑 데이트하기, 일본여행 같이 가기 같은 최종 보상을 암시하는 카드입니다.
         </span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8, marginBottom: 14 }}>
-        <StatTile label="나의 계급" value={stats.rank} sub={`${stats.rankScore}/${stats.nextAt}`} />
-        <StatTile label="학습일" value={`${stats.dates.length}일`} sub={stats.dates.slice(-7).join(' · ') || '아직 없음'} />
-        <StatTile label="저장 용량" value={`${stats.storageKb}KB`} sub={`정답 ${stats.correct}/${stats.attempts}`} />
-      </div>
-      <LearningHeatmap dayCounts={stats.dayCounts} />
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(150px, 1fr))', gap: 14 }}>
         {SCENES.map((m) => {
           const card = collection.cards[m.id];
@@ -817,47 +777,6 @@ export function DeckModal({ onClose }: { onClose: () => void }) {
     <Modal title="내 여행 도감" onClose={onClose}>
       <DeckBrowser />
     </Modal>
-  );
-}
-
-function StatTile({ label, value, sub }: { label: string; value: string; sub: string }) {
-  return (
-    <div style={{ border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', borderRadius: 14, padding: '10px 9px', minWidth: 0 }}>
-      <span style={{ display: 'block', fontSize: 10.5, fontWeight: 850, color: 'var(--ink-faint)' }}>{label}</span>
-      <strong style={{ display: 'block', marginTop: 3, fontSize: 15, color: 'var(--ink)' }}>{value}</strong>
-      <span style={{ display: 'block', marginTop: 3, fontSize: 10.5, color: 'var(--ink-soft)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{sub}</span>
-    </div>
-  );
-}
-
-function LearningHeatmap({ dayCounts }: { dayCounts: Record<string, number> }) {
-  const days = useMemo(() => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return Array.from({ length: 28 }, (_, i) => {
-      const d = new Date(today);
-      d.setDate(today.getDate() - (27 - i));
-      const key = d.toISOString().slice(0, 10);
-      const n = dayCounts[key] ?? 0;
-      return { key, n };
-    });
-  }, [dayCounts]);
-  return (
-    <div style={{ margin: '0 0 14px', padding: 12, borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 9 }}>
-        <span style={{ fontSize: 12, fontWeight: 900, color: 'var(--ink)' }}>최근 4주 학습 진도</span>
-        <span style={{ fontSize: 10.5, fontWeight: 800, color: 'var(--ink-faint)' }}>진할수록 많이 복습</span>
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(14, minmax(0, 1fr))', gap: 4 }}>
-        {days.map((d) => {
-          const alpha = d.n >= 12 ? 0.95 : d.n >= 6 ? 0.72 : d.n >= 2 ? 0.48 : d.n > 0 ? 0.28 : 0;
-          return (
-            <span key={d.key} title={`${d.key} · ${d.n}회`} aria-label={`${d.key} ${d.n}회`}
-              style={{ aspectRatio: '1', borderRadius: 4, background: alpha ? `rgba(185,56,46,${alpha})` : 'rgba(127,127,127,.14)', boxShadow: alpha >= 0.72 ? '0 0 10px rgba(185,56,46,.28)' : undefined }} />
-          );
-        })}
-      </div>
-    </div>
   );
 }
 

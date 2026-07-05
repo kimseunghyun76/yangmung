@@ -142,7 +142,7 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
 
   return (
     <main style={{ ...WRAP, minHeight: '100dvh', display: 'flex', flexDirection: 'column', paddingBottom: 24 }}>
-      <button onClick={onBack} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--ink-faint)', padding: '4px 0', marginBottom: 8, alignSelf: 'flex-start' }}>← 홈으로</button>
+      <button onClick={onBack} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 14, color: 'var(--ink-faint)', padding: '4px 0', marginBottom: 8, alignSelf: 'flex-start' }}>← 뒤로</button>
       <div style={{
         position: 'relative',
         overflow: 'hidden',

@@ -268,6 +268,7 @@ export const c17: Mission = {
       promptPhraseId: 'p_sabi_wa_daijoubu_desu_ka',
       choices: [
         { text: '괜찮습니다', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫です」— 와사비 OK 표현. 「さびあり(サビあり)でお願いします」도 같은 의미로 쓰여요' },
+        { text: '이거 빼 주세요', phraseId: 'p_kore_nuite', correct: true, feedback: '「これを抜(ぬ)いてください」— 와사비를 빼달라는 뜻으로도 써요. 「サビ抜きで」라고도 해요' },
         { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: false, feedback: '와사비 여부를 먼저 답하세요 — 추천 질문은 다른 상황이에요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
@@ -488,6 +489,7 @@ export const c20: Mission = {
       promptPhraseId: 'p_karada_o_aratte_kudasai',
       choices: [
         { text: '기억해 둘게요', phraseId: 'p_oboete_okimasu', correct: true, feedback: '「覚(おぼ)えておきます」— 이용 규칙을 잊지 않게 기억해 두는 응답' },
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 안내받은 규칙을 이해했다는 응답' },
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
         { text: '영수증 주세요', phraseId: 'p_ryoushuusho', correct: false, feedback: '규칙 안내를 듣는 중이라 먼저 이해/확인을 답하는 게 좋아요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
@@ -670,6 +672,7 @@ export const c23: Mission = {
       promptPhraseId: 'p_noriba_wa_jyuunibansen_desu',
       choices: [
         { text: '기억해 둘게요', phraseId: 'p_oboete_okimasu', correct: true, feedback: '「覚(おぼ)えておきます」— 승강장 번호를 기억해 두는 응답' },
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 승강장 안내를 이해했다는 응답' },
         { text: '몇 번 선이에요?', phraseId: 'p_nanbansen', correct: false, feedback: '방금 12번선이라고 들었어요. 이미 들은 정보를 다시 물으면 어색해요' },
         { text: '표 주세요', phraseId: 'p_kippu_kudasai', correct: false, feedback: '표는 이미 샀어요 — 지금은 승강장 안내를 확인해요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
@@ -681,6 +684,7 @@ export const c23: Mission = {
       promptPhraseId: 'p_jikan_ni_gochuui_kudasai',
       choices: [
         { text: '조심할게요', phraseId: 'p_ki_o_tsukemasu', correct: true, feedback: '「気(き)をつけます」— 출발 시간에 늦지 않게 "조심하겠습니다"' },
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 시간 주의 안내를 이해했다는 응답' },
         { text: '다음은 시부야예요?', phraseId: 'p_tsugi_wa_shibuya', correct: false, feedback: '시간 주의 안내에 노선 질문은 어긋나요. 먼저 알겠다고 답해요' },
         { text: '몇 번 선이에요?', phraseId: 'p_nanbansen', correct: false, feedback: '승강장은 이미 안내받았어요 — 지금은 출발 시간 주의를 확인해요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
@@ -739,6 +743,7 @@ export const c24: Mission = {
       promptPhraseId: 'p_henkyaku_basho_wa_kochira_desu',
       choices: [
         { text: '기억해 둘게요', phraseId: 'p_oboete_okimasu', correct: true, feedback: '「覚(おぼ)えておきます」— 반납 장소를 기억해 두는 응답' },
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 반납 장소 안내를 이해했다는 응답' },
         { text: '어디예요?', phraseId: 'p_doko_desu_ka', correct: false, feedback: '방금 이쪽이라고 안내받았어요. 위치를 들었으면 확인 응답을 해요' },
         { text: '영수증 주세요', phraseId: 'p_ryoushuusho', correct: false, feedback: '반납 장소 안내 단계예요. 영수증은 계산할 때 요청해요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
@@ -819,6 +824,7 @@ export const c25: Mission = {
       choices: [
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
         { text: '잘 부탁드려요', phraseId: 'p_yoroshiku_onegai', correct: true, feedback: '「よろしくお願(ねが)いします」— 진료를 시작하며 건네는 응답' },
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 의사가 설명할 것이라는 안내를 이해했다는 응답' },
         { text: '카드로요', phraseId: 'p_card_de', correct: false, feedback: '진료 설명 안내에는 결제보다 이해 확인이 먼저예요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
@@ -1091,6 +1097,7 @@ export const c29: Mission = {
       promptPhraseId: 'p_kanryou_made_sanjuppun_desu',
       choices: [
         { text: '기억해 둘게요', phraseId: 'p_oboete_okimasu', correct: true, feedback: '「覚(おぼ)えておきます」— 세탁 완료 시간을 기억해 두는 응답' },
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 완료 시간 안내를 이해했다는 응답' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '사용법은 이미 익혔어요 — 지금은 완료 시간을 확인하면 돼요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },

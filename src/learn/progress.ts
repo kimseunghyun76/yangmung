@@ -299,6 +299,13 @@ export interface SessionConfig {
   openMissions?: string[];
   /** 듣기·받아쓰기·발음구분 카드의 레벨(티어) 범위 [min,max]. 범위 밖은 제외. 태그 없는 카드는 항상 포함. */
   cardTierRange?: [number, number];
+  /**
+   * true면 missionTierFilter 결과가 0개여도 전체 미션으로 폴백하지 않는다.
+   * 기본(false)은 메인 학습 세션용 — "실력 tier에 맞는 미션이 아직 없으면 빈 세션보다 전체 폴백"이 맞다.
+   * 복습처럼 "필터를 통과하는 게 하나도 없으면 정말 복습할 게 없는 것"이 맞는 용도는 true로 설정 —
+   * 안 그러면 진척이 0인 신규 유저의 "복습 큐"가 전혀 배운 적 없는 미션으로 폴백해버리는 버그가 생긴다.
+   */
+  strictMissionFilter?: boolean;
 }
 
 // 각 버킷에서 보장하는 최소 fresh(신규) 수 — due 복습이 quota를 다 채워서
@@ -535,8 +542,8 @@ export function selectSessionCards(
   let filteredByMission = cByMission;
   if (config.missionTierFilter) {
     const filtered = new Map([...cByMission.entries()].filter(([mid]) => config.missionTierFilter!(mid)));
-    if (filtered.size > 0) filteredByMission = filtered;
-    // filtered.size === 0 이면 해당 티어 미션이 아직 잠금/미경험 → 전체 폴백
+    if (filtered.size > 0 || config.strictMissionFilter) filteredByMission = filtered;
+    // filtered.size === 0 이고 strictMissionFilter가 아니면 → 해당 티어 미션이 아직 잠금/미경험 → 전체 폴백
   }
   const kSel = pickPool(k, config.quotas.K, config.minFresh.K, progress);
   const bSel = pickPool(b, config.quotas.B, config.minFresh.B, progress);

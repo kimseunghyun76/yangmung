@@ -30,8 +30,11 @@
     "test:progression": "tsx src/learn/progression.test.ts",
     "test:missionmix": "tsx src/learn/missionMix.test.ts",
     "test:studyfirst": "tsx src/learn/studyFirst.test.ts",
+    "test:missionstudyfirst": "tsx src/learn/missionStudyFirst.test.ts",
+    "test:missioncoverage": "tsx src/learn/missionCoverage.test.ts",
+    "test:composecontext": "tsx src/learn/composeContext.test.ts",
     "test:variantladder": "tsx src/learn/variantLadder.test.ts",
-    "test": "npm run test:content && npm run test:adaptive && npm run test:progress && npm run test:cards && npm run test:unlocks && npm run test:progression && npm run test:missionmix && npm run test:studyfirst && npm run test:variantladder"
+    "test": "npm run test:content && npm run test:adaptive && npm run test:progress && npm run test:cards && npm run test:unlocks && npm run test:progression && npm run test:missionmix && npm run test:studyfirst && npm run test:missionstudyfirst && npm run test:missioncoverage && npm run test:composecontext && npm run test:variantladder"
   },
   "dependencies": {
     "react": "^18.3.1",

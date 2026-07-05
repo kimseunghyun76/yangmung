@@ -222,7 +222,7 @@ function SceneSheets({ places, byId, phraseSeen, openMissions, devUnlockAll }: {
             </div>
             {seenPhrases.length
               ? <PhraseList phrases={seenPhrases} phraseSeen={phraseSeen} />
-              : <Empty>이 장면은 열렸지만 아직 학습한 표현이 없어요. 지도에서 연습해보세요.</Empty>}
+              : <Empty>이 장면은 열렸지만 아직 학습한 표현이 없어요. 미션 지도에서 연습해보세요.</Empty>}
           </GlassPanel>
         );
       })() : (

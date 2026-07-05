@@ -81,7 +81,7 @@ export function GachaPage({ nav, openMissions }: Props) {
           <p style={{ margin: '0 0 6px', fontSize: 12, fontWeight: 900, letterSpacing: '0.06em', color: 'var(--accent)' }}>DAILY FREE</p>
           <h2 style={{ margin: 0, fontSize: 23, lineHeight: 1.18, color: 'var(--ink)' }}>오늘의 무료 가챠</h2>
           <p style={{ margin: '8px 0 14px', fontSize: 13, lineHeight: 1.55, color: 'var(--ink-soft)', fontWeight: 650 }}>
-            현재 열린 장면에서만 카드가 나와요. 도감이 비어 있는 장면은 지도에서 연습하면 보상이 더 잘 이어집니다.
+            현재 열린 장면에서만 카드가 나와요. 도감이 비어 있는 장면은 미션 지도에서 연습하면 보상이 더 잘 이어집니다.
           </p>
           <div style={{ display: 'flex', gap: 7, flexWrap: 'wrap', marginBottom: claimed ? 0 : 4 }}>
             {previewScenes.map((s) => (

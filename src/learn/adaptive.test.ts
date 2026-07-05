@@ -82,5 +82,44 @@ console.log('\n=== 진단: 잘하는 항목은 약점 아님 ===');
   check('숙련 글자는 weakKana 제외', !d.weakKana.some((w) => w.key === String(readCard.reviewTarget!.id)));
 }
 
+console.log('\n=== 진단: 며칠 만에 재접속(daysSinceLastVisit) ===');
+{
+  const daysAgo = (n: number) => new Date(Date.now() - n * 24 * 60 * 60 * 1000).toISOString();
+  // 신규(진척 없음) → null이어야(복습 권유 문구가 잘못 뜨면 안 됨)
+  const dNew = diagnose(cards, {}, 0);
+  check('진척 없음 → daysSinceLastVisit null', dNew.daysSinceLastVisit === null);
+  check('진척 없음 → focus/message에 재접속 문구 없음', !dNew.focus.includes('만이') && !dNew.message.includes('만이'));
+
+  // 오늘(0~1일) → 평소 메시지, 재접속 문구 없음
+  const pToday: ProgressMap = { a: mk({ lastSeenAt: daysAgo(0) }) };
+  const dToday = diagnose(cards, pToday, 0);
+  check('당일 재접속 → daysSinceLastVisit 0', dToday.daysSinceLastVisit === 0);
+  check('당일 재접속 → 재접속 문구 없음', !dToday.focus.includes('만이'));
+
+  // 3일 만 → "N일 만이에요" 문구 + adaptSessionConfig가 minFresh를 낮춤
+  const p3: ProgressMap = { a: mk({ lastSeenAt: daysAgo(3) }) };
+  const d3 = diagnose(cards, p3, 0);
+  check('3일 만 → daysSinceLastVisit 3', d3.daysSinceLastVisit === 3);
+  check('3일 만 → focus에 "3일 만" 포함', d3.focus.includes('3일 만'));
+  check('3일 만 → message에 복습 비중 문구', d3.message.includes('복습'));
+  const { config: c3, changed: ch3 } = adaptSessionConfig(base, d3);
+  check('3일 만 → 신규 유입(minFresh) 감소', ch3 && c3.minFresh.K < base.minFresh.K && c3.minFresh.C < base.minFresh.C);
+  check('3일 만 → 세션 길이(quota)는 유지', c3.quotas.K === base.quotas.K && c3.quotas.C === base.quotas.C);
+
+  // 10일 만(오랜만) → "오랜만" 문구 + minFresh 전부 0(복습 최우선)
+  const p10: ProgressMap = { a: mk({ lastSeenAt: daysAgo(10) }) };
+  const d10 = diagnose(cards, p10, 0);
+  check('10일 만 → daysSinceLastVisit 10', d10.daysSinceLastVisit === 10);
+  check('10일 만 → focus에 "오랜만" 포함', d10.focus.includes('오랜만'));
+  const { config: c10 } = adaptSessionConfig(base, d10);
+  check('10일 만 → 신규 유입(minFresh) 전부 0(복습 최우선)', c10.minFresh.K === 0 && c10.minFresh.B === 0 && c10.minFresh.C === 0);
+
+  // 더 긴 공백(20일)이 3일보다 minFresh를 더(또는 같게) 낮춰야 "그만큼 복습"이 성립
+  const p20: ProgressMap = { a: mk({ lastSeenAt: daysAgo(20) }) };
+  const d20 = diagnose(cards, p20, 0);
+  const { config: c20 } = adaptSessionConfig(base, d20);
+  check('공백이 길수록 minFresh.C가 짧은 공백보다 크지 않음(단조 감소)', c20.minFresh.C <= c3.minFresh.C);
+}
+
 console.log(`\n결과: ${pass}/${total} PASS`);
 if (pass !== total) process.exit(1);

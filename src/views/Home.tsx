@@ -18,6 +18,9 @@ import { NavBar, type NavBarProps } from './NavBar';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
 import { MascotEmpty } from './mascot';
 import { Icon } from '../ui/Icon';
+import { loadCollection } from '../learn/collection';
+import { useLearningStats, type LearningStats } from '../learn/learningStats';
+import { StatTile, LearningHeatmap } from './StatsWidgets';
 
 interface Props {
   nav: NavBarProps;
@@ -53,6 +56,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
   const hira = kanaReadMastery(progress, hiraIds);
   const kata = kanaReadMastery(progress, kataIds);
   const kanaPct = Math.round(((hira.mastered + kata.mastered) / Math.max(1, hira.total + kata.total)) * 100);
+  const stats = useLearningStats(loadCollection());
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
   const openScenes = scenes.filter((m) => openMissions.includes(m.id));
 
@@ -116,7 +120,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
         <GlassPanel>
           <StatusDashboard
             d={diagnosis} line={coach.line}
-            hira={hira} kata={kata} kanaPct={kanaPct}
+            hira={hira} kata={kata} kanaPct={kanaPct} stats={stats}
             modeLabel={modeLabel} onPlacement={onPlacement}
           />
         </GlassPanel>
@@ -177,9 +181,9 @@ function TravelRoute({ routeScenes, locked, allCards, progress, onPracticeScene,
     <GlassPanel>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
         <p style={{ margin: 0, ...label }}>{locked ? '다음 여행 미션' : '여행 루트'}</p>
-        <button className="ym-press" onClick={onMap} style={{ border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', borderRadius: 999, padding: '8px 12px', fontSize: 12.5, fontWeight: 800, cursor: 'pointer' }}>지도 보기</button>
+        <button className="ym-press" onClick={onMap} style={{ border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', borderRadius: 999, padding: '8px 12px', fontSize: 12.5, fontWeight: 800, cursor: 'pointer' }}>미션 보기</button>
       </div>
-      {locked && <p style={{ margin: '8px 0 0', fontSize: 12.5, color: 'var(--ink-faint)', fontWeight: 700 }}>아직 열린 장면이 없어요. 눌러서 지도에서 다음 미션을 열어보세요.</p>}
+      {locked && <p style={{ margin: '8px 0 0', fontSize: 12.5, color: 'var(--ink-faint)', fontWeight: 700 }}>아직 열린 장면이 없어요. 눌러서 미션 지도에서 다음 미션을 열어보세요.</p>}
       {routeScenes.length > 0 ? (
         <div style={{ display: 'grid', gridTemplateColumns: compact ? 'repeat(2, minmax(0, 1fr))' : '1fr', gap: 10, marginTop: 12 }}>
           {routeScenes.map((m) => (
@@ -188,7 +192,7 @@ function TravelRoute({ routeScenes, locked, allCards, progress, onPracticeScene,
           ))}
         </div>
       ) : (
-        <p style={{ margin: '12px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>모든 미션을 열었어요! 지도에서 골라 진행해요.</p>
+        <p style={{ margin: '12px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>모든 미션을 열었어요! 미션 지도에서 골라 진행해요.</p>
       )}
     </GlassPanel>
   );
@@ -353,7 +357,7 @@ function HomeSceneCard({ hero, accent, kicker, title, chips, planned, onStart }:
         </PrimaryAction>
         {planned === 0 && (
           <MascotEmpty who="duo" size={48} title="오늘은 복습장으로 가볼까요?" style={{ padding: '12px 0 0' }}>
-            지도나 복습장에서 다시 듣고 익숙한 표현을 확인할 수 있어요.
+            미션 지도나 복습장에서 다시 듣고 익숙한 표현을 확인할 수 있어요.
           </MascotEmpty>
         )}
       </div>
@@ -362,17 +366,20 @@ function HomeSceneCard({ hero, accent, kicker, title, chips, planned, onStart }:
 }
 
 // 상태 대시보드 — 코치·학습 상태·가나 안정도·난이도(진단)를 한 카드로 묶어 "한눈에".
-function StatusDashboard({ d, line, hira, kata, kanaPct, modeLabel, onPlacement }: {
+function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPlacement }: {
   d: Diagnosis; line: string;
   hira: { mastered: number; total: number }; kata: { mastered: number; total: number };
-  kanaPct: number; modeLabel: string; onPlacement: () => void;
+  kanaPct: number; stats: LearningStats; modeLabel: string; onPlacement: () => void;
 }) {
   const tone = d.level === 'struggling' ? 'var(--warn)' : d.level === 'cruising' ? 'var(--ok)' : 'var(--accent)';
   return (
     <>
-      {/* 헤더: 제목 + 난이도/진단 칩 */}
+      {/* 헤더: 제목 + 계급 뱃지 + 난이도/진단 칩 */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-        <p style={{ margin: 0, ...label }}>내 학습 현황</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+          <p style={{ margin: 0, ...label }}>내 학습 현황</p>
+          <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 800, color: 'var(--accent)', background: 'var(--accent-soft)', padding: '3px 9px', borderRadius: 999 }}>🎖 {stats.rank}</span>
+        </div>
         <button className="ym-press" onClick={onPlacement} title="수준 진단으로 난이도 재조정" style={{
           display: 'inline-flex', alignItems: 'center', gap: 7, padding: '7px 12px', borderRadius: 999,
           border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
@@ -416,6 +423,16 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, modeLabel, onPlacement 
         </div>
       </div>
 
+      {/* 성장 기록 — 학습일·정답률·최근 4주 진도(도감에 흩어져 있던 계급·학습일 통계를 여기로 병합) */}
+      <div style={{ marginTop: 13, paddingTop: 12, borderTop: '1px solid var(--glass-border)' }}>
+        <p style={{ margin: '0 0 8px', ...label }}>성장 기록</p>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 10 }}>
+          <StatTile label="학습일" value={`${stats.dates.length}일`} sub={stats.dates.slice(-7).join(' · ') || '아직 없음'} />
+          <StatTile label="정답률" value={stats.attempts ? `${Math.round((stats.correct / stats.attempts) * 100)}%` : '—'} sub={`${stats.attempts}문제 학습`} />
+        </div>
+        <LearningHeatmap dayCounts={stats.dayCounts} />
+      </div>
+
       {/* 약점 */}
       {(d.weakKana.length > 0 || d.weakScenes.length > 0) && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 13, alignItems: 'center' }}>
@@ -450,31 +467,30 @@ function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion,
         <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--ink-faint)' }}>통과하면 다음이 열려요</span>
       </div>
 
-      {coreLevel === 'advanced' ? (
-        <p style={{ margin: '12px 0 0', fontSize: 13.5, color: 'var(--ink-soft)', fontWeight: 700, lineHeight: 1.5 }}>
-          고급은 단계 없이 아래 <strong style={{ color: 'var(--ink)' }}>여행 미션</strong>으로 진행해요.
-        </p>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 12 }}>
+        {stages.map((st, idx) => (
+          <StageTile
+            key={st.id} order={idx + 1} stage={st} art={artOf(st)}
+            done={isStageComplete(progression, coreLevel, st.id)}
+            unlocked={devUnlockAll || isStageUnlocked(progression, coreLevel, idx)}
+            onClick={() => onStartStage(st)}
+          />
+        ))}
+      </div>
+
+      {nx ? (
+        <button className="ym-press" onClick={onStartPromotion} disabled={!promotionUnlocked} style={{
+          width: '100%', marginTop: 12, padding: '14px 16px', borderRadius: 14, cursor: promotionUnlocked ? 'pointer' : 'default',
+          fontWeight: 850, fontSize: 14.5, opacity: promotionUnlocked ? 1 : 0.55,
+          background: promotionUnlocked ? 'linear-gradient(135deg, #b9382e, #e0564a)' : 'var(--glass-bg-strong)',
+          color: promotionUnlocked ? '#fff' : 'var(--ink-faint)', border: promotionUnlocked ? 'none' : '1px solid var(--glass-border)',
+        }}>
+          {promotionUnlocked ? `🎯 ${CORE_LEVEL_LABEL[nx]} 승급 시험 — 20문항·90%` : '🔒 모든 단계를 통과하면 승급 시험이 열려요'}
+        </button>
       ) : (
-        <>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 12 }}>
-            {stages.map((st, idx) => (
-              <StageTile
-                key={st.id} order={idx + 1} stage={st} art={artOf(st)}
-                done={isStageComplete(progression, coreLevel, st.id)}
-                unlocked={devUnlockAll || isStageUnlocked(progression, coreLevel, idx)}
-                onClick={() => onStartStage(st)}
-              />
-            ))}
-          </div>
-          <button className="ym-press" onClick={onStartPromotion} disabled={!promotionUnlocked} style={{
-            width: '100%', marginTop: 12, padding: '14px 16px', borderRadius: 14, cursor: promotionUnlocked ? 'pointer' : 'default',
-            fontWeight: 850, fontSize: 14.5, opacity: promotionUnlocked ? 1 : 0.55,
-            background: promotionUnlocked ? 'linear-gradient(135deg, #b9382e, #e0564a)' : 'var(--glass-bg-strong)',
-            color: promotionUnlocked ? '#fff' : 'var(--ink-faint)', border: promotionUnlocked ? 'none' : '1px solid var(--glass-border)',
-          }}>
-            {promotionUnlocked ? `🎯 ${nx ? CORE_LEVEL_LABEL[nx] : ''} 승급 시험 — 20문항·90%` : '🔒 모든 단계를 통과하면 승급 시험이 열려요'}
-          </button>
-        </>
+        <p style={{ margin: '12px 0 0', fontSize: 13.5, color: 'var(--ink-soft)', fontWeight: 700, lineHeight: 1.5 }}>
+          고급은 승급 시험 없이 위 단계와 아래 <strong style={{ color: 'var(--ink)' }}>여행 미션</strong>으로 계속 실력을 다져요.
+        </p>
       )}
 
       <button className="ym-press" onClick={onPracticeWrite} style={{

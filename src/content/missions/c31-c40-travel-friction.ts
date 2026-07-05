@@ -96,6 +96,7 @@ export const c32: Mission = {
       promptPhraseId: 'p_shichakushitsu_kochira',
       choices: [
         { text: '가 볼게요', phraseId: 'p_itte_mimasu', correct: true, feedback: '「行(い)ってみます」— 피팅룸 위치를 안내받고 가 보겠다는 응답' },
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 피팅룸 위치 안내를 이해했다는 응답' },
         { text: '이걸로 할게요', phraseId: 'p_kore_kudasai_shop', correct: false, feedback: '아직 입어보기 전이에요. 피팅룸 안내에는 확인 응답이 자연스러워요' },
         { text: '입어 봐도 돼요?', phraseId: 'p_shichaku', correct: false, feedback: '피팅룸 안내를 받는 중이에요 — 입어봐도 되는지는 이미 물었어요' },
         { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
@@ -166,6 +167,7 @@ export const c33: Mission = {
       promptPhraseId: 'p_kasa_wa_front_desu',
       choices: [
         { text: '찾아볼게요', phraseId: 'p_sagashite_mimasu', correct: true, feedback: '「探(さが)してみます」— 우산 둔 곳을 직접 찾아보겠다는 표현' },
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 우산 위치 안내를 이해했다는 응답' },
         { text: '우산을 반납하겠습니다', phraseId: 'p_kasa_wo_kaeshimasu', correct: false, feedback: '지금은 빌리는 중이에요. 반납 표현은 돌아온 뒤에 써요' },
         { text: '우산을 빌릴 수 있나요?', phraseId: 'p_kasa_kariremasu_ka', correct: false, feedback: '방금 빌렸어요 — 지금은 위치 안내를 듣는 중이에요' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
@@ -269,6 +271,7 @@ export const c34: Mission = {
       recapPromptKo: '다른 방을 준비하겠습니다',
       choices: [
         { text: '그걸로 부탁드려요', phraseId: 'p_sorede_onegai', correct: true, feedback: '「それでお願(ねが)いします」— 안내받은 방으로 하겠다는 수락' },
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 새 방 안내를 이해했다는 응답' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
         { text: '방을 바꿔 주세요', phraseId: 'p_heya_kaete_kudasai', correct: false, feedback: '새 방을 안내받는 마무리예요 — 감사 인사로 답하면 돼요' },
       ],
@@ -337,6 +340,7 @@ export const c35: Mission = {
       promptPhraseId: 'p_noriba_wa_jyuunibansen_desu',
       choices: [
         { text: '가 볼게요', phraseId: 'p_itte_mimasu', correct: true, feedback: '「行(い)ってみます」— 안내받은 승강장으로 가 보겠다는 응답' },
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 승강장 안내를 이해했다는 응답' },
         { text: '몇 번 선이에요?', phraseId: 'p_nanbansen', correct: false, feedback: '방금 12번선이라고 들었어요. 들은 정보를 다시 묻지 않아요' },
         { text: '이 티켓 사용할 수 있나요?', phraseId: 'p_kono_chiketto_tsukaemasu_ka', correct: false, feedback: '승강장 안내를 들었어요 — 표 교환은 이미 끝났어요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
@@ -406,6 +410,7 @@ export const c36: Mission = {
       recapPromptKo: '다시 한 번 무게를 재겠습니다',
       choices: [
         { text: '확인했어요', phraseId: 'p_kakunin_shimashita', correct: true, feedback: '「確認(かくにん)しました」— 짐 무게를 다시 확인했다는 표현' },
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 재측정 안내를 이해했다는 응답' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
         { text: '이걸 기내수하물로 하겠습니다', phraseId: 'p_kore_tebutsu_ni_shimasu', correct: false, feedback: '짐을 뺀 뒤 다시 무게를 재는 마무리예요 — 확인·감사로 답해요' },
       ],
@@ -475,6 +480,7 @@ export const c37: Mission = {
       recapPromptKo: '잠시만 기다려 주세요',
       choices: [
         { text: '이제 충분해요', phraseId: 'p_mou_juubun', correct: true, feedback: '「もう十分(じゅうぶん)です」— 충분히 받았으면 깔끔하게 마무리' },
+        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 곧 보충하겠다는 안내를 이해했다는 응답' },
         { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'partial' },
         { text: '조금 더 받을 수 있나요?', phraseId: 'p_mou_sukoshi_moraemasu_ka', correct: false, feedback: '추가 요청은 이미 했어요 — 기다리겠다는 인사로 마무리해요' },
       ],

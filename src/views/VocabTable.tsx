@@ -43,7 +43,7 @@ export function VocabTable({ nav, progress, onQuiz, onBack }: Props) {
       <button onClick={onBack} style={{
         display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none',
         color: 'var(--ink-soft)', fontSize: 14, fontWeight: 700, cursor: 'pointer', padding: '4px 0', marginBottom: 12,
-      }}>← 어휘로</button>
+      }}>← 뒤로</button>
 
       <div style={{ marginBottom: 16 }}>
         <p style={{ margin: 0, ...label }}>생활 기초 · 표 학습</p>
