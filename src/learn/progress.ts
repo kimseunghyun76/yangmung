@@ -3,6 +3,7 @@
 
 import type { Card, DictationCard, IntroduceCard, QuizCard, SpeakCard } from './cards';
 import { routePosition } from '../content/routes';
+import { pickTipForMission, withLeadingTip } from './tips';
 
 // ── 진척 데이터 ─────────────────────────────────────
 export interface CardProgress {
@@ -667,7 +668,9 @@ export function selectMissionCards(allCards: Card[], missionId: string, progress
     // 대화 전체 리캡(order)은 미션의 모든 표현을 학습한 뒤에만 — 미학습 대화가 섞이지 않게
     .filter((c) => c.kind !== 'order' || fullyIntroduced)
     .filter((c) => requires(c).every((pid) => learned.has(pid)));
-  return [...batchIntros, ...rest];
+  // 미션 앞부분엔 항상 문법/문화 팁 하나 — 이 미션과 연관 있으면 우선, 없으면 안 본 것/오래된 것부터.
+  const tip = pickTipForMission(allCards, missionId, progress ?? {});
+  return withLeadingTip([...batchIntros, ...rest], tip);
 }
 
 // 발음 구분 전용 덱 — 최소 페어(듣고 둘 중 고르기)만, 약점/안 본 것 먼저. (직접 진입)

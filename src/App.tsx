@@ -19,6 +19,7 @@ import {
 } from './learn/progression';
 import { extractKanaChars } from './learn/kanaReading';
 import { buildKanaSpeakLadder, type SpeakWord } from './learn/kanaSpeakWords';
+import { pickTipForTopic, withLeadingTip } from './learn/tips';
 import { missionDifficultyWindow } from './learn/missionMix';
 import { selectAnnouncementDeck } from './learn/announcementCards';
 import { ANNOUNCEMENT_CATEGORIES, type AnnouncementCategory } from './content/announcements';
@@ -175,10 +176,12 @@ export function App() {
   // 남겨 신규 미션이 "복습"으로 둔갑하지 않게 한다("신규 0" 의도를 미션에도 실제로 적용).
   // strictMissionFilter: 경험한 미션이 0개(완전 신규 유저)면 selectSessionCards가 보통 "전체로 폴백"하는데,
   // 복습에선 그 폴백이 정확히 이 버그를 재현시킨다 — 여기선 0개면 정말 0개(복습할 미션 없음)가 맞다.
+  // missionsLocked(입문·기본)면 미션 quota도 0으로 강제 — 그렇지 않으면 review 프리셋의
+  // 고정 quota(C:8)가 레벨과 무관하게 항상 적용돼 "미션은 중급부터" 원칙을 복습 큐만 비껴갔다.
   const reviewConfig = {
-    quotas: MODE_PRESETS.review.quotas,
+    quotas: { ...MODE_PRESETS.review.quotas, C: missionsLocked ? 0 : MODE_PRESETS.review.quotas.C },
     minFresh: MODE_PRESETS.review.minFresh,
-    openMissions,
+    openMissions: visibleOpenMissions,
     missionTierFilter: (mid: string) => missionExperiencedCount(progress, mid) > 0,
     strictMissionFilter: true,
   };
@@ -347,6 +350,12 @@ export function App() {
     const stage = coreLevel === 'beginner' ? stageKey('beginner', script) : null;
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
   }
+  // 학습 연습(발음구분·간판·받아쓰기·작문·어휘·방송·명장면 등)에도 항상 문법/문화 팁 1개 이상 —
+  // 입문은 제외(미션과 마찬가지로 기본 등급부터). 주제 키워드로 연관 팁을 우선 찾고 없으면 전체 풀에서 회전.
+  function withStudyTip(cards: Card[], keywords: string[] = []): Card[] {
+    if (coreLevel === 'beginner' || cards.length === 0) return cards;
+    return withLeadingTip(cards, pickTipForTopic(allCards, keywords, progress));
+  }
   // 발음 구분 — 최소 페어 듣고 4지선다로 고르기 (つ/す·장음·촉음·청탁)
   // 매번 같은 개수로 고정되지 않게 무작위(12/18/24)로 — 세션마다 분량이 조금씩 달라짐.
   const PAIR_COUNT_OPTIONS = [12, 18, 24];
@@ -354,8 +363,9 @@ export function App() {
     // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 stage로 흘러들 수 있어(방어)
     if (typeof stage !== 'string') stage = undefined;
     const count = PAIR_COUNT_OPTIONS[Math.floor(Math.random() * PAIR_COUNT_OPTIONS.length)];
-    const cards = selectPairCards(allCards, progress, nextSessionId(session), count);
+    let cards = selectPairCards(allCards, progress, nextSessionId(session), count);
     if (cards.length === 0) return;
+    cards = withStudyTip(cards, ['발음', '촉음', '장음', 'ら행', 'ふ']);
     lastPracticeRef.current = () => startPairSession(stage);
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
   }
@@ -364,8 +374,9 @@ export function App() {
   // stage가 있으면(레벨 진도 단계 진입) 기존처럼 Intro를 거친다.
   function startSignSession(stage?: string | null) {
     // 학습형 — 간판을 모두 설명·듣기·읽기한 뒤, 다양한 변형 퀴즈(표기→뜻·듣고 일본어 등).
-    const cards = selectStudyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:') && !id.startsWith('sign:study:'), { studyLimit: 24, quizCount: 6, progress });
+    let cards = selectStudyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:') && !id.startsWith('sign:study:'), { studyLimit: 24, quizCount: 6, progress });
     if (cards.length === 0) return;
+    cards = withStudyTip(cards, ['간판', '표지', '편의점']);
     lastPracticeRef.current = () => startSignSession(stage);
     // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 stage로 흘러들 수 있어(방어)
     if (typeof stage !== 'string') { beginWithPreview('간판·메뉴 읽기', undefined, cards, 'public', { practice: true }); return; }
@@ -375,8 +386,9 @@ export function App() {
   function startDictationSession(stage?: string | null) {
     // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 stage로 흘러들 수 있어(방어)
     if (typeof stage !== 'string') stage = undefined;
-    const cards = selectDictationCards(allCards, progress, nextSessionId(session), 18);
+    let cards = selectDictationCards(allCards, progress, nextSessionId(session), 18);
     if (cards.length === 0) return;
+    cards = withStudyTip(cards, ['받아쓰기', '촉음', '장음', 'ん']);
     lastPracticeRef.current = () => startDictationSession(stage);
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
   }
@@ -392,12 +404,13 @@ export function App() {
     const lines = cards
       .filter((c): c is DictationCard => c.kind === 'dictation')
       .map((c) => ({ ja: c.ja, kana: c.answer.join(''), korean: c.korean }));
+    const sessionCards = withStudyTip(cards, ['작문', '문법', '조사']);
     setPreview({
       title: '한→일 작문',
       subtitle: '이번에 나올 문장을 먼저 듣고 뜻을 익힌 뒤, 직접 조립해 봐요.',
       lines,
       returnView: stage ? 'practice' : 'home', // 레벨 진도 단계면 연습 메뉴로, 강화학습 경유면 홈으로
-      begin: () => flow.beginSession(id, cards, { intro: false, replace: true, practice: true, stage }),
+      begin: () => flow.beginSession(id, sessionCards, { intro: false, replace: true, practice: true, stage }),
       countControl: { value: count, options: COMPOSE_COUNT_OPTIONS, onChange: (n) => openComposePreview(n, stage) },
     });
     navigate('preview');
@@ -426,6 +439,14 @@ export function App() {
   // 기본 레벨에 배너로 펼쳐져 있어 순서 없는 자유 연습(단계 완료 추적 대상 아님).
   // 모두 학습형: 설명·듣기·읽기 후 다양한 변형 퀴즈(일본어→뜻·뜻→일본어·듣고 일본어·듣고 뜻).
   const isVocabStudy = (id: string) => id.includes(':study:');
+  // 그룹별 팁 연관 키워드 — 매칭 없는 그룹은 전체 팁 풀에서 회전(그래도 "1개 이상"은 항상 보장).
+  const VOCAB_TOPIC_KEYWORDS: Record<string, string[]> = {
+    basics: ['숫자', '시간', '금액'],
+    food: ['음식', '라멘', '식당', '카페'],
+    places: ['장소', '역', '공항', '병원', '약국'],
+    transport: ['전철', '버스', '택시', '교통', 'ic카드'],
+    weather: ['축제'],
+  };
   function startVocabSession(groupId: string) {
     // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 groupId로 흘러들 수 있어(방어)
     if (typeof groupId !== 'string') groupId = 'all';
@@ -438,6 +459,7 @@ export function App() {
       cards = selectStudyDeck(allCards, (id) => id.startsWith(`vocab:${groupId}:study:`), (id) => id.startsWith(`vocab:${groupId}:`) && !isVocabStudy(id), { studyLimit: 28, quizCount: 6, progress });
     }
     if (cards.length === 0) return;
+    cards = withStudyTip(cards, VOCAB_TOPIC_KEYWORDS[groupId] ?? []);
     lastPracticeRef.current = () => startVocabSession(groupId);
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true });
   }
@@ -452,26 +474,30 @@ export function App() {
   }
   // 방송 메시지 — 전철·공항·버스 등 공공 방송 듣고 학습(독립 콘텐츠 덱).
   function startAnnouncementSession(category?: AnnouncementCategory) {
-    const cards = selectAnnouncementDeck(category);
+    let cards = selectAnnouncementDeck(category);
     if (cards.length === 0) return;
+    cards = withStudyTip(cards, ['안내', '방송', '전철', '공항']);
     lastPracticeRef.current = () => startAnnouncementSession(category);
     const title = category
       ? `방송 · ${ANNOUNCEMENT_CATEGORIES.find((c) => c.id === category)?.label ?? '방송'}`
       : '방송 메시지 모아 듣기';
     beginWithPreview(title, undefined, cards, 'public', { practice: true });
   }
-  // 명장면 대화 / 노래 가사 — 오리지널 샘플 덱. cards[0].tag에 이미 "명장면 · 제목"이 담겨 있어 그대로 제목으로.
+  // 명장면 대화 / 노래 가사 — 오리지널 샘플 덱. cards[0].tag에 이미 "명장면 · 제목"이 담겨 있어 그대로 제목으로
+  // (팁을 앞에 붙이기 전에 제목을 먼저 뽑아둔다 — 안 그러면 cards[0]이 팁 카드가 돼 제목이 깨진다).
   function startDialogueSession(sceneId: string) {
     const cards = selectDialogueDeck(sceneId);
     if (cards.length === 0) return;
+    const title = cards[0].tag;
     lastPracticeRef.current = () => startDialogueSession(sceneId);
-    beginWithPreview(cards[0].tag, undefined, cards, 'ent', { practice: true });
+    beginWithPreview(title, undefined, withStudyTip(cards, ['회화', '대화']), 'ent', { practice: true });
   }
   function startSongSession(songId: string) {
     const cards = selectSongDeck(songId);
     if (cards.length === 0) return;
+    const title = cards[0].tag;
     lastPracticeRef.current = () => startSongSession(songId);
-    beginWithPreview(cards[0].tag, undefined, cards, 'ent', { practice: true });
+    beginWithPreview(title, undefined, withStudyTip(cards, ['회화']), 'ent', { practice: true });
   }
   // 가나 쓰기(따라쓰기) — 히라/가타 섞어 무작위 10자(유추 방지). 세션/SRS와 분리.
   function startKanaWrite() {

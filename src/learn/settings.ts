@@ -85,7 +85,7 @@ export const MODE_PRESETS: Record<LearnMode, ModePreset> = {
   beginner: { label: '입문', desc: '발음 보조 항상 · 일본어+한글 · 가나+기본 단어 집중', readingAid: 'always', choiceMode: 'kana_ko', quotas: { K: 8, B: 3, C: 0, P: 0, tip: 2 }, minFresh: { K: 3, B: 1, C: 0 }, missionFloorTier: 1 },
   default:  { label: '기본', desc: '모르는 가나만 보조 · 일본어+한글 · 단어+가나 복습',   readingAid: 'auto',   choiceMode: 'kana_ko', quotas: { K: 3, B: 7, C: 0, P: 0, tip: 2 }, minFresh: { K: 1, B: 2, C: 0 }, missionFloorTier: 1 },
   express:  { label: '중급', desc: '보조 끔 · 일본어(가나) 보기 · 장면 미션 처음 시작',   readingAid: 'off',    choiceMode: 'kana',    quotas: { K: 0, B: 2, C: 10, P: 0, tip: 1 }, minFresh: { K: 0, B: 0, C: 3 }, missionFloorTier: 1 },
-  advanced: { label: '고급', desc: '한자 보기 · 보조 끔 · 빠르게 · 장면+문법 집중',     readingAid: 'off',    choiceMode: 'kanji',   quotas: { K: 0, B: 0, C: 10, P: 0, tip: 0 }, minFresh: { K: 0, B: 0, C: 4 }, missionFloorTier: 3 },
+  advanced: { label: '고급', desc: '한자 보기 · 보조 끔 · 빠르게 · 장면+문법 집중',     readingAid: 'off',    choiceMode: 'kanji',   quotas: { K: 0, B: 0, C: 10, P: 0, tip: 1 }, minFresh: { K: 0, B: 0, C: 4 }, missionFloorTier: 3 },
   review:   { label: '복습', desc: '틀린 것 · 오래 안 본 것 우선',                     readingAid: 'auto',   choiceMode: 'kana_ko', quotas: { K: 0, B: 0, C: 8, P: 0, tip: 1 }, minFresh: { K: 0, B: 0, C: 0 }, missionFloorTier: 1 },
   kana:     { label: '가나만', desc: '히라가나·가타카나만 집중 (미션 X)',               readingAid: 'auto',   choiceMode: 'kana_ko', quotas: { K: 12, B: 0, C: 0, P: 0, tip: 0 }, minFresh: { K: 4, B: 0, C: 0 }, missionFloorTier: 1 },
 };

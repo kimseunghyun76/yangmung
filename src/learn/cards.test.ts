@@ -82,7 +82,9 @@ console.log('\n=== 미션 새표현 선행 규칙 ===');
       if (!introIds.has(introKey(m.id, pid))) missingIntro.push(`${m.id}:${pid}`);
     }
 
-    const deck = selectMissionCards(cards, m.id, {});
+    // tip 카드는 맨 앞에 항상 붙는 문법/문화 팁(2026-07-08)으로, introduce→quiz 학습선행 게이팅과는
+    // 무관한 별개 카드종류다 — 순서 검증에서는 제외하고 본다.
+    const deck = selectMissionCards(cards, m.id, {}).filter((c) => c.kind !== 'tip');
     const firstNonIntro = deck.findIndex((c) => c.kind !== 'introduce');
     if (firstNonIntro >= 0 && deck.slice(firstNonIntro).some((c) => c.kind === 'introduce')) {
       orderViolations.push(m.id);
