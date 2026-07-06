@@ -37,6 +37,8 @@ export interface KanaItem {
   confusables?: string[];
   examples?: string[]; // 경량 원시 문자열 (Phrase 참조 아님)
   n5Refs?: string[];
+  strokeGuide?: string; // 획순 가이드 — "①②③" 순서로 짧게(쓰기 상세 화면용)
+  mnemonic?: string;    // 빠르게 외우는 시각 연상 팁(쓰기 상세 화면용)
 }
 
 export interface Phrase {

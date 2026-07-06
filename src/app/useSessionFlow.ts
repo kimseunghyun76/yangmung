@@ -71,6 +71,7 @@ export function useSessionFlow(deps: SessionFlowDeps) {
   const [sessionId, setSessionId] = useState(0);
   const [i, setI] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
+  const [skipped, setSkipped] = useState(false); // "이번 카드는 건너뛰기" — 오답과 동일 취급 + 정답 공개(2026-07-06)
   const [score, setScore] = useState(0);
   const [quizSeen, setQuizSeen] = useState(0);
   const [sessionLog, setSessionLog] = useState<SessionLogEntry[]>([]);
@@ -152,7 +153,7 @@ export function useSessionFlow(deps: SessionFlowDeps) {
     const materialized = cards.map(materializeQuizCard);
     setSessionId(id);
     setSessionCards(materialized);
-    setI(0); setPicked(null); setScore(0); setQuizSeen(0); setSessionLog([]); setPicks({});
+    setI(0); setPicked(null); setSkipped(false); setScore(0); setQuizSeen(0); setSessionLog([]); setPicks({});
     setGachaEligible(opts.gacha ?? true);
     navigate((opts.intro ?? true) ? 'intro' : 'session', { replace: opts.replace });
   }
@@ -176,13 +177,24 @@ export function useSessionFlow(deps: SessionFlowDeps) {
       deps.commitProgress(recordAttempt(deps.progress, card.id, { correct: true, usedRecovery: false, sessionId }));
     }
     setPicked(null);
+    setSkipped(false);
     setI((n) => n + 1);
   }
 
   function prev() {
     clearAdvanceTimers();
     setPicked(null);
+    setSkipped(false);
     setI((n) => Math.max(0, n - 1));
+  }
+
+  // "이번 카드는 건너뛰기" — 오답과 동일하게 채점(나중에 복습 큐에 다시 나옴) + 정답을 공개하고
+  // "다음"을 눌러야 넘어간다(예전엔 recordKnown으로 "이미 안다" 취급해 즉시 익숙 처리하며 넘겨버렸음).
+  function skipAsWrong() {
+    if (!card || picked !== null || skipped) return;
+    if (card.kind !== 'quiz') { next(); return; } // 퀴즈가 아닌 카드는 기존처럼 그냥 다음으로
+    setSkipped(true);
+    recordCardResult(card.id, false, false, false);
   }
 
   // "이미 알아요": 현재 카드를 즉시 익숙 처리 + 가나 보조 끔 → 다음으로 (점수·약점 집계 X)
@@ -266,10 +278,10 @@ export function useSessionFlow(deps: SessionFlowDeps) {
 
   return {
     // 상태
-    card, i, sessionCards, sessionId, picked, score, quizSeen, sessionLog, picks, gachaEligible,
+    card, i, sessionCards, sessionId, picked, skipped, score, quizSeen, sessionLog, picks, gachaEligible,
     isPractice: practiceRef.current, doneSnapshot,
     // 액션
-    beginSession, retryWeak, next, prev, choose, markKnown,
+    beginSession, retryWeak, next, prev, choose, markKnown, skipAsWrong,
     introduceSeen, dictationResult, speakPracticed,
   };
 }

@@ -1,4 +1,5 @@
 // 홈 — Immersive Scene Coach. 오늘의 루트 + 장면 히어로 + 가나/여행 루트 진입.
+import { useState } from 'react';
 import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
 import type { Diagnosis } from '../learn/adaptive';
@@ -16,11 +17,13 @@ import { WRAP } from '../ui/styles';
 import { isMangaSceneImage, sceneVisualByMission, sceneVisualByPlace } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
-import { MascotEmpty } from './mascot';
+import { MascotEmpty, MascotFace } from './mascot';
 import { Icon } from '../ui/Icon';
-import { loadCollection } from '../learn/collection';
+import { loadCollection, ownedCount, bestRarity, itemsOf, RARITIES, rarityMeta, type Collection } from '../learn/collection';
+import { gachaItemForPlace } from '../learn/gachaItems';
 import { useLearningStats, type LearningStats } from '../learn/learningStats';
 import { StatTile, LearningHeatmap } from './StatsWidgets';
+import { VOCAB_GROUPS } from '../content/thematicVocab';
 
 interface Props {
   nav: NavBarProps;
@@ -29,6 +32,7 @@ interface Props {
   session: SessionState;
   sessionConfig: SessionConfig;
   openMissions: string[];
+  missionsLocked: boolean;
   diagnosis: Diagnosis;
   modeLabel: string;
   onStart: () => void;
@@ -43,11 +47,13 @@ interface Props {
   devUnlockAll: boolean;
   onStartStage: (stage: ProgStage) => void;
   onStartPromotion: () => void;
+  onOpenBasics: () => void;
+  onStartVocabGroup: (groupId: string) => void;
 }
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' };
 
-export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeFlash, onPracticeWrite, onPlacement, placementDone, coreLevel, progression, devUnlockAll, onStartStage, onStartPromotion }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, missionsLocked, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeFlash, onPracticeWrite, onPlacement, placementDone, coreLevel, progression, devUnlockAll, onStartStage, onStartPromotion, onOpenBasics, onStartVocabGroup }: Props) {
   const upcomingId = nextSessionId(session);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
   const planned = plan.size;
@@ -56,7 +62,8 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
   const hira = kanaReadMastery(progress, hiraIds);
   const kata = kanaReadMastery(progress, kataIds);
   const kanaPct = Math.round(((hira.mastered + kata.mastered) / Math.max(1, hira.total + kata.total)) * 100);
-  const stats = useLearningStats(loadCollection());
+  const collection = loadCollection();
+  const stats = useLearningStats(collection);
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
   const openScenes = scenes.filter((m) => openMissions.includes(m.id));
 
@@ -81,7 +88,25 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
   // 레벨이 낮은 사람(입문·기본)은 레벨 진도(빠른 연습)를 오늘의 미션보다 위에 둔다.
   const lowLevel = coreLevel === 'beginner' || coreLevel === 'default';
 
-  const missionPanel = (
+  // 여행 미션은 입문·기본에서는 절대 노출하지 않는다(요청) — 오늘의 미션 히어로·여행 루트 대신
+  // "왜 안 보이는지 + 언제 열리는지"를 분명히 알려주는 안내 카드로 대체.
+  const missionPanel = missionsLocked ? (
+    <div className="ym-rise" style={{ marginTop: 14 }}>
+      <GlassPanel>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span aria-hidden style={{ fontSize: 26 }}>🔒</span>
+          <div>
+            <p style={{ margin: 0, ...label }}>여행 미션</p>
+            <strong style={{ display: 'block', marginTop: 3, fontSize: 16 }}>미션은 중급부터 열려요</strong>
+          </div>
+        </div>
+        <p style={{ margin: '10px 0 0', fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.6 }}>
+          지금은 가나·기본 단어를 다지는 단계예요. 아래 <strong style={{ color: 'var(--ink)' }}>레벨 진도</strong>를 다 통과하고
+          중급으로 승급하면 편의점·식당 같은 실전 여행 장면이 열려요.
+        </p>
+      </GlassPanel>
+    </div>
+  ) : (
     <>
       {/* 오늘의 여행 미션 히어로 + 시작 CTA */}
       <div className="ym-rise" style={{ marginTop: 14 }}>
@@ -107,7 +132,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
 
   const levelPanel = (
     <div className="ym-rise" style={{ marginTop: 14 }}>
-      <LevelProgress coreLevel={coreLevel} progression={progression} onStartStage={onStartStage} onStartPromotion={onStartPromotion} onPracticeWrite={onPracticeWrite} devUnlockAll={devUnlockAll} />
+      <LevelProgress coreLevel={coreLevel} progression={progression} onStartStage={onStartStage} onStartPromotion={onStartPromotion} onPracticeWrite={onPracticeWrite} devUnlockAll={devUnlockAll} onOpenBasics={onOpenBasics} onStartVocabGroup={onStartVocabGroup} onSeeAll={() => nav.onNavigate('practice')} />
     </div>
   );
 
@@ -122,6 +147,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
             d={diagnosis} line={coach.line}
             hira={hira} kata={kata} kanaPct={kanaPct} stats={stats}
             modeLabel={modeLabel} onPlacement={onPlacement}
+            collection={collection} sceneCount={scenes.length} onOpenGacha={() => nav.onNavigate('gacha')}
           />
         </GlassPanel>
       </div>
@@ -366,93 +392,183 @@ function HomeSceneCard({ hero, accent, kicker, title, chips, planned, onStart }:
 }
 
 // 상태 대시보드 — 코치·학습 상태·가나 안정도·난이도(진단)를 한 카드로 묶어 "한눈에".
-function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPlacement }: {
+// 접었을 때도 등급·코치 한 줄은 보이고, 펼치면 학습 상태·가나 안정도·성장 기록·보유 카드·약점까지.
+function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPlacement, collection, sceneCount, onOpenGacha }: {
   d: Diagnosis; line: string;
   hira: { mastered: number; total: number }; kata: { mastered: number; total: number };
   kanaPct: number; stats: LearningStats; modeLabel: string; onPlacement: () => void;
+  collection: Collection; sceneCount: number; onOpenGacha: () => void;
 }) {
+  const [expanded, setExpanded] = useState(true);
   const tone = d.level === 'struggling' ? 'var(--warn)' : d.level === 'cruising' ? 'var(--ok)' : 'var(--accent)';
   return (
     <>
-      {/* 헤더: 제목 + 계급 뱃지 + 난이도/진단 칩 */}
+      {/* 헤더: 제목 + 등급 뱃지 + 난이도/진단 칩 + 접기/펼치기 */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
           <p style={{ margin: 0, ...label }}>내 학습 현황</p>
-          <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 800, color: 'var(--accent)', background: 'var(--accent-soft)', padding: '3px 9px', borderRadius: 999 }}>🎖 {stats.rank}</span>
+          <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 800, color: 'var(--accent)', background: 'var(--accent-soft)', padding: '3px 9px', borderRadius: 999 }}>🧭 {stats.rank}</span>
         </div>
-        <button className="ym-press" onClick={onPlacement} title="수준 진단으로 난이도 재조정" style={{
-          display: 'inline-flex', alignItems: 'center', gap: 7, padding: '7px 12px', borderRadius: 999,
-          border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
-          fontSize: 12.5, fontWeight: 750, cursor: 'pointer',
-        }}>
-          <span style={{ width: 7, height: 7, borderRadius: 99, background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)' }} />
-          {modeLabel} · 진단
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+          <button className="ym-press" onClick={onPlacement} title="수준 진단으로 난이도 재조정" style={{
+            display: 'inline-flex', alignItems: 'center', gap: 7, padding: '7px 12px', borderRadius: 999,
+            border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
+            fontSize: 12.5, fontWeight: 750, cursor: 'pointer', whiteSpace: 'nowrap',
+          }}>
+            <span style={{ width: 7, height: 7, borderRadius: 99, background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)' }} />
+            {modeLabel} · 진단
+          </button>
+          <button className="ym-press" onClick={() => setExpanded((v) => !v)} aria-label={expanded ? '내 학습 현황 접기' : '내 학습 현황 펼치기'} style={{
+            width: 30, height: 30, flexShrink: 0, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            borderRadius: 999, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink-soft)', cursor: 'pointer',
+          }}>
+            <Icon name="flow" size={13} style={{ transform: expanded ? 'rotate(90deg)' : 'rotate(-90deg)', transition: 'transform .2s' }} />
+          </button>
+        </div>
       </div>
 
-      {/* 상태 분석: 가나 링 + 코치 한 줄 (캐릭터 없이 공간 활용) */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 14 }}>
-        <Ring pct={kanaPct} size={62} />
+      {/* 상태 분석: 캐릭터 + 가나 링 + 코치 한 줄 — 접혀 있어도 항상 보이는 요약.
+          캐릭터 표정은 최근 성과(struggling→복구, cruising→정답)에 맞춰 바뀐다. */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 14 }}>
+        <MascotFace
+          who="mung"
+          mood={d.level === 'struggling' ? 'recovery' : d.level === 'cruising' ? 'correct' : 'default'}
+          size={48}
+          style={{ filter: 'saturate(.85) brightness(1.05) drop-shadow(0 8px 14px rgba(0,0,0,.14))' }}
+        />
+        <Ring pct={kanaPct} size={56} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <p style={{ margin: 0, fontSize: 12, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.04em' }}>오늘의 코치</p>
           <p style={{ margin: '5px 0 0', fontSize: 13.5, fontWeight: 650, lineHeight: 1.5, color: 'var(--ink)' }}>{line}</p>
         </div>
       </div>
 
-      {/* 학습 상태 + 직전 정답률 */}
-      <div style={{ marginTop: 13, paddingTop: 12, borderTop: '1px solid var(--glass-border)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
-          <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, fontWeight: 700, color: 'var(--ink-faint)' }}>
-            <span style={{ width: 8, height: 8, borderRadius: 99, background: tone, boxShadow: `0 0 8px ${tone}` }} />
-            학습 상태{d.level ? ` · ${LEVEL_LABEL[d.level]}` : ''}
-          </p>
-          {d.level !== null && d.recentAccuracy !== null && (
-            <span style={{ fontSize: 12, color: 'var(--ink-faint)', fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>직전 정답률 {Math.round(d.recentAccuracy * 100)}%</span>
+      {!expanded ? null : (
+        <>
+          {/* 학습 상태 + 직전 정답률 */}
+          <div style={{ marginTop: 13, paddingTop: 12, borderTop: '1px solid var(--glass-border)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+              <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, fontWeight: 700, color: 'var(--ink-faint)' }}>
+                <span style={{ width: 8, height: 8, borderRadius: 99, background: tone, boxShadow: `0 0 8px ${tone}` }} />
+                학습 상태{d.level ? ` · ${LEVEL_LABEL[d.level]}` : ''}
+              </p>
+              {d.level !== null && d.recentAccuracy !== null && (
+                <span style={{ fontSize: 12, color: 'var(--ink-faint)', fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>직전 정답률 {Math.round(d.recentAccuracy * 100)}%</span>
+              )}
+            </div>
+            <p style={{ margin: '7px 0 0', fontSize: 15, fontWeight: 750, letterSpacing: '-0.01em' }}>{d.focus}</p>
+            <p style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--ink-soft)', lineHeight: 1.5 }}>{d.message}</p>
+          </div>
+
+          {/* 가나 안정도 — 히라/가타 나란히 */}
+          <div style={{ marginTop: 13, paddingTop: 12, borderTop: '1px solid var(--glass-border)' }}>
+            <p style={{ margin: 0, ...label }}>가나 안정도</p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 18px' }}>
+              <KanaRow label="히라가나" m={hira} />
+              <KanaRow label="가타카나" m={kata} />
+            </div>
+          </div>
+
+          {/* 성장 기록 — 학습일·정답률·최근 4주 진도(도감에 흩어져 있던 등급·학습일 통계를 여기로 병합) */}
+          <div style={{ marginTop: 13, paddingTop: 12, borderTop: '1px solid var(--glass-border)' }}>
+            <p style={{ margin: '0 0 8px', ...label }}>성장 기록</p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 10 }}>
+              <StatTile label="학습일" value={`${stats.dates.length}일`} sub={stats.dates.slice(-7).join(' · ') || '아직 없음'} />
+              <StatTile label="정답률" value={stats.attempts ? `${Math.round((stats.correct / stats.attempts) * 100)}%` : '—'} sub={`${stats.attempts}문제 학습`} />
+            </div>
+            <LearningHeatmap dayCounts={stats.dayCounts} />
+          </div>
+
+          {/* 보유 카드 — 가챠로 모은 여행 아이템을 등급별 그래프 + 썸네일로 */}
+          <div style={{ marginTop: 13, paddingTop: 12, borderTop: '1px solid var(--glass-border)' }}>
+            <CollectionPreview collection={collection} sceneCount={sceneCount} onOpenGacha={onOpenGacha} />
+          </div>
+
+          {/* 약점 */}
+          {(d.weakKana.length > 0 || d.weakScenes.length > 0) && (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 13, alignItems: 'center' }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-faint)' }}>약점</span>
+              {d.weakKana.map((w) => (
+                <span key={w.key} style={{ minWidth: 28, height: 28, padding: '0 6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', borderRadius: 8, fontSize: 15, fontWeight: 700, color: 'var(--accent)' }}>{w.label}</span>
+              ))}
+              {d.weakScenes.map((w) => (
+                <span key={w.key} style={{ padding: '4px 10px', border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', borderRadius: 999, fontSize: 12, fontWeight: 600, color: 'var(--ink-soft)' }}>{w.label}</span>
+              ))}
+            </div>
           )}
-        </div>
-        <p style={{ margin: '7px 0 0', fontSize: 15, fontWeight: 750, letterSpacing: '-0.01em' }}>{d.focus}</p>
-        <p style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--ink-soft)', lineHeight: 1.5 }}>{d.message}</p>
-      </div>
-
-      {/* 가나 안정도 — 히라/가타 나란히 */}
-      <div style={{ marginTop: 13, paddingTop: 12, borderTop: '1px solid var(--glass-border)' }}>
-        <p style={{ margin: 0, ...label }}>가나 안정도</p>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 18px' }}>
-          <KanaRow label="히라가나" m={hira} />
-          <KanaRow label="가타카나" m={kata} />
-        </div>
-      </div>
-
-      {/* 성장 기록 — 학습일·정답률·최근 4주 진도(도감에 흩어져 있던 계급·학습일 통계를 여기로 병합) */}
-      <div style={{ marginTop: 13, paddingTop: 12, borderTop: '1px solid var(--glass-border)' }}>
-        <p style={{ margin: '0 0 8px', ...label }}>성장 기록</p>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 10 }}>
-          <StatTile label="학습일" value={`${stats.dates.length}일`} sub={stats.dates.slice(-7).join(' · ') || '아직 없음'} />
-          <StatTile label="정답률" value={stats.attempts ? `${Math.round((stats.correct / stats.attempts) * 100)}%` : '—'} sub={`${stats.attempts}문제 학습`} />
-        </div>
-        <LearningHeatmap dayCounts={stats.dayCounts} />
-      </div>
-
-      {/* 약점 */}
-      {(d.weakKana.length > 0 || d.weakScenes.length > 0) && (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 13, alignItems: 'center' }}>
-          <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-faint)' }}>약점</span>
-          {d.weakKana.map((w) => (
-            <span key={w.key} style={{ minWidth: 28, height: 28, padding: '0 6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', borderRadius: 8, fontSize: 15, fontWeight: 700, color: 'var(--accent)' }}>{w.label}</span>
-          ))}
-          {d.weakScenes.map((w) => (
-            <span key={w.key} style={{ padding: '4px 10px', border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', borderRadius: 999, fontSize: 12, fontWeight: 600, color: 'var(--ink-soft)' }}>{w.label}</span>
-          ))}
-        </div>
+        </>
       )}
     </>
   );
 }
 
+// 보유 카드 — 등급별 보유 개수를 막대 그래프로, 등급 높은 순 몇 개는 썸네일로 보여준다.
+function CollectionPreview({ collection, sceneCount, onOpenGacha }: { collection: Collection; sceneCount: number; onOpenGacha: () => void }) {
+  const rarityCounts = RARITIES.map((r) => ({
+    ...r,
+    count: Object.values(collection.cards).reduce((sum, card) => sum + itemsOf(card)[r.key], 0),
+  }));
+  const maxCount = Math.max(1, ...rarityCounts.map((r) => r.count));
+  const owned = ownedCount(collection);
+  const topCards = Object.entries(collection.cards)
+    .map(([sceneId, card]) => ({ sceneId, rarity: bestRarity(card), n: itemsOf(card)[bestRarity(card)] }))
+    .filter((c) => c.n > 0)
+    .sort((a, b) => RARITIES.findIndex((r) => r.key === b.rarity) - RARITIES.findIndex((r) => r.key === a.rarity))
+    .slice(0, 6);
+
+  return (
+    <>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10 }}>
+        <p style={{ margin: 0, ...label }}>보유 카드</p>
+        <button className="ym-press" onClick={onOpenGacha} style={{ border: 'none', background: 'none', color: 'var(--accent)', fontWeight: 800, fontSize: 12, cursor: 'pointer', padding: 0 }}>
+          🎁 도감 {owned}/{sceneCount} →
+        </button>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 7, height: 60, marginTop: 10 }}>
+        {rarityCounts.map((r) => (
+          <div key={r.key} style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+            <div style={{
+              width: '100%', maxWidth: 28, height: Math.max(3, Math.round((r.count / maxCount) * 40)),
+              background: r.color, borderRadius: 4, transition: 'height .4s ease',
+            }} title={`${r.label} ${r.count}개`} />
+            <span style={{ fontSize: 9.5, fontWeight: 850, color: 'var(--ink-faint)' }}>{r.label}</span>
+            <span style={{ fontSize: 9.5, fontWeight: 700, color: 'var(--ink-soft)', fontVariantNumeric: 'tabular-nums' }}>{r.count}</span>
+          </div>
+        ))}
+      </div>
+      {topCards.length > 0 ? (
+        <div style={{ display: 'flex', gap: 8, marginTop: 10, overflowX: 'auto', paddingBottom: 2 }}>
+          {topCards.map((c) => {
+            const place = CONTENT.missions.find((m) => m.id === c.sceneId)?.place ?? c.sceneId;
+            const item = gachaItemForPlace(place, c.rarity);
+            const meta = rarityMeta(c.rarity);
+            return (
+              <div key={c.sceneId} style={{ flex: '0 0 auto', width: 46, textAlign: 'center' }}>
+                <div style={{ width: 46, height: 46, borderRadius: 12, overflow: 'hidden', border: `2px solid ${meta.color}`, background: 'var(--glass-bg-strong)' }}>
+                  {item.image && <img src={item.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
+                </div>
+                <span style={{ display: 'block', marginTop: 3, fontSize: 9, color: 'var(--ink-faint)', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.title}</span>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <p style={{ margin: '10px 0 0', fontSize: 12, color: 'var(--ink-soft)' }}>아직 모은 카드가 없어요 — 학습을 마치면 가챠로 받을 수 있어요.</p>
+      )}
+    </>
+  );
+}
+
+// 기본 레벨은 순차 단계가 간판·메뉴 하나뿐이라(어휘 주제는 순서 없는 자유 연습으로 뺐음),
+// 레벨 진도 패널이 너무 휑해 보이지 않게 생활 기초 + 어휘 주제 일부를 미리보기로 함께 보여준다.
+// 나머지 주제는 학습 탭(Practice)에서 전부 볼 수 있다(TravelRoute의 "최대 4개 미리보기" 관례와 동일).
+const DEFAULT_PREVIEW_VOCAB_GROUPS = VOCAB_GROUPS.filter((g) => g.id !== 'greetings').slice(0, 3);
+
 // 레벨 진도 패널 — 현재 레벨의 단계를 순서대로, 잠금/완료 상태로. 모두 통과 시 승급 시험.
-function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion, onPracticeWrite, devUnlockAll }: {
+function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion, onPracticeWrite, onOpenBasics, onStartVocabGroup, onSeeAll, devUnlockAll }: {
   coreLevel: CoreLevel; progression: ProgressionState;
   onStartStage: (stage: ProgStage) => void; onStartPromotion: () => void; onPracticeWrite: () => void;
+  onOpenBasics: () => void; onStartVocabGroup: (groupId: string) => void; onSeeAll: () => void;
   devUnlockAll: boolean;
 }) {
   const stages = LEVEL_STAGES[coreLevel];
@@ -460,6 +576,10 @@ function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion,
   const promotionUnlocked = allDone || devUnlockAll;
   const nx = nextLevel(coreLevel);
   const artOf = (s: ProgStage) => s.script ?? s.practice;
+  const freeExtras = coreLevel === 'default' ? [
+    { key: 'basics', label: '생활 기초', sub: '숫자·요일·시간·금액', art: 'basics', onClick: onOpenBasics },
+    ...DEFAULT_PREVIEW_VOCAB_GROUPS.map((g) => ({ key: `vocab:${g.id}`, label: g.label, sub: g.description, art: 'vocab', onClick: () => onStartVocabGroup(g.id) })),
+  ] : [];
   return (
     <GlassPanel>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10 }}>
@@ -476,7 +596,16 @@ function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion,
             onClick={() => onStartStage(st)}
           />
         ))}
+        {freeExtras.map((it) => (
+          <FreeTile key={it.key} label={it.label} sub={it.sub} art={it.art} onClick={it.onClick} />
+        ))}
       </div>
+      {freeExtras.length > 0 && (
+        <button className="ym-press" onClick={onSeeAll} style={{
+          width: '100%', marginTop: 10, padding: '9px 12px', borderRadius: 10, cursor: 'pointer',
+          border: 'none', background: 'none', color: 'var(--accent)', fontWeight: 750, fontSize: 12.5,
+        }}>학습 탭에서 어휘 주제 전체 보기 →</button>
+      )}
 
       {nx ? (
         <button className="ym-press" onClick={onStartPromotion} disabled={!promotionUnlocked} style={{
@@ -527,6 +656,28 @@ function StageTile({ order, stage, art, done, unlocked, onClick }: {
       <span style={{ minWidth: 0, display: 'block', padding: '10px 11px 11px' }}>
         <span style={{ display: 'block', fontSize: 14, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{stage.label}</span>
         <span style={{ display: 'block', fontSize: 11, color: 'var(--ink-faint)', fontWeight: 700, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{stage.sub}</span>
+      </span>
+    </button>
+  );
+}
+
+// 순서 없는 자유 연습 항목(어휘 주제 등) — 늘 열려 있어 순번·잠금 배지가 없다는 점만 StageTile과 다르다.
+function FreeTile({ label: lbl, sub, art, onClick }: { label: string; sub: string; art: string; onClick: () => void }) {
+  return (
+    <button className="ym-press" onClick={onClick} style={{
+      position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', textAlign: 'left', minWidth: 0,
+      border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
+      borderRadius: 14, padding: 0, cursor: 'pointer', boxShadow: '0 7px 16px rgba(89,58,28,.06)',
+    }}>
+      <span aria-hidden style={{ position: 'relative', display: 'block', width: '100%', aspectRatio: '4 / 3', overflow: 'hidden', background: 'rgba(255,247,235,.64)' }}>
+        <img src={`/scenes/quick-practice/${art}.webp`} alt="" loading="lazy" decoding="async" style={{
+          width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'saturate(.9) contrast(.97) brightness(1.02)',
+        }} />
+        <span style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(255,247,235,.02), transparent 58%, rgba(48,34,18,.26))' }} />
+      </span>
+      <span style={{ minWidth: 0, display: 'block', padding: '10px 11px 11px' }}>
+        <span style={{ display: 'block', fontSize: 14, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{lbl}</span>
+        <span style={{ display: 'block', fontSize: 11, color: 'var(--ink-faint)', fontWeight: 700, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sub}</span>
       </span>
     </button>
   );

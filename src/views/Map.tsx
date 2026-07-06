@@ -25,6 +25,7 @@ interface Props {
   allCards: Card[];
   progress: ProgressMap;
   openMissions: string[];
+  missionsLocked: boolean;
   devUnlockAll: boolean;
   onPracticeScene: (missionId: string) => void;
   onBack: () => void;
@@ -39,10 +40,37 @@ function lockHint(): string {
 
 interface SceneItem { m: typeof CONTENT.missions[number]; sv: SceneVisual; unlocked: boolean; done: boolean; started: boolean; mastered: number; total: number }
 
-export function Map({ nav, allCards, progress, openMissions, devUnlockAll, onPracticeScene, onBack }: Props) {
+export function Map({ nav, allCards, progress, openMissions, missionsLocked, devUnlockAll, onPracticeScene, onBack }: Props) {
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
   const hira = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'hiragana').map((k) => k.id));
   const kata = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'katakana').map((k) => k.id));
+
+  // 여행 미션은 입문·기본에서는 절대 노출하지 않는다(요청) — 장면 그리드 대신 명확한 안내로 대체.
+  if (missionsLocked && !devUnlockAll) {
+    return (
+      <main style={WRAP}>
+        <NavBar {...nav} />
+        <PageHead title="미션 지도" sub="열린 장면을 골라 연습하고, 학습할수록 새 장면이 무작위로 열려요" />
+        <GlassPanel style={{ marginTop: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span aria-hidden style={{ fontSize: 28 }}>🔒</span>
+            <div>
+              <p style={{ ...kicker, margin: 0 }}>여행 미션</p>
+              <strong style={{ display: 'block', marginTop: 3, fontSize: 17 }}>미션은 중급부터 열려요</strong>
+            </div>
+          </div>
+          <p style={{ margin: '12px 0 0', fontSize: 13.5, color: 'var(--ink-soft)', lineHeight: 1.65 }}>
+            입문·기본 단계에서는 가나와 기본 단어를 먼저 다져요. 학습 탭의 <strong style={{ color: 'var(--ink)' }}>레벨 진도</strong>를
+            모두 통과하고 중급으로 승급하면 편의점·식당 같은 실전 여행 장면이 이 화면에 열려요.
+          </p>
+          <button className="ym-press" onClick={onBack} style={{
+            width: '100%', marginTop: 14, padding: '13px 16px', borderRadius: 14, cursor: 'pointer',
+            border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 750, fontSize: 14,
+          }}>← 학습 탭으로 돌아가기</button>
+        </GlassPanel>
+      </main>
+    );
+  }
 
   const items: SceneItem[] = scenes.map((m) => {
     const unlocked = isSceneOpen(m.id, openMissions, devUnlockAll);

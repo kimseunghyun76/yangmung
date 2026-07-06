@@ -63,7 +63,7 @@ export function KanaWrite({ items, onExit, onReplay, onKanaWritten }: Props) {
       </div>
 
       <p style={{ textAlign: 'center', margin: '14px 0 2px', fontSize: 14, color: 'var(--ink-soft)', fontWeight: 700 }}>
-        <strong style={{ color: 'var(--ink)', fontSize: 16 }}>{item.romaji}</strong> · {item.koreanSound} — 흐린 글자를 따라 써보세요
+        <strong style={{ color: 'var(--ink)', fontSize: 16 }}>{item.romaji}</strong> · {item.koreanSound} — 흐린 글자를 따라 써보세요. 손을 떼면 2초 뒤 자동 채점돼요.
       </p>
 
       <TraceCanvas key={item.id} char={item.char} onComplete={complete} />
@@ -114,14 +114,25 @@ function buildMask(char: string): { core: Uint8Array; band: Uint8Array; coreCoun
   return { core, band, coreCount };
 }
 
-export function TraceCanvas({ char, onComplete, nextLabel = '다음' }: { char: string; onComplete: (score: number) => void; nextLabel?: string }) {
+const AUTO_CHECK_MS = 2000; // 손을 뗀 뒤 이 시간(2초) 동안 다시 안 그리면 자동 채점
+
+export function TraceCanvas({ char, onComplete, nextLabel = '다음', autoCompleteOnPass = false }: {
+  char: string; onComplete: (score: number) => void; nextLabel?: string;
+  autoCompleteOnPass?: boolean; // true면 합격 점수일 때 버튼 클릭 없이 onComplete를 자동 호출
+}) {
   const viewRef = useRef<HTMLCanvasElement>(null);
   const inkRef = useRef<HTMLCanvasElement | null>(null);
   const maskRef = useRef<ReturnType<typeof buildMask> | null>(null);
   const drawingRef = useRef(false);
+  const autoTimerRef = useRef<number | null>(null);
+  const autoCompletedRef = useRef(false); // 이번 시도에서 이미 자동 기록했는지(중복 호출 방지)
   // 잉크 유무는 state로 — ref면 그려도 리렌더가 안 돼 '채점' 버튼이 계속 disabled로 남는다.
   const [hasInk, setHasInk] = useState(false);
   const [checked, setChecked] = useState<number | null>(null);
+
+  function clearAutoTimer() {
+    if (autoTimerRef.current !== null) { window.clearTimeout(autoTimerRef.current); autoTimerRef.current = null; }
+  }
 
   useEffect(() => {
     const view = viewRef.current!;
@@ -131,9 +142,19 @@ export function TraceCanvas({ char, onComplete, nextLabel = '다음' }: { char: 
     maskRef.current = buildMask(char);
     setHasInk(false);
     setChecked(null);
+    autoCompletedRef.current = false;
     redraw();
+    return clearAutoTimer;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [char]);
+
+  // 합격 점수로 채점되면(자동이든 수동이든) 버튼 클릭 없이 바로 기록 — 결과를 잠깐 보여준 뒤 호출.
+  useEffect(() => {
+    if (!autoCompleteOnPass || checked === null || checked < PASS || autoCompletedRef.current) return;
+    autoCompletedRef.current = true;
+    const t = window.setTimeout(() => onComplete(checked), 700);
+    return () => window.clearTimeout(t);
+  }, [checked, autoCompleteOnPass, onComplete]);
 
   function redraw() {
     const ctx = viewRef.current?.getContext('2d'); if (!ctx) return;
@@ -150,6 +171,7 @@ export function TraceCanvas({ char, onComplete, nextLabel = '다음' }: { char: 
   }
   function down(e: React.PointerEvent) {
     if (checked !== null) return;
+    clearAutoTimer();
     e.currentTarget.setPointerCapture(e.pointerId);
     drawingRef.current = true;
     const ink = inkRef.current!.getContext('2d')!;
@@ -167,17 +189,27 @@ export function TraceCanvas({ char, onComplete, nextLabel = '다음' }: { char: 
     ink.beginPath(); ink.moveTo(p.x, p.y);
     redraw();
   }
-  function up() { drawingRef.current = false; }
+  function up() {
+    drawingRef.current = false;
+    // 손을 뗀 뒤 2초 동안 다시 그리지 않으면 자동으로 채점 — 그 전에 다시 그리면 down()에서 타이머 취소.
+    if (checked === null && hasInk) {
+      clearAutoTimer();
+      autoTimerRef.current = window.setTimeout(() => { check(); }, AUTO_CHECK_MS);
+    }
+  }
 
   function clear() {
     const ink = inkRef.current?.getContext('2d'); if (!ink) return;
+    clearAutoTimer();
     ink.clearRect(0, 0, SIZE, SIZE);
     setHasInk(false);
     setChecked(null);
+    autoCompletedRef.current = false;
     redraw();
   }
 
   function check() {
+    clearAutoTimer();
     const mask = maskRef.current, inkCanvas = inkRef.current;
     if (!mask || !inkCanvas) return;
     const inkData = inkCanvas.getContext('2d')!.getImageData(0, 0, SIZE, SIZE).data;

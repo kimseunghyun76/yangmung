@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 export type View =
   | 'home' | 'practice' | 'map' | 'review' | 'gacha'
   | 'vocabTable' | 'verbs' | 'kana' | 'public' | 'ent'
-  | 'intro' | 'preview' | 'session' | 'done' | 'flash' | 'write' | 'placement';
+  | 'intro' | 'preview' | 'session' | 'done' | 'flash' | 'write' | 'kanaSpeak' | 'placement';
 
 const VIEW_TO_HASH: Record<View, string> = {
   home: '/',
@@ -25,6 +25,7 @@ const VIEW_TO_HASH: Record<View, string> = {
   done: '/session/done',
   flash: '/flash',
   write: '/write',
+  kanaSpeak: '/kana/speak',
   placement: '/placement',
 };
 
@@ -35,7 +36,7 @@ const HASH_TO_VIEW = new Map<string, View>(
 // 세션 데이터가 메모리에만 있어 새로고침으로 복원할 수 없는 화면.
 // (App에서 데이터 없이 이 화면에 진입하면 홈으로 되돌린다)
 export const FLOW_VIEWS: ReadonlySet<View> = new Set<View>([
-  'intro', 'preview', 'session', 'done', 'flash', 'write', 'placement',
+  'intro', 'preview', 'session', 'done', 'flash', 'write', 'kanaSpeak', 'placement',
 ]);
 
 export function viewFromLocation(): View {

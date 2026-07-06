@@ -96,10 +96,14 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
   const stamps = clearedSceneIds.slice(0, 3);
   // 아직 도달 못한 레벨의 연습은 배너 자체를 안 보여준다(전엔 항상 다 보이고 눌리면 실제로 들어가지는 버그였음).
   const reach = (practice: PracticeKey, script?: 'hiragana' | 'katakana') => stageReachable(coreLevel, progression, devUnlockAll, practice, script);
+  // "전체 어휘 세션"은 더 이상 LEVEL_STAGES 단계가 아니라(자유 배너) stageReachable이 무조건 통과시키지만,
+  // Practice.tsx에서는 실제로 중급(express) 배너로 배치해뒀다 — 여기서도 같은 최소 레벨을 지켜야
+  // 입문 유저 Done 화면에 중급 전용 메뉴가 새는 걸 막을 수 있다.
+  const reachVocabAll = devUnlockAll || CORE_LEVEL_RANK[coreLevel] >= CORE_LEVEL_RANK.express;
   const quickPracticeActions: NextAction[] = [
     // 방금 한 연습을 처음부터 다시 — 항상 맨 앞(가장 예상되는 다음 행동)
     ...(onRetrySame ? [quickAction('retry-same', 'flow', 'var(--ok)', '다시 한번 학습', '방금 한 연습을 처음부터 다시', onRetrySame, true)] : []),
-    ...(onPracticeVocab && reach('vocab') ? [quickAction('vocab', 'kana', 'var(--accent)', '전체 어휘 세션', '모든 주제를 SRS 방식으로 복습', onPracticeVocab, !onRetrySame)] : []),
+    ...(onPracticeVocab && reachVocabAll ? [quickAction('vocab', 'kana', 'var(--accent)', '전체 어휘 세션', '모든 주제를 SRS 방식으로 복습', onPracticeVocab, !onRetrySame)] : []),
     ...(onPracticeGreetings && reach('greetings') ? [quickAction('greetings', 'speak', 'var(--ok)', '기본 인사', '듣고 바로 반응하기', onPracticeGreetings)] : []),
     ...(onSigns && reach('signs') ? [quickAction('signs', 'sign', 'var(--accent)', '거리 읽기', '간판·메뉴·안내 읽기', onSigns)] : []),
     ...(onDictation && reach('dictation') ? [quickAction('dictation', 'dictation', 'var(--warn)', '받아쓰기', '듣고 가나 타일로 쓰기', onDictation)] : []),

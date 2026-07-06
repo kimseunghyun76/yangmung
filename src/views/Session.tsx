@@ -25,6 +25,7 @@ interface Props {
   index: number;
   total: number;
   picked: number | null;
+  skipped: boolean;
   cardStatus: CardStatus | null;
   onChoose: (idx: number, c: Choice) => void;
   onIntroduceSeen: () => void;
@@ -35,11 +36,12 @@ interface Props {
   onPrev?: () => void;
   onExit: () => void;
   onKnown: () => void;
+  onSkip: () => void;
   picks: PickMap;
   quickPractice?: boolean;
 }
 
-export function Session({ card, index, total, picked, onChoose, onIntroduceSeen, onSpeakPracticed, onDictationResult, isKanaFamiliar, onNext, onPrev, onExit, onKnown, picks, quickPractice }: Props) {
+export function Session({ card, index, total, picked, skipped, onChoose, onIntroduceSeen, onSpeakPracticed, onDictationResult, isKanaFamiliar, onNext, onPrev, onExit, onKnown, onSkip, picks, quickPractice }: Props) {
   const missionId = card.kind !== 'tip' && card.kind !== 'discover' && card.reviewTarget?.type === 'mission'
     ? String(card.reviewTarget.id) : undefined;
   const sv = missionId ? sceneVisualByMission(missionId) : null;
@@ -168,7 +170,7 @@ export function Session({ card, index, total, picked, onChoose, onIntroduceSeen,
           ) : card.kind === 'discover' ? (
             <DiscoverCardView key={card.id} card={card} onNext={onNext} />
           ) : (
-            <QuizBody key={card.id} card={card} picked={picked} isMissionStep={isMissionStep} isKanaFamiliar={isKanaFamiliar} onChoose={onChoose} onNext={onNext} onKnown={onKnown} />
+            <QuizBody key={card.id} card={card} picked={picked} skipped={skipped} isMissionStep={isMissionStep} isKanaFamiliar={isKanaFamiliar} onChoose={onChoose} onNext={onNext} onKnown={onKnown} onSkip={onSkip} />
           )}
         </div>
       </GlassPanel>
@@ -278,11 +280,11 @@ function DiffBadge({ level }: { level: DifficultyLabel }) {
 }
 
 // 퀴즈/듣기 본문 — 일본어(주인공) → 듣기(1급) → 선택(행동) → 한국어(보조)
-function QuizBody({ card, picked, isMissionStep, isKanaFamiliar, onChoose, onNext, onKnown }: {
-  card: Extract<Card, { kind: 'quiz' }>; picked: number | null; isMissionStep: boolean;
-  isKanaFamiliar: (c: string) => boolean; onChoose: (i: number, c: Choice) => void; onNext: () => void; onKnown: () => void;
+function QuizBody({ card, picked, skipped, isMissionStep, isKanaFamiliar, onChoose, onNext, onKnown, onSkip }: {
+  card: Extract<Card, { kind: 'quiz' }>; picked: number | null; skipped: boolean; isMissionStep: boolean;
+  isKanaFamiliar: (c: string) => boolean; onChoose: (i: number, c: Choice) => void; onNext: () => void; onKnown: () => void; onSkip: () => void;
 }) {
-  const reveal = picked !== null;
+  const reveal = picked !== null || skipped;
   const big = card.tag.startsWith('K') ? 68 : 30;
   // 보기 표시 난이도: 가나 퀴즈는 소리(한글) 유지, 표현/미션 보기는 일본어로(한글병기→가나만→한자).
   const settings = loadSettings();
@@ -384,11 +386,12 @@ function QuizBody({ card, picked, isMissionStep, isKanaFamiliar, onChoose, onNex
         })}
       </div>
 
-      {reveal && <ChoiceFeedback card={card} picked={picked!} onNext={onNext} />}
+      {picked !== null && <ChoiceFeedback card={card} picked={picked} onNext={onNext} />}
+      {skipped && <SkippedFeedback card={card} onNext={onNext} />}
       {!reveal && (
         recoveryChoice
           ? <RecoverySkipAction choice={recoveryChoice} onClick={onKnown} />
-          : <button onClick={onKnown} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--ink-faint)', fontWeight: 600, marginTop: 14, width: '100%', textAlign: 'center' }}>이번 카드는 건너뛰기</button>
+          : <button onClick={onSkip} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--ink-faint)', fontWeight: 600, marginTop: 14, width: '100%', textAlign: 'center' }}>이번 카드는 건너뛰기</button>
       )}
     </>
   );
@@ -559,6 +562,23 @@ function HintExplain({ ja, korean, tip, feedback }: HintExplainProps) {
           <strong lang="ja">{ja}</strong>{korean ? <span style={{ color: 'var(--ink-soft)' }}> — {korean}</span> : null}
         </p>
       )}
+    </div>
+  );
+}
+
+// "이번 카드는 건너뛰기" 결과 — 오답과 동일하게 채점된 뒤 정답을 보여준다.
+// 어떤 보기도 "내가 고른 오답"으로 빨갛게 표시하지 않는다(고르지 않았으니까) — 정답만 초록으로.
+function SkippedFeedback({ card, onNext }: { card: Extract<Card, { kind: 'quiz' }>; onNext: () => void }) {
+  const correct = card.choices.find((x) => x.correct && !x.recovery) ?? card.choices.find((x) => x.correct);
+  const ja = correct?.phrase ? (correct.phrase.kanji ?? correct.phrase.kana) : correct?.ja;
+  return (
+    <div className="ym-reveal" style={{ marginTop: 14 }}>
+      <div style={{ background: 'var(--accent-soft)', padding: 14, borderRadius: 14, marginBottom: 10 }}>
+        <p style={{ margin: 0, color: 'var(--accent)', fontWeight: 700 }}>건너뛰었어요 — 정답은 이거예요</p>
+        {ja && <PhraseLine ja={ja} korean={correct?.phrase?.korean ?? correct?.label ?? ''} />}
+        <p style={{ margin: '6px 0 0', fontSize: 12.5, color: 'var(--ink-soft)' }}>복습 큐에 다시 나와요 — 다음에 한 번 더 풀어봐요.</p>
+      </div>
+      <PrimaryAction onClick={onNext}>다음</PrimaryAction>
     </div>
   );
 }

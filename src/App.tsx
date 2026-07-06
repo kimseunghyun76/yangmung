@@ -18,6 +18,7 @@ import {
   saveProgression, stageKey, PROMO_COUNT, STAGE_PASS, type CoreLevel, type ProgStage,
 } from './learn/progression';
 import { extractKanaChars } from './learn/kanaReading';
+import { buildKanaSpeakLadder, type SpeakWord } from './learn/kanaSpeakWords';
 import { missionDifficultyWindow } from './learn/missionMix';
 import { selectAnnouncementDeck } from './learn/announcementCards';
 import { ANNOUNCEMENT_CATEGORIES, type AnnouncementCategory } from './content/announcements';
@@ -44,6 +45,7 @@ const Practice = lazy(() => import('./views/Practice').then((m) => ({ default: m
 const GachaPage = lazy(() => import('./views/GachaPage').then((m) => ({ default: m.GachaPage })));
 const Flash = lazy(() => import('./views/Flash').then((m) => ({ default: m.Flash })));
 const KanaWrite = lazy(() => import('./views/KanaWrite').then((m) => ({ default: m.KanaWrite })));
+const KanaSpeak = lazy(() => import('./views/KanaSpeak').then((m) => ({ default: m.KanaSpeak })));
 const Placement = lazy(() => import('./views/Placement').then((m) => ({ default: m.Placement })));
 const Review = lazy(() => import('./views/Review').then((m) => ({ default: m.Review })));
 const Guide = lazy(() => import('./views/Guide').then((m) => ({ default: m.Guide })));
@@ -69,6 +71,7 @@ export function App() {
   const [session, setSession] = useState<SessionState>(() => loadSession());
   const [flashCards, setFlashCards] = useState<Card[]>([]); // 속도전 플래시(세션 SRS와 분리)
   const [writeItems, setWriteItems] = useState<KanaItem[]>([]); // 가나 쓰기(따라쓰기)
+  const [speakItems, setSpeakItems] = useState<SpeakWord[]>([]); // 가나 말하기(단어 사다리, 듣고 녹음 비교)
   const [placementCards, setPlacementCards] = useState<Card[]>([]); // 수준 진단(배치) 문항
   // 명장면 대화·노래 가사·간판·방송·작문처럼 사용자가 항목을 직접 고르거나(또는 확정된) 학습 —
   // Intro 대신 배울 문장 전체를 한 번 듣고 시작. begin은 "학습 시작" 클릭 시 실행할 세션 진입 액션.
@@ -94,6 +97,11 @@ export function App() {
     saveOpenMissions(o);
     return o;
   });
+  // 여행 미션(장면)은 입문·기본에서는 절대 노출하지 않는다(요청: 미션은 중급부터) — 백그라운드
+  // 개방 로직(reconcileOpenMissions)은 그대로 두고, 화면에 실제로 보여주는 시점에만 가린다.
+  // 그래야 중급으로 승급하는 순간 이미 쌓여 있던 개방 목록이 바로 보여 대기 없이 시작할 수 있다.
+  const missionsLocked = coreLevel === 'beginner' || coreLevel === 'default';
+  const visibleOpenMissions = missionsLocked ? [] : openMissions;
   const [showGuide, setShowGuide] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -203,12 +211,13 @@ export function App() {
     const empty =
       (view === 'flash' && flashCards.length === 0)
       || (view === 'write' && writeItems.length === 0)
+      || (view === 'kanaSpeak' && speakItems.length === 0)
       || (view === 'placement' && placementCards.length === 0)
       || (view === 'preview' && !preview)
       || ((view === 'intro' || view === 'session') && sessionCards.length === 0)
       || (view === 'done' && !flow.doneSnapshot);
     if (empty) navigate('home', { replace: true });
-  }, [view, flashCards.length, writeItems.length, placementCards.length, preview, sessionCards.length, flow.doneSnapshot, navigate]);
+  }, [view, flashCards.length, writeItems.length, speakItems.length, placementCards.length, preview, sessionCards.length, flow.doneSnapshot, navigate]);
 
   // 주간/야간 테마를 <html data-theme>에 반영
   useEffect(() => { document.documentElement.dataset.theme = settings.theme; }, [settings.theme]);
@@ -271,7 +280,7 @@ export function App() {
     if (cards.length === 0) return;
     flow.beginSession(nextSessionId(session), cards, { intro: true }); // 미션 = 1000
   }
-  // 가나 표 학습 — 전체 표를 한 화면에 보고, 글자를 누르면 읽기·듣기·쓰기·말하기 상세
+  // 가나 표 학습 — 전체 표를 한 화면에 보고, 글자를 누르면 읽기(획순·연상 팁)·쓰기 상세
   function openKanaTable(script: 'hiragana' | 'katakana') { setKanaScript(script); navigate('kana'); }
 
   // 사용자가 항목을 직접 골라 들어오는 학습(명장면 대화·노래 가사·간판·방송) 진입 —
@@ -474,6 +483,14 @@ export function App() {
     setWriteItems(items);
     navigate('write');
   }
+  // 가나 말하기 — 낱글자가 아니라 실제 짧은 단어를 가나 1개→2개→3개…로 점점 늘려가며
+  // 듣고 녹음/비교를 연달아 진행한다(세션/SRS와 분리, 2026-07-07 단어 사다리로 개편).
+  function startKanaSpeak() {
+    const items = buildKanaSpeakLadder();
+    if (items.length === 0) return;
+    setSpeakItems(items);
+    navigate('kanaSpeak');
+  }
   // 수준 진단(배치) — 3축(읽기·듣기·상황) 16문항 무작위 난이도 분산 진단.
   function startPlacement() {
     const cards = buildPlacementCards(allCards);
@@ -541,6 +558,7 @@ export function App() {
           devUnlockAll={!!settings.devUnlockAll}
           onStartStage={startStage}
           onPracticeWrite={startKanaWrite}
+          onPracticeSpeak={startKanaSpeak}
           onPracticeFlash={startFlashSession}
           onOpenBasics={() => navigate('vocabTable')}
           onOpenPublic={() => navigate('public')}
@@ -570,13 +588,13 @@ export function App() {
       );
     }
     if (view === 'map') {
-      return <MapView nav={{ ...nav, current: 'map' }} allCards={allCards} progress={progress} openMissions={openMissions} devUnlockAll={!!settings.devUnlockAll} onPracticeScene={startSceneSession} onBack={() => goBack('home')} />;
+      return <MapView nav={{ ...nav, current: 'map' }} allCards={allCards} progress={progress} openMissions={visibleOpenMissions} missionsLocked={missionsLocked} devUnlockAll={!!settings.devUnlockAll} onPracticeScene={startSceneSession} onBack={() => goBack('home')} />;
     }
     if (view === 'review') {
-      return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} openMissions={openMissions} devUnlockAll={!!settings.devUnlockAll} onStartReview={startReviewSession} onPracticeScene={startSceneSession} onBack={() => goBack('home')} />;
+      return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} openMissions={visibleOpenMissions} devUnlockAll={!!settings.devUnlockAll} onStartReview={startReviewSession} onPracticeScene={startSceneSession} onBack={() => goBack('home')} />;
     }
     if (view === 'gacha') {
-      return <GachaPage nav={{ ...nav, current: 'gacha' }} openMissions={openMissions} />;
+      return <GachaPage nav={{ ...nav, current: 'gacha' }} openMissions={visibleOpenMissions} />;
     }
     if (view === 'flash') {
       const unlockedSceneIds = CONTENT.missions.filter((m) => m.id !== 'C0' && isSceneOpen(m.id, openMissions, !!settings.devUnlockAll)).map((m) => m.id);
@@ -614,10 +632,13 @@ export function App() {
       }} />;
     }
     if (view === 'write') {
-      return <KanaWrite items={writeItems} onExit={() => goBack('home')} onReplay={startKanaWrite}
+      return <KanaWrite key={writeItems.map((k) => k.id).join(',')} items={writeItems} onExit={() => goBack('home')} onReplay={startKanaWrite}
         onKanaWritten={(item, score) => {
           if (score >= 55 && item.char) setSeenKana((prev) => { const nx = markKanaSeen(prev, [item.char]); saveSeenKana(nx); return nx; });
         }} />;
+    }
+    if (view === 'kanaSpeak') {
+      return <KanaSpeak key={speakItems.map((k) => k.id).join(',')} items={speakItems} onExit={() => goBack('home')} onReplay={startKanaSpeak} />;
     }
     if (view === 'preview') {
       if (!preview) return <main style={WRAP}><MascotEmpty who="yang" mood="loading" title="화면을 준비하고 있어요">잠시만 기다려 주세요.</MascotEmpty></main>;
@@ -669,8 +690,8 @@ export function App() {
           onReview={startReviewSession} onDictation={startDictationSession} onCompose={startComposeSession} onSigns={startSignSession} onFlash={startFlashSession}
           onPracticeVocab={() => startVocabSession('all')}
           onPracticeGreetings={startGreetingSession}
-          onPracticeKanaHiragana={() => startKanaSession('hiragana')}
-          onPracticeKanaKatakana={() => startKanaSession('katakana')}
+          onPracticeKanaHiragana={() => openKanaTable('hiragana')}
+          onPracticeKanaKatakana={() => openKanaTable('katakana')}
           onPracticePairs={startPairSession}
           onPracticeWrite={startKanaWrite}
           onPracticeVerbs={() => navigate('verbs')}
@@ -696,6 +717,7 @@ export function App() {
           index={flow.i}
           total={sessionCards.length}
           picked={flow.picked}
+          skipped={flow.skipped}
           picks={flow.picks}
           cardStatus={card.kind === 'tip' || card.kind === 'order' || card.kind === 'discover' ? null : classifyCard(card, progress[card.id], sessionId)}
           onChoose={flow.choose}
@@ -707,6 +729,7 @@ export function App() {
           onPrev={flow.prev}
           onExit={() => goBack('home')}
           onKnown={flow.markKnown}
+          onSkip={flow.skipAsWrong}
           quickPractice={flow.isPractice}
         />
       );
@@ -715,11 +738,12 @@ export function App() {
       <Home
         nav={{ ...nav, current: 'home' }}
         allCards={allCards} progress={progress} session={session} sessionConfig={sessionConfig}
-        openMissions={openMissions}
+        openMissions={visibleOpenMissions} missionsLocked={missionsLocked}
         diagnosis={diag}
         modeLabel={MODE_PRESETS[settings.mode].label}
         onStart={startSession} onPracticeScene={startSceneSession} onPracticeFlash={startFlashSession} onPracticeWrite={startKanaWrite} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
         coreLevel={coreLevel} progression={progression} devUnlockAll={!!settings.devUnlockAll} onStartStage={startStage} onStartPromotion={startPromotionQuiz}
+        onOpenBasics={() => navigate('vocabTable')} onStartVocabGroup={startVocabSession}
       />
     );
   }
