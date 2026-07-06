@@ -37,9 +37,8 @@ export function Modal({ title, onClose, children, footer }: { title: string; onC
           <button aria-label="닫기" onClick={onClose} style={{ border: 'none', background: 'none', fontSize: 22, cursor: 'pointer', color: 'var(--ink-faint)' }}>✕</button>
         </div>
         <div style={{ marginTop: 12 }}>{children}</div>
-        {footer !== undefined
-          ? <div style={{ marginTop: 16 }}>{footer}</div>
-          : <PrimaryAction onClick={onClose} style={{ marginTop: 16 }}>닫기</PrimaryAction>}
+        {footer === undefined && <PrimaryAction onClick={onClose} style={{ marginTop: 16 }}>닫기</PrimaryAction>}
+        {footer !== undefined && footer !== null && <div style={{ marginTop: 16 }}>{footer}</div>}
       </div>
     </div>,
     document.body,

@@ -116,9 +116,10 @@ function buildMask(char: string): { core: Uint8Array; band: Uint8Array; coreCoun
 
 const AUTO_CHECK_MS = 2000; // 손을 뗀 뒤 이 시간(2초) 동안 다시 안 그리면 자동 채점
 
-export function TraceCanvas({ char, onComplete, nextLabel = '다음', autoCompleteOnPass = false }: {
+export function TraceCanvas({ char, onComplete, nextLabel = '다음', autoComplete = 'off', hideCompleteButton = false }: {
   char: string; onComplete: (score: number) => void; nextLabel?: string;
-  autoCompleteOnPass?: boolean; // true면 합격 점수일 때 버튼 클릭 없이 onComplete를 자동 호출
+  autoComplete?: 'off' | 'pass' | 'always'; // pass=합격 점수만 자동 기록, always=점수 무관 항상 자동 기록
+  hideCompleteButton?: boolean; // true면 "다시 쓰기"만 남기고 완료 버튼은 아예 안 보여줌(자동 기록 전제)
 }) {
   const viewRef = useRef<HTMLCanvasElement>(null);
   const inkRef = useRef<HTMLCanvasElement | null>(null);
@@ -148,13 +149,15 @@ export function TraceCanvas({ char, onComplete, nextLabel = '다음', autoComple
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [char]);
 
-  // 합격 점수로 채점되면(자동이든 수동이든) 버튼 클릭 없이 바로 기록 — 결과를 잠깐 보여준 뒤 호출.
+  // 채점되면(자동이든 수동이든) 버튼 클릭 없이 바로 기록 — 결과를 잠깐 보여준 뒤 호출.
+  // 'pass'=합격 점수만, 'always'=점수 무관 항상.
   useEffect(() => {
-    if (!autoCompleteOnPass || checked === null || checked < PASS || autoCompletedRef.current) return;
+    if (autoComplete === 'off' || checked === null || autoCompletedRef.current) return;
+    if (autoComplete === 'pass' && checked < PASS) return;
     autoCompletedRef.current = true;
     const t = window.setTimeout(() => onComplete(checked), 700);
     return () => window.clearTimeout(t);
-  }, [checked, autoCompleteOnPass, onComplete]);
+  }, [checked, autoComplete, onComplete]);
 
   function redraw() {
     const ctx = viewRef.current?.getContext('2d'); if (!ctx) return;
@@ -239,6 +242,15 @@ export function TraceCanvas({ char, onComplete, nextLabel = '다음', autoComple
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 12 }}>
+      {checked !== null && (
+        <p className="ym-reveal" style={{
+          margin: '0 0 10px', padding: 12, borderRadius: 12, fontWeight: 800, textAlign: 'center', width: 'min(86vw, 300px)',
+          background: pass ? 'var(--ok-soft)' : 'var(--warn-soft)', color: pass ? 'var(--ok)' : 'var(--warn)',
+        }}>
+          {pass ? `좋아요! 정확도 ${checked}%` : `정확도 ${checked}% — 다시 한 번 또박또박`}
+        </p>
+      )}
+
       <canvas
         ref={viewRef}
         onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}
@@ -251,14 +263,11 @@ export function TraceCanvas({ char, onComplete, nextLabel = '다음', autoComple
           <button className="ym-press" onClick={check} disabled={!hasInk} style={{ flex: 2, padding: '13px', borderRadius: 14, border: 'none', background: 'var(--accent)', color: 'var(--accent-ink)', fontWeight: 800, fontSize: 16, cursor: hasInk ? 'pointer' : 'default', opacity: hasInk ? 1 : 0.5 }}>채점</button>
         </div>
       ) : (
-        <div className="ym-reveal" style={{ marginTop: 14, width: 'min(86vw, 300px)' }}>
-          <p style={{ margin: 0, padding: 12, borderRadius: 12, fontWeight: 800, textAlign: 'center', background: pass ? 'var(--ok-soft)' : 'var(--warn-soft)', color: pass ? 'var(--ok)' : 'var(--warn)' }}>
-            {pass ? `좋아요! 정확도 ${checked}%` : `정확도 ${checked}% — 다시 한 번 또박또박`}
-          </p>
-          <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-            <button className="ym-press" onClick={clear} style={{ flex: 1, padding: '13px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 700, cursor: 'pointer' }}>다시 쓰기</button>
+        <div style={{ display: 'flex', gap: 8, marginTop: 10, width: 'min(86vw, 300px)' }}>
+          <button className="ym-press" onClick={clear} style={{ flex: 1, padding: '13px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 700, cursor: 'pointer' }}>다시 쓰기</button>
+          {!hideCompleteButton && (
             <button className="ym-press" onClick={() => onComplete(checked)} style={{ flex: 2, padding: '13px', borderRadius: 14, border: 'none', background: 'var(--accent)', color: 'var(--accent-ink)', fontWeight: 800, fontSize: 16, cursor: 'pointer' }}>{nextLabel}</button>
-          </div>
+          )}
         </div>
       )}
     </div>
