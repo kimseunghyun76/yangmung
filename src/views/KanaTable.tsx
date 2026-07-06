@@ -192,53 +192,53 @@ function KanaDetail({ item, prev, next, onPrev, onNext, onClose, onKanaWritten }
     color: disabled ? 'var(--ink-faint)' : 'var(--ink)', cursor: disabled ? 'default' : 'pointer',
     opacity: disabled ? 0.5 : 1,
   });
-  const footer = (
-    <div style={{ display: 'flex', gap: 8 }}>
-      <button className="ym-press" onClick={onPrev} disabled={!prev} style={navBtn(!prev)}>
-        ← 이전{prev && <span lang="ja" style={{ fontWeight: 900, color: 'var(--accent)' }}>{prev.char}</span>}
-      </button>
-      <button className="ym-press" onClick={onNext} disabled={!next} style={navBtn(!next)}>
-        {next && <span lang="ja" style={{ fontWeight: 900, color: 'var(--accent)' }}>{next.char}</span>}다음 →
-      </button>
-    </div>
-  );
 
   return (
-    <Modal title={`${item.char} · ${item.romaji}`} onClose={onClose} footer={footer}>
-      {/* ① 읽기 — 글자·로마자·한글 소리 */}
+    // footer 대신 이전/다음 네비를 children에 직접 넣어 그 아래에 "쓰는 방법"을 배치한다.
+    <Modal title={`${item.char} · ${item.romaji}`} onClose={onClose} footer={null}>
+      {/* ① 읽기 — 글자·로마자·한글 소리(공간 절약을 위해 한 줄로 압축) */}
       <Section icon="kana" title="읽기">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div lang="ja" style={{ fontSize: 56, fontWeight: 900, lineHeight: 1, color: 'var(--ink)' }}>{item.char}</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div lang="ja" style={{ fontSize: 44, fontWeight: 900, lineHeight: 1, color: 'var(--ink)' }}>{item.char}</div>
           <div>
-            <p style={{ margin: 0, fontSize: 20, fontWeight: 800 }}>{item.romaji}</p>
-            <p style={{ margin: '2px 0 0', fontSize: 15, color: 'var(--ink-soft)', fontWeight: 700 }}>한글 소리 「{item.koreanSound}」</p>
+            <p style={{ margin: 0, fontSize: 17, fontWeight: 800 }}>{item.romaji} <span style={{ fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>· 한글 소리 「{item.koreanSound}」</span></p>
+            {confus.length > 0 && (
+              <p style={{ margin: '3px 0 0', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 700 }}>
+                ⚠️ 비슷한 글자: <span lang="ja" style={{ color: 'var(--accent)', fontWeight: 800 }}>{confus.join(' · ')}</span>
+              </p>
+            )}
           </div>
         </div>
-        {confus.length > 0 && (
-          <p style={{ margin: '10px 0 0', fontSize: 12.5, color: 'var(--ink-faint)', fontWeight: 700 }}>
-            ⚠️ 비슷한 글자: <span lang="ja" style={{ color: 'var(--accent)', fontWeight: 800 }}>{confus.join(' · ')}</span>
-          </p>
-        )}
         {item.mnemonic && (
-          <p style={{ margin: '10px 0 0', padding: '9px 11px', borderRadius: 10, background: 'var(--accent-soft)', fontSize: 12.5, color: 'var(--accent)', fontWeight: 700, lineHeight: 1.5 }}>
+          <p style={{ margin: '8px 0 0', padding: '7px 10px', borderRadius: 10, background: 'var(--accent-soft)', fontSize: 12, color: 'var(--accent)', fontWeight: 700, lineHeight: 1.4 }}>
             💡 빠르게 외우기 — {item.mnemonic}
           </p>
         )}
       </Section>
 
-      {/* ② 쓰기 — 따라 쓰기(2초 자동 채점, 통과 시 자동 기록). 쓰는 방법은 맨 아래 참고용. */}
+      {/* ② 쓰기 — 따라 쓰기(2초 자동 채점, 점수 무관 항상 자동 기록). 쓰는 방법은 맨 아래 참고용. */}
       <Section icon="kana" title="쓰기">
         <p style={{ margin: '0 0 4px', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 700 }}>흐린 글자를 따라 써보세요. 손을 떼면 2초 뒤 자동으로 채점돼요.</p>
         <TraceCanvas
           char={item.char}
-          nextLabel="기록하기"
-          autoCompleteOnPass
+          autoComplete="always"
+          hideCompleteButton
           onComplete={(score) => { if (score >= 55) { onKanaWritten?.(item.char); setWritten(true); } }}
         />
         {written && <p style={{ margin: '8px 0 0', textAlign: 'center', fontSize: 12.5, color: 'var(--ok)', fontWeight: 800 }}>✓ 익힌 가나로 자동 기록했어요</p>}
       </Section>
 
-      {/* 쓰는 방법(순서 1·2·3) — 페이지 맨 아래 참고용 */}
+      {/* 이전/다음 네비 */}
+      <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+        <button className="ym-press" onClick={onPrev} disabled={!prev} style={navBtn(!prev)}>
+          ← 이전{prev && <span lang="ja" style={{ fontWeight: 900, color: 'var(--accent)' }}>{prev.char}</span>}
+        </button>
+        <button className="ym-press" onClick={onNext} disabled={!next} style={navBtn(!next)}>
+          {next && <span lang="ja" style={{ fontWeight: 900, color: 'var(--accent)' }}>{next.char}</span>}다음 →
+        </button>
+      </div>
+
+      {/* 쓰는 방법(순서 1·2·3) — 이전/다음 네비 아래, 페이지 맨 아래 참고용 */}
       {item.strokeGuide && (
         <div style={{ marginTop: 14, padding: '11px 12px', borderRadius: 10, background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)' }}>
           <p style={{ margin: '0 0 9px', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 800 }}>✍️ 쓰는 방법</p>
