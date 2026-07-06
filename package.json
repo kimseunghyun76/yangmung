@@ -34,7 +34,9 @@
     "test:missioncoverage": "tsx src/learn/missionCoverage.test.ts",
     "test:composecontext": "tsx src/learn/composeContext.test.ts",
     "test:variantladder": "tsx src/learn/variantLadder.test.ts",
-    "test": "npm run test:content && npm run test:adaptive && npm run test:progress && npm run test:cards && npm run test:unlocks && npm run test:progression && npm run test:missionmix && npm run test:studyfirst && npm run test:missionstudyfirst && npm run test:missioncoverage && npm run test:composecontext && npm run test:variantladder"
+    "test:fullplaythrough": "tsx src/learn/fullPlaythrough.test.ts",
+    "test:kanaspeakwords": "tsx src/learn/kanaSpeakWords.test.ts",
+    "test": "npm run test:content && npm run test:adaptive && npm run test:progress && npm run test:cards && npm run test:unlocks && npm run test:progression && npm run test:missionmix && npm run test:studyfirst && npm run test:missionstudyfirst && npm run test:missioncoverage && npm run test:composecontext && npm run test:variantladder && npm run test:fullplaythrough && npm run test:kanaspeakwords"
   },
   "dependencies": {
     "react": "^18.3.1",

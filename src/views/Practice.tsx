@@ -15,6 +15,7 @@ interface Props {
   devUnlockAll: boolean;
   onStartStage: (stage: ProgStage) => void;
   onPracticeWrite: () => void;
+  onPracticeSpeak: () => void;
   onPracticeFlash: () => void;
   onOpenBasics: () => void;
   onOpenPublic: () => void;
@@ -93,7 +94,7 @@ function itemDone(item: PracticeItem, progression: ProgressionState): boolean {
   return !!item.stage && isStageComplete(progression, item.level, item.stage.id);
 }
 
-export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartStage, onPracticeWrite, onPracticeFlash, onOpenBasics, onOpenPublic, onOpenEntertainment, onStartVocabGroup }: Props) {
+export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartStage, onPracticeWrite, onPracticeSpeak, onPracticeFlash, onOpenBasics, onOpenPublic, onOpenEntertainment, onStartVocabGroup }: Props) {
   // 어휘 커리큘럼 — 예전엔 "어휘 커리큘럼" 배너 하나로 뭉쳐 그 안의 하위 메뉴(/vocab)로 들어가야 했는데,
   // 그 메뉴 안에 기본 인사·생활 기초가 이미 별도 배너로 있는 내용과 중복돼 혼란스러웠다.
   // 이제 기본 인사(입문 단계로 이동)를 뺀 나머지 주제 그룹을 기본 레벨에 개별 배너로 바로 펼쳐 놓는다.
@@ -129,6 +130,16 @@ export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartSta
       icon: 'kana',
       accent: '#2f8b67',
       onClick: onPracticeWrite,
+    },
+    {
+      key: 'beginner:kana-speak',
+      label: '가나 말하기',
+      sub: '듣고 따라 말하기 10자',
+      level: 'beginner',
+      art: 'greetings',
+      icon: 'speak',
+      accent: '#2f8b67',
+      onClick: onPracticeSpeak,
     },
     {
       key: 'beginner:flash',

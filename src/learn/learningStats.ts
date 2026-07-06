@@ -4,7 +4,13 @@ import { useMemo } from 'react';
 import { honorTrophyCount, totalItems, type Collection } from './collection';
 import { loadProgress } from './progress';
 
-export const RANKS = ['이등병', '일병', '상병', '병장', '하사', '중사', '상사', '원사', '소위', '중위', '대위', '소령', '중령', '대령', '준장', '소장', '중장', '대장', '원수'];
+// 여행/일본어 학습 테마 등급 — 군대 계급 대신 여행자가 성장해 가는 이름으로(2026-07-06).
+export const RANKS = [
+  '여행 준비생', '첫걸음 여행자', '가나 탐험가', '초보 배낭러', '편의점 단골',
+  '골목 탐방러', '로컬 맛집러', '길찾기 고수', '회화 새내기', '여행 능숙자',
+  '일본어 애호가', '현지인 친구', '통역 없이 척척', '미식 여행가', '일본 통',
+  '문화 마니아', '원어민 친구', '여행 고수', '일본어 마스터',
+];
 
 function totalItemsAll(c: Collection): number {
   return Object.values(c.cards).reduce((sum, card) => sum + totalItems(card), 0);

@@ -1,6 +1,6 @@
 // 가나 표 학습 — 히라가나/가타카나 전체를 한 화면에. 셀을 누르면 상세 팝업에서
-// 한 글자에 대해 읽기·듣기·쓰기·말하기를 한 장에 모두 익힌다.
-import { useEffect, useRef, useState } from 'react';
+// 한 글자에 대해 읽기(획순·연상 팁 포함)·쓰기를 익힌다. 듣기·말하기는 별도 "가나 말하기" 메뉴로 분리(2026-07-06).
+import { useEffect, useState } from 'react';
 import { CONTENT } from '../content';
 import type { KanaItem, KanaKind } from '../content/types';
 import type { ProgressMap } from '../learn/progress';
@@ -78,7 +78,7 @@ export function KanaTable({ nav, progress, script, onScriptChange, onQuiz, onBac
         <p style={{ margin: 0, ...label }}>가나 · 표 학습</p>
         <h1 style={{ margin: '8px 0 4px', fontSize: 25, fontWeight: 900, letterSpacing: '-0.03em' }}>{scriptKo} 한눈에</h1>
         <p style={{ margin: 0, fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.5 }}>
-          글자를 누르면 <strong style={{ color: 'var(--ink)' }}>읽기·듣기·쓰기·말하기</strong>를 한 장에서 익혀요.
+          글자를 누르면 <strong style={{ color: 'var(--ink)' }}>읽기(획순·연상 팁)·쓰기</strong>를 한 장에서 익혀요.
         </p>
       </div>
 
@@ -166,7 +166,7 @@ export function KanaTable({ nav, progress, script, onScriptChange, onQuiz, onBac
   );
 }
 
-// ── 상세 팝업 — 한 글자의 읽기·듣기·쓰기·말하기를 한 장에 ──────────────
+// ── 상세 팝업 — 한 글자의 읽기(획순·연상 팁)·쓰기를 한 장에 ──────────────
 function KanaDetail({ item, prev, next, onPrev, onNext, onClose, onKanaWritten }: {
   item: KanaItem;
   prev: KanaItem | null;
@@ -205,8 +205,8 @@ function KanaDetail({ item, prev, next, onPrev, onNext, onClose, onKanaWritten }
 
   return (
     <Modal title={`${item.char} · ${item.romaji}`} onClose={onClose} footer={footer}>
-      {/* ① 읽기 · 쓰기 — 보고 읽고, 바로 따라 써본다 */}
-      <Section icon="kana" title="읽기 · 쓰기">
+      {/* ① 읽기 — 글자·로마자·한글 소리 */}
+      <Section icon="kana" title="읽기">
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <div lang="ja" style={{ fontSize: 56, fontWeight: 900, lineHeight: 1, color: 'var(--ink)' }}>{item.char}</div>
           <div>
@@ -219,20 +219,57 @@ function KanaDetail({ item, prev, next, onPrev, onNext, onClose, onKanaWritten }
             ⚠️ 비슷한 글자: <span lang="ja" style={{ color: 'var(--accent)', fontWeight: 800 }}>{confus.join(' · ')}</span>
           </p>
         )}
-        <p style={{ margin: '12px 0 4px', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 700 }}>흐린 글자를 따라 써보세요.</p>
+        {item.mnemonic && (
+          <p style={{ margin: '10px 0 0', padding: '9px 11px', borderRadius: 10, background: 'var(--accent-soft)', fontSize: 12.5, color: 'var(--accent)', fontWeight: 700, lineHeight: 1.5 }}>
+            💡 빠르게 외우기 — {item.mnemonic}
+          </p>
+        )}
+      </Section>
+
+      {/* ② 쓰기 — 따라 쓰기(2초 자동 채점, 통과 시 자동 기록). 쓰는 방법은 맨 아래 참고용. */}
+      <Section icon="kana" title="쓰기">
+        <p style={{ margin: '0 0 4px', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 700 }}>흐린 글자를 따라 써보세요. 손을 떼면 2초 뒤 자동으로 채점돼요.</p>
         <TraceCanvas
           char={item.char}
           nextLabel="기록하기"
+          autoCompleteOnPass
           onComplete={(score) => { if (score >= 55) { onKanaWritten?.(item.char); setWritten(true); } }}
         />
-        {written && <p style={{ margin: '8px 0 0', textAlign: 'center', fontSize: 12.5, color: 'var(--ok)', fontWeight: 800 }}>✓ 익힌 가나로 기록했어요</p>}
+        {written && <p style={{ margin: '8px 0 0', textAlign: 'center', fontSize: 12.5, color: 'var(--ok)', fontWeight: 800 }}>✓ 익힌 가나로 자동 기록했어요</p>}
       </Section>
 
-      {/* ② 듣기 · 말하기 — 다시 듣기 + 녹음/비교를 한 줄에 */}
-      <Section icon="listen" title="듣기 · 말하기">
-        <KanaSpeak char={item.char} />
-      </Section>
+      {/* 쓰는 방법(순서 1·2·3) — 페이지 맨 아래 참고용 */}
+      {item.strokeGuide && (
+        <div style={{ marginTop: 14, padding: '11px 12px', borderRadius: 10, background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)' }}>
+          <p style={{ margin: '0 0 9px', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 800 }}>✍️ 쓰는 방법</p>
+          <StrokeSteps guide={item.strokeGuide} />
+        </div>
+      )}
     </Modal>
+  );
+}
+
+// 획순 문구(①②③...로 구간 표기된 텍스트, 없으면 통짜 한 덩어리)를 순서 목록으로 쪼갠다.
+function parseStrokeSteps(guide: string): string[] {
+  const parts = guide.split(/[①②③④⑤⑥⑦⑧⑨⑩]/).map((s) => s.trim()).filter(Boolean);
+  return parts.length > 0 ? parts : [guide];
+}
+
+// 획순을 1·2·3 순서 목록으로 — 페이지 맨 아래(쓰기 영역과 분리된 참고용)에 배치.
+function StrokeSteps({ guide }: { guide: string }) {
+  const steps = parseStrokeSteps(guide);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      {steps.map((s, i) => (
+        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{
+            flexShrink: 0, width: 20, height: 20, borderRadius: 99, background: 'var(--accent)', color: 'var(--accent-ink)',
+            fontSize: 11.5, fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>{i + 1}</span>
+          <span style={{ fontSize: 12.5, color: 'var(--ink)', fontWeight: 700 }}>{s}</span>
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -243,94 +280,6 @@ function Section({ icon, title, children }: { icon: React.ComponentProps<typeof 
         <Icon name={icon} size={16} /> {title}
       </p>
       {children}
-    </div>
-  );
-}
-
-// 말하기 — 원음 듣고 → 녹음 → 내 발음/원음 번갈아 비교 (채점 없음, iOS 인식 불안정 대비).
-const recSupported = typeof navigator !== 'undefined'
-  && !!navigator.mediaDevices?.getUserMedia
-  && typeof window !== 'undefined'
-  && typeof window.MediaRecorder !== 'undefined';
-
-function KanaSpeak({ char }: { char: string }) {
-  const [recording, setRecording] = useState(false);
-  const [hasRec, setHasRec] = useState(false);
-  const [recErr, setRecErr] = useState(false);
-  const mrRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<Blob[]>([]);
-  const urlRef = useRef<string | null>(null);
-  const playbackRef = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => () => {
-    playbackRef.current?.pause();
-    if (urlRef.current) URL.revokeObjectURL(urlRef.current);
-    mrRef.current?.stream.getTracks().forEach((t) => t.stop());
-  }, []);
-
-  async function startRec() {
-    setRecErr(false);
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mr = new MediaRecorder(stream);
-      chunksRef.current = [];
-      mr.ondataavailable = (e) => { if (e.data.size) chunksRef.current.push(e.data); };
-      mr.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: mr.mimeType || 'audio/webm' });
-        if (urlRef.current) URL.revokeObjectURL(urlRef.current);
-        urlRef.current = URL.createObjectURL(blob);
-        setHasRec(true);
-        setRecording(false);
-        stream.getTracks().forEach((t) => t.stop());
-      };
-      mrRef.current = mr;
-      mr.start();
-      setRecording(true);
-    } catch { setRecErr(true); setRecording(false); }
-  }
-  function playMine() {
-    if (!urlRef.current) return;
-    playbackRef.current?.pause();
-    const audio = new Audio(urlRef.current);
-    playbackRef.current = audio;
-    audio.play().catch(() => {});
-  }
-
-  const canRec = recSupported && !recErr;
-  return (
-    <div>
-      {/* 다시 듣기 + 녹음/비교 — 한 줄 */}
-      <div style={{ display: 'flex', gap: 8 }}>
-        <button className="ym-press" onClick={() => speak(char)} disabled={!ttsSupported()} style={{
-          flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-          padding: '13px 10px', borderRadius: 14, cursor: 'pointer', fontWeight: 800, fontSize: 14.5, whiteSpace: 'nowrap',
-          border: '1px solid var(--glass-border)', background: 'var(--accent-soft)', color: 'var(--accent)',
-        }}>
-          <Icon name="listen" size={17} /> 다시 듣기
-        </button>
-        {canRec && (
-          <button className="ym-press" onClick={recording ? () => mrRef.current?.stop() : startRec} style={{
-            flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-            padding: '13px 10px', borderRadius: 14, border: 'none', cursor: 'pointer', fontWeight: 800, fontSize: 14.5, whiteSpace: 'nowrap',
-            background: 'var(--accent)', color: 'var(--accent-ink)',
-          }}>
-            {recording
-              ? (<><span style={{ width: 10, height: 10, borderRadius: 99, background: '#fff' }} /> 멈추기</>)
-              : (<><Icon name="speak" size={17} /> {hasRec ? '다시 녹음' : '녹음하고 비교'}</>)}
-          </button>
-        )}
-      </div>
-      {!canRec && (
-        <p style={{ margin: '8px 0 0', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 700 }}>
-          소리 내어 따라 말해보세요{recErr ? ' (마이크를 쓸 수 없어 녹음 없이 진행)' : ''}.
-        </p>
-      )}
-      {hasRec && !recording && (
-        <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-          <button className="ym-press" onClick={playMine} style={{ flex: 1, padding: '11px', borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 750, cursor: 'pointer' }}>▶ 내 발음</button>
-          <button className="ym-press" onClick={() => speak(char)} disabled={!ttsSupported()} style={{ flex: 1, padding: '11px', borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--accent-soft)', color: 'var(--accent)', fontWeight: 750, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}><Icon name="listen" size={15} /> 원음</button>
-        </div>
-      )}
     </div>
   );
 }
