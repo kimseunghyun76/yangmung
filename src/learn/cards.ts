@@ -148,6 +148,7 @@ export interface TipCard {
   label: string;
   tipKo: string;
   tier?: 1 | 2 | 3 | 4 | 5; // 팁 난이도 — 세션 레벨(미션 티어 범위)에 맞춰 필터링
+  missionIds?: string[]; // 이 팁과 특히 관련 있는 미션 id들 — 미션 진입 시 우선 노출
 }
 
 // 새 표현 소개 카드 — 퀴즈 전에 의미·소리·쪼개보기를 먼저 제공.
@@ -1087,7 +1088,7 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
   // 정확성 팁 (디브리프) — 전체 풀 생성, 세션 선별에서 안 본 것 1개씩 회전
   for (const g of grammar) {
     if (!g.tipKo) continue;
-    cards.push({ kind: 'tip', id: `tip:${g.id}`, tag: g.category ?? '팁', label: g.label, tipKo: g.tipKo, tier: grammarLevel(g) });
+    cards.push({ kind: 'tip', id: `tip:${g.id}`, tag: g.category ?? '팁', label: g.label, tipKo: g.tipKo, tier: grammarLevel(g), missionIds: g.missionIds });
   }
 
   return cards;

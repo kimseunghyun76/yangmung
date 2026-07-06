@@ -128,6 +128,7 @@ export interface GrammarPoint {
   action?: string;
   category?: string; // 팁 분류 배지 (문법·문화·발음·여행)
   n5Refs?: string[];
+  missionIds?: string[]; // 이 팁과 특히 관련 있는 미션(CLevel) id들 — 미션 진입 시 우선 노출
 }
 
 export interface N5Entry {
