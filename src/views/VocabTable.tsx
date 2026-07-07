@@ -1,5 +1,6 @@
-// 생활 기초 표 학습 — 숫자·월·요일·시간 등 열거형을 표(grid)로 한 번에 보고 익힌다.
+// 숫자 학습 표 학습 — 숫자·월·요일·시간 등 열거형을 표(grid)로 한 번에 보고 익힌다.
 // 가나 표(KanaGrid)와 같은 결: 셀을 누르면 발음 재생, 진척에 따라 색이 달라진다.
+import { useState } from 'react';
 import { BASIC_GROUPS, BASIC_LIFE_ITEMS } from '../content/basicLife';
 import type { ProgressMap } from '../learn/progress';
 import { speak, ttsSupported } from '../tts';
@@ -11,7 +12,7 @@ import { Icon } from '../ui/Icon';
 interface Props {
   nav: NavBarProps;
   progress: ProgressMap;
-  onQuiz: () => void;
+  onQuiz: (count: number) => void;
   onBack: () => void;
 }
 
@@ -35,7 +36,16 @@ function cellState(progress: ProgressMap, id: string): 'mastered' | 'seen' | 'ne
 
 const speakable = (s: string) => s.split('/')[0].trim();
 
+const QUIZ_COUNT_OPTIONS = [12, 24, 48] as const;
+
 export function VocabTable({ nav, progress, onQuiz, onBack }: Props) {
+  const total = BASIC_LIFE_ITEMS.length;
+  const [quizCount, setQuizCount] = useState(12); // 퀴즈 문항 수(12·24·48·전체)
+  const COUNT_OPTIONS: { label: string; value: number }[] = [
+    ...QUIZ_COUNT_OPTIONS.map((n) => ({ label: `${n}개`, value: n })),
+    { label: '전체', value: total },
+  ];
+
   return (
     <main style={WRAP}>
       <NavBar {...nav} />
@@ -46,7 +56,7 @@ export function VocabTable({ nav, progress, onQuiz, onBack }: Props) {
       }}>← 뒤로</button>
 
       <div style={{ marginBottom: 16 }}>
-        <p style={{ margin: 0, ...label }}>생활 기초 · 표 학습</p>
+        <p style={{ margin: 0, ...label }}>숫자 학습 · 표 학습</p>
         <h1 style={{ margin: '8px 0 4px', fontSize: 25, fontWeight: 900, letterSpacing: '-0.03em' }}>숫자·월·시간 한눈에</h1>
         <p style={{ margin: 0, fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.5 }}>
           표의 칸을 누르면 발음을 들려줘요. 1~10, 1월~12월처럼 묶음으로 한 번에 익혀요.
@@ -85,8 +95,21 @@ export function VocabTable({ nav, progress, onQuiz, onBack }: Props) {
       </div>
 
       <div style={{ marginTop: 18 }}>
-        <PrimaryAction onClick={onQuiz}>
-          <Icon name="fast" size={18} /> 표 다 봤어요 — 퀴즈로 확인
+        <p style={{ margin: '0 0 8px', ...label }}>퀴즈 문항 수</p>
+        <div style={{ display: 'flex', gap: 6, padding: 4, borderRadius: 14, background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', marginBottom: 12 }}>
+          {COUNT_OPTIONS.map((opt) => {
+            const active = quizCount === opt.value;
+            return (
+              <button key={opt.label} className="ym-press" onClick={() => setQuizCount(opt.value)} style={{
+                flex: 1, padding: '9px 4px', borderRadius: 11, border: 'none', cursor: 'pointer',
+                background: active ? 'var(--accent)' : 'transparent', color: active ? 'var(--accent-ink)' : 'var(--ink-soft)',
+                fontWeight: 800, fontSize: 13.5,
+              }}>{opt.label}</button>
+            );
+          })}
+        </div>
+        <PrimaryAction onClick={() => onQuiz(quizCount)}>
+          <Icon name="fast" size={18} /> {Math.min(quizCount, total)}개 퀴즈로 확인
         </PrimaryAction>
       </div>
     </main>

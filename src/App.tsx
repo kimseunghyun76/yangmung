@@ -32,6 +32,7 @@ import { sessionGoalText } from './views/goal';
 import { setListenRate } from './tts';
 import { WRAP } from './ui/styles';
 import type { KanaItem } from './content/types';
+import { VOCAB_GROUPS } from './content/thematicVocab';
 import { MascotEmpty } from './views/mascot';
 import { useHashView, type View } from './app/routing';
 import type { CountControl } from './views/SequencePreview';
@@ -357,40 +358,82 @@ export function App() {
     return withLeadingTip(cards, pickTipForTopic(allCards, keywords, progress));
   }
   // 발음 구분 — 최소 페어 듣고 4지선다로 고르기 (つ/す·장음·촉음·청탁)
-  // 매번 같은 개수로 고정되지 않게 무작위(12/18/24)로 — 세션마다 분량이 조금씩 달라짐.
+  // 문제 내용 미리보기는 답을 미리 보여주는 셈이라(듣기 판별 연습) 생략하고, 개수 선택만 제공.
   const PAIR_COUNT_OPTIONS = [12, 18, 24];
-  function startPairSession(stage?: string | null) {
-    // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 stage로 흘러들 수 있어(방어)
-    if (typeof stage !== 'string') stage = undefined;
-    const count = PAIR_COUNT_OPTIONS[Math.floor(Math.random() * PAIR_COUNT_OPTIONS.length)];
+  function beginPairSession(count: number, stage?: string | null) {
     let cards = selectPairCards(allCards, progress, nextSessionId(session), count);
     if (cards.length === 0) return;
     cards = withStudyTip(cards, ['발음', '촉음', '장음', 'ら행', 'ふ']);
-    lastPracticeRef.current = () => startPairSession(stage);
-    flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
+    lastPracticeRef.current = () => beginPairSession(count, stage);
+    flow.beginSession(nextSessionId(session), cards, { intro: false, replace: true, practice: true, stage });
   }
-  // 거리 읽기 — 간판·메뉴·안내·교통 표기 읽기 연습
-  // stage 없이 호출(공공 표현 메뉴에서 직접 선택)되면 Intro 대신 전체 미리듣기로.
-  // stage가 있으면(레벨 진도 단계 진입) 기존처럼 Intro를 거친다.
-  function startSignSession(stage?: string | null) {
-    // 학습형 — 간판을 모두 설명·듣기·읽기한 뒤, 다양한 변형 퀴즈(표기→뜻·듣고 일본어 등).
-    let cards = selectStudyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:') && !id.startsWith('sign:study:'), { studyLimit: 24, quizCount: 6, progress });
-    if (cards.length === 0) return;
-    cards = withStudyTip(cards, ['간판', '표지', '편의점']);
-    lastPracticeRef.current = () => startSignSession(stage);
-    // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 stage로 흘러들 수 있어(방어)
-    if (typeof stage !== 'string') { beginWithPreview('간판·메뉴 읽기', undefined, cards, 'public', { practice: true }); return; }
-    flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
-  }
-  // 받아쓰기 전용 — 듣고 가나 타일로 쓰기
-  function startDictationSession(stage?: string | null) {
+  function startPairSession(stage?: string | null, count?: number) {
     // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 stage로 흘러들 수 있어(방어)
     if (typeof stage !== 'string') stage = undefined;
-    let cards = selectDictationCards(allCards, progress, nextSessionId(session), 18);
+    const c = count ?? PAIR_COUNT_OPTIONS[Math.floor(Math.random() * PAIR_COUNT_OPTIONS.length)];
+    setPreview({
+      title: '발음 구분',
+      subtitle: '비슷하게 들리는 소리를 듣고 구분하는 연습이에요. 몇 문제를 풀지 골라보세요.',
+      lines: [],
+      returnView: stage ? 'practice' : 'home',
+      begin: () => beginPairSession(c, stage),
+      countControl: { value: c, options: PAIR_COUNT_OPTIONS, onChange: (n) => startPairSession(stage, n) },
+    });
+    navigate('preview');
+  }
+  // 거리 읽기 — 간판·메뉴·안내·교통 표기 읽기 연습. 표기 목록 미리보기 + 퀴즈 개수 선택 후 시작.
+  const SIGN_COUNT_OPTIONS = [6, 10, 15];
+  function signCards(quizCount: number): Card[] {
+    return selectStudyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:') && !id.startsWith('sign:study:'), { studyLimit: 24, quizCount, progress });
+  }
+  function beginSignSession(count: number, stage?: string | null) {
+    let cards = signCards(count);
+    if (cards.length === 0) return;
+    cards = withStudyTip(cards, ['간판', '표지', '편의점']);
+    lastPracticeRef.current = () => beginSignSession(count, stage);
+    flow.beginSession(nextSessionId(session), cards, { intro: false, replace: true, practice: true, stage });
+  }
+  function startSignSession(stage?: string | null, count?: number) {
+    // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 stage로 흘러들 수 있어(방어)
+    if (typeof stage !== 'string') stage = undefined;
+    const c = count ?? SIGN_COUNT_OPTIONS[0];
+    const cards = signCards(c);
+    if (cards.length === 0) return;
+    const lines = cards
+      .filter((card): card is IntroduceCard => card.kind === 'introduce')
+      .map((card) => ({ ja: card.ja, kana: card.kana, korean: card.korean }));
+    setPreview({
+      title: '간판·메뉴 읽기',
+      subtitle: '이번에 읽을 표기를 먼저 살펴보고, 몇 문제를 풀지 골라보세요.',
+      lines,
+      returnView: stage ? 'practice' : 'home',
+      begin: () => beginSignSession(c, stage),
+      countControl: { value: c, options: SIGN_COUNT_OPTIONS, onChange: (n) => startSignSession(stage, n) },
+    });
+    navigate('preview');
+  }
+  // 받아쓰기 전용 — 듣고 가나 타일로 쓰기. 발음구분과 마찬가지로 미리듣기는 답 유출이라 생략, 개수만 선택.
+  const DICTATION_COUNT_OPTIONS = [12, 18, 24];
+  function beginDictationSession(count: number, stage?: string | null) {
+    let cards = selectDictationCards(allCards, progress, nextSessionId(session), count);
     if (cards.length === 0) return;
     cards = withStudyTip(cards, ['받아쓰기', '촉음', '장음', 'ん']);
-    lastPracticeRef.current = () => startDictationSession(stage);
-    flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
+    lastPracticeRef.current = () => beginDictationSession(count, stage);
+    flow.beginSession(nextSessionId(session), cards, { intro: false, replace: true, practice: true, stage });
+  }
+  function startDictationSession(stage?: string | null, count?: number) {
+    // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 stage로 흘러들 수 있어(방어)
+    if (typeof stage !== 'string') stage = undefined;
+    const c = count ?? 18;
+    setPreview({
+      title: '받아쓰기',
+      subtitle: '듣고 가나 타일로 받아쓰는 연습이에요. 몇 문제를 풀지 골라보세요.',
+      lines: [],
+      returnView: stage ? 'practice' : 'home',
+      begin: () => beginDictationSession(c, stage),
+      countControl: { value: c, options: DICTATION_COUNT_OPTIONS, onChange: (n) => startDictationSession(stage, n) },
+    });
+    navigate('preview');
   }
   // 한→일 작문 전용 — 한국어 보고 일본어 조립(산출).
   // 시작하면 먼저 이번에 나올 문장 전체를 미리 듣는 선행학습 화면을 거친 뒤 곧장 세션으로
@@ -435,7 +478,7 @@ export function App() {
     navigate('flash');
     return cards;
   }
-  // 어휘 커리큘럼 — 주제 그룹별 또는 전체(SRS). 생활 기초(basics)도 여기에 병합.
+  // 어휘 커리큘럼 — 주제 그룹별 또는 전체(SRS). 숫자 학습(basics)도 여기에 병합.
   // 기본 레벨에 배너로 펼쳐져 있어 순서 없는 자유 연습(단계 완료 추적 대상 아님).
   // 모두 학습형: 설명·듣기·읽기 후 다양한 변형 퀴즈(일본어→뜻·뜻→일본어·듣고 일본어·듣고 뜻).
   const isVocabStudy = (id: string) => id.includes(':study:');
@@ -447,21 +490,49 @@ export function App() {
     transport: ['전철', '버스', '택시', '교통', 'ic카드'],
     weather: ['축제'],
   };
-  function startVocabSession(groupId: string) {
-    // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 groupId로 흘러들 수 있어(방어)
-    if (typeof groupId !== 'string') groupId = 'all';
-    let cards: Card[];
+  function vocabCards(groupId: string, quizCount: number): Card[] {
     if (groupId === 'basics') {
-      cards = selectStudyDeck(allCards, (id) => id.startsWith('basic:study:'), (id) => id.startsWith('basic:') && !isVocabStudy(id), { studyLimit: 36, quizCount: 8, progress });
-    } else if (groupId === 'all') {
-      cards = selectStudyDeck(allCards, (id) => id.startsWith('vocab:') && isVocabStudy(id), (id) => id.startsWith('vocab:') && !isVocabStudy(id), { studyLimit: 36, quizCount: 8, progress });
-    } else {
-      cards = selectStudyDeck(allCards, (id) => id.startsWith(`vocab:${groupId}:study:`), (id) => id.startsWith(`vocab:${groupId}:`) && !isVocabStudy(id), { studyLimit: 28, quizCount: 6, progress });
+      return selectStudyDeck(allCards, (id) => id.startsWith('basic:study:'), (id) => id.startsWith('basic:') && !isVocabStudy(id), { studyLimit: 36, quizCount, progress });
     }
+    if (groupId === 'all') {
+      return selectStudyDeck(allCards, (id) => id.startsWith('vocab:') && isVocabStudy(id), (id) => id.startsWith('vocab:') && !isVocabStudy(id), { studyLimit: 36, quizCount, progress });
+    }
+    return selectStudyDeck(allCards, (id) => id.startsWith(`vocab:${groupId}:study:`), (id) => id.startsWith(`vocab:${groupId}:`) && !isVocabStudy(id), { studyLimit: 28, quizCount, progress });
+  }
+  function vocabTitle(groupId: string): string {
+    if (groupId === 'basics') return '숫자 학습';
+    if (groupId === 'all') return '전체 어휘 세션';
+    return VOCAB_GROUPS.find((g) => g.id === groupId)?.label ?? '어휘';
+  }
+  // 실제 세션 시작(미리보기의 "학습 시작" 또는 표 학습 화면의 퀴즈 버튼에서 호출).
+  function beginVocabSession(groupId: string, quizCount: number) {
+    let cards = vocabCards(groupId, quizCount);
     if (cards.length === 0) return;
     cards = withStudyTip(cards, VOCAB_TOPIC_KEYWORDS[groupId] ?? []);
-    lastPracticeRef.current = () => startVocabSession(groupId);
-    flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true });
+    lastPracticeRef.current = () => beginVocabSession(groupId, quizCount);
+    flow.beginSession(nextSessionId(session), cards, { intro: false, replace: true, practice: true });
+  }
+  const VOCAB_COUNT_OPTIONS = [6, 10, 16];
+  // 배너에서 바로 시작 — 미리보기(이번에 배울 단어 목록 + 퀴즈 개수 선택) 화면을 먼저 거친다.
+  // (표 학습 화면이 있는 숫자 학습은 그 표가 이미 미리보기 역할을 해서 beginVocabSession으로 바로 감 — VocabTable.onQuiz 참고.)
+  function startVocabSession(groupId: string, quizCount?: number) {
+    // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 groupId로 흘러들 수 있어(방어)
+    if (typeof groupId !== 'string') groupId = 'all';
+    const count = quizCount ?? VOCAB_COUNT_OPTIONS[0];
+    const cards = vocabCards(groupId, count);
+    if (cards.length === 0) return;
+    const lines = cards
+      .filter((c): c is IntroduceCard => c.kind === 'introduce')
+      .map((c) => ({ ja: c.ja, kana: c.kana, korean: c.korean }));
+    setPreview({
+      title: vocabTitle(groupId),
+      subtitle: '이번에 배울 단어를 먼저 살펴보고 시작해요.',
+      lines,
+      returnView: 'practice',
+      begin: () => beginVocabSession(groupId, count),
+      countControl: { value: count, options: VOCAB_COUNT_OPTIONS, onChange: (n) => startVocabSession(groupId, n) },
+    });
+    navigate('preview');
   }
   // 기본 인사 전용 세션 — 학습형
   function startGreetingSession(stage?: string | null) {
@@ -472,16 +543,32 @@ export function App() {
     lastPracticeRef.current = () => startGreetingSession(stage);
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
   }
-  // 방송 메시지 — 전철·공항·버스 등 공공 방송 듣고 학습(독립 콘텐츠 덱).
-  function startAnnouncementSession(category?: AnnouncementCategory) {
-    let cards = selectAnnouncementDeck(category);
+  // 방송 메시지 — 전철·공항·버스 등 공공 방송 듣고 학습(독립 콘텐츠 덱). 목록 미리듣기 + 퀴즈 개수 선택.
+  const ANNOUNCEMENT_COUNT_OPTIONS = [6, 10, 16];
+  function beginAnnouncementSession(category: AnnouncementCategory | undefined, count: number) {
+    let cards = selectAnnouncementDeck(category, count);
     if (cards.length === 0) return;
     cards = withStudyTip(cards, ['안내', '방송', '전철', '공항']);
-    lastPracticeRef.current = () => startAnnouncementSession(category);
+    lastPracticeRef.current = () => beginAnnouncementSession(category, count);
+    flow.beginSession(nextSessionId(session), cards, { intro: false, replace: true, practice: true });
+  }
+  function startAnnouncementSession(category?: AnnouncementCategory, count?: number) {
+    const c = count ?? ANNOUNCEMENT_COUNT_OPTIONS[0];
+    const cards = selectAnnouncementDeck(category, c);
+    if (cards.length === 0) return;
+    const lines = cards
+      .filter((card): card is IntroduceCard => card.kind === 'introduce')
+      .map((card) => ({ ja: card.ja, kana: card.kana, korean: card.korean }));
     const title = category
-      ? `방송 · ${ANNOUNCEMENT_CATEGORIES.find((c) => c.id === category)?.label ?? '방송'}`
+      ? `방송 · ${ANNOUNCEMENT_CATEGORIES.find((x) => x.id === category)?.label ?? '방송'}`
       : '방송 메시지 모아 듣기';
-    beginWithPreview(title, undefined, cards, 'public', { practice: true });
+    setPreview({
+      title, subtitle: '이번에 들을 방송 문구를 먼저 살펴보고, 몇 문제를 풀지 골라보세요.', lines,
+      returnView: 'public',
+      begin: () => beginAnnouncementSession(category, c),
+      countControl: { value: c, options: ANNOUNCEMENT_COUNT_OPTIONS, onChange: (n) => startAnnouncementSession(category, n) },
+    });
+    navigate('preview');
   }
   // 명장면 대화 / 노래 가사 — 오리지널 샘플 덱. cards[0].tag에 이미 "명장면 · 제목"이 담겨 있어 그대로 제목으로
   // (팁을 앞에 붙이기 전에 제목을 먼저 뽑아둔다 — 안 그러면 cards[0]이 팁 카드가 돼 제목이 깨진다).
@@ -730,7 +817,7 @@ export function App() {
         <VocabTable
           nav={{ ...nav, current: 'practice' }}
           progress={progress}
-          onQuiz={() => startVocabSession('basics')}
+          onQuiz={(count) => beginVocabSession('basics', count)}
           onBack={() => goBack('practice')}
         />
       );

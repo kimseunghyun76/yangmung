@@ -146,6 +146,7 @@ export function Placement({ cards, onDone, onSkip }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idx, done]);
 
+  // 정답 여부와 무관하게 자동으로 넘어가지 않는다 — 정답 설명을 보여준 뒤 "다음"을 눌러야 진행된다.
   function pick(i: number, c: Choice) {
     if (picked !== null || !card) return;
     setPicked(i);
@@ -153,12 +154,8 @@ export function Placement({ cards, onDone, onSkip }: Props) {
     const axis = axisOf(card);
     setHits((h) => ({ ...h, [axis]: { ok: h[axis].ok + (ok ? 1 : 0), total: h[axis].total + 1 } }));
     if (c.ja) speak(c.ja);
-    window.setTimeout(() => {
-      setPicked(null);
-      if (idx + 1 >= cards.length) setDone(true); else setIdx((n) => n + 1);
-    }, 650);
   }
-  // 모르는 문제 패스 — 오답(미숙)으로 집계하되, 정답을 잠깐 보여주고 넘어간다.
+  // 모르는 문제 패스 — 오답(미숙)으로 집계하되, 정답을 보여주고 "다음"을 눌러야 넘어간다.
   function passQuestion() {
     if (picked !== null || !card || card.kind !== 'quiz') return;
     setPicked(-1); // 정답만 강조(고른 오답 없음)
@@ -166,10 +163,10 @@ export function Placement({ cards, onDone, onSkip }: Props) {
     setHits((h) => ({ ...h, [axis]: { ok: h[axis].ok, total: h[axis].total + 1 } }));
     const correct = card.choices.find((x) => x.correct && !x.recovery);
     if (correct?.ja) speak(correct.ja);
-    window.setTimeout(() => {
-      setPicked(null);
-      if (idx + 1 >= cards.length) setDone(true); else setIdx((n) => n + 1);
-    }, 650);
+  }
+  function next() {
+    setPicked(null);
+    if (idx + 1 >= cards.length) setDone(true); else setIdx((n) => n + 1);
   }
 
   if (done) {
@@ -246,7 +243,10 @@ export function Placement({ cards, onDone, onSkip }: Props) {
   return (
     <main style={WRAP}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 }}>
-        <button onClick={onSkip} className="ym-press" style={{ border: 0, background: 'transparent', color: 'var(--ink-soft)', fontWeight: 800, cursor: 'pointer', padding: 4 }}>건너뛰기</button>
+        <button onClick={onSkip} className="ym-press" style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none',
+          color: 'var(--ink-soft)', fontSize: 14, fontWeight: 700, cursor: 'pointer', padding: '4px 0',
+        }}>← 뒤로</button>
         <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--ink-soft)', fontVariantNumeric: 'tabular-nums' }}>{idx + 1} / {cards.length}</span>
       </div>
 
@@ -326,12 +326,45 @@ export function Placement({ cards, onDone, onSkip }: Props) {
         })}
       </div>
 
-      {/* 이 문제 패스 — 모르는 질문은 넘어가도 돼요 */}
-      <button className="ym-press" onClick={passQuestion} disabled={picked !== null}
-        style={{ width: '100%', marginTop: 12, padding: '12px', borderRadius: 14, border: '1px dashed var(--glass-border)', background: 'transparent', color: 'var(--ink-soft)', fontWeight: 700, fontSize: 13.5, cursor: picked === null ? 'pointer' : 'default' }}>
-        모르겠어요 · 이 문제 패스 →
-      </button>
+      {picked === null ? (
+        /* 이 문제 패스 — 모르는 질문은 넘어가도 돼요 */
+        <button className="ym-press" onClick={passQuestion}
+          style={{ width: '100%', marginTop: 12, padding: '12px', borderRadius: 14, border: '1px dashed var(--glass-border)', background: 'transparent', color: 'var(--ink-soft)', fontWeight: 700, fontSize: 13.5, cursor: 'pointer' }}>
+          모르겠어요 · 이 문제 패스 →
+        </button>
+      ) : (
+        <AnswerExplanation card={card} picked={picked} onNext={next} />
+      )}
     </main>
+  );
+}
+
+// 정답 설명 — 맞았든 틀렸든(패스 포함) 정답과 이유를 보여준 뒤 "다음"을 눌러야 넘어간다.
+function AnswerExplanation({ card, picked, onNext }: { card: Extract<Card, { kind: 'quiz' }>; picked: number; onNext: () => void }) {
+  const pickedChoice = picked >= 0 ? card.choices[picked] : undefined;
+  const isCorrect = !!pickedChoice && pickedChoice.correct && !pickedChoice.recovery;
+  const correct = card.choices.find((x) => x.correct && !x.recovery) ?? card.choices.find((x) => x.correct);
+  const ja = correct?.phrase ? (correct.phrase.kanji ?? correct.phrase.kana) : correct?.ja;
+  const korean = correct?.phrase?.korean ?? correct?.label;
+  const heading = isCorrect ? '정답이에요' : picked === -1 ? '패스했어요 — 정답은 이거예요' : '아쉬워요 — 정답은 이거예요';
+  const tone = isCorrect ? 'var(--ok)' : 'var(--accent)';
+  const toneSoft = isCorrect ? 'var(--ok-soft)' : 'var(--accent-soft)';
+  return (
+    <div className="ym-reveal" style={{ marginTop: 14 }}>
+      <div style={{ background: toneSoft, padding: 14, borderRadius: 14 }}>
+        <p style={{ margin: 0, color: tone, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 6 }}>
+          {isCorrect && <Icon name="check" size={18} />} {heading}
+        </p>
+        {ja && (
+          <p style={{ margin: '8px 0 0', fontSize: 18 }}>
+            <strong lang="ja">{ja}</strong>
+            {korean && <span style={{ color: 'var(--ink-soft)', fontSize: 15 }}> — {korean}</span>}
+          </p>
+        )}
+        {correct?.feedback && <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.5 }}>{correct.feedback}</p>}
+      </div>
+      <PrimaryAction onClick={onNext} style={{ marginTop: 12 }}>다음</PrimaryAction>
+    </div>
   );
 }
 

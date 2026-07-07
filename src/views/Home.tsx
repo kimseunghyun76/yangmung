@@ -23,7 +23,7 @@ import { loadCollection, ownedCount, bestRarity, itemsOf, RARITIES, rarityMeta, 
 import { gachaItemForPlace } from '../learn/gachaItems';
 import { useLearningStats, type LearningStats } from '../learn/learningStats';
 import { StatTile, LearningHeatmap } from './StatsWidgets';
-import { VOCAB_GROUPS } from '../content/thematicVocab';
+import { VOCAB_GROUPS, vocabGroupArt } from '../content/thematicVocab';
 
 interface Props {
   nav: NavBarProps;
@@ -399,7 +399,8 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPla
   kanaPct: number; stats: LearningStats; modeLabel: string; onPlacement: () => void;
   collection: Collection; sceneCount: number; onOpenGacha: () => void;
 }) {
-  const [expanded, setExpanded] = useState(true);
+  // 기본은 접힌 상태로 시작(2026-07-08, 사용자 요청) — 요약(코치 한 줄)은 접혀 있어도 항상 보임.
+  const [expanded, setExpanded] = useState(false);
   const tone = d.level === 'struggling' ? 'var(--warn)' : d.level === 'cruising' ? 'var(--ok)' : 'var(--accent)';
   return (
     <>
@@ -577,8 +578,8 @@ function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion,
   const nx = nextLevel(coreLevel);
   const artOf = (s: ProgStage) => s.script ?? s.practice;
   const freeExtras = coreLevel === 'default' ? [
-    { key: 'basics', label: '생활 기초', sub: '숫자·요일·시간·금액', art: 'basics', onClick: onOpenBasics },
-    ...DEFAULT_PREVIEW_VOCAB_GROUPS.map((g) => ({ key: `vocab:${g.id}`, label: g.label, sub: g.description, art: 'vocab', onClick: () => onStartVocabGroup(g.id) })),
+    { key: 'basics', label: '숫자 학습', sub: '숫자·요일·시간·금액', art: 'basics', onClick: onOpenBasics },
+    ...DEFAULT_PREVIEW_VOCAB_GROUPS.map((g) => ({ key: `vocab:${g.id}`, label: g.label, sub: g.description, art: vocabGroupArt(g.id), onClick: () => onStartVocabGroup(g.id) })),
   ] : [];
   return (
     <GlassPanel>
@@ -696,13 +697,20 @@ function Ring({ pct, size = 68 }: { pct: number; size?: number }) {
   );
 }
 
+// 진척률 막대 그래프 — 예전엔 숫자만 있어 "차트가 반영 안 됐다"는 피드백을 받아 막대를 추가(2026-07-08).
 function KanaRow({ label: lbl, m }: { label: string; m: { mastered: number; total: number } }) {
+  const pct = m.total > 0 ? Math.round((m.mastered / m.total) * 100) : 0;
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: 14, marginTop: 6 }}>
-      <span style={{ fontWeight: 600 }}>{lbl}</span>
-      <span style={{ color: 'var(--ink-faint)', fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>
-        <strong style={{ color: 'var(--ink)' }}>{m.mastered}</strong> / {m.total}
-      </span>
+    <div style={{ marginTop: 9 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: 13 }}>
+        <span style={{ fontWeight: 700 }}>{lbl}</span>
+        <span style={{ color: 'var(--ink-faint)', fontWeight: 700, fontVariantNumeric: 'tabular-nums', fontSize: 12 }}>
+          <strong style={{ color: 'var(--ink)' }}>{m.mastered}</strong> / {m.total}
+        </span>
+      </div>
+      <div style={{ marginTop: 5, height: 7, borderRadius: 99, background: 'var(--glass-bg-strong)', overflow: 'hidden' }}>
+        <div style={{ width: `${pct}%`, height: '100%', background: 'var(--accent)', borderRadius: 99, transition: 'width .4s ease' }} />
+      </div>
     </div>
   );
 }

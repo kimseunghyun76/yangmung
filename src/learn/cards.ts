@@ -340,12 +340,12 @@ function buildBasicLifeCards(): Card[] {
     const group = BASIC_GROUP_LABEL[item.group];
     const distract = distractorsFor(item);
     // 학습형 — 설명·듣기·읽기 + 듣고 일본어 찾기
-    cards.push(makeStudyCard({ id: `basic:study:${item.id}`, tag: `생활 기초 · ${group}`, ja: item.ja, kana: item.kana, korean: item.korean }));
-    cards.push(makeHearToJaCard({ id: `basic:hear2ja:${item.id}`, tag: `생활 기초 · ${group}`, reviewId: `basic:${item.id}`, item, distract }));
+    cards.push(makeStudyCard({ id: `basic:study:${item.id}`, tag: `숫자 학습 · ${group}`, ja: item.ja, kana: item.kana, korean: item.korean }));
+    cards.push(makeHearToJaCard({ id: `basic:hear2ja:${item.id}`, tag: `숫자 학습 · ${group}`, reviewId: `basic:${item.id}`, item, distract }));
     cards.push({
       kind: 'quiz',
       id: `basic:read:${item.id}`,
-      tag: `생활 기초 · ${group}`,
+      tag: `숫자 학습 · ${group}`,
       banner: item.ja,
       bannerJa: item.kana,
       sub: `${group} 표현을 보고 뜻을 고르세요`,
@@ -358,7 +358,7 @@ function buildBasicLifeCards(): Card[] {
     cards.push({
       kind: 'quiz',
       id: `basic:listen:${item.id}`,
-      tag: `생활 기초 · ${group}`,
+      tag: `숫자 학습 · ${group}`,
       banner: '듣기',
       bannerJa: item.kana,
       sub: `듣고 ${group}을 고르세요`,
@@ -372,7 +372,7 @@ function buildBasicLifeCards(): Card[] {
     cards.push({
       kind: 'quiz',
       id: `basic:ko2ja:${item.id}`,
-      tag: `생활 기초 · ${group}`,
+      tag: `숫자 학습 · ${group}`,
       banner: item.korean,
       sub: `뜻에 맞는 ${group} 일본어를 고르세요`,
       reviewTarget: { type: 'phrase', id: `basic:${item.id}` },

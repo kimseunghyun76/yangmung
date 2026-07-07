@@ -65,10 +65,10 @@ export function SequencePreview({ title, subtitle, lines, onStart, onBack, count
       }}>← 목록으로</button>
 
       <div style={{ marginBottom: 16 }}>
-        <p style={{ margin: 0, fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' }}>전체 미리듣기</p>
+        <p style={{ margin: 0, fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' }}>{lines.length > 0 ? '전체 미리듣기' : '연습 준비'}</p>
         <h1 style={{ margin: '8px 0 4px', fontSize: 23, fontWeight: 900, letterSpacing: '-0.03em' }}>{title}</h1>
         {subtitle && <p style={{ margin: 0, fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.5 }}>{subtitle}</p>}
-        <p style={{ margin: '6px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>먼저 전체를 한 번 들어본 뒤, 문장별로 학습하고 퀴즈를 풀어요.</p>
+        {lines.length > 0 && <p style={{ margin: '6px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>먼저 전체를 한 번 들어본 뒤, 문장별로 학습하고 퀴즈를 풀어요.</p>}
       </div>
 
       {countControl && (
@@ -91,43 +91,47 @@ export function SequencePreview({ title, subtitle, lines, onStart, onBack, count
         </div>
       )}
 
-      <GlassPanel>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {lines.map((l, i) => {
-            const active = playingIndex === i;
-            return (
-              <button key={i} className="ym-press" onClick={() => playOne(i)} style={{
-                width: '100%', textAlign: 'left', display: 'flex', alignItems: 'flex-start', gap: 10,
-                padding: '11px 12px', borderRadius: 12, cursor: 'pointer',
-                border: `1px solid ${active ? 'var(--accent)' : 'var(--glass-border)'}`,
-                background: active ? 'var(--accent-soft)' : 'var(--glass-bg)',
-                color: 'var(--ink)',
-              }}>
-                {l.speaker && (
-                  <span style={{
-                    flex: '0 0 auto', fontSize: 11, fontWeight: 800, color: 'var(--accent)',
-                    border: '1px solid var(--accent)', borderRadius: 999, padding: '1px 7px', marginTop: 2,
-                  }}>{l.speaker}</span>
-                )}
-                <span style={{ flex: 1, minWidth: 0 }}>
-                  <span style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{l.ja}</span>
-                  <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 2 }}>{l.korean}</span>
-                </span>
-                <Icon name="listen" size={16} style={{ flex: '0 0 16px', marginTop: 3, color: active ? 'var(--accent)' : 'var(--ink-faint)' }} />
-              </button>
-            );
-          })}
-        </div>
-      </GlassPanel>
+      {lines.length > 0 && (
+        <GlassPanel>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {lines.map((l, i) => {
+              const active = playingIndex === i;
+              return (
+                <button key={i} className="ym-press" onClick={() => playOne(i)} style={{
+                  width: '100%', textAlign: 'left', display: 'flex', alignItems: 'flex-start', gap: 10,
+                  padding: '11px 12px', borderRadius: 12, cursor: 'pointer',
+                  border: `1px solid ${active ? 'var(--accent)' : 'var(--glass-border)'}`,
+                  background: active ? 'var(--accent-soft)' : 'var(--glass-bg)',
+                  color: 'var(--ink)',
+                }}>
+                  {l.speaker && (
+                    <span style={{
+                      flex: '0 0 auto', fontSize: 11, fontWeight: 800, color: 'var(--accent)',
+                      border: '1px solid var(--accent)', borderRadius: 999, padding: '1px 7px', marginTop: 2,
+                    }}>{l.speaker}</span>
+                  )}
+                  <span style={{ flex: 1, minWidth: 0 }}>
+                    <span style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{l.ja}</span>
+                    <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 2 }}>{l.korean}</span>
+                  </span>
+                  <Icon name="listen" size={16} style={{ flex: '0 0 16px', marginTop: 3, color: active ? 'var(--accent)' : 'var(--ink-faint)' }} />
+                </button>
+              );
+            })}
+          </div>
+        </GlassPanel>
+      )}
 
       <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
-        <button className="ym-press" onClick={playAll} style={{
-          width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-          padding: '13px 16px', borderRadius: 14, cursor: 'pointer', fontWeight: 800, fontSize: 14.5,
-          border: '1.5px solid var(--border)', background: 'var(--surface)', color: 'var(--ink)',
-        }}>
-          <Icon name="listen" size={18} /> 전체 듣기 ({lines.length}문장)
-        </button>
+        {lines.length > 0 && (
+          <button className="ym-press" onClick={playAll} style={{
+            width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            padding: '13px 16px', borderRadius: 14, cursor: 'pointer', fontWeight: 800, fontSize: 14.5,
+            border: '1.5px solid var(--border)', background: 'var(--surface)', color: 'var(--ink)',
+          }}>
+            <Icon name="listen" size={18} /> 전체 듣기 ({lines.length}문장)
+          </button>
+        )}
         <PrimaryAction onClick={onStart}>학습 시작</PrimaryAction>
       </div>
     </main>
