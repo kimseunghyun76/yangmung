@@ -1,12 +1,16 @@
 // 세션 시작 전 "오늘 한 판" 인트로 — 목표와 첫 행동을 정렬.
 // goal은 App에서 planSession 기반으로 계산해 전달(복습 뉘앙스 포함).
+// 2026-07-08: 배경 상황을 떠올리라는 문구만 있던 걸, 실제 이번 세션에 나올 내용(표현 목록)을
+// 미리 훑어볼 수 있는 요약으로 바꿨다 — 테마와 무관하게 항상 같은 자리에서 확인 가능.
 import type { Card } from '../learn/cards';
 import { itemMastery, type ProgressMap } from '../learn/progress';
 import { CONTENT } from '../content';
 import { WRAP } from '../ui/styles';
+import { Icon } from '../ui/Icon';
 import { quickPracticeBackdrop, sceneVisualByMission } from './scene';
-import { PrimaryAction, hexA } from './shell';
+import { PrimaryAction, GlassPanel, hexA } from './shell';
 import { MascotFace, MascotLine } from './mascot';
+import { speak, ttsSupported } from '../tts';
 
 interface IntroProps {
   cards: Card[];
@@ -29,6 +33,28 @@ function cardBrief(card: Card): { ja?: string; ko: string } | undefined {
   if (card.kind === 'dictation') return { ja: card.ja, ko: card.korean };
   if (card.kind === 'order') return { ko: card.items.slice(0, 3).map((x) => x.label).join(' → ') };
   return undefined;
+}
+
+// 이번 세션에 실제로 나올 내용 미리보기 — 새 표현(introduce)을 먼저, 그다음 나머지 카드 순서로
+// 중복 없이 몇 개만 뽑는다. 테마(가나·미션·어휘·발음 등)와 무관하게 항상 실제 카드에서 뽑으므로
+// "배경 상황을 떠올리세요" 같은 막연한 문구 대신 무엇을 배울지 구체적으로 보여준다.
+function contentSummary(cards: Card[], limit = 6): { ja?: string; ko: string }[] {
+  const ordered = [
+    ...cards.filter((c) => c.kind === 'introduce'),
+    ...cards.filter((c) => c.kind !== 'introduce' && c.kind !== 'tip' && c.kind !== 'discover'),
+  ];
+  const seen = new Set<string>();
+  const items: { ja?: string; ko: string }[] = [];
+  for (const c of ordered) {
+    const brief = cardBrief(c);
+    if (!brief?.ko) continue;
+    const key = brief.ja ?? brief.ko;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    items.push(brief);
+    if (items.length >= limit) break;
+  }
+  return items;
 }
 
 function introMissionStats(allCards: Card[], progress: ProgressMap, missionId?: string) {
@@ -139,6 +165,8 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
   const { attempts, seen, weak } = introMissionStats(allCards, progress, firstMissionId);
   const points = mission ? memoryPoints(mission, weak, attempts) : quickPracticePoints(cards);
   const sessionKind = missionCount > 0 ? `${missionCount}개 상황 카드` : `${expressionCount || cards.length}개 표현 카드`;
+  const preview = contentSummary(cards);
+  const subtitle = preview.length > 0 ? `이번엔 ${sessionKind}로 만나요 — 아래에서 먼저 훑어보세요.` : '오늘 필요한 표현만 짧게 모아 연습해요.';
 
   return (
     <main style={{ ...WRAP, minHeight: '100dvh', display: 'flex', flexDirection: 'column', paddingBottom: 24 }}>
@@ -176,7 +204,7 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
                 {scenario}
               </p>
               <p style={{ margin: '8px 0 0', fontSize: 13, lineHeight: 1.5, fontWeight: 600, color: 'rgba(255,255,255,.92)', textShadow: '0 1px 6px rgba(0,0,0,.5)' }}>
-                배경 상황을 떠올리고 바로 시작합니다. 이전에 본 표현은 아래 포인트만 다시 확인하면 됩니다.
+                {subtitle}
               </p>
             </div>
           </div>
@@ -192,7 +220,7 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
           {!backdrop && <h1 style={{ margin: '7px 0 0', lineHeight: 1.22 }}>{goal}</h1>}
           {!backdrop && (
             <p style={{ color: 'var(--ink-soft)', fontSize: 15, lineHeight: 1.65, marginTop: 14, maxWidth: 640 }}>
-              배경 상황을 떠올리고 바로 시작합니다. 이전에 본 표현은 아래 포인트만 다시 확인하면 됩니다.
+              {subtitle}
             </p>
           )}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 16 }}>
@@ -207,6 +235,31 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
             </span>
           </div>
         </div>
+        {preview.length > 0 && (
+          <GlassPanel>
+            <p style={{ margin: '0 0 10px', color: 'var(--ink-faint)', fontSize: 12, fontWeight: 850, letterSpacing: '0.08em' }}>이번에 배울 내용</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {preview.map((item, idx) => (
+                <button
+                  key={`${item.ja ?? item.ko}-${idx}`}
+                  className="ym-press"
+                  onClick={() => item.ja && speak(item.ja)}
+                  disabled={!item.ja || !ttsSupported()}
+                  style={{
+                    width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 10,
+                    padding: '10px 12px', borderRadius: 12, cursor: item.ja ? 'pointer' : 'default',
+                    border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)',
+                  }}>
+                  <span style={{ flex: 1, minWidth: 0 }}>
+                    {item.ja && <span lang="ja" style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{item.ja}</span>}
+                    <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: item.ja ? 2 : 0 }}>{item.ko}</span>
+                  </span>
+                  {item.ja && <Icon name="listen" size={15} style={{ flex: '0 0 15px', color: 'var(--ink-faint)' }} />}
+                </button>
+              ))}
+            </div>
+          </GlassPanel>
+        )}
         <div style={{ position: 'relative' }}>
           <section aria-label="기억할 포인트" style={{
             borderRadius: 24,
