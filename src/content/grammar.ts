@@ -43,6 +43,7 @@ export const grammar: GrammarPoint[] = [
   { id: 'g_conversation_my_case', category: '회화법', label: '내 여행 상황으로 바꾸기', tipKo: '회화 실력은 내 상황을 말할 때 늘어납니다. 앱 문장을 그대로 끝내지 말고 내 호텔·역·가게 이름으로 바꿔 보세요.', action: '오늘 실제로 갈 장소 하나를 넣어 「〜までお願いします」를 만들어 보세요.' },
 
   // ── 확장 장면 실전 팁 ──
+  { id: 'g_coin_locker', category: '장면', label: '코인로커는 크기별 요금', tipKo: '로커는 小(しょう)·中(ちゅう)·大(だい) 순으로 요금이 오르고, 현금 외에 IC카드(Suica·PASMO) 결제가 되는 곳도 많아요. 역 로커는 매진되기 쉬우니 개찰구 안팎을 모두 확인하세요.', exampleJa: '大きいのでお願いします', exampleKo: '큰 걸로 부탁해요.', commonMistake: '막차 전까지만 꺼낼 수 있는 로커도 있어 이용 시간 확인을 놓치기 쉬워요.', action: '짐을 넣기 전에 로커 번호와 비밀번호를 메모해 두세요.', missionIds: ['C11'] },
   { id: 'g_cafe', category: '장면', label: '카페 주문은 크기부터', tipKo: '체인 카페에서는 음료 뒤에 크기와 뜨거움·차가움을 연달아 물을 수 있어요.', exampleJa: 'これを一つお願いします', exampleKo: '이거 하나 부탁합니다.', action: '못 들으면 질문마다 はい 또는 ゆっくりお願いします로 끊어 답하세요.', missionIds: ['C14', 'C45'] },
   { id: 'g_bakery', category: '장면', label: '빵집은 트레이와 집게', tipKo: '대부분 직접 담은 뒤 계산대로 가져갑니다.', exampleJa: 'これとこれをお願いします', exampleKo: '이거와 이거 부탁합니다.', action: '빵 이름을 몰라도 가리키며 개수를 말하면 충분해요.', missionIds: ['C15'] },
   { id: 'g_izakaya', category: '장면', label: '이자카야의 お通し', tipKo: '주문하지 않은 작은 안주가 나오고 자리 요금처럼 계산되는 가게가 있어요.', commonMistake: '무료 서비스라고 생각하기 쉬워요.', action: '궁금하면 これは何ですか라고 물어보세요.', missionIds: ['C16'] },
@@ -154,7 +155,7 @@ const GRAMMAR_LEVEL: Record<string, 1 | 2 | 3 | 4 | 5> = {
   g_conversation_roleplay: 3, g_conversation_recovery: 3, g_conversation_my_case: 3,
   // 확장 장면 — 기본 장면(1~2) → 문화·응용(3) → 트러블·복합(4)
   g_cafe: 1, g_bakery: 1,
-  g_izakaya: 2, g_sushi: 2, g_tourist_info: 2, g_shrine: 2, g_bus: 2, g_shinkansen: 2,
+  g_coin_locker: 2, g_izakaya: 2, g_sushi: 2, g_tourist_info: 2, g_shrine: 2, g_bus: 2, g_shinkansen: 2,
   g_festival: 2, g_kaiten_sushi_panel: 2, g_hotel_umbrella: 2, g_narita_ticket: 2,
   g_buffet_refill: 2, g_food_court: 2, g_izakaya_order: 2, g_cherry_blossom: 2,
   g_onsen: 3, g_ryokan: 3, g_sim: 3, g_laundry: 3, g_fitting_room: 3,
