@@ -2,7 +2,7 @@ import {
   CORE_LEVEL_LABEL, CORE_LEVELS, LEVEL_STAGES, isStageComplete, isStageUnlocked,
   type CoreLevel, type ProgStage, type ProgressionState,
 } from '../learn/progression';
-import { VOCAB_GROUPS } from '../content/thematicVocab';
+import { VOCAB_GROUPS, vocabGroupArt } from '../content/thematicVocab';
 import { WRAP } from '../ui/styles';
 import { Icon, type IconName } from '../ui/Icon';
 import { NavBar, type NavBarProps } from './NavBar';
@@ -103,7 +103,7 @@ export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartSta
     label: g.label,
     sub: g.description,
     level: 'default',
-    art: 'vocab',
+    art: vocabGroupArt(g.id),
     icon: 'kana',
     accent: LEVEL_ACCENT.default,
     onClick: () => onStartVocabGroup(g.id),
@@ -112,7 +112,7 @@ export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartSta
     ...stageItems(onStartStage),
     {
       key: 'default:basics',
-      label: '생활 기초',
+      label: '숫자 학습',
       sub: '숫자·요일·시간·금액',
       level: 'default',
       art: 'basics',

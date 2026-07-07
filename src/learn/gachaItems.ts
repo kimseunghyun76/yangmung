@@ -93,23 +93,72 @@ const JA_TITLE: Record<string, string> = {
   오늘의네타세트: '本日のネタセット',
   셰프추천니기리: 'シェフおすすめにぎり',
   카운터오마카세코스: 'カウンターおまかせコース',
+  쇼핑메모: '買い物メモ',
+  가격표태그: '値札タグ',
+  포인트카드: 'ポイントカード',
+  면세영수증: '免税レシート',
+  기프트포장리본: 'ギフト包装リボン',
+  한정교환권: '限定引換券',
+  현재위치메모: '現在地メモ',
+  거리표지판: '道路標識',
+  골목길경로카드: '路地ルートカード',
+  현지산책지도: '街歩きマップ',
+  엔화동전지갑: '円の小銭入れ',
+  IC로커영수증: 'ICロッカーレシート',
+  관광안내파일: '観光案内ファイル',
+  약국여행파우치: '薬局トラベルポーチ',
+  온천어메니티바구니: '温泉アメニティかご',
+  료칸객실안내장: '旅館客室案内',
+  공항정액택시권: '空港定額タクシー券',
+  고속도로드라이브지도: '高速道路ドライブマップ',
+  리무진버스교환권: 'リムジンバス引換券',
+  공항특급승차권: '空港特急乗車券',
+  수하물배송전표: '手荷物配送伝票',
+  오쿠스리수첩: 'お薬手帳',
+  분실물접수증: '遺失物受付証',
+  응급안내카드: '救急案内カード',
+  긴급연락카드: '緊急連絡カード',
+  위치전달메모: '位置伝達メモ',
+  포켓와이파이파우치: 'ポケットWi-Fiポーチ',
+  세탁물정리파우치: '洗濯物整理ポーチ',
+  우산반납카드: '傘返却カード',
+  객실변경확인서: '客室変更確認書',
+  서비스데스크접수증: 'サービスデスク受付証',
+  한정음료교환권: '限定ドリンク引換券',
+  출금확인봉투: '出金確認封筒',
+  멀티프린트이용표: 'マルチプリント利用票',
+  긴급길찾기메모: '緊急道案内メモ',
+  골목안내표지: '路地案内標識',
+  매장가격표: '店頭値札',
+  선물포장스티커: 'ギフト包装シール',
 };
 
 function compactTitle(title: string): string {
   return title.replace(/\s+/g, '');
 }
 
+function jaTitleFor(title: string): string {
+  const compact = compactTitle(title);
+  if (JA_TITLE[compact]) return JA_TITLE[compact];
+  const premium = /^특상\s+(.+)$/.exec(title);
+  if (premium) {
+    const base = JA_TITLE[compactTitle(premium[1])] ?? premium[1];
+    return `特上${base}`;
+  }
+  return title;
+}
+
 function withJa(item: GachaItemArt): GachaItemArt {
-  return { ...item, jaTitle: item.jaTitle ?? JA_TITLE[compactTitle(item.title)] ?? item.title };
+  return { ...item, jaTitle: item.jaTitle ?? jaTitleFor(item.title) };
 }
 
 const GENERIC: Record<Rarity, GachaItemArt> = {
-  basic: { title: '여행 메모', sub: '기본', motif: 'service' },
-  bronze: { title: '실전 쿠폰', sub: '동', motif: 'ticket' },
-  silver: { title: '로컬 패스', sub: '은', motif: 'ticket' },
-  gold: { title: '마스터 키트', sub: '금', motif: 'service' },
-  diamond: { title: '명예 배지', sub: '다이아', motif: 'festival' },
-  xur: { title: '비밀 초대장', sub: 'XUR', motif: 'festival' },
+  basic: { title: '쇼핑 메모', sub: '기본', motif: 'service' },
+  bronze: { title: '가격표 태그', sub: '확인', motif: 'shopping' },
+  silver: { title: '포인트 카드', sub: '적립', motif: 'ticket' },
+  gold: { title: '면세 영수증', sub: '계산', motif: 'ticket' },
+  diamond: { title: '기프트 포장 리본', sub: '완벽 구매', motif: 'shopping' },
+  xur: { title: '한정 교환권', sub: '한정', motif: 'ticket' },
 };
 
 export function gachaItemAssetSlug(title: string, rarity: Rarity, motif: ItemMotif): string {
@@ -166,18 +215,18 @@ const BY_PLACE: Record<string, Partial<Record<Rarity, GachaItemArt>>> = {
     diamond: { title: '컨시어지 패스', sub: '완벽 응대', motif: 'stay' },
   },
   거리: {
-    basic: { title: '지도 조각', sub: '길묻기', motif: 'ticket' },
-    bronze: { title: '골목 표지', sub: '방향', motif: 'service' },
+    basic: { title: '현재 위치 메모', sub: '길묻기', motif: 'ticket' },
+    bronze: { title: '거리 표지판', sub: '방향', motif: 'service' },
     silver: { title: '동네 지도', sub: '확인', motif: 'ticket' },
-    gold: { title: '로컬 루트', sub: '자연 질문', motif: 'ticket' },
-    diamond: { title: '도시 탐험가', sub: '완전 적응', motif: 'festival' },
+    gold: { title: '골목길 경로 카드', sub: '자연 질문', motif: 'ticket' },
+    diamond: { title: '현지 산책 지도', sub: '완전 적응', motif: 'ticket' },
   },
   약국: {
     basic: { title: '마스크', sub: '기본', motif: 'safety' },
     bronze: { title: '목캔디', sub: '증상', motif: 'safety' },
     silver: { title: '상비약', sub: '상담', motif: 'safety' },
     gold: { title: '약사 추천 세트', sub: '정확 설명', motif: 'safety' },
-    diamond: { title: '안심 키트', sub: '건강 마스터', motif: 'safety' },
+    diamond: { title: '약국 여행 파우치', sub: '건강 마스터', motif: 'safety' },
   },
   쇼핑: {
     basic: { title: '쇼핑백', sub: '기본', motif: 'shopping' },
@@ -240,14 +289,14 @@ const BY_PLACE: Record<string, Partial<Record<Rarity, GachaItemArt>>> = {
     bronze: { title: '엔화 봉투', sub: '수령', motif: 'service' },
     silver: { title: '환율 메모 카드', sub: '확인', motif: 'ticket' },
     gold: { title: '우대 환전 쿠폰', sub: '할인', motif: 'ticket' },
-    diamond: { title: '여행 예산 지갑', sub: '완벽 준비', motif: 'shopping' },
+    diamond: { title: '엔화 동전 지갑', sub: '완벽 준비', motif: 'shopping' },
   },
   코인로커: {
     basic: { title: '로커 동전', sub: '보관', motif: 'service' },
     bronze: { title: '로커 열쇠', sub: '찾기', motif: 'ticket' },
     silver: { title: '짐 보관 영수증', sub: '확인', motif: 'ticket' },
     gold: { title: '대형 캐리어 락커', sub: '여유 보관', motif: 'stay' },
-    diamond: { title: '역 보관 마스터키', sub: '안심 이동', motif: 'service' },
+    diamond: { title: 'IC 로커 영수증', sub: '안심 이동', motif: 'ticket' },
   },
   택배: {
     basic: { title: '배송 라벨', sub: '작성', motif: 'service' },
@@ -261,7 +310,7 @@ const BY_PLACE: Record<string, Partial<Record<Rarity, GachaItemArt>>> = {
     bronze: { title: '관광 지도', sub: '길찾기', motif: 'ticket' },
     silver: { title: '추천 루트 카드', sub: '상담', motif: 'service' },
     gold: { title: '지역 패스 쿠폰', sub: '할인', motif: 'ticket' },
-    diamond: { title: '시티 투어 플래너', sub: '여행 설계', motif: 'festival' },
+    diamond: { title: '관광 안내 파일', sub: '여행 설계', motif: 'service' },
   },
   신사: {
     basic: { title: '참배 동전', sub: '예절', motif: 'festival' },
@@ -275,14 +324,14 @@ const BY_PLACE: Record<string, Partial<Record<Rarity, GachaItemArt>>> = {
     bronze: { title: '탈의실 바구니', sub: '보관', motif: 'stay' },
     silver: { title: '노천탕 이용권', sub: '안내', motif: 'ticket' },
     gold: { title: '프라이빗 탕 키', sub: '예약', motif: 'stay' },
-    diamond: { title: '온천 힐링 세트', sub: '완전 휴식', motif: 'stay' },
+    diamond: { title: '온천 어메니티 바구니', sub: '완전 휴식', motif: 'stay' },
   },
   료칸: {
     basic: { title: '유카타 끈', sub: '객실', motif: 'stay' },
     bronze: { title: '다다미 객실키', sub: '안내', motif: 'stay' },
     silver: { title: '가이세키 식권', sub: '식사', motif: 'ticket' },
     gold: { title: '노천 객실 카드', sub: '업그레이드', motif: 'stay' },
-    diamond: { title: '료칸 환대 세트', sub: '최고 숙박', motif: 'stay' },
+    diamond: { title: '료칸 객실 안내장', sub: '최고 숙박', motif: 'stay' },
   },
   버스: {
     basic: { title: '정류장 표지', sub: '확인', motif: 'ticket' },
@@ -296,7 +345,7 @@ const BY_PLACE: Record<string, Partial<Record<Rarity, GachaItemArt>>> = {
     bronze: { title: '목적지 메모', sub: '전달', motif: 'service' },
     silver: { title: '택시 영수증', sub: '확인', motif: 'ticket' },
     gold: { title: '호텔 주소 카드', sub: '정확 이동', motif: 'service' },
-    diamond: { title: '프리미엄 택시 패스', sub: '안심 귀가', motif: 'ticket' },
+    diamond: { title: '공항 정액 택시권', sub: '안심 귀가', motif: 'ticket' },
   },
   신칸센: {
     basic: { title: '자유석 티켓', sub: '탑승', motif: 'ticket' },
@@ -310,63 +359,63 @@ const BY_PLACE: Record<string, Partial<Record<Rarity, GachaItemArt>>> = {
     bronze: { title: '차량 키 태그', sub: '인수', motif: 'service' },
     silver: { title: 'ETC 카드', sub: '고속도로', motif: 'ticket' },
     gold: { title: '보험 옵션 서류', sub: '안심 운전', motif: 'service' },
-    diamond: { title: '드라이브 플랜 키트', sub: '완벽 반납', motif: 'service' },
+    diamond: { title: '고속도로 드라이브 지도', sub: '완벽 반납', motif: 'ticket' },
   },
   공항: {
     basic: { title: '입국 카드', sub: '작성', motif: 'ticket' },
     bronze: { title: '여권 스탬프', sub: '심사', motif: 'ticket' },
     silver: { title: '수하물 태그', sub: '확인', motif: 'service' },
     gold: { title: '패스트트랙 패스', sub: '빠른 입국', motif: 'ticket' },
-    diamond: { title: '공항 컨시어지 카드', sub: '완벽 도착', motif: 'service' },
+    diamond: { title: '리무진버스 교환권', sub: '완벽 도착', motif: 'ticket' },
   },
   나리타역: {
     basic: { title: '오픈 티켓', sub: '교환', motif: 'ticket' },
     bronze: { title: '매표소 번호표', sub: '대기', motif: 'ticket' },
     silver: { title: '특급 열차권', sub: '예약', motif: 'ticket' },
     gold: { title: '공항철도 패스', sub: '환승', motif: 'ticket' },
-    diamond: { title: '도쿄 도착 패키지', sub: '완벽 출발', motif: 'ticket' },
+    diamond: { title: '공항특급 승차권', sub: '완벽 출발', motif: 'ticket' },
   },
   공항수하물: {
     basic: { title: '수하물 저울', sub: '측정', motif: 'service' },
     bronze: { title: '짐 정리 파우치', sub: '분리', motif: 'shopping' },
     silver: { title: '초과수하물 영수증', sub: '결제', motif: 'ticket' },
     gold: { title: '압축 패킹 큐브', sub: '감량', motif: 'shopping' },
-    diamond: { title: '공항 짐관리 키트', sub: '완벽 정리', motif: 'service' },
+    diamond: { title: '수하물 배송 전표', sub: '완벽 정리', motif: 'ticket' },
   },
   병원: {
     basic: { title: '접수 번호표', sub: '대기', motif: 'ticket' },
     bronze: { title: '증상 메모', sub: '설명', motif: 'safety' },
     silver: { title: '진료 카드', sub: '문진', motif: 'safety' },
     gold: { title: '처방전 봉투', sub: '수령', motif: 'safety' },
-    diamond: { title: '안심 진료 세트', sub: '건강 회복', motif: 'safety' },
+    diamond: { title: '오쿠스리 수첩', sub: '건강 회복', motif: 'safety' },
   },
   경찰서: {
     basic: { title: '분실물 메모', sub: '신고', motif: 'service' },
     bronze: { title: '파출소 안내카드', sub: '문의', motif: 'safety' },
     silver: { title: '분실 신고서', sub: '작성', motif: 'ticket' },
     gold: { title: '임시 확인증', sub: '증명', motif: 'safety' },
-    diamond: { title: '여행 안전 파일', sub: '완벽 대처', motif: 'safety' },
+    diamond: { title: '분실물 접수증', sub: '완벽 대처', motif: 'safety' },
   },
   긴급상황: {
     basic: { title: '도움 요청 카드', sub: '호출', motif: 'safety' },
     bronze: { title: '긴급 연락 메모', sub: '연락', motif: 'safety' },
-    silver: { title: '위치 공유 배지', sub: '전달', motif: 'safety' },
-    gold: { title: '응급 안내 키트', sub: '대응', motif: 'safety' },
-    diamond: { title: '세이프티 마스터팩', sub: '안전 확보', motif: 'safety' },
+    silver: { title: '위치 전달 메모', sub: '전달', motif: 'safety' },
+    gold: { title: '응급 안내 카드', sub: '대응', motif: 'safety' },
+    diamond: { title: '긴급 연락 카드', sub: '안전 확보', motif: 'safety' },
   },
   통신매장: {
     basic: { title: '유심 핀', sub: '개통', motif: 'service' },
     bronze: { title: '데이터 플랜 카드', sub: '선택', motif: 'ticket' },
     silver: { title: '포켓와이파이 태그', sub: '대여', motif: 'service' },
     gold: { title: '무제한 데이터 쿠폰', sub: '업그레이드', motif: 'ticket' },
-    diamond: { title: '여행 통신 키트', sub: '완벽 연결', motif: 'service' },
+    diamond: { title: '포켓와이파이 파우치', sub: '완벽 연결', motif: 'service' },
   },
   코인세탁: {
     basic: { title: '세탁 코인', sub: '투입', motif: 'service' },
     bronze: { title: '세제 캡슐', sub: '세탁', motif: 'stay' },
     silver: { title: '건조기 토큰', sub: '건조', motif: 'service' },
     gold: { title: '세탁 코스 카드', sub: '선택', motif: 'ticket' },
-    diamond: { title: '여행 세탁 세트', sub: '완벽 정리', motif: 'stay' },
+    diamond: { title: '세탁물 정리 파우치', sub: '완벽 정리', motif: 'stay' },
   },
   축제: {
     basic: { title: '축제 부채', sub: '입장', motif: 'festival' },
@@ -394,14 +443,14 @@ const BY_PLACE: Record<string, Partial<Record<Rarity, GachaItemArt>>> = {
     bronze: { title: '프런트 우산', sub: '대여', motif: 'stay' },
     silver: { title: '비 오는 날 지도', sub: '안내', motif: 'ticket' },
     gold: { title: '호텔 레인코트', sub: '배려', motif: 'stay' },
-    diamond: { title: '레인 데이 서비스팩', sub: '완벽 외출', motif: 'stay' },
+    diamond: { title: '우산 반납 카드', sub: '완벽 외출', motif: 'ticket' },
   },
   호텔방변경: {
     basic: { title: '객실 요청 메모', sub: '문의', motif: 'stay' },
     bronze: { title: '새 객실 키', sub: '변경', motif: 'stay' },
     silver: { title: '룸 타입 카드', sub: '확인', motif: 'ticket' },
     gold: { title: '업그레이드 바우처', sub: '배정', motif: 'ticket' },
-    diamond: { title: '스위트 변경 패스', sub: '완벽 변경', motif: 'stay' },
+    diamond: { title: '객실 변경 확인서', sub: '완벽 변경', motif: 'ticket' },
   },
   조식뷔페: {
     basic: { title: '조식 접시', sub: '시작', motif: 'food' },
@@ -422,28 +471,28 @@ const BY_PLACE: Record<string, Partial<Record<Rarity, GachaItemArt>>> = {
     bronze: { title: '교환 신청서', sub: '접수', motif: 'service' },
     silver: { title: '환불 영수증', sub: '확인', motif: 'ticket' },
     gold: { title: '고객센터 바우처', sub: '처리', motif: 'service' },
-    diamond: { title: '몰 컨시어지 패스', sub: '완벽 해결', motif: 'shopping' },
+    diamond: { title: '서비스 데스크 접수증', sub: '완벽 해결', motif: 'ticket' },
   },
   자판기: {
     basic: { title: '동전 토큰', sub: '투입', motif: 'drink' },
     bronze: { title: '녹차 캔', sub: '선택', motif: 'drink' },
     silver: { title: '핫커피 버튼', sub: '조작', motif: 'drink' },
     gold: { title: '한정 음료 쿠폰', sub: '특별 선택', motif: 'ticket' },
-    diamond: { title: '자판기 마스터 캡슐', sub: '완벽 구매', motif: 'drink' },
+    diamond: { title: '한정 음료 교환권', sub: '완벽 구매', motif: 'ticket' },
   },
   '편의점 ATM': {
     basic: { title: 'ATM 카드', sub: '삽입', motif: 'service' },
     bronze: { title: '출금 영수증', sub: '확인', motif: 'ticket' },
     silver: { title: '엔화 현금 봉투', sub: '수령', motif: 'service' },
     gold: { title: '해외 카드 승인표', sub: '성공', motif: 'ticket' },
-    diamond: { title: '현금 인출 안심팩', sub: '완벽 출금', motif: 'service' },
+    diamond: { title: '출금 확인 봉투', sub: '완벽 출금', motif: 'service' },
   },
   '편의점 복합기': {
     basic: { title: '복사 카드', sub: '시작', motif: 'service' },
     bronze: { title: '프린트 예약번호', sub: '입력', motif: 'ticket' },
     silver: { title: '스캔 파일 토큰', sub: '저장', motif: 'service' },
     gold: { title: '행정서류 출력권', sub: '출력', motif: 'ticket' },
-    diamond: { title: '멀티프린트 마스터팩', sub: '완벽 처리', motif: 'service' },
+    diamond: { title: '멀티프린트 이용표', sub: '완벽 처리', motif: 'ticket' },
   },
   '카페·레스토랑 픽업 카운터': {
     basic: { title: '픽업 번호표', sub: '확인', motif: 'ticket' },
@@ -475,10 +524,17 @@ const BY_PLACE: Record<string, Partial<Record<Rarity, GachaItemArt>>> = {
   },
   길거리: {
     basic: { title: '현재 위치 핀', sub: '확인', motif: 'ticket' },
-    bronze: { title: '거리 표지판', sub: '방향', motif: 'service' },
+    bronze: { title: '골목 안내 표지', sub: '방향', motif: 'service' },
     silver: { title: '공유 위치 카드', sub: '전달', motif: 'safety' },
     gold: { title: '근처 역 루트', sub: '안내', motif: 'ticket' },
-    diamond: { title: '긴급 길찾기 키트', sub: '안심 복귀', motif: 'safety' },
+    diamond: { title: '긴급 길찾기 메모', sub: '안심 복귀', motif: 'safety' },
+  },
+  가게: {
+    basic: { title: '쇼핑 메모', sub: '질문', motif: 'service' },
+    bronze: { title: '매장 가격표', sub: '확인', motif: 'shopping' },
+    silver: { title: '포인트 카드', sub: '적립', motif: 'ticket' },
+    gold: { title: '면세 영수증', sub: '계산', motif: 'ticket' },
+    diamond: { title: '선물 포장 스티커', sub: '완벽 구매', motif: 'shopping' },
   },
 };
 
@@ -495,8 +551,8 @@ function itemForKey(key: string | undefined, rarity: Rarity): GachaItemArt {
   if (direct) return direct;
   if (rarity === 'xur' && row?.diamond) {
     return {
-      title: `${row.diamond.title} 초월 초대장`,
-      sub: 'XUR',
+      title: `특상 ${row.diamond.title}`,
+      sub: '한정',
       motif: row.diamond.motif,
     };
   }

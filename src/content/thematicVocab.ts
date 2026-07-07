@@ -27,3 +27,23 @@ export interface VocabGroup {
 
 const raw = rawData as { groups: VocabGroup[] };
 export const VOCAB_GROUPS: VocabGroup[] = raw.groups;
+
+export const VOCAB_GROUP_ART: Record<string, string> = {
+  greetings: 'greetings',
+  body: 'vocab-body',
+  sports: 'vocab-sports',
+  animals: 'vocab-animals',
+  plants: 'vocab-plants',
+  colors: 'vocab-colors',
+  food: 'vocab-food',
+  family: 'vocab-family',
+  weather: 'vocab-weather',
+  adjectives: 'vocab-adjectives',
+  places: 'vocab-places',
+  transport: 'vocab-transport',
+  feelings: 'vocab-feelings',
+};
+
+export function vocabGroupArt(groupId: string): string {
+  return VOCAB_GROUP_ART[groupId] ?? 'vocab';
+}

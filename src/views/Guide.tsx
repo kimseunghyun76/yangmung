@@ -96,7 +96,7 @@ function TabModes() {
       <p style={{ margin: '14px 0 8px', fontSize: 12, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.05em' }}>어휘·읽기</p>
       <ModeCard icon="📚" title="어휘 커리큘럼" color="#9b59b6" sub="인사·월·시간·숫자·신체·스포츠·동물·식물·색·음식·가족·날씨 12그룹 × 184단어. 읽기·듣기·역방향 3종." />
       <ModeCard icon="🪧" title="거리 읽기" color="#e0a23a" sub="편의점 표지·역 안내·메뉴판·경고문 115개. 실전 간판 읽기 훈련." />
-      <ModeCard icon="🔢" title="생활 기초" color="#3fb27f" sub="숫자·요일·달·시간·금액·셈 단위 72항목. 계산대·예약 필수 표현." />
+      <ModeCard icon="🔢" title="숫자 학습" color="#3fb27f" sub="숫자·요일·달·시간·금액·셈 단위 72항목. 계산대·예약 필수 표현." />
       <ModeCard icon="🔤" title="발음 구분" color="#3b9fe0" sub="っ/ー·つ/す·장음 등 헷갈리는 소리 쌍을 듣고 구분." />
 
       <p style={{ margin: '14px 0 8px', fontSize: 12, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.05em' }}>게임</p>

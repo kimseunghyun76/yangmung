@@ -17,25 +17,19 @@ export interface Settings {
 }
 
 const KEY = 'yangmung:settings:v1';
-const DEFAULTS: Settings = { mode: 'default', readingAid: 'auto', choiceMode: 'kana_ko', fastForward: false, theme: 'light', listenRate: 1, devUnlockAll: false };
+// 기본 외형은 야간(다크) — 시스템 설정과 무관하게 첫 실행은 항상 다크로 시작(2026-07-08, 사용자 요청).
+const DEFAULTS: Settings = { mode: 'default', readingAid: 'auto', choiceMode: 'kana_ko', fastForward: false, theme: 'dark', listenRate: 1, devUnlockAll: false };
 
 // 듣기 속도 선택지 — 설정 UI + 검증 공용.
 export const LISTEN_RATES = [0.5, 0.8, 1, 1.2, 1.5, 2] as const;
-
-// 첫 실행이면 시스템 외형(라이트/다크)을 따른다 (Apple HIG: 시스템 appearance 존중).
-function systemTheme(): Theme {
-  try {
-    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  } catch { return 'light'; }
-}
 
 export function loadSettings(): Settings {
   if (typeof window === 'undefined') return { ...DEFAULTS };
   try {
     const raw = window.localStorage.getItem(KEY);
-    if (!raw) return { ...DEFAULTS, theme: systemTheme() }; // 첫 실행 = 시스템 외형
+    if (!raw) return { ...DEFAULTS };
     return { ...DEFAULTS, ...(JSON.parse(raw) as Partial<Settings>) };
-  } catch { return { ...DEFAULTS, theme: systemTheme() }; }
+  } catch { return { ...DEFAULTS }; }
 }
 
 export function saveSettings(s: Settings): void {
