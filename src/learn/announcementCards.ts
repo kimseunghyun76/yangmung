@@ -45,7 +45,7 @@ function hearToJa(item: Announcement): QuizCard {
     reviewTarget: { type: 'phrase', id: `announce:${item.id}` },
     choices: shuffle([
       { label: item.ja, correct: true, ja: item.kana, phrase: { kana: item.kana, kanji: item.ja, korean: item.korean, tip: item.tip } },
-      ...d.map((x) => ({ label: x.ja, correct: false, ja: x.kana, phrase: { kana: x.kana, kanji: x.ja, korean: x.korean } })),
+      ...d.map((x) => ({ label: x.ja, correct: false, ja: x.kana, phrase: { kana: x.kana, kanji: x.ja, korean: x.korean, tip: x.tip } })),
     ]),
   };
 }
@@ -63,7 +63,7 @@ function jaToKo(item: Announcement): QuizCard {
     reviewTarget: { type: 'phrase', id: `announce:${item.id}` },
     choices: shuffle([
       { label: item.korean, correct: true, ja: item.kana, phrase: { kana: item.kana, kanji: item.ja, korean: item.korean, tip: item.tip } },
-      ...d.map((x) => ({ label: x.korean, correct: false, ja: x.kana, phrase: { kana: x.kana, kanji: x.ja, korean: x.korean } })),
+      ...d.map((x) => ({ label: x.korean, correct: false, ja: x.kana, phrase: { kana: x.kana, kanji: x.ja, korean: x.korean, tip: x.tip } })),
     ]),
   };
 }

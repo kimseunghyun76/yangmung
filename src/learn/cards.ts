@@ -7,6 +7,7 @@ import { grammarLevel } from '../content/grammar';
 import { minimalPairs } from '../content/minimalPairs';
 import { VOCAB_GROUPS, type VocabItem } from '../content/thematicVocab';
 import { BASIC_LIFE_ITEMS, BASIC_GROUP_LABEL, type BasicLifeItem } from '../content/basicLife';
+import { GREETING_RESPONSES, greetingResponseFor } from '../content/greetingResponses';
 import { toReadingUnits } from './kanaReading';
 import { segmentJa, type SegPos } from './jaSegment';
 
@@ -166,6 +167,8 @@ export interface IntroduceCard {
   answersQuestion?: { ja: string; kana: string; korean: string }; // 이 표현이 답하는 질문(점원 대사)
   altAnswers?: { ja: string; kana: string; korean: string }[];     // 같은 질문에 가능한 다른 정답들
   reviewTarget?: ReviewTarget;
+  /** 격식 — 인사말 등에서 친한 사이/정중한 사이 구분 표시용(있을 때만 배지 노출). */
+  register?: 'casual' | 'formal' | 'both';
 }
 
 // 장면 흐름 카드 — 정답 채점이 아니라 "흔한 흐름"을 보여주는 정보 카드.
@@ -244,7 +247,7 @@ function shuffle<T>(a: T[]): T[] {
 }
 
 // 학습형(설명·듣기·읽기) 카드 — 채점 없이 항목을 익히는 introduce 카드.
-function makeStudyCard(opts: { id: string; tag: string; ja: string; kana: string; korean: string; tip?: string }): IntroduceCard {
+function makeStudyCard(opts: { id: string; tag: string; ja: string; kana: string; korean: string; tip?: string; register?: 'casual' | 'formal' | 'both' }): IntroduceCard {
   return {
     kind: 'introduce',
     id: opts.id,
@@ -254,6 +257,7 @@ function makeStudyCard(opts: { id: string; tag: string; ja: string; kana: string
     kana: opts.kana,
     korean: opts.korean,
     tip: opts.tip,
+    register: opts.register,
     note: '소리를 듣고, 일본어와 뜻을 함께 읽어보세요.',
     // reviewTarget 없음 — 소개 카드는 채점하지 않는다.
   };
@@ -574,7 +578,7 @@ function buildVocabCards(): Card[] {
       const distract = distractorsFor(item);
 
       // 학습형 — 설명·듣기·읽기 + 듣고 일본어 찾기
-      cards.push(makeStudyCard({ id: `vocab:${group.id}:study:${item.id}`, tag: `어휘 · ${group.label}`, ja: item.ja, kana: item.kana, korean: item.korean, tip: item.tip }));
+      cards.push(makeStudyCard({ id: `vocab:${group.id}:study:${item.id}`, tag: `어휘 · ${group.label}`, ja: item.ja, kana: item.kana, korean: item.korean, tip: item.tip, register: item.register }));
       cards.push(makeHearToJaCard({ id: `vocab:${group.id}:hear2ja:${item.id}`, tag: `어휘 · ${group.label}`, reviewId: `vocab:${group.id}:${item.id}`, item, distract }));
 
       // (A) ja 표기 → 뜻 (읽기)
@@ -621,6 +625,32 @@ function buildVocabCards(): Card[] {
           ...distract.map((d) => ({ label: d.ja, correct: false, ja: d.kana, phrase: phrase(d) })),
         ]),
       });
+
+      // (D) 인사 전용 — 이 인사에 자연스러운 반응 고르기(학습 카드의 "반응" 미니 컨텍스트와 짝).
+      if (group.id === 'greetings') {
+        const response = greetingResponseFor(item.id);
+        if (response) {
+          const otherResponses = group.items
+            .filter((x) => x.id !== item.id && GREETING_RESPONSES[x.id] && GREETING_RESPONSES[x.id]!.ja !== response.ja)
+            .map((x) => ({ id: x.id, ...GREETING_RESPONSES[x.id]! }));
+          const distractResponses = shuffle(otherResponses).slice(0, 3);
+          if (distractResponses.length >= 2) {
+            cards.push({
+              kind: 'quiz',
+              id: `vocab:${group.id}:response:${item.id}`,
+              tag: `어휘 · ${group.label}`,
+              banner: item.ja,
+              bannerJa: item.kana,
+              sub: '이 인사에 자연스러운 반응은?',
+              reviewTarget: { type: 'phrase', id: `vocab:${group.id}:${item.id}` },
+              choices: shuffle([
+                { label: response.ja, correct: true, ja: response.ja, phrase: { kana: response.ja, kanji: response.ja, korean: response.korean } },
+                ...distractResponses.map((d) => ({ label: d.ja, correct: false, ja: d.ja, phrase: { kana: d.ja, kanji: d.ja, korean: d.korean } })),
+              ]),
+            });
+          }
+        }
+      }
     }
 
     // 그룹 대표 예문 — 단어를 익힌 뒤 문장 속에서 보는 학습 카드(채점 없음).
@@ -1079,8 +1109,8 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
       banner: sg.ja, bannerJa: sg.kana, sub: '이 표기는 무슨 뜻일까요?',
       reviewTarget: { type: 'phrase', id: `sign:${sg.id}` },
       choices: shuffle([
-        { label: sg.korean, correct: true, ja: sg.kana, phrase: { kana: sg.kana, korean: sg.korean } },
-        ...distract.map((d) => ({ label: d.korean, correct: false, ja: d.kana, phrase: { kana: d.kana, korean: d.korean } })),
+        { label: sg.korean, correct: true, ja: sg.kana, phrase: { kana: sg.kana, kanji: sg.ja, korean: sg.korean, tip: sg.tip } },
+        ...distract.map((d) => ({ label: d.korean, correct: false, ja: d.kana, phrase: { kana: d.kana, kanji: d.ja, korean: d.korean, tip: d.tip } })),
       ]),
     });
   }

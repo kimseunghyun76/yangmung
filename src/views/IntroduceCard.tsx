@@ -2,9 +2,11 @@
 import { useState, type CSSProperties } from 'react';
 import type { IntroduceCard } from '../learn/cards';
 import { VOCAB_GROUPS } from '../content/thematicVocab';
+import { greetingResponseFor } from '../content/greetingResponses';
 import { speak, ttsSupported } from '../tts';
 import { PRIMARY } from '../ui/styles';
 import { ReadingAid } from './ReadingAid';
+import { toReadingUnits } from '../learn/kanaReading';
 import { Icon } from '../ui/Icon';
 import { WordArt, hasWordArt, wordArtAssetSrcForId } from './WordArt';
 
@@ -18,52 +20,20 @@ interface Props {
   preferImageArt?: boolean;
 }
 
+// 학습 카드 본문 — 표기 위주 이미지 카드든, 아이콘/무이미지 카드든 동일한 구조(표기 크게 → 읽기·뜻 작게 →
+// 반응 → 다음)를 쓴다. 예전엔 preferImageArt에 따라 완전히 다른 레이아웃 두 벌을 유지했지만, "다음" 버튼
+// 위치·표기 우선순위는 모든 학습에 똑같이 적용돼야 한다는 요청(2026-07-09)에 따라 하나로 합쳤다.
 export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, headerInScene, preferImageArt }: Props) {
   function next() {
     onSeen();
     onNext();
   }
 
-  if (preferImageArt) {
-    return (
-      <div>
-        <QuickPracticeWordScene card={card} />
-        <WordLearningPanel card={card} isKanaFamiliar={isKanaFamiliar} />
-        <VocabMiniContext card={card} />
-
-        {card.answersQuestion && (
-          <div style={{ marginTop: 8, padding: 10, borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--surface-2)' }}>
-            <p style={{ margin: 0, fontSize: 11, fontWeight: 800, color: 'var(--ink-faint)', letterSpacing: '.03em' }}>질문</p>
-            <button onClick={() => speak(card.answersQuestion!.ja)} disabled={!ttsSupported()}
-              style={{ display: 'block', width: '100%', marginTop: 4, padding: 0, border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer', color: 'var(--ink)' }}>
-              <span lang="ja" style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{card.answersQuestion.kana}</span>
-              <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600 }}>{card.answersQuestion.korean}</span>
-            </button>
-          </div>
-        )}
-
-        {card.altAnswers && card.altAnswers.length > 0 && (
-          <div style={{ marginTop: 8, padding: 10, borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--surface-2)' }}>
-            <p style={{ margin: '0 0 6px', fontSize: 11, fontWeight: 800, color: 'var(--ink-faint)', letterSpacing: '.03em' }}>다른 답</p>
-            {card.altAnswers.map((a, i) => (
-              <button key={i} onClick={() => speak(a.ja)} disabled={!ttsSupported()}
-                style={{ display: 'block', width: '100%', marginTop: i ? 6 : 0, padding: 0, border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer', color: 'var(--ink)' }}>
-                <span lang="ja" style={{ display: 'block', fontSize: 14, fontWeight: 700 }}>{a.kana}</span>
-                <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600 }}>{a.korean}</span>
-              </button>
-            ))}
-          </div>
-        )}
-
-        <TipBlock card={card} />
-        <button style={{ ...PRIMARY, width: '100%', marginTop: 10 }} onClick={next}>알겠어요</button>
-      </div>
-    );
-  }
-
   return (
     <div>
-      {!headerInScene && <h2 style={{ marginTop: 14, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="discover" size={22} /> 새 표현</h2>}
+      {!headerInScene && !preferImageArt && (
+        <h2 style={{ marginTop: 14, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="discover" size={22} /> 새 표현</h2>
+      )}
       {preferImageArt ? (
         <QuickPracticeWordScene card={card} />
       ) : (
@@ -75,10 +45,12 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
           </div>
         )
       )}
-      {!headerInScene && <p style={{ color: 'var(--ink-soft)', marginTop: 0, lineHeight: 1.5 }}>{card.note}</p>}
+
+      <WordLearningPanel card={card} isKanaFamiliar={isKanaFamiliar} />
+      <VocabMiniContext card={card} />
 
       {card.answersQuestion && (
-        <div style={{ marginTop: headerInScene ? 4 : 10, padding: 10, borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--surface-2)' }}>
+        <div style={{ marginTop: 8, padding: 10, borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--surface-2)' }}>
           <p style={{ margin: 0, fontSize: 11, fontWeight: 800, color: 'var(--ink-faint)', letterSpacing: '.03em' }}>이런 질문에 답할 때</p>
           <button onClick={() => speak(card.answersQuestion!.ja)} disabled={!ttsSupported()}
             style={{ display: 'block', width: '100%', marginTop: 4, padding: 0, border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer', color: 'var(--ink)' }}>
@@ -88,15 +60,6 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
           <p style={{ margin: '6px 0 0', fontSize: 11, color: 'var(--ink-faint)', textAlign: 'center', fontWeight: 700 }}>↓ 이렇게 답해요</p>
         </div>
       )}
-
-      {/* 일본어 블록 — 핵심 새 표현. 크게 보여주고, 탭하면 듣기 */}
-      <button onClick={() => speak(card.ja)} disabled={!ttsSupported()}
-        style={{ display: 'block', width: '100%', background: 'var(--accent-soft)', padding: '14px 12px', borderRadius: 12, marginTop: 10, textAlign: 'center', border: 'none', cursor: 'pointer', color: 'var(--ink)' }}>
-        <ReadingAid text={card.kana} isFamiliar={isKanaFamiliar} fontSize={38} />
-        <p style={{ margin: '6px 0 0', fontSize: 15, fontWeight: 600, color: 'var(--ink-soft)' }}>{card.korean}</p>
-      </button>
-
-      {hasWrittenFormHint(card) && <WrittenFormHint card={card} />}
 
       {card.altAnswers && card.altAnswers.length > 0 && (
         <div style={{ marginTop: 8, padding: 10, borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--surface-2)' }}>
@@ -111,26 +74,39 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
         </div>
       )}
 
-      <TipBlock card={card} />
-      <button style={{ ...PRIMARY, width: '100%', marginTop: 10 }} onClick={next}>알겠어요</button>
+      {/* 다음 버튼 — 콘텐츠 길이와 무관하게 항상 같은 자리에서 이어지도록 하단에 고정 */}
+      <button
+        className="ym-press"
+        style={{
+          ...PRIMARY, width: '100%', marginTop: 12,
+          position: 'sticky', bottom: 'max(6px, env(safe-area-inset-bottom))',
+          boxShadow: '0 -6px 18px rgba(20,14,10,.14)',
+        }}
+        onClick={next}
+      >알겠어요</button>
     </div>
   );
 }
 
-// 표현 설명·팁 — 이 표현을 언제·어떻게 쓰는지 한 단락. (없으면 짧은 기본 안내)
-function TipBlock({ card }: { card: IntroduceCard }) {
-  const text = card.tip ?? card.note;
-  if (!text) return null;
+// 로마자 — 익숙도와 무관하게 항상 보여주는 보조 표기(ReadingAid는 익숙해지면 사라지는 학습용, 이건 참고용).
+function toRomaji(kana: string): string {
+  return toReadingUnits(kana).map((u) => (u.romaji === 'ー' ? '-' : u.romaji)).join('');
+}
+
+// 격식 배지 — 인사말처럼 상대에 따라 표현이 달라지는 항목에서 친한 사이/정중한 사이를 한눈에 구분.
+function RegisterBadge({ register }: { register: 'casual' | 'formal' | 'both' }) {
+  const label = register === 'casual' ? '친한 사이' : register === 'formal' ? '정중한 사이' : '두 사이 모두';
+  const color = register === 'casual' ? 'var(--ok)' : register === 'formal' ? 'var(--accent)' : 'var(--ink-soft)';
   return (
-    <div style={{ marginTop: 12, padding: '12px 13px', borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--surface-2)', display: 'flex', gap: 9 }}>
-      <span style={{ flex: '0 0 auto', marginTop: 1, color: 'var(--accent)' }} aria-hidden>💡</span>
-      <p style={{ margin: 0, fontSize: 13, lineHeight: 1.6, color: 'var(--ink-soft)', fontWeight: 600 }}>{text}</p>
-    </div>
+    <span style={{
+      fontSize: 10, fontWeight: 850, color, border: `1px solid ${color}`, borderRadius: 999,
+      padding: '1px 7px', lineHeight: 1.5,
+    }}>{label}</span>
   );
 }
 
 function WordLearningPanel({ card, isKanaFamiliar }: { card: IntroduceCard; isKanaFamiliar: (char: string) => boolean }) {
-  const showWritten = hasWrittenFormHint(card);
+  const romaji = toRomaji(card.kana);
   return (
     <button
       onClick={() => speak(card.ja)}
@@ -139,7 +115,7 @@ function WordLearningPanel({ card, isKanaFamiliar }: { card: IntroduceCard; isKa
         width: '100%',
         position: 'relative',
         display: 'grid',
-        gap: 8,
+        gap: 7,
         alignItems: 'stretch',
         marginTop: 10,
         padding: '14px 16px',
@@ -152,30 +128,32 @@ function WordLearningPanel({ card, isKanaFamiliar }: { card: IntroduceCard; isKa
         textAlign: 'left',
       }}
     >
-      <span style={{ display: 'grid', gap: 4, minWidth: 0 }}>
-        <span style={{ fontSize: 11, fontWeight: 850, color: 'var(--ink-soft)', lineHeight: 1 }}>읽기</span>
-        <span lang="ja" style={{ display: 'block', fontWeight: 950, lineHeight: 1.05, color: 'var(--ink)', overflowWrap: 'anywhere' }}>
-          <ReadingAid text={card.kana} isFamiliar={isKanaFamiliar} fontSize={40} />
-        </span>
-      </span>
-
-      <span style={{ display: 'grid', gap: 4, minWidth: 0 }}>
-        <span style={{ fontSize: 11, fontWeight: 850, color: 'var(--ink-soft)', lineHeight: 1 }}>뜻</span>
-        <span style={{ display: 'block', fontSize: 19, lineHeight: 1.22, fontWeight: 900, color: 'var(--ink)', overflowWrap: 'anywhere' }}>{card.korean}</span>
-      </span>
-
-      {showWritten && (
-        <span style={{
-          display: 'grid',
-          gap: 4,
-          minWidth: 0,
-          paddingTop: 8,
-          borderTop: '1px solid rgba(185,56,46,.18)',
-        }}>
+      {/* 표기 — 가장 크게, 항상 표시(가타카나 전용 등 표기=읽기가 같아도 그대로 보여준다) */}
+      <span style={{ display: 'grid', gap: 4, minWidth: 0, paddingRight: 30 }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <span style={{ fontSize: 11, fontWeight: 850, color: 'var(--ink-soft)', lineHeight: 1 }}>표기</span>
-          <span lang="ja" style={{ display: 'block', fontSize: 31, lineHeight: 1.08, fontWeight: 950, color: 'var(--ink)', letterSpacing: 0, overflowWrap: 'anywhere' }}>{card.ja}</span>
+          {card.register && <RegisterBadge register={card.register} />}
         </span>
-      )}
+        <span lang="ja" style={{ display: 'block', fontSize: 34, lineHeight: 1.1, fontWeight: 950, color: 'var(--ink)', letterSpacing: 0, overflowWrap: 'anywhere' }}>{card.ja}</span>
+      </span>
+
+      {/* 읽기 + 로마자 — 작게 */}
+      <span style={{ display: 'grid', gap: 3, minWidth: 0, paddingTop: 7, borderTop: '1px solid rgba(185,56,46,.18)' }}>
+        <span style={{ fontSize: 10.5, fontWeight: 850, color: 'var(--ink-soft)', lineHeight: 1 }}>읽기</span>
+        <span lang="ja" style={{ display: 'flex', alignItems: 'baseline', gap: 6, flexWrap: 'wrap' }}>
+          <span style={{ fontWeight: 850, lineHeight: 1.15, color: 'var(--ink)', overflowWrap: 'anywhere' }}>
+            <ReadingAid text={card.kana} isFamiliar={isKanaFamiliar} fontSize={17} />
+          </span>
+          {romaji && <span lang="" style={{ fontSize: 12, fontWeight: 650, color: 'var(--ink-faint)' }}>[{romaji}]</span>}
+        </span>
+      </span>
+
+      {/* 뜻 — 작게, 팁이 있으면 바로 아래 이어서 */}
+      <span style={{ display: 'grid', gap: 3, minWidth: 0 }}>
+        <span style={{ fontSize: 10.5, fontWeight: 850, color: 'var(--ink-soft)', lineHeight: 1 }}>뜻</span>
+        <span style={{ display: 'block', fontSize: 14.5, lineHeight: 1.3, fontWeight: 800, color: 'var(--ink)', overflowWrap: 'anywhere' }}>{card.korean}</span>
+        {card.tip && <span style={{ display: 'block', fontSize: 12, lineHeight: 1.45, fontWeight: 600, color: 'var(--ink-soft)' }}>{card.tip}</span>}
+      </span>
 
       <Icon name="listen" size={20} style={{ position: 'absolute', right: 12, top: 11, color: 'var(--accent)', opacity: 0.82 }} />
     </button>
@@ -221,53 +199,6 @@ function vocabResponseForCard(card: IntroduceCard): { ja: string; korean: string
   const item = group?.items.find((x) => x.id === m[2]);
   if (!group || !item) return null;
   return greetingResponseFor(item.id) ?? null;
-}
-
-function greetingResponseFor(id: string): { ja: string; korean: string } | undefined {
-  const responses: Record<string, { ja: string; korean: string }> = {
-    g_ohayou: { ja: 'おはようございます。', korean: '안녕하세요(아침)라고 답해요.' },
-    g_konnichiwa: { ja: 'こんにちは。', korean: '안녕하세요(낮)라고 답해요.' },
-    g_konbanwa: { ja: 'こんばんは。', korean: '안녕하세요(저녁)라고 답해요.' },
-    g_arigatou: { ja: 'どういたしまして。', korean: '천만에요.' },
-    g_sumimasen: { ja: '大丈夫です。', korean: '괜찮아요.' },
-    g_gomen: { ja: '大丈夫です。', korean: '괜찮아요.' },
-    g_ittekimasu: { ja: '行ってらっしゃい。', korean: '잘 다녀오세요.' },
-    g_itterasshai: { ja: '行ってきます。', korean: '다녀오겠습니다.' },
-    g_tadaima: { ja: 'おかえりなさい。', korean: '어서 와요.' },
-    g_okaerinasai: { ja: 'ただいま。', korean: '다녀왔습니다.' },
-    g_hajimemashite: { ja: 'よろしくお願いします。', korean: '잘 부탁드립니다.' },
-    g_yoroshiku: { ja: 'こちらこそ、よろしくお願いします。', korean: '저야말로 잘 부탁드립니다.' },
-  };
-  return responses[id];
-}
-
-function hasWrittenFormHint(card: IntroduceCard): boolean {
-  return compactText(card.ja) !== compactText(card.kana);
-}
-
-function hasKanji(text: string): boolean {
-  return /[\u4E00-\u9FFF]/.test(text);
-}
-
-function WrittenFormHint({ card }: { card: IntroduceCard }) {
-  const label = hasKanji(card.ja) ? '한자 표기' : '표기';
-  return (
-    <div style={{
-      marginTop: 8,
-      padding: '10px 12px',
-      borderRadius: 12,
-      border: '1px solid var(--glass-border)',
-      background: 'var(--surface-2)',
-    }}>
-      <p style={{ margin: 0, fontSize: 11, fontWeight: 850, color: 'var(--ink-faint)', letterSpacing: '.03em' }}>표기 힌트</p>
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(44px, auto) 1fr', gap: '5px 10px', alignItems: 'baseline', marginTop: 7 }}>
-        <span style={{ fontSize: 12, fontWeight: 800, color: 'var(--ink-soft)' }}>읽기</span>
-        <span lang="ja" style={{ fontSize: 17, fontWeight: 850, color: 'var(--ink)' }}>{card.kana}</span>
-        <span style={{ fontSize: 12, fontWeight: 800, color: 'var(--ink-soft)' }}>{label}</span>
-        <span lang="ja" style={{ fontSize: 22, fontWeight: 900, color: 'var(--ink)', letterSpacing: 0 }}>{card.ja}</span>
-      </div>
-    </div>
-  );
 }
 
 function quickPracticeGroup(id: string): string {
