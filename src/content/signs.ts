@@ -92,7 +92,7 @@ export const signs: Sign[] = [
   { id: 'satsuei_kinshi', ja: '撮影禁止', kana: 'さつえいきんし', korean: '촬영 금지', category: '주의' },
   { id: 'shizukani', ja: 'お静かに', kana: 'おしずかに', korean: '조용히', category: '주의' },
   { id: 'ichiji_teishi', ja: '一時停止', kana: 'いちじていし', korean: '일단 정지', category: '주의' },
-  { id: 'tachiiri_kinshi2', ja: '関係者以外立入禁止', kana: 'かんけいしゃいがいたちいりきんし', korean: '관계자 외 출입 금지', category: '주의' },
+  { id: 'tachiiri_kinshi2', ja: '関係者以外立入禁止', kana: 'かんけいしゃいがいたちいりきんし', korean: '관계자 외 출입 금지', category: '주의', tip: '공사장·직원 전용 구역 입구에서 자주 보는 경고문이에요. 関係者(관계자)+以外(외)+立入禁止(출입금지)가 합쳐진 표현이에요.' },
 
   // ── 메뉴 추가 ──
   { id: 'tanpin', ja: '単品', kana: 'たんぴん', korean: '단품', category: '메뉴' },
@@ -107,12 +107,12 @@ export const signs: Sign[] = [
   { id: 'sakana_menu', ja: '魚', kana: 'さかな', korean: '생선', category: '메뉴' },
   { id: 'yasai_menu', ja: '野菜', kana: 'やさい', korean: '채소', category: '메뉴' },
   { id: 'nashi_menu', ja: 'なし', kana: 'なし', korean: '없음(재료 제외)', category: '메뉴' },
-  { id: 'allergy', ja: 'アレルギー', kana: 'アレルギー', korean: '알레르기', category: '메뉴' },
+  { id: 'allergy', ja: 'アレルギー', kana: 'アレルギー', korean: '알레르기', category: '메뉴', tip: '가타카나로만 쓰는 외래어라 표기와 읽기가 같아요. 메뉴판·포장지에서 알레르기 유발 성분을 표시할 때 자주 보여요.' },
   { id: 'vege', ja: 'ベジタリアン', kana: 'ベジタリアン', korean: '채식', category: '메뉴' },
   { id: 'halal', ja: 'ハラール', kana: 'ハラール', korean: '할랄', category: '메뉴' },
   { id: 'refill', ja: 'おかわり自由', kana: 'おかわりじゆう', korean: '리필 자유', category: '메뉴' },
   { id: 'last_order', ja: 'ラストオーダー', kana: 'ラストオーダー', korean: '라스트 오더', category: '메뉴' },
-  { id: 'tsugi_no_kata', ja: '次の方どうぞ', kana: 'つぎのかたどうぞ', korean: '다음 분 오세요', category: '안내' },
+  { id: 'tsugi_no_kata', ja: '次の方どうぞ', kana: 'つぎのかたどうぞ', korean: '다음 분 오세요', category: '메뉴', tip: '백화점·병원 등 번호표를 뽑고 기다리는 곳에서 직원이 다음 손님을 부를 때 쓰는 말이에요.' },
 
   // ── 표지·시설 추가 ──
   { id: 'men_toilet', ja: '男性', kana: 'だんせい', korean: '남성(화장실)', category: '표지' },

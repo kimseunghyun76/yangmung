@@ -11,126 +11,144 @@
           "ja": "おはようございます",
           "kana": "おはようございます",
           "korean": "안녕하세요(아침)",
-          "tip": "아침 인사. 친한 사이엔 おはよう"
+          "tip": "아침 인사. 친한 사이엔 おはよう",
+          "register": "formal"
         },
         {
           "id": "g_konnichiwa",
           "ja": "こんにちは",
           "kana": "こんにちは",
           "korean": "안녕하세요(낮)",
-          "tip": "낮 인사. は는 'wa'로 읽음"
+          "tip": "낮 인사. は는 'wa'로 읽음",
+          "register": "both"
         },
         {
           "id": "g_konbanwa",
           "ja": "こんばんは",
           "kana": "こんばんは",
           "korean": "안녕하세요(저녁)",
-          "tip": "저녁 인사. は는 'wa'로 읽음"
+          "tip": "저녁 인사. は는 'wa'로 읽음",
+          "register": "both"
         },
         {
           "id": "g_oyasumi",
           "ja": "おやすみなさい",
           "kana": "おやすみなさい",
           "korean": "잘 자요",
-          "tip": "취침 전 인사. 친한 사이엔 おやすみ"
+          "tip": "취침 전 인사. 친한 사이엔 おやすみ",
+          "register": "formal"
         },
         {
           "id": "g_arigatou",
           "ja": "ありがとうございます",
           "kana": "ありがとうございます",
           "korean": "감사합니다",
-          "tip": "진심 어린 감사. ありがとう는 캐주얼"
+          "tip": "진심 어린 감사. ありがとう는 캐주얼",
+          "register": "formal"
         },
         {
           "id": "g_sumimasen",
           "ja": "すみません",
           "kana": "すみません",
           "korean": "저기요 / 죄송합니다",
-          "tip": "길 묻기·사람 부를 때·사과 모두 OK"
+          "tip": "길 묻기·사람 부를 때·사과 모두 OK",
+          "register": "both"
         },
         {
           "id": "g_gomen",
           "ja": "ごめんなさい",
           "kana": "ごめんなさい",
           "korean": "미안합니다",
-          "tip": "진심 사과. すみません보다 더 진지함"
+          "tip": "진심 사과. すみません보다 더 진지함",
+          "register": "casual"
         },
         {
           "id": "g_douzo",
           "ja": "どうぞ",
           "kana": "どうぞ",
           "korean": "자, 어서 / 여기 있어요",
-          "tip": "물건 건네거나 먼저 가라고 할 때"
+          "tip": "물건 건네거나 먼저 가라고 할 때",
+          "register": "both"
         },
         {
           "id": "g_douitashimashite",
           "ja": "どういたしまして",
           "kana": "どういたしまして",
           "korean": "천만에요",
-          "tip": "감사에 대한 답변"
+          "tip": "감사에 대한 답변",
+          "register": "formal"
         },
         {
           "id": "g_hajimemashite",
           "ja": "はじめまして",
           "kana": "はじめまして",
           "korean": "처음 뵙겠습니다",
-          "tip": "처음 만날 때. 자기소개 전에"
+          "tip": "처음 만날 때. 자기소개 전에",
+          "register": "formal"
         },
         {
           "id": "g_yoroshiku",
           "ja": "よろしくお願いします",
           "kana": "よろしくおねがいします",
           "korean": "잘 부탁드립니다",
-          "tip": "자기소개 마무리, 부탁할 때 모두 사용"
+          "tip": "자기소개 마무리, 부탁할 때 모두 사용",
+          "register": "formal"
         },
         {
           "id": "g_sayonara",
           "ja": "さようなら",
           "kana": "さようなら",
           "korean": "안녕히 계세요(이별)",
-          "tip": "정중한 작별. 일상엔 じゃあね / またね"
+          "tip": "정중한 작별. 일상엔 じゃあね / またね",
+          "register": "formal"
         },
         {
           "id": "g_mata_ne",
           "ja": "またね",
           "kana": "またね",
           "korean": "또 봐요(캐주얼)",
-          "tip": "친한 사이 헤어질 때"
+          "tip": "친한 사이 헤어질 때",
+          "register": "casual"
         },
         {
           "id": "g_ittekimasu",
           "ja": "行ってきます",
           "kana": "いってきます",
           "korean": "다녀오겠습니다",
-          "tip": "외출 시 집에 있는 사람에게"
+          "tip": "외출 시 집에 있는 사람에게",
+          "register": "both"
         },
         {
           "id": "g_itterasshai",
           "ja": "行ってらっしゃい",
           "kana": "いってらっしゃい",
           "korean": "잘 다녀오세요",
-          "tip": "행って来ます에 대한 답변"
+          "tip": "행って来ます에 대한 답변",
+          "register": "both"
         },
         {
           "id": "g_tadaima",
           "ja": "ただいま",
           "kana": "ただいま",
           "korean": "다녀왔습니다",
-          "tip": "귀가 인사"
+          "tip": "귀가 인사",
+          "register": "both"
         },
         {
           "id": "g_okaerinasai",
           "ja": "おかえりなさい",
           "kana": "おかえりなさい",
           "korean": "어서 와요",
-          "tip": "ただいま에 대한 답변"
+          "tip": "ただいま에 대한 답변",
+          "register": "both"
         },
         {
           "id": "g_otsukaresama",
           "ja": "お疲れ様です",
           "kana": "おつかれさまです",
           "korean": "수고하셨습니다",
-          "tip": "직장·모임 등에서 수고했을 때 범용"
+          "tip": "직장·모임 등에서 수고했을 때 범용",
+          "register": "formal"
         }
       ],
       "examples": [

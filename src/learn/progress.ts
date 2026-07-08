@@ -698,7 +698,7 @@ export function selectPairCards(allCards: Card[], progress: ProgressMap, current
 // 학습형 덱 — 항목을 모두 설명·듣기·읽기(introduce)한 뒤, 마지막에 "듣고 일본어 찾기" 퀴즈 몇 개만.
 // 기본 인사·어휘 커리큘럼·간판은 뜻 고르기 퀴즈가 아니라 이 흐름으로 학습한다.
 // 퀴즈 변형 타입 — id 토큰으로 식별. (vocab:food:read:apple, sign:hear2ja:x, sign:x 등)
-const QUIZ_VARIANT_TYPES = ['read', 'listen', 'ko2ja', 'hear2ja', 'image'];
+const QUIZ_VARIANT_TYPES = ['read', 'listen', 'ko2ja', 'hear2ja', 'image', 'response'];
 function quizVariantType(id: string): string {
   const parts = id.split(':');
   for (const t of QUIZ_VARIANT_TYPES) if (parts.includes(t)) return t;

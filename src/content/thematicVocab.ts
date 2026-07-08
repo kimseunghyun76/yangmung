@@ -7,6 +7,8 @@ export interface VocabItem {
   kana: string;     // 읽기(히라가나/가타카나)
   korean: string;   // 뜻
   tip?: string;     // 추가 설명
+  /** 격식 — 인사말처럼 상대에 따라 표현이 달라지는 그룹에서만 사용(친한 사이/정중한 사이 구분). */
+  register?: 'casual' | 'formal' | 'both';
 }
 
 // 그룹 대표 예문 — 단어를 문장 속에서 익히도록 학습 카드로 제공.

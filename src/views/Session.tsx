@@ -90,7 +90,8 @@ export function Session({ card, index, total, picked, skipped, onChoose, onIntro
         const inOverlay = !!cardBackdrop && (card.kind === 'introduce' || isMissionStep);
         const showScenario = !!sv && !!scenario && card.kind !== 'introduce' && !inOverlay;
         const showSpeaker = !!sv && !!speaker && !inOverlay;
-        const showPlain = !sv && !!plainTag;
+        // 빠른 연습(quickPractice)의 새 표현 카드는 장면 이미지 코너에 같은 라벨이 이미 오버레이돼 있어(ImageCornerOverlay) 중복.
+        const showPlain = !sv && !!plainTag && !(quickPractice && card.kind === 'introduce');
         const diff = cardDifficulty(card); // 난이도 배지 (입문·기본·중급·고급)
         if (!diff && !showScenario && !showSpeaker && !showPlain) return null;
         return (
