@@ -229,9 +229,13 @@ function TipDetail({ label, text, tone }: { label: string; text: string; tone: s
   return <div style={{ marginTop: 10, padding: '11px 13px', borderRadius: 13, borderLeft: `3px solid ${tone}`, background: 'var(--surface-2)' }}><strong style={{ display: 'block', fontSize: 12, color: tone }}>{label}</strong><span style={{ display: 'block', marginTop: 3, fontSize: 13.5, lineHeight: 1.5, color: 'var(--ink-soft)' }}>{text}</span></div>;
 }
 // 보기 텍스트 — 가나 퀴즈는 소리(한글) 그대로, 표현/미션 보기는 난이도별 일본어 표기.
+// "표기/듣기 → 뜻"류 퀴즈(선택지 label이 이미 뜻=phrase.korean과 같음)는 뜻 그대로 보여준다 —
+// 여기서도 phrase의 일본어(kana/kanji)를 우선 표시하면, 질문이 이미 일본어인데 "뜻을 고르세요" 선택지도
+// 일본어로 나와 정답이 질문과 똑같아 보이는 자기참조 버그가 된다(예: 질문 柔道 → 정답 선택지도 柔道).
 function ChoiceText({ c, mode, kanaQuiz, reveal }: { c: Choice; mode: 'kana_ko' | 'kana' | 'kanji'; kanaQuiz: boolean; reveal: boolean }) {
   const p = c.phrase;
-  if (kanaQuiz || !p) return <span style={{ flex: 1 }}>{c.label}</span>;
+  const isMeaningChoice = !!p && c.label === p.korean;
+  if (kanaQuiz || !p || isMeaningChoice) return <span style={{ flex: 1 }}>{c.label}</span>;
   const primary = mode === 'kanji' ? (p.kanji ?? p.kana) : p.kana;
   const showKo = reveal;
   return (
