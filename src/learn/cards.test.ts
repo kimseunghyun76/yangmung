@@ -4,12 +4,8 @@
 import { CONTENT } from '../content';
 import { buildCards, materializeQuizCard, type Card, type QuizCard } from './cards';
 import { selectMissionCards } from './progress';
+import { check } from '../test/check';
 
-let pass = 0, total = 0;
-function check(name: string, cond: boolean, detail = '') {
-  total++; if (cond) pass++;
-  console.log(`  ${cond ? 'PASS' : 'FAIL'} ${name}${cond ? '' : detail ? ` — ${detail}` : ''}`);
-}
 
 const cards = buildCards();
 const KINDS = new Set(['quiz', 'tip', 'introduce', 'order', 'speak', 'dictation', 'discover']);
@@ -146,6 +142,3 @@ console.log('\n=== 한→일 작문 — 콘텐츠 확장(2026-07-05) ===');
   check('작문 카드 id 유일성', new Set(composeCards.map((c) => c.id)).size === composeCards.length);
   check('작문 카드는 모두 한국어 프롬프트(promptKind=korean)', composeCards.every((c) => c.promptKind === 'korean'));
 }
-
-console.log(`\n결과: ${pass}/${total} ${pass === total ? 'PASS' : 'FAIL'}`);
-if (pass !== total) process.exit(1);

@@ -5,12 +5,8 @@
 // 실행: npm run test:studyfirst
 import { buildCards, type Card, type QuizCard } from './cards';
 import { selectStudyDeck, type ProgressMap } from './progress';
+import { check } from '../test/check';
 
-let pass = 0, fail = 0;
-function check(name: string, ok: boolean, detail = '') {
-  if (ok) { pass++; console.log(`  PASS ${name}`); }
-  else { fail++; console.log(`  FAIL ${name}${detail ? ` — ${detail}` : ''}`); }
-}
 
 const allCards = buildCards(2);
 const isVocabStudy = (id: string) => id.includes(':study:');
@@ -90,6 +86,3 @@ console.log('=== 이전에 학습한 항목은 이번 덱에 없어도 퀴즈 �
     check('과거 학습 개념이 퀴즈로 실제 출제됨', sawTargetQuiz);
   }
 }
-
-console.log(`\n결과: ${pass}/${pass + fail} PASS`);
-if (fail > 0) process.exitCode = 1;

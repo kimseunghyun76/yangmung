@@ -4,12 +4,8 @@
 // 실행: npm run test:composecontext
 import { CONTENT } from '../content';
 import { composeContextFor } from './composeContext';
+import { check } from '../test/check';
 
-let pass = 0, fail = 0;
-function check(name: string, ok: boolean, detail = '') {
-  if (ok) { pass++; console.log(`  PASS ${name}`); }
-  else { fail++; console.log(`  FAIL ${name}${detail ? ` — ${detail}` : ''}`); }
-}
 
 console.log('=== composeContextFor — 질문↔답변 정합성 ===');
 {
@@ -39,6 +35,3 @@ console.log('=== composeContextFor — 질문↔답변 정합성 ===');
   check('질문 역할 컨텍스트가 실제로 존재함', sawQuestion);
   check('답변 역할 컨텍스트가 실제로 존재함', sawAnswer);
 }
-
-console.log(`\n결과: ${pass}/${pass + fail} PASS`);
-if (fail > 0) process.exitCode = 1;

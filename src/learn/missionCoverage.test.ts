@@ -14,12 +14,8 @@ import { selectSessionCards, type ProgressMap, type CardProgress, type SessionCo
 import { reconcileOpenMissions } from './unlocks';
 import { missionDifficultyWindow } from './missionMix';
 import { MODE_PRESETS, type LearnMode } from './settings';
+import { check } from '../test/check';
 
-let pass = 0, fail = 0;
-function check(name: string, ok: boolean, detail = '') {
-  if (ok) { pass++; console.log(`  PASS ${name}`); }
-  else { fail++; console.log(`  FAIL ${name}${detail ? ` — ${detail}` : ''}`); }
-}
 
 const allCards = buildCards(2);
 const POOL = CONTENT.missions.filter((m) => m.id !== 'C0').map((m) => m.id);
@@ -168,7 +164,7 @@ console.log('\n=== ⑤ 고급(floor 3) — 상위 미션부터 시작·세션창
   let firstTierBad = 0, belowFloorSessionTotal = 0;
   for (let r = 0; r < RUNS; r++) {
     const progress: ProgressMap = {};
-    let open = reconcileOpenMissions([], progress, missionDifficultyWindow(allCards, progress, floor), floor);
+    const open = reconcileOpenMissions([], progress, missionDifficultyWindow(allCards, progress, floor), floor);
     const first = open.filter((id) => id !== 'C0')[0];
     if (first && (tierMap.get(first) ?? 1) !== 3) firstTierBad++;
     const m: Metrics = { reached: new Set(), studyLeak: 0, belowFloorSession: 0 };
@@ -178,6 +174,3 @@ console.log('\n=== ⑤ 고급(floor 3) — 상위 미션부터 시작·세션창
   check('고급 첫 개방이 항상 tier3(10런)', firstTierBad === 0, `tier3 아님 ${firstTierBad}런`);
   check('고급 세션에 tier1~2 미션 노출 0(10런)', belowFloorSessionTotal === 0, `${belowFloorSessionTotal}건`);
 }
-
-console.log(`\n결과: ${pass}/${pass + fail} PASS`);
-if (fail > 0) process.exitCode = 1;

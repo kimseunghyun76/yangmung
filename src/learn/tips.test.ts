@@ -4,12 +4,8 @@ import { CONTENT } from '../content';
 import { buildCards } from './cards';
 import { selectMissionCards, type ProgressMap, type CardProgress } from './progress';
 import { pickTipForMission, pickTipForTopic } from './tips';
+import { check } from '../test/check';
 
-let pass = 0, fail = 0;
-function check(name: string, ok: boolean, detail = '') {
-  if (ok) { pass++; console.log(`  PASS ${name}`); }
-  else { fail++; console.log(`  FAIL ${name}${detail ? ` — ${detail}` : ''}`); }
-}
 
 const allCards = buildCards(2);
 const MISSION_IDS = CONTENT.missions.filter((m) => m.id !== 'C0').map((m) => m.id as string);
@@ -79,6 +75,3 @@ console.log('=== pickTipForTopic — 키워드 연관 우선, 없으면 폴백 =
   const noMatch = pickTipForTopic(allCards, ['존재하지않는키워드zzz'], {});
   check('키워드 매칭이 없어도 전체 풀로 폴백해 null이 아님', !!noMatch);
 }
-
-console.log(`\n결과: ${pass}/${pass + fail} PASS`);
-if (fail > 0) process.exitCode = 1;

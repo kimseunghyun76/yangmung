@@ -303,13 +303,15 @@ export function wordArtAssetSrcForId(id: string): string | null {
 export function WordArt({ id, korean, kana: _kana, ja, size = 96, style, preferAsset = false }: { id: string; korean: string; kana: string; ja?: string; size?: number; style?: CSSProperties; preferAsset?: boolean }) {
   const signConceptSrc = signConceptAsset(id);
   const signPngSrc = signWordArtPngAsset(id);
+  // id가 바뀔 때마다(카드 전환) signConceptSrc 유무가 달라질 수 있으므로,
+  // early return보다 위에서 훅을 항상 같은 순서로 호출해야 한다(rules-of-hooks).
+  const [assetFailed, setAssetFailed] = useState(false);
+  const [panelBgFailed, setPanelBgFailed] = useState(false);
   if (signConceptSrc) {
     return <SignArtConceptImage conceptSrc={signConceptSrc} fallbackSrc={signPngSrc} label={korean} size={size} style={style} />;
   }
   const assetSrc = vocabWordArtSrc(id) ?? signPngSrc;
-  const [assetFailed, setAssetFailed] = useState(false);
   const panelBg = basicWordArtBg(id);
-  const [panelBgFailed, setPanelBgFailed] = useState(false);
   if (signPngSrc && !assetFailed) {
     return (
       <img

@@ -49,6 +49,9 @@ export function Admin() {
   const [version, setVersion] = useState(0);
   const [q, setQ] = useState('');
   const [busy, setBusy] = useState<string | null>(null);
+  // version은 loadOverrides() 내부에서 안 쓰이지만, 저장 후 setVersion으로 강제 재계산시키는
+  // 의도적 무효화 트리거다 — 지우면 오버라이드 저장 후 화면이 안 갱신된다.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const overrides = useMemo<Overrides>(() => loadOverrides(), [version]);
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
   const editedCount = useMemo(() => JSON.stringify(overrides).length > 2 ? Object.keys(overrides.missions ?? {}).length + Object.keys(overrides.sentences ?? {}).length : 0, [overrides]);

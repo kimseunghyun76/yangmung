@@ -21,6 +21,9 @@ jobs:
       - name: 타입체크
         run: npm run typecheck
 
+      - name: ESLint
+        run: npm run lint
+
       - name: 콘텐츠 검증 (V1~V20)
         run: npm run lint:content
 

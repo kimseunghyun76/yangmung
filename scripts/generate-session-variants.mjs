@@ -212,5 +212,5 @@ function write(file, body) {
   fs.writeFileSync(file, body, 'utf8');
 }
 
-let count = 0;
+const count = 0;
 console.log(`Generated ${count} SVG scene assets. Runtime scene assets are maintained as checked-in WebP files.`);

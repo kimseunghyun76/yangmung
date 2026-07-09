@@ -9,12 +9,8 @@ import { buildCards, type QuizCard } from './cards';
 import { CONTENT } from '../content';
 import { phrases as PHRASES } from '../content/phrases';
 import { selectSessionCards, DEFAULT_SESSION_CONFIG, type ProgressMap, type CardProgress } from './progress';
+import { check } from '../test/check';
 
-let pass = 0, fail = 0;
-function check(name: string, ok: boolean, detail = '') {
-  if (ok) { pass++; console.log(`  PASS ${name}`); }
-  else { fail++; console.log(`  FAIL ${name}${detail ? ` — ${detail}` : ''}`); }
-}
 
 const allCards = buildCards(2);
 const phraseIdOf = (id: string) => id.split(':').slice(2).join(':');
@@ -120,6 +116,3 @@ console.log('\n=== 복습 큐(reviewConfig) — 신규 유저(미션 미경험)�
   const missionCards = cards.filter((c) => c.kind === 'quiz' && c.reviewTarget?.type === 'mission');
   check('미션 경험 0인 신규 유저 — 복습 큐에 미션 퀴즈가 하나도 안 섞임', missionCards.length === 0, `${missionCards.length}장 섞임: ${missionCards.map((c) => c.id).join(',')}`);
 }
-
-console.log(`\n결과: ${pass}/${pass + fail} PASS`);
-if (fail > 0) process.exitCode = 1;

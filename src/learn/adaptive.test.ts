@@ -4,13 +4,9 @@ import { buildCards, type Card } from './cards';
 type QuizC = Extract<Card, { kind: 'quiz' }>;
 import { diagnose, adaptSessionConfig } from './adaptive';
 import { itemMastery, type CardProgress, type ProgressMap, type SessionConfig } from './progress';
+import { check } from '../test/check';
 
 const cards = buildCards();
-let pass = 0, total = 0;
-function check(name: string, cond: boolean) {
-  total++; if (cond) pass++;
-  console.log(`  ${cond ? 'PASS' : 'FAIL'} ${name}`);
-}
 
 // 진척 엔트리 헬퍼
 function mk(o: Partial<CardProgress>): CardProgress {
@@ -120,6 +116,3 @@ console.log('\n=== 진단: 며칠 만에 재접속(daysSinceLastVisit) ===');
   const { config: c20 } = adaptSessionConfig(base, d20);
   check('공백이 길수록 minFresh.C가 짧은 공백보다 크지 않음(단조 감소)', c20.minFresh.C <= c3.minFresh.C);
 }
-
-console.log(`\n결과: ${pass}/${total} PASS`);
-if (pass !== total) process.exit(1);

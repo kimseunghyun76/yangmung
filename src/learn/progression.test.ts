@@ -4,12 +4,8 @@ import {
   LEVEL_STAGES, stageKey, isStageComplete, isStageUnlocked, levelAllComplete,
   markStageComplete, nextStageIndex, nextLevel, coreLevelOf, type ProgressionState,
 } from './progression';
+import { check } from '../test/check';
 
-let pass = 0, total = 0;
-function check(name: string, cond: boolean) {
-  total++; if (cond) pass++;
-  console.log(`  ${cond ? 'PASS' : 'FAIL'} ${name}`);
-}
 
 const empty: ProgressionState = { completed: [] };
 
@@ -54,6 +50,3 @@ console.log('=== coreLevelOf ===');
 check('express 그대로', coreLevelOf('express') === 'express');
 check('review → beginner로 폴백', coreLevelOf('review') === 'beginner');
 check('kana → beginner로 폴백', coreLevelOf('kana') === 'beginner');
-
-console.log(`\n결과: ${pass}/${total} ${pass === total ? 'PASS' : 'FAIL'}`);
-if (pass !== total) process.exit(1);
