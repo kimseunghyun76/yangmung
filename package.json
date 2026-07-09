@@ -22,35 +22,33 @@
     "lint:content": "tsx src/content/validate.ts",
     "report:n5": "tsx src/content/n5.report.ts",
     "lint:sentences": "tsx src/content/sceneSentences.validate.ts",
-    "test:content": "tsx src/content/validate.test.ts",
-    "test:adaptive": "tsx src/learn/adaptive.test.ts",
-    "test:progress": "tsx src/learn/progress.test.ts",
-    "test:cards": "tsx src/learn/cards.test.ts",
-    "test:unlocks": "tsx src/learn/unlocks.test.ts",
-    "test:progression": "tsx src/learn/progression.test.ts",
-    "test:missionmix": "tsx src/learn/missionMix.test.ts",
-    "test:studyfirst": "tsx src/learn/studyFirst.test.ts",
-    "test:missionstudyfirst": "tsx src/learn/missionStudyFirst.test.ts",
-    "test:missioncoverage": "tsx src/learn/missionCoverage.test.ts",
-    "test:composecontext": "tsx src/learn/composeContext.test.ts",
-    "test:variantladder": "tsx src/learn/variantLadder.test.ts",
-    "test:spiral": "tsx src/learn/spiral.test.ts",
-    "test:fullplaythrough": "tsx src/learn/fullPlaythrough.test.ts",
-    "test:kanaspeakwords": "tsx src/learn/kanaSpeakWords.test.ts",
-    "test:tips": "tsx src/learn/tips.test.ts",
-    "test": "npm run test:content && npm run test:adaptive && npm run test:progress && npm run test:cards && npm run test:unlocks && npm run test:progression && npm run test:missionmix && npm run test:studyfirst && npm run test:missionstudyfirst && npm run test:missioncoverage && npm run test:composecontext && npm run test:variantladder && npm run test:spiral && npm run test:fullplaythrough && npm run test:kanaspeakwords && npm run test:tips"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^22.19.19",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^10.6.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.3",
+    "globals": "^17.7.0",
+    "prettier": "^3.9.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
-    "vite": "^6.0.5"
+    "typescript-eslint": "^8.63.0",
+    "vite": "^6.0.5",
+    "vitest": "^4.1.10"
   }
 }

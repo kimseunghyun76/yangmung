@@ -1,12 +1,8 @@
 // missionMix.ts 단위 테스트 — 미션 난이도 이동 창.
 // 실행: npm run test:missionmix
 import { missionTierWindow } from './missionMix';
+import { check } from '../test/check';
 
-let pass = 0, total = 0;
-function check(name: string, cond: boolean) {
-  total++; if (cond) pass++;
-  console.log(`  ${cond ? 'PASS' : 'FAIL'} ${name}`);
-}
 const eq = (a: [number, number], b: [number, number]) => a[0] === b[0] && a[1] === b[1];
 
 console.log('=== missionTierWindow ===');
@@ -32,6 +28,3 @@ check('floor2 tier2 진행중(0.5) → [2,3]', eq(missionTierWindow([0, 0.5, 0, 
 // floor는 위로만 밀어 올림 — 이미 상위까지 숙련한 유저는 창이 낮아지지 않음.
 check('floor2라도 전부 숙련이면 [5,5](하한이 창을 낮추지 않음)', eq(missionTierWindow([0.9, 0.9, 0.9, 0.9, 0.9], 2), [5, 5]));
 check('floor1(기본)은 기존과 동일 [1,1]', eq(missionTierWindow([0, 0, 0, 0, 0], 1), [1, 1]));
-
-console.log(`\n결과: ${pass}/${total} ${pass === total ? 'PASS' : 'FAIL'}`);
-if (pass !== total) process.exit(1);

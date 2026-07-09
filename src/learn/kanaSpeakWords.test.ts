@@ -3,12 +3,8 @@
 // 실행: npm run test:kanaspeakwords
 import { buildKanaSpeakLadder } from './kanaSpeakWords';
 import { VOCAB_GROUPS } from '../content/thematicVocab';
+import { check } from '../test/check';
 
-let pass = 0, fail = 0;
-function check(name: string, ok: boolean, detail = '') {
-  if (ok) { pass++; console.log(`  PASS ${name}`); }
-  else { fail++; console.log(`  FAIL ${name}${detail ? ` — ${detail}` : ''}`); }
-}
 
 console.log('=== buildKanaSpeakLadder — 점점 길어지는 단어 사다리 ===');
 {
@@ -40,6 +36,3 @@ console.log('=== buildKanaSpeakLadder — 점점 길어지는 단어 사다리 =
   }
   check('10회 반복 실행해도 항상 오름차순 유지', allRunsOk, runDetail);
 }
-
-console.log(`\n결과: ${pass}/${pass + fail} PASS`);
-if (fail > 0) process.exitCode = 1;

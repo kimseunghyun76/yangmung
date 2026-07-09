@@ -3,12 +3,8 @@
 import { reconcileOpenMissions, isSceneOpen } from './unlocks';
 import { SCENE_UNLOCK_THRESHOLD, type ProgressMap, type CardProgress } from './progress';
 import { CONTENT } from '../content';
+import { check } from '../test/check';
 
-let pass = 0, total = 0;
-function check(name: string, cond: boolean) {
-  total++; if (cond) pass++;
-  console.log(`  ${cond ? 'PASS' : 'FAIL'} ${name}`);
-}
 
 const POOL: string[] = CONTENT.missions.filter((m) => m.id !== 'C0').map((m) => m.id);
 const cp = (): CardProgress => ({ attempts: 1, correct: 1, consecutiveCorrect: 1, lastResult: 'correct', lastSeenAt: '', lastSessionId: 1, usedRecoveryEver: false });
@@ -144,6 +140,3 @@ console.log('\n=== isSceneOpen ===');
   check('목록에 있으면 열림', isSceneOpen('C9', ['C9']));
   check('목록에 없으면 닫힘', !isSceneOpen('C9', ['C1']));
 }
-
-console.log(`\n결과: ${pass}/${total} ${pass === total ? 'PASS' : 'FAIL'}`);
-if (pass !== total) process.exit(1);

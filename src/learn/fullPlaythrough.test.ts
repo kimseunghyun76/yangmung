@@ -9,16 +9,12 @@ import {
   DEFAULT_SESSION_CONFIG, type ProgressMap,
 } from './progress';
 import { diagnose } from './adaptive';
+import { check } from '../test/check';
 import {
   LEVEL_STAGES, CORE_LEVELS, isStageUnlocked, levelAllComplete, markStageComplete, nextLevel,
   stageKey, type ProgressionState,
 } from './progression';
 
-let pass = 0, total = 0;
-function check(name: string, cond: boolean, detail = '') {
-  total++; if (cond) pass++;
-  console.log(`  ${cond ? 'PASS' : 'FAIL'} ${name}${cond ? '' : detail ? ` — ${detail}` : ''}`);
-}
 
 const cards = buildCards();
 
@@ -100,6 +96,3 @@ console.log('\n=== 완전 마스터 상태에서 진단·세션 계획이 안 �
     check('planSession() size가 NaN 아님', Number.isFinite(plan.size));
   } catch (e) { check('planSession() 크래시 없음', false, String(e)); }
 }
-
-console.log(`\n결과: ${pass}/${total} ${pass === total ? 'PASS' : 'FAIL'}`);
-if (pass !== total) process.exit(1);

@@ -6,12 +6,8 @@ import {
   recordAttempt, type ProgressMap,
 } from './progress';
 import type { QuizCard } from './cards';
+import { check } from '../test/check';
 
-let pass = 0, total = 0;
-function check(name: string, cond: boolean) {
-  total++; if (cond) pass++;
-  console.log(`  ${cond ? 'PASS' : 'FAIL'} ${name}`);
-}
 
 // 최소 QuizCard 픽스처 — reviewTarget만 있으면 pickFreshestVariant엔 충분.
 // id 규칙은 실제 콘텐츠와 동일: kana:xxx:read / listen:xxx / ko2ja:xxx / dictation:xxx.
@@ -79,6 +75,3 @@ console.log('=== pickFreshestVariant — 사다리 등급의 형태가 없으면
   const rep = pickFreshestVariant(twoForms, progress);
   check('산출형 없음 → 폴백으로 두 형태 중 하나 정상 선택', rep.id === 'p1:read' || rep.id === 'listen:p1');
 }
-
-console.log(`\n결과: ${pass}/${total} PASS`);
-if (pass !== total) process.exitCode = 1;

@@ -5,12 +5,8 @@ import { CONTENT } from '../content';
 import type { Phrase } from '../content';
 import type { QuizCard } from './cards';
 import { isPhraseUnlocked, masteredPhraseIds, recordAttempt, selectSessionCards, type ProgressMap } from './progress';
+import { check } from '../test/check';
 
-let pass = 0, total = 0;
-function check(name: string, cond: boolean) {
-  total++; if (cond) pass++;
-  console.log(`  ${cond ? 'PASS' : 'FAIL'} ${name}`);
-}
 
 // 테스트 전용 3단 사슬을 실제 CONTENT.phrases에 임시로 밀어넣는다(이 프로세스 안에서만 유효 —
 // 각 test:* 스크립트는 별도 프로세스로 실행돼 다른 테스트 파일에 영향 없음).
@@ -64,6 +60,3 @@ console.log('=== selectSessionCards 통합 — 선행 미숙련 → 후속 미�
   const afterP2 = idsInDeck(progress);
   check('P1·P2 모두 mastered → 사슬 3단계(P3)까지 순차 해금', afterP2.has(q3.id));
 }
-
-console.log(`\n결과: ${pass}/${total} ${pass === total ? 'PASS' : 'FAIL'}`);
-if (pass !== total) process.exitCode = 1;

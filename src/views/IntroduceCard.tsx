@@ -301,13 +301,14 @@ function ImageCornerOverlay({ card }: { card: IntroduceCard }) {
 }
 
 function QuickPracticeWordScene({ card }: { card: IntroduceCard }) {
+  // card.id 접두사에 따라 아래서 조기 반환하므로, 훅은 항상 그보다 앞에서 같은 순서로 호출한다(rules-of-hooks).
+  const [imageFailed, setImageFailed] = useState(false);
   // 명장면 대화·노래 가사·방송 메시지는 매칭되는 이미지가 없어 항상 같은 일반 배경(vocab.webp)만
   // 뜨게 된다 — 내용과 무관한 의미 없는 이미지라 아예 표시하지 않는다.
   if (card.id.startsWith('dlg:') || card.id.startsWith('song:') || card.id.startsWith('announce:')) return null;
 
   const art = quickPracticeArtForCard(card);
   const imageSrc = card.id.startsWith('sign:') || card.id.startsWith('basic:') ? null : wordArtSrcForCard(card);
-  const [imageFailed, setImageFailed] = useState(false);
   if (imageSrc && !imageFailed) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', margin: '-2px -4px 14px' }}>

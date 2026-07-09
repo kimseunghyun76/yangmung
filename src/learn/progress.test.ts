@@ -7,12 +7,8 @@ import {
   type ProgressMap, type CardProgress,
 } from './progress';
 import type { Card } from './cards';
+import { check } from '../test/check';
 
-let pass = 0, total = 0;
-function check(name: string, cond: boolean) {
-  total++; if (cond) pass++;
-  console.log(`  ${cond ? 'PASS' : 'FAIL'} ${name}`);
-}
 
 const DUMMY = undefined as unknown as Card; // classifyCard는 첫 인자를 쓰지 않음(_c)
 
@@ -117,6 +113,3 @@ console.log('\n=== 요약/세션 결과 ===');
   check('sessionResult 이번 세션 익힘 1, 약점 1', r.masteredNow === 1 && r.weakNow === 1);
   check('다른 세션은 집계 제외', sessionResult(map, 99).masteredNow === 0);
 }
-
-console.log(`\n결과: ${pass}/${total} ${pass === total ? 'PASS' : 'FAIL'}`);
-if (pass !== total) process.exit(1);

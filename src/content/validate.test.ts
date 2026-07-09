@@ -3,18 +3,17 @@
 import type { ContentBundle } from './types';
 import { CONTENT } from './index';
 import { validateContent } from './validate';
+import { check } from '../test/check';
 
 const clone = (): ContentBundle => structuredClone(CONTENT);
 const c1 = (d: ContentBundle) => d.missions.find((m) => m.id === 'C1')!; // C1은 2스텝 정식 미션 (C0는 튜토리얼)
-let pass = 0, total = 0;
 
 function expectFail(name: string, mutate: (d: ContentBundle) => void, rule: string) {
-  total++;
-  const d = clone(); mutate(d);
+  const d = clone();
+  mutate(d);
   const got = [...new Set(validateContent(d).filter((i) => i.sev === 'fail').map((i) => i.rule))];
   const ok = got.includes(rule);
-  console.log(`  ${ok ? 'PASS' : 'FAIL'} ${name} -> 기대 ${rule}, 검출 [${got.join(',') || '없음'}]`);
-  if (ok) pass++;
+  check(name, ok, `기대 ${rule}, 검출 [${got.join(',') || '없음'}]`);
 }
 
 console.log('=== 정상 데이터셋 ===');
@@ -26,8 +25,7 @@ console.log('=== 정상 데이터셋 ===');
   // 정상셋: 하드 실패 0.
   // 허용 경고: V9(C0 면제), V13(receptive 학습 목적 wrong choice — 정답이 아닌 쪽에 사용 가능).
   const warnsOk = w.every((x) => x.rule === 'V9' || x.rule === 'V13');
-  total++; if (f.length === 0 && warnsOk) { pass++; console.log('  PASS 정상셋 클린 (하드 0, 허용 경고만)'); }
-  else console.log('  FAIL 정상셋에 예상 밖 이슈');
+  check('정상셋 클린 (하드 0, 허용 경고만)', f.length === 0 && warnsOk);
 }
 
 console.log('\n=== 위반 검출 ===');
@@ -60,7 +58,6 @@ expectFail('V9 recovery 제거(사유 없음)', (d) => {
 }, 'V9');
 
 console.log('\n=== 강등/경고 (실패가 아니어야) ===');
-total++;
 {
   const d = clone();
   const m = c1(d);
@@ -70,18 +67,12 @@ total++;
   const f = [...new Set(r.filter((i) => i.sev === 'fail').map((i) => i.rule))];
   const w = [...new Set(r.filter((i) => i.sev === 'warn').map((i) => i.rule))];
   const ok = !f.includes('V9') && w.includes('V9');
-  console.log(`  ${ok ? 'PASS' : 'FAIL'} V9 면제사유로 강등 -> fail[${f.join(',') || '없음'}] warn[${w.join(',') || '없음'}]`);
-  if (ok) pass++;
+  check('V9 면제사유로 강등', ok, `fail[${f.join(',') || '없음'}] warn[${w.join(',') || '없음'}]`);
 }
-total++;
 {
   const d = clone();
   c1(d).steps[0].choices[0].phraseId = 'p_fukuro'; // receptive를 학습자 발화로
   const w = [...new Set(validateContent(d).filter((i) => i.sev === 'warn').map((i) => i.rule))];
   const ok = w.includes('V13');
-  console.log(`  ${ok ? 'PASS' : 'FAIL'} V13 receptive를 학습자 선택지로 -> warn[${w.join(',') || '없음'}]`);
-  if (ok) pass++;
+  check('V13 receptive를 학습자 선택지로', ok, `warn[${w.join(',') || '없음'}]`);
 }
-
-console.log(`\n결과: ${pass}/${total} ${pass === total ? 'PASS' : 'FAIL'}`);
-if (pass !== total) process.exitCode = 1;
