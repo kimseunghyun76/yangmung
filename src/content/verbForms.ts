@@ -47,6 +47,10 @@ export const VERB_FORMS: VerbEntry[] = [
   E('v_kaeru', 'ichidan', '바꾸다', '変える', 'かえる', '変え', 'かえ'),
   E('v_shiraberu', 'ichidan', '알아보다', '調べる', 'しらべる', '調べ', 'しらべ'),
   E('v_tsuzukeru', 'ichidan', '계속하다', '続ける', 'つづける', '続け', 'つづけ'),
+  // N5 커버리지 보강(2026-07-10) — 듣다/말하다/읽다, 여행 중 안내·회화에서도 자주 쓰는 기본 동사.
+  E('v_kiku', 'godan', '듣다/묻다', '聞く', 'きく', '聞き', 'きき'),
+  E('v_hanasu', 'godan', '말하다', '話す', 'はなす', '話し', 'はなし'),
+  E('v_yomu', 'godan', '읽다', '読む', 'よむ', '読み', 'よみ'),
 ];
 
 export const VERB_FORM_KEYS = ['masu', 'nagara', 'tai'] as const;
