@@ -12,12 +12,17 @@ if (!input || !output) {
 mkdirSync(dirname(output), { recursive: true });
 const tmp = join(dirname(output), `.${Date.now()}.tmp.webp`);
 
-const vf = [
+const filters = [
   'format=rgba',
   `colorkey=${keyColorArg}:0.28:0.05`,
-  keyColorArg.toLowerCase() === '0xff00ff'
-    ? 'despill=type=blue:mix=0.45:expand=0.12'
-    : 'despill=type=green:mix=0.82:expand=0.18',
+];
+
+if (keyColorArg.toLowerCase() !== '0xff00ff') {
+  filters.push('despill=type=green:mix=0.82:expand=0.18');
+}
+
+const vf = [
+  ...filters,
   'format=rgba',
   'scale=512:512:flags=lanczos',
 ].join(',');

@@ -19,8 +19,7 @@ import { NavBar, type NavBarProps } from './NavBar';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
 import { MascotEmpty, MascotFace } from './mascot';
 import { Icon } from '../ui/Icon';
-import { loadCollection, ownedCount, bestRarity, itemsOf, RARITIES, rarityMeta, type Collection } from '../learn/collection';
-import { gachaItemForPlace } from '../learn/gachaItems';
+import { loadCollection } from '../learn/collection';
 import { useLearningStats, type LearningStats } from '../learn/learningStats';
 import { StatTile, LearningHeatmap } from './StatsWidgets';
 import { VOCAB_GROUPS, vocabGroupArt } from '../content/thematicVocab';
@@ -147,7 +146,6 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
             d={diagnosis} line={coach.line}
             hira={hira} kata={kata} kanaPct={kanaPct} stats={stats}
             modeLabel={modeLabel} onPlacement={onPlacement}
-            collection={collection} sceneCount={scenes.length} onOpenGacha={() => nav.onNavigate('gacha')}
           />
         </GlassPanel>
       </div>
@@ -393,11 +391,10 @@ function HomeSceneCard({ hero, accent, kicker, title, chips, planned, onStart }:
 
 // 상태 대시보드 — 코치·학습 상태·가나 안정도·난이도(진단)를 한 카드로 묶어 "한눈에".
 // 접었을 때도 등급·코치 한 줄은 보이고, 펼치면 학습 상태·가나 안정도·성장 기록·보유 카드·약점까지.
-function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPlacement, collection, sceneCount, onOpenGacha }: {
+function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPlacement }: {
   d: Diagnosis; line: string;
   hira: { mastered: number; total: number }; kata: { mastered: number; total: number };
   kanaPct: number; stats: LearningStats; modeLabel: string; onPlacement: () => void;
-  collection: Collection; sceneCount: number; onOpenGacha: () => void;
 }) {
   // 기본은 접힌 상태로 시작(2026-07-08, 사용자 요청) — 요약(코치 한 줄)은 접혀 있어도 항상 보임.
   const [expanded, setExpanded] = useState(false);
@@ -480,11 +477,6 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPla
             <LearningHeatmap dayCounts={stats.dayCounts} />
           </div>
 
-          {/* 보유 카드 — 가챠로 모은 여행 아이템을 등급별 그래프 + 썸네일로 */}
-          <div style={{ marginTop: 13, paddingTop: 12, borderTop: '1px solid var(--glass-border)' }}>
-            <CollectionPreview collection={collection} sceneCount={sceneCount} onOpenGacha={onOpenGacha} />
-          </div>
-
           {/* 약점 */}
           {(d.weakKana.length > 0 || d.weakScenes.length > 0) && (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 13, alignItems: 'center' }}>
@@ -498,63 +490,6 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPla
             </div>
           )}
         </>
-      )}
-    </>
-  );
-}
-
-// 보유 카드 — 등급별 보유 개수를 막대 그래프로, 등급 높은 순 몇 개는 썸네일로 보여준다.
-function CollectionPreview({ collection, sceneCount, onOpenGacha }: { collection: Collection; sceneCount: number; onOpenGacha: () => void }) {
-  const rarityCounts = RARITIES.map((r) => ({
-    ...r,
-    count: Object.values(collection.cards).reduce((sum, card) => sum + itemsOf(card)[r.key], 0),
-  }));
-  const maxCount = Math.max(1, ...rarityCounts.map((r) => r.count));
-  const owned = ownedCount(collection);
-  const topCards = Object.entries(collection.cards)
-    .map(([sceneId, card]) => ({ sceneId, rarity: bestRarity(card), n: itemsOf(card)[bestRarity(card)] }))
-    .filter((c) => c.n > 0)
-    .sort((a, b) => RARITIES.findIndex((r) => r.key === b.rarity) - RARITIES.findIndex((r) => r.key === a.rarity))
-    .slice(0, 6);
-
-  return (
-    <>
-      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10 }}>
-        <p style={{ margin: 0, ...label }}>보유 카드</p>
-        <button className="ym-press" onClick={onOpenGacha} style={{ border: 'none', background: 'none', color: 'var(--accent)', fontWeight: 800, fontSize: 12, cursor: 'pointer', padding: 0 }}>
-          🎁 도감 {owned}/{sceneCount} →
-        </button>
-      </div>
-      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 7, height: 60, marginTop: 10 }}>
-        {rarityCounts.map((r) => (
-          <div key={r.key} style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-            <div style={{
-              width: '100%', maxWidth: 28, height: Math.max(3, Math.round((r.count / maxCount) * 40)),
-              background: r.color, borderRadius: 4, transition: 'height .4s ease',
-            }} title={`${r.label} ${r.count}개`} />
-            <span style={{ fontSize: 9.5, fontWeight: 850, color: 'var(--ink-faint)' }}>{r.label}</span>
-            <span style={{ fontSize: 9.5, fontWeight: 700, color: 'var(--ink-soft)', fontVariantNumeric: 'tabular-nums' }}>{r.count}</span>
-          </div>
-        ))}
-      </div>
-      {topCards.length > 0 ? (
-        <div style={{ display: 'flex', gap: 8, marginTop: 10, overflowX: 'auto', paddingBottom: 2 }}>
-          {topCards.map((c) => {
-            const place = CONTENT.missions.find((m) => m.id === c.sceneId)?.place ?? c.sceneId;
-            const item = gachaItemForPlace(place, c.rarity);
-            const meta = rarityMeta(c.rarity);
-            return (
-              <div key={c.sceneId} style={{ flex: '0 0 auto', width: 46, textAlign: 'center' }}>
-                <div style={{ width: 46, height: 46, borderRadius: 12, overflow: 'hidden', border: `2px solid ${meta.color}`, background: 'var(--glass-bg-strong)' }}>
-                  {item.image && <img src={item.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
-                </div>
-                <span style={{ display: 'block', marginTop: 3, fontSize: 9, color: 'var(--ink-faint)', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.title}</span>
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <p style={{ margin: '10px 0 0', fontSize: 12, color: 'var(--ink-soft)' }}>아직 모은 카드가 없어요 — 학습을 마치면 가챠로 받을 수 있어요.</p>
       )}
     </>
   );

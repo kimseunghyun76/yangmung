@@ -17,7 +17,7 @@ const items: { key: NavView; label: string }[] = [
   { key: 'practice', label: '학습' },
   { key: 'map', label: '미션' },
   { key: 'review', label: '복습' },
-  { key: 'gacha', label: '가챠' },
+  { key: 'gacha', label: '도감' },
 ];
 
 export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings, theme, onToggleTheme }: Props) {

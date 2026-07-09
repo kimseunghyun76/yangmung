@@ -13,6 +13,7 @@ import { Icon } from '../ui/Icon';
 import { speakSequence, ttsSupported } from '../tts';
 import { loadSettings, sceneSentenceLevelForMode } from '../learn/settings';
 import { Modal } from './Modal';
+import { GlassPanel } from './shell';
 import { sceneVisualByMission } from './scene';
 
 const SCENES = CONTENT.missions.filter((m) => m.id !== 'C0');
@@ -46,7 +47,7 @@ function ItemArt({ sceneId, rarity, size }: { sceneId: string; rarity: Rarity; s
   return <img className="ym-mcard-img" src={src} alt="" draggable={false} onError={() => advanceImageSource(sourceIndex, sources, setSourceIndex, setFailed)} />;
 }
 
-// 도감 카드 — 상세 설명은 팝업으로 넘기고, 아이템과 등급만 또렷하게 보인다.
+// 도감 카드 — 등급은 색상·아우라로만 표시(N/R/SR 등 글자 배지 없음), 일본어 표기를 크게, 한글 뜻은 작게 하단에.
 function DeckCardFace({ sceneId, rarity, size = 56 }: { sceneId: string; rarity: Rarity; size?: number }) {
   const sv = sceneVisualByMission(sceneId);
   const meta = rarityMeta(rarity);
@@ -59,13 +60,13 @@ function DeckCardFace({ sceneId, rarity, size = 56 }: { sceneId: string; rarity:
       borderRadius: Math.round(size * 0.13),
     }}>
       <span className="ym-mcard-aura" aria-hidden />
-      <span className="ym-mcard-top">
-        <span className="ym-mcard-tier" aria-hidden style={{ fontSize: Math.max(8, Math.round(size * 0.09)) }}>{meta.label}</span>
-      </span>
-      <span aria-hidden className="ym-mcard-art" style={{ width: Math.round(size * 0.88), height: Math.round(size * 0.78), marginTop: Math.round(size * 0.035) }}>
+      <span aria-hidden className="ym-mcard-art" style={{ width: Math.round(size * 0.9), height: Math.round(size * 0.86), marginTop: Math.round(size * 0.05) }}>
         <ItemArt sceneId={sceneId} rarity={rarity} size={size} />
       </span>
-      <span className="ym-mcard-title" style={{ fontSize: Math.max(8, Math.round(size * 0.095)), width: '88%', marginTop: Math.round(size * 0.035) }}>{item.title}</span>
+      <span className="ym-mcard-info">
+        <span lang="ja" className="ym-mcard-title" style={{ fontSize: Math.max(11, Math.round(size * 0.135)) }}>{item.jaTitle ?? item.title}</span>
+        <span className="ym-mcard-sub" style={{ fontSize: Math.max(8, Math.round(size * 0.078)) }}>{item.title}</span>
+      </span>
     </span>
   );
 }
@@ -205,7 +206,7 @@ function RevealCards({ results, animate }: { results: DropResult[]; animate?: bo
     <div className="ym-gacha-summary-grid">
       {grouped.map((r, i) => (
         <div key={`${r.sceneId}:${r.rarity}`} className={animate ? 'ym-card-in ym-gacha-summary-item' : 'ym-gacha-summary-item'} style={{ animationDelay: animate ? `${0.3 + i * 0.08}s` : undefined }}>
-          <DeckCardFace sceneId={r.sceneId} rarity={r.rarity} size={98} />
+          <DeckCardFace sceneId={r.sceneId} rarity={r.rarity} size={118} />
           <span className="ym-gacha-summary-place">{placeOf(r.sceneId)}</span>
           <span className="ym-gacha-summary-count">x{r.count}</span>
         </div>
@@ -552,7 +553,7 @@ function CollectionCardDetailModal({ sceneId, rarity, count, onClose }: { sceneI
   return (
     <Modal title="카드 상세" onClose={onClose}>
       <div style={{ display: 'grid', gridTemplateColumns: '132px minmax(0, 1fr)', gap: 14, alignItems: 'center' }}>
-        <DeckCardFace sceneId={sceneId} rarity={rarity} size={128} />
+        <DeckCardFace sceneId={sceneId} rarity={rarity} size={156} />
         <div style={{ minWidth: 0 }}>
           <p style={{ margin: 0, color: rarityMeta(rarity).color, fontSize: 12, fontWeight: 950, letterSpacing: '0.06em' }}>{rarityMeta(rarity).label} · {place}</p>
           <h3 lang="ja" style={{ margin: '6px 0 0', fontSize: 22, lineHeight: 1.15, color: 'var(--ink)' }}>{item.jaTitle ?? item.title}</h3>
@@ -633,6 +634,51 @@ function finalGiftProgress(collection: Collection): { have: number; total: numbe
   return { have, total: SCENES.length, ready: have >= SCENES.length };
 }
 
+// 보유 카드 요약 — 등급별 보유 개수를 막대 그래프로, 등급 높은 순 몇 개는 썸네일로.
+// 예전엔 홈 화면에도 있었지만(2026-07-09 사용자 요청) 도감 화면 하나로 모았다.
+export function CollectionSummary() {
+  const collection = loadCollection();
+  const rarityCounts = RARITIES.map((r) => ({
+    ...r,
+    count: Object.values(collection.cards).reduce((sum, card) => sum + itemsOf(card)[r.key], 0),
+  }));
+  const maxCount = Math.max(1, ...rarityCounts.map((r) => r.count));
+  const topCards = Object.entries(collection.cards)
+    .map(([sceneId, card]) => ({ sceneId, rarity: bestRarity(card), n: itemsOf(card)[bestRarity(card)] }))
+    .filter((c) => c.n > 0)
+    .sort((a, b) => RARITIES.findIndex((r) => r.key === b.rarity) - RARITIES.findIndex((r) => r.key === a.rarity))
+    .slice(0, 6);
+
+  return (
+    <GlassPanel strong style={{ marginBottom: 18 }}>
+      <p style={{ margin: '0 0 12px', fontSize: 12, fontWeight: 900, letterSpacing: '0.06em', color: 'var(--accent)' }}>MY COLLECTION</p>
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, height: 64 }}>
+        {rarityCounts.map((r) => (
+          <div key={r.key} style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+            <div style={{
+              width: '100%', maxWidth: 30, height: Math.max(3, Math.round((r.count / maxCount) * 42)),
+              background: r.color, borderRadius: 4, transition: 'height .4s ease',
+            }} title={`${r.label} ${r.count}개`} />
+            <span style={{ fontSize: 10, fontWeight: 850, color: 'var(--ink-faint)' }}>{r.label}</span>
+            <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--ink-soft)', fontVariantNumeric: 'tabular-nums' }}>{r.count}</span>
+          </div>
+        ))}
+      </div>
+      {topCards.length > 0 ? (
+        <div style={{ display: 'flex', gap: 10, marginTop: 12, overflowX: 'auto', paddingBottom: 2 }}>
+          {topCards.map((c) => (
+            <div key={c.sceneId} style={{ flex: '0 0 auto' }}>
+              <DeckCardFace sceneId={c.sceneId} rarity={c.rarity} size={64} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p style={{ margin: '10px 0 0', fontSize: 12, color: 'var(--ink-soft)' }}>아직 모은 카드가 없어요 — 학습을 마치면 카드를 받을 수 있어요.</p>
+      )}
+    </GlassPanel>
+  );
+}
+
 export function DeckBrowser() {
   const [collection, setCollection] = useState<Collection>(() => loadCollection());
   const [selected, setSelected] = useState<string>();
@@ -682,7 +728,7 @@ export function DeckBrowser() {
             return (
               <div key={r.key} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: 11, borderRadius: 16, border: `1px solid ${r.color}`, background: 'var(--glass-bg-strong)', color: 'var(--ink)' }}>
                 <button className="ym-press" onClick={() => setSelectedDetail({ sceneId: selected, rarity: r.key })} style={{ border: 0, background: 'transparent', color: 'var(--ink)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: 0 }}>
-                  <DeckCardFace sceneId={selected} rarity={r.key} size={104} />
+                  <DeckCardFace sceneId={selected} rarity={r.key} size={130} />
                   <span lang="ja" style={{ fontSize: 12, fontWeight: 950, color: r.color, textAlign: 'center' }}>{item.jaTitle ?? item.title}</span>
                   <span style={{ fontSize: 11, fontWeight: 850, color: 'var(--ink-soft)' }}>x{count}</span>
                 </button>
@@ -752,7 +798,7 @@ export function DeckBrowser() {
           return (
             <div key={m.id} className="ym-gacha-merge-host" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 9, padding: '15px 10px', borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', position: 'relative', overflow: 'hidden' }}>
               <button className="ym-press" onClick={() => setSelected(m.id)} style={{ border: 0, background: 'transparent', color: 'var(--ink)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, padding: 0, width: '100%' }}>
-                <DeckCardFace sceneId={m.id} rarity={rarity} size={116} />
+                <DeckCardFace sceneId={m.id} rarity={rarity} size={138} />
                 <span style={{ fontSize: 12, fontWeight: 850 }}>{placeOf(m.id)}</span>
               </button>
               <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}>

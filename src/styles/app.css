@@ -902,7 +902,7 @@
         font-size: 8px; font-weight: 1000; line-height: 1.2;
       }
       .ym-item-thumb-art { width: 48px; height: 48px; display: grid; place-items: center; }
-      .ym-item-thumb-art img { width: 124%; height: 124%; object-fit: contain; display: block; filter: drop-shadow(0 8px 8px rgba(0,0,0,.22)); }
+      .ym-item-thumb-art img { width: 110%; height: 110%; object-fit: contain; display: block; filter: drop-shadow(0 8px 8px rgba(0,0,0,.22)); }
       .ym-gacha-result-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; min-height: 42px; }
       .ym-gacha-summary-grid {
         display: grid; grid-template-columns: repeat(auto-fit, minmax(112px, 1fr)); gap: 12px; align-items: start;
@@ -1332,16 +1332,6 @@
       .ym-mcard-desc {
         display: none;
       }
-      .ym-mcard-top {
-        position: relative;
-        z-index: 3;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 88%;
-        min-height: 12%;
-        gap: 4px;
-      }
       .ym-mcard-aura {
         position: absolute;
         left: 50%;
@@ -1356,21 +1346,21 @@
         pointer-events: none;
       }
       .ym-mcard-mascot { display: none !important; }
-      .ym-mcard-tier {
-        position: static;
-        display: inline-flex;
+      /* 등급 배지(N/R/SR 등 글자)는 카드에서 제거 — 색상·아우라·오버레이 배경만으로 등급을 표현한다. */
+      .ym-mcard-info {
+        position: relative;
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        min-width: 2.35em;
-        padding: .28em .58em;
-        border: 1.5px solid color-mix(in srgb, var(--rarity-color,#d78f73), #161b25 18%);
-        border-radius: 999px;
-        color: #fffdf8;
-        background: linear-gradient(180deg, color-mix(in srgb, var(--rarity-color,#d78f73), #fff 12%), color-mix(in srgb, var(--rarity-color,#d78f73), #161b25 18%));
-        font-weight: 1000;
-        letter-spacing: .03em;
-        line-height: 1;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 3px 8px color-mix(in srgb, var(--rarity-color,#d78f73), transparent 55%);
+        gap: .18em;
+        width: 92%;
+        margin-top: auto;
+        padding: .4em .3em .38em;
+        border-radius: .6em;
+        background: linear-gradient(180deg, color-mix(in srgb, var(--rarity-color,#d78f73), transparent 78%), color-mix(in srgb, var(--rarity-color,#d78f73), #10131a 62%));
+        border: 1px solid color-mix(in srgb, var(--rarity-color,#d78f73), #fff 22%);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.16);
       }
       .ym-mcard-art {
         overflow: visible;
@@ -1409,20 +1399,25 @@
       .ym-mcard-title {
         position: relative;
         z-index: 3;
-        max-width: 88%;
+        max-width: 100%;
         min-height: 1.05em;
         color: #fff8e5;
         font-weight: 1000;
-        line-height: 1.05;
+        line-height: 1.12;
         text-align: center;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        white-space: normal;
+        word-break: keep-all;
       }
       .ym-mcard-sub {
         position: relative;
         z-index: 3;
-        color: rgba(255,248,229,.66);
+        max-width: 100%;
+        color: rgba(255,248,229,.7);
         background: transparent;
         border-radius: 0;
         font-weight: 850;
@@ -1449,8 +1444,10 @@
         white-space: nowrap;
       }
       .ym-mcard.is-basic { --rarity-color:#8b95a3; }
+      /* 108%(예전 142%) — 원본 이미지가 중앙에서 살짝 벗어나 있어도(예: 도시락·핫스낵) 과한 확대가
+         한쪽을 화면 밖으로 밀어내 잘려 보이지 않도록 여백을 줄였다. */
       .ym-mcard-img {
-        width: 142%; height: 142%; object-fit: contain; object-position: center; display: block;
+        width: 108%; height: 108%; object-fit: contain; object-position: center; display: block;
         filter: saturate(1.12) contrast(1.04) drop-shadow(0 10px 8px rgba(54,38,22,.18));
         animation: ym-mcard-item-float 2.8s ease-in-out infinite;
       }
