@@ -352,6 +352,16 @@ export function App() {
     const stage = coreLevel === 'beginner' ? stageKey('beginner', script) : null;
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
   }
+  // 복습장 "약점" 탭 전용 — 지금 화면에 뜬 약한 글자들만 콕 집어 퀴즈로 해소.
+  // 일반 복습(startReviewSession)은 quotas.K:0라 가나가 아예 안 나오는 별개 세션이라, 이걸 새로 만들었다.
+  function startWeakKanaReview(weakKeys: string[], count: number) {
+    if (weakKeys.length === 0) return;
+    const ids = new Set(weakKeys);
+    const cards = selectScriptKanaCards(allCards, progress, nextSessionId(session), ids, count);
+    if (cards.length === 0) return;
+    lastPracticeRef.current = () => startWeakKanaReview(weakKeys, count);
+    flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true });
+  }
   // 학습 연습(발음구분·간판·받아쓰기·작문·어휘·방송·명장면 등)에도 항상 문법/문화 팁 1개 이상 —
   // 입문은 제외(미션과 마찬가지로 기본 등급부터). 주제 키워드로 연관 팁을 우선 찾고 없으면 전체 풀에서 회전.
   function withStudyTip(cards: Card[], keywords: string[] = []): Card[] {
@@ -797,7 +807,7 @@ export function App() {
       return <MapView nav={{ ...nav, current: 'map' }} allCards={allCards} progress={progress} openMissions={visibleOpenMissions} missionsLocked={missionsLocked} devUnlockAll={!!settings.devUnlockAll} onPracticeScene={startSceneSession} onBack={() => goBack('home')} />;
     }
     if (view === 'review') {
-      return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} openMissions={visibleOpenMissions} devUnlockAll={!!settings.devUnlockAll} onStartReview={startReviewSession} onPracticeScene={startSceneSession} onBack={() => goBack('home')} />;
+      return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} openMissions={visibleOpenMissions} devUnlockAll={!!settings.devUnlockAll} onStartReview={startReviewSession} onPracticeScene={startSceneSession} onStartWeakKanaReview={startWeakKanaReview} onBack={() => goBack('home')} />;
     }
     if (view === 'gacha') {
       return <GachaPage nav={{ ...nav, current: 'gacha' }} openMissions={visibleOpenMissions} />;

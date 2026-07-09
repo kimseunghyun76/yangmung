@@ -28,7 +28,8 @@ const label: React.CSSProperties = {
 };
 
 // 셀 상태 — 읽기 안정(2회 연속 정답)=익힘, 시도 흔적 있으면=본 적 있음.
-function cellState(progress: ProgressMap, id: string): 'mastered' | 'seen' | 'new' {
+// Review.tsx의 가나 탭도 이 분류를 그대로 재사용(중복 로직 방지).
+export function cellState(progress: ProgressMap, id: string): 'mastered' | 'seen' | 'new' {
   const read = progress[`kana:${id}:read`];
   if (read && read.consecutiveCorrect >= 2) return 'mastered';
   for (const suf of ['read', 'listen', 'confuse']) {
@@ -38,14 +39,14 @@ function cellState(progress: ProgressMap, id: string): 'mastered' | 'seen' | 'ne
 }
 
 // 표 섹션 — 청음 / 탁음·반탁음 / 요음. 같은 결로 행(group) 단위 렌더.
-const SECTIONS: { key: string; title: string; sub: string; kinds: KanaKind[] }[] = [
+export const KANA_SECTIONS: { key: string; title: string; sub: string; kinds: KanaKind[] }[] = [
   { key: 'sei', title: '청음', sub: '오십음도 기본', kinds: ['sei'] },
   { key: 'daku', title: '탁음 · 반탁음', sub: '゛ ゜가 붙은 소리', kinds: ['daku', 'handaku'] },
   { key: 'yoon', title: '요음', sub: '작은 ゃ ゅ ょ 조합', kinds: ['yoon'] },
 ];
 
 // 한 섹션의 아이템을 group(행) 순서를 보존하며 묶는다.
-function groupRows(items: KanaItem[]): { group: string; cells: KanaItem[] }[] {
+export function groupKanaRows(items: KanaItem[]): { group: string; cells: KanaItem[] }[] {
   const order: string[] = [];
   const map = new Map<string, KanaItem[]>();
   for (const it of items) {
@@ -97,10 +98,10 @@ export function KanaTable({ nav, progress, script, onScriptChange, onQuiz, onBac
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-        {SECTIONS.map((sec) => {
+        {KANA_SECTIONS.map((sec) => {
           const secItems = items.filter((it) => sec.kinds.includes(it.kind));
           if (secItems.length === 0) return null;
-          const rows = groupRows(secItems);
+          const rows = groupKanaRows(secItems);
           return (
             <GlassPanel key={sec.key}>
               <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10 }}>
@@ -118,7 +119,7 @@ export function KanaTable({ nav, progress, script, onScriptChange, onQuiz, onBac
                         <button key={it.id} className="ym-press" onClick={() => setDetailIdx(items.indexOf(it))}
                           title={st === 'mastered' ? '익힘' : st === 'seen' ? '본 적 있음' : '아직'}
                           style={{ padding: '8px 3px', borderRadius: 11, cursor: 'pointer', textAlign: 'center', border: `1px solid ${border}`, background: bg, color: 'var(--ink)', minWidth: 0 }}>
-                          <div lang="ja" style={{ fontSize: 22, fontWeight: 800, lineHeight: 1.1 }}>{it.char}</div>
+                          <div lang="ja" style={{ fontSize: it.char.length > 1 ? 17 : 22, fontWeight: 800, lineHeight: 1.1, whiteSpace: 'nowrap' }}>{it.char}</div>
                           <div style={{ fontSize: 10, color: 'var(--ink-faint)', fontWeight: 700, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{it.romaji}</div>
                         </button>
                       );
