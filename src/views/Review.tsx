@@ -3,9 +3,12 @@ import { useMemo, useState } from 'react';
 import { CONTENT } from '../content';
 import type { KanaItem, Phrase } from '../content';
 import type { Card } from '../learn/cards';
-import { countSeenKana, isKanaReadStable, type ProgressMap, type SeenKana } from '../learn/progress';
+import {
+  countSeenKana, isWeakDismissed, loadDismissedWeak, saveDismissedWeak,
+  type DismissedWeak, type ProgressMap, type SeenKana,
+} from '../learn/progress';
 import { isSceneOpen } from '../learn/unlocks';
-import { diagnose } from '../learn/adaptive';
+import { diagnose, type WeakItem } from '../learn/adaptive';
 import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
@@ -15,6 +18,7 @@ import { GlassPanel, hexA } from './shell';
 import { sceneVisualByPlace } from './scene';
 import { phraseIdsByPlace } from './scene';
 import { MascotEmpty } from './mascot';
+import { cellState, KANA_SECTIONS, groupKanaRows } from './KanaTable';
 
 interface Props {
   nav: NavBarProps;
@@ -25,20 +29,32 @@ interface Props {
   devUnlockAll: boolean;
   onStartReview?: () => void;
   onPracticeScene?: (missionId: string) => void;
+  onStartWeakKanaReview?: (weakKeys: string[], count: number) => void;
   onBack: () => void;
 }
+
+const WEAK_KANA_COUNT_OPTIONS = [6, 10, 15];
 
 type Tab = '가나' | '표현' | '장면별' | '약점';
 const TABS: Tab[] = ['가나', '표현', '장면별', '약점'];
 const kicker: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase', margin: 0 };
 
-export function Review({ nav, allCards, progress, seenKana, openMissions, devUnlockAll, onStartReview, onPracticeScene }: Props) {
+export function Review({ nav, allCards, progress, seenKana, openMissions, devUnlockAll, onStartReview, onPracticeScene, onStartWeakKanaReview }: Props) {
   const [tab, setTab] = useState<Tab>('가나');
   const phraseSeen = useMemo(() => collectSeenPhraseIds(allCards, progress), [allCards, progress]);
   const lastSeen = useMemo(() => phraseLastSeenMap(allCards, progress), [allCards, progress]);
   const places = useMemo(() => phraseIdsByPlace(), []);
   const byId = useMemo(() => Object.fromEntries(CONTENT.phrases.map((p) => [p.id, p])), []);
   const diag = useMemo(() => diagnose(allCards, progress, 0), [allCards, progress]);
+  const [dismissed, setDismissed] = useState<DismissedWeak>(() => loadDismissedWeak());
+  const [weakKanaCount, setWeakKanaCount] = useState(WEAK_KANA_COUNT_OPTIONS[0]);
+  const visibleWeakKana = useMemo(() => diag.weakKana.filter((w) => !isWeakDismissed(dismissed, w.key, w.score)), [diag.weakKana, dismissed]);
+  const visibleWeakScenes = useMemo(() => diag.weakScenes.filter((w) => !isWeakDismissed(dismissed, w.key, w.score)), [diag.weakScenes, dismissed]);
+  function dismissWeak(w: WeakItem) {
+    const next = { ...dismissed, [w.key]: w.score };
+    setDismissed(next);
+    saveDismissedWeak(next);
+  }
 
   const hira = useMemo(() => CONTENT.kana.filter((k) => k.script === 'hiragana' && !!(progress[`kana:${k.id}:read`] || progress[`kana:${k.id}:listen`] || progress[`kana:${k.id}:confuse`])), [progress]);
   const kata = useMemo(() => CONTENT.kana.filter((k) => (k.script === 'katakana' || k.script === 'common') && !!(progress[`kana:${k.id}:read`] || progress[`kana:${k.id}:listen`] || progress[`kana:${k.id}:confuse`])), [progress]);
@@ -85,43 +101,72 @@ export function Review({ nav, allCards, progress, seenKana, openMissions, devUnl
       {tab === '약점' && (
         <GlassPanel>
           <p style={{ ...kicker, marginBottom: 12 }}>다시 다질 약점</p>
-          {diag.weakKana.length === 0 && diag.weakScenes.length === 0 ? (
-            <Empty>아직 뚜렷한 약점이 없어요. 잘하고 있어요!</Empty>
+          {visibleWeakKana.length === 0 && visibleWeakScenes.length === 0 ? (
+            <Empty>{diag.weakKana.length + diag.weakScenes.length > 0 ? '표시할 약점을 모두 지웠어요. 잘하고 있어요!' : '아직 뚜렷한 약점이 없어요. 잘하고 있어요!'}</Empty>
           ) : (
             <>
-              {diag.weakKana.length > 0 && (
+              {visibleWeakKana.length > 0 && (
                 <div style={{ marginBottom: 16 }}>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink-soft)', margin: '0 0 8px' }}>약한 글자</p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                    {diag.weakKana.map((w) => (
-                      <button key={w.key} className="ym-press" onClick={() => speak(w.label)} disabled={!ttsSupported()}
-                        style={{ width: 52, height: 52, borderRadius: 13, border: '1px solid var(--accent)', background: 'var(--accent-soft)', color: 'var(--accent)', fontSize: 24, fontWeight: 700, cursor: 'pointer' }}>{w.label}</button>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink-soft)', margin: '0 0 8px' }}>약한 글자 · 누르면 듣기, ✕는 목록에서 지우기</p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
+                    {visibleWeakKana.map((w) => (
+                      <span key={w.key} style={{ position: 'relative', display: 'inline-flex' }}>
+                        <button className="ym-press" onClick={() => speak(w.label)} disabled={!ttsSupported()}
+                          style={{ width: 54, height: 54, borderRadius: 13, border: '1px solid var(--accent)', background: 'var(--accent-soft)', color: 'var(--accent)', fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                          <span lang="ja" style={{ fontSize: w.label.length > 1 ? 18 : 24 }}>{w.label}</span>
+                        </button>
+                        <button aria-label={`${w.label} 약점 목록에서 지우기`} onClick={(e) => { e.stopPropagation(); dismissWeak(w); }}
+                          style={{ position: 'absolute', right: -5, top: -5, width: 20, height: 20, borderRadius: 999, border: '1px solid var(--glass-border)', background: 'var(--surface)', color: 'var(--ink-faint)', fontSize: 11, fontWeight: 900, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, lineHeight: 1 }}>✕</button>
+                      </span>
                     ))}
                   </div>
+                  {onStartWeakKanaReview && (
+                    <>
+                      <div style={{ display: 'flex', gap: 6, padding: 4, borderRadius: 12, background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', marginBottom: 10 }}>
+                        {WEAK_KANA_COUNT_OPTIONS.map((n) => {
+                          const active = weakKanaCount === n;
+                          return (
+                            <button key={n} className="ym-press" onClick={() => setWeakKanaCount(n)} style={{
+                              flex: 1, padding: '8px 4px', borderRadius: 10, border: 'none', cursor: 'pointer',
+                              background: active ? 'var(--accent)' : 'transparent', color: active ? 'var(--accent-ink)' : 'var(--ink-soft)',
+                              fontWeight: 800, fontSize: 13,
+                            }}>{n}문제</button>
+                          );
+                        })}
+                      </div>
+                      <button className="ym-press" onClick={() => onStartWeakKanaReview(visibleWeakKana.map((w) => w.key), weakKanaCount)}
+                        style={{ width: '100%', padding: '13px 16px', borderRadius: 14, border: 'none', background: 'var(--accent)', color: 'var(--accent-ink)', fontWeight: 800, fontSize: 15, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                        <Icon name="recovery" size={17} /> 약한 글자만 퀴즈로 풀기
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
-              {diag.weakScenes.length > 0 && (
+              {visibleWeakScenes.length > 0 && (
                 <div>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink-soft)', margin: '0 0 8px' }}>약한 장면</p>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink-soft)', margin: '0 0 8px' }}>약한 장면 · 누르면 그 장면을 바로 연습</p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                    {diag.weakScenes.map((w) => {
+                    {visibleWeakScenes.map((w) => {
                       const sv = sceneVisualByPlace(w.label);
                       return (
-                        <button key={w.key} className="ym-press" onClick={() => onPracticeScene?.(w.key)} disabled={!onPracticeScene}
-                          style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '8px 13px', borderRadius: 999, border: '1px solid var(--glass-border)', background: hexA(sv.accent, 0.12), color: 'var(--ink)', fontSize: 14, fontWeight: 600, cursor: onPracticeScene ? 'pointer' : 'default' }}>
-                          <span style={{ color: sv.accent, display: 'inline-flex' }}><Icon name={sv.icon} size={16} /></span>{w.label}
-                          {onPracticeScene && <Icon name="flow" size={14} style={{ color: 'var(--ink-faint)' }} />}
-                        </button>
+                        <span key={w.key} style={{ display: 'inline-flex', alignItems: 'center', borderRadius: 999, border: '1px solid var(--glass-border)', background: hexA(sv.accent, 0.12), overflow: 'hidden' }}>
+                          <button className="ym-press" onClick={() => onPracticeScene?.(w.key)} disabled={!onPracticeScene}
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '8px 6px 8px 13px', border: 'none', background: 'none', color: 'var(--ink)', fontSize: 14, fontWeight: 600, cursor: onPracticeScene ? 'pointer' : 'default' }}>
+                            <span style={{ color: sv.accent, display: 'inline-flex' }}><Icon name={sv.icon} size={16} /></span>{w.label}
+                            {onPracticeScene && <Icon name="flow" size={14} style={{ color: 'var(--ink-faint)' }} />}
+                          </button>
+                          <button aria-label={`${w.label} 약점 목록에서 지우기`} onClick={(e) => { e.stopPropagation(); dismissWeak(w); }}
+                            style={{ border: 'none', background: 'none', color: 'var(--ink-faint)', fontSize: 12, fontWeight: 900, cursor: 'pointer', padding: '8px 11px 8px 4px' }}>✕</button>
+                        </span>
                       );
                     })}
                   </div>
-                  <p style={{ margin: '8px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>장면을 누르면 그 장면을 바로 연습해요.</p>
                 </div>
               )}
               {onStartReview && (
                 <button className="ym-press" onClick={onStartReview}
-                  style={{ width: '100%', marginTop: 16, padding: '14px 16px', borderRadius: 16, border: 'none', background: 'var(--accent)', color: 'var(--accent-ink)', fontWeight: 800, fontSize: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                  <Icon name="recovery" size={18} /> 약점 복습 한 판 시작
+                  style={{ width: '100%', marginTop: 16, padding: '13px 16px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)', fontWeight: 750, fontSize: 14.5, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                  <Icon name="recovery" size={17} /> 전체 복습 한 판(장면·표현 포함)
                 </button>
               )}
             </>
@@ -185,19 +230,34 @@ function SceneSheets({ places, byId, phraseSeen, openMissions, devUnlockAll }: {
 
   return (
     <>
-      {/* 셀렉트박스 — 장소 선택 (잠긴 곳은 ??? 신비 처리) */}
+      {/* 장소 선택 — 칩으로 눈에 바로 들어오게(잠긴 곳은 🔒 신비 처리). 진행률이 있으면 바로 보여 골라 들어가기 쉽게. */}
       <div style={{ marginBottom: 14 }}>
         <label style={{ ...kicker, display: 'block', marginBottom: 8 }}>장면 선택 · {openCount}/{places.length} 개방</label>
-        <div style={{ position: 'relative' }}>
-          <select value={sel} onChange={(e) => setSel(e.target.value)}
-            style={{ width: '100%', appearance: 'none', WebkitAppearance: 'none', padding: '13px 40px 13px 14px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontSize: 15, fontWeight: 700, fontFamily: 'inherit', cursor: 'pointer' }}>
-            {places.map((p, i) => {
-              const open = isOpen(p.id);
-              const seenCount = p.phraseIds.filter((id) => phraseSeen.has(id)).length;
-              return <option key={p.id} value={p.id}>{open ? `${p.place} (${seenCount}/${p.phraseIds.length})` : `🔒 미개방 ${i + 1}`}</option>;
-            })}
-          </select>
-          <Icon name="flow" size={18} style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--ink-faint)', pointerEvents: 'none' }} />
+        <div style={{ display: 'flex', gap: 7, overflowX: 'auto', paddingBottom: 3 }}>
+          {places.map((p, i) => {
+            const open = isOpen(p.id);
+            const seenCount = p.phraseIds.filter((id) => phraseSeen.has(id)).length;
+            const active = p.id === sel;
+            const sv = open ? sceneVisualByPlace(p.place) : null;
+            return (
+              <button key={p.id} className="ym-press" onClick={() => setSel(p.id)} style={{
+                flex: '0 0 auto', display: 'flex', alignItems: 'center', gap: 7, padding: '9px 13px', borderRadius: 999,
+                border: `1px solid ${active ? 'var(--ink)' : 'var(--glass-border)'}`,
+                background: active ? 'var(--accent)' : 'var(--glass-bg-strong)',
+                color: active ? 'var(--accent-ink)' : 'var(--ink)', fontWeight: 750, fontSize: 13.5, cursor: 'pointer', whiteSpace: 'nowrap',
+              }}>
+                {open ? (
+                  <>
+                    <span style={{ color: active ? 'var(--accent-ink)' : sv!.accent, display: 'inline-flex' }}><Icon name={sv!.icon} size={15} /></span>
+                    {p.place}
+                    <span style={{ fontSize: 11.5, fontWeight: 700, opacity: 0.75 }}>{seenCount}/{p.phraseIds.length}</span>
+                  </>
+                ) : (
+                  <>🔒 미개방 {i + 1}</>
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -269,29 +329,40 @@ function phraseLastSeenMap(allCards: Card[], progress: ProgressMap): Record<stri
   return out;
 }
 
+// 실제 가나 표(KanaTable)와 같은 구획(청음/탁음·반탁음/요음)·같은 5열 배치·같은 셀 판정을 그대로 써서
+// 요음(りゅ・りょ 등 2글자)이 좁은 칸에서 두 줄로 줄바꿈되던 문제를 해결하고, "익힌 표를 보는" 느낌을 맞췄다.
 function KanaGrid({ items, progress }: { items: KanaItem[]; progress: ProgressMap }) {
-  const groups = groupBy(items, (k) => `${k.level} · ${k.group}`);
   return (
     <>
-      {Object.entries(groups).map(([label, ks]) => (
-        <div key={label} style={{ marginTop: 10 }}>
-          <p style={{ margin: '0 0 6px', color: 'var(--ink-faint)', fontSize: 12, fontWeight: 600 }}>{label}</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(52px, 1fr))', gap: 7 }}>
-            {ks.map((k) => {
-              const stable = isKanaReadStable(progress, k.id);
-              const seen = !!(progress[`kana:${k.id}:read`] || progress[`kana:${k.id}:listen`] || progress[`kana:${k.id}:confuse`]);
-              return (
-                <button key={k.id} className="ym-press"
-                  style={{ padding: '8px 4px', borderRadius: 12, cursor: 'pointer', border: `1px solid ${stable ? 'var(--ok)' : seen ? 'var(--accent)' : 'var(--glass-border)'}`, background: stable ? 'var(--ok-soft)' : seen ? 'var(--accent-soft)' : 'var(--glass-bg-strong)', color: 'var(--ink)' }}
-                  onClick={() => speak(k.char)} disabled={!ttsSupported()} title={stable ? '읽기 안정' : seen ? '본 적 있음' : '아직'}>
-                  <div style={{ fontSize: 24, lineHeight: 1.1 }}>{k.char}</div>
-                  <div style={{ color: 'var(--ink-faint)', fontSize: 10 }}>{k.romaji}</div>
-                </button>
-              );
-            })}
+      {KANA_SECTIONS.map((sec) => {
+        const secItems = items.filter((it) => sec.kinds.includes(it.kind));
+        if (secItems.length === 0) return null;
+        const rows = groupKanaRows(secItems);
+        return (
+          <div key={sec.key} style={{ marginTop: 10 }}>
+            <p style={{ margin: '0 0 6px', color: 'var(--ink-faint)', fontSize: 12, fontWeight: 700 }}>{sec.title}</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+              {rows.map((row) => (
+                <div key={row.group} style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 6 }}>
+                  {row.cells.map((k) => {
+                    const st = cellState(progress, k.id);
+                    const border = st === 'mastered' ? 'var(--ok)' : st === 'seen' ? 'var(--accent)' : 'var(--glass-border)';
+                    const bg = st === 'mastered' ? 'var(--ok-soft)' : st === 'seen' ? 'var(--accent-soft)' : 'var(--glass-bg-strong)';
+                    return (
+                      <button key={k.id} className="ym-press"
+                        style={{ padding: '8px 3px', borderRadius: 12, cursor: 'pointer', textAlign: 'center', border: `1px solid ${border}`, background: bg, color: 'var(--ink)', minWidth: 0 }}
+                        onClick={() => speak(k.char)} disabled={!ttsSupported()} title={st === 'mastered' ? '읽기 안정' : '본 적 있음'}>
+                        <div lang="ja" style={{ fontSize: k.char.length > 1 ? 17 : 22, fontWeight: 800, lineHeight: 1.1, whiteSpace: 'nowrap' }}>{k.char}</div>
+                        <div style={{ fontSize: 10, color: 'var(--ink-faint)', fontWeight: 700, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{k.romaji}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </>
   );
 }
@@ -325,10 +396,4 @@ function PhraseList({ phrases, phraseSeen }: { phrases: Phrase[]; phraseSeen: Se
 
 function Empty({ children }: { children: React.ReactNode }) {
   return <MascotEmpty who="yang" title="아직 채울 공간이에요">{children}</MascotEmpty>;
-}
-
-function groupBy<T>(items: T[], key: (item: T) => string): Record<string, T[]> {
-  const out: Record<string, T[]> = {};
-  for (const item of items) { const k = key(item); (out[k] ??= []).push(item); }
-  return out;
 }
