@@ -19,12 +19,16 @@ const GROUP_LABEL: Record<VerbEntry['group'], string> = { godan: '5단', ichidan
 const shuffle = <T,>(a: T[]): T[] => { const r = [...a]; for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
 const rand = (n: number) => Math.floor(Math.random() * n);
 
+const QUIZ_COUNT_OPTIONS = [10, 20, 30];
+
 export function VerbForms({ onExit, progress, onAnswer }: {
   onExit: () => void;
   progress?: ProgressMap;
   onAnswer?: (id: string, correct: boolean) => void;
 }) {
   const [mode, setMode] = useState<'browse' | 'quiz'>('browse');
+  // null = 아직 개수를 안 골라 "연습" 진입 시 개수 선택 화면부터 보여준다. 다른 학습 메뉴들과 같은 패턴.
+  const [quizCount, setQuizCount] = useState<number | null>(null);
 
   return (
     <main style={WRAP}>
@@ -50,7 +54,7 @@ export function VerbForms({ onExit, progress, onAnswer }: {
         {(['browse', 'quiz'] as const).map((m) => {
           const on = mode === m;
           return (
-            <button key={m} className="ym-press" onClick={() => setMode(m)}
+            <button key={m} className="ym-press" onClick={() => { setMode(m); if (m === 'quiz') setQuizCount(null); }}
               style={{ flex: 1, padding: '11px 4px', borderRadius: 12, border: `1px solid ${on ? 'transparent' : 'var(--glass-border)'}`, background: on ? 'var(--accent)' : 'var(--glass-bg-strong)', color: on ? 'var(--accent-ink)' : 'var(--ink-soft)', fontWeight: 800, fontSize: 14, cursor: 'pointer' }}>
               {m === 'browse' ? '보기' : '연습'}
             </button>
@@ -58,10 +62,33 @@ export function VerbForms({ onExit, progress, onAnswer }: {
         })}
       </div>
 
-      {mode === 'browse' ? <Browse /> : <Quiz progress={progress} onAnswer={onAnswer} />}
+      {mode === 'browse' ? (
+        <Browse />
+      ) : quizCount === null ? (
+        <QuizCountPicker onPick={setQuizCount} />
+      ) : (
+        <Quiz key={quizCount} progress={progress} onAnswer={onAnswer} count={quizCount} onRestart={() => setQuizCount(null)} />
+      )}
 
       <PrimaryAction onClick={onExit} style={{ marginTop: 20 }}>홈으로</PrimaryAction>
     </main>
+  );
+}
+
+// 연습 진입 시 개수부터 고르게 — 예전엔 "다음 문제"를 끝없이 눌러야 그만둘 수 있었다(2026-07-10 사용자 요청).
+function QuizCountPicker({ onPick }: { onPick: (count: number) => void }) {
+  return (
+    <div style={{ padding: 18, borderRadius: 18, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', textAlign: 'center' }}>
+      <p style={{ margin: '0 0 12px', fontSize: 14, fontWeight: 800, color: 'var(--ink)' }}>몇 문제를 풀까요?</p>
+      <div style={{ display: 'flex', gap: 8 }}>
+        {QUIZ_COUNT_OPTIONS.map((n) => (
+          <button key={n} className="ym-press" onClick={() => onPick(n)}
+            style={{ flex: 1, padding: '13px 4px', borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)', fontWeight: 800, fontSize: 15, cursor: 'pointer' }}>
+            {n}문제
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -152,12 +179,13 @@ function makeQuestion(progress?: ProgressMap): Question {
   return { verb, formKey, choices: shuffle([answer, ...distractors]), answer };
 }
 
-function Quiz({ progress, onAnswer }: { progress?: ProgressMap; onAnswer?: (id: string, correct: boolean) => void }) {
+function Quiz({ progress, onAnswer, count, onRestart }: { progress?: ProgressMap; onAnswer?: (id: string, correct: boolean) => void; count: number; onRestart: () => void }) {
   const [q, setQ] = useState<Question>(() => makeQuestion(progress));
   const [picked, setPicked] = useState<string | null>(null);
   const [score, setScore] = useState({ ok: 0, total: 0 });
   const info = VERB_FORM_INFO[q.formKey];
   const reveal = picked !== null;
+  const done = score.total >= count;
 
   function choose(c: VerbConj) {
     if (reveal) return;
@@ -168,10 +196,21 @@ function Quiz({ progress, onAnswer }: { progress?: ProgressMap; onAnswer?: (id: 
   }
   function next() { setPicked(null); setQ(makeQuestion(progress)); }
 
+  if (done) {
+    const pct = score.total ? Math.round((score.ok / score.total) * 100) : 0;
+    return (
+      <div style={{ padding: 22, borderRadius: 18, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', textAlign: 'center' }}>
+        <p style={{ margin: '0 0 4px', fontSize: 13, fontWeight: 800, color: 'var(--ink-soft)' }}>{count}문제 완료</p>
+        <p style={{ margin: 0, fontSize: 32, fontWeight: 900, color: 'var(--ink)' }}>{score.ok}/{score.total}<span style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink-faint)' }}> ({pct}%)</span></p>
+        <PrimaryAction onClick={onRestart} style={{ marginTop: 16 }}>개수 다시 선택</PrimaryAction>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>
-        <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--ink-soft)', fontVariantNumeric: 'tabular-nums' }}>{score.ok} / {score.total}</span>
+        <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--ink-soft)', fontVariantNumeric: 'tabular-nums' }}>{score.ok} / {score.total} · {count}문제 중</span>
       </div>
 
       {/* 문제 */}

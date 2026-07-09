@@ -69,6 +69,33 @@ export function validateContent(d: ContentBundle): Issue[] {
     if (ids.length > 1) add('V20', 'fail', `Phrase kana 중복: "${kana}" (${ids.join(', ')})`);
   }
 
+  // V21: 나선형 난이도(buildsOn) — 참조 무결성 · 자기참조 금지 · 사이클 금지 (SPIRAL_DIFFICULTY_BRIEF.md 설계 1)
+  for (const p of d.phrases) {
+    for (const r of p.buildsOn ?? []) {
+      if (!phraseIds.has(r)) add('V21', 'fail', `Phrase ${p.id} buildsOn 참조 깨짐: ${r}`);
+      if (r === p.id) add('V21', 'fail', `Phrase ${p.id} buildsOn 자기 참조`);
+    }
+  }
+  {
+    // DFS로 사이클 탐지 — 방문 스택에 이미 있는 노드로 다시 들어가면 사이클.
+    const GRAY = 1, BLACK = 2;
+    const color = new Map<string, number>();
+    const cyclePhrases = new Set<string>();
+    const visit = (id: string, stack: string[]): void => {
+      if (color.get(id) === BLACK) return;
+      if (color.get(id) === GRAY) { for (const s of stack) cyclePhrases.add(s); cyclePhrases.add(id); return; }
+      color.set(id, GRAY);
+      const p = phraseById[id];
+      for (const r of p?.buildsOn ?? []) {
+        if (!phraseIds.has(r)) continue; // 무결성은 위에서 이미 fail 처리
+        visit(r, [...stack, id]);
+      }
+      color.set(id, BLACK);
+    };
+    for (const p of d.phrases) visit(p.id, []);
+    if (cyclePhrases.size > 0) add('V21', 'fail', `buildsOn 사이클 감지: ${[...cyclePhrases].sort().join(', ')}`);
+  }
+
   // N5
   for (const n of d.n5) if (n.source !== 'unofficial') add('V12', 'fail', `N5Entry.source != unofficial: ${n.id}`);
 

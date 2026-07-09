@@ -112,8 +112,8 @@ export const phrases: Phrase[] = [
 
   // ── C2 식당 보강: 개수/이거랑/매워요?/먹을게요 ──
   { id: 'p_hitotsu_kudasai', kana: 'ひとつください', kanji: '一つください', korean: '하나 주세요', register: 'productive', tip: '「一(ひと)つください」— 일본어 고유 수 세기: ひとつ(1), ふたつ(2), みっつ(3), よっつ(4). 二(ふた)つ、三(みっ)つ로 응용해요. 상품·음식 모두 통해요' },
-  { id: 'p_futatsu_kudasai', kana: 'ふたつください', kanji: '二つください', korean: '두 개 주세요', register: 'productive', tip: '「二(ふた)つください」— 고유어 수 세기로 작은 물건을 셀 때. 3개는 みっつください, 4개는 よっつください로 이어서 쓸 수 있어요' },
-  { id: 'p_kore_to_kore', kana: 'これとこれ', korean: '이거랑 이거', register: 'productive', tip: '메뉴를 가리키며 — 가장 안전한 주문법' },
+  { id: 'p_futatsu_kudasai', kana: 'ふたつください', kanji: '二つください', korean: '두 개 주세요', register: 'productive', tip: '「二(ふた)つください」— 고유어 수 세기로 작은 물건을 셀 때. 3개는 みっつください, 4개는 よっつください로 이어서 쓸 수 있어요', buildsOn: ['p_hitotsu_kudasai'] },
+  { id: 'p_kore_to_kore', kana: 'これとこれ', korean: '이거랑 이거', register: 'productive', tip: '메뉴를 가리키며 — 가장 안전한 주문법', buildsOn: ['p_kore_kudasai'] },
   { id: 'p_karai_desu_ka', kana: 'からいですか', kanji: '辛いですか', displayKana: 'からいですか？', korean: '매워요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '「辛(から)いですか」— 매운맛 여부 확인. 일본 음식은 한국보다 매운맛이 약한 편이지만, 唐辛子(とうがらし)・ワサビ 등은 주의가 필요해요' },
   { id: 'p_tabemasu', kana: 'たべます', kanji: '食べます', korean: '먹을게요', register: 'productive', tip: '「食(た)べます」— 주문을 결정했을 때. これを食べます(이걸 먹을게요)나 これにします(이걸로 할게요)로 응용할 수 있어요' },
 
@@ -173,7 +173,7 @@ export const phrases: Phrase[] = [
   { id: 'p_kore_ikura', kana: 'これはいくらですか', kanji: 'これはいくらですか', displayKana: 'これは、いくらですか？', korean: '이거 얼마예요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '「これはいくらですか」— 가격표가 없거나 확인이 필요할 때. すみません을 앞에 붙이면 더 자연스러워요. 반찬가게·시장·노점에서 자주 쓰는 표현이에요' },
   { id: 'p_shichaku', kana: 'しちゃくしてもいいですか', kanji: '試着してもいいですか', displayKana: 'しちゃく、してもいいですか？', korean: '입어 봐도 돼요?', register: 'productive', tip: '「試着(しちゃく)してもいいですか」— 피팅룸 이용 전 반드시 확인해야 해요. 試着室(しちゃくしつ)はどこですかで위치도 함께 물어봐요' },
   { id: 'p_menzei_dekimasu_ka', kana: 'めんぜいできますか', kanji: '免税できますか', displayKana: 'めんぜい、できますか？', korean: '면세 되나요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '「免税(めんぜい)できますか」— 외국인 여행자는 세금 환급 대상. 보통 1회 5,000엔 이상 구매 시 적용되며, 여권(パスポート)을 제시해야 해요' },
-  { id: 'p_kore_kudasai_shop', kana: 'これにします', kanji: 'これにします', korean: '이걸로 할게요', register: 'productive', tip: '「これにします」— 상품을 결정했을 때. これください보다 조금 더 자연스럽고 세련된 표현이에요. どれにしますか(어느 것으로 하시겠어요?)라는 질문의 답변이기도 해요' },
+  { id: 'p_kore_kudasai_shop', kana: 'これにします', kanji: 'これにします', korean: '이걸로 할게요', register: 'productive', tip: '「これにします」— 상품을 결정했을 때. これください보다 조금 더 자연스럽고 세련된 표현이에요. どれにしますか(어느 것으로 하시겠어요?)라는 질문의 답변이기도 해요', buildsOn: ['p_kore_kudasai'] },
   { id: 'p_card_tsukaemasu_ka', kana: 'カードはつかえますか', kanji: 'カードは使えますか', displayKana: 'カードは、つかえますか？', korean: '카드 돼요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '「カードは使(つか)えますか」— 소규모 가게나 시장에서는 현금만 받는 곳도 있어요. 入店(にゅうてん)前에 확인하면 낭패를 피할 수 있어요' },
   { id: 'p_pasupooto_arimasu', kana: 'パスポートはこちらです', displayKana: 'パスポートは、こちらです', korean: '여권 여기 있어요', register: 'productive', tip: '「パスポートはこちらです」— 면세 처리나 체크인 시 여권 제시. こちら는 "이쪽" — 물건을 건네는 가장 정중한 표현이에요. 여권은 여행 중 항상 지참하세요' },
 

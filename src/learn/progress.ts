@@ -4,6 +4,7 @@
 import type { Card, DictationCard, IntroduceCard, QuizCard, SpeakCard } from './cards';
 import { routePosition } from '../content/routes';
 import { pickTipForMission, withLeadingTip } from './tips';
+import { CONTENT } from '../content';
 
 // ── 진척 데이터 ─────────────────────────────────────
 export interface CardProgress {
@@ -455,6 +456,27 @@ export function isMissionUnlocked(missionId: string, progress: ProgressMap): boo
   return missionExperiencedCount(progress, prev) >= SCENE_UNLOCK_THRESHOLD;
 }
 
+// ── 나선형 난이도(SPIRAL_DIFFICULTY_BRIEF.md 설계 1) — 표현 확장 사슬(buildsOn) 해금 ──────
+// 선행 표현이 전부 mastered(2연속 정답)일 때만 후속 표현이 fresh 풀에 등장.
+// studyFirst와 같은 강도: 미해금이면 세션·미션 어디서도 새로 소개되지 않는다.
+const PHRASE_MASTERED_STREAK = 2;
+export function masteredPhraseIds(allCards: Card[], progress: ProgressMap): Set<string> {
+  const out = new Set<string>();
+  for (const c of allCards) {
+    if (c.kind !== 'quiz' && c.kind !== 'introduce' && c.kind !== 'speak' && c.kind !== 'dictation') continue;
+    if (c.reviewTarget?.type !== 'phrase') continue;
+    const p = progress[c.id];
+    if (p && p.consecutiveCorrect >= PHRASE_MASTERED_STREAK) out.add(String(c.reviewTarget.id));
+  }
+  return out;
+}
+export function isPhraseUnlocked(phraseId: string, mastered: Set<string>): boolean {
+  const phrase = CONTENT.phrases.find((p) => p.id === phraseId);
+  const buildsOn = phrase?.buildsOn;
+  if (!buildsOn || buildsOn.length === 0) return true;
+  return buildsOn.every((pid) => mastered.has(pid));
+}
+
 function interleave<T>(...arrs: T[][]): T[] {
   const out: T[] = [];
   const max = Math.max(0, ...arrs.map((a) => a.length));
@@ -526,6 +548,7 @@ export function selectSessionCards(
   const b: Pool = { due: [], fresh: [] };
   const cByMission = new Map<string, Pool>(); // 미션별 그룹 (등장 순서 = 진행 순서)
   const tips: Card[] = [];
+  const masteredPhrases = masteredPhraseIds(allCards, progress); // buildsOn 해금 판정용(설계 1)
 
   // 1) cooldown 아닌 형태들을 개념별로 묶음 (등장 순서 유지)
   const byConcept = new Map<string, ReviewableCard[]>();
@@ -553,7 +576,11 @@ export function selectSessionCards(
     const status: CardStatus = progress[rep.id] ? 'due' : 'new';
     const t = rep.reviewTarget?.type;
     if (t === 'kana') pushByStatus(k, rep, status);
-    else if (t === 'phrase') pushByStatus(b, rep, status);
+    else if (t === 'phrase') {
+      // 미해금 표현(buildsOn 선행 미완료)은 새로 소개하지 않음 — 이미 본 적 있으면(due) 계속 노출.
+      if (status === 'new' && !isPhraseUnlocked(String(rep.reviewTarget!.id), masteredPhrases)) continue;
+      pushByStatus(b, rep, status);
+    }
     else if (t === 'mission') {
       const mid = String(rep.reviewTarget!.id);
       // 잠긴 장면 제외 — openMissions(랜덤 순차)가 주어지면 그 기준, 없으면 기존 경험치 해제 기준.
@@ -674,12 +701,15 @@ export function selectMissionCards(allCards: Card[], missionId: string, progress
   const phraseIdOf = (id: string) => id.split(':').slice(2).join(':');
   const allIntroPhrases = new Set(introCards.map((c) => phraseIdOf(c.id)));
   const seenPhrases = new Set(introCards.filter((c) => progress && progress[c.id]).map((c) => phraseIdOf(c.id)));
-  const batchIntros = introCards.filter((c) => !(progress && progress[c.id])).slice(0, MAX_NEW_INTROS);
+  // buildsOn 미해금 표현은 새로 소개하지 않음(설계 1) — 선행을 익힐 때까지 이 미션에서도 계속 숨김.
+  const mastered = masteredPhraseIds(allCards, progress ?? {});
+  const unseenIntros = introCards.filter((c) => !(progress && progress[c.id]));
+  const unlockedUnseenIntros = unseenIntros.filter((c) => isPhraseUnlocked(phraseIdOf(c.id), mastered));
+  const batchIntros = unlockedUnseenIntros.slice(0, MAX_NEW_INTROS);
   // 이번 세션 기준 "학습된 표현" = 이전에 본 것 + 이번에 새로 소개하는 묶음
   const learned = new Set<string>([...seenPhrases, ...batchIntros.map((c) => phraseIdOf(c.id))]);
-  // 이번 세션으로 이 미션의 새 표현이 전부 소개되는가(= 마지막 학습 회차/복습)
-  const unseenCount = introCards.filter((c) => !(progress && progress[c.id])).length;
-  const fullyIntroduced = unseenCount <= MAX_NEW_INTROS;
+  // 이번 세션으로 이 미션의 (해금된) 새 표현이 전부 소개되는가(= 마지막 학습 회차/복습)
+  const fullyIntroduced = unlockedUnseenIntros.length <= MAX_NEW_INTROS;
   // 규칙: 새 표현으로 학습하지 않은 표현의 퀴즈/말하기는 절대 내지 않는다.
   // (새 표현 카드가 있는 표현만 게이트 대상 — 새 표현이 없는 receptive 등은 통과)
   const requires = (c: Card): string[] => {
@@ -789,33 +819,6 @@ export function selectStudyDeck(
   return [...words, ...examples, ...quizPick];
 }
 
-// 주제별 어휘 전용 덱 — vocab:groupId:* 카드, 그룹 필터 가능. limit = 24.
-export function selectVocabCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, groupId?: string, limit = 24): Card[] {
-  const prefix = groupId ? `vocab:${groupId}:` : 'vocab:';
-  const byConcept = new Map<string, ReviewableCard[]>();
-  for (const c of allCards) {
-    if (c.kind !== 'quiz' || !c.id.startsWith(prefix)) continue;
-    if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
-    // 개념 키 = vocab:groupId:itemId (변형 3종을 하나로 묶음)
-    const parts = c.id.split(':');
-    const key = parts.slice(0, 2).concat(parts[3] ?? parts[2]).join(':');
-    const arr = byConcept.get(key);
-    if (arr) arr.push(c); else byConcept.set(key, [c]);
-  }
-  const due: ReviewableCard[] = [];
-  const fresh: ReviewableCard[] = [];
-  for (const variants of byConcept.values()) {
-    const rep = pickFreshestVariant(variants, progress);
-    (progress[rep.id] ? due : fresh).push(rep);
-  }
-  return [...sortWeakFirst(due, progress), ...shuffleKana(fresh)].slice(0, limit);
-}
-
-// 기본 인사 전용 덱 — vocab:greetings:* 카드만.
-export function selectGreetingCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit = 18): Card[] {
-  return selectVocabCards(allCards, progress, currentSessionId, 'greetings', limit);
-}
-
 // 거리 읽기 전용 덱 — 간판·메뉴 카드만, 약점/안 본 것 먼저. (직접 진입)
 export function selectSignCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit = 12): Card[] {
   const due: Card[] = [], fresh: Card[] = [];
@@ -826,25 +829,6 @@ export function selectSignCards(allCards: Card[], progress: ProgressMap, current
   }
   // 약점 먼저(due) 유지하되 각 그룹 내부는 셔플 — 풀이 커도 매번 같은 앞 12개만 나오지 않게.
   return [...shuffleKana(due), ...shuffleKana(fresh)].slice(0, limit);
-}
-
-// 생활 기초 전용 덱 — 숫자·순서·요일·달력·시간·금액. 같은 개념의 읽기/듣기/뜻→일본어를 회전.
-export function selectBasicLifeCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit = 24): Card[] {
-  const byConcept = new Map<string, ReviewableCard[]>();
-  for (const c of allCards) {
-    if (c.kind !== 'quiz' || !c.id.startsWith('basic:')) continue;
-    if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
-    const key = conceptKey(c);
-    const arr = byConcept.get(key);
-    if (arr) arr.push(c); else byConcept.set(key, [c]);
-  }
-  const due: ReviewableCard[] = [];
-  const fresh: ReviewableCard[] = [];
-  for (const variants of byConcept.values()) {
-    const rep = pickFreshestVariant(variants, progress);
-    (progress[rep.id] ? due : fresh).push(rep);
-  }
-  return [...sortWeakFirst(due, progress), ...shuffleKana(fresh)].slice(0, limit);
 }
 
 // 표현별 "최근 학습 시점" — 같은 표현(reviewTarget=phrase)을 가리키는 모든 카드의 lastSessionId 최댓값.

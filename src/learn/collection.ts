@@ -48,9 +48,9 @@ export const tierToRarity = (tier: number): Rarity => RARITIES[Math.min(Math.max
 export const MAX_TIER = 6;
 
 export const BOX: Record<BoxGrade, { label: string; draws: number; colors: [string, string] }> = {
-  wood: { label: '가챠 박스', draws: DRAW_COUNT, colors: ['#c56f62', '#d78f73'] },
-  silver: { label: '빛나는 가챠 박스', draws: DRAW_COUNT, colors: ['#7f8794', '#c7ccd4'] },
-  gold: { label: '특별 가챠 박스', draws: DRAW_COUNT, colors: ['#c8951f', '#e8c45a'] },
+  wood: { label: '카드 박스', draws: DRAW_COUNT, colors: ['#c56f62', '#d78f73'] },
+  silver: { label: '빛나는 카드 박스', draws: DRAW_COUNT, colors: ['#7f8794', '#c7ccd4'] },
+  gold: { label: '특별 카드 박스', draws: DRAW_COUNT, colors: ['#c8951f', '#e8c45a'] },
 };
 
 export interface DropResult {

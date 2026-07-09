@@ -246,7 +246,7 @@ function randomGachaDrawCount(): number {
   return 1;
 }
 
-export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘의 가챠', drawCount, randomDrawCount = false, afterRevealLabel, onAfterReveal, onClaimed }: {
+export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘의 카드 뽑기', drawCount, randomDrawCount = false, afterRevealLabel, onAfterReveal, onClaimed }: {
   sessionId: number;
   sceneIds: string[];
   grade?: BoxGrade;

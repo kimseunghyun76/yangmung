@@ -5,6 +5,7 @@ import { CONTENT } from './index';
 import { VOCAB_GROUPS } from './thematicVocab';
 import { signs } from './signs';
 import { BASIC_LIFE_ITEMS } from './basicLife';
+import { VERB_FORMS } from './verbForms';
 import type { N5Entry } from './types';
 
 // 매칭 말뭉치 — 표기(한자 포함)와 읽기(가나)를 나눠 수집
@@ -13,6 +14,7 @@ const writtenCorpus: string[] = [
   ...VOCAB_GROUPS.flatMap((g) => g.items.map((i) => i.ja)),
   ...signs.map((s) => s.ja),
   ...BASIC_LIFE_ITEMS.map((b) => b.ja),
+  ...VERB_FORMS.map((v) => v.dict.ja),
 ].filter(Boolean);
 
 const kanaCorpus: string[] = [
@@ -20,6 +22,7 @@ const kanaCorpus: string[] = [
   ...VOCAB_GROUPS.flatMap((g) => g.items.map((i) => i.kana)),
   ...signs.map((s) => s.kana),
   ...BASIC_LIFE_ITEMS.map((b) => b.kana ?? ''),
+  ...VERB_FORMS.map((v) => v.dict.kana),
 ].filter(Boolean);
 
 // 문법은 "명시적으로 가르치는가" — 문법 팁(label·예문·팁)에서만 찾는다.

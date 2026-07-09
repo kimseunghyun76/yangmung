@@ -48,6 +48,12 @@ expectFail('V19 productive 사전 미도입', (d) => {
   c1(d).steps[0].choices.push({ text: '테스트(미도입)', phraseId: 'p_test_orphan', correct: false });
 }, 'V19');
 expectFail('V7 Choice 형태(둘 다)', (d) => { c1(d).steps[0].choices[0].actionText = 'x'; }, 'V7');
+expectFail('V21 buildsOn 참조 깨짐', (d) => { d.phrases[0].buildsOn = ['p_nonexist_xyz']; }, 'V21');
+expectFail('V21 buildsOn 자기 참조', (d) => { d.phrases[0].buildsOn = [d.phrases[0].id]; }, 'V21');
+expectFail('V21 buildsOn 사이클(A→B→A)', (d) => {
+  d.phrases[0].buildsOn = [d.phrases[1].id];
+  d.phrases[1].buildsOn = [d.phrases[0].id];
+}, 'V21');
 expectFail('V9 recovery 제거(사유 없음)', (d) => {
   const m = c1(d);
   for (const s of m.steps) for (const c of s.choices) c.recoveryType = undefined;

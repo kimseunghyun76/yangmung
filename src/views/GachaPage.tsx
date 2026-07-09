@@ -81,7 +81,7 @@ export function GachaPage({ nav, openMissions }: Props) {
         <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(circle at 50% 0%, rgba(185,56,46,.18), transparent 44%)' }} />
         <div style={{ position: 'relative' }}>
           <p style={{ margin: '0 0 6px', fontSize: 12, fontWeight: 900, letterSpacing: '0.06em', color: 'var(--accent)' }}>DAILY FREE</p>
-          <h2 style={{ margin: 0, fontSize: 23, lineHeight: 1.18, color: 'var(--ink)' }}>오늘의 무료 가챠</h2>
+          <h2 style={{ margin: 0, fontSize: 23, lineHeight: 1.18, color: 'var(--ink)' }}>오늘의 무료 카드 뽑기</h2>
           <p style={{ margin: '8px 0 14px', fontSize: 13, lineHeight: 1.55, color: 'var(--ink-soft)', fontWeight: 650 }}>
             현재 열린 장면에서만 카드가 나와요. 도감이 비어 있는 장면은 미션 지도에서 연습하면 보상이 더 잘 이어집니다.
           </p>
@@ -97,11 +97,11 @@ export function GachaPage({ nav, openMissions }: Props) {
             )}
           </div>
           <p style={{ margin: claimed ? '14px 0 0' : '14px 0 0', fontSize: 13, color: 'var(--ink)', fontWeight: 850 }}>
-            오늘 남은 무료 가챠 {remainingFree}/{DAILY_FREE_LIMIT}
+            오늘 남은 무료 뽑기 {remainingFree}/{DAILY_FREE_LIMIT}
           </p>
           {claimed ? (
             <div style={{ marginTop: 16, padding: 14, borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)' }}>
-              <strong style={{ display: 'block', fontSize: 16 }}>오늘 무료 가챠 100회를 모두 받았어요.</strong>
+              <strong style={{ display: 'block', fontSize: 16 }}>오늘 무료 뽑기 100회를 모두 받았어요.</strong>
               <span style={{ display: 'block', marginTop: 5, fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 700 }}>내일 다시 열리고, 수업 완료 보상은 계속 받을 수 있어요.</span>
             </div>
           ) : (
@@ -110,9 +110,9 @@ export function GachaPage({ nav, openMissions }: Props) {
               sessionId={dailySessionId(key, nextFreeOrdinal)}
               sceneIds={unlockedSceneIds}
               grade="wood"
-              label={`무료 가챠 ${nextFreeOrdinal}/${DAILY_FREE_LIMIT}`}
+              label={`무료 뽑기 ${nextFreeOrdinal}/${DAILY_FREE_LIMIT}`}
               randomDrawCount
-              afterRevealLabel={claimedCount < DAILY_FREE_LIMIT ? `다음 무료 가챠 (${DAILY_FREE_LIMIT - claimedCount}회 남음)` : undefined}
+              afterRevealLabel={claimedCount < DAILY_FREE_LIMIT ? `다음 무료 뽑기 (${DAILY_FREE_LIMIT - claimedCount}회 남음)` : undefined}
               onAfterReveal={() => {
                 setShowLastDailyResult(false);
                 setDailyRun((n) => n + 1);
