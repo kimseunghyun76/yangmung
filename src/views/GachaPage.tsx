@@ -5,7 +5,7 @@ import { WRAP } from '../ui/styles';
 import { NavBar, type NavBarProps } from './NavBar';
 import { PageHead } from './ui';
 import { GlassPanel } from './shell';
-import { DeckBrowser, GachaBox } from './Gacha';
+import { CollectionSummary, DeckBrowser, GachaBox } from './Gacha';
 import { MascotBubble } from './mascot';
 import { sceneVisualByMission } from './scene';
 
@@ -69,11 +69,13 @@ export function GachaPage({ nav, openMissions }: Props) {
   return (
     <main style={WRAP}>
       <NavBar {...nav} />
-      <PageHead title="가챠 도감" sub="수업 보상으로 여행 카드를 모으고, 부족한 장면은 다시 연습해요" />
+      <PageHead title="도감" sub="수업 보상으로 여행 카드를 모으고, 부족한 장면은 다시 연습해요" />
 
       <MascotBubble who="mung" mood="correct" size={46} style={{ marginBottom: 14 }}>
-        가챠는 학습 보상이에요. 현금 뽑기 없이 하루 100회 무료와 수업 완료 보상만 있어요.
+        카드 뽑기는 학습 보상이에요. 현금 뽑기 없이 하루 100회 무료와 수업 완료 보상만 있어요.
       </MascotBubble>
+
+      <CollectionSummary key={deckVersion} />
 
       <GlassPanel strong style={{ position: 'relative', overflow: 'hidden', marginBottom: 18 }}>
         <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(circle at 50% 0%, rgba(185,56,46,.18), transparent 44%)' }} />
@@ -132,7 +134,7 @@ export function GachaPage({ nav, openMissions }: Props) {
       </GlassPanel>
 
       <GlassPanel strong>
-        <p style={{ margin: '0 0 12px', fontSize: 12, fontWeight: 900, letterSpacing: '0.06em', color: 'var(--accent)' }}>COLLECTION</p>
+        <p style={{ margin: '0 0 12px', fontSize: 12, fontWeight: 900, letterSpacing: '0.06em', color: 'var(--accent)' }}>ALL SCENES</p>
         <DeckBrowser key={deckVersion} />
       </GlassPanel>
     </main>

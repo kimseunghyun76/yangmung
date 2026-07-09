@@ -57,6 +57,7 @@ const JA_TITLE: Record<string, string> = {
   쇼유라멘: '醤油ラーメン',
   미소버터라멘: '味噌バターラーメン',
   돈코츠차슈라멘: '豚骨チャーシューメン',
+  해산물라멘: '海鮮ラーメン',
   특상해산물라멘: '特上海鮮ラーメン',
   아이스커피: 'アイスコーヒー',
   라떼: 'ラテ',
@@ -93,6 +94,8 @@ const JA_TITLE: Record<string, string> = {
   오늘의네타세트: '本日のネタセット',
   셰프추천니기리: 'シェフおすすめにぎり',
   카운터오마카세코스: 'カウンターおまかせコース',
+  국제배송키트: '国際配送キット',
+  계절고슈인: '季節の御朱印',
   쇼핑메모: '買い物メモ',
   가격표태그: '値札タグ',
   포인트카드: 'ポイントカード',
@@ -144,6 +147,11 @@ function jaTitleFor(title: string): string {
   if (premium) {
     const base = JA_TITLE[compactTitle(premium[1])] ?? premium[1];
     return `特上${base}`;
+  }
+  const ultimate = /^극상\s+(.+)$/.exec(title);
+  if (ultimate) {
+    const base = JA_TITLE[compactTitle(ultimate[1])] ?? ultimate[1];
+    return `極上${base}`;
   }
   return title;
 }
@@ -550,8 +558,10 @@ function itemForKey(key: string | undefined, rarity: Rarity): GachaItemArt {
   const direct = row?.[rarity];
   if (direct) return direct;
   if (rarity === 'xur' && row?.diamond) {
+    const alreadyPremium = row.diamond.title.startsWith('특상 ');
+    const baseTitle = alreadyPremium ? row.diamond.title.replace(/^특상\s+/, '') : row.diamond.title;
     return {
-      title: `특상 ${row.diamond.title}`,
+      title: `${alreadyPremium ? '극상' : '특상'} ${baseTitle}`,
       sub: '한정',
       motif: row.diamond.motif,
     };
