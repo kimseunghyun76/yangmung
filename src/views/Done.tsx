@@ -1,11 +1,13 @@
 // 세션 완료 — Immersive Scene Coach. 장면 클리어 감정 + 여권 스탬프 + 다음 장면 예고.
 import { CONTENT } from '../content';
+import type { Card } from '../learn/cards';
 import { sessionResult, summarize, type ProgressMap, type SessionLogEntry } from '../learn/progress';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
 import { GlassPanel, hexA } from './shell';
 import { quickPracticeBackdrop, sceneVisualByMission } from './scene';
 import { MascotLine } from './mascot';
+import { PromotionResult } from './PromotionResult';
 import {
   CORE_LEVEL_LABEL,
   LEVEL_STAGES,
@@ -48,6 +50,7 @@ interface Props {
   score: number;
   quizSeen: number;
   sessionLog: SessionLogEntry[];
+  sessionCards: Card[];
   progress: ProgressMap;
   speakCount: number;
   canContinue: boolean;
@@ -61,6 +64,10 @@ interface Props {
   coreLevel: CoreLevel;
   progression: ProgressionState;
   devUnlockAll?: boolean;
+  /** 이번 세션이 승급 시험이었으면 결과 — 있으면 일반 결과 화면 대신 전용 합격/불합격 화면을 그린다. */
+  promotionResult?: { fromLevel: CoreLevel; toLevel: CoreLevel; passed: boolean };
+  onOpenLevelGuide?: (level: CoreLevel) => void;
+  onRetryPromotion?: (level: CoreLevel) => void;
   onRetryWeak: () => void;
   onRetrySame?: () => void; // 방금 한 연습을 처음부터 다시(연습 완료 화면 전용)
   onContinue: () => void;
@@ -82,7 +89,24 @@ interface Props {
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place
   ?? CONTENT.missions.find((m) => m.id === id)?.scenario ?? id;
 
-export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, isQuickPractice = false, coreLevel, progression, devUnlockAll = false, onRetryWeak, onRetrySame, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onPracticeVocab, onPracticeGreetings, onPracticeKanaHiragana, onPracticeKanaKatakana, onPracticePairs, onPracticeWrite, onPracticeVerbs, onHome }: Props) {
+export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, isQuickPractice = false, coreLevel, progression, devUnlockAll = false, promotionResult, onOpenLevelGuide, onRetryPromotion, onRetryWeak, onRetrySame, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onPracticeVocab, onPracticeGreetings, onPracticeKanaHiragana, onPracticeKanaKatakana, onPracticePairs, onPracticeWrite, onPracticeVerbs, onHome }: Props) {
+  // 승급 시험이었으면 일반 결과 화면 대신 전용 합격/불합격 화면 — 캐릭터가 목적·결과·다음 행동을 설명한다.
+  if (promotionResult) {
+    return (
+      <PromotionResult
+        fromLevel={promotionResult.fromLevel}
+        toLevel={promotionResult.toLevel}
+        passed={promotionResult.passed}
+        score={score}
+        quizSeen={quizSeen}
+        sessionLog={sessionLog}
+        sessionCards={sessionCards}
+        onOpenLevelGuide={() => onOpenLevelGuide?.(promotionResult.toLevel)}
+        onRetry={() => onRetryPromotion?.(promotionResult.fromLevel)}
+        onHome={onHome}
+      />
+    );
+  }
   // 정답률을 있는 그대로 보여준다 — 예전엔 0점이어도 최소 1성으로 올려 보여줘서(Math.max(1,…))
   // "하나도 못 맞혔는데 완료 축하"처럼 결과를 왜곡했다. 이젠 별점이 실제 정답률을 그대로 반영한다.
   const accuracy = quizSeen ? score / quizSeen : null;

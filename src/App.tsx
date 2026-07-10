@@ -52,6 +52,7 @@ const Placement = lazy(() => import('./views/Placement').then((m) => ({ default:
 const Review = lazy(() => import('./views/Review').then((m) => ({ default: m.Review })));
 const Guide = lazy(() => import('./views/Guide').then((m) => ({ default: m.Guide })));
 const WelcomeGuide = lazy(() => import('./views/WelcomeGuide').then((m) => ({ default: m.WelcomeGuide })));
+const LevelIntroGuide = lazy(() => import('./views/LevelIntroGuide').then((m) => ({ default: m.LevelIntroGuide })));
 const SettingsModal = lazy(() => import('./views/SettingsModal').then((m) => ({ default: m.SettingsModal })));
 const VocabTable = lazy(() => import('./views/VocabTable').then((m) => ({ default: m.VocabTable })));
 const VerbForms = lazy(() => import('./views/VerbForms').then((m) => ({ default: m.VerbForms })));
@@ -108,13 +109,23 @@ export function App() {
   const [showGuide, setShowGuide] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [levelGuide, setLevelGuide] = useState<CoreLevel | null>(null); // 레벨 소개 가이드 대상(승급 성공 후 또는 설정 모드 변경 시)
 
   function updateSettings(s: Settings) { setSettings(s); saveSettings(s); }
   function toggleTheme() { updateSettings({ ...settings, theme: settings.theme === 'dark' ? 'light' : 'dark' }); }
   // 모드 선택 = 프리셋 적용(보조·속도) + 세션 구성 변경. readingAid/속도는 이후 개별 미세조정 가능.
+  // 레벨 가이드는 여기서 자동으로 띄우지 않는다 — 승급 시험 통과 시엔 결과 화면을 먼저 보여준 뒤
+  // 사용자가 버튼을 눌러야 가이드로 이동한다(selectModeFromSettings가 설정 화면 전용으로 자동 트리거).
   function selectMode(mode: Settings['mode']) {
     const p = MODE_PRESETS[mode];
     updateSettings({ ...settings, mode, readingAid: p.readingAid, choiceMode: p.choiceMode });
+  }
+  // 설정에서 직접 모드를 바꿀 때만: 실제 레벨(입문/기본/중급/고급)이 달라지면 소개 가이드를 바로 띄운다.
+  function selectModeFromSettings(mode: Settings['mode']) {
+    const prevLevel = coreLevelOf(settings.mode);
+    selectMode(mode);
+    const nx = coreLevelOf(mode);
+    if (nx !== prevLevel) setLevelGuide(nx);
   }
 
   // ── 세션 카드 상태머신 (진행·채점·타이머·TTS) — src/app/useSessionFlow ──
@@ -899,12 +910,14 @@ export function App() {
       return (
         <Done
           sessionId={snap.sessionId} score={snap.score} quizSeen={snap.quizSeen} sessionLog={snap.sessionLog}
+          sessionCards={snap.sessionCards}
           progress={progress} canContinue={canContinue}
           clearedSceneIds={clearedSceneIds} nextSceneId={nextSceneId}
           reviewCount={reviewCount} dictationCount={dictationCount} composeCount={composeCount} signCount={signCount}
           speakCount={snap.sessionCards.filter((c) => c.kind === 'speak').length}
           isQuickPractice={snap.isPractice}
           coreLevel={coreLevel} progression={progression} devUnlockAll={!!settings.devUnlockAll}
+          promotionResult={snap.promotionResult} onRetryPromotion={startPromotionQuiz} onOpenLevelGuide={setLevelGuide}
           onRetryWeak={flow.retryWeak} onRetrySame={snap.isPractice ? snap.retrySame ?? undefined : undefined} onContinue={startSession}
           onReview={startReviewSession} onDictation={startDictationSession} onCompose={startComposeSession} onSigns={startSignSession} onFlash={startFlashSession}
           onPracticeVocab={() => startVocabSession('all')}
@@ -978,7 +991,10 @@ export function App() {
         />
       )}
       {showSettings && (
-        <SettingsModal settings={settings} onChange={updateSettings} onSelectMode={selectMode} onMarkKanaKnown={markAllKanaKnown} onReset={resetAll} onResetUnlocks={resetUnlocks} onFillDevCards={fillDevCardsAll} onPlacement={startPlacement} onStartPromotion={startPromotionQuiz} onClose={() => setShowSettings(false)} />
+        <SettingsModal settings={settings} onChange={updateSettings} onSelectMode={selectModeFromSettings} onMarkKanaKnown={markAllKanaKnown} onReset={resetAll} onResetUnlocks={resetUnlocks} onFillDevCards={fillDevCardsAll} onPlacement={startPlacement} onStartPromotion={startPromotionQuiz} onClose={() => setShowSettings(false)} />
+      )}
+      {levelGuide && (
+        <LevelIntroGuide level={levelGuide} onStart={() => setLevelGuide(null)} onClose={() => setLevelGuide(null)} />
       )}
     </Suspense>
   );
