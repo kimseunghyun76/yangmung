@@ -48,15 +48,20 @@ interface Props {
 
 export function SequencePreview({ title, subtitle, lines, onStart, onBack, countControl, backdropKind, stats, onStudyAll }: Props) {
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
+  // 미리보기 목록(=이번 퀴즈에 나올 내용) 기본은 접어둔다 — 선행학습 스포일러를 원치 않는 사람이 대다수라
+  // 보고 싶은 사람만 펼쳐 보게 한다. 재생 중이면 강제로 펼쳐 따라 스크롤이 보이게 한다.
+  const [listOpen, setListOpen] = useState(false);
   const tokenRef = useRef(0);
   const lineRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => stopSpeaking, []); // 화면 이탈 시 재생 중지
 
-  // 전체 듣기 중엔 재생 중인 항목이 화면 안에 보이도록 따라 스크롤.
+  // 전체 듣기 중엔 재생 중인 항목이 화면 안에 보이도록 따라 스크롤(목록이 접혀 있으면 먼저 펼친다).
   useEffect(() => {
     if (playingIndex === null) return;
-    lineRefs.current[playingIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setListOpen(true);
+    const t = window.setTimeout(() => lineRefs.current[playingIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60);
+    return () => window.clearTimeout(t);
   }, [playingIndex]);
 
   function playAll() {
@@ -139,6 +144,19 @@ export function SequencePreview({ title, subtitle, lines, onStart, onBack, count
       )}
 
       {lines.length > 0 && (
+        <div style={{ marginBottom: 14 }}>
+          <button className="ym-press" onClick={() => setListOpen((v) => !v)} style={{
+            width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
+            padding: '10px 12px', borderRadius: 12, cursor: 'pointer',
+            border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)',
+          }}>
+            <span style={{ fontSize: 13, fontWeight: 800 }}>이번에 나올 내용 미리보기 ({lines.length}개)</span>
+            <Icon name="flow" size={13} style={{ transform: listOpen ? 'rotate(90deg)' : 'rotate(-90deg)', transition: 'transform .2s', flex: '0 0 auto', color: 'var(--ink-soft)' }} />
+          </button>
+        </div>
+      )}
+
+      {lines.length > 0 && listOpen && (
         <GlassPanel>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {lines.map((l, i) => {

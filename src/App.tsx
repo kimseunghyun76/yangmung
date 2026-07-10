@@ -7,7 +7,7 @@ import {
   classifyCard, isKanaFamiliar, loadDiscovered, loadProgress, loadSeenKana, loadSession,
   markKanaKnown, markKanaSeen, missionExperiencedCount, missionsFromCards, nextSessionId, planSession, plannedSessionSize, recordAttempt, recordKnown,
   saveDiscovered, saveProgress, saveSeenKana, saveSession, selectComposeCards, selectDictationCards,
-  selectFlashCardsByMode, selectMissionCards, selectPairCards, selectScriptKanaCards, selectSessionCards, selectSignCards, selectStudyDeck,
+  selectFlashCardsByMode, selectMissionCards, selectPairCards, selectQuizOnlyDeck, selectScriptKanaCards, selectSessionCards, selectSignCards, selectStudyDeck,
   type FlashMode, type ProgressMap, type SeenKana, type SessionState,
 } from './learn/progress';
 import { loadCollection, saveCollection, fillDevCards } from './learn/collection';
@@ -423,8 +423,15 @@ export function App() {
   function signCards(quizCount: number): Card[] {
     return selectStudyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:') && !id.startsWith('sign:study:'), { studyLimit: 24, quizCount, progress });
   }
+  // "바로 퀴즈 풀기" — 새로 학습하는 단어를 섞지 않는다. 이전에 이미 학습한 적 있는 표지만
+  // 퀴즈로 낸다("학습 먼저→퀴즈" 규칙). 한 번도 학습한 적 없으면(진짜 신규) signCards로 폴백 —
+  // 그래야 첫 사용자에게도 죽은 버튼이 아니라 실제 학습+퀴즈가 나간다.
+  function signQuizOnly(count: number): Card[] {
+    const quizOnly = selectQuizOnlyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:') && !id.startsWith('sign:study:'), { quizCount: count, progress });
+    return quizOnly.length > 0 ? quizOnly : signCards(count);
+  }
   function beginSignSession(count: number, stage?: string | null) {
-    let cards = signCards(count);
+    let cards = signQuizOnly(count);
     if (cards.length === 0) return;
     cards = withStudyTip(cards, ['간판', '표지', '편의점']);
     lastPracticeRef.current = () => beginSignSession(count, stage);
@@ -561,9 +568,19 @@ export function App() {
     if (groupId === 'all') return 'vocab';
     return VOCAB_GROUP_ART[groupId] ?? 'vocab';
   }
+  // "바로 퀴즈 풀기" — 새로 학습하는 단어를 섞지 않고, 이전에 이미 학습한 단어의 퀴즈만.
+  // 처음 보는 그룹(학습 기록 전무)이면 vocabCards(학습+퀴즈)로 폴백.
+  function vocabQuizOnly(groupId: string, quizCount: number): Card[] {
+    let studyTest: (id: string) => boolean, quizTest: (id: string) => boolean;
+    if (groupId === 'basics') { studyTest = (id) => id.startsWith('basic:study:'); quizTest = (id) => id.startsWith('basic:') && !isVocabStudy(id); }
+    else if (groupId === 'all') { studyTest = (id) => id.startsWith('vocab:') && isVocabStudy(id); quizTest = (id) => id.startsWith('vocab:') && !isVocabStudy(id); }
+    else { studyTest = (id) => id.startsWith(`vocab:${groupId}:study:`); quizTest = (id) => id.startsWith(`vocab:${groupId}:`) && !isVocabStudy(id); }
+    const quizOnly = selectQuizOnlyDeck(allCards, studyTest, quizTest, { quizCount, progress });
+    return quizOnly.length > 0 ? quizOnly : vocabCards(groupId, quizCount);
+  }
   // 실제 세션 시작(미리보기의 "학습 시작" 또는 표 학습 화면의 퀴즈 버튼에서 호출).
   function beginVocabSession(groupId: string, quizCount: number) {
-    let cards = vocabCards(groupId, quizCount);
+    let cards = vocabQuizOnly(groupId, quizCount);
     if (cards.length === 0) return;
     cards = withStudyTip(cards, VOCAB_TOPIC_KEYWORDS[groupId] ?? []);
     lastPracticeRef.current = () => beginVocabSession(groupId, quizCount);
@@ -607,8 +624,13 @@ export function App() {
   function greetingCards(quizCount: number): Card[] {
     return selectStudyDeck(allCards, (id) => id.startsWith('vocab:greetings:study:'), (id) => id.startsWith('vocab:greetings:') && !isVocabStudy(id), { studyLimit: 18, quizCount, progress });
   }
+  // "바로 퀴즈 풀기" — 이전에 학습한 인사말만 퀴즈로. 한 번도 학습한 적 없으면(첫 승급 단계 등) greetingCards로 폴백.
+  function greetingQuizOnly(quizCount: number): Card[] {
+    const quizOnly = selectQuizOnlyDeck(allCards, (id) => id.startsWith('vocab:greetings:study:'), (id) => id.startsWith('vocab:greetings:') && !isVocabStudy(id), { quizCount, progress });
+    return quizOnly.length > 0 ? quizOnly : greetingCards(quizCount);
+  }
   function beginGreetingSession(count: number, stage?: string | null) {
-    const cards = greetingCards(count);
+    const cards = greetingQuizOnly(count);
     if (cards.length === 0) return;
     lastPracticeRef.current = () => beginGreetingSession(count, stage);
     flow.beginSession(nextSessionId(session), cards, { intro: false, replace: true, practice: true, stage });
