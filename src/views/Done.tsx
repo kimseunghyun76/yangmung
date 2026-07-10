@@ -122,7 +122,7 @@ export function Done({ sessionId, score, quizSeen, sessionLog, progress, speakCo
       accent: 'var(--accent)',
       title: '오답만 다시 잡기',
       sub: `이번에 막힌 ${weak}개를 바로 다시 풀기`,
-      image: quickPracticeBackdrop('flash'),
+      image: quickPracticeBackdrop('retry-missed'),
       badge: '오답',
       onClick: onRetryWeak,
       preferred: true,
