@@ -398,7 +398,7 @@ function conceptKey(c: ReviewableCard): string {
 // 처음 만날 때도 이 순서로(가장 부드러운 것부터), 숙련도가 오르면 사다리를 타고 어려운 형태로 이동.
 export function formRank(id: string): number {
   if (id.endsWith(':read')) return 0;
-  if (id.startsWith('listen:') || id.endsWith(':listen') || id.startsWith('hear2ja:')) return 1;
+  if (id.startsWith('listen:') || id.endsWith(':listen') || id.startsWith('hear2ja:') || id.endsWith(':reverse')) return 1;
   if (id.startsWith('ko2ja:')) return 2;   // 한→일 고르기 — 산출 방향, 듣기 다음 난이도
   if (id.startsWith('dictation:')) return 3;
   if (id.endsWith(':confuse')) return 4;

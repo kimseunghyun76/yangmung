@@ -467,6 +467,8 @@ function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 
   const ja = c.phrase ? (c.phrase.kanji ?? c.phrase.kana) : undefined;
   // 오답일 때 이 표현과 연결된 문법 팁을 즉시 노출(세션 끝 무작위 팁과 별개로 "맞는 순간" 학습)
   const wrongTip = isWrong ? relatedGrammar(card) : undefined;
+  // 가나 퀴즈면 정답/오답 상관없이 "자세히" 눌러 로마자·한글음·연상팁을 펼쳐볼 수 있게.
+  const kanaId = card.reviewTarget?.type === 'kana' ? card.reviewTarget.id : undefined;
 
   return (
     <div className="ym-reveal" style={{ marginTop: 14 }}>
@@ -521,6 +523,7 @@ function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 
       {card.listen && card.bannerJa && (
         <p style={{ background: 'var(--surface-2)', padding: 12, borderRadius: 12, fontSize: 16, color: 'var(--ink-soft)' }}>들린 표현: <strong style={{ color: 'var(--ink)' }}>{card.bannerJa}</strong></p>
       )}
+      {kanaId && <KanaDetailToggle kanaId={kanaId} />}
       <PrimaryAction onClick={onNext} style={{ marginTop: 4 }}>다음</PrimaryAction>
     </div>
   );
@@ -613,6 +616,31 @@ function PhraseLine({ ja, korean }: { ja: string; korean: string }) {
       <strong>{ja}</strong>
       <span style={{ color: 'var(--ink-soft)', fontSize: 15 }}> — {korean}</span>
     </p>
+  );
+}
+
+// 가나 퀴즈 피드백 하단 — 눌러서 로마자·한글음·연상팁을 펼쳐보는 상세 정보(기본은 접힘).
+function KanaDetailToggle({ kanaId }: { kanaId: string }) {
+  const [open, setOpen] = useState(false);
+  const k = CONTENT.kana.find((x) => x.id === kanaId);
+  if (!k) return null;
+  return (
+    <div style={{ marginTop: 10 }}>
+      <button className="ym-press" onClick={() => setOpen((v) => !v)} style={{
+        width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '10px 12px', borderRadius: 12, cursor: 'pointer',
+        border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink-soft)', fontSize: 12.5, fontWeight: 700,
+      }}>
+        <span>읽기 자세히 보기</span>
+        <span aria-hidden style={{ fontSize: 11 }}>{open ? '▴' : '▾'}</span>
+      </button>
+      {open && (
+        <div className="ym-reveal" style={{ marginTop: 8, padding: '12px 14px', borderRadius: 12, background: 'var(--surface-2)' }}>
+          <p style={{ margin: 0, fontSize: 15, fontWeight: 800, color: 'var(--ink)' }}>{k.char} · {k.romaji} · {k.koreanSound}</p>
+          {k.mnemonic && <FeedbackText>{k.mnemonic}</FeedbackText>}
+        </div>
+      )}
+    </div>
   );
 }
 
