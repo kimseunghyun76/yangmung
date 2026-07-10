@@ -819,6 +819,27 @@ export function selectStudyDeck(
   return [...words, ...examples, ...quizPick];
 }
 
+// "바로 퀴즈 풀기" 전용 — selectStudyDeck과 달리 이번 세션에서 새로 학습(introduce)하는 단어를
+// 전혀 섞지 않는다. "학습 먼저 → 퀴즈" 규칙을 지키기 위해, 오직 이전 세션에서 이미 학습한
+// (progress에 시도 기록이 있는) 개념의 퀴즈만 낸다. 한 번도 학습한 적 없으면 빈 배열 반환 —
+// 호출부가 selectStudyDeck으로 폴백해 "죽은 버튼"이 되지 않게 한다.
+export function selectQuizOnlyDeck(
+  allCards: Card[],
+  studyTest: (id: string) => boolean,
+  quizTest: (id: string) => boolean,
+  opts: { quizCount?: number; progress?: ProgressMap } = {},
+): Card[] {
+  const study = allCards.filter((c) => c.kind === 'introduce' && studyTest(c.id));
+  const quiz = allCards.filter((c): c is QuizCard => c.kind === 'quiz' && quizTest(c.id));
+  const progress = opts.progress ?? {};
+  const learned = new Set<string>();
+  for (const c of study) {
+    if (progress[c.id]?.attempts) learned.add(c.id.replace(':study:', ':'));
+  }
+  const allowedQuiz = quiz.filter((c) => c.reviewTarget && learned.has(String(c.reviewTarget.id)));
+  return pickVariedQuiz(allowedQuiz, opts.quizCount ?? 3);
+}
+
 // 거리 읽기 전용 덱 — 간판·메뉴 카드만, 약점/안 본 것 먼저. (직접 진입)
 export function selectSignCards(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit = 12): Card[] {
   const due: Card[] = [], fresh: Card[] = [];
