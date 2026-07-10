@@ -6,7 +6,7 @@ import {
   recordAttempt, recordKnown, nextSessionId,
   type ProgressMap, type SessionLogEntry, type SessionState,
 } from '../learn/progress';
-import { PROMO_PASS, STAGE_PASS, type CoreLevel } from '../learn/progression';
+import { PROMO_PASS, STAGE_PASS, nextLevel, type CoreLevel } from '../learn/progression';
 import { extractKanaChars } from '../learn/kanaReading';
 import { resetMangaBackdrops } from '../views/scene';
 import { speak, stopSpeaking, ttsSupported } from '../tts';
@@ -39,6 +39,8 @@ export interface DoneSnapshot {
   isPractice: boolean;
   /** "다시 한번 학습" 재현 함수 — App의 lastPracticeRef도 같은 이유로 스냅숏 시점에 얼려둔다. */
   retrySame: (() => void) | null;
+  /** 이 세션이 승급 시험이었으면 결과. Done이 전용 합격/불합격 화면을 그릴지 판단하는 근거. */
+  promotionResult?: { fromLevel: CoreLevel; toLevel: CoreLevel; passed: boolean };
 }
 
 export interface SessionFlowDeps {
@@ -130,14 +132,18 @@ export function useSessionFlow(deps: SessionFlowDeps) {
       const acc = quizSeen > 0 ? score / quizSeen : 0;
       const promo = promotionRef.current;
       const stage = stageKeyRef.current;
+      let promotionResult: DoneSnapshot['promotionResult'];
       if (promo) {
-        if (acc >= PROMO_PASS) deps.onPromotionPass(promo);
+        const passed = acc >= PROMO_PASS;
+        if (passed) deps.onPromotionPass(promo);
+        const nx = nextLevel(promo);
+        if (nx) promotionResult = { fromLevel: promo, toLevel: nx, passed };
         promotionRef.current = null;
       } else if (stage) {
         if (acc >= STAGE_PASS) deps.onStagePass(stage);
         stageKeyRef.current = null;
       }
-      setDoneSnapshot({ sessionId, score, quizSeen, sessionLog, sessionCards, isPractice: practiceRef.current, retrySame: deps.getRetrySame() });
+      setDoneSnapshot({ sessionId, score, quizSeen, sessionLog, sessionCards, isPractice: practiceRef.current, retrySame: deps.getRetrySame(), promotionResult });
       navigate('done', { replace: true }); // 자동 전환 — 뒤로가기로 세션에 재진입하지 않게
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
