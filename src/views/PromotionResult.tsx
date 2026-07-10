@@ -1,10 +1,10 @@
 // 승급 시험 전용 결과 화면 — 합격/불합격을 명확히 구분하고, 캐릭터가 시험의 목적·결과·다음 행동을 설명한다.
 // Done.tsx가 doneSnapshot.promotionResult를 갖고 있을 때만 이 컴포넌트를 그린다(일반 세션은 기존 화면 유지).
-import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
 import type { SessionLogEntry } from '../learn/progress';
 import { CORE_LEVEL_LABEL, LEVEL_STAGES, type CoreLevel } from '../learn/progression';
 import { MODE_PRESETS } from '../learn/settings';
+import { categoryBreakdown } from '../learn/sessionCategories';
 import { Icon } from '../ui/Icon';
 import { MascotBubble } from './mascot';
 import { GlassPanel } from './shell';
@@ -22,28 +22,12 @@ export interface PromotionResultProps {
   onHome: () => void;
 }
 
-// 세션 카드 id → 사람이 읽을 카테고리 라벨. 오답 분석("어떤 부분을 다시 학습해야 하는지")에 쓴다.
-function categoryLabel(card: Card | undefined): string {
-  if (!card || !('reviewTarget' in card) || !card.reviewTarget) return '기타';
-  const rt = card.reviewTarget;
-  if (rt.type === 'kana') return '가나 읽기';
-  if (rt.type === 'grammar') return '문법';
-  if (rt.type === 'mission') {
-    const m = CONTENT.missions.find((x) => x.id === rt.id);
-    return m ? `미션 · ${m.place ?? m.scenario}` : '미션';
-  }
-  return '표현';
-}
-
+// 오답 분석("어떤 부분을 다시 학습해야 하는지") — categoryBreakdown 중 하나라도 틀린 카테고리만.
 function weakBreakdown(sessionLog: SessionLogEntry[], sessionCards: Card[]): { label: string; count: number }[] {
-  const byId = new Map(sessionCards.map((c) => [c.id, c]));
-  const counts = new Map<string, number>();
-  for (const entry of sessionLog) {
-    if (entry.result === 'correct') continue;
-    const label = categoryLabel(byId.get(entry.id));
-    counts.set(label, (counts.get(label) ?? 0) + 1);
-  }
-  return [...counts.entries()].map(([label, count]) => ({ label, count })).sort((a, b) => b.count - a.count);
+  return categoryBreakdown(sessionLog, sessionCards)
+    .filter((c) => c.correct < c.total)
+    .map((c) => ({ label: c.label, count: c.total - c.correct }))
+    .sort((a, b) => b.count - a.count);
 }
 
 export function PromotionResult({ fromLevel, toLevel, passed, score, quizSeen, sessionLog, sessionCards, onOpenLevelGuide, onRetry, onHome }: PromotionResultProps) {
