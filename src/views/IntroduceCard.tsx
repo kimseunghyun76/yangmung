@@ -46,7 +46,7 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
         )
       )}
 
-      <WordLearningPanel card={card} isKanaFamiliar={isKanaFamiliar} />
+      <WordLearningPanel card={card} isKanaFamiliar={isKanaFamiliar} japaneseOnImage={preferImageArt && hasSpecificWordImage(card)} />
       <VocabMiniContext card={card} />
 
       {card.answersQuestion && (
@@ -105,7 +105,9 @@ function RegisterBadge({ register }: { register: 'casual' | 'formal' | 'both' })
   );
 }
 
-function WordLearningPanel({ card, isKanaFamiliar }: { card: IntroduceCard; isKanaFamiliar: (char: string) => boolean }) {
+// japaneseOnImage: 이미지 위에 표기(+격식 배지)가 이미 오버레이됐으면 이 카드에서는 중복 표시를 뺀다
+// (표기 텍스트, 격식 배지, 코너의 다시 듣기 아이콘 모두 이미지 쪽에만 남긴다).
+function WordLearningPanel({ card, isKanaFamiliar, japaneseOnImage }: { card: IntroduceCard; isKanaFamiliar: (char: string) => boolean; japaneseOnImage?: boolean }) {
   const romaji = toRomaji(card.kana);
   return (
     <button
@@ -128,17 +130,19 @@ function WordLearningPanel({ card, isKanaFamiliar }: { card: IntroduceCard; isKa
         textAlign: 'left',
       }}
     >
-      {/* 표기 — 가장 크게, 항상 표시(가타카나 전용 등 표기=읽기가 같아도 그대로 보여준다) */}
-      <span style={{ display: 'grid', gap: 4, minWidth: 0, paddingRight: 30 }}>
-        <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span style={{ fontSize: 11, fontWeight: 850, color: 'var(--ink-soft)', lineHeight: 1 }}>표기</span>
-          {card.register && <RegisterBadge register={card.register} />}
+      {/* 표기 — 가장 크게, 항상 표시(가타카나 전용 등 표기=읽기가 같아도 그대로 보여준다). 이미지에 이미 오버레이됐으면 생략 */}
+      {!japaneseOnImage && (
+        <span style={{ display: 'grid', gap: 4, minWidth: 0, paddingRight: 30 }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: 11, fontWeight: 850, color: 'var(--ink-soft)', lineHeight: 1 }}>표기</span>
+            {card.register && <RegisterBadge register={card.register} />}
+          </span>
+          <span lang="ja" style={{ display: 'block', fontSize: 34, lineHeight: 1.1, fontWeight: 950, color: 'var(--ink)', letterSpacing: 0, overflowWrap: 'anywhere' }}>{card.ja}</span>
         </span>
-        <span lang="ja" style={{ display: 'block', fontSize: 34, lineHeight: 1.1, fontWeight: 950, color: 'var(--ink)', letterSpacing: 0, overflowWrap: 'anywhere' }}>{card.ja}</span>
-      </span>
+      )}
 
       {/* 읽기 + 로마자 — 작게 */}
-      <span style={{ display: 'grid', gap: 3, minWidth: 0, paddingTop: 7, borderTop: '1px solid rgba(185,56,46,.18)' }}>
+      <span style={{ display: 'grid', gap: 3, minWidth: 0, paddingTop: japaneseOnImage ? 0 : 7, borderTop: japaneseOnImage ? 'none' : '1px solid rgba(185,56,46,.18)' }}>
         <span style={{ fontSize: 10.5, fontWeight: 850, color: 'var(--ink-soft)', lineHeight: 1 }}>읽기</span>
         <span lang="ja" style={{ display: 'flex', alignItems: 'baseline', gap: 6, flexWrap: 'wrap' }}>
           <span style={{ fontWeight: 850, lineHeight: 1.15, color: 'var(--ink)', overflowWrap: 'anywhere' }}>
@@ -155,7 +159,7 @@ function WordLearningPanel({ card, isKanaFamiliar }: { card: IntroduceCard; isKa
         {card.tip && <span style={{ display: 'block', fontSize: 12, lineHeight: 1.45, fontWeight: 600, color: 'var(--ink-soft)' }}>{card.tip}</span>}
       </span>
 
-      <Icon name="listen" size={20} style={{ position: 'absolute', right: 12, top: 11, color: 'var(--accent)', opacity: 0.82 }} />
+      {!japaneseOnImage && <Icon name="listen" size={20} style={{ position: 'absolute', right: 12, top: 11, color: 'var(--accent)', opacity: 0.82 }} />}
     </button>
   );
 }
@@ -253,7 +257,16 @@ function wordArtSrcForCard(card: IntroduceCard): string | null {
   return matched ? `/vocab/word-art/${group.id}/${matched.id}.webp` : null;
 }
 
-function ImageCornerOverlay({ card }: { card: IntroduceCard }) {
+// 이 카드의 이미지가 그 단어를 구체적으로 그려낸 전용 이미지(사진 아트 또는 WordArt 일러스트)인지 —
+// 그런 경우에만 표기를 이미지 위에 오버레이하고 설명 카드 쪽 표기는 생략한다. 명장면/노래/방송처럼
+// 이미지 자체가 없거나, 매칭되는 이미지가 없어 일반 배경 장면만 뜨는 경우는 표기를 설명 카드에 남긴다.
+function hasSpecificWordImage(card: IntroduceCard): boolean {
+  if (card.id.startsWith('dlg:') || card.id.startsWith('song:') || card.id.startsWith('announce:')) return false;
+  if (card.id.startsWith('sign:') || card.id.startsWith('basic:')) return hasWordArt(card.id);
+  return !!wordArtSrcForCard(card) || hasWordArt(card.id);
+}
+
+function ImageCornerOverlay({ card, showJapanese }: { card: IntroduceCard; showJapanese?: boolean }) {
   const group = card.tag.replace(/^어휘 ·\s*/, '').replace(/\s*·.*$/, '');
   return (
     <>
@@ -296,6 +309,20 @@ function ImageCornerOverlay({ card }: { card: IntroduceCard }) {
       >
         <Icon name="listen" size={18} />
       </button>
+      {showJapanese && (
+        <span aria-hidden style={{
+          position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 1,
+          padding: '28px 14px 12px',
+          background: 'linear-gradient(to top, rgba(18,14,10,.78), rgba(18,14,10,.32) 60%, transparent)',
+        }}>
+          {card.register && (
+            <span style={{ display: 'inline-block', marginBottom: 4 }}>
+              <RegisterBadge register={card.register} />
+            </span>
+          )}
+          <span lang="ja" style={{ display: 'block', fontSize: 26, lineHeight: 1.15, fontWeight: 950, color: '#fff', textShadow: '0 2px 8px rgba(0,0,0,.5)', overflowWrap: 'anywhere' }}>{card.ja}</span>
+        </span>
+      )}
     </>
   );
 }
@@ -314,7 +341,7 @@ function QuickPracticeWordScene({ card }: { card: IntroduceCard }) {
       <div style={{ display: 'flex', justifyContent: 'center', margin: '-2px -4px 14px' }}>
         <div style={{
           position: 'relative',
-          width: 'min(75%, 520px)',
+          width: '100%',
           aspectRatio: '1 / 1',
           overflow: 'hidden',
           borderRadius: 22,
@@ -338,7 +365,7 @@ function QuickPracticeWordScene({ card }: { card: IntroduceCard }) {
               filter: 'saturate(1.02) contrast(1.01)',
             }}
           />
-          <ImageCornerOverlay card={card} />
+          <ImageCornerOverlay card={card} showJapanese />
         </div>
       </div>
     );
@@ -349,7 +376,7 @@ function QuickPracticeWordScene({ card }: { card: IntroduceCard }) {
       <div style={{ display: 'flex', justifyContent: 'center', margin: '-2px -4px 14px' }}>
         <div style={{
           position: 'relative',
-          width: 'min(75%, 520px)',
+          width: '100%',
           aspectRatio: '1 / 1',
           display: 'grid',
           placeItems: 'center',
@@ -360,7 +387,7 @@ function QuickPracticeWordScene({ card }: { card: IntroduceCard }) {
           boxShadow: '0 10px 22px rgba(54,38,20,.09)',
         }}>
           <WordArt id={card.id} korean={card.korean} kana={card.kana} ja={card.ja} size={240} style={{ width: '100%', height: '100%' }} />
-          <ImageCornerOverlay card={card} />
+          <ImageCornerOverlay card={card} showJapanese />
         </div>
       </div>
     );
