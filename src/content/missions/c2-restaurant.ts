@@ -19,8 +19,6 @@ export const c2: Mission = {
       choices: [
         { text: '한 명이요', phraseId: 'p_hitori_desu', correct: true, feedback: '「一人(ひとり)です」— 혼자 식사를 뜻하는 말. 일본은 혼밥 문화가 발달해 있어요. おひとりさまで도 같은 뜻으로 씁니다' },
         { text: '두 명이요', phraseId: 'p_futari_desu', correct: true, feedback: '「二人(ふたり)です」— 인원 표현은 ひとり・ふたり로 불규칙해요. 세 명은 さんにん, 네 명은 よにん으로 돌아와요' },
-        { text: '저기요 (주의 끌기)', phraseId: 'p_sumimasen', correct: false, feedback: '인원수 질문에는 「ひとりです / ふたりです」처럼 숫자로 답해요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
       ],
     },
     {
@@ -28,10 +26,8 @@ export const c2: Mission = {
       speaker: '점원',
       promptPhraseId: 'p_gochuumon',
       choices: [
-        { text: '이거 주세요 (메뉴를 가리키며)', phraseId: 'p_kore_kudasai', correct: true, feedback: '「これをください」— 사진 메뉴를 가리키는 것만으로도 완벽한 주문. 일본 식당 메뉴는 대부분 사진이 있어요' },
         { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: true, feedback: '「おすすめは何(なん)ですか」— 오늘의 인기 메뉴·제철 요리를 물어봐요. 현지인이 선택한 메뉴가 대개 최선이에요' },
         { text: '메뉴 좀 보여 주세요', phraseId: 'p_menu_misete', correct: true, feedback: '「メニューを見(み)せてください」— 메뉴판을 요청할 때. 사진 메뉴가 없으면 「写真(しゃしん)のメニューはありますか」도 써봐요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
         { text: '잠깐만 기다려 주세요 (메뉴 보는 중)', phraseId: 'p_chotto_matte', correct: true, feedback: '「ちょっと待ってください」— 아직 메뉴를 정하는 중일 때. 점원이 조용히 기다려줘요' },
       ],
     },
@@ -42,7 +38,6 @@ export const c2: Mission = {
       choices: [
         { text: '물 주세요', phraseId: 'p_mizu_kudasai', correct: true, feedback: '「お水(みず)ください」— 일본 식당 물은 대부분 무료. お水とセルフサービスがある場合は셀프로 가져가면 돼요' },
         { text: '아니요, 괜찮습니다 (음료 사양)', phraseId: 'p_iie_kekkou', correct: true, feedback: 'いいえ、結構です — 정중하게 거절할 때 가장 자연스러운 표현' },
-        { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
         { text: '아니요, 필요 없어요', phraseId: 'p_iie_irimasen', correct: true, feedback: '「いいえ、いりません」— 음료가 필요 없을 때 명확하게 거절. いいえ、結構(けっこう)です도 더 부드러운 대안이에요' },
       ],
     },
@@ -62,15 +57,12 @@ export const c2: Mission = {
       choices: [
         { text: '메밀·땅콩 알레르기가 있어요', phraseId: 'p_arerugi', correct: true, feedback: '「アレルギーがあります」— 주문 전에 반드시 전달. 메밀(そば)·땅콩(ピーナッツ)·새우(えび)는 일본 식당에서 특히 주의 식재료예요' },
         { text: '이거 빼 주세요', phraseId: 'p_kore_nuite', correct: true, feedback: '「これを抜(ぬ)いてください」— 특정 재료를 빼 달라는 표현. 손가락으로 가리키면 더 정확하게 전달돼요' },
-        { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'full' },
-        { text: '계산 부탁합니다', phraseId: 'p_okaikei', correct: false, feedback: '아직 식사 전 — 계산은 마지막에' },
       ],
     },
     {
       situationKo: '식사를 마치고 계산대로 향한다',
       speaker: '나',
       choices: [
-        { text: '계산 부탁드립니다', phraseId: 'p_okaikei', correct: true, feedback: '「お会計(かいけい)お願いします」— 일본 식당은 자리에서 결제하거나 계산대로 가는 방식이 있어요. 직원을 부르거나 계산대로 가서 말해요' },
         { text: '따로따로요 (각자 계산)', phraseId: 'p_betsubetsu_de', correct: true, feedback: '동행자와 나눠 낼 때 — 계산대에서 미리 말하면 매끄러워요' },
         { text: '잘 먹었습니다', phraseId: 'p_gochisousama', correct: true, feedback: '계산하며 곁들이면 인상이 좋아지는 마무리 인사' },
         { text: '메뉴 좀 보여 주세요', phraseId: 'p_menu_misete', correct: false, feedback: '식사를 마친 단계라 메뉴 요청은 흐름에 안 맞아요' },

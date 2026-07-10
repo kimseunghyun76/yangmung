@@ -324,8 +324,6 @@ export function cardDifficulty(card: Card): DifficultyLabel | null {
   return null;
 }
 
-const fallbackRecoveryIds = ['p_mou_ichido', 'p_yukkuri', 'p_yasashii_nihongo', 'p_eigo_de'];
-
 
 function buildBasicLifeCards(): Card[] {
   const cards: Card[] = [];
@@ -430,28 +428,15 @@ function buildStepChoicePools(stepChoices: MissionStep['choices'], byPhrase: (id
     correct.push({ ...src });
   }
 
-  if (recovery.length === 0) {
-    const p = fallbackRecoveryIds.map((id) => allPhrases.find((x) => x.id === id)).find((x): x is Phrase => !!x && !usedPhraseIds.has(x.id));
-    if (p) {
-      recovery.push({
-        label: p.korean,
-        correct: true,
-        recovery: true,
-        ja: ttsText(p),
-        phrase: phraseInfo(p),
-        feedback: '못 알아들었을 때는 복구 표현으로 다시 요청하면 됩니다.',
-      });
-      usedPhraseIds.add(p.id);
-      usedLabels.add(p.korean);
-    }
-  }
+  // 복구 선택지는 자동 주입하지 않는다 — C0(생존 회화 기초)에서만 명시적으로 가르치고,
+  // 다른 미션 스텝은 recovery가 0개인 게 정상(RecoverySkipAction 미노출).
 
   if (wrong.length < 3) {
     const eligible = (p: Phrase) =>
       !usedPhraseIds.has(p.id)
       && !usedLabels.has(p.korean)
       && p.korean.length <= 18
-      && !fallbackRecoveryIds.includes(p.id)
+      && p.missionScope !== 'generic' // 범용 표현(복구·긍정응답·결제·위치 질문 등)은 다른 미션 오답 후보로도 쓰지 않는다.
       && !isAmbiguousReply(p); // 헷갈리는 단답·반응어 제외
     // 다른 장면 하나에만 강하게 묶인 표현(예: 료칸 전용 "유카타 사이즈는…")은 주제가 어긋나 보이므로 최후순위로 미룬다.
     const otherOwnerCount = (p: Phrase): number => {

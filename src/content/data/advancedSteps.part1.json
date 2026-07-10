@@ -13,12 +13,6 @@
           "feedback": "「千円(せんえん)チャージしてください」— 계산대에서 현금으로 바로 충전할 수 있어요. 보통 1000엔 단위로 충전해요"
         },
         {
-          "text": "그럼 현금으로요",
-          "phraseId": "p_genkin_de",
-          "correct": true,
-          "feedback": "「現金(げんきん)で」— 충전 대신 현금으로 바꿔 결제. 잔액이 애매할 때 가장 빠른 해결이에요"
-        },
-        {
           "text": "카드로 부탁드려요",
           "phraseId": "p_card_de_onegai",
           "correct": true,
@@ -29,13 +23,6 @@
           "phraseId": "p_ookii_fukuro",
           "correct": false,
           "feedback": "봉투는 이미 정했어요 — 지금은 결제 수단을 정해야 해요"
-        },
-        {
-          "text": "다시 말해 주세요",
-          "phraseId": "p_mou_ichido",
-          "correct": true,
-          "recoveryType": "repeat",
-          "recoveryOutcome": "partial"
         }
       ]
     },
@@ -86,12 +73,6 @@
           "feedback": "감상을 먼저 전하면 대화가 따뜻해져요"
         },
         {
-          "text": "괜찮습니다 (사양)",
-          "phraseId": "p_daijoubu_desu",
-          "correct": true,
-          "feedback": "디저트 권유를 부드럽게 사양하는 표현이에요"
-        },
-        {
           "text": "두 명이요",
           "phraseId": "p_futari_desu",
           "correct": false,
@@ -116,11 +97,6 @@
           "phraseId": "p_betsubetsu_de",
           "correct": true,
           "feedback": "일본은 더치페이 문화가 강해 따로 계산이 아주 흔해요"
-        },
-        {
-          "text": "네",
-          "phraseId": "p_hai",
-          "correct": true
         },
         {
           "text": "잘 먹었습니다",
@@ -155,12 +131,6 @@
           "correct": true
         },
         {
-          "text": "어디예요?",
-          "phraseId": "p_doko_desu_ka",
-          "correct": false,
-          "feedback": "방금 신주쿠라고 알려줬어요. 감사 인사로 답해요"
-        },
-        {
           "text": "표 주세요",
           "phraseId": "p_kippu_kudasai",
           "correct": false,
@@ -178,12 +148,6 @@
           "text": "기억해 둘게요",
           "phraseId": "p_oboete_okimasu",
           "correct": true
-        },
-        {
-          "text": "다시 한 번 부탁합니다",
-          "phraseId": "p_mou_ichido",
-          "correct": true,
-          "feedback": "시간·승강장 정보는 틀리면 안 되니 되묻는 것도 좋은 전략이에요"
         },
         {
           "text": "몇 번 선이에요?",
@@ -208,16 +172,6 @@
       "recapPromptKo": "객실은 금연룸으로 괜찮으실까요?",
       "choices": [
         {
-          "text": "네",
-          "phraseId": "p_hai",
-          "correct": true
-        },
-        {
-          "text": "괜찮습니다",
-          "phraseId": "p_daijoubu_desu",
-          "correct": true
-        },
-        {
           "text": "방을 바꿔 주세요",
           "phraseId": "p_heya_kaete_kudasai",
           "correct": false,
@@ -228,6 +182,12 @@
           "phraseId": "p_tabako_no_nioi",
           "correct": false,
           "feedback": "방에 들어가기 전이에요. 지금은 금연룸 확인에 답해요"
+        },
+        {
+          "text": "금연으로 부탁드립니다",
+          "phraseId": "p_new_kinen_de_onegai",
+          "correct": true,
+          "feedback": "「禁煙(きんえん)でお願(ねが)いします」— 객실 타입(금연/흡연) 확인 질문에는 이렇게 원하는 쪽을 명시해서 답하는 게 자연스러워요. 체크인 서류에도 바로 반영됩니다"
         }
       ]
     },
@@ -276,12 +236,6 @@
           "correct": true
         },
         {
-          "text": "다시 한 번 부탁합니다",
-          "phraseId": "p_mou_ichido",
-          "correct": true,
-          "feedback": "두 단계 설명은 한 번에 외우기 어려워요. 다시 청해도 전혀 실례가 아니에요"
-        },
-        {
           "text": "어느 쪽이에요?",
           "phraseId": "p_dochira_desu_ka",
           "correct": false,
@@ -307,18 +261,6 @@
           "correct": true
         },
         {
-          "text": "저기요 / 죄송합니다",
-          "phraseId": "p_sumimasen",
-          "correct": true,
-          "feedback": "수고를 끼칠 때의 すみません은 감사의 뜻도 담아요"
-        },
-        {
-          "text": "괜찮습니다 (사양)",
-          "phraseId": "p_daijoubu_desu",
-          "correct": true,
-          "feedback": "부담스러우면 정중히 사양해도 좋아요"
-        },
-        {
           "text": "도와주세요",
           "phraseId": "p_tasukete",
           "correct": false,
@@ -334,11 +276,6 @@
       "recapPromptJa": "日本は初めてですか",
       "recapPromptKo": "일본은 처음이세요?",
       "choices": [
-        {
-          "text": "네",
-          "phraseId": "p_hai",
-          "correct": true
-        },
         {
           "text": "아니요",
           "phraseId": "p_iie",
@@ -364,11 +301,6 @@
       "recapPromptJa": "滞在先の住所をこちらに書いてください",
       "recapPromptKo": "체류지 주소를 여기에 적어 주세요",
       "choices": [
-        {
-          "text": "알겠습니다",
-          "phraseId": "p_wakarimashita",
-          "correct": true
-        },
         {
           "text": "잠깐만 기다려 주세요",
           "phraseId": "p_chotto_matte",
@@ -414,12 +346,6 @@
           "phraseId": "p_futsuu_de",
           "correct": true,
           "feedback": "「普通(ふつう)で」— 굳기를 잘 모르겠으면 보통으로. 토핑은 없어도 괜찮아요"
-        },
-        {
-          "text": "계산 부탁드려요",
-          "phraseId": "p_okaikei",
-          "correct": false,
-          "feedback": "라멘집은 식권 선불이에요 — 지금은 면 굳기·토핑을 정할 차례예요"
         }
       ]
     },
@@ -434,12 +360,6 @@
           "phraseId": "p_kaedama",
           "correct": true,
           "feedback": "「替え玉(かえだま)お願(ねが)いします」— 국물이 남았을 때 면만 추가. 하카타 라멘의 명물이에요"
-        },
-        {
-          "text": "괜찮습니다 (사양)",
-          "phraseId": "p_daijoubu_desu",
-          "correct": true,
-          "feedback": "「大丈夫(だいじょうぶ)です」— 배가 부르면 가볍게 사양해요"
         },
         {
           "text": "잘 먹었습니다",
@@ -463,11 +383,6 @@
       "recapPromptJa": "ご注文を確認します。Mサイズのカフェラテでよろしいですか",
       "recapPromptKo": "주문 확인하겠습니다. M사이즈 카페라테 맞으세요?",
       "choices": [
-        {
-          "text": "네",
-          "phraseId": "p_hai",
-          "correct": true
-        },
         {
           "text": "그래요 / 맞아요",
           "phraseId": "p_sou_desu",
@@ -508,12 +423,6 @@
           "phraseId": "p_koohii_wa_doko",
           "correct": false,
           "feedback": "커피는 이미 받았어요. 안내에 감사로 답해요"
-        },
-        {
-          "text": "계산 부탁드립니다",
-          "phraseId": "p_okaikei",
-          "correct": false,
-          "feedback": "카페는 선불이라 계산이 이미 끝났어요"
         }
       ]
     }
@@ -535,11 +444,6 @@
           "phraseId": "p_kore_to_kore",
           "correct": true,
           "feedback": "권유받은 것과 고른 것을 함께 사도 좋아요"
-        },
-        {
-          "text": "괜찮습니다 (사양)",
-          "phraseId": "p_daijoubu_desu",
-          "correct": true
         },
         {
           "text": "데워 주세요",
@@ -569,12 +473,6 @@
           "text": "봉투는 필요 없어요",
           "phraseId": "p_fukuro_iranai",
           "correct": true
-        },
-        {
-          "text": "계산 부탁드립니다",
-          "phraseId": "p_okaikei",
-          "correct": false,
-          "feedback": "두 가지 질문을 받았어요. 봉투/데우기에 먼저 답해요"
         }
       ]
     }
@@ -589,11 +487,6 @@
         {
           "text": "기억해 둘게요",
           "phraseId": "p_oboete_okimasu",
-          "correct": true
-        },
-        {
-          "text": "알겠습니다",
-          "phraseId": "p_wakarimashita",
           "correct": true
         },
         {
@@ -625,12 +518,6 @@
           "text": "확인했어요",
           "phraseId": "p_kakunin_shimashita",
           "correct": true
-        },
-        {
-          "text": "어디예요?",
-          "phraseId": "p_doko_desu_ka",
-          "correct": false,
-          "feedback": "여기가 시부야라고 방금 알려줬어요"
         },
         {
           "text": "다음은 시부야예요?",

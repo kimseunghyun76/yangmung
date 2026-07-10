@@ -25,7 +25,6 @@ export const c41: Mission = {
         { text: '환불로 부탁드려요', phraseId: 'p_henkin_de', correct: true, feedback: '「返金(へんきん)でお願(ねが)いします」— 교환 대신 환불을 원할 때도 첫 마디로 바로 말할 수 있어요' },
         { text: '영수증 주세요', phraseId: 'p_reshiito_kudasai', correct: false, feedback: '영수증은 내가 가져와야 합니다 — 직원에게 달라는 말이 아니에요' },
         { text: '조금 작아요', phraseId: 'p_chotto_chiisai_desu', correct: false, feedback: '먼저 무슨 용건인지 말해요 — 사이즈 같은 이유는 그다음에 설명해요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -37,7 +36,6 @@ export const c41: Mission = {
         { text: '조금 작아요', phraseId: 'p_chotto_chiisai_desu', correct: true, feedback: '「ちょっと小(ちい)さいです」— 사이즈가 맞지 않을 때 가장 자연스러운 표현. ちょっと(조금)를 붙이면 부드러운 뉘앙스. 大(おお)きいです(커요)로도 응용할 수 있어요' },
         { text: '다른 색 있나요?', phraseId: 'p_hoka_no_iro_arimasu_ka', correct: true, feedback: '「他(ほか)の色(いろ)はありますか」— 색상 교환 요청. 他の는 "다른"이라는 뜻으로 サイズ·デザインにも応用できます' },
         { text: 'M 사이즈 있나요?', phraseId: 'p_emu_saizu_arimasu_ka', correct: true, feedback: '「Mサイズはありますか」— 원하는 사이즈를 구체적으로 확인하는 표현. S/M/L/XL 모두 카타카나로 표현해요' },
-        { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: false, feedback: '이유를 설명해야 하는 상황 — 속도 요청은 맥락에 맞지 않아요' },
       ],
     },
     {
@@ -48,7 +46,6 @@ export const c41: Mission = {
         { text: '네, 있어요', phraseId: 'p_hai_arimasu', correct: true, feedback: '「はい、あります」— 영수증(レシート)을 건네요. 교환·환불에는 영수증이 필수예요. 카드 결제였다면 결제 카드도 함께 준비해요' },
         { text: '잠깐만 기다려 주세요', phraseId: 'p_chotto_matte', correct: true, feedback: '「ちょっと待(ま)ってください」— 가방에서 영수증을 찾는 동안 양해를 구해요' },
         { text: '영수증 주세요', phraseId: 'p_reshiito_kudasai', correct: false, feedback: '영수증은 내가 가진 걸 보여줘야 해요 — 직원에게 달라는 말이 아니에요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -56,10 +53,8 @@ export const c41: Mission = {
       speaker: '직원',
       promptPhraseId: 'p_henkin_card',
       choices: [
-        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「わかりました」— 카드 결제는 보통 카드로 환불돼요(반영까지 며칠 걸리기도). 현금 환불이 안 되는 경우도 많아요' },
-        { text: '카드로요', phraseId: 'p_card_de', correct: true, feedback: '「カードで」— 환불받을 카드를 확인. 결제한 카드와 같아야 처리가 빨라요' },
-        { text: '이걸로 부탁드려요', phraseId: 'p_kore_de', correct: true, feedback: '「これでお願(ねが)いします」— 환불 방식을 수락하며 마무리. 처리 영수증을 꼭 받아두세요' },
-        { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+        { text: '사용했던 카드랑 같은 건가요?', phraseId: 'p_new_card_kakunin', correct: true, feedback: '「使(つか)ったカードと同(おな)じですか」— 환불 카드가 원래 결제 카드와 같은지 재차 확인하면 착오를 막을 수 있어요' },
+        { text: '이걸 교환하고 싶어요', phraseId: 'p_koukan_shitai', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
       ],
     },
     {
@@ -71,7 +66,6 @@ export const c41: Mission = {
         { text: 'M 사이즈로요', phraseId: 'p_emu_saizu_de', correct: true, feedback: '「Mサイズで」— 교환 사이즈를 결정할 때. ～で는 선택을 나타내는 조사예요. Sサイズで·Lサイズで로 바꿔서도 그대로 쓸 수 있어요' },
         { text: 'S 사이즈로요', phraseId: 'p_esu_saizu_de', correct: true, feedback: '「Sサイズで」— S 사이즈 교환 선택. 일본 의류 사이즈는 한국보다 작은 경향이 있으니 교환 전 꼭 착용해보세요' },
         { text: '환불로 부탁드려요', phraseId: 'p_henkin_de', correct: true, feedback: '「返金(へんきん)でお願(ねが)いします」— 교환 대신 환불을 택할 때. 카드 결제는 보통 카드로 돌려받아요' },
-        { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: false, feedback: '교환/환불 선택 상황에서 속도 요청은 맥락과 맞지 않아요' },
       ],
     },
   ],
@@ -95,7 +89,6 @@ export const c42: Mission = {
       recapPromptKo: 'IC카드를 쓸 수 있어요',
       choices: [
         { text: '스이카로요', phraseId: 'p_suica_de', correct: true, feedback: '「Suicaで」— IC카드로 자판기 결제. 잔액이 부족하면 残高不足(ざんだかふそく)가 뜨니 미리 충전해두면 좋아요' },
-        { text: '현금으로요', phraseId: 'p_genkin_de', correct: true, feedback: '「現金(げんきん)で」— 동전 투입 결제. 자판기는 대부분 10円·100円·500円을 받고, 千円札(せんえんさつ) 지폐도 대부분 OK예요' },
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: true, feedback: '「使(つか)い方(かた)を教(おし)えてください」— 자판기 조작이 처음일 때. 옆 사람에게 물어보면 친절하게 알려줘요. 일본 자판기는 세계에서 가장 종류가 다양해요' },
         { text: '영수증 주세요', phraseId: 'p_reshiito_kudasai', correct: false, feedback: '자판기는 영수증이 나오지 않는 경우가 대부분입니다' },
       ],
@@ -106,7 +99,6 @@ export const c42: Mission = {
       recapPromptJa: '何にしますか',
       recapPromptKo: '무엇으로 하시겠어요?',
       choices: [
-        { text: '이걸로 부탁드려요', phraseId: 'p_kore_de', correct: true, feedback: '「これでお願(ねが)いします」— 화면이나 버튼을 가리키며 선택. 일본 자판기는 暖(あたた)かい(따뜻한)·冷(つめ)たい(차가운) 표시도 있어 체크해봐요' },
         { text: '이 버튼 눌러 주세요', phraseId: 'p_kono_botan_oshite', correct: true, feedback: '「このボタンを押(お)してください」— 어떤 버튼인지 모를 때 직접 도움을 구하는 실용 표현. 화면을 가리키며 쓰면 바로 이해해줘요' },
         { text: '커피는 어디예요?', phraseId: 'p_koohii_wa_doko', correct: true, feedback: '「コーヒーはどこですか」— 원하는 음료 위치를 찾을 때. 자판기는 カテゴリー(コーヒー·炭酸/たんさん·お茶/おちゃ 등)별로 구분돼 있어요' },
         { text: '잔돈으로 해 주세요', phraseId: 'p_komakaku', correct: false, feedback: '자판기에서 잔돈 교환 요청은 불가능합니다' },
@@ -120,7 +112,6 @@ export const c42: Mission = {
         { text: '따뜻한 걸로요', phraseId: 'p_hotto_de', correct: true, feedback: '「ホットで」— 자판기는 あたたかい·つめたい 표시가 있어요. 겨울엔 따뜻한 캔커피가 인기예요' },
         { text: '차가운 걸로요', phraseId: 'p_aisu_de', correct: true, feedback: '「アイスで」— 같은 음료도 ホット·アイス 버튼이 따로 있어요' },
         { text: '잔돈으로 해 주세요', phraseId: 'p_komakaku', correct: false, feedback: '자판기에서는 잔돈 교환을 못 해요 — 먼저 음료를 골라요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -128,10 +119,8 @@ export const c42: Mission = {
       speaker: '상대',
       promptPhraseId: 'p_urikire',
       choices: [
-        { text: '이거 주세요', phraseId: 'p_kore_kudasai', correct: true, feedback: '「これをください」— 다른 음료를 가리켜 골라요. 売(う)り切(き)れ(품절)는 버튼에 빨간불이 들어와요' },
         { text: '이건 뭐예요?', phraseId: 'p_kore_nani', correct: true, feedback: '「これは何(なん)ですか」— 처음 보는 음료를 물어봐요. 신상·한정 음료가 자주 나와요' },
-        { text: '괜찮아요', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 굳이 안 사도 되면 가볍게 넘어가요' },
-        { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+        { text: '스이카로요', phraseId: 'p_suica_de', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
       ],
     },
     {
@@ -140,7 +129,6 @@ export const c42: Mission = {
       recapPromptJa: 'おつりは出ましたか',
       recapPromptKo: '거스름돈 나왔나요?',
       choices: [
-        { text: '괜찮아요', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 잔돈이 정상 출금됐을 때. おつり取(と)り忘(わす)れに注意(ちゅうい)！ 잔돈 꼭 챙기고 나오세요' },
         { text: '잔돈 확인했어요', phraseId: 'p_kakunin_shimashita', correct: true, feedback: '「確認(かくにん)しました」— 잔돈을 그 자리에서 확인. 자판기·거스름돈은 바로 세어보는 게 좋아요' },
         { text: '잘 모르겠어요', phraseId: 'p_wakarimasen', correct: true, feedback: '「分(わ)かりません」— 잔돈이 제대로 나왔는지 확신이 없을 때. おつりを確認(かくにん)してください라고 주변에 도움을 구할 수도 있어요' },
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '잔돈을 확인하는 마무리예요 — 사용법은 앞서 익혔어요' },
@@ -166,9 +154,7 @@ export const c43: Mission = {
       recapPromptJa: 'お困りですか',
       recapPromptKo: '불편하신가요?',
       choices: [
-        { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, feedback: '「英語(えいご)で大丈夫(だいじょうぶ)ですか」— 7-Eleven ATM 등 편의점 ATM은 다국어 지원. English 버튼을 먼저 찾거나 직원에게 이 표현으로 물어봐요' },
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: true, feedback: '「使(つか)い方(かた)を教(おし)えてください」— ATM 조작법 도움 요청. 해외 카드(International Card)로 인출하는 방법을 모를 때 직접 도움을 구해요' },
-        { text: '쉬운 일본어로 부탁해요', phraseId: 'p_yasashii_nihongo', correct: true, feedback: '「やさしい日本語(にほんご)でお願(ねが)いします」— 화면 안내가 어려울 때. ATM은 보통 English 선택지가 있어서 영어 화면이 더 편할 수 있어요' },
         { text: '잔돈으로 해 주세요', phraseId: 'p_komakaku', correct: false, feedback: 'ATM 현금 인출과 잔돈 교환은 다른 상황입니다' },
       ],
     },
@@ -178,10 +164,8 @@ export const c43: Mission = {
       recapPromptJa: 'こちらにカードを入れてください',
       recapPromptKo: '이쪽에 카드를 넣어 주세요',
       choices: [
-        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 직원 안내를 이해했을 때. ATM 카드 삽입 방향이나 순서를 안내받을 때 쓰는 자연스러운 반응이에요' },
-        { text: '네, 알겠습니다', phraseId: 'p_hai_wakarimashita', correct: true, feedback: '「はい、分(わ)かりました」— はい를 붙이면 더 적극적인 이해 확인. 직원이 설명해줄 때 고개를 끄덕이며 함께 쓰면 자연스러워요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
         { text: '카드 되나요?', phraseId: 'p_card_tsukaemasu_ka', correct: false, feedback: '이미 카드를 쓰려고 준비한 상황 — 다시 물어볼 필요가 없어요' },
+        { text: '이 방향 맞아요?', phraseId: 'p_new_kono_muki_de_ii', correct: true, feedback: '「この向(む)きで合(あ)ってますか」— 화살표 방향 안내를 듣고 카드를 넣기 직전에 방향을 재확인하는 자연스러운 대답이에요' },
       ],
     },
     {
@@ -189,10 +173,8 @@ export const c43: Mission = {
       speaker: '직원',
       promptPhraseId: 'p_kingaku_nyuuryoku',
       choices: [
-        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「わかりました」— 화면 숫자판으로 금액을 입력. 만 엔 단위 버튼이 따로 있는 ATM도 많아요' },
         { text: '만 엔으로 낼게요', phraseId: 'p_ichiman_de', correct: true, feedback: '「一万円(いちまんえん)で」— 인출 금액을 입력. 1,000엔·10,000엔 단위로 뽑을 수 있어요' },
         { text: '카드 되나요?', phraseId: 'p_card_tsukaemasu_ka', correct: false, feedback: '이미 카드를 넣었어요 — 지금은 금액을 입력하면 돼요' },
-        { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -200,10 +182,8 @@ export const c43: Mission = {
       speaker: '직원',
       promptPhraseId: 'p_meisai',
       choices: [
-        { text: '네, 부탁합니다', phraseId: 'p_hai_onegai', correct: true, feedback: '「はい、お願(ねが)いします」— 明細票(めいさいひょう)는 인출 내역 영수증. 환율·수수료 확인에 유용해요' },
-        { text: '괜찮아요', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 필요 없으면 받지 않아도 돼요' },
-        { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: true, feedback: '「いくらですか」— 최종 인출액·수수료를 한 번 더 확인해요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
+        { text: '처분해 주세요', phraseId: 'p_new_meisai_shobun', correct: true, feedback: '「処分(しょぶん)しておいてください」— 명세표를 굳이 받지 않고 기기 쪽에서 파기해달라고 요청하는 자연스러운 대답이에요. 명세표엔 계좌 정보가 있어 이렇게 처리하는 사람이 많아요' },
+        { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
       ],
     },
     {
@@ -212,8 +192,6 @@ export const c43: Mission = {
       recapPromptJa: '手数料が表示されていますが、よろしいですか',
       recapPromptKo: '수수료가 표시되어 있는데 괜찮으세요?',
       choices: [
-        { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: true, feedback: '「いくらですか」— ATM 수수료 금액을 확인하는 질문. 편의점 ATM 수수료는 보통 110~220엔이에요. 7-Eleven ATM은 일요일 무료인 경우도 있어요' },
-        { text: '괜찮아요', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 수수료를 감수하고 진행할 때. 急(いそ)いでいる경우 수수료를 내더라도 빠르게 처리하는 게 편할 수 있어요' },
         { text: '추가 요금은 얼마예요?', phraseId: 'p_tsui_ryoukin_ikura', correct: true, feedback: '「追加料金(ついかりょうきん)はいくらですか」— 수수료를 명확히 확인하는 표현. 화면에 表示(ひょうじ)되는 금액을 직접 확인하는 것이 더 빠를 수 있어요' },
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '지금은 수수료를 확인하는 중이에요 — 진행 여부를 정하면 돼요' },
       ],
@@ -240,7 +218,6 @@ export const c44: Mission = {
       choices: [
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: true, feedback: '「使(つか)い方(かた)を教(おし)えてください」— 복합기 조작을 처음 접할 때. 편의점 직원은 보통 친절하게 도와줘요. 基本(きほん)は画面(がめん)の指示(しじ)に従(したが)えばOK!' },
         { text: '이 버튼을 눌러 주세요', phraseId: 'p_kono_botan_oshite', correct: true, feedback: '「このボタンを押(お)してください」— 어떤 버튼인지 모를 때 직접 도움을 요청하는 표현. 화면을 가리키면서 함께 쓰면 더 효과적이에요' },
-        { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: true, feedback: '「ゆっくりお願(ねが)いします」— 직원 설명이 빠를 때. ゆっくり와 もう一度를 함께 쓰면 완전히 이해할 때까지 반복 설명을 받을 수 있어요' },
         { text: '영수증 주세요', phraseId: 'p_reshiito_kudasai', correct: false, feedback: '아직 이용도 안 했는데 영수증 요청은 맥락과 맞지 않아요' },
       ],
     },
@@ -250,10 +227,8 @@ export const c44: Mission = {
       recapPromptJa: 'カラーですか、白黒ですか。用紙はA4でよろしいですか',
       recapPromptKo: '컬러인가요, 흑백인가요? 용지는 A4로 괜찮으세요?',
       choices: [
-        { text: '네, 괜찮습니다', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— A4 흑백으로 승낙할 때. 편의점 복합기는 A4·B5·L判(Lばん) 등 다양한 용지 사이즈를 지원해요' },
-        { text: '이걸로 부탁드려요', phraseId: 'p_kore_de', correct: true, feedback: '「これでお願(ねが)いします」— 화면 선택지를 가리키며 결정할 때. これで는 "이걸로"라는 뜻으로 어떤 선택 상황에서도 쓸 수 있는 표현이에요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '복사 옵션을 고르는 중이에요 — 사용법은 앞서 물었어요' },
+        { text: '컬러로, A4로 부탁드려요', phraseId: 'p_new_karaa_a4_de', correct: true, feedback: '「カラーで、A4でお願いします」— 직원의 두 가지 질문(컬러 여부, 용지 크기)에 순서대로 답하는 자연스러운 응답이에요' },
       ],
     },
     {
@@ -263,8 +238,6 @@ export const c44: Mission = {
       choices: [
         { text: '하나 주세요', phraseId: 'p_hitotsu_kudasai', correct: true, feedback: '「一(ひと)つ / 一部(いちぶ)」— 인쇄 부수를 말해요. 화면에서 숫자로 지정해도 돼요' },
         { text: '두 개 주세요', phraseId: 'p_futatsu_kudasai', correct: true, feedback: '「二(ふた)つ / 二部(にぶ)」— 여러 부 인쇄. 매수가 많으면 비용도 늘어요' },
-        { text: '이걸로 부탁드려요', phraseId: 'p_kore_de', correct: true, feedback: '「これでお願(ねが)いします」— 화면 설정을 확정. 미리보기로 매수를 확인하면 안심돼요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -272,9 +245,8 @@ export const c44: Mission = {
       speaker: '직원',
       promptPhraseId: 'p_ryoumen',
       choices: [
-        { text: '네, 부탁합니다', phraseId: 'p_hai_onegai', correct: true, feedback: '「はい、お願(ねが)いします」— 両面(りょうめん)은 종이를 절약해요. 단면은 片面(かためん)이에요' },
-        { text: '네, 괜찮습니다', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 단면으로 충분하면 가볍게 답해요' },
-        { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+        { text: '양면으로 부탁해요', phraseId: 'p_new_ryoumen_de', correct: true, feedback: '「両面(りょうめん)でお願(ねが)いします」— 직원의 양면 인쇄 확인에 그렇게 해달라고 답하는 표현이에요. 종이를 아낄 때 자주 쓰는 선택이죠' },
+        { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
       ],
     },
     {
@@ -283,9 +255,7 @@ export const c44: Mission = {
       recapPromptJa: 'お支払いはどうされますか',
       recapPromptKo: '결제는 어떻게 하시겠어요?',
       choices: [
-        { text: '현금으로요', phraseId: 'p_genkin_de', correct: true, feedback: '「現金(げんきん)で」— 편의점 복합기 현금 결제. 10円単位で支払(しはら)えるのが多いです. 거스름돈도 기계에서 바로 나와요' },
         { text: '스이카로요', phraseId: 'p_suica_de', correct: true, feedback: '「Suicaで」— IC카드로 복합기 결제. タッチするだけで完了(かんりょう)! 가장 빠르고 편한 결제 방법이에요' },
-        { text: '카드로요', phraseId: 'p_card_de', correct: true, feedback: '「カードで」— 신용카드 결제. 일부 복합기는 카드 결제를 지원하지 않는 경우도 있어 카드 마크를 미리 확인하세요' },
         { text: '예약했어요', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '복합기 이용에서 예약은 관계없는 개념입니다' },
       ],
     },
@@ -311,8 +281,6 @@ export const c45: Mission = {
       choices: [
         { text: '예약했어요', phraseId: 'p_yoyaku_shiteimasu', correct: true, feedback: '「予約(よやく)しています」— 모바일 주문 픽업 시 첫 마디. QR코드나 주문번호 화면을 미리 열어두면 더 빠르게 처리돼요' },
         { text: '이름은요?', actionText: '이름은요?', correct: false, feedback: '지금 직원이 당신의 이름을 묻는 상황 — 내가 먼저 물어볼 필요가 없어요' },
-        { text: '이걸로 부탁드려요', phraseId: 'p_kore_de', correct: false, feedback: '픽업 상황에서는 이미 주문 완료 — 추가 선택이 아닙니다' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -321,9 +289,7 @@ export const c45: Mission = {
       promptPhraseId: 'p_onamae_wa',
       choices: [
         { text: '스이카로요', phraseId: 'p_suica_de', correct: false, feedback: '이름 확인 상황에서 결제 방법을 말하는 건 맥락이 어긋납니다' },
-        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: false, feedback: '이름을 알려줘야 할 상황 — 알겠다는 말은 흐름이 맞지 않아요' },
-        { text: '이걸로 부탁드려요', phraseId: 'p_kore_de', correct: true, feedback: '「これでお願(ねが)いします」— 이름 대신 예약 화면을 보여주며 확인시킬 때. スマホの画面(がめん)を一緒に見せると 더 빠르게 처리돼요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
+        { text: '예약한 야마다예요', phraseId: 'p_new_yoyaku_namae_desu', correct: true, feedback: '「予約の山田です」— 픽업 카운터에서 예약자 본인임을 이름으로 밝히는 자연스러운 대답이에요' },
       ],
     },
     {
@@ -331,9 +297,8 @@ export const c45: Mission = {
       speaker: '직원',
       promptPhraseId: 'p_chuumon_bangou',
       choices: [
-        { text: '이걸로 부탁드려요', phraseId: 'p_kore_de', correct: true, feedback: '「これでお願(ねが)いします」— 앱 화면의 注文番号나 QR을 보여줘요. 화면을 밝게 하면 스캔이 빨라요' },
-        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「わかりました」— 번호를 확인하고 화면을 제시해요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
+        { text: '번호는 7번이에요', phraseId: 'p_new_bangou_nana_desu', correct: true, feedback: '「番号(ばんごう)は7番(ななばん)です」— 주문번호를 묻는 질문에 구체적인 숫자로 바로 답하는 가장 직접적인 대응이에요' },
+        { text: '예약했습니다', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
       ],
     },
     {
@@ -342,10 +307,8 @@ export const c45: Mission = {
       recapPromptJa: 'ほかにご注文はございますか',
       recapPromptKo: '더 주문하실 것 있으세요?',
       choices: [
-        { text: '이거 주세요', phraseId: 'p_kore_kudasai', correct: true, feedback: '「これをください」— 추가로 사고 싶은 게 있으면 가리켜 주문해요' },
-        { text: '괜찮습니다', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 더 필요 없으면 가볍게 마무리해요' },
         { text: '이제 충분해요', phraseId: 'p_mou_juubun', correct: true, feedback: '「もう十分(じゅうぶん)です」— 더 권유받을 때 "이제 충분합니다"로 깔끔하게 마무리' },
-        { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+        { text: '예약했습니다', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
       ],
     },
     {
@@ -383,7 +346,6 @@ export const c46: Mission = {
         { text: '티켓은 이쪽입니다', phraseId: 'p_chiketto_wa_kochira_desu', correct: true, feedback: '「チケットはこちらです」— 티켓 제시 표현. こちらは"이쪽/여기"의 정중한 말투. 전자티켓(電子チケット)이라면 QR코드 화면을 보여주면 돼요' },
         { text: '여권은 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: false, feedback: '스타디움 입장은 여권이 아닌 티켓이 필요합니다' },
         { text: '이 티켓 사용할 수 있나요?', phraseId: 'p_kono_chiketto_tsukaemasu_ka', correct: true, feedback: '「このチケットは使(つか)えますか」— 전자티켓 유효성이 불확실할 때. 화면을 밝게 하거나 미리 저장해두면 스캔이 빠르게 돼요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -393,7 +355,6 @@ export const c46: Mission = {
       recapPromptKo: '어떤 좌석을 찾고 계세요?',
       choices: [
         { text: '장소를 알려 주세요', phraseId: 'p_basho_o_oshiete_kudasai', correct: true, feedback: '「場所(ばしょ)を教(おし)えてください」— 좌석 위치를 모를 때. 티켓에 적힌 座席番号(ざせきばんごう)를 보여주면 직원이 바로 안내해줘요' },
-        { text: '어디예요?', phraseId: 'p_doko_desu_ka', correct: true, feedback: '「どこですか」— 간단하고 직접적인 위치 질문. すみません、○○(座席番号)はどこですか로 더 완전하게 표현할 수 있어요' },
         { text: '한 명이요', phraseId: 'p_hitori_desu', correct: false, feedback: '이미 좌석이 배정된 상황 — 인원 안내는 맥락과 맞지 않아요' },
         { text: '예약했어요', phraseId: 'p_yoyaku_shiteimasu', correct: true, feedback: '「予約(よやく)しています」— 예약 좌석임을 확인시키며 도움을 구할 때. 티켓 화면을 보여주면 직원이 쉽게 좌석 위치를 안내해줘요' },
       ],
@@ -403,10 +364,8 @@ export const c46: Mission = {
       speaker: '직원',
       promptPhraseId: 'p_sainyuujou',
       choices: [
-        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「わかりました」— 再入場(さいにゅうじょう) 스탬프가 있으면 잠깐 나갔다 올 수 있어요. 손등에 찍어줘요' },
         { text: '또 올게요', phraseId: 'p_mata_kimasu', correct: true, feedback: '「また来(き)ます」— 재입장 도장을 받고 잠깐 나갈 때 "다시 올게요"' },
         { text: '여권은 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: false, feedback: '스탬프 안내 중이에요 — 여권은 필요하지 않아요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -414,10 +373,8 @@ export const c46: Mission = {
       speaker: '직원',
       promptPhraseId: 'p_megaphone',
       choices: [
-        { text: '이거 주세요', phraseId: 'p_kore_kudasai', correct: true, feedback: '「これください」— 응원 メガホン·유니폼은 분위기를 살려요. 팀 컬러로 골라요' },
-        { text: '얼마예요?', phraseId: 'p_ikura_desu_ka', correct: true, feedback: '「いくらですか」— 굿즈 가격을 확인. 한정 상품은 빨리 품절돼요' },
-        { text: '괜찮아요', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 필요 없으면 가볍게 사양해요' },
-        { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+        { text: '무슨 색이 있어요?', phraseId: 'p_new_megahon_iro', correct: true, feedback: '「何色(なにいろ)がありますか」— 팀 컬러 굿즈를 살 때 색상 옵션부터 확인하는 실용적인 질문이에요. 「色」는 いろ로 읽어요' },
+        { text: '티켓은 이쪽입니다', phraseId: 'p_chiketto_wa_kochira_desu', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
       ],
     },
     {
@@ -426,7 +383,6 @@ export const c46: Mission = {
       promptPhraseId: 'p_gochuumon',
       choices: [
         { text: '이거 하나로 괜찮으세요?', actionText: '이거 하나로 괜찮으세요?', correct: false, feedback: '직원이 나한테 묻는 말 — 내가 직원에게 쓰는 표현이 아니에요' },
-        { text: '이거 주세요', phraseId: 'p_kore_kudasai', correct: true, feedback: '「これください」— 스탠드 메뉴를 가리키며 주문하는 가장 실용적인 표현. 야구장 스탠드는 기다리는 줄이 짧을 때 빠르게 주문하는 게 포인트예요' },
         { text: '맥주 한 잔 더 주세요', phraseId: 'p_biiru_mou_ippai', correct: true, feedback: '「ビールもう一杯(いっぱい)ください」— 추가 주문 표현. もう一杯는 "한 잔 더". 야구장 비어걸(ビールの売(う)り子(こ))이 돌아다니니 손을 들어 부르세요' },
         { text: '하나 주세요', phraseId: 'p_hitotsu_kudasai', correct: true, feedback: '「一(ひと)つください」— 수량 지정 주문. 야구장 명물 음식 도시락(球場弁当/きゅうじょうべんとう)도 꼭 먹어봐요!' },
       ],
@@ -453,7 +409,6 @@ export const c47: Mission = {
         { text: '저거요', phraseId: 'p_are', correct: false, feedback: '안내소에서는 「あれ(저거)」처럼 막연하게 가리키지 말고 구체적인 장소나 물건을 말해야 합니다' },
         { text: '화장실 어디예요?', phraseId: 'p_toire_doko', correct: true, feedback: '「トイレはどこですか」— 화장실 위치 확인. 대형 쇼핑몰은 층별(フロアマップ)을 보거나 안내소에 物어보는 게 빠르기도 해요' },
         { text: '커피는 어디예요?', phraseId: 'p_koohii_wa_doko', correct: true, feedback: '「コーヒーはどこですか」— 안내소에서 특정 매장이나 상품 위치 확인. ○○はどこですか 패턴으로 어떤 매장이든 물어볼 수 있어요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -462,10 +417,8 @@ export const c47: Mission = {
       recapPromptJa: '3階のエスカレーター横にございます',
       recapPromptKo: '3층 에스컬레이터 옆에 있습니다',
       choices: [
-        { text: '쉬운 일본어로 부탁해요', phraseId: 'p_yasashii_nihongo', correct: true, feedback: '「やさしい日本語(にほんご)でお願(ねが)いします」— 층·방향·이름 등 복잡한 설명이 이해 안 될 때. 안내소 직원은 外国人(がいこくじん)対応에 익숙한 경우가 많아요' },
-        { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: true, feedback: '「ゆっくりお願(ねが)いします」— 설명이 빠를 때. 쇼핑몰 안내는 층·에스컬레이터·방향이 복합적으로 나오니 ゆっくり는 정말 유용한 표현이에요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
-        { text: '이거 주세요', phraseId: 'p_kore_kudasai', correct: false, feedback: '안내소에서 물건을 달라는 말은 맥락과 다릅니다' },
+        { text: '지도로 보여주실 수 있어요?', phraseId: 'p_new_chizu_misete', correct: true, feedback: '「地図で見せてもらえますか」— 매장 위치 설명이 복잡할 때 지도를 보여달라고 요청하는 게 다시 말해달라는 것보다 더 확실해요' },
+        { text: '저거', phraseId: 'p_are', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
       ],
     },
     {
@@ -474,9 +427,7 @@ export const c47: Mission = {
       promptPhraseId: 'p_elevator',
       choices: [
         { text: '가 볼게요', phraseId: 'p_itte_mimasu', correct: true, feedback: '「行(い)ってみます」— 엘리베이터 위치를 안내받고 바로 가 보겠다는 응답' },
-        { text: '어디예요?', phraseId: 'p_doko_desu_ka', correct: true, feedback: '「どこですか」— 정확한 방향을 한 번 더 확인. フロアマップ도 함께 보면 좋아요' },
-        { text: '이거 주세요', phraseId: 'p_kore_kudasai', correct: false, feedback: '안내소에서는 위치를 묻는 단계예요 — 물건 주문이 아니에요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
+        { text: '저거', phraseId: 'p_are', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
       ],
     },
     {
@@ -485,8 +436,7 @@ export const c47: Mission = {
       promptPhraseId: 'p_menzei_counter8',
       choices: [
         { text: '찾아볼게요', phraseId: 'p_sagashite_mimasu', correct: true, feedback: '「探(さが)してみます」— 면세 카운터를 직접 찾아보겠다는 표현' },
-        { text: '어디예요?', phraseId: 'p_doko_desu_ka', correct: true, feedback: '「どこですか」— 면세 카운터 층·위치를 확인. 폐점 1시간 전 마감인 곳도 있어요' },
-        { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+        { text: '저거', phraseId: 'p_are', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
       ],
     },
     {
@@ -496,9 +446,7 @@ export const c47: Mission = {
       recapPromptKo: '안내가 되셨나요?',
       choices: [
         { text: '덕분에 도움이 됐어요', phraseId: 'p_tasukarimashita', correct: true, feedback: '「助(たす)かりました」— 여러 번 안내해 준 데 대한 자연스러운 응답' },
-        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 이해했음을 간결하게 전달. ありがとうございます를 더하면 이해+감사를 한 번에 표현할 수 있어요' },
-        { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: false, feedback: '이미 안내가 끝난 상황 — 속도 요청은 맥락에 맞지 않아요' },
-        { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: false, feedback: '이미 대화가 마무리된 시점에 언어를 바꾸자는 건 어색해요' },
+        { text: '저거', phraseId: 'p_are', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
       ],
     },
   ],
@@ -524,7 +472,6 @@ export const c48: Mission = {
         { text: '아니요, 없어요 (약 수첩 미소지)', phraseId: 'p_iie_arimasen', correct: true, feedback: '「いいえ、ありません」— 처음 방문이라면 없는 것이 자연스러워요. 薬(くすり)手帳(てちょう)は継続的に薬を飲む방에게 있는 건강 관리 수첩이에요' },
         { text: '네, 있어요 (약 수첩 소지)', phraseId: 'p_hai_arimasu', correct: true, feedback: '「はい、あります」— 약 수첩이 있을 때. 手帳(てちょう)を差(さ)し出(だ)しながら말하면 OK. 처방 이력 관리에 중요한 역할을 해요' },
         { text: '보험증이 있나요?', actionText: '보험증이 있나요?', correct: false, feedback: '약사가 먼저 물어보는 상황 — 내가 되묻는 건 맥락과 맞지 않아요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -533,10 +480,9 @@ export const c48: Mission = {
       recapPromptJa: '少々お待ちください。30分ほどかかります',
       recapPromptKo: '잠시만 기다려 주세요. 30분 정도 걸립니다',
       choices: [
-        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 대기 안내를 이해하고 승낙할 때. 약국 근처를 散歩(さんぽ)하거나 스마트폰을 보며 기다리면 돼요. 呼(よ)ばれたら窓口(まどぐち)へ!' },
-        { text: '괜찮아요', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 30분 대기도 문제없을 때. 일본 약국은 薬歴管理(やくれきかんり)를 철저히 하기 때문에 조제에 시간이 걸려요' },
         { text: '완료까지 30분입니다', actionText: '완료까지 30분입니다', correct: false, feedback: '약사가 이미 말한 내용 — 내가 반복할 필요가 없어요' },
         { text: '전화번호를 적어 주세요', actionText: '전화번호를 적어 주세요', correct: false, feedback: '약국 대기 상황에서 연락처 요청은 맥락과 다릅니다' },
+        { text: '여기서 기다릴게요', phraseId: 'p_new_koko_de_machimasu', correct: true, feedback: '「ここで待っています」— 30분 정도 걸린다는 안내에 자연스럽게 그 자리에서 기다리겠다고 응답하는 말이에요' },
       ],
     },
     {
@@ -546,7 +492,6 @@ export const c48: Mission = {
       choices: [
         { text: '아니요, 없어요', phraseId: 'p_iie_arimasen', correct: true, feedback: '「いいえ、ありません」— 외국인은 보통 일본 보험증이 없어요. 자비 부담이며 여행자 보험으로 나중에 청구할 수 있어요' },
         { text: '여권 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: true, feedback: '「パスポートはこちらです」— 신분 확인으로 여권을 요청하기도 해요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -554,10 +499,8 @@ export const c48: Mission = {
       speaker: '약사',
       promptPhraseId: 'p_generic',
       choices: [
-        { text: '네, 부탁합니다', phraseId: 'p_hai_onegai', correct: true, feedback: '「はい、お願(ねが)いします」— ジェネリック(제네릭)은 효능이 같고 더 저렴해요. 대부분 받아도 괜찮아요' },
-        { text: '괜찮아요', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 어느 쪽이든 괜찮으면 가볍게 답해요' },
         { text: '이 약은 뭐예요?', phraseId: 'p_kono_kusuri', correct: true, feedback: '「この薬(くすり)は何(なん)ですか」— 약의 용도·성분을 확인해요' },
-        { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+        { text: '아니요, 없어요', phraseId: 'p_iie_arimasen', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
       ],
     },
     {
@@ -567,7 +510,6 @@ export const c48: Mission = {
       choices: [
         { text: '식후에 먹으면 되나요?', phraseId: 'p_shokugo_kakunin', correct: true, feedback: '「食後(しょくご)に飲(の)めばいいですか」— 복약법을 되물어 확인. 감사보다 안전하게 먹는 게 먼저예요' },
         { text: '이 약은 뭐예요?', phraseId: 'p_kono_kusuri', correct: true, feedback: '「この薬(くすり)は何(なに)ですか」— 약의 용도나 성분이 궁금할 때. 약 봉투에 薬の説明書(せつめいしょ)が入(はい)っている경우가 많아요' },
-        { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
         { text: '영수증 주세요', phraseId: 'p_reshiito_kudasai', correct: false, feedback: '복약 설명을 듣는 상황에서 영수증 요청은 시기상 어색해요' },
       ],
     },
@@ -613,10 +555,8 @@ export const c49: Mission = {
       speaker: '셰프',
       promptPhraseId: 'p_omakase_course',
       choices: [
-        { text: '네, 부탁합니다', phraseId: 'p_hai_onegai', correct: true, feedback: '「はい、お願(ねが)いします」— おまかせ는 셰프가 코스를 알아서 내줘요. 예산을 미리 말해두면 좋아요' },
         { text: '추천 생선은 뭐예요?', phraseId: 'p_osusume_no_sakana', correct: true, feedback: '「おすすめの魚(さかな)は何(なに)ですか」— 코스 중에도 그날 특선을 물어봐요' },
         { text: '마늘 빼 주세요', phraseId: 'p_ninniku_nuki', correct: false, feedback: '스시 오마카세에서 마늘 제외는 일반적이지 않아요 — 알레르기는 앞서 전했어요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -626,8 +566,6 @@ export const c49: Mission = {
       choices: [
         { text: '맥주 한 잔 더 주세요', phraseId: 'p_biiru_mou_ippai', correct: true, feedback: '「ビールもう一杯(いっぱい)ください」— 스시엔 日本酒·ビール가 잘 어울려요' },
         { text: '물 주세요', phraseId: 'p_mizu_kudasai', correct: true, feedback: '「お水(みず)ください」— 술을 안 마시면 물·차로. 입가심으로 ガリ(초생강)도 곁들여요' },
-        { text: '아니요, 괜찮아요', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 더 필요 없으면 가볍게 사양해요' },
-        { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -637,7 +575,6 @@ export const c49: Mission = {
       choices: [
         { text: '방어 주세요', phraseId: 'p_hamachi_kudasai', correct: true, feedback: '방어(はまち)는 겨울 제철 고급 생선 — 오마카세에서 자주 나옴' },
         { text: '맥주 한 잔 더 주세요', phraseId: 'p_biiru_mou_ippai', correct: true, feedback: '「ビールもう一杯(いっぱい)ください」— 음료 추가 주문. 일본 스시 오마카세엔 日本酒(にほんしゅ)·清酒(せいしゅ)·생맥주(生(なま)ビール) 등 다양한 음료가 있어요' },
-        { text: '아니요, 괜찮아요', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 추가 주문이 없을 때. 오마카세 마무리에는 ごちそうさまでした를 셰프에게 직접 전하는 게 일본 식사 예절이에요' },
         { text: '잘 먹었습니다', phraseId: 'p_gochisousama', correct: false, feedback: '아직 추가 주문을 묻는 중이에요 — 마무리 인사는 정말 다 먹은 뒤에 해요' },
       ],
     },
@@ -687,7 +624,6 @@ export const c50: Mission = {
         { text: '걸어서 몇 분이에요?', phraseId: 'p_aruite_nanpun', correct: true, feedback: '「歩(ある)いて何分(なんぷん)ですか」— 도보 시간을 확인해 결정. 가까우면 걷고 멀면 전철·버스를 타요' },
         { text: '역은 어디예요?', phraseId: 'p_eki_wa_doko', correct: true, feedback: '「駅(えき)はどこですか」— 전철을 타려면 가까운 역을 먼저 찾아요' },
         { text: '사진 부탁드려요', phraseId: 'p_shashin_onegai', correct: false, feedback: '지금은 이동 방법을 정하는 중이에요 — 사진 요청은 맥락과 달라요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -695,9 +631,8 @@ export const c50: Mission = {
       speaker: '상대',
       promptPhraseId: 'p_meijirushi',
       choices: [
-        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「わかりました」— 일본은 コンビニ가 곳곳에 있어 좋은 目印(めじるし)가 돼요. 간판을 기준으로 이동해요' },
         { text: '가 볼게요', phraseId: 'p_itte_mimasu', correct: true, feedback: '「行(い)ってみます」— 편의점을 표지 삼아 가 보겠다는 응답' },
-        { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
+        { text: '실례합니다, 여기가 어디예요?', phraseId: 'p_sumimasen_koko_doko', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
       ],
     },
     {
@@ -709,7 +644,6 @@ export const c50: Mission = {
         { text: '덕분에 도움이 됐어요', phraseId: 'p_tasukarimashita', correct: true, feedback: '「助(たす)かりました」— 방향을 알려준 데 대한 응답' },
         { text: '걸어가 볼게요', phraseId: 'p_aruite_mimasu', correct: true, feedback: '「歩(ある)いてみます」— 도보 5분이면 걸어가 보겠다는 응답' },
         { text: '어느 쪽이에요?', phraseId: 'p_dochira_desu_ka', correct: true, feedback: '「どちらですか」— 상대가 가리키는 방향을 재확인할 때. 손으로 방향을 가리키며 함께 쓰면 더 자연스러워요. まっすぐ(직진)·右(오른쪽)·左(왼쪽)도 함께 알아두세요' },
-        { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: false, feedback: '이미 안내가 끝난 상황 — 속도 요청은 시기가 맞지 않아요' },
       ],
     },
   ],

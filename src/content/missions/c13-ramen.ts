@@ -21,7 +21,6 @@ export const c13: Mission = {
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: true, feedback: '「使(つか)い方(かた)を教(おし)えてください」— 기계가 낯설면 주저 없이 물어봐요. 일본 점원은 직접 눌러줄 만큼 친절해요' },
         { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: true, feedback: '「おすすめは何(なん)ですか」— 간판 메뉴를 물어봐요. 인기 라멘집은 醤油(しょうゆ)·味噌(みそ)·豚骨(とんこつ) 중 대표 메뉴가 있어요' },
         { text: '면 추가요', phraseId: 'p_kaedama', correct: false, feedback: '아직 식권도 안 뽑았어요 — 면 추가(替え玉)는 라멘을 먹는 중에 부탁해요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -32,7 +31,6 @@ export const c13: Mission = {
         { text: '카운터석으로 괜찮아요', phraseId: 'p_counter_de_ii', correct: true, feedback: '「カウンター席(せき)で大丈夫(だいじょうぶ)です」— 자리 안내에 답하는 표현. 주방 앞 카운터석은 혼밥하기 좋고 회전도 빨라요' },
         { text: '두 명이요', phraseId: 'p_futari_desu', correct: true, feedback: '「二人(ふたり)です」— 일행이 있을 때 인원을 전해요. 카운터는 보통 1인석 위주라 자리를 따로 안내받기도 해요' },
         { text: '곱빼기 되나요?', phraseId: 'p_oomori', correct: false, feedback: '지금은 자리 안내 중이에요 — 양은 식권을 뽑을 때나 주문하면서 정해요' },
-        { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -40,10 +38,8 @@ export const c13: Mission = {
       speaker: '점원',
       promptPhraseId: 'p_shokken_douzo',
       choices: [
-        { text: '네, 부탁합니다', phraseId: 'p_hai_onegai', correct: true, feedback: '「はい、お願(ねが)いします」— 식권을 건네며 답해요. 라멘집은 식권 선불이라 식사 후 따로 계산하지 않아요' },
-        { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「わかりました」— 식권을 카운터에 올려놓거나 직원에게 건네면 돼요' },
-        { text: '계산 부탁드려요', phraseId: 'p_okaikei', correct: false, feedback: '라멘집은 식권으로 미리 결제해요 — 식사 후 따로 계산할 필요가 없어요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'partial' },
+        { text: '네, 여기 있어요', phraseId: 'p_new_shokken_douzo', correct: true, feedback: '「はい、これです」— 식권을 내밀며 건넬 때 쓰는 자연스러운 표현이에요. 손으로 건네는 동작과 함께 쓰면 딱 맞아요' },
+        { text: '식권기 어디예요?', phraseId: 'p_kenbaiki', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
       ],
     },
     {
@@ -54,7 +50,6 @@ export const c13: Mission = {
         { text: '면은 단단하게요', phraseId: 'p_men_katame', correct: true, feedback: '「麺(めん)は硬(かた)めで」— バリカタ〉硬め〉普通(ふつう)〉やわめ 순으로 굳기를 골라요. 돈코츠 라멘에서 특히 자주 물어봐요' },
         { text: '보통으로 부탁합니다', phraseId: 'p_futsuu_de', correct: true, feedback: '「普通(ふつう)で」— 잘 모르겠으면 보통이 무난해요. 「ふつうで大丈夫です」도 자연스러워요' },
         { text: '곱빼기 되나요?', phraseId: 'p_oomori', correct: false, feedback: '지금은 면 굳기 질문이에요 — 곱빼기/면 추가는 양에 관한 거라 따로 정해요' },
-        { text: '천천히 말해 주세요', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -64,7 +59,6 @@ export const c13: Mission = {
       choices: [
         { text: '맛계란 추가요', phraseId: 'p_ajitama_tsuika', correct: true, feedback: '「味玉(あじたま)追加(ついか)で」— 간장에 절인 반숙 계란. 라멘 인기 토핑 1위예요' },
         { text: '차슈 추가요', phraseId: 'p_chaashuu_tsuika', correct: true, feedback: '「チャーシュー追加(ついか)で」— 돼지고기 차슈. のり(김)·ねぎ(파)도 같은 「〇〇追加で」패턴으로 추가해요' },
-        { text: '괜찮습니다', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 토핑 없이 기본으로 충분할 때 가볍게 사양해요' },
         { text: '면 추가요', phraseId: 'p_kaedama', correct: false, feedback: '지금은 토핑 질문이에요 — 면 추가(替え玉)는 면을 거의 다 먹어갈 때 부탁해요' },
       ],
     },
@@ -75,7 +69,6 @@ export const c13: Mission = {
         { text: '면 추가요', phraseId: 'p_kaedama', correct: true, feedback: '「替え玉(かえだま)お願(ねが)いします」— 국물이 남았을 때 면만 추가. 하카타 라멘의 명물 문화예요. 보통 100~150엔' },
         { text: '곱빼기 되나요?', phraseId: 'p_oomori', correct: true, feedback: '「大盛(おおも)りできますか」— 처음부터 양을 늘리고 싶을 때. 가게에 따라 무료이거나 추가 요금이 있어요' },
         { text: '물 주세요', phraseId: 'p_mizu_kudasai', correct: true, feedback: '「お水(みず)ください」— 라멘집 물은 대부분 셀프(セルフサービス). 진한 국물엔 물이 자주 당겨요' },
-        { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'partial' },
       ],
     },
     {

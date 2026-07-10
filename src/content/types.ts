@@ -57,6 +57,9 @@ export interface Phrase {
   /** 나선형 난이도(SPIRAL_DIFFICULTY_BRIEF.md 설계 1) — 이 표현의 선행 표현 id 목록.
    * 모든 선행 표현이 mastered(consecutiveCorrect>=2)일 때만 이 표현이 fresh 풀에 등장한다. */
   buildsOn?: string[];
+  /** 'generic'이면 특정 장면에 묶이지 않는 범용 표현(복구·긍정응답·결제·위치 질문 등) —
+   * C0(생존 회화 기초)에서만 가르치고, 다른 미션의 choices/promptPhraseId에는 쓰지 않는다(validate.ts V22). */
+  missionScope?: 'generic';
   recoveryType?: RecoveryType;
   audioId?: string;      // 지금은 비움 (오디오 후행)
   speechPhoneme?: string;// Azure ja-JP SAPI 가타카나 발음 강제. 자동 발음이 틀릴 때만 사용

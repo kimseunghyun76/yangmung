@@ -7,6 +7,7 @@ import { check } from '../test/check';
 
 const clone = (): ContentBundle => structuredClone(CONTENT);
 const c1 = (d: ContentBundle) => d.missions.find((m) => m.id === 'C1')!; // C1은 2스텝 정식 미션 (C0는 튜토리얼)
+const c0 = (d: ContentBundle) => d.missions.find((m) => m.id === 'C0')!; // C0 = 생존 회화 기초(범용 표현 전담, V9 대상)
 
 function expectFail(name: string, mutate: (d: ContentBundle) => void, rule: string) {
   const d = clone();
@@ -52,22 +53,36 @@ expectFail('V21 buildsOn 사이클(A→B→A)', (d) => {
   d.phrases[0].buildsOn = [d.phrases[1].id];
   d.phrases[1].buildsOn = [d.phrases[0].id];
 }, 'V21');
-expectFail('V9 recovery 제거(사유 없음)', (d) => {
-  const m = c1(d);
+expectFail('V9 recovery 제거(사유 없음, C0 대상)', (d) => {
+  const m = c0(d);
   for (const s of m.steps) for (const c of s.choices) c.recoveryType = undefined;
 }, 'V9');
+expectFail('V22 비C0 미션이 범용 표현을 선택지로 사용', (d) => {
+  c1(d).steps[0].choices.push({ text: '네', phraseId: 'p_hai', correct: true });
+}, 'V22');
+expectFail('V22 비C0 미션이 범용 표현을 promptPhraseId로 사용', (d) => {
+  c1(d).steps[0].promptPhraseId = 'p_ikura_desu_ka';
+}, 'V22');
 
 console.log('\n=== 강등/경고 (실패가 아니어야) ===');
 {
   const d = clone();
-  const m = c1(d);
+  const m = c0(d);
   for (const s of m.steps) for (const c of s.choices) c.recoveryType = undefined;
-  m.meta = { recoveryExemptReason: 'C1 데모: 면제 사유로 강등 확인' };
+  m.meta = { recoveryExemptReason: 'C0 데모: 면제 사유로 강등 확인' };
   const r = validateContent(d);
   const f = [...new Set(r.filter((i) => i.sev === 'fail').map((i) => i.rule))];
   const w = [...new Set(r.filter((i) => i.sev === 'warn').map((i) => i.rule))];
   const ok = !f.includes('V9') && w.includes('V9');
   check('V9 면제사유로 강등', ok, `fail[${f.join(',') || '없음'}] warn[${w.join(',') || '없음'}]`);
+}
+{
+  // C1(비C0 미션)은 이제 복구 표현이 0개인 게 정상 — V9는 C0에만 적용되므로 fail이 나면 안 된다.
+  const d = clone();
+  const m = c1(d);
+  for (const s of m.steps) for (const c of s.choices) c.recoveryType = undefined;
+  const f = [...new Set(validateContent(d).filter((i) => i.sev === 'fail').map((i) => i.rule))];
+  check('C1(비C0)은 recovery 0개여도 V9 fail 아님', !f.includes('V9'), `fail[${f.join(',') || '없음'}]`);
 }
 {
   const d = clone();
