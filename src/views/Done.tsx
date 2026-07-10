@@ -1,13 +1,17 @@
 // 세션 완료 — Immersive Scene Coach. 장면 클리어 감정 + 여권 스탬프 + 다음 장면 예고.
 import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
+import { loadCollection } from '../learn/collection';
+import { useLearningStats } from '../learn/learningStats';
 import { sessionResult, summarize, type ProgressMap, type SessionLogEntry } from '../learn/progress';
+import { categoryBreakdown } from '../learn/sessionCategories';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
 import { GlassPanel, hexA } from './shell';
 import { quickPracticeBackdrop, sceneVisualByMission } from './scene';
 import { MascotLine } from './mascot';
 import { PromotionResult } from './PromotionResult';
+import { StatTile } from './StatsWidgets';
 import {
   CORE_LEVEL_LABEL,
   LEVEL_STAGES,
@@ -90,6 +94,8 @@ const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place
   ?? CONTENT.missions.find((m) => m.id === id)?.scenario ?? id;
 
 export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, isQuickPractice = false, coreLevel, progression, devUnlockAll = false, promotionResult, onOpenLevelGuide, onRetryPromotion, onRetryWeak, onRetrySame, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onPracticeVocab, onPracticeGreetings, onPracticeKanaHiragana, onPracticeKanaKatakana, onPracticePairs, onPracticeWrite, onPracticeVerbs, onHome }: Props) {
+  // 훅은 이 아래 이른 반환(promotionResult)과 무관하게 항상 같은 순서로 호출돼야 한다(rules-of-hooks).
+  const learningStats = useLearningStats(loadCollection());
   // 승급 시험이었으면 일반 결과 화면 대신 전용 합격/불합격 화면 — 캐릭터가 목적·결과·다음 행동을 설명한다.
   if (promotionResult) {
     return (
@@ -114,6 +120,8 @@ export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, pro
   const strugglingResult = accuracy !== null && accuracy < 0.34; // 3분의 1도 못 맞힘 — 축하보다 재학습 권유가 맞다
   const s = summarize(progress);
   const sr = sessionResult(progress, sessionId);
+  const catStats = categoryBreakdown(sessionLog, sessionCards);
+  const cumulativeAccuracy = learningStats.attempts ? Math.round((learningStats.correct / learningStats.attempts) * 100) : 0;
   const recoveryUsed = sessionLog.filter((r) => r.result === 'recovery').length;
   const wrongCount = sessionLog.filter((r) => r.result === 'wrong').length;
   const weak = new Set(sessionLog.filter((r) => r.result !== 'correct').map((r) => r.id)).size;
@@ -256,6 +264,36 @@ export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, pro
         <p className="ym-rise" style={{ animationDelay: '.12s', textAlign: 'center', marginTop: 16, fontSize: 13, color: 'var(--warn)', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
           <Icon name="recovery" size={16} /> 복구 {recoveryUsed}회 — 막혀도 끝까지 이어갔어요
         </p>
+      )}
+
+      {/* 결과 자세히 — 카테고리별 정답률 + 누적 통계와 비교. 접지 않고 바로 보여줘서
+          "시험 결과를 제대로 안 알려준다"는 문제를 승급 시험 화면과 같은 수준으로 해결한다. */}
+      {quizSeen > 0 && (
+        <div className="ym-rise" style={{ animationDelay: '.14s', marginTop: 16 }}>
+          <GlassPanel>
+            {catStats.length > 0 && (
+              <>
+                <p style={{ ...kicker, margin: '0 0 8px' }}>카테고리별 정답률</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {catStats.map((c) => (
+                    <div key={c.label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13.5 }}>
+                      <span style={{ color: 'var(--ink)' }}>{c.label}</span>
+                      <strong style={{ color: c.correct === c.total ? 'var(--ok)' : c.correct === 0 ? 'var(--warn)' : 'var(--ink-soft)' }}>
+                        {c.correct}/{c.total}
+                      </strong>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ margin: '12px 0', borderTop: '1px solid var(--glass-border)' }} />
+              </>
+            )}
+            <p style={{ ...kicker, margin: '0 0 8px' }}>누적 학습과 비교</p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+              <StatTile label="누적 정답률" value={`${cumulativeAccuracy}%`} sub={`${learningStats.correct}/${learningStats.attempts}회 시도`} />
+              <StatTile label="현재 등급" value={learningStats.rank} sub={`${learningStats.rankScore}/${learningStats.nextAt}점`} />
+            </div>
+          </GlassPanel>
+        </div>
       )}
 
       {/* 다음 단계 추천 — 매번 같은 다음 장면 대신 신규·복습·다른 연습을 골라가며 */}
