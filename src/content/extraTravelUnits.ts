@@ -18,4 +18,16 @@ export const extraTravelUnits: Unit[] = [
       'p_menzei_onegai', 'p_gift_wrapping_onegai', 'p_receipt_email_ii',
     ],
   },
+  {
+    id: 'u_b3_scene_specific_answers', track: 'lang', stage: 'B3', mode: 'action',
+    canDo: '사용자는 각 여행 장면(호텔·기차·환전·택시·환불·인쇄·매점 등)에서 그 상황에만 맞는 구체적인 응답을 할 수 있다',
+    newPhraseIds: [
+      'p_new_kinen_de_onegai', 'p_new_shokken_douzo', 'p_new_sen_nihyaku_en_desune', 'p_new_nimotsu_futatsu', 'p_new_sono_reeto_de_onegai', 'p_new_kozeni_shika_nai',
+      'p_new_motto_hayaku_todoku', 'p_new_nimotsu_onegai', 'p_new_bentou_hitotsu', 'p_new_sara_kazoete', 'p_new_tsume_dorekurai_kakaru', 'p_new_omelette_cheese_ire',
+      'p_new_supu_mo_onegai', 'p_new_fullcover_onegai', 'p_new_jibun_de_hakobimasu', 'p_new_nagame_yori_kinen', 'p_new_sagaku_koko_de_haraeru', 'p_new_30pun_go_daijoubu',
+      'p_new_tsuurogawa_de', 'p_new_card_kakunin', 'p_new_card_ni_henkin', 'p_new_kono_muki_de_ii', 'p_new_meisai_shobun', 'p_new_karaa_a4_de',
+      'p_new_ryoumen_de', 'p_new_yoyaku_namae_desu', 'p_new_bangou_nana_desu', 'p_new_megahon_iro', 'p_new_seki_ni_modorimasu', 'p_new_chizu_misete',
+      'p_new_betsu_tsuuro_kakunin', 'p_new_koko_de_machimasu', 'p_onegai_shimasu',
+    ],
+  },
 ];

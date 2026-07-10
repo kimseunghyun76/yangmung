@@ -137,6 +137,10 @@ export function validateContent(d: ContentBundle): Issue[] {
       if (s.promptPhraseId) {
         if (!phraseIds.has(s.promptPhraseId)) add('V3', 'fail', `${where} promptPhraseId 깨짐: ${s.promptPhraseId}`);
         else if (phraseById[s.promptPhraseId].register === 'productive') add('V13', 'warn', `${where} prompt가 productive: ${s.promptPhraseId}`);
+        // V22: C0(생존 회화 기초) 밖에서는 범용 표현을 질문으로도 쓰지 않는다.
+        if (m.id !== 'C0' && phraseIds.has(s.promptPhraseId) && phraseById[s.promptPhraseId].missionScope === 'generic') {
+          add('V22', 'fail', `${where} promptPhraseId가 범용(generic) 표현: ${s.promptPhraseId}`);
+        }
       }
       if (!s.choices || s.choices.length < 2) add('V8', 'fail', `${where} 선택지 <2`);
       const corrects = (s.choices ?? []).filter((c) => c.correct);
@@ -154,6 +158,10 @@ export function validateContent(d: ContentBundle): Issue[] {
             if ((reg === 'productive' || reg === 'both') && !introduced.has(c.phraseId)) {
               add('V19', 'fail', `${where} productive/both 사전 미도입: ${c.phraseId}`);
             }
+            // V22: C0 밖에서는 범용(generic) 표현을 선택지로 쓰지 않는다 — 미션은 그 장면 테마 표현만.
+            if (m.id !== 'C0' && phraseById[c.phraseId].missionScope === 'generic') {
+              add('V22', 'fail', `${where} choice.phraseId가 범용(generic) 표현: ${c.phraseId}`);
+            }
           }
         }
         if (c.recoveryType) {
@@ -163,15 +171,19 @@ export function validateContent(d: ContentBundle): Issue[] {
         }
       }
     });
-    const recShort = recCount < 2;
-    const fpMissing = !hasFull || !hasPartial;
-    if (recShort || fpMissing) {
-      const reason = m.meta?.recoveryExemptReason;
-      if (reason && reason.length >= 10) {
-        add('V9', 'warn', `${m.id} recovery 부족 면제: "${reason}"`);
-      } else {
-        if (recShort) add('V9', 'fail', `${m.id} recovery <2`);
-        if (fpMissing) add('V9', 'fail', `${m.id} full+partial 미충족 (full=${hasFull}, partial=${hasPartial})`);
+    // V9: 복구 표현 가용성 요구는 C0(생존 회화 기초)에서만 확인한다 — 다른 미션은 복구 표현을
+    // 아예 갖지 않는 게 의도(범용 표현은 C0에서만 가르침, V22가 강제).
+    if (m.id === 'C0') {
+      const recShort = recCount < 2;
+      const fpMissing = !hasFull || !hasPartial;
+      if (recShort || fpMissing) {
+        const reason = m.meta?.recoveryExemptReason;
+        if (reason && reason.length >= 10) {
+          add('V9', 'warn', `${m.id} recovery 부족 면제: "${reason}"`);
+        } else {
+          if (recShort) add('V9', 'fail', `${m.id} recovery <2`);
+          if (fpMissing) add('V9', 'fail', `${m.id} full+partial 미충족 (full=${hasFull}, partial=${hasPartial})`);
+        }
       }
     }
   }
