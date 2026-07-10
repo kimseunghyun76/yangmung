@@ -244,7 +244,7 @@ export function TraceCanvas({ char, onComplete, nextLabel = '다음', autoComple
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 12 }}>
       {checked !== null && (
         <p className="ym-reveal" style={{
-          margin: '0 0 10px', padding: 12, borderRadius: 12, fontWeight: 800, textAlign: 'center', width: 'min(86vw, 300px)',
+          margin: '0 0 10px', padding: 12, borderRadius: 12, fontWeight: 800, textAlign: 'center', width: 'min(92vw, 420px)',
           background: pass ? 'var(--ok-soft)' : 'var(--warn-soft)', color: pass ? 'var(--ok)' : 'var(--warn)',
         }}>
           {pass ? `좋아요! 정확도 ${checked}%` : `정확도 ${checked}% — 다시 한 번 또박또박`}
@@ -254,16 +254,16 @@ export function TraceCanvas({ char, onComplete, nextLabel = '다음', autoComple
       <canvas
         ref={viewRef}
         onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}
-        style={{ width: 'min(86vw, 300px)', height: 'min(86vw, 300px)', borderRadius: 24, border: '1.5px solid var(--glass-border)', background: 'var(--glass-bg-strong)', touchAction: 'none', cursor: 'crosshair' }}
+        style={{ width: 'min(92vw, 420px)', height: 'min(92vw, 420px)', borderRadius: 24, border: '1.5px solid var(--glass-border)', background: 'var(--glass-bg-strong)', touchAction: 'none', cursor: 'crosshair' }}
       />
 
       {checked === null ? (
-        <div style={{ display: 'flex', gap: 8, marginTop: 14, width: 'min(86vw, 300px)' }}>
+        <div style={{ display: 'flex', gap: 8, marginTop: 14, width: 'min(92vw, 420px)' }}>
           <button className="ym-press" onClick={clear} style={{ flex: 1, padding: '13px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 700, cursor: 'pointer' }}>⌫ 지우기</button>
           <button className="ym-press" onClick={check} disabled={!hasInk} style={{ flex: 2, padding: '13px', borderRadius: 14, border: 'none', background: 'var(--accent)', color: 'var(--accent-ink)', fontWeight: 800, fontSize: 16, cursor: hasInk ? 'pointer' : 'default', opacity: hasInk ? 1 : 0.5 }}>채점</button>
         </div>
       ) : (
-        <div style={{ display: 'flex', gap: 8, marginTop: 10, width: 'min(86vw, 300px)' }}>
+        <div style={{ display: 'flex', gap: 8, marginTop: 10, width: 'min(92vw, 420px)' }}>
           <button className="ym-press" onClick={clear} style={{ flex: 1, padding: '13px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 700, cursor: 'pointer' }}>다시 쓰기</button>
           {!hideCompleteButton && (
             <button className="ym-press" onClick={() => onComplete(checked)} style={{ flex: 2, padding: '13px', borderRadius: 14, border: 'none', background: 'var(--accent)', color: 'var(--accent-ink)', fontWeight: 800, fontSize: 16, cursor: 'pointer' }}>{nextLabel}</button>

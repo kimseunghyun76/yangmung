@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { CONTENT } from '../content';
 import type { KanaItem, KanaKind } from '../content/types';
+import { VOCAB_GROUPS } from '../content/thematicVocab';
 import type { ProgressMap } from '../learn/progress';
 import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
@@ -195,8 +196,17 @@ function KanaDetail({ item, prev, next, onPrev, onNext, onClose, onKanaWritten }
   });
 
   return (
-    // footer 대신 이전/다음 네비를 children에 직접 넣어 그 아래에 "쓰는 방법"을 배치한다.
     <Modal title={`${item.char} · ${item.romaji}`} onClose={onClose} footer={null}>
+      {/* 이전/다음 네비 — 헤더(글자·로마자·닫기) 바로 아래로, 스크롤 없이 바로 다음 글자로 넘어갈 수 있게 */}
+      <div style={{ display: 'flex', gap: 8 }}>
+        <button className="ym-press" onClick={onPrev} disabled={!prev} style={navBtn(!prev)}>
+          ← 이전{prev && <span lang="ja" style={{ fontWeight: 900, color: 'var(--accent)' }}>{prev.char}</span>}
+        </button>
+        <button className="ym-press" onClick={onNext} disabled={!next} style={navBtn(!next)}>
+          {next && <span lang="ja" style={{ fontWeight: 900, color: 'var(--accent)' }}>{next.char}</span>}다음 →
+        </button>
+      </div>
+
       {/* ① 읽기 — 글자·로마자·한글 소리(공간 절약을 위해 한 줄로 압축) */}
       <Section icon="kana" title="읽기">
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -217,9 +227,22 @@ function KanaDetail({ item, prev, next, onPrev, onNext, onClose, onKanaWritten }
         )}
       </Section>
 
-      {/* ② 쓰기 — 따라 쓰기(2초 자동 채점, 점수 무관 항상 자동 기록). 쓰는 방법은 맨 아래 참고용. */}
-      <Section icon="kana" title="쓰기">
-        <p style={{ margin: '0 0 4px', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 700 }}>흐린 글자를 따라 써보세요. 손을 떼면 2초 뒤 자동으로 채점돼요.</p>
+      {/* ② 쓰기 — 캡션은 타이틀 옆에, 쓰는 방법은 캔버스보다 먼저, 캔버스는 확대, 예시 단어는 맨 아래 */}
+      <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--glass-border)' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
+          <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 7, fontSize: 13, fontWeight: 800, color: 'var(--accent)' }}>
+            <Icon name="kana" size={16} /> 쓰기
+          </p>
+          <span style={{ fontSize: 11, color: 'var(--ink-faint)', fontWeight: 700 }}>흐린 글자를 따라 써보세요 · 손을 떼면 2초 뒤 자동 채점</span>
+        </div>
+
+        {item.strokeGuide && (
+          <div style={{ marginTop: 10, padding: '11px 12px', borderRadius: 10, background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)' }}>
+            <p style={{ margin: '0 0 9px', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 800 }}>✍️ 쓰는 방법</p>
+            <StrokeSteps guide={item.strokeGuide} />
+          </div>
+        )}
+
         <TraceCanvas
           char={item.char}
           autoComplete="always"
@@ -227,27 +250,49 @@ function KanaDetail({ item, prev, next, onPrev, onNext, onClose, onKanaWritten }
           onComplete={(score) => { if (score >= 55) { onKanaWritten?.(item.char); setWritten(true); } }}
         />
         {written && <p style={{ margin: '8px 0 0', textAlign: 'center', fontSize: 12.5, color: 'var(--ok)', fontWeight: 800 }}>✓ 익힌 가나로 자동 기록했어요</p>}
-      </Section>
 
-      {/* 이전/다음 네비 */}
-      <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
-        <button className="ym-press" onClick={onPrev} disabled={!prev} style={navBtn(!prev)}>
-          ← 이전{prev && <span lang="ja" style={{ fontWeight: 900, color: 'var(--accent)' }}>{prev.char}</span>}
-        </button>
-        <button className="ym-press" onClick={onNext} disabled={!next} style={navBtn(!next)}>
-          {next && <span lang="ja" style={{ fontWeight: 900, color: 'var(--accent)' }}>{next.char}</span>}다음 →
-        </button>
+        <ExampleWords char={item.char} />
       </div>
-
-      {/* 쓰는 방법(순서 1·2·3) — 이전/다음 네비 아래, 페이지 맨 아래 참고용 */}
-      {item.strokeGuide && (
-        <div style={{ marginTop: 14, padding: '11px 12px', borderRadius: 10, background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)' }}>
-          <p style={{ margin: '0 0 9px', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 800 }}>✍️ 쓰는 방법</p>
-          <StrokeSteps guide={item.strokeGuide} />
-        </div>
-      )}
     </Modal>
   );
+}
+
+// 이 가나가 들어간 실제 단어 예시(VOCAB_GROUPS에서 검색) — 클릭하면 발음. 없으면 섹션 자체를 숨긴다.
+function ExampleWords({ char }: { char: string }) {
+  const [words] = useState(() => {
+    const pool = VOCAB_GROUPS.flatMap((g) => g.items).filter((it) => it.kana.includes(char));
+    return shuffleOnce(pool).slice(0, 3);
+  });
+  if (words.length === 0) return null;
+  return (
+    <div style={{ marginTop: 12 }}>
+      <p style={{ margin: '0 0 7px', fontSize: 11.5, color: 'var(--ink-faint)', fontWeight: 800 }}>이 글자가 들어간 단어</p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {words.map((w) => (
+          <button key={w.id} className="ym-press" onClick={() => speak(w.kana)} disabled={!ttsSupported()} style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
+            padding: '9px 12px', borderRadius: 11, cursor: 'pointer', textAlign: 'left',
+            border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)',
+          }}>
+            <span>
+              <span lang="ja" style={{ fontWeight: 800, fontSize: 14 }}>{w.kana}</span>
+              <span style={{ marginLeft: 8, fontSize: 12.5, color: 'var(--ink-soft)' }}>{w.korean}</span>
+            </span>
+            <Icon name="listen" size={14} style={{ color: 'var(--accent)', flex: '0 0 auto' }} />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function shuffleOnce<T>(a: T[]): T[] {
+  const arr = [...a];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
 
 // 획순 문구(①②③...로 구간 표기된 텍스트, 없으면 통짜 한 덩어리)를 순서 목록으로 쪼갠다.

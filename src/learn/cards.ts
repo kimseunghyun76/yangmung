@@ -543,6 +543,22 @@ function buildKanaCards(stage: string, kanaIds: string[], lk: KanaLookup): QuizC
     });
   }
 
+  // (D) 한글/로마자 → 글자 — (A)의 반대 방향. 소리(한글·로마자 텍스트)를 보고 맞는 가나를 찾는다.
+  // 오디오가 아니라 텍스트 프롬프트라 bannerJa를 비워 자동재생·탭재생 둘 다 안 걸리게 한다.
+  for (const id of kanaIds) {
+    const k = lk.byKana(id);
+    const distract = shuffle(lk.kana.filter((x) => x.id !== id && x.char !== k.char && x.script === k.script)).slice(0, 3);
+    out.push({
+      kind: 'quiz', id: `kana:${id}:reverse`, tag: `${stage} 가나 · 찾기`,
+      banner: `${k.koreanSound} · ${k.romaji}`, sub: '이 소리에 맞는 글자는?',
+      reviewTarget: { type: 'kana', id },
+      choices: shuffle([
+        { label: k.char, correct: true, ja: k.char, phrase: mk(k) },
+        ...distract.map((d) => ({ label: d.char, correct: false, ja: d.char, phrase: mk(d) })),
+      ]),
+    });
+  }
+
   return out;
 }
 
