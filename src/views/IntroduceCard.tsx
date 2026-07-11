@@ -3,6 +3,7 @@ import { useState, type CSSProperties } from 'react';
 import type { IntroduceCard } from '../learn/cards';
 import { VOCAB_GROUPS } from '../content/thematicVocab';
 import { greetingResponseFor } from '../content/greetingResponses';
+import { vocabExampleFor } from '../content/vocabExamples';
 import { speak, ttsSupported } from '../tts';
 import { PRIMARY } from '../ui/styles';
 import { ReadingAid } from './ReadingAid';
@@ -48,6 +49,7 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
 
       <WordLearningPanel card={card} isKanaFamiliar={isKanaFamiliar} japaneseOnImage={preferImageArt && hasSpecificWordImage(card)} />
       <VocabMiniContext card={card} />
+      <VocabUsageExample card={card} />
 
       {card.answersQuestion && (
         <div style={{ marginTop: 8, padding: 10, borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--surface-2)' }}>
@@ -203,6 +205,35 @@ function vocabResponseForCard(card: IntroduceCard): { ja: string; korean: string
   const item = group?.items.find((x) => x.id === m[2]);
   if (!group || !item) return null;
   return greetingResponseFor(item.id) ?? null;
+}
+
+// 단어 사용 예제 — "단어만 외우지 말고 예제로" 요청에 따라, 그 단어를 쓰게 되는 질문↔답변을 함께 보여준다.
+function vocabItemIdForCard(card: IntroduceCard): string | null {
+  const m = /^vocab:([^:]+):study:([^:]+)$/.exec(card.id);
+  if (!m || m[2].startsWith('ex')) return null;
+  return m[2];
+}
+
+function VocabUsageExample({ card }: { card: IntroduceCard }) {
+  const itemId = vocabItemIdForCard(card);
+  const example = itemId ? vocabExampleFor(itemId) : undefined;
+  if (!example) return null;
+  return (
+    <div style={{ marginTop: 8, padding: 10, borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--surface-2)' }}>
+      <p style={{ margin: 0, fontSize: 11, fontWeight: 800, color: 'var(--ink-faint)', letterSpacing: '.03em' }}>실전 예제 · 질문</p>
+      <button onClick={() => speak(example.questionJa)} disabled={!ttsSupported()}
+        style={{ display: 'block', width: '100%', marginTop: 4, padding: 0, border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer', color: 'var(--ink)' }}>
+        <span lang="ja" style={{ display: 'block', fontSize: 14.5, fontWeight: 700 }}>{example.questionKana}</span>
+        <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600 }}>{example.questionKorean}</span>
+      </button>
+      <p style={{ margin: '6px 0 0', fontSize: 11, color: 'var(--ink-faint)', textAlign: 'center', fontWeight: 700 }}>↓ 답변</p>
+      <button onClick={() => speak(example.answerJa)} disabled={!ttsSupported()}
+        style={{ display: 'block', width: '100%', marginTop: 4, padding: 0, border: 'none', background: 'none', textAlign: 'left', cursor: 'pointer', color: 'var(--ink)' }}>
+        <span lang="ja" style={{ display: 'block', fontSize: 14.5, fontWeight: 700 }}>{example.answerKana}</span>
+        <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600 }}>{example.answerKorean}</span>
+      </button>
+    </div>
+  );
 }
 
 function quickPracticeGroup(id: string): string {
