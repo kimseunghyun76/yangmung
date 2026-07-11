@@ -8,6 +8,7 @@ import { minimalPairs } from '../content/minimalPairs';
 import { VOCAB_GROUPS, type VocabItem } from '../content/thematicVocab';
 import { BASIC_LIFE_ITEMS, BASIC_GROUP_LABEL, type BasicLifeItem } from '../content/basicLife';
 import { GREETING_RESPONSES, greetingResponseFor } from '../content/greetingResponses';
+import { vocabExampleQuestionFor } from '../content/vocabGroupExampleQuestions';
 import { toReadingUnits } from './kanaReading';
 import { segmentJa, type SegPos } from './jaSegment';
 
@@ -655,6 +656,8 @@ function buildVocabCards(): Card[] {
     }
 
     // 그룹 대표 예문 — 단어를 익힌 뒤 문장 속에서 보는 학습 카드(채점 없음).
+    // 이미 완전한 문장이라 answersQuestion(미션과 같은 렌더링)이 자연스럽게 들어맞는다 —
+    // 이 문장을 쓰게 되는 상황을 질문으로 놓고, 예문 자체를 답으로 보여준다.
     (group.examples ?? []).forEach((ex, i) => {
       cards.push({
         kind: 'introduce',
@@ -665,6 +668,7 @@ function buildVocabCards(): Card[] {
         kana: ex.kana,
         korean: ex.korean,
         note: '배운 단어가 문장에서 어떻게 쓰이는지 듣고 읽어보세요.',
+        answersQuestion: vocabExampleQuestionFor(group.id, i),
       });
     });
   }
