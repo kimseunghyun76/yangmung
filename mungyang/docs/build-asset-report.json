@@ -1,0 +1,57 @@
+{
+  "sizes": [
+    {
+      "path": "dist",
+      "bytes": 15168492,
+      "files": 351
+    },
+    {
+      "path": "dist/assets",
+      "bytes": 312308,
+      "files": 3
+    },
+    {
+      "path": "dist/audio",
+      "bytes": 3557481,
+      "files": 210
+    },
+    {
+      "path": "dist/audio/nanami",
+      "bytes": 3425472,
+      "files": 209
+    },
+    {
+      "path": "dist/gacha",
+      "bytes": 2089220,
+      "files": 102
+    },
+    {
+      "path": "dist/mascots",
+      "bytes": 2750582,
+      "files": 9
+    },
+    {
+      "path": "dist/scenes",
+      "bytes": 6458374,
+      "files": 26
+    }
+  ],
+  "audioSubset": {
+    "requiredUniqueSessionTexts": 209,
+    "expectedMp3Files": 209,
+    "actualMp3Files": 209,
+    "missingTexts": 0,
+    "missingFiles": 0,
+    "extraFiles": 0,
+    "extraManifestFiles": 0,
+    "expectedBytes": 3425472,
+    "actualBytes": 3425472,
+    "ok": true,
+    "details": {
+      "missingTexts": [],
+      "missingFiles": [],
+      "extraFiles": [],
+      "extraManifestFiles": []
+    }
+  }
+}

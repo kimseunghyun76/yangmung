@@ -45,7 +45,7 @@ npm run build
 
 - `docs/content-qa.md`: 카드 흐름, 퀴즈 선행 학습, 역할 혼선 검사
 - `docs/assets-qa.md`: 단원 이미지, 빠른 연습 이미지, 도감 이미지 누락/중복 검사
-- `docs/resource-links.md`: 개발 중 재사용하는 `yangmung` 리소스 링크 상태
+- `docs/resource-links.md`: 런타임에 필요한 public 리소스 존재 여부
 - `docs/audio-missing.md`: 음성 연결 현황
 - `docs/audio-missing.json`: TTS 작업용 누락 음성 JSON, 현재 누락 0개
 - `docs/build-asset-report.md`: 배포 자산 중량 개선 결과

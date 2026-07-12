@@ -164,7 +164,7 @@
 
 `scripts/audit-assets.ts`는 단원 이미지, 빠른 연습 이미지, 도감 보상 이미지의 누락과 도감 이미지 중복을 확인한다. 현재 결과는 `docs/assets-qa.md`에 저장된다.
 
-`scripts/audit-resource-links.ts`는 개발 중 재사용하는 `yangmung` 리소스 심볼릭 링크가 깨졌는지 확인한다. 현재 결과는 `docs/resource-links.md`에 저장된다.
+`scripts/audit-resources.ts`는 `mungyang/public`의 리소스 배치 방식이 실제 파일이든 개발용 링크든 상관없이, 런타임에 필요한 public 리소스가 읽히는지 확인한다. 현재 결과는 `docs/resource-links.md`에 저장된다.
 
 `scripts/audit-audio.ts`는 현재 세션 문장 기준으로 음성 연결과 누락 음성 수를 계산한다. 현재 결과는 `docs/audio-missing.md`와 `docs/audio-missing.json`에 저장된다.
 

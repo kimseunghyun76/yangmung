@@ -6,10 +6,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "check": "tsx scripts/audit-content.ts && tsx scripts/audit-assets.ts && tsx scripts/audit-resource-links.ts && tsx scripts/audit-audio.ts",
+    "check": "tsx scripts/audit-content.ts && tsx scripts/audit-assets.ts && tsx scripts/audit-resources.ts && tsx scripts/audit-audio.ts",
+    "check:audio-subset": "tsx scripts/audit-audio-subset.ts",
     "audio:missing": "tsx scripts/generate-missing-audio.ts",
     "audio:missing:dry": "tsx scripts/generate-missing-audio.ts --dry",
-    "build": "tsc --noEmit && vite build && tsx scripts/prune-dist-audio.ts",
+    "build": "tsc --noEmit && vite build && tsx scripts/prune-dist-audio.ts && tsx scripts/audit-audio-subset.ts && tsx scripts/report-build-size.ts",
+    "build:size": "tsx scripts/report-build-size.ts",
     "preview": "vite preview --host 127.0.0.1",
     "test": "vitest run"
   },

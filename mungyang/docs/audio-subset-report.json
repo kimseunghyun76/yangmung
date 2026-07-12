@@ -1,0 +1,18 @@
+{
+  "requiredUniqueSessionTexts": 209,
+  "expectedMp3Files": 209,
+  "actualMp3Files": 209,
+  "missingTexts": 0,
+  "missingFiles": 0,
+  "extraFiles": 0,
+  "extraManifestFiles": 0,
+  "expectedBytes": 3425472,
+  "actualBytes": 3425472,
+  "ok": true,
+  "details": {
+    "missingTexts": [],
+    "missingFiles": [],
+    "extraFiles": [],
+    "extraManifestFiles": []
+  }
+}

@@ -1,19 +1,26 @@
-# Resource Link Report
+# Resource Availability Report
 
-`mungyang/public` intentionally reuses selected `yangmung/public` assets through symlinks during development.
+`mungyang/public` is checked by required runtime assets, not by symlink shape. This passes whether assets are copied as real files or exposed through development links.
 
-- Top-level links: 3
-- Gacha item links: 102
-- Broken links: 0
+- Root resources checked: 4
+- Required asset files checked: 82
+- Missing or wrong type: 0
+- Symlink-backed paths: 85
+- Required asset bytes: 6209760
 
-## Top-Level Links
+## Root Resources
 
-| Link | Target | Status |
-| --- | --- | --- |
-| public/audio | ../../public/audio | ok |
-| public/mascots | ../../public/mascots | ok |
-| public/scenes/quick-practice | ../../../public/scenes/quick-practice | ok |
+| Scope | Path | Expected | Status |
+| --- | --- | --- | --- |
+| audio manifest | /audio/manifest.json | file | ok |
+| mascot assets | /mascots | directory | ok |
+| scene assets | /scenes/quick-practice | directory | ok |
+| gacha item assets | /gacha/items/generated-v2 | directory | ok |
+
+## Missing
+
+No missing resources.
 
 ## Guardrail
 
-`npm run build` still prunes audio after Vite copies symlinked assets, so production output contains only audio referenced by current learning sessions.
+This report intentionally does not require symbolic links. The production build separately prunes and audits `dist/audio` so copied source audio cannot bloat the deploy output.
