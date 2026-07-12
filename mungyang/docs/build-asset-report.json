@@ -2,12 +2,12 @@
   "sizes": [
     {
       "path": "dist",
-      "bytes": 15168492,
+      "bytes": 15171296,
       "files": 351
     },
     {
       "path": "dist/assets",
-      "bytes": 312308,
+      "bytes": 315112,
       "files": 3
     },
     {

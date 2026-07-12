@@ -8,8 +8,8 @@
 
 | Area | Files | Bytes | Human |
 | --- | ---: | ---: | ---: |
-| `dist` | 351 | 15168492 | 14.5 MB |
-| `dist/assets` | 3 | 312308 | 305.0 KB |
+| `dist` | 351 | 15171296 | 14.5 MB |
+| `dist/assets` | 3 | 315112 | 307.7 KB |
 | `dist/audio` | 210 | 3557481 | 3.39 MB |
 | `dist/audio/nanami` | 209 | 3425472 | 3.27 MB |
 | `dist/gacha` | 102 | 2089220 | 1.99 MB |

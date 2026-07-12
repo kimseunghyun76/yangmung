@@ -116,12 +116,13 @@ function generatedLesson(unit: LearningUnit, data: UnitScript): Lesson {
       .map((unitId) => {
         const linked = SCRIPT_BY_ID[unitId] ?? DRILL_ONLY_BY_ID[unitId];
         if (!linked) return undefined;
+        const expression = checkpoint.id === 'j3-cp4' && unitId === 'S39' ? linked.support : linked.primary;
         return {
           unitId,
           action: linked.scene,
-          japanese: linked.primary.japanese,
-          reading: linked.primary.reading,
-          meaning: linked.primary.meaning,
+          japanese: expression.japanese,
+          reading: expression.reading,
+          meaning: expression.meaning,
         };
       })
       .filter(Boolean) as Array<{ unitId: string; action: string; japanese: string; reading: string; meaning: string }>;

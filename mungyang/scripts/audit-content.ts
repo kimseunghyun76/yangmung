@@ -13,6 +13,21 @@ interface Finding {
 const findings: Finding[] = [];
 const levels = ['beginner', 'intermediate', 'advanced'] as const;
 const baseFlow = ['preview', 'expression', 'expression', 'expression', 'staffLine', 'dialogue', 'branch', 'roleplay', 'quiz', 'listen', 'done'] as const;
+const listeningPrepFlow = [
+  'preview',
+  'staffLine',
+  'staffLine',
+  'staffLine',
+  'expression',
+  'expression',
+  'staffLine',
+  'dialogue',
+  'branch',
+  'roleplay',
+  'quiz',
+  'listen',
+  'done',
+] as const;
 const beginnerFlow = ['preview', 'expression', 'staffLine', 'dialogue', 'quiz', 'listen', 'done'] as const;
 const intermediateFlow = ['preview', 'expression', 'expression', 'staffLine', 'dialogue', 'branch', 'quiz', 'listen', 'done'] as const;
 const advancedFlow = ['preview', 'expression', 'expression', 'expression', 'staffLine', 'dialogue', 'branch', 'roleplay', 'quiz', 'listen', 'done'] as const;
@@ -112,7 +127,7 @@ for (const unit of allUnits) {
 for (const unit of [...starterUnits, ...foundationUnits]) {
   const lesson = lessonForUnit(unit.id);
   if (!lesson) continue;
-  assertExactFlow(unit.id, lesson.cards, unit.course, baseFlow);
+  assertExactFlow(unit.id, lesson.cards, unit.course, unit.id === 'P1' ? listeningPrepFlow : baseFlow);
 }
 
 for (const unit of practiceUnits) {

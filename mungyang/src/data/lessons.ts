@@ -166,31 +166,49 @@ export const lessons: Record<string, Lesson> = {
         ],
       },
       {
-        kind: 'expression',
-        id: 'p1-exp-yoroshii',
+        kind: 'staffLine',
+        id: 'p1-staff-yoroshii',
         title: '확인 질문의 끝 억양',
         japanese: 'こちらでよろしいですか。',
         reading: 'こちらで よろしいですか。',
         meaning: '이쪽으로 괜찮으세요?',
-        note: '마지막 ですか가 올라가면 확인 질문입니다. 식당, 계산대, 호텔에서 자주 듣습니다.',
+        cue: '마지막 ですか가 올라가면 확인 질문입니다. 식당, 계산대, 호텔에서 자주 듣습니다.',
       },
       {
-        kind: 'expression',
-        id: 'p1-exp-mochikaeri',
+        kind: 'staffLine',
+        id: 'p1-staff-mochikaeri',
         title: '빠르게 붙어서 들리는 말',
         japanese: 'お持ち帰りですか。',
         reading: 'おもちかえりですか。',
         meaning: '포장이세요?',
-        note: '식당이나 카페에서 매우 빠르게 들릴 수 있습니다. おもちかえり 전체를 하나의 소리 덩어리로 기억합니다.',
+        cue: '식당이나 카페에서 매우 빠르게 들릴 수 있습니다. おもちかえり 전체를 하나의 소리 덩어리로 기억합니다.',
       },
       {
-        kind: 'expression',
-        id: 'p1-exp-fukuro',
+        kind: 'staffLine',
+        id: 'p1-staff-fukuro',
         title: '핵심 명사만 먼저 잡기',
         japanese: '袋はご利用ですか。',
         reading: 'ふくろは ごりようですか。',
         meaning: '봉투 이용하시겠어요?',
-        note: '문장을 다 못 들어도 袋만 들리면 봉투 질문이라는 것을 추측할 수 있습니다.',
+        cue: '문장을 다 못 들어도 袋만 들리면 봉투 질문이라는 것을 추측할 수 있습니다.',
+      },
+      {
+        kind: 'expression',
+        id: 'p1-exp-hai-onegai',
+        title: '긍정으로 답하기',
+        japanese: 'お願いします。',
+        reading: 'おねがいします。',
+        meaning: '부탁드립니다.',
+        note: '포장, 봉투, 선택 확인처럼 직원 질문에 긍정으로 답할 때 가장 넓게 쓰는 반응입니다.',
+      },
+      {
+        kind: 'expression',
+        id: 'p1-exp-daijoubu',
+        title: '거절로 답하기',
+        japanese: '大丈夫です。',
+        reading: 'だいじょうぶです。',
+        meaning: '괜찮습니다.',
+        note: '봉투나 영수증처럼 필요 없는 것을 정중하게 거절할 때 씁니다.',
       },
       {
         kind: 'staffLine',
@@ -202,11 +220,60 @@ export const lessons: Record<string, Lesson> = {
         cue: '호텔, 식당, 체험 예약에서 자주 듣는 질문입니다. ご予約가 들리면 예약 여부를 묻는 상황입니다.',
       },
       {
+        kind: 'dialogue',
+        id: 'p1-dialogue-basic',
+        title: '직원 질문에 짧게 답하기',
+        setup: '직원이 빠르게 묻는 말을 듣고, 여행자는 짧은 반응으로 답합니다.',
+        turns: [
+          { speaker: 'staff', japanese: 'お持ち帰りですか。', reading: 'おもちかえりですか。', meaning: '포장이세요?' },
+          { speaker: 'traveler', japanese: 'お願いします。', reading: 'おねがいします。', meaning: '부탁드립니다.' },
+          { speaker: 'staff', japanese: '袋はご利用ですか。', reading: 'ふくろは ごりようですか。', meaning: '봉투 이용하시겠어요?' },
+          { speaker: 'traveler', japanese: '大丈夫です。', reading: 'だいじょうぶです。', meaning: '괜찮습니다.' },
+        ],
+      },
+      {
+        kind: 'branch',
+        id: 'p1-branch',
+        title: '직원 질문별 반응',
+        situation: '직원이 포장, 봉투, 예약 여부를 묻습니다. 먼저 핵심 단어를 듣고 짧게 답합니다.',
+        choices: [
+          {
+            label: '포장 원함',
+            japanese: 'お願いします。',
+            reading: 'おねがいします。',
+            meaning: '부탁드립니다.',
+            outcome: 'お持ち帰り가 들렸고 포장을 원하면 짧게 긍정합니다.',
+          },
+          {
+            label: '봉투 불필요',
+            japanese: '大丈夫です。',
+            reading: 'だいじょうぶです。',
+            meaning: '괜찮습니다.',
+            outcome: '袋가 들렸고 필요 없으면 정중하게 거절합니다.',
+          },
+          {
+            label: '예약 있음',
+            japanese: 'はい、予約しています。',
+            reading: 'はい、よやくしています。',
+            meaning: '네, 예약했습니다.',
+            outcome: 'ご予約가 들리면 예약 여부를 먼저 답합니다.',
+          },
+        ],
+      },
+      {
+        kind: 'roleplay',
+        id: 'p1-roleplay',
+        title: '듣고 반응하기',
+        mission: '직원이 묻는다고 생각하고, 필요한지 아닌지 짧게 답해 봅니다.',
+        starter: 'お願いします。',
+        checklist: ['필요하면 お願いします로 답하기', '필요 없으면 大丈夫です로 답하기', '예약 질문에는 予約しています로 답하기'],
+      },
+      {
         kind: 'quiz',
         id: 'p1-quiz-1',
         title: '뜻 고르기',
         prompt: '직원이 “お持ち帰りですか。”라고 물었습니다. 어떤 뜻일까요?',
-        requiredExpressionIds: ['p1-exp-mochikaeri'],
+        requiredExpressionIds: ['p1-staff-mochikaeri'],
         answerId: 'takeout',
         options: [
           { id: 'bag', japanese: '袋はご利用ですか。', reading: 'ふくろは ごりようですか。', meaning: '봉투 이용하시겠어요?' },
@@ -1853,6 +1920,27 @@ function buildBranchCard(unit: { id: string; title: string }, primary: Expressio
   };
 }
 
+function hasKoreanFinalConsonant(text: string): boolean {
+  const match = /[가-힣](?!.*[가-힣])/.exec(text);
+  if (!match) return false;
+  return (match[0].charCodeAt(0) - 0xac00) % 28 !== 0;
+}
+
+function endsWithKoreanRieul(text: string): boolean {
+  const match = /[가-힣](?!.*[가-힣])/.exec(text);
+  if (!match) return false;
+  return (match[0].charCodeAt(0) - 0xac00) % 28 === 8;
+}
+
+function quoteParticle(text: string): string {
+  return hasKoreanFinalConsonant(text) ? '이라고' : '라고';
+}
+
+function meansParticle(text: string): string {
+  if (!hasKoreanFinalConsonant(text) || endsWithKoreanRieul(text)) return '로';
+  return '으로';
+}
+
 function buildRoleplayCard(unit: { id: string; title: string }, primary: ExpressionCard, support: ExpressionCard, recovery: ExpressionCard): RoleplayCard {
   return {
     kind: 'roleplay',
@@ -1861,9 +1949,9 @@ function buildRoleplayCard(unit: { id: string; title: string }, primary: Express
     mission: `${unit.title} 상황이라고 생각하고, 아래 세 가지 행동을 순서대로 말해 봅니다.`,
     starter: primary.japanese,
     checklist: [
-      `${primary.meaning}라고 먼저 말하기`,
-      `${support.meaning}로 필요한 정보를 확인하기`,
-      `${recovery.meaning}로 문제가 생겼을 때 대응하기`,
+      `${primary.meaning}${quoteParticle(primary.meaning)} 먼저 말하기`,
+      `${support.meaning}${meansParticle(support.meaning)} 필요한 정보를 확인하기`,
+      `${recovery.meaning}${meansParticle(recovery.meaning)} 문제가 생겼을 때 대응하기`,
     ],
   };
 }

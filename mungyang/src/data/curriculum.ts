@@ -334,7 +334,7 @@ export const journeyUnits: LearningUnit[] = [
     group: '통합 여행 미션',
     image: '/scenes/quick-practice/basics.webp',
     goal: '입국, 교통카드, 전철, 호텔 체크인을 하나의 흐름으로 진행한다.',
-    requiredIds: ['S1', 'S2', 'S7', 'S10', 'S14'],
+    requiredIds: ['S7', 'S8', 'S9', 'S10', 'S14'],
     reward: '도착일 여행 세트',
     blocks: FLOW_BLOCKS,
     journeyCheckpoints: [
@@ -410,7 +410,7 @@ export const journeyUnits: LearningUnit[] = [
     group: '통합 여행 미션',
     image: '/scenes/quick-practice/signs.webp',
     goal: '호텔에서 공항까지 이동하고 탑승까지 마친다.',
-    requiredIds: ['S41', 'S42', 'S43'],
+    requiredIds: ['S17', 'S41', 'S42', 'S43'],
     reward: '출국 완료 세트',
     blocks: FLOW_BLOCKS,
     journeyCheckpoints: [
