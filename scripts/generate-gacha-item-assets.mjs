@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { CONTENT } from '../src/content/index.ts';
 import { RARITIES } from '../src/learn/collection.ts';
-import { GACHA_ITEM_PLACES, gachaLabItemForPlace } from '../src/learn/gachaItems.ts';
+import { gachaLabItemForMission } from '../src/learn/gachaItems.ts';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const outDir = join(root, 'public', 'gacha', 'items', 'generated-v2');
@@ -647,11 +647,11 @@ function drawItem(item, rarity) {
   }
 }
 
-const places = [...new Set([...GACHA_ITEM_PLACES, ...CONTENT.missions.map((m) => m.place).filter(Boolean)])];
+const missionIds = CONTENT.missions.map((m) => m.id).filter((id) => id !== 'C0');
 const files = new Map();
-for (const place of places) {
+for (const missionId of missionIds) {
   for (const r of RARITIES) {
-    const item = gachaLabItemForPlace(place, r.key);
+    const item = gachaLabItemForMission(missionId, r.key);
     const rel = item.image?.replace(/^\/gacha\/items\/generated-v2\//, '').replace(/\.webp$/i, '');
     if (!rel) continue;
     files.set(rel, { item, rarity: r.key });

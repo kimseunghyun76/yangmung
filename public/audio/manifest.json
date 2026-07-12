@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T23:07:01.656Z",
+  "generatedAt": "2026-07-12T01:15:54.882Z",
   "voices": {
     "nanami": {
       "name": "ja-JP-NanamiNeural",
@@ -59518,6 +59518,1989 @@
       "synthText": "大丈夫です。",
       "synthSignature": "bcb0f07abe85",
       "path": "/audio/nanami/tts_9a493f082a41.mp3"
+    },
+    "tts_66e8f36f19b2": {
+      "text": "お持ち帰りですか。",
+      "synthText": "お持ち帰りですか。",
+      "altTexts": [],
+      "synthSignature": "966df805db7b",
+      "path": "/audio/nanami/tts_66e8f36f19b2.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P1:dialogue",
+      "sources": [
+        "mungyang:P1:dialogue"
+      ]
+    },
+    "tts_17623dae0b6f": {
+      "text": "ご予約はされていますか。",
+      "synthText": "ご予約はされていますか。",
+      "altTexts": [],
+      "synthSignature": "809890f995c6",
+      "path": "/audio/nanami/tts_17623dae0b6f.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P1:dialogue",
+      "sources": [
+        "mungyang:P1:dialogue"
+      ]
+    },
+    "tts_0fba371420b3": {
+      "text": "カウンター",
+      "synthText": "カウンター",
+      "altTexts": [],
+      "synthSignature": "227a05ce76b0",
+      "path": "/audio/nanami/tts_0fba371420b3.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P2:dialogue",
+      "sources": [
+        "mungyang:P2:dialogue"
+      ]
+    },
+    "tts_c2c6b48a1663": {
+      "text": "カードでよろしいですか。",
+      "synthText": "カードでよろしいですか。",
+      "altTexts": [],
+      "synthSignature": "285940a58b2f",
+      "path": "/audio/nanami/tts_c2c6b48a1663.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P2:dialogue",
+      "sources": [
+        "mungyang:P2:dialogue"
+      ]
+    },
+    "tts_7bab1348971e": {
+      "text": "予約は三時です。",
+      "synthText": "予約は三時です。",
+      "altTexts": [],
+      "synthSignature": "7de09a18a660",
+      "path": "/audio/nanami/tts_7bab1348971e.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P3:roleplay",
+      "sources": [
+        "mungyang:P3:roleplay"
+      ]
+    },
+    "tts_59fa4fa8c23c": {
+      "text": "これをお願いします。",
+      "synthText": "これをお願いします。",
+      "altTexts": [],
+      "synthSignature": "55e03ae3259c",
+      "path": "/audio/nanami/tts_59fa4fa8c23c.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S1:expression",
+      "sources": [
+        "mungyang:S1:expression"
+      ]
+    },
+    "tts_c555e562adc5": {
+      "text": "現金のみです。",
+      "synthText": "現金のみです。",
+      "altTexts": [],
+      "synthSignature": "adaff24f1cce",
+      "path": "/audio/nanami/tts_c555e562adc5.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P3:listen",
+      "sources": [
+        "mungyang:P3:listen"
+      ]
+    },
+    "tts_c9dec07b56b6": {
+      "text": "どちらになさいますか。",
+      "synthText": "どちらになさいますか。",
+      "altTexts": [],
+      "synthSignature": "d95e92cdaf37",
+      "path": "/audio/nanami/tts_c9dec07b56b6.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P4:listen",
+      "sources": [
+        "mungyang:P4:listen"
+      ]
+    },
+    "tts_e8c46e76b3de": {
+      "text": "ここで待てばいいですか。",
+      "synthText": "ここで待てばいいですか。",
+      "altTexts": [],
+      "synthSignature": "ae7a8547b6b3",
+      "path": "/audio/nanami/tts_e8c46e76b3de.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P5:dialogue",
+      "sources": [
+        "mungyang:P5:dialogue"
+      ]
+    },
+    "tts_abc5570d4515": {
+      "text": "右に曲がればいいですか。",
+      "synthText": "右に曲がればいいですか。",
+      "altTexts": [],
+      "synthSignature": "7821baa19619",
+      "path": "/audio/nanami/tts_abc5570d4515.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P5:expression",
+      "sources": [
+        "mungyang:P5:expression"
+      ]
+    },
+    "tts_5c5d7bcc5d18": {
+      "text": "まっすぐ行って、左です。",
+      "synthText": "まっすぐ行って、左です。",
+      "altTexts": [],
+      "synthSignature": "868416b53523",
+      "path": "/audio/nanami/tts_5c5d7bcc5d18.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P5:listen",
+      "sources": [
+        "mungyang:P5:listen"
+      ]
+    },
+    "tts_554fc2cfdd87": {
+      "text": "何時ですか。",
+      "synthText": "何時ですか。",
+      "altTexts": [],
+      "synthSignature": "2284c1c759f7",
+      "path": "/audio/nanami/tts_554fc2cfdd87.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P6:roleplay",
+      "sources": [
+        "mungyang:P6:roleplay"
+      ]
+    },
+    "tts_0fbca0bc0001": {
+      "text": "追加料金はかかりますか。",
+      "synthText": "追加料金はかかりますか。",
+      "altTexts": [],
+      "synthSignature": "8905297e5485",
+      "path": "/audio/nanami/tts_0fbca0bc0001.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P6:expression",
+      "sources": [
+        "mungyang:P6:expression"
+      ]
+    },
+    "tts_3d6a56b620b4": {
+      "text": "合計で三千円です。",
+      "synthText": "合計で三千円です。",
+      "altTexts": [],
+      "synthSignature": "5308aa48d4d0",
+      "path": "/audio/nanami/tts_3d6a56b620b4.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P6:listen",
+      "sources": [
+        "mungyang:P6:listen"
+      ]
+    },
+    "tts_9d6fe8b9ec96": {
+      "text": "こちらでお預かりできます。",
+      "synthText": "こちらでお預かりできます。",
+      "altTexts": [],
+      "synthSignature": "7de52f96db4d",
+      "path": "/audio/nanami/tts_9d6fe8b9ec96.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P7:listen",
+      "sources": [
+        "mungyang:P7:listen"
+      ]
+    },
+    "tts_3b4c8b365050": {
+      "text": "こちらでお願いします。",
+      "synthText": "こちらでお願いします。",
+      "altTexts": [],
+      "synthSignature": "e182df3171c0",
+      "path": "/audio/nanami/tts_3b4c8b365050.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P8:roleplay",
+      "sources": [
+        "mungyang:P8:roleplay"
+      ]
+    },
+    "tts_955d006179ea": {
+      "text": "窓側の席をお願いします。",
+      "synthText": "窓側の席をお願いします。",
+      "altTexts": [],
+      "synthSignature": "23bb0e77670c",
+      "path": "/audio/nanami/tts_955d006179ea.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P8:dialogue",
+      "sources": [
+        "mungyang:P8:dialogue"
+      ]
+    },
+    "tts_87a09398c573": {
+      "text": "辛くないものがいいです。",
+      "synthText": "辛くないものがいいです。",
+      "altTexts": [],
+      "synthSignature": "71ed687c182c",
+      "path": "/audio/nanami/tts_87a09398c573.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S20:roleplay",
+      "sources": [
+        "mungyang:S20:roleplay"
+      ]
+    },
+    "tts_e41d1ba4207e": {
+      "text": "テーブル席とカウンター席、どちらになさいますか。",
+      "synthText": "テーブル席とカウンター席、どちらになさいますか。",
+      "altTexts": [],
+      "synthSignature": "f1ffff440ee6",
+      "path": "/audio/nanami/tts_e41d1ba4207e.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P8:listen",
+      "sources": [
+        "mungyang:P8:listen"
+      ]
+    },
+    "tts_7ff5013704a5": {
+      "text": "できません。",
+      "synthText": "できません。",
+      "altTexts": [],
+      "synthSignature": "d103851b63fb",
+      "path": "/audio/nanami/tts_7ff5013704a5.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P9:dialogue",
+      "sources": [
+        "mungyang:P9:dialogue"
+      ]
+    },
+    "tts_51c54c430966": {
+      "text": "よく分かりません。",
+      "synthText": "よく分かりません。",
+      "altTexts": [],
+      "synthSignature": "f22b9e4fa21b",
+      "path": "/audio/nanami/tts_51c54c430966.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P9:expression",
+      "sources": [
+        "mungyang:P9:expression"
+      ]
+    },
+    "tts_e70f187d3411": {
+      "text": "本日はご利用いただけません。",
+      "synthText": "本日はご利用いただけません。",
+      "altTexts": [],
+      "synthSignature": "3feb6f229ef9",
+      "path": "/audio/nanami/tts_e70f187d3411.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P9:listen",
+      "sources": [
+        "mungyang:P9:listen"
+      ]
+    },
+    "tts_20c60154e801": {
+      "text": "エアコンが動きません。",
+      "synthText": "エアコンが動きません。",
+      "altTexts": [],
+      "synthSignature": "8aa2a5958a4c",
+      "path": "/audio/nanami/tts_20c60154e801.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S16:dialogue",
+      "sources": [
+        "mungyang:S16:dialogue"
+      ]
+    },
+    "tts_b44d1e668406": {
+      "text": "確認いたしますので、少々お待ちください。",
+      "synthText": "確認いたしますので、少々お待ちください。",
+      "altTexts": [],
+      "synthSignature": "7d081dc35704",
+      "path": "/audio/nanami/tts_b44d1e668406.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P10:listen",
+      "sources": [
+        "mungyang:P10:listen"
+      ]
+    },
+    "tts_73384f9e4937": {
+      "text": "申し訳ありません。",
+      "synthText": "申し訳ありません。",
+      "altTexts": [],
+      "synthSignature": "12f8e6f5caeb",
+      "path": "/audio/nanami/tts_73384f9e4937.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P11:roleplay",
+      "sources": [
+        "mungyang:P11:roleplay"
+      ]
+    },
+    "tts_0acd0d66a64d": {
+      "text": "大丈夫ですよ。",
+      "synthText": "大丈夫ですよ。",
+      "altTexts": [],
+      "synthSignature": "3b716ae7b46d",
+      "path": "/audio/nanami/tts_0acd0d66a64d.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P11:listen",
+      "sources": [
+        "mungyang:P11:listen"
+      ]
+    },
+    "tts_9cf597cd6f5e": {
+      "text": "もう一度言ってください。",
+      "synthText": "もう一度言ってください。",
+      "altTexts": [],
+      "synthSignature": "58c73750e30d",
+      "path": "/audio/nanami/tts_9cf597cd6f5e.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P12:roleplay",
+      "sources": [
+        "mungyang:P12:roleplay"
+      ]
+    },
+    "tts_d8c0d6e85585": {
+      "text": "書いてもらえますか。",
+      "synthText": "書いてもらえますか。",
+      "altTexts": [],
+      "synthSignature": "8e1a27839ea4",
+      "path": "/audio/nanami/tts_d8c0d6e85585.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P12:expression",
+      "sources": [
+        "mungyang:P12:expression"
+      ]
+    },
+    "tts_2f3f9fae94bd": {
+      "text": "こちらをご確認ください。",
+      "synthText": "こちらをご確認ください。",
+      "altTexts": [],
+      "synthSignature": "0eeb0d5e19bb",
+      "path": "/audio/nanami/tts_2f3f9fae94bd.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "P12:listen",
+      "sources": [
+        "mungyang:P12:listen"
+      ]
+    },
+    "tts_0c8444e836be": {
+      "text": "画面を見せてください。",
+      "synthText": "画面を見せてください。",
+      "altTexts": [],
+      "synthSignature": "db31edf2ead9",
+      "path": "/audio/nanami/tts_0c8444e836be.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S2:expression",
+      "sources": [
+        "mungyang:S2:expression"
+      ]
+    },
+    "tts_8d64d93e62a1": {
+      "text": "はい、少々お待ちください。",
+      "synthText": "はい、少々お待ちください。",
+      "altTexts": [],
+      "synthSignature": "ae62843f6de9",
+      "path": "/audio/nanami/tts_8d64d93e62a1.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S2:dialogue",
+      "sources": [
+        "mungyang:S2:dialogue"
+      ]
+    },
+    "tts_97a3675ff10f": {
+      "text": "出口はどこですか。",
+      "synthText": "出口はどこですか。",
+      "altTexts": [],
+      "synthSignature": "063bc70a867f",
+      "path": "/audio/nanami/tts_97a3675ff10f.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S3:roleplay",
+      "sources": [
+        "mungyang:S3:roleplay"
+      ]
+    },
+    "tts_0c8e5a785b72": {
+      "text": "この道で合っていますか。",
+      "synthText": "この道で合っていますか。",
+      "altTexts": [],
+      "synthSignature": "c2d3f5914bb4",
+      "path": "/audio/nanami/tts_0c8e5a785b72.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S3:expression",
+      "sources": [
+        "mungyang:S3:expression"
+      ]
+    },
+    "tts_7a701280f677": {
+      "text": "この先を左です。",
+      "synthText": "この先を左です。",
+      "altTexts": [],
+      "synthSignature": "fad9ed6683be",
+      "path": "/audio/nanami/tts_7a701280f677.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S3:listen",
+      "sources": [
+        "mungyang:S3:listen"
+      ]
+    },
+    "tts_f231edc64b25": {
+      "text": "三時で合っていますか。",
+      "synthText": "三時で合っていますか。",
+      "altTexts": [],
+      "synthSignature": "0fee37802581",
+      "path": "/audio/nanami/tts_f231edc64b25.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S4:roleplay",
+      "sources": [
+        "mungyang:S4:roleplay"
+      ]
+    },
+    "tts_5e1c69215146": {
+      "text": "全部でいくらですか。",
+      "synthText": "全部でいくらですか。",
+      "altTexts": [],
+      "synthSignature": "b50d2501c6e5",
+      "path": "/audio/nanami/tts_5e1c69215146.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S4:dialogue",
+      "sources": [
+        "mungyang:S4:dialogue"
+      ]
+    },
+    "tts_8d7cfbe58b80": {
+      "text": "二つお願いします。",
+      "synthText": "二つお願いします。",
+      "altTexts": [],
+      "synthSignature": "3d8022907a65",
+      "path": "/audio/nanami/tts_8d7cfbe58b80.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S4:expression",
+      "sources": [
+        "mungyang:S4:expression"
+      ]
+    },
+    "tts_7263c471b1dc": {
+      "text": "全部で二千五百円です。",
+      "synthText": "全部で二千五百円です。",
+      "altTexts": [],
+      "synthSignature": "23e99d3ce30a",
+      "path": "/audio/nanami/tts_7263c471b1dc.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S4:listen",
+      "sources": [
+        "mungyang:S4:listen"
+      ]
+    },
+    "tts_d87e4adbd2ca": {
+      "text": "荷物を預けたいです。",
+      "synthText": "荷物を預けたいです。",
+      "altTexts": [],
+      "synthSignature": "1157d7c7f8e9",
+      "path": "/audio/nanami/tts_d87e4adbd2ca.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "J5:dialogue",
+      "sources": [
+        "mungyang:J5:dialogue"
+      ]
+    },
+    "tts_d96555233ece": {
+      "text": "できれば席を変えたいです。",
+      "synthText": "できれば席を変えたいです。",
+      "altTexts": [],
+      "synthSignature": "c546625efcd5",
+      "path": "/audio/nanami/tts_d96555233ece.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S5:dialogue",
+      "sources": [
+        "mungyang:S5:dialogue"
+      ]
+    },
+    "tts_9e27f5e15889": {
+      "text": "席を変えられますか。",
+      "synthText": "席を変えられますか。",
+      "altTexts": [],
+      "synthSignature": "ef5660cc1706",
+      "path": "/audio/nanami/tts_9e27f5e15889.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S5:expression",
+      "sources": [
+        "mungyang:S5:expression"
+      ]
+    },
+    "tts_283efd4a49a2": {
+      "text": "少し難しいです。",
+      "synthText": "少し難しいです。",
+      "altTexts": [],
+      "synthSignature": "e0b0031ed6a8",
+      "path": "/audio/nanami/tts_283efd4a49a2.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S5:listen",
+      "sources": [
+        "mungyang:S5:listen"
+      ]
+    },
+    "tts_e3c904db7ef2": {
+      "text": "間違えました。",
+      "synthText": "間違えました。",
+      "altTexts": [],
+      "synthSignature": "fae3c74e63b6",
+      "path": "/audio/nanami/tts_e3c904db7ef2.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S6:roleplay",
+      "sources": [
+        "mungyang:S6:roleplay"
+      ]
+    },
+    "tts_4c598530e345": {
+      "text": "ちょっと問題があります。",
+      "synthText": "ちょっと問題があります。",
+      "altTexts": [],
+      "synthSignature": "84c0be049b2f",
+      "path": "/audio/nanami/tts_4c598530e345.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S6:dialogue",
+      "sources": [
+        "mungyang:S6:dialogue"
+      ]
+    },
+    "tts_cf16231e0d1a": {
+      "text": "手伝っていただけますか。",
+      "synthText": "手伝っていただけますか。",
+      "altTexts": [],
+      "synthSignature": "59df83922d74",
+      "path": "/audio/nanami/tts_cf16231e0d1a.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S6:expression",
+      "sources": [
+        "mungyang:S6:expression"
+      ]
+    },
+    "tts_1381c22e087c": {
+      "text": "状況を確認します。",
+      "synthText": "状況を確認します。",
+      "altTexts": [],
+      "synthSignature": "bc187609894f",
+      "path": "/audio/nanami/tts_1381c22e087c.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "J4:listen",
+      "sources": [
+        "mungyang:J4:listen"
+      ]
+    },
+    "tts_d585eb1ce856": {
+      "text": "滞在先はホテルです。",
+      "synthText": "滞在先はホテルです。",
+      "altTexts": [],
+      "synthSignature": "acc7eb4d8308",
+      "path": "/audio/nanami/tts_d585eb1ce856.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S7:dialogue",
+      "sources": [
+        "mungyang:S7:dialogue"
+      ]
+    },
+    "tts_58ec0937c5ac": {
+      "text": "三日間です。",
+      "synthText": "三日間です。",
+      "altTexts": [],
+      "synthSignature": "d384d7906bea",
+      "path": "/audio/nanami/tts_58ec0937c5ac.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S7:expression",
+      "sources": [
+        "mungyang:S7:expression"
+      ]
+    },
+    "tts_1ef3a2da8229": {
+      "text": "滞在目的は何ですか。",
+      "synthText": "滞在目的は何ですか。",
+      "altTexts": [],
+      "synthSignature": "6201032ba924",
+      "path": "/audio/nanami/tts_1ef3a2da8229.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S7:listen",
+      "sources": [
+        "mungyang:S7:listen"
+      ]
+    },
+    "tts_5642036f9322": {
+      "text": "荷物が出てきません。",
+      "synthText": "荷物が出てきません。",
+      "altTexts": [],
+      "synthSignature": "25b25d871caf",
+      "path": "/audio/nanami/tts_5642036f9322.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S8:roleplay",
+      "sources": [
+        "mungyang:S8:roleplay"
+      ]
+    },
+    "tts_04d9e3751b7c": {
+      "text": "申告するものはありません。",
+      "synthText": "申告するものはありません。",
+      "altTexts": [],
+      "synthSignature": "dbc8c2fcdbf1",
+      "path": "/audio/nanami/tts_04d9e3751b7c.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S8:dialogue",
+      "sources": [
+        "mungyang:S8:dialogue"
+      ]
+    },
+    "tts_b171fc4af34f": {
+      "text": "このスーツケースです。",
+      "synthText": "このスーツケースです。",
+      "altTexts": [],
+      "synthSignature": "8c8a24438f48",
+      "path": "/audio/nanami/tts_b171fc4af34f.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S8:expression",
+      "sources": [
+        "mungyang:S8:expression"
+      ]
+    },
+    "tts_0ea73e96b4b0": {
+      "text": "中身を確認してもいいですか。",
+      "synthText": "中身を確認してもいいですか。",
+      "altTexts": [],
+      "synthSignature": "ef089ffb1fc7",
+      "path": "/audio/nanami/tts_0ea73e96b4b0.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S8:listen",
+      "sources": [
+        "mungyang:S8:listen"
+      ]
+    },
+    "tts_cb603f95ad69": {
+      "text": "電車の乗り場はどこですか。",
+      "synthText": "電車の乗り場はどこですか。",
+      "altTexts": [],
+      "synthSignature": "8eb7e83589ca",
+      "path": "/audio/nanami/tts_cb603f95ad69.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S9:roleplay",
+      "sources": [
+        "mungyang:S9:roleplay"
+      ]
+    },
+    "tts_20c22790b102": {
+      "text": "新宿まで行きたいです。",
+      "synthText": "新宿まで行きたいです。",
+      "altTexts": [],
+      "synthSignature": "ca023aff336b",
+      "path": "/audio/nanami/tts_20c22790b102.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S9:dialogue",
+      "sources": [
+        "mungyang:S9:dialogue"
+      ]
+    },
+    "tts_de4b22346689": {
+      "text": "リムジンバスはありますか。",
+      "synthText": "リムジンバスはありますか。",
+      "altTexts": [],
+      "synthSignature": "e97568e71b46",
+      "path": "/audio/nanami/tts_de4b22346689.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S9:expression",
+      "sources": [
+        "mungyang:S9:expression"
+      ]
+    },
+    "tts_03afc760337f": {
+      "text": "二番乗り場から出ます。",
+      "synthText": "二番乗り場から出ます。",
+      "altTexts": [],
+      "synthSignature": "a0242a1029fc",
+      "path": "/audio/nanami/tts_03afc760337f.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S9:listen",
+      "sources": [
+        "mungyang:S9:listen"
+      ]
+    },
+    "tts_8a53ebc18c37": {
+      "text": "ICカードを買いたいです。",
+      "synthText": "ICカードを買いたいです。",
+      "altTexts": [],
+      "synthSignature": "21c6697879d3",
+      "path": "/audio/nanami/tts_8a53ebc18c37.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "J1:dialogue",
+      "sources": [
+        "mungyang:J1:dialogue"
+      ]
+    },
+    "tts_0391f1d4c7d9": {
+      "text": "チャージできますか。",
+      "synthText": "チャージできますか。",
+      "altTexts": [],
+      "synthSignature": "961b10ba47bc",
+      "path": "/audio/nanami/tts_0391f1d4c7d9.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S10:dialogue",
+      "sources": [
+        "mungyang:S10:dialogue"
+      ]
+    },
+    "tts_51c6287239b4": {
+      "text": "一日券はありますか。",
+      "synthText": "一日券はありますか。",
+      "altTexts": [],
+      "synthSignature": "eb6a1e5591ee",
+      "path": "/audio/nanami/tts_51c6287239b4.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S10:expression",
+      "sources": [
+        "mungyang:S10:expression"
+      ]
+    },
+    "tts_5b254f3186e9": {
+      "text": "券売機で購入できます。",
+      "synthText": "券売機で購入できます。",
+      "altTexts": [],
+      "synthSignature": "6b06fe8b0ec9",
+      "path": "/audio/nanami/tts_5b254f3186e9.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S10:listen",
+      "sources": [
+        "mungyang:S10:listen"
+      ]
+    },
+    "tts_fe7faf60f3a5": {
+      "text": "この改札で合っていますか。",
+      "synthText": "この改札で合っていますか。",
+      "altTexts": [],
+      "synthSignature": "2898e04f9d70",
+      "path": "/audio/nanami/tts_fe7faf60f3a5.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S11:roleplay",
+      "sources": [
+        "mungyang:S11:roleplay"
+      ]
+    },
+    "tts_98fe80235353": {
+      "text": "三番ホームはどこですか。",
+      "synthText": "三番ホームはどこですか。",
+      "altTexts": [],
+      "synthSignature": "bc00761a1306",
+      "path": "/audio/nanami/tts_98fe80235353.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S11:dialogue",
+      "sources": [
+        "mungyang:S11:dialogue"
+      ]
+    },
+    "tts_e77c9ab83d4a": {
+      "text": "このカードが使えません。",
+      "synthText": "このカードが使えません。",
+      "altTexts": [],
+      "synthSignature": "4cd7d26a387c",
+      "path": "/audio/nanami/tts_e77c9ab83d4a.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S11:expression",
+      "sources": [
+        "mungyang:S11:expression"
+      ]
+    },
+    "tts_bb82d17cb096": {
+      "text": "反対側のホームです。",
+      "synthText": "反対側のホームです。",
+      "altTexts": [],
+      "synthSignature": "aa9dced0be26",
+      "path": "/audio/nanami/tts_bb82d17cb096.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S11:listen",
+      "sources": [
+        "mungyang:S11:listen"
+      ]
+    },
+    "tts_0451bc5d7b0f": {
+      "text": "この電車で合っていますか。",
+      "synthText": "この電車で合っていますか。",
+      "altTexts": [],
+      "synthSignature": "daa87eeae68a",
+      "path": "/audio/nanami/tts_0451bc5d7b0f.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S12:dialogue",
+      "sources": [
+        "mungyang:S12:dialogue"
+      ]
+    },
+    "tts_efca40b8f26c": {
+      "text": "急行ですか。",
+      "synthText": "急行ですか。",
+      "altTexts": [],
+      "synthSignature": "15bbe2918b79",
+      "path": "/audio/nanami/tts_efca40b8f26c.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S12:expression",
+      "sources": [
+        "mungyang:S12:expression"
+      ]
+    },
+    "tts_f8cf915046d3": {
+      "text": "次の駅でお乗り換えください。",
+      "synthText": "次の駅でお乗り換えください。",
+      "altTexts": [],
+      "synthSignature": "d88f9350bf15",
+      "path": "/audio/nanami/tts_f8cf915046d3.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S12:listen",
+      "sources": [
+        "mungyang:S12:listen"
+      ]
+    },
+    "tts_3358bb948134": {
+      "text": "トランクを使えますか。",
+      "synthText": "トランクを使えますか。",
+      "altTexts": [],
+      "synthSignature": "7398dfefc01e",
+      "path": "/audio/nanami/tts_3358bb948134.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S13:dialogue",
+      "sources": [
+        "mungyang:S13:dialogue"
+      ]
+    },
+    "tts_80a1d2ee3275": {
+      "text": "予約番号を入力します。",
+      "synthText": "予約番号を入力します。",
+      "altTexts": [],
+      "synthSignature": "a7200c38dabf",
+      "path": "/audio/nanami/tts_80a1d2ee3275.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S15:roleplay",
+      "sources": [
+        "mungyang:S15:roleplay"
+      ]
+    },
+    "tts_1e0a1aa55055": {
+      "text": "やり方を教えてください。",
+      "synthText": "やり方を教えてください。",
+      "altTexts": [],
+      "synthSignature": "7d2fb5dba33a",
+      "path": "/audio/nanami/tts_1e0a1aa55055.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S15:dialogue",
+      "sources": [
+        "mungyang:S15:dialogue"
+      ]
+    },
+    "tts_bb402488166f": {
+      "text": "画面が分かりません。",
+      "synthText": "画面が分かりません。",
+      "altTexts": [],
+      "synthSignature": "f66c640c8ca8",
+      "path": "/audio/nanami/tts_bb402488166f.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S15:expression",
+      "sources": [
+        "mungyang:S15:expression"
+      ]
+    },
+    "tts_fa200bb4fed4": {
+      "text": "こちらの画面で確認してください。",
+      "synthText": "こちらの画面で確認してください。",
+      "altTexts": [],
+      "synthSignature": "21943e681253",
+      "path": "/audio/nanami/tts_fa200bb4fed4.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S15:listen",
+      "sources": [
+        "mungyang:S15:listen"
+      ]
+    },
+    "tts_631f3036cd72": {
+      "text": "タオルを追加できますか。",
+      "synthText": "タオルを追加できますか。",
+      "altTexts": [],
+      "synthSignature": "4138bc50eec3",
+      "path": "/audio/nanami/tts_631f3036cd72.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S16:expression",
+      "sources": [
+        "mungyang:S16:expression"
+      ]
+    },
+    "tts_1bc3e1ec7582": {
+      "text": "すぐ確認いたします。",
+      "synthText": "すぐ確認いたします。",
+      "altTexts": [],
+      "synthSignature": "5513517c1652",
+      "path": "/audio/nanami/tts_1bc3e1ec7582.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S16:listen",
+      "sources": [
+        "mungyang:S16:listen"
+      ]
+    },
+    "tts_b699c2eaa67e": {
+      "text": "チェックアウトをお願いします。",
+      "synthText": "チェックアウトをお願いします。",
+      "altTexts": [],
+      "synthSignature": "a5a0b94d6510",
+      "path": "/audio/nanami/tts_b699c2eaa67e.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S17:roleplay",
+      "sources": [
+        "mungyang:S17:roleplay"
+      ]
+    },
+    "tts_be52d8b53233": {
+      "text": "追加料金がございます。",
+      "synthText": "追加料金がございます。",
+      "altTexts": [],
+      "synthSignature": "1d205c54fd9c",
+      "path": "/audio/nanami/tts_be52d8b53233.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S17:listen",
+      "sources": [
+        "mungyang:S17:listen"
+      ]
+    },
+    "tts_b47471e0d29a": {
+      "text": "予約していません。",
+      "synthText": "予約していません。",
+      "altTexts": [],
+      "synthSignature": "f167a31cc2b8",
+      "path": "/audio/nanami/tts_b47471e0d29a.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S18:dialogue",
+      "sources": [
+        "mungyang:S18:dialogue"
+      ]
+    },
+    "tts_af62a670fd39": {
+      "text": "どのくらい待ちますか。",
+      "synthText": "どのくらい待ちますか。",
+      "altTexts": [],
+      "synthSignature": "a66338931821",
+      "path": "/audio/nanami/tts_af62a670fd39.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S18:expression",
+      "sources": [
+        "mungyang:S18:expression"
+      ]
+    },
+    "tts_db6c27e259b6": {
+      "text": "お名前を書いてお待ちください。",
+      "synthText": "お名前を書いてお待ちください。",
+      "altTexts": [],
+      "synthSignature": "126f90cf2de6",
+      "path": "/audio/nanami/tts_db6c27e259b6.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S18:listen",
+      "sources": [
+        "mungyang:S18:listen"
+      ]
+    },
+    "tts_753535063c22": {
+      "text": "セットにできますか。",
+      "synthText": "セットにできますか。",
+      "altTexts": [],
+      "synthSignature": "c67b91d7fec9",
+      "path": "/audio/nanami/tts_753535063c22.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S19:expression",
+      "sources": [
+        "mungyang:S19:expression"
+      ]
+    },
+    "tts_54305c3835f2": {
+      "text": "肉は食べられません。",
+      "synthText": "肉は食べられません。",
+      "altTexts": [],
+      "synthSignature": "e6248a1b5f9e",
+      "path": "/audio/nanami/tts_54305c3835f2.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S20:expression",
+      "sources": [
+        "mungyang:S20:expression"
+      ]
+    },
+    "tts_bbc49241e9eb": {
+      "text": "食券は券売機で買いますか。",
+      "synthText": "食券は券売機で買いますか。",
+      "altTexts": [],
+      "synthSignature": "e3237d69f3b4",
+      "path": "/audio/nanami/tts_bbc49241e9eb.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S21:roleplay",
+      "sources": [
+        "mungyang:S21:roleplay"
+      ]
+    },
+    "tts_96df08a7a35f": {
+      "text": "食券をお出しください。",
+      "synthText": "食券をお出しください。",
+      "altTexts": [],
+      "synthSignature": "9d1fdae96d3e",
+      "path": "/audio/nanami/tts_96df08a7a35f.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S21:listen",
+      "sources": [
+        "mungyang:S21:listen"
+      ]
+    },
+    "tts_e44bc161e97d": {
+      "text": "別々にできますか。",
+      "synthText": "別々にできますか。",
+      "altTexts": [],
+      "synthSignature": "ad05df803028",
+      "path": "/audio/nanami/tts_e44bc161e97d.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S22:dialogue",
+      "sources": [
+        "mungyang:S22:dialogue"
+      ]
+    },
+    "tts_5eca5489d887": {
+      "text": "セルフレジは使えますか。",
+      "synthText": "セルフレジは使えますか。",
+      "altTexts": [],
+      "synthSignature": "171176245b2c",
+      "path": "/audio/nanami/tts_5eca5489d887.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S23:expression",
+      "sources": [
+        "mungyang:S23:expression"
+      ]
+    },
+    "tts_f784f10c61d7": {
+      "text": "指定席をお願いします。",
+      "synthText": "指定席をお願いします。",
+      "altTexts": [],
+      "synthSignature": "db7cca903a5e",
+      "path": "/audio/nanami/tts_f784f10c61d7.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "J3:roleplay",
+      "sources": [
+        "mungyang:J3:roleplay"
+      ]
+    },
+    "tts_a26f4e5144ee": {
+      "text": "自由席はありますか。",
+      "synthText": "自由席はありますか。",
+      "altTexts": [],
+      "synthSignature": "94ca28bd2850",
+      "path": "/audio/nanami/tts_a26f4e5144ee.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S24:dialogue",
+      "sources": [
+        "mungyang:S24:dialogue"
+      ]
+    },
+    "tts_379a191ef117": {
+      "text": "東京まで一枚ください。",
+      "synthText": "東京まで一枚ください。",
+      "altTexts": [],
+      "synthSignature": "147a2edc2feb",
+      "path": "/audio/nanami/tts_379a191ef117.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S24:expression",
+      "sources": [
+        "mungyang:S24:expression"
+      ]
+    },
+    "tts_438f6d3068e9": {
+      "text": "何時の列車にしますか。",
+      "synthText": "何時の列車にしますか。",
+      "altTexts": [],
+      "synthSignature": "7027c5fa8413",
+      "path": "/audio/nanami/tts_438f6d3068e9.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S24:listen",
+      "sources": [
+        "mungyang:S24:listen"
+      ]
+    },
+    "tts_9f86d7c261fe": {
+      "text": "このバスは駅に行きますか。",
+      "synthText": "このバスは駅に行きますか。",
+      "altTexts": [],
+      "synthSignature": "7e1baa5641ab",
+      "path": "/audio/nanami/tts_9f86d7c261fe.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S25:roleplay",
+      "sources": [
+        "mungyang:S25:roleplay"
+      ]
+    },
+    "tts_3564a60b32c2": {
+      "text": "整理券を取ればいいですか。",
+      "synthText": "整理券を取ればいいですか。",
+      "altTexts": [],
+      "synthSignature": "c9dee14bc0d7",
+      "path": "/audio/nanami/tts_3564a60b32c2.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S25:dialogue",
+      "sources": [
+        "mungyang:S25:dialogue"
+      ]
+    },
+    "tts_dd8d5ba69f57": {
+      "text": "どこで降りればいいですか。",
+      "synthText": "どこで降りればいいですか。",
+      "altTexts": [],
+      "synthSignature": "243cb7194925",
+      "path": "/audio/nanami/tts_dd8d5ba69f57.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S25:expression",
+      "sources": [
+        "mungyang:S25:expression"
+      ]
+    },
+    "tts_fe71ff66a749": {
+      "text": "降りる時にお支払いください。",
+      "synthText": "降りる時にお支払いください。",
+      "altTexts": [],
+      "synthSignature": "7c87ba27a944",
+      "path": "/audio/nanami/tts_fe71ff66a749.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S25:listen",
+      "sources": [
+        "mungyang:S25:listen"
+      ]
+    },
+    "tts_5b75e9c56e81": {
+      "text": "保険を付けたいです。",
+      "synthText": "保険を付けたいです。",
+      "altTexts": [],
+      "synthSignature": "6220f91dc341",
+      "path": "/audio/nanami/tts_5b75e9c56e81.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S26:dialogue",
+      "sources": [
+        "mungyang:S26:dialogue"
+      ]
+    },
+    "tts_fe43f37b9b0e": {
+      "text": "返却場所はどこですか。",
+      "synthText": "返却場所はどこですか。",
+      "altTexts": [],
+      "synthSignature": "0aa541dd0fe3",
+      "path": "/audio/nanami/tts_fe43f37b9b0e.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S26:expression",
+      "sources": [
+        "mungyang:S26:expression"
+      ]
+    },
+    "tts_d3ddd0b7d742": {
+      "text": "免許証を確認いたします。",
+      "synthText": "免許証を確認いたします。",
+      "altTexts": [],
+      "synthSignature": "d1e67da0bd6a",
+      "path": "/audio/nanami/tts_d3ddd0b7d742.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S26:listen",
+      "sources": [
+        "mungyang:S26:listen"
+      ]
+    },
+    "tts_f4fc7ccf419c": {
+      "text": "試着できますか。",
+      "synthText": "試着できますか。",
+      "altTexts": [],
+      "synthSignature": "f11761f28e6a",
+      "path": "/audio/nanami/tts_f4fc7ccf419c.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S27:roleplay",
+      "sources": [
+        "mungyang:S27:roleplay"
+      ]
+    },
+    "tts_de489e430db5": {
+      "text": "この色がいいです。",
+      "synthText": "この色がいいです。",
+      "altTexts": [],
+      "synthSignature": "279f70385ff4",
+      "path": "/audio/nanami/tts_de489e430db5.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S27:expression",
+      "sources": [
+        "mungyang:S27:expression"
+      ]
+    },
+    "tts_228ac5f8a6dc": {
+      "text": "風邪薬はありますか。",
+      "synthText": "風邪薬はありますか。",
+      "altTexts": [],
+      "synthSignature": "db8563cfd741",
+      "path": "/audio/nanami/tts_228ac5f8a6dc.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S28:roleplay",
+      "sources": [
+        "mungyang:S28:roleplay"
+      ]
+    },
+    "tts_59c6001efc0f": {
+      "text": "この充電器は日本で使えますか。",
+      "synthText": "この充電器は日本で使えますか。",
+      "altTexts": [],
+      "synthSignature": "3e50a0952f5e",
+      "path": "/audio/nanami/tts_59c6001efc0f.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S28:expression",
+      "sources": [
+        "mungyang:S28:expression"
+      ]
+    },
+    "tts_dc5b264fc160": {
+      "text": "袋を分けられますか。",
+      "synthText": "袋を分けられますか。",
+      "altTexts": [],
+      "synthSignature": "64a441662bb0",
+      "path": "/audio/nanami/tts_dc5b264fc160.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S29:expression",
+      "sources": [
+        "mungyang:S29:expression"
+      ]
+    },
+    "tts_6f2b566a873b": {
+      "text": "入場券を二枚ください。",
+      "synthText": "入場券を二枚ください。",
+      "altTexts": [],
+      "synthSignature": "0d64694fe5dd",
+      "path": "/audio/nanami/tts_6f2b566a873b.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "J2:roleplay",
+      "sources": [
+        "mungyang:J2:roleplay"
+      ]
+    },
+    "tts_8d31397fac2d": {
+      "text": "音声ガイドはありますか。",
+      "synthText": "音声ガイドはありますか。",
+      "altTexts": [],
+      "synthSignature": "239a1ecee8ee",
+      "path": "/audio/nanami/tts_8d31397fac2d.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S30:expression",
+      "sources": [
+        "mungyang:S30:expression"
+      ]
+    },
+    "tts_5c114eb5a90a": {
+      "text": "お守りはどこで買えますか。",
+      "synthText": "お守りはどこで買えますか。",
+      "altTexts": [],
+      "synthSignature": "4e2f3c9b0474",
+      "path": "/audio/nanami/tts_5c114eb5a90a.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S31:roleplay",
+      "sources": [
+        "mungyang:S31:roleplay"
+      ]
+    },
+    "tts_b9e7c4a6d3b5": {
+      "text": "御朱印をお願いします。",
+      "synthText": "御朱印をお願いします。",
+      "altTexts": [],
+      "synthSignature": "929aece87f08",
+      "path": "/audio/nanami/tts_b9e7c4a6d3b5.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S31:dialogue",
+      "sources": [
+        "mungyang:S31:dialogue"
+      ]
+    },
+    "tts_7feaa5ad92b8": {
+      "text": "写真は大丈夫ですか。",
+      "synthText": "写真は大丈夫ですか。",
+      "altTexts": [],
+      "synthSignature": "f0524e252c5d",
+      "path": "/audio/nanami/tts_7feaa5ad92b8.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S31:expression",
+      "sources": [
+        "mungyang:S31:expression"
+      ]
+    },
+    "tts_1b54b312a441": {
+      "text": "こちらでは撮影できません。",
+      "synthText": "こちらでは撮影できません。",
+      "altTexts": [],
+      "synthSignature": "753c08f5bf86",
+      "path": "/audio/nanami/tts_1b54b312a441.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S31:listen",
+      "sources": [
+        "mungyang:S31:listen"
+      ]
+    },
+    "tts_851c4062f541": {
+      "text": "夕食は何時ですか。",
+      "synthText": "夕食は何時ですか。",
+      "altTexts": [],
+      "synthSignature": "ca6ff614bf3d",
+      "path": "/audio/nanami/tts_851c4062f541.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "J3:expression",
+      "sources": [
+        "mungyang:J3:expression"
+      ]
+    },
+    "tts_0f77fcb83e8e": {
+      "text": "浴衣はどこにありますか。",
+      "synthText": "浴衣はどこにありますか。",
+      "altTexts": [],
+      "synthSignature": "dafd8bac1d21",
+      "path": "/audio/nanami/tts_0f77fcb83e8e.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S32:dialogue",
+      "sources": [
+        "mungyang:S32:dialogue"
+      ]
+    },
+    "tts_08e3a7afb923": {
+      "text": "大浴場は利用できますか。",
+      "synthText": "大浴場は利用できますか。",
+      "altTexts": [],
+      "synthSignature": "4c599ce05ee6",
+      "path": "/audio/nanami/tts_08e3a7afb923.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S32:expression",
+      "sources": [
+        "mungyang:S32:expression"
+      ]
+    },
+    "tts_7094bc816d97": {
+      "text": "入浴時間は十一時までです。",
+      "synthText": "入浴時間は十一時までです。",
+      "altTexts": [],
+      "synthSignature": "3ef6ca2ee46b",
+      "path": "/audio/nanami/tts_7094bc816d97.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "J3:listen",
+      "sources": [
+        "mungyang:J3:listen"
+      ]
+    },
+    "tts_bf86c0ac1e4d": {
+      "text": "予約した体験に来ました。",
+      "synthText": "予約した体験に来ました。",
+      "altTexts": [],
+      "synthSignature": "2eba67437d94",
+      "path": "/audio/nanami/tts_bf86c0ac1e4d.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S33:roleplay",
+      "sources": [
+        "mungyang:S33:roleplay"
+      ]
+    },
+    "tts_76c35c69277e": {
+      "text": "レンタルはできますか。",
+      "synthText": "レンタルはできますか。",
+      "altTexts": [],
+      "synthSignature": "e4faf695fe80",
+      "path": "/audio/nanami/tts_76c35c69277e.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S33:dialogue",
+      "sources": [
+        "mungyang:S33:dialogue"
+      ]
+    },
+    "tts_bf6e896dd738": {
+      "text": "開始時間までお待ちください。",
+      "synthText": "開始時間までお待ちください。",
+      "altTexts": [],
+      "synthSignature": "11bbb6cef6b0",
+      "path": "/audio/nanami/tts_bf6e896dd738.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S33:listen",
+      "sources": [
+        "mungyang:S33:listen"
+      ]
+    },
+    "tts_78e5ef240aa7": {
+      "text": "予約を変更したいです。",
+      "synthText": "予約を変更したいです。",
+      "altTexts": [],
+      "synthSignature": "890c090a403c",
+      "path": "/audio/nanami/tts_78e5ef240aa7.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "J4:dialogue",
+      "sources": [
+        "mungyang:J4:dialogue"
+      ]
+    },
+    "tts_b5310c6d67e2": {
+      "text": "キャンセルできますか。",
+      "synthText": "キャンセルできますか。",
+      "altTexts": [],
+      "synthSignature": "c757cf1c9bc2",
+      "path": "/audio/nanami/tts_b5310c6d67e2.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S34:dialogue",
+      "sources": [
+        "mungyang:S34:dialogue"
+      ]
+    },
+    "tts_ae396235f74a": {
+      "text": "予約時間を遅くできますか。",
+      "synthText": "予約時間を遅くできますか。",
+      "altTexts": [],
+      "synthSignature": "868abe177bf5",
+      "path": "/audio/nanami/tts_ae396235f74a.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S34:expression",
+      "sources": [
+        "mungyang:S34:expression"
+      ]
+    },
+    "tts_cc1e37fcaf34": {
+      "text": "キャンセル料がかかります。",
+      "synthText": "キャンセル料がかかります。",
+      "altTexts": [],
+      "synthSignature": "4f3f55f91113",
+      "path": "/audio/nanami/tts_cc1e37fcaf34.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S34:listen",
+      "sources": [
+        "mungyang:S34:listen"
+      ]
+    },
+    "tts_3725abf2e036": {
+      "text": "落とし物センターはどこですか。",
+      "synthText": "落とし物センターはどこですか。",
+      "altTexts": [],
+      "synthSignature": "b3f6e9c3fc09",
+      "path": "/audio/nanami/tts_3725abf2e036.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S35:dialogue",
+      "sources": [
+        "mungyang:S35:dialogue"
+      ]
+    },
+    "tts_d4f2784d6906": {
+      "text": "黒いかばんです。",
+      "synthText": "黒いかばんです。",
+      "altTexts": [],
+      "synthSignature": "3b731024084b",
+      "path": "/audio/nanami/tts_d4f2784d6906.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S35:expression",
+      "sources": [
+        "mungyang:S35:expression"
+      ]
+    },
+    "tts_16ff97f25ed9": {
+      "text": "特徴を教えてください。",
+      "synthText": "特徴を教えてください。",
+      "altTexts": [],
+      "synthSignature": "f941a73567fa",
+      "path": "/audio/nanami/tts_16ff97f25ed9.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S35:listen",
+      "sources": [
+        "mungyang:S35:listen"
+      ]
+    },
+    "tts_7eafe213c916": {
+      "text": "この薬は眠くなりますか。",
+      "synthText": "この薬は眠くなりますか。",
+      "altTexts": [],
+      "synthSignature": "e1c9b7d6d23c",
+      "path": "/audio/nanami/tts_7eafe213c916.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S36:dialogue",
+      "sources": [
+        "mungyang:S36:dialogue"
+      ]
+    },
+    "tts_dad7e117376e": {
+      "text": "一日何回飲めばいいですか。",
+      "synthText": "一日何回飲めばいいですか。",
+      "altTexts": [],
+      "synthSignature": "2a1758e8184e",
+      "path": "/audio/nanami/tts_dad7e117376e.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S36:expression",
+      "sources": [
+        "mungyang:S36:expression"
+      ]
+    },
+    "tts_38bcaa967385": {
+      "text": "旅行者で、保険証はありません。",
+      "synthText": "旅行者で、保険証はありません。",
+      "altTexts": [],
+      "synthSignature": "c0de82fe7ecc",
+      "path": "/audio/nanami/tts_38bcaa967385.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S37:roleplay",
+      "sources": [
+        "mungyang:S37:roleplay"
+      ]
+    },
+    "tts_dd892bcc30eb": {
+      "text": "救急車を呼んでください。",
+      "synthText": "救急車を呼んでください。",
+      "altTexts": [],
+      "synthSignature": "e259d89e9774",
+      "path": "/audio/nanami/tts_dd892bcc30eb.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S37:expression",
+      "sources": [
+        "mungyang:S37:expression"
+      ]
+    },
+    "tts_2b94628548f5": {
+      "text": "すみません、知りませんでした。",
+      "synthText": "すみません、知りませんでした。",
+      "altTexts": [],
+      "synthSignature": "1c5a4009c9c0",
+      "path": "/audio/nanami/tts_2b94628548f5.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S38:roleplay",
+      "sources": [
+        "mungyang:S38:roleplay"
+      ]
+    },
+    "tts_e91194486449": {
+      "text": "どうすればいいですか。",
+      "synthText": "どうすればいいですか。",
+      "altTexts": [],
+      "synthSignature": "a5a8bba9c6ec",
+      "path": "/audio/nanami/tts_e91194486449.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S38:dialogue",
+      "sources": [
+        "mungyang:S38:dialogue"
+      ]
+    },
+    "tts_43190d624858": {
+      "text": "ここにいて大丈夫ですか。",
+      "synthText": "ここにいて大丈夫ですか。",
+      "altTexts": [],
+      "synthSignature": "b57760c1a963",
+      "path": "/audio/nanami/tts_43190d624858.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S38:expression",
+      "sources": [
+        "mungyang:S38:expression"
+      ]
+    },
+    "tts_adb169a2b299": {
+      "text": "こちらではご遠慮ください。",
+      "synthText": "こちらではご遠慮ください。",
+      "altTexts": [],
+      "synthSignature": "8b98b095d8da",
+      "path": "/audio/nanami/tts_adb169a2b299.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S38:listen",
+      "sources": [
+        "mungyang:S38:listen"
+      ]
+    },
+    "tts_757220e15e4b": {
+      "text": "次のバスは何時ですか。",
+      "synthText": "次のバスは何時ですか。",
+      "altTexts": [],
+      "synthSignature": "7e188f99de7f",
+      "path": "/audio/nanami/tts_757220e15e4b.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "J3:dialogue",
+      "sources": [
+        "mungyang:J3:dialogue"
+      ]
+    },
+    "tts_6fbd0b487802": {
+      "text": "駅まで歩けますか。",
+      "synthText": "駅まで歩けますか。",
+      "altTexts": [],
+      "synthSignature": "dc2125db7609",
+      "path": "/audio/nanami/tts_6fbd0b487802.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S39:dialogue",
+      "sources": [
+        "mungyang:S39:dialogue"
+      ]
+    },
+    "tts_07cd3943b724": {
+      "text": "この辺に食堂はありますか。",
+      "synthText": "この辺に食堂はありますか。",
+      "altTexts": [],
+      "synthSignature": "03ebac322521",
+      "path": "/audio/nanami/tts_07cd3943b724.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S39:expression",
+      "sources": [
+        "mungyang:S39:expression"
+      ]
+    },
+    "tts_5621d3b8adac": {
+      "text": "本数が少ないのでご注意ください。",
+      "synthText": "本数が少ないのでご注意ください。",
+      "altTexts": [],
+      "synthSignature": "13d407133ef6",
+      "path": "/audio/nanami/tts_5621d3b8adac.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S39:listen",
+      "sources": [
+        "mungyang:S39:listen"
+      ]
+    },
+    "tts_a7262148df88": {
+      "text": "電車は動いていますか。",
+      "synthText": "電車は動いていますか。",
+      "altTexts": [],
+      "synthSignature": "1a62112b0fbd",
+      "path": "/audio/nanami/tts_a7262148df88.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S40:roleplay",
+      "sources": [
+        "mungyang:S40:roleplay"
+      ]
+    },
+    "tts_c648d41a7a13": {
+      "text": "運休ですか。",
+      "synthText": "運休ですか。",
+      "altTexts": [],
+      "synthSignature": "b08821bc6617",
+      "path": "/audio/nanami/tts_c648d41a7a13.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S40:dialogue",
+      "sources": [
+        "mungyang:S40:dialogue"
+      ]
+    },
+    "tts_7eeaf3c23a32": {
+      "text": "別の行き方はありますか。",
+      "synthText": "別の行き方はありますか。",
+      "altTexts": [],
+      "synthSignature": "32720c591b89",
+      "path": "/audio/nanami/tts_7eeaf3c23a32.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "J4:expression",
+      "sources": [
+        "mungyang:J4:expression"
+      ]
+    },
+    "tts_aee3747f3e6d": {
+      "text": "大雨のため遅れています。",
+      "synthText": "大雨のため遅れています。",
+      "altTexts": [],
+      "synthSignature": "57afd5fe9c79",
+      "path": "/audio/nanami/tts_aee3747f3e6d.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S40:listen",
+      "sources": [
+        "mungyang:S40:listen"
+      ]
+    },
+    "tts_d2064c0bb321": {
+      "text": "空港までお願いします。",
+      "synthText": "空港までお願いします。",
+      "altTexts": [],
+      "synthSignature": "d4fe16551df5",
+      "path": "/audio/nanami/tts_d2064c0bb321.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "J5:roleplay",
+      "sources": [
+        "mungyang:J5:roleplay"
+      ]
+    },
+    "tts_e780b7b1f873": {
+      "text": "何時に出ればいいですか。",
+      "synthText": "何時に出ればいいですか。",
+      "altTexts": [],
+      "synthSignature": "f0b873abadab",
+      "path": "/audio/nanami/tts_e780b7b1f873.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S41:dialogue",
+      "sources": [
+        "mungyang:S41:dialogue"
+      ]
+    },
+    "tts_947aef936462": {
+      "text": "国際線ターミナルまでお願いします。",
+      "synthText": "国際線ターミナルまでお願いします。",
+      "altTexts": [],
+      "synthSignature": "c8c4a5a80ef1",
+      "path": "/audio/nanami/tts_947aef936462.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S41:expression",
+      "sources": [
+        "mungyang:S41:expression"
+      ]
+    },
+    "tts_0920a0e5e4bb": {
+      "text": "道路が混んでいます。",
+      "synthText": "道路が混んでいます。",
+      "altTexts": [],
+      "synthSignature": "ffa69e61c327",
+      "path": "/audio/nanami/tts_0920a0e5e4bb.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S41:listen",
+      "sources": [
+        "mungyang:S41:listen"
+      ]
+    },
+    "tts_f24246479da1": {
+      "text": "搭乗券をお受け取りください。",
+      "synthText": "搭乗券をお受け取りください。",
+      "altTexts": [],
+      "synthSignature": "1c6e161b52c8",
+      "path": "/audio/nanami/tts_f24246479da1.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S42:listen",
+      "sources": [
+        "mungyang:S42:listen"
+      ]
+    },
+    "tts_e1446b6698db": {
+      "text": "搭乗口はどこですか。",
+      "synthText": "搭乗口はどこですか。",
+      "altTexts": [],
+      "synthSignature": "09cdbfc7969e",
+      "path": "/audio/nanami/tts_e1446b6698db.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "J5:expression",
+      "sources": [
+        "mungyang:J5:expression"
+      ]
+    },
+    "tts_5f6e53fb5f3d": {
+      "text": "液体は入っていません。",
+      "synthText": "液体は入っていません。",
+      "altTexts": [],
+      "synthSignature": "429e67e151c4",
+      "path": "/audio/nanami/tts_5f6e53fb5f3d.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S43:dialogue",
+      "sources": [
+        "mungyang:S43:dialogue"
+      ]
+    },
+    "tts_b103856d7fc2": {
+      "text": "何時から搭乗ですか。",
+      "synthText": "何時から搭乗ですか。",
+      "altTexts": [],
+      "synthSignature": "291c5a4f6663",
+      "path": "/audio/nanami/tts_b103856d7fc2.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "S43:expression",
+      "sources": [
+        "mungyang:S43:expression"
+      ]
+    },
+    "tts_696366e96834": {
+      "text": "まもなく搭乗を開始します。",
+      "synthText": "まもなく搭乗を開始します。",
+      "altTexts": [],
+      "synthSignature": "1f1e3f4293b0",
+      "path": "/audio/nanami/tts_696366e96834.mp3",
+      "voice": "nanami",
+      "source": "mungyang",
+      "sourceId": "J5:listen",
+      "sources": [
+        "mungyang:J5:listen"
+      ]
+    },
+    "it_ticket": {
+      "text": "チケット",
+      "synthText": "チケット",
+      "altTexts": [],
+      "path": "/audio/nanami/it_ticket.mp3",
+      "voice": "nanami",
+      "source": "mungyang-import",
+      "sourceId": "kana-master:it_ticket",
+      "sources": [
+        "kana-master:it_ticket"
+      ]
+    },
+    "ss_5": {
+      "text": "カードで払えますか。",
+      "synthText": "カードで払えますか",
+      "altTexts": [],
+      "path": "/audio/nanami/ss_5.mp3",
+      "voice": "nanami",
+      "source": "mungyang-import",
+      "sourceId": "kana-master:ss_5",
+      "sources": [
+        "kana-master:ss_5"
+      ]
+    },
+    "sph_7": {
+      "text": "少々お待ちください。",
+      "synthText": "少々お待ちください",
+      "altTexts": [],
+      "path": "/audio/nanami/sph_7.mp3",
+      "voice": "nanami",
+      "source": "mungyang-import",
+      "sourceId": "kana-master:sph_7",
+      "sources": [
+        "kana-master:sph_7"
+      ]
+    },
+    "sw_2": {
+      "text": "乗り換えはどこですか。",
+      "synthText": "乗り換えはどこですか",
+      "altTexts": [],
+      "path": "/audio/nanami/sw_2.mp3",
+      "voice": "nanami",
+      "source": "mungyang-import",
+      "sourceId": "kana-master:sw_2",
+      "sources": [
+        "kana-master:sw_2"
+      ]
+    },
+    "hd_2": {
+      "text": "お名前をお願いします。",
+      "synthText": "お名前をお願いします。",
+      "altTexts": [],
+      "path": "/audio/nanami/hd_2.mp3",
+      "voice": "nanami",
+      "source": "mungyang-import",
+      "sourceId": "kana-master:hd_2",
+      "sources": [
+        "kana-master:hd_2"
+      ]
+    },
+    "scv_2": {
+      "text": "袋はいりません。",
+      "synthText": "袋はいりません",
+      "altTexts": [],
+      "path": "/audio/nanami/scv_2.mp3",
+      "voice": "nanami",
+      "source": "mungyang-import",
+      "sourceId": "kana-master:scv_2",
+      "sources": [
+        "kana-master:scv_2"
+      ]
     }
   },
   "textIndex": {
@@ -63080,7 +65063,160 @@
     "気をつけて。": "tts_3943aa4bead7",
     "行ってきます。": "tts_36f99101c717",
     "行ってらっしゃい。": "tts_3ac55e9d607a",
-    "大丈夫です。": "tts_9a493f082a41"
+    "大丈夫です。": "tts_9a493f082a41",
+    "お持ち帰りですか。": "tts_66e8f36f19b2",
+    "ご予約はされていますか。": "tts_17623dae0b6f",
+    "カウンター": "tts_0fba371420b3",
+    "カードでよろしいですか。": "tts_c2c6b48a1663",
+    "予約は三時です。": "tts_7bab1348971e",
+    "これをお願いします。": "tts_59fa4fa8c23c",
+    "現金のみです。": "tts_c555e562adc5",
+    "どちらになさいますか。": "tts_c9dec07b56b6",
+    "ここで待てばいいですか。": "tts_e8c46e76b3de",
+    "右に曲がればいいですか。": "tts_abc5570d4515",
+    "まっすぐ行って、左です。": "tts_5c5d7bcc5d18",
+    "何時ですか。": "tts_554fc2cfdd87",
+    "追加料金はかかりますか。": "tts_0fbca0bc0001",
+    "合計で三千円です。": "tts_3d6a56b620b4",
+    "こちらでお預かりできます。": "tts_9d6fe8b9ec96",
+    "こちらでお願いします。": "tts_3b4c8b365050",
+    "窓側の席をお願いします。": "tts_955d006179ea",
+    "辛くないものがいいです。": "tts_87a09398c573",
+    "テーブル席とカウンター席、どちらになさいますか。": "tts_e41d1ba4207e",
+    "できません。": "tts_7ff5013704a5",
+    "よく分かりません。": "tts_51c54c430966",
+    "本日はご利用いただけません。": "tts_e70f187d3411",
+    "エアコンが動きません。": "tts_20c60154e801",
+    "確認いたしますので、少々お待ちください。": "tts_b44d1e668406",
+    "申し訳ありません。": "tts_73384f9e4937",
+    "大丈夫ですよ。": "tts_0acd0d66a64d",
+    "もう一度言ってください。": "tts_9cf597cd6f5e",
+    "書いてもらえますか。": "tts_d8c0d6e85585",
+    "こちらをご確認ください。": "tts_2f3f9fae94bd",
+    "画面を見せてください。": "tts_0c8444e836be",
+    "はい、少々お待ちください。": "tts_8d64d93e62a1",
+    "出口はどこですか。": "tts_97a3675ff10f",
+    "この道で合っていますか。": "tts_0c8e5a785b72",
+    "この先を左です。": "tts_7a701280f677",
+    "三時で合っていますか。": "tts_f231edc64b25",
+    "全部でいくらですか。": "tts_5e1c69215146",
+    "二つお願いします。": "tts_8d7cfbe58b80",
+    "全部で二千五百円です。": "tts_7263c471b1dc",
+    "荷物を預けたいです。": "tts_d87e4adbd2ca",
+    "できれば席を変えたいです。": "tts_d96555233ece",
+    "席を変えられますか。": "tts_9e27f5e15889",
+    "少し難しいです。": "tts_283efd4a49a2",
+    "間違えました。": "tts_e3c904db7ef2",
+    "ちょっと問題があります。": "tts_4c598530e345",
+    "手伝っていただけますか。": "tts_cf16231e0d1a",
+    "状況を確認します。": "tts_1381c22e087c",
+    "滞在先はホテルです。": "tts_d585eb1ce856",
+    "三日間です。": "tts_58ec0937c5ac",
+    "滞在目的は何ですか。": "tts_1ef3a2da8229",
+    "荷物が出てきません。": "tts_5642036f9322",
+    "申告するものはありません。": "tts_04d9e3751b7c",
+    "このスーツケースです。": "tts_b171fc4af34f",
+    "中身を確認してもいいですか。": "tts_0ea73e96b4b0",
+    "電車の乗り場はどこですか。": "tts_cb603f95ad69",
+    "新宿まで行きたいです。": "tts_20c22790b102",
+    "リムジンバスはありますか。": "tts_de4b22346689",
+    "二番乗り場から出ます。": "tts_03afc760337f",
+    "ICカードを買いたいです。": "tts_8a53ebc18c37",
+    "チャージできますか。": "tts_0391f1d4c7d9",
+    "一日券はありますか。": "tts_51c6287239b4",
+    "券売機で購入できます。": "tts_5b254f3186e9",
+    "この改札で合っていますか。": "tts_fe7faf60f3a5",
+    "三番ホームはどこですか。": "tts_98fe80235353",
+    "このカードが使えません。": "tts_e77c9ab83d4a",
+    "反対側のホームです。": "tts_bb82d17cb096",
+    "この電車で合っていますか。": "tts_0451bc5d7b0f",
+    "急行ですか。": "tts_efca40b8f26c",
+    "次の駅でお乗り換えください。": "tts_f8cf915046d3",
+    "トランクを使えますか。": "tts_3358bb948134",
+    "予約番号を入力します。": "tts_80a1d2ee3275",
+    "やり方を教えてください。": "tts_1e0a1aa55055",
+    "画面が分かりません。": "tts_bb402488166f",
+    "こちらの画面で確認してください。": "tts_fa200bb4fed4",
+    "タオルを追加できますか。": "tts_631f3036cd72",
+    "すぐ確認いたします。": "tts_1bc3e1ec7582",
+    "チェックアウトをお願いします。": "tts_b699c2eaa67e",
+    "追加料金がございます。": "tts_be52d8b53233",
+    "予約していません。": "tts_b47471e0d29a",
+    "どのくらい待ちますか。": "tts_af62a670fd39",
+    "お名前を書いてお待ちください。": "tts_db6c27e259b6",
+    "セットにできますか。": "tts_753535063c22",
+    "肉は食べられません。": "tts_54305c3835f2",
+    "食券は券売機で買いますか。": "tts_bbc49241e9eb",
+    "食券をお出しください。": "tts_96df08a7a35f",
+    "別々にできますか。": "tts_e44bc161e97d",
+    "セルフレジは使えますか。": "tts_5eca5489d887",
+    "指定席をお願いします。": "tts_f784f10c61d7",
+    "自由席はありますか。": "tts_a26f4e5144ee",
+    "東京まで一枚ください。": "tts_379a191ef117",
+    "何時の列車にしますか。": "tts_438f6d3068e9",
+    "このバスは駅に行きますか。": "tts_9f86d7c261fe",
+    "整理券を取ればいいですか。": "tts_3564a60b32c2",
+    "どこで降りればいいですか。": "tts_dd8d5ba69f57",
+    "降りる時にお支払いください。": "tts_fe71ff66a749",
+    "保険を付けたいです。": "tts_5b75e9c56e81",
+    "返却場所はどこですか。": "tts_fe43f37b9b0e",
+    "免許証を確認いたします。": "tts_d3ddd0b7d742",
+    "試着できますか。": "tts_f4fc7ccf419c",
+    "この色がいいです。": "tts_de489e430db5",
+    "風邪薬はありますか。": "tts_228ac5f8a6dc",
+    "この充電器は日本で使えますか。": "tts_59c6001efc0f",
+    "袋を分けられますか。": "tts_dc5b264fc160",
+    "入場券を二枚ください。": "tts_6f2b566a873b",
+    "音声ガイドはありますか。": "tts_8d31397fac2d",
+    "お守りはどこで買えますか。": "tts_5c114eb5a90a",
+    "御朱印をお願いします。": "tts_b9e7c4a6d3b5",
+    "写真は大丈夫ですか。": "tts_7feaa5ad92b8",
+    "こちらでは撮影できません。": "tts_1b54b312a441",
+    "夕食は何時ですか。": "tts_851c4062f541",
+    "浴衣はどこにありますか。": "tts_0f77fcb83e8e",
+    "大浴場は利用できますか。": "tts_08e3a7afb923",
+    "入浴時間は十一時までです。": "tts_7094bc816d97",
+    "予約した体験に来ました。": "tts_bf86c0ac1e4d",
+    "レンタルはできますか。": "tts_76c35c69277e",
+    "開始時間までお待ちください。": "tts_bf6e896dd738",
+    "予約を変更したいです。": "tts_78e5ef240aa7",
+    "キャンセルできますか。": "tts_b5310c6d67e2",
+    "予約時間を遅くできますか。": "tts_ae396235f74a",
+    "キャンセル料がかかります。": "tts_cc1e37fcaf34",
+    "落とし物センターはどこですか。": "tts_3725abf2e036",
+    "黒いかばんです。": "tts_d4f2784d6906",
+    "特徴を教えてください。": "tts_16ff97f25ed9",
+    "この薬は眠くなりますか。": "tts_7eafe213c916",
+    "一日何回飲めばいいですか。": "tts_dad7e117376e",
+    "旅行者で、保険証はありません。": "tts_38bcaa967385",
+    "救急車を呼んでください。": "tts_dd892bcc30eb",
+    "すみません、知りませんでした。": "tts_2b94628548f5",
+    "どうすればいいですか。": "tts_e91194486449",
+    "ここにいて大丈夫ですか。": "tts_43190d624858",
+    "こちらではご遠慮ください。": "tts_adb169a2b299",
+    "次のバスは何時ですか。": "tts_757220e15e4b",
+    "駅まで歩けますか。": "tts_6fbd0b487802",
+    "この辺に食堂はありますか。": "tts_07cd3943b724",
+    "本数が少ないのでご注意ください。": "tts_5621d3b8adac",
+    "電車は動いていますか。": "tts_a7262148df88",
+    "運休ですか。": "tts_c648d41a7a13",
+    "別の行き方はありますか。": "tts_7eeaf3c23a32",
+    "大雨のため遅れています。": "tts_aee3747f3e6d",
+    "空港までお願いします。": "tts_d2064c0bb321",
+    "何時に出ればいいですか。": "tts_e780b7b1f873",
+    "国際線ターミナルまでお願いします。": "tts_947aef936462",
+    "道路が混んでいます。": "tts_0920a0e5e4bb",
+    "搭乗券をお受け取りください。": "tts_f24246479da1",
+    "搭乗口はどこですか。": "tts_e1446b6698db",
+    "液体は入っていません。": "tts_5f6e53fb5f3d",
+    "何時から搭乗ですか。": "tts_b103856d7fc2",
+    "まもなく搭乗を開始します。": "tts_696366e96834",
+    "チケット": "it_ticket",
+    "カードで払えますか。": "ss_5",
+    "少々お待ちください。": "sph_7",
+    "乗り換えはどこですか。": "sw_2",
+    "お名前をお願いします。": "hd_2",
+    "袋はいりません。": "scv_2"
   },
   "voiceTextIndex": {
     "nanami": {
@@ -66643,7 +68779,160 @@
       "気をつけて。": "tts_3943aa4bead7",
       "行ってきます。": "tts_36f99101c717",
       "行ってらっしゃい。": "tts_3ac55e9d607a",
-      "大丈夫です。": "tts_9a493f082a41"
+      "大丈夫です。": "tts_9a493f082a41",
+      "お持ち帰りですか。": "tts_66e8f36f19b2",
+      "ご予約はされていますか。": "tts_17623dae0b6f",
+      "カウンター": "tts_0fba371420b3",
+      "カードでよろしいですか。": "tts_c2c6b48a1663",
+      "予約は三時です。": "tts_7bab1348971e",
+      "これをお願いします。": "tts_59fa4fa8c23c",
+      "現金のみです。": "tts_c555e562adc5",
+      "どちらになさいますか。": "tts_c9dec07b56b6",
+      "ここで待てばいいですか。": "tts_e8c46e76b3de",
+      "右に曲がればいいですか。": "tts_abc5570d4515",
+      "まっすぐ行って、左です。": "tts_5c5d7bcc5d18",
+      "何時ですか。": "tts_554fc2cfdd87",
+      "追加料金はかかりますか。": "tts_0fbca0bc0001",
+      "合計で三千円です。": "tts_3d6a56b620b4",
+      "こちらでお預かりできます。": "tts_9d6fe8b9ec96",
+      "こちらでお願いします。": "tts_3b4c8b365050",
+      "窓側の席をお願いします。": "tts_955d006179ea",
+      "辛くないものがいいです。": "tts_87a09398c573",
+      "テーブル席とカウンター席、どちらになさいますか。": "tts_e41d1ba4207e",
+      "できません。": "tts_7ff5013704a5",
+      "よく分かりません。": "tts_51c54c430966",
+      "本日はご利用いただけません。": "tts_e70f187d3411",
+      "エアコンが動きません。": "tts_20c60154e801",
+      "確認いたしますので、少々お待ちください。": "tts_b44d1e668406",
+      "申し訳ありません。": "tts_73384f9e4937",
+      "大丈夫ですよ。": "tts_0acd0d66a64d",
+      "もう一度言ってください。": "tts_9cf597cd6f5e",
+      "書いてもらえますか。": "tts_d8c0d6e85585",
+      "こちらをご確認ください。": "tts_2f3f9fae94bd",
+      "画面を見せてください。": "tts_0c8444e836be",
+      "はい、少々お待ちください。": "tts_8d64d93e62a1",
+      "出口はどこですか。": "tts_97a3675ff10f",
+      "この道で合っていますか。": "tts_0c8e5a785b72",
+      "この先を左です。": "tts_7a701280f677",
+      "三時で合っていますか。": "tts_f231edc64b25",
+      "全部でいくらですか。": "tts_5e1c69215146",
+      "二つお願いします。": "tts_8d7cfbe58b80",
+      "全部で二千五百円です。": "tts_7263c471b1dc",
+      "荷物を預けたいです。": "tts_d87e4adbd2ca",
+      "できれば席を変えたいです。": "tts_d96555233ece",
+      "席を変えられますか。": "tts_9e27f5e15889",
+      "少し難しいです。": "tts_283efd4a49a2",
+      "間違えました。": "tts_e3c904db7ef2",
+      "ちょっと問題があります。": "tts_4c598530e345",
+      "手伝っていただけますか。": "tts_cf16231e0d1a",
+      "状況を確認します。": "tts_1381c22e087c",
+      "滞在先はホテルです。": "tts_d585eb1ce856",
+      "三日間です。": "tts_58ec0937c5ac",
+      "滞在目的は何ですか。": "tts_1ef3a2da8229",
+      "荷物が出てきません。": "tts_5642036f9322",
+      "申告するものはありません。": "tts_04d9e3751b7c",
+      "このスーツケースです。": "tts_b171fc4af34f",
+      "中身を確認してもいいですか。": "tts_0ea73e96b4b0",
+      "電車の乗り場はどこですか。": "tts_cb603f95ad69",
+      "新宿まで行きたいです。": "tts_20c22790b102",
+      "リムジンバスはありますか。": "tts_de4b22346689",
+      "二番乗り場から出ます。": "tts_03afc760337f",
+      "ICカードを買いたいです。": "tts_8a53ebc18c37",
+      "チャージできますか。": "tts_0391f1d4c7d9",
+      "一日券はありますか。": "tts_51c6287239b4",
+      "券売機で購入できます。": "tts_5b254f3186e9",
+      "この改札で合っていますか。": "tts_fe7faf60f3a5",
+      "三番ホームはどこですか。": "tts_98fe80235353",
+      "このカードが使えません。": "tts_e77c9ab83d4a",
+      "反対側のホームです。": "tts_bb82d17cb096",
+      "この電車で合っていますか。": "tts_0451bc5d7b0f",
+      "急行ですか。": "tts_efca40b8f26c",
+      "次の駅でお乗り換えください。": "tts_f8cf915046d3",
+      "トランクを使えますか。": "tts_3358bb948134",
+      "予約番号を入力します。": "tts_80a1d2ee3275",
+      "やり方を教えてください。": "tts_1e0a1aa55055",
+      "画面が分かりません。": "tts_bb402488166f",
+      "こちらの画面で確認してください。": "tts_fa200bb4fed4",
+      "タオルを追加できますか。": "tts_631f3036cd72",
+      "すぐ確認いたします。": "tts_1bc3e1ec7582",
+      "チェックアウトをお願いします。": "tts_b699c2eaa67e",
+      "追加料金がございます。": "tts_be52d8b53233",
+      "予約していません。": "tts_b47471e0d29a",
+      "どのくらい待ちますか。": "tts_af62a670fd39",
+      "お名前を書いてお待ちください。": "tts_db6c27e259b6",
+      "セットにできますか。": "tts_753535063c22",
+      "肉は食べられません。": "tts_54305c3835f2",
+      "食券は券売機で買いますか。": "tts_bbc49241e9eb",
+      "食券をお出しください。": "tts_96df08a7a35f",
+      "別々にできますか。": "tts_e44bc161e97d",
+      "セルフレジは使えますか。": "tts_5eca5489d887",
+      "指定席をお願いします。": "tts_f784f10c61d7",
+      "自由席はありますか。": "tts_a26f4e5144ee",
+      "東京まで一枚ください。": "tts_379a191ef117",
+      "何時の列車にしますか。": "tts_438f6d3068e9",
+      "このバスは駅に行きますか。": "tts_9f86d7c261fe",
+      "整理券を取ればいいですか。": "tts_3564a60b32c2",
+      "どこで降りればいいですか。": "tts_dd8d5ba69f57",
+      "降りる時にお支払いください。": "tts_fe71ff66a749",
+      "保険を付けたいです。": "tts_5b75e9c56e81",
+      "返却場所はどこですか。": "tts_fe43f37b9b0e",
+      "免許証を確認いたします。": "tts_d3ddd0b7d742",
+      "試着できますか。": "tts_f4fc7ccf419c",
+      "この色がいいです。": "tts_de489e430db5",
+      "風邪薬はありますか。": "tts_228ac5f8a6dc",
+      "この充電器は日本で使えますか。": "tts_59c6001efc0f",
+      "袋を分けられますか。": "tts_dc5b264fc160",
+      "入場券を二枚ください。": "tts_6f2b566a873b",
+      "音声ガイドはありますか。": "tts_8d31397fac2d",
+      "お守りはどこで買えますか。": "tts_5c114eb5a90a",
+      "御朱印をお願いします。": "tts_b9e7c4a6d3b5",
+      "写真は大丈夫ですか。": "tts_7feaa5ad92b8",
+      "こちらでは撮影できません。": "tts_1b54b312a441",
+      "夕食は何時ですか。": "tts_851c4062f541",
+      "浴衣はどこにありますか。": "tts_0f77fcb83e8e",
+      "大浴場は利用できますか。": "tts_08e3a7afb923",
+      "入浴時間は十一時までです。": "tts_7094bc816d97",
+      "予約した体験に来ました。": "tts_bf86c0ac1e4d",
+      "レンタルはできますか。": "tts_76c35c69277e",
+      "開始時間までお待ちください。": "tts_bf6e896dd738",
+      "予約を変更したいです。": "tts_78e5ef240aa7",
+      "キャンセルできますか。": "tts_b5310c6d67e2",
+      "予約時間を遅くできますか。": "tts_ae396235f74a",
+      "キャンセル料がかかります。": "tts_cc1e37fcaf34",
+      "落とし物センターはどこですか。": "tts_3725abf2e036",
+      "黒いかばんです。": "tts_d4f2784d6906",
+      "特徴を教えてください。": "tts_16ff97f25ed9",
+      "この薬は眠くなりますか。": "tts_7eafe213c916",
+      "一日何回飲めばいいですか。": "tts_dad7e117376e",
+      "旅行者で、保険証はありません。": "tts_38bcaa967385",
+      "救急車を呼んでください。": "tts_dd892bcc30eb",
+      "すみません、知りませんでした。": "tts_2b94628548f5",
+      "どうすればいいですか。": "tts_e91194486449",
+      "ここにいて大丈夫ですか。": "tts_43190d624858",
+      "こちらではご遠慮ください。": "tts_adb169a2b299",
+      "次のバスは何時ですか。": "tts_757220e15e4b",
+      "駅まで歩けますか。": "tts_6fbd0b487802",
+      "この辺に食堂はありますか。": "tts_07cd3943b724",
+      "本数が少ないのでご注意ください。": "tts_5621d3b8adac",
+      "電車は動いていますか。": "tts_a7262148df88",
+      "運休ですか。": "tts_c648d41a7a13",
+      "別の行き方はありますか。": "tts_7eeaf3c23a32",
+      "大雨のため遅れています。": "tts_aee3747f3e6d",
+      "空港までお願いします。": "tts_d2064c0bb321",
+      "何時に出ればいいですか。": "tts_e780b7b1f873",
+      "国際線ターミナルまでお願いします。": "tts_947aef936462",
+      "道路が混んでいます。": "tts_0920a0e5e4bb",
+      "搭乗券をお受け取りください。": "tts_f24246479da1",
+      "搭乗口はどこですか。": "tts_e1446b6698db",
+      "液体は入っていません。": "tts_5f6e53fb5f3d",
+      "何時から搭乗ですか。": "tts_b103856d7fc2",
+      "まもなく搭乗を開始します。": "tts_696366e96834",
+      "チケット": "it_ticket",
+      "カードで払えますか。": "ss_5",
+      "少々お待ちください。": "sph_7",
+      "乗り換えはどこですか。": "sw_2",
+      "お名前をお願いします。": "hd_2",
+      "袋はいりません。": "scv_2"
     },
     "keita": {
       "おしはらいはどうしますか": "tts_keita_528f6538e26b",
