@@ -8,7 +8,7 @@ import {
   mergeSceneRarity, nextMergeRarity, ownedCount, rarityMeta, rarityToTier, saveCollection, totalItems,
   type BoxGrade, type Collection, type DropResult, type Rarity,
 } from '../learn/collection';
-import { gachaItemForPlace, gachaLabItemForPlace, type GachaItemArt } from '../learn/gachaItems';
+import { gachaItemForMission, gachaLabItemForMission, type GachaItemArt } from '../learn/gachaItems';
 import { Icon } from '../ui/Icon';
 import { speakSequence, ttsSupported } from '../tts';
 import { loadSettings, sceneSentenceLevelForMode } from '../learn/settings';
@@ -36,7 +36,7 @@ function itemKoreanDescription(place: string, title: string, rarity: Rarity): st
 
 function ItemArt({ sceneId, rarity, size }: { sceneId: string; rarity: Rarity; size: number }) {
   const sv = sceneVisualByMission(sceneId);
-  const item = gachaLabItemForPlace(placeOf(sceneId), rarity);
+  const item = gachaLabItemForMission(sceneId, rarity);
   const [failed, setFailed] = useState(false);
   const [sourceIndex, setSourceIndex] = useState(0);
   const sources = itemImageSources(item);
@@ -51,7 +51,7 @@ function ItemArt({ sceneId, rarity, size }: { sceneId: string; rarity: Rarity; s
 function DeckCardFace({ sceneId, rarity, size = 56 }: { sceneId: string; rarity: Rarity; size?: number }) {
   const sv = sceneVisualByMission(sceneId);
   const meta = rarityMeta(rarity);
-  const item = gachaItemForPlace(placeOf(sceneId), rarity);
+  const item = gachaItemForMission(sceneId, rarity);
   return (
     <span className={`ym-mcard is-${rarity}`} style={{
       ['--rarity-color' as string]: meta.color,
@@ -86,7 +86,7 @@ function CardBack({ rarity = 'basic', size = 82 }: { rarity?: Rarity; size?: num
 
 function ItemReveal({ item, index, onNext }: { item: DropResult; index: number; onNext: () => void }) {
   const meta = rarityMeta(item.rarity);
-  const art = gachaLabItemForPlace(placeOf(item.sceneId), item.rarity);
+  const art = gachaLabItemForMission(item.sceneId, item.rarity);
   const [failed, setFailed] = useState(false);
   const [sourceIndex, setSourceIndex] = useState(0);
   const sources = itemImageSources(art);
@@ -135,7 +135,7 @@ function PremiumMysteryReveal({ rarity }: { rarity: Rarity }) {
 
 function ItemThumb({ item }: { item: DropResult }) {
   const meta = rarityMeta(item.rarity);
-  const art = gachaLabItemForPlace(placeOf(item.sceneId), item.rarity);
+  const art = gachaLabItemForMission(item.sceneId, item.rarity);
   const [failed, setFailed] = useState(false);
   const [sourceIndex, setSourceIndex] = useState(0);
   const sources = itemImageSources(art);
@@ -545,7 +545,7 @@ function BurstParticles({ color }: { color: string }) {
 }
 
 function CollectionCardDetailModal({ sceneId, rarity, count, onClose }: { sceneId: string; rarity: Rarity; count: number; onClose: () => void }) {
-  const item = gachaItemForPlace(placeOf(sceneId), rarity);
+  const item = gachaItemForMission(sceneId, rarity);
   const place = placeOf(sceneId);
   const dialogue = giftDialogue(place, item.title, rarity);
   // 줄 단위로 읽어 각 줄이 개별 mp3(Nanami)를 탈 수 있게 — 없으면 줄마다 Web Speech 폴백.
@@ -724,7 +724,7 @@ export function DeckBrowser() {
                 </div>
               );
             }
-            const item = gachaItemForPlace(placeOf(selected), r.key);
+            const item = gachaItemForMission(selected, r.key);
             return (
               <div key={r.key} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: 11, borderRadius: 16, border: `1px solid ${r.color}`, background: 'var(--glass-bg-strong)', color: 'var(--ink)' }}>
                 <button className="ym-press" onClick={() => setSelectedDetail({ sceneId: selected, rarity: r.key })} style={{ border: 0, background: 'transparent', color: 'var(--ink)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: 0 }}>
@@ -804,7 +804,7 @@ export function DeckBrowser() {
               <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}>
                 {RARITIES.map((r) => {
                   const count = items[r.key];
-                  const label = count > 0 ? `${gachaItemForPlace(m.place, r.key).title} ${count}` : '미획득';
+                  const label = count > 0 ? `${gachaItemForMission(m.id, r.key).title} ${count}` : '미획득';
                   return <span key={r.key} style={{ fontSize: 10.5, fontWeight: 850, color: count > 0 ? r.color : 'var(--ink-faint)', border: `1px solid ${count > 0 ? r.color : 'var(--glass-border)'}`, borderRadius: 999, padding: '2px 5px' }}>{label}</span>;
                 })}
               </div>

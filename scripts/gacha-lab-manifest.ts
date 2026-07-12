@@ -4,29 +4,27 @@
 // 실행: npx tsx scripts/gacha-lab-manifest.ts
 import { writeFileSync } from 'node:fs';
 import { CONTENT } from '../src/content';
-import { gachaLabItemForPlace } from '../src/learn/gachaItems';
+import { gachaLabItemForMission } from '../src/learn/gachaItems';
 import type { Rarity } from '../src/learn/collection';
 
 const RARITIES: Rarity[] = ['basic', 'bronze', 'silver', 'gold', 'diamond'];
 const RARITY_KO: Record<Rarity, string> = { basic: '커먼', bronze: '레어', silver: '에픽', gold: 'SSR', diamond: 'UR' };
 
-const places = [...new Set(
-  CONTENT.missions.filter((m) => m.id !== 'C0').map((m) => (m.place ?? m.scenario ?? m.id) as string),
-)];
+const missionIds = CONTENT.missions.filter((m) => m.id !== 'C0').map((m) => m.id as string);
 
-const byPath = new Map<string, { image: string; rarity: Rarity; rarityKo: string; ja: string; ko: string; motif: string; places: Set<string> }>();
-for (const place of places) {
+const byPath = new Map<string, { image: string; rarity: Rarity; rarityKo: string; ja: string; ko: string; motif: string; missions: Set<string> }>();
+for (const missionId of missionIds) {
   for (const rarity of RARITIES) {
-    const a = gachaLabItemForPlace(place, rarity);
+    const a = gachaLabItemForMission(missionId, rarity);
     if (!a.image) continue;
-    const e = byPath.get(a.image) ?? { image: a.image, rarity, rarityKo: RARITY_KO[rarity], ja: a.jaTitle ?? a.title, ko: a.title, motif: a.motif, places: new Set<string>() };
-    e.places.add(place);
+    const e = byPath.get(a.image) ?? { image: a.image, rarity, rarityKo: RARITY_KO[rarity], ja: a.jaTitle ?? a.title, ko: a.title, motif: a.motif, missions: new Set<string>() };
+    e.missions.add(missionId);
     byPath.set(a.image, e);
   }
 }
 
 const items = [...byPath.values()]
-  .map((e) => ({ image: e.image, rarity: e.rarity, rarityKo: e.rarityKo, ja: e.ja, ko: e.ko, motif: e.motif, places: [...e.places].sort() }))
+  .map((e) => ({ image: e.image, rarity: e.rarity, rarityKo: e.rarityKo, ja: e.ja, ko: e.ko, motif: e.motif, missions: [...e.missions].sort() }))
   .sort((a, b) => a.image.localeCompare(b.image));
 
 writeFileSync('docs/gacha-lab-assets.json', JSON.stringify({ generatedAt: new Date().toISOString().slice(0, 10), count: items.length, note: 'image 경로 그대로 투명 WebP 생성 -> 랩 가챠/도감에 자동 반영', items }, null, 2) + '\n');
