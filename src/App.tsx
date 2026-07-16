@@ -191,8 +191,11 @@ export function App() {
   // 복습에선 그 폴백이 정확히 이 버그를 재현시킨다 — 여기선 0개면 정말 0개(복습할 미션 없음)가 맞다.
   // missionsLocked(입문·기본)면 미션 quota도 0으로 강제 — 그렇지 않으면 review 프리셋의
   // 고정 quota(C:8)가 레벨과 무관하게 항상 적용돼 "미션은 중급부터" 원칙을 복습 큐만 비껴갔다.
+  // tip:0 — 문법 팁 카드는 classifyCard의 cooldown 판정을 아예 안 거치는 특수 카드라(진짜 학습 세션에선
+  // 의도된 동작) quota만 있으면 항상 최소 1개가 뽑힌다. 그 결과 K/B/C/P가 전부 비어(진짜 복습할 게 없어)도
+  // reviewCount가 tip 1개 때문에 절대 0이 되지 않아 "복습 큐 풀기" 배너가 영원히 사라지지 않는 버그가 있었다.
   const reviewConfig = {
-    quotas: { ...MODE_PRESETS.review.quotas, C: missionsLocked ? 0 : MODE_PRESETS.review.quotas.C },
+    quotas: { ...MODE_PRESETS.review.quotas, C: missionsLocked ? 0 : MODE_PRESETS.review.quotas.C, tip: 0 },
     minFresh: MODE_PRESETS.review.minFresh,
     openMissions: visibleOpenMissions,
     missionTierFilter: (mid: string) => missionExperiencedCount(progress, mid) > 0,
@@ -907,9 +910,17 @@ export function App() {
     }
     if (view === 'intro') {
       const missions = missionsFromCards(sessionCards, progress, sessionId);
-      const hasKana = sessionCards.some((c) => c.kind === 'quiz' && c.reviewTarget?.type === 'kana');
+      // 실제 세션에 담긴 가나가 어느 스크립트인지(히라가나/가타카나/혼합) 판별 — "히라가나부터"
+      // 고정 문구가 가타카나 세션에도 그대로 뜨던 문제를 goal.ts에서 바로잡기 위한 입력.
+      const kanaScripts = new Set(
+        sessionCards
+          .filter((c): c is typeof c & { reviewTarget: { type: 'kana'; id: string | number } } => c.kind === 'quiz' && c.reviewTarget?.type === 'kana')
+          .map((c) => CONTENT.kana.find((k) => k.id === String(c.reviewTarget.id))?.script)
+          .filter((s): s is 'hiragana' | 'katakana' => s === 'hiragana' || s === 'katakana'),
+      );
+      const kanaScript = kanaScripts.size === 0 ? undefined : kanaScripts.size === 1 ? [...kanaScripts][0] : 'mixed';
       const hasBasics = sessionCards.some((c) => c.kind === 'quiz' && c.id.startsWith('basic:'));
-      return <Intro cards={sessionCards} allCards={allCards} progress={progress} goal={sessionGoalText(missions, hasKana, hasBasics)} onStart={() => navigate('session', { replace: true })} onBack={() => goBack('home')} />;
+      return <Intro cards={sessionCards} allCards={allCards} progress={progress} goal={sessionGoalText(missions, kanaScript, hasBasics)} onStart={() => navigate('session', { replace: true })} onBack={() => goBack('home')} />;
     }
     if (view === 'done') {
       const snap = flow.doneSnapshot;
