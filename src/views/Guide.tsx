@@ -94,9 +94,9 @@ function TabModes() {
       <ModeCard icon="✍️" title="한→일 작문" color="#3b9fe0" sub="한국어 뜻을 보고 일본어 타일로 조립. 산출(output) 강화." />
 
       <p style={{ margin: '14px 0 8px', fontSize: 12, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.05em' }}>어휘·읽기</p>
-      <ModeCard icon="📚" title="어휘 커리큘럼" color="#9b59b6" sub="인사·월·시간·숫자·신체·스포츠·동물·식물·색·음식·가족·날씨 12그룹 × 184단어. 읽기·듣기·역방향 3종." />
-      <ModeCard icon="🪧" title="거리 읽기" color="#e0a23a" sub="편의점 표지·역 안내·메뉴판·경고문 115개. 실전 간판 읽기 훈련." />
-      <ModeCard icon="🔢" title="숫자 학습" color="#3fb27f" sub="숫자·요일·달·시간·금액·셈 단위 72항목. 계산대·예약 필수 표현." />
+      <ModeCard icon="📚" title="어휘 커리큘럼" color="#9b59b6" sub="인사·신체·스포츠·동물·식물·색깔·음식·가족·날씨·형용사·장소시설·교통수단·감정상태 13그룹 × 219단어. 읽기·듣기·역방향 3종에 실전 Q&A 예문까지." />
+      <ModeCard icon="🪧" title="거리 읽기" color="#e0a23a" sub="편의점 표지·역 안내·메뉴판·경고문 113개. 실전 간판 읽기 훈련." />
+      <ModeCard icon="🔢" title="숫자 학습" color="#3fb27f" sub="숫자·요일·달·시간·금액·셈 단위 87항목. 계산대·예약 필수 표현." />
       <ModeCard icon="🔤" title="발음 구분" color="#3b9fe0" sub="っ/ー·つ/す·장음 등 헷갈리는 소리 쌍을 듣고 구분." />
 
       <p style={{ margin: '14px 0 8px', fontSize: 12, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.05em' }}>게임</p>
@@ -109,42 +109,41 @@ function TabModes() {
 function TabMission() {
   return (
     <>
-      <Section icon="nav-map" title="미션은 5스텝 점층 구조">
-        각 장면(편의점·식당 등)은 5단계로 구성됩니다.
+      <Section icon="nav-map" title="미션은 점점 복잡해지는 점층 구조">
+        각 장면(편의점·식당 등)은 6~8단계 안팎으로, 장면마다 스텝 수가 다릅니다.
         <div style={{ marginTop: 8 }}>
-          <StepBadge n={1} label="상황 진입 — 기본 상호작용(영수증 주세요·이거 주세요)" />
-          <StepBadge n={2} label="응용 — 예상 밖 상황(품절·환전 거부 등)" />
-          <StepBadge n={3} label="마무리 — 계산·인사 등 대화 끝맺음" />
-          <StepBadge n={4} label="응용 심화 — 조건·선택 포함한 복합 상황" />
-          <StepBadge n={5} label="종합 — 처음부터 끝까지 전략적 선택" />
+          <StepBadge n={1} label="상황 진입 — 기본 상호작용(이거 주세요·주문할게요)" />
+          <StepBadge n={2} label="응용 — 예상 밖 상황(품절·확인 요청·조건 분기)" />
+          <StepBadge n={3} label="마무리 — 결제·인사 등 대화 끝맺음" />
         </div>
+        <p style={{ margin: '8px 0 0' }}>장면이 클수록 중간에 응용 상황이 여러 번 끼어들어요 — 정해진 5단계가 아니라 실제 대화 동선 그대로 이어집니다.</p>
       </Section>
 
       <Section icon="target" title="canDo 목표 확인하기">
-        각 미션 카드 상단의 "이걸 할 수 있다" 문장이 학습 목표입니다. 예: C1 — "편의점에서 계산하고 봉투 여부를 답할 수 있다." 목표를 읽고 시작하면 집중도가 올라갑니다.
+        각 미션 카드 상단의 "이걸 할 수 있다" 문장이 학습 목표입니다. 예: C1(편의점) — "추가 주문·연령 확인·봉투·데우기·수저·포인트카드·결제·거스름돈까지 실제 흐름에 맞춰 응답할 수 있다." 목표를 읽고 시작하면 집중도가 올라갑니다.
       </Section>
 
       <Section icon="kana" title="5단계 티어 — 순서대로 열림">
         <div style={{ marginBottom: 6 }}>
-          <Chip color="#3fb27f">티어1</Chip> 생존 동선 — 편의점·식당·전철·호텔·입국
+          <Chip color="#3fb27f">티어1</Chip> 생존 동선 — 편의점·식당·전철·호텔·공항 입국
         </div>
         <div style={{ marginBottom: 6 }}>
-          <Chip color="#3b9fe0">티어2</Chip> 생활 확장 — 약국·쇼핑·택시·환전·로커
+          <Chip color="#3b9fe0">티어2</Chip> 생활 확장·미식 — 코인로커·라멘·카페·스시집·온천
         </div>
         <div style={{ marginBottom: 6 }}>
-          <Chip color="#9b59b6">티어3</Chip> 문화·체험 — 스시·온천·료칸·신칸센·회전초밥
+          <Chip color="#9b59b6">티어3</Chip> 이동·돌발 상황 — 료칸·신칸센·렌터카·병원·긴급상황
         </div>
         <div style={{ marginBottom: 6 }}>
-          <Chip color="#e0a23a">티어4</Chip> 트러블·교섭 — 렌터카·병원·분실·긴급·면세
+          <Chip color="#e0a23a">티어4</Chip> 쇼핑·응대 디테일 — 회전초밥·편집샵·나리타역·조식뷔페·파스타
         </div>
         <div>
-          <Chip color="#e0564a">티어5</Chip> 고급심화 — 환불·ATM·약국처방·오마카세·길잃음
+          <Chip color="#e0564a">티어5</Chip> 고급심화 — 환불·ATM·약국 처방전·오마카세·길 잃음
         </div>
         <p style={{ margin: '8px 0 0' }}>앞 장면을 3번 이상 경험하면 다음 장면이 열립니다. 건너뛸 수 없게 설계된 것은 기초 없이 고급이 나오는 혼란을 방지하기 위해서예요.</p>
       </Section>
 
       <Section icon="fast" title="약점 재도전 활용하기">
-        세션이 끝난 뒤 "완료" 화면에서 틀린 카드만 모아 즉시 재도전할 수 있습니다. 한 세션에서 오답이 3개 이상이면 꼭 재도전해 그 자리에서 굳혀두는 게 효율적입니다.
+        세션이 끝난 뒤 "완료" 화면에서 틀린 카드만 모아 즉시 재도전할 수 있습니다. 한 세션에서 오답이 3개 이상이면 꼭 재도전해 그 자리에서 굳혀두는 게 효율적입니다. 세션이 끝나도 정말 복습할 게 남아 있을 때만 "복습 큐" 배너가 뜨니, 안 보이면 그날은 복습할 게 없다는 뜻이에요.
       </Section>
     </>
   );

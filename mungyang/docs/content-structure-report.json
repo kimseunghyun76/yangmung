@@ -1,0 +1,499 @@
+{
+  "summary": {
+    "practiceUnits": 43,
+    "integratedUnits": 5,
+    "findings": 81,
+    "subtitleRepeatsGroup": 43,
+    "genericNoteOrCue": 37,
+    "largeRepeatedRequiredIdsBlock": 1,
+    "journeyRequiredIdsMissingLinkedUnit": 0
+  },
+  "rows": [
+    {
+      "unit": "S1",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "직원에게 말 걸기: 생존 회화와 대화 시작"
+    },
+    {
+      "unit": "S2",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "알아듣지 못했을 때: 생존 회화와 대화 시작"
+    },
+    {
+      "unit": "S3",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "위치와 길 묻기: 생존 회화와 대화 시작"
+    },
+    {
+      "unit": "S4",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "시간·금액·수량 확인하기: 생존 회화와 대화 시작"
+    },
+    {
+      "unit": "S5",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "부탁과 허락: 생존 회화와 대화 시작"
+    },
+    {
+      "unit": "S6",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "실수와 문제 설명하기: 생존 회화와 대화 시작"
+    },
+    {
+      "unit": "S7",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "입국심사: 공항 도착과 기본 이동"
+    },
+    {
+      "unit": "S7",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s7-exp-primary, s7-exp-confirm, s7-exp-support, s7-staff-main"
+    },
+    {
+      "unit": "S8",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "수하물과 세관: 공항 도착과 기본 이동"
+    },
+    {
+      "unit": "S8",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s8-exp-primary, s8-exp-confirm, s8-exp-support, s8-staff-main"
+    },
+    {
+      "unit": "S9",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "공항에서 교통편 찾기: 공항 도착과 기본 이동"
+    },
+    {
+      "unit": "S9",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s9-exp-primary, s9-exp-confirm, s9-exp-support, s9-staff-main"
+    },
+    {
+      "unit": "S10",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "교통카드와 승차권: 공항 도착과 기본 이동"
+    },
+    {
+      "unit": "S10",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s10-exp-primary, s10-exp-confirm, s10-exp-support, s10-staff-main"
+    },
+    {
+      "unit": "S11",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "개찰구와 승강장: 공항 도착과 기본 이동"
+    },
+    {
+      "unit": "S11",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s11-exp-primary, s11-exp-confirm, s11-exp-support, s11-staff-main"
+    },
+    {
+      "unit": "S12",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "환승과 안내방송: 공항 도착과 기본 이동"
+    },
+    {
+      "unit": "S12",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s12-exp-primary, s12-exp-confirm, s12-exp-support, s12-staff-main"
+    },
+    {
+      "unit": "S13",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "택시 이용: 공항 도착과 기본 이동"
+    },
+    {
+      "unit": "S13",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s13-exp-primary, s13-exp-confirm, s13-exp-support, s13-staff-main"
+    },
+    {
+      "unit": "S14",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "호텔 체크인: 숙박·식사·일상생활"
+    },
+    {
+      "unit": "S14",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s14-exp-primary, s14-exp-confirm, s14-exp-support, s14-staff-main"
+    },
+    {
+      "unit": "S15",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "셀프 체크인: 숙박·식사·일상생활"
+    },
+    {
+      "unit": "S15",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s15-exp-primary, s15-exp-confirm, s15-exp-support, s15-staff-main"
+    },
+    {
+      "unit": "S16",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "객실 문제 해결: 숙박·식사·일상생활"
+    },
+    {
+      "unit": "S16",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s16-exp-primary, s16-exp-confirm, s16-exp-support, s16-staff-main"
+    },
+    {
+      "unit": "S17",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "호텔 서비스와 체크아웃: 숙박·식사·일상생활"
+    },
+    {
+      "unit": "S17",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s17-exp-primary, s17-exp-confirm, s17-exp-support, s17-staff-main"
+    },
+    {
+      "unit": "S18",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "식당 입장과 대기: 숙박·식사·일상생활"
+    },
+    {
+      "unit": "S18",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s18-exp-primary, s18-exp-confirm, s18-exp-support, s18-staff-main"
+    },
+    {
+      "unit": "S19",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "메뉴 확인과 기본 주문: 숙박·식사·일상생활"
+    },
+    {
+      "unit": "S19",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s19-exp-primary, s19-exp-confirm, s19-exp-support, s19-staff-main"
+    },
+    {
+      "unit": "S20",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "취향과 식사 제한: 숙박·식사·일상생활"
+    },
+    {
+      "unit": "S20",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s20-exp-primary, s20-exp-confirm, s20-exp-support, s20-staff-main"
+    },
+    {
+      "unit": "S21",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "음식점 유형별 주문: 숙박·식사·일상생활"
+    },
+    {
+      "unit": "S21",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s21-exp-primary, s21-exp-confirm, s21-exp-support, s21-staff-main"
+    },
+    {
+      "unit": "S22",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "계산과 결제: 숙박·식사·일상생활"
+    },
+    {
+      "unit": "S22",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s22-exp-primary, s22-exp-confirm, s22-exp-support, s22-staff-main"
+    },
+    {
+      "unit": "S23",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "편의점과 셀프 계산대: 숙박·식사·일상생활"
+    },
+    {
+      "unit": "S23",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s23-exp-primary, s23-exp-confirm, s23-exp-support, s23-staff-main"
+    },
+    {
+      "unit": "S24",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "신칸센 이용: 장거리 이동·쇼핑·관광"
+    },
+    {
+      "unit": "S24",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s24-exp-primary, s24-exp-confirm, s24-exp-support, s24-staff-main"
+    },
+    {
+      "unit": "S25",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "버스와 노면전차: 장거리 이동·쇼핑·관광"
+    },
+    {
+      "unit": "S25",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s25-exp-primary, s25-exp-confirm, s25-exp-support, s25-staff-main"
+    },
+    {
+      "unit": "S26",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "렌터카: 장거리 이동·쇼핑·관광"
+    },
+    {
+      "unit": "S26",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s26-exp-primary, s26-exp-confirm, s26-exp-support, s26-staff-main"
+    },
+    {
+      "unit": "S27",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "의류와 신발 쇼핑: 장거리 이동·쇼핑·관광"
+    },
+    {
+      "unit": "S27",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s27-exp-primary, s27-exp-confirm, s27-exp-support, s27-staff-main"
+    },
+    {
+      "unit": "S28",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "드럭스토어와 전자제품: 장거리 이동·쇼핑·관광"
+    },
+    {
+      "unit": "S28",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s28-exp-primary, s28-exp-confirm, s28-exp-support, s28-staff-main"
+    },
+    {
+      "unit": "S29",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "면세 쇼핑: 장거리 이동·쇼핑·관광"
+    },
+    {
+      "unit": "S29",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s29-exp-primary, s29-exp-confirm, s29-exp-support, s29-staff-main"
+    },
+    {
+      "unit": "S30",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "관광지와 입장권: 장거리 이동·쇼핑·관광"
+    },
+    {
+      "unit": "S30",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s30-exp-primary, s30-exp-confirm, s30-exp-support, s30-staff-main"
+    },
+    {
+      "unit": "S31",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "신사와 사찰: 장거리 이동·쇼핑·관광"
+    },
+    {
+      "unit": "S31",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s31-exp-primary, s31-exp-confirm, s31-exp-support, s31-staff-main"
+    },
+    {
+      "unit": "S32",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "료칸과 온천: 장거리 이동·쇼핑·관광"
+    },
+    {
+      "unit": "S32",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s32-exp-primary, s32-exp-confirm, s32-exp-support, s32-staff-main"
+    },
+    {
+      "unit": "S33",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "체험과 대여: 장거리 이동·쇼핑·관광"
+    },
+    {
+      "unit": "S33",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s33-exp-primary, s33-exp-confirm, s33-exp-support, s33-staff-main"
+    },
+    {
+      "unit": "S34",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "예약 변경과 취소: 문제 해결과 안전"
+    },
+    {
+      "unit": "S34",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s34-exp-primary, s34-exp-confirm, s34-exp-support, s34-staff-main"
+    },
+    {
+      "unit": "S35",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "분실물: 문제 해결과 안전"
+    },
+    {
+      "unit": "S35",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s35-exp-primary, s35-exp-confirm, s35-exp-support, s35-staff-main"
+    },
+    {
+      "unit": "S36",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "약국: 문제 해결과 안전"
+    },
+    {
+      "unit": "S36",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s36-exp-primary, s36-exp-confirm, s36-exp-support, s36-staff-main"
+    },
+    {
+      "unit": "S37",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "병원과 응급상황: 문제 해결과 안전"
+    },
+    {
+      "unit": "S37",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s37-exp-primary, s37-exp-confirm, s37-exp-support, s37-staff-main"
+    },
+    {
+      "unit": "S38",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "문화 에티켓과 지적받는 상황: 문제 해결과 안전"
+    },
+    {
+      "unit": "S38",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s38-exp-primary, s38-exp-confirm, s38-exp-support, s38-staff-main"
+    },
+    {
+      "unit": "S39",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "지방과 소도시 여행: 문제 해결과 안전"
+    },
+    {
+      "unit": "S39",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s39-exp-primary, s39-exp-confirm, s39-exp-support, s39-staff-main"
+    },
+    {
+      "unit": "S40",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "기상과 교통 장애: 문제 해결과 안전"
+    },
+    {
+      "unit": "S40",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s40-exp-primary, s40-exp-confirm, s40-exp-support, s40-staff-main"
+    },
+    {
+      "unit": "S41",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "공항으로 이동: 출국"
+    },
+    {
+      "unit": "S41",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s41-exp-primary, s41-exp-confirm, s41-exp-support, s41-staff-main"
+    },
+    {
+      "unit": "S42",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "항공사 체크인: 출국"
+    },
+    {
+      "unit": "S42",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s42-exp-primary, s42-exp-confirm, s42-exp-support, s42-staff-main"
+    },
+    {
+      "unit": "S43",
+      "scope": "curriculum",
+      "finding": "subtitle repeats group",
+      "detail": "보안검색과 탑승: 출국"
+    },
+    {
+      "unit": "S43",
+      "scope": "lesson",
+      "finding": "generic note/cue remains",
+      "detail": "4 card(s): s43-exp-primary, s43-exp-confirm, s43-exp-support, s43-staff-main"
+    },
+    {
+      "unit": "S7-S43",
+      "scope": "curriculum",
+      "finding": "large repeated requiredIds block",
+      "detail": "S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20, S21, S22, S23, S24, S25, S26, S27, S28, S29, S30, S31, S32, S33, S34, S35, S36, S37, S38, S39, S40, S41, S42, S43 all require [P1,P6,P7,P12,P13]"
+    }
+  ]
+}

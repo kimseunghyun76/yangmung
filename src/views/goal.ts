@@ -25,13 +25,20 @@ function joinPlaces(places: string[]): string {
   return places.join('·'); // 3개 이상이면 가운뎃점 (조사 회피)
 }
 
-export function sessionGoalText(missions: SessionMission[], hasKana: boolean, hasBasics = false): string {
+export type KanaScript = 'hiragana' | 'katakana' | 'mixed';
+
+export function sessionGoalText(missions: SessionMission[], kanaScript: KanaScript | undefined, hasBasics = false): string {
   // 튜토리얼(C0)은 장면 카피에서 제외 — 가게 인사는 편의점 등의 도입부로 흡수.
   const scenes = missions.filter((m) => m.id !== 'C0');
   if (scenes.length === 0) {
     if (hasBasics) return '숫자·순서·요일·시간 익히기';
     if (missions.length > 0) return `${stripParen(missions[0].scenario)}까지 해보기`;
-    return hasKana ? '히라가나부터 차근차근 시작하기' : '오늘 한 판 가볍게';
+    // 실제 세션에 담긴 가나 스크립트를 그대로 반영 — 히라가나를 이미 끝내고 가타카나만
+    // 남은 유저에게 "히라가나부터"라고 고정 문구를 보여주던 문제를 없앤다.
+    if (kanaScript === 'hiragana') return '히라가나부터 차근차근 시작하기';
+    if (kanaScript === 'katakana') return '가타카나부터 차근차근 시작하기';
+    if (kanaScript === 'mixed') return '가나부터 차근차근 시작하기';
+    return '오늘 한 판 가볍게';
   }
   if (scenes.length === 1) {
     const s = scenes[0];

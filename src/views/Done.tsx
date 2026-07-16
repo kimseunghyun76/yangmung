@@ -173,15 +173,19 @@ export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, pro
   const levelGuideActions = LEVEL_STAGES[coreLevel]
     .map((stage, idx) => actionForStage(stage, idx))
     .filter((action): action is NextAction => !!action);
-  const nextSceneAction: NextAction | null = !isQuickPractice && canContinue ? (() => {
-    const sv = nextSceneId ? sceneVisualByMission(nextSceneId) : null;
+  // nextSceneId가 없으면(입문·기본은 미션 자체가 잠겨 있어 다음 세션에 장면이 전혀 없음) "새 장면
+  // 학습"이라는 이름표를 붙일 실체가 없다 — canContinue만 보고 띄우면 가나/어휘뿐인 다음 세션에도
+  // "새 장면"이라 잘못 표시되고, 이미 같은 정보를 정확히 주는 레벨 가이드 섹션과 중복된다.
+  // 실제 장면이 있을 때만(주로 중급 이상) 이 배너를 띄운다.
+  const nextSceneAction: NextAction | null = !isQuickPractice && canContinue && nextSceneId ? (() => {
+    const sv = sceneVisualByMission(nextSceneId);
     return {
       section: 'next' as const,
-      icon: (sv?.icon ?? 'flow') as IconName,
-      accent: sv?.accent ?? 'var(--accent)',
+      icon: sv.icon as IconName,
+      accent: sv.accent,
       title: '새 장면 학습',
-      sub: nextSceneId ? `다음 장면 · ${placeOf(nextSceneId)}` : '새로운 표현 익히기',
-      image: sv?.thumb ?? sv?.hero ?? sv?.backdrop,
+      sub: `다음 장면 · ${placeOf(nextSceneId)}`,
+      image: sv.thumb ?? sv.hero ?? sv.backdrop,
       badge: '다음',
       onClick: onContinue,
       preferred: weak === 0,

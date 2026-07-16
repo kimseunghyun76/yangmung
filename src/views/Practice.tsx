@@ -142,16 +142,6 @@ export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartSta
       onClick: onPracticeSpeak,
     },
     {
-      key: 'beginner:flash',
-      label: '속도전 대결',
-      sub: '제한시간 즉답',
-      level: 'beginner',
-      art: 'flash',
-      icon: 'fast',
-      accent: '#b9382e',
-      onClick: onPracticeFlash,
-    },
-    {
       key: 'express:vocab-all',
       label: '전체 어휘 세션',
       sub: '모든 주제를 SRS 방식으로 복습',
@@ -230,6 +220,31 @@ export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartSta
           </section>
         );
       })}
+
+      {/* 속도전 대결 — 레벨 단계와 무관한 공통 미션(어느 레벨에서든 그 레벨 문제로 도전 가능)이라
+          레벨별 진도 그리드 안에 끼워 넣지 않고, 페이지 맨 아래에 별도 배너로 분리해 놓는다. */}
+      <section className="ym-rise" style={{ marginTop: 18 }}>
+        <button className="ym-press" onClick={onPracticeFlash} style={{
+          width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '16px 18px',
+          borderRadius: 18, border: '1px solid var(--glass-border)', cursor: 'pointer', textAlign: 'left',
+          background: 'linear-gradient(120deg, rgba(185,56,46,.16), var(--glass-bg-strong) 60%)',
+        }}>
+          <span style={{
+            flex: '0 0 auto', width: 46, height: 46, borderRadius: 14, display: 'inline-flex',
+            alignItems: 'center', justifyContent: 'center', background: hexA('#b9382e', 0.16), color: '#b9382e',
+          }}>
+            <Icon name="fast" size={22} />
+          </span>
+          <span style={{ flex: 1, minWidth: 0 }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <strong style={{ fontSize: 16, color: 'var(--ink)' }}>속도전 대결</strong>
+              <span style={{ padding: '2px 8px', borderRadius: 999, background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', fontSize: 10.5, fontWeight: 850, color: 'var(--ink-soft)' }}>공통 · 전 레벨</span>
+            </span>
+            <span style={{ display: 'block', marginTop: 3, fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 650 }}>제한시간 즉답 — 지금 레벨 문제로 바로 대결해요</span>
+          </span>
+          <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)', flex: '0 0 auto' }} />
+        </button>
+      </section>
     </main>
   );
 }

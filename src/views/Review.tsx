@@ -116,7 +116,7 @@ export function Review({ nav, allCards, progress, seenKana, openMissions, devUnl
                           <span lang="ja" style={{ fontSize: w.label.length > 1 ? 18 : 24 }}>{w.label}</span>
                         </button>
                         <button aria-label={`${w.label} 약점 목록에서 지우기`} onClick={(e) => { e.stopPropagation(); dismissWeak(w); }}
-                          style={{ position: 'absolute', right: -5, top: -5, width: 20, height: 20, borderRadius: 999, border: '1px solid var(--glass-border)', background: 'var(--surface)', color: 'var(--ink-faint)', fontSize: 11, fontWeight: 900, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, lineHeight: 1 }}>✕</button>
+                          style={{ position: 'absolute', right: -5, top: -5, width: 20, height: 20, minHeight: 20, borderRadius: 999, border: '1px solid var(--glass-border)', background: 'var(--surface)', color: 'var(--ink-faint)', fontSize: 11, fontWeight: 900, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, lineHeight: 1 }}>✕</button>
                       </span>
                     ))}
                   </div>
