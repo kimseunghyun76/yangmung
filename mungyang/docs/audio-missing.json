@@ -1,9 +1,0 @@
-{
-  "primarySource": "/Users/dennis/kana-master/yangmung/mungyang/public/audio/manifest.json",
-  "fallbackSource": "/Users/dennis/kana-master/yangmung/kana-master/public/audio/manifest.json",
-  "requiredUniqueSessionTexts": 209,
-  "reusedFromExistingAudio": 209,
-  "missingAudio": 0,
-  "coverage": 100,
-  "missingTexts": []
-}
