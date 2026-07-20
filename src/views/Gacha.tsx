@@ -884,11 +884,13 @@ export function DeckBrowser() {
               </div>
             );
           }
+          const bestItem = gachaItemForMission(m.id, rarity);
           return (
             <div key={m.id} className="ym-gacha-merge-host" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 9, padding: '15px 10px', borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', position: 'relative', overflow: 'hidden' }}>
               <button className="ym-press" onClick={() => setSelected(m.id)} style={{ border: 0, background: 'transparent', color: 'var(--ink)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, padding: 0, width: '100%' }}>
                 <DeckCardFace sceneId={m.id} rarity={rarity} size={150} />
                 <span style={{ fontSize: 12, fontWeight: 850 }}>{placeOf(m.id)}</span>
+                <span lang="ja" style={{ fontSize: 11, fontWeight: 750, color: 'var(--ink-soft)' }}>{bestItem.jaTitle ?? bestItem.title}</span>
               </button>
               <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}>
                 {RARITIES.map((r) => {
