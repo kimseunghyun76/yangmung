@@ -73,3 +73,24 @@ export function extractKanaChars(s: string): string[] {
   for (const u of toReadingUnits(s)) out.push(...u.chars);
   return out;
 }
+
+// 로마자 표기 문자열 — 촉음(っ)은 다음 자음을 겹쳐 쓰고(もっと→motto, もと→moto가 서로 다르게 보이도록),
+// 장음(ー)은 직전 모음을 반복해(ビール→biiru) 실제 발음 길이를 로마자에도 반영한다.
+// toReadingUnits의 단위별 romaji만 그대로 이어 붙이면 촉음·장음이 통째로 사라져(예: もっと가 moto로
+// 표시) 발음 구분 학습 카드처럼 그 차이 자체가 핵심인 곳에서 로마자가 오히려 틀린 힌트를 주게 된다.
+export function toRomaji(s: string): string {
+  let out = '';
+  let geminate = false;
+  for (const u of toReadingUnits(s)) {
+    if (isSokuon(u.text)) { geminate = true; continue; }
+    if (isLong(u.text)) {
+      const vowel = [...out].reverse().find((ch) => 'aeiou'.includes(ch));
+      if (vowel) out += vowel;
+      continue;
+    }
+    if (!u.romaji) continue;
+    out += geminate ? `${u.romaji[0]}${u.romaji}` : u.romaji;
+    geminate = false;
+  }
+  return out;
+}

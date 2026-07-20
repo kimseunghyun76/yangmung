@@ -1,0 +1,362 @@
+[
+ {
+  "file": "basic-drink-12ys-13ec-12g4-14v8-164c.webp",
+  "rarity": "basic",
+  "motif": "drink",
+  "title": "아이스커피"
+ },
+ {
+  "file": "basic-drink-zix-13ic-15eo-1568.webp",
+  "rarity": "basic",
+  "motif": "drink",
+  "title": "동전토큰"
+ },
+ {
+  "file": "basic-festival-14c8-1168-zix-13ic.webp",
+  "rarity": "basic",
+  "motif": "festival",
+  "title": "참배동전"
+ },
+ {
+  "file": "basic-festival-14lx-13j0-11fk-14ck.webp",
+  "rarity": "basic",
+  "motif": "festival",
+  "title": "축제부채"
+ },
+ {
+  "file": "basic-food-122k-xz5-yf4-115x.webp",
+  "rarity": "basic",
+  "motif": "food",
+  "title": "삼각김밥"
+ },
+ {
+  "file": "basic-food-13et-10zc-zbc-yeo-10oc-1260-15mg.webp",
+  "rarity": "basic",
+  "motif": "food",
+  "title": "입문니기리세트"
+ },
+ {
+  "file": "basic-food-13lc-12hp-13ip-12ho.webp",
+  "rarity": "basic",
+  "motif": "food",
+  "title": "조식접시"
+ },
+ {
+  "file": "basic-food-14vp-108s-10t4.webp",
+  "rarity": "basic",
+  "motif": "food",
+  "title": "컵라멘"
+ },
+ {
+  "file": "basic-food-y4k-108w-14i0-115x.webp",
+  "rarity": "basic",
+  "motif": "food",
+  "title": "계란초밥"
+ },
+ {
+  "file": "basic-food-zc8-15ph-11md.webp",
+  "rarity": "basic",
+  "motif": "food",
+  "title": "단팥빵"
+ },
+ {
+  "file": "basic-safety-10p4-12g4-1564.webp",
+  "rarity": "basic",
+  "motif": "safety",
+  "title": "마스크"
+ },
+ {
+  "file": "basic-safety-zic-139c-1384-14fh-14s4-zq4.webp",
+  "rarity": "basic",
+  "motif": "safety",
+  "title": "도움요청카드"
+ },
+ {
+  "file": "basic-service-1168-128x-108s-119k.webp",
+  "rarity": "basic",
+  "motif": "service",
+  "title": "배송라벨"
+ },
+ {
+  "file": "basic-service-11bp-1224-14s4-zq4.webp",
+  "rarity": "basic",
+  "motif": "service",
+  "title": "복사카드"
+ },
+ {
+  "file": "basic-service-11fo-12hw-10zg-10t0-10vc.webp",
+  "rarity": "basic",
+  "motif": "service",
+  "title": "분실물메모"
+ },
+ {
+  "file": "basic-service-1260-158h-14yc-13eg.webp",
+  "rarity": "basic",
+  "motif": "service",
+  "title": "세탁코인"
+ },
+ {
+  "file": "basic-service-12bg-164x-10t0-10vc.webp",
+  "rarity": "basic",
+  "motif": "service",
+  "title": "쇼핑메모"
+ },
+ {
+  "file": "basic-service-12c8-1654-10zg-13i8-1394.webp",
+  "rarity": "basic",
+  "motif": "service",
+  "title": "수하물저울"
+ },
+ {
+  "file": "basic-service-13c0-12i4-164g.webp",
+  "rarity": "basic",
+  "motif": "service",
+  "title": "유심핀"
+ },
+ {
+  "file": "basic-shopping-12bg-164x-1169.webp",
+  "rarity": "basic",
+  "motif": "shopping",
+  "title": "쇼핑백"
+ },
+ {
+  "file": "basic-shopping-xz4-y3t-15y4-1598-yd4.webp",
+  "rarity": "basic",
+  "motif": "shopping",
+  "title": "가격표태그"
+ },
+ {
+  "file": "basic-stay-10jc-157o.webp",
+  "rarity": "basic",
+  "motif": "stay",
+  "title": "룸키"
+ },
+ {
+  "file": "basic-stay-13c0-14s4-158g-ytk.webp",
+  "rarity": "basic",
+  "motif": "stay",
+  "title": "유카타끈"
+ },
+ {
+  "file": "basic-stay-xzx-12hw-1384-14fh-10t0-10vc.webp",
+  "rarity": "basic",
+  "motif": "stay",
+  "title": "객실요청메모"
+ },
+ {
+  "file": "basic-ticket-12gp-14bs-ya4.webp",
+  "rarity": "basic",
+  "motif": "ticket",
+  "title": "승차권"
+ },
+ {
+  "file": "basic-ticket-12yw-ywk-zg0-12g4-1564-118o-16bc-15y4.webp",
+  "rarity": "basic",
+  "motif": "ticket",
+  "title": "안내데스크번호표"
+ },
+ {
+  "file": "basic-ticket-13et-13fp-15o0-14wj.webp",
+  "rarity": "basic",
+  "motif": "ticket",
+  "title": "입장티켓"
+ },
+ {
+  "file": "basic-ticket-13it-10m0-13fp-15y4-13uo.webp",
+  "rarity": "basic",
+  "motif": "ticket",
+  "title": "정류장표지"
+ },
+ {
+  "file": "basic-ticket-14qd-11ac-12yw-ywk-zic.webp",
+  "rarity": "basic",
+  "motif": "ticket",
+  "title": "층별안내도"
+ },
+ {
+  "file": "basic-ticket-169w-13fw-13b8-14rc-164g.webp",
+  "rarity": "basic",
+  "motif": "ticket",
+  "title": "현재위치핀"
+ },
+ {
+  "file": "bronze-drink-108s-zwc.webp",
+  "rarity": "bronze",
+  "motif": "drink",
+  "title": "라떼"
+ },
+ {
+  "file": "bronze-festival-13dd-139s-158g-139w.webp",
+  "rarity": "bronze",
+  "motif": "festival",
+  "title": "응원타월"
+ },
+ {
+  "file": "bronze-food-10co-13ek-14i0-115x.webp",
+  "rarity": "bronze",
+  "motif": "food",
+  "title": "레일초밥"
+ },
+ {
+  "file": "bronze-food-10t8-10f4-11md.webp",
+  "rarity": "bronze",
+  "motif": "food",
+  "title": "멜론빵"
+ },
+ {
+  "file": "bronze-food-12bg-13c0-108s-10t4.webp",
+  "rarity": "bronze",
+  "motif": "food",
+  "title": "쇼유라멘"
+ },
+ {
+  "file": "bronze-food-12ys-13uo-14i0-115x.webp",
+  "rarity": "bronze",
+  "motif": "food",
+  "title": "아지초밥"
+ },
+ {
+  "file": "bronze-food-14c8-14rc-14i0-115x.webp",
+  "rarity": "bronze",
+  "motif": "food",
+  "title": "참치초밥"
+ },
+ {
+  "file": "bronze-food-1564-10os-15os-12g4-158g.webp",
+  "rarity": "bronze",
+  "motif": "food",
+  "title": "크림파스타"
+ },
+ {
+  "file": "bronze-food-15cc-13ec-1564-12ys-139f-11c9-15ik.webp",
+  "rarity": "bronze",
+  "motif": "food",
+  "title": "테이크아웃봉투"
+ },
+ {
+  "file": "bronze-food-165n-12g4-ywl.webp",
+  "rarity": "bronze",
+  "motif": "food",
+  "title": "핫스낵"
+ },
+ {
+  "file": "bronze-safety-10vd-14t0-zro.webp",
+  "rarity": "bronze",
+  "motif": "safety",
+  "title": "목캔디"
+ },
+ {
+  "file": "bronze-safety-13tp-122p-10t0-10vc.webp",
+  "rarity": "bronze",
+  "motif": "safety",
+  "title": "증상메모"
+ },
+ {
+  "file": "bronze-service-10vd-13i9-13uo-10t0-10vc.webp",
+  "rarity": "bronze",
+  "motif": "service",
+  "title": "목적지메모"
+ },
+ {
+  "file": "bronze-service-132s-16c4-11c9-15ik.webp",
+  "rarity": "bronze",
+  "motif": "service",
+  "title": "엔화봉투"
+ },
+ {
+  "file": "bronze-service-y5k-10vd-12yw-ywk-15y4-13uo.webp",
+  "rarity": "bronze",
+  "motif": "service",
+  "title": "골목안내표지"
+ },
+ {
+  "file": "bronze-shopping-10pw-13fp-1528-15v4-11fl.webp",
+  "rarity": "bronze",
+  "motif": "shopping",
+  "title": "매장쿠폰북"
+ },
+ {
+  "file": "bronze-shopping-10pw-13fp-xz4-y3t-15y4.webp",
+  "rarity": "bronze",
+  "motif": "shopping",
+  "title": "매장가격표"
+ },
+ {
+  "file": "bronze-shopping-1224-13ec-13t4-1598-yd4.webp",
+  "rarity": "bronze",
+  "motif": "shopping",
+  "title": "사이즈태그"
+ },
+ {
+  "file": "bronze-shopping-164c-15ol-1224-13ec-13t4-1598-yd4.webp",
+  "rarity": "bronze",
+  "motif": "shopping",
+  "title": "피팅사이즈태그"
+ },
+ {
+  "file": "bronze-stay-122w-xzx-12hw-157o.webp",
+  "rarity": "bronze",
+  "motif": "stay",
+  "title": "새객실키"
+ },
+ {
+  "file": "bronze-stay-1260-13j0-14td-12fk.webp",
+  "rarity": "bronze",
+  "motif": "stay",
+  "title": "세제캡슐"
+ },
+ {
+  "file": "bronze-stay-131w-10t0-zbc-15o0.webp",
+  "rarity": "bronze",
+  "motif": "stay",
+  "title": "어메니티"
+ },
+ {
+  "file": "diamond-shopping-125c-10zg-15v0-13fp-122p-13f4.webp",
+  "rarity": "diamond",
+  "motif": "shopping",
+  "title": "선물포장상자"
+ },
+ {
+  "file": "diamond-stay-xzx-12hw-157o-14s4-zq4.webp",
+  "rarity": "diamond",
+  "motif": "stay",
+  "title": "객실키카드"
+ },
+ {
+  "file": "diamond-ticket-y5x-165p-10oc-10z8-13us-15o0-14wj.webp",
+  "rarity": "diamond",
+  "motif": "ticket",
+  "title": "공항리무진티켓"
+ },
+ {
+  "file": "gold-drink-10pc-14bs-108s-zwc.webp",
+  "rarity": "gold",
+  "motif": "drink",
+  "title": "말차라떼"
+ },
+ {
+  "file": "gold-festival-1350-10p4-10vc-10oc.webp",
+  "rarity": "gold",
+  "motif": "festival",
+  "title": "오마모리"
+ },
+ {
+  "file": "gold-safety-13dd-ydl-157o-15mg.webp",
+  "rarity": "gold",
+  "motif": "safety",
+  "title": "응급키트"
+ },
+ {
+  "file": "gold-service-13f4-15ow-yeo-114o-zbc-131w-14ew.webp",
+  "rarity": "gold",
+  "motif": "service",
+  "title": "자판기미니어처"
+ },
+ {
+  "file": "xur-food-15mh-13j0-13ic-11fk-z20-1260-108s-10t4.webp",
+  "rarity": "xur",
+  "motif": "food",
+  "title": "특제전부노세라멘"
+ }
+]

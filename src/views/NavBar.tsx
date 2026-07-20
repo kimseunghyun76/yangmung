@@ -7,6 +7,7 @@ export interface NavBarProps {
   onNavigate: (v: NavView) => void;
   onOpenGuide: () => void;
   onOpenSettings: () => void;
+  onOpenTips: () => void;
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
 }
@@ -20,7 +21,7 @@ const items: { key: NavView; label: string }[] = [
   { key: 'gacha', label: '도감' },
 ];
 
-export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings, theme, onToggleTheme }: Props) {
+export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings, onOpenTips, theme, onToggleTheme }: Props) {
   const tab = (active: boolean): React.CSSProperties => ({
     border: 'none', background: 'none', cursor: 'pointer', fontSize: 15,
     padding: '4px 1px', color: active ? 'var(--ink)' : 'var(--ink-faint)',
@@ -42,6 +43,7 @@ export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings, theme
       ))}
       <span style={{ flex: 1 }} />
       <button style={ctrl} onClick={onToggleTheme} title="주간/야간"><Icon name={theme === 'dark' ? 'theme-day' : 'theme-night'} size={19} /></button>
+      <button style={ctrl} onClick={onOpenTips} title="문화·여행 팁"><Icon name="tip" size={19} /></button>
       <button style={ctrl} onClick={onOpenGuide} title="가이드"><Icon name="nav-guide" size={19} /></button>
       <button style={ctrl} onClick={onOpenSettings} title="설정"><Icon name="nav-settings" size={19} /></button>
     </nav>

@@ -7,7 +7,7 @@ import {
   classifyCard, isKanaFamiliar, loadDiscovered, loadProgress, loadSeenKana, loadSession,
   markKanaKnown, markKanaSeen, missionExperiencedCount, missionsFromCards, nextSessionId, planSession, plannedSessionSize, recordAttempt, recordKnown,
   saveDiscovered, saveProgress, saveSeenKana, saveSession, selectComposeCards, selectDictationCards,
-  selectFlashCardsByMode, selectMissionCards, selectPairCards, selectQuizOnlyDeck, selectScriptKanaCards, selectSessionCards, selectSignCards, selectStudyDeck,
+  selectFlashCardsByMode, selectMissionCards, selectPairStudyDeck, selectQuizOnlyDeck, selectScriptKanaCards, selectSessionCards, selectSignCards, selectStudyDeck,
   type FlashMode, type ProgressMap, type SeenKana, type SessionState,
 } from './learn/progress';
 import { loadCollection, saveCollection, fillDevCards } from './learn/collection';
@@ -35,7 +35,7 @@ import type { KanaItem } from './content/types';
 import { VOCAB_GROUPS, VOCAB_GROUP_ART } from './content/thematicVocab';
 import { MascotEmpty } from './views/mascot';
 import { useHashView, type View } from './app/routing';
-import type { CountControl, PreviewStats } from './views/SequencePreview';
+import type { CountControl, PreviewLine, PreviewStats } from './views/SequencePreview';
 import { useSessionFlow } from './app/useSessionFlow';
 
 const Home = lazy(() => import('./views/Home').then((m) => ({ default: m.Home })));
@@ -59,6 +59,8 @@ const VerbForms = lazy(() => import('./views/VerbForms').then((m) => ({ default:
 const KanaTable = lazy(() => import('./views/KanaTable').then((m) => ({ default: m.KanaTable })));
 const PublicExpressions = lazy(() => import('./views/PublicExpressions').then((m) => ({ default: m.PublicExpressions })));
 const EntertainmentLearning = lazy(() => import('./views/EntertainmentLearning').then((m) => ({ default: m.EntertainmentLearning })));
+const TipsLibrary = lazy(() => import('./views/TipsLibrary').then((m) => ({ default: m.TipsLibrary })));
+const DiscoverGallery = lazy(() => import('./views/DiscoverGallery').then((m) => ({ default: m.DiscoverGallery })));
 const SequencePreview = lazy(() => import('./views/SequencePreview').then((m) => ({ default: m.SequencePreview })));
 
 function AppFallback() {
@@ -80,9 +82,9 @@ export function App() {
   // Intro 대신 배울 문장 전체를 한 번 듣고 시작. begin은 "학습 시작" 클릭 시 실행할 세션 진입 액션.
   // countControl이 있으면(작문) 프리뷰에서 퀴즈 개수를 바꿀 수 있고, 바뀌면 프리뷰 자체가 재계산됨.
   const [preview, setPreview] = useState<{
-    title: string; subtitle?: string; lines: { ja: string; kana: string; korean: string }[];
+    title: string; subtitle?: string; lines: PreviewLine[];
     returnView: View; begin: () => void; countControl?: CountControl;
-    backdropKind?: string; stats?: PreviewStats; studyAll?: () => void;
+    backdropKind?: string; stats?: PreviewStats; defaultListOpen?: boolean;
   } | null>(null);
   const [kanaScript, setKanaScript] = useState<'hiragana' | 'katakana'>('hiragana'); // 가나 표 학습 스크립트
   const [progression, setProgression] = useState(() => loadProgression()); // 레벨별 순차 진도
@@ -269,19 +271,35 @@ export function App() {
     }
     return null;
   }
+  // 입문 전용 "이제 읽을 수 있어요!" 갤러리 — pickDiscovery와 같은 조건(배운 가나로만 된 표현)이지만
+  // 하나만 고르지 않고 지금까지 조건을 만족하는 표현을 전부 모아서 보여준다.
+  function readableDiscoveries() {
+    const out: { id: string; ja: string; korean: string; isNew: boolean }[] = [];
+    for (const p of CONTENT.phrases) {
+      if (p.register !== 'productive' && p.register !== 'both') continue;
+      const chars = extractKanaChars(p.kana);
+      if (chars.length < 4) continue;
+      if (chars.every((ch) => isKanaFamiliar(ch, seenKana))) {
+        out.push({ id: p.id, ja: p.displayKana ?? p.kana, korean: p.korean, isNew: !discovered.includes(p.id) });
+      }
+    }
+    return out;
+  }
   function startSession() {
     const id = nextSessionId(session);
     const cards = selectSessionCards(allCards, progress, id, sessionConfig);
     if (cards.length === 0) return;
     lastPracticeRef.current = null; // 미션/오늘의 세션 — "다시 한번 학습"(연습 전용) 대상 아님
-    // 발견 카드가 있으면 세션 끝(팁 앞)에 보상으로 삽입 + 축하 기록
-    const disc = pickDiscovery();
-    if (disc) {
-      const tipIdx = cards.findIndex((c) => c.kind === 'tip');
-      const at = tipIdx >= 0 ? tipIdx : cards.length;
-      cards.splice(at, 0, disc);
-      const pid = disc.id.slice('discover:'.length);
-      const nx = [...discovered, pid]; setDiscovered(nx); saveDiscovered(nx);
+    // 발견 카드는 입문 전용 — 기본 이상은 "이제 읽을 수 있어요" 갤러리(입문 메뉴)에서 모아서 본다.
+    if (coreLevel === 'beginner') {
+      const disc = pickDiscovery();
+      if (disc) {
+        const tipIdx = cards.findIndex((c) => c.kind === 'tip');
+        const at = tipIdx >= 0 ? tipIdx : cards.length;
+        cards.splice(at, 0, disc);
+        const pid = disc.id.slice('discover:'.length);
+        const nx = [...discovered, pid]; setDiscovered(nx); saveDiscovered(nx);
+      }
     }
     flow.beginSession(id, cards, { intro: true });
   }
@@ -383,26 +401,34 @@ export function App() {
     return withLeadingTip(cards, pickTipForTopic(allCards, keywords, progress));
   }
   // 발음 구분 — 최소 페어 듣고 4지선다로 고르기 (つ/す·장음·촉음·청탁)
-  // 문제 내용 미리보기는 답을 미리 보여주는 셈이라(듣기 판별 연습) 생략하고, 개수 선택만 제공.
+  // 대조되는 두 발음을 먼저 학습 카드로 보여준 뒤 퀴즈로 이어진다("학습 먼저 → 퀴즈" 규칙,
+  // selectPairStudyDeck). 미리보기 화면에서 만든 덱을 그대로 넘겨써서, 미리보기 목록과 실제
+  // 세션에 나오는 쌍이 항상 일치한다(각자 다시 뽑으면 셔플 때문에 서로 달라질 수 있었다).
   const PAIR_COUNT_OPTIONS = [12, 18, 24];
-  function beginPairSession(count: number, stage?: string | null) {
-    let cards = selectPairCards(allCards, progress, nextSessionId(session), count);
+  function beginPairSession(cards: Card[], stage?: string | null) {
     if (cards.length === 0) return;
-    cards = withStudyTip(cards, ['발음', '촉음', '장음', 'ら행', 'ふ']);
-    lastPracticeRef.current = () => beginPairSession(count, stage);
-    flow.beginSession(nextSessionId(session), cards, { intro: false, replace: true, practice: true, stage });
+    const withTip = withStudyTip(cards, ['발음', '촉음', '장음', 'ら행', 'ふ']);
+    lastPracticeRef.current = () => beginPairSession(selectPairStudyDeck(allCards, progress, nextSessionId(session), cards.length), stage);
+    flow.beginSession(nextSessionId(session), withTip, { intro: false, replace: true, practice: true, stage });
   }
   function startPairSession(stage?: string | null, count?: number) {
     // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 stage로 흘러들 수 있어(방어)
     if (typeof stage !== 'string') stage = undefined;
     const c = count ?? PAIR_COUNT_OPTIONS[Math.floor(Math.random() * PAIR_COUNT_OPTIONS.length)];
+    const deck = selectPairStudyDeck(allCards, progress, nextSessionId(session), c);
+    if (deck.length === 0) return;
+    const lines: PreviewLine[] = deck
+      .filter((card): card is IntroduceCard => card.kind === 'introduce')
+      .map((card) => ({ ja: card.kana, kana: card.kana, korean: card.korean, contrast: card.contrast }));
     setPreview({
       title: '발음 구분',
-      subtitle: '비슷하게 들리는 소리를 듣고 구분하는 연습이에요. 몇 문제를 풀지 골라보세요.',
-      lines: [],
+      subtitle: '헷갈리는 소리 쌍을 먼저 눈으로 익힌 뒤, 듣고 구분하는 퀴즈로 이어져요. 몇 문제를 풀지 골라보세요.',
+      lines,
       returnView: stage ? 'practice' : 'home',
-      begin: () => beginPairSession(c, stage),
-      countControl: { value: c, options: PAIR_COUNT_OPTIONS, onChange: (n) => startPairSession(stage, n) },
+      begin: () => beginPairSession(deck, stage),
+      countControl: { value: c, options: PAIR_COUNT_OPTIONS, onChange: (n) => { if (n !== 'all') startPairSession(stage, n); } },
+      defaultListOpen: true,
+      backdropKind: 'pairs',
     });
     navigate('preview');
   }
@@ -421,20 +447,14 @@ export function App() {
     return { studied, quizzes, avgScore };
   }
   // 거리 읽기 — 간판·메뉴·안내·교통 표기 읽기 연습. 표기 목록 미리보기 + 퀴즈 개수 선택 후 시작.
-  const SIGN_COUNT_OPTIONS = [6, 10, 15];
+  const SIGN_COUNT_OPTIONS: (number | 'all')[] = [6, 10, 15, 'all'];
   const signScope = (id: string) => id.startsWith('sign:');
   function signCards(quizCount: number): Card[] {
     return selectStudyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:') && !id.startsWith('sign:study:'), { studyLimit: 24, quizCount, progress });
   }
-  // "바로 퀴즈 풀기" — 새로 학습하는 단어를 섞지 않는다. 이전에 이미 학습한 적 있는 표지만
-  // 퀴즈로 낸다("학습 먼저→퀴즈" 규칙). 한 번도 학습한 적 없으면(진짜 신규) signCards로 폴백 —
-  // 그래야 첫 사용자에게도 죽은 버튼이 아니라 실제 학습+퀴즈가 나간다.
-  function signQuizOnly(count: number): Card[] {
-    const quizOnly = selectQuizOnlyDeck(allCards, (id) => id.startsWith('sign:study:'), (id) => id.startsWith('sign:') && !id.startsWith('sign:study:'), { quizCount: count, progress });
-    return quizOnly.length > 0 ? quizOnly : signCards(count);
-  }
+  // 학습(먼저)+퀴즈(고른 개수만큼) — "바로 퀴즈 풀기"는 없애고 항상 학습부터.
   function beginSignSession(count: number, stage?: string | null) {
-    let cards = signQuizOnly(count);
+    let cards = signCards(count);
     if (cards.length === 0) return;
     cards = withStudyTip(cards, ['간판', '표지', '편의점']);
     lastPracticeRef.current = () => beginSignSession(count, stage);
@@ -447,25 +467,24 @@ export function App() {
     lastPracticeRef.current = () => beginSignStudyAll(stage);
     flow.beginSession(nextSessionId(session), cards, { intro: false, replace: true, practice: true, stage });
   }
-  function startSignSession(stage?: string | null, count?: number) {
+  function startSignSession(stage?: string | null, count?: number | 'all') {
     // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 stage로 흘러들 수 있어(방어)
     if (typeof stage !== 'string') stage = undefined;
     const c = count ?? SIGN_COUNT_OPTIONS[0];
-    const cards = signCards(c);
+    const cards = c === 'all' ? allCards.filter((card) => card.kind === 'introduce' && card.id.startsWith('sign:study:')) : signCards(c);
     if (cards.length === 0) return;
     const lines = cards
       .filter((card): card is IntroduceCard => card.kind === 'introduce')
       .map((card) => ({ ja: card.ja, kana: card.kana, korean: card.korean }));
     setPreview({
       title: '간판·메뉴 읽기',
-      subtitle: '바로 퀴즈를 풀거나, 전체를 먼저 학습한 뒤 퀴즈 개수를 골라보세요.',
+      subtitle: '퀴즈 개수를 고르고 학습하세요. "전체"를 고르면 퀴즈 없이 전부 학습해요.',
       lines,
       returnView: stage ? 'practice' : 'home',
-      begin: () => beginSignSession(c, stage),
+      begin: () => (c === 'all' ? beginSignStudyAll(stage) : beginSignSession(c, stage)),
       countControl: { value: c, options: SIGN_COUNT_OPTIONS, onChange: (n) => startSignSession(stage, n) },
       backdropKind: 'signs',
       stats: computePreviewStats(signScope),
-      studyAll: () => beginSignStudyAll(stage),
     });
     navigate('preview');
   }
@@ -488,7 +507,7 @@ export function App() {
       lines: [],
       returnView: stage ? 'practice' : 'home',
       begin: () => beginDictationSession(c, stage),
-      countControl: { value: c, options: DICTATION_COUNT_OPTIONS, onChange: (n) => startDictationSession(stage, n) },
+      countControl: { value: c, options: DICTATION_COUNT_OPTIONS, onChange: (n) => { if (n !== 'all') startDictationSession(stage, n); } },
     });
     navigate('preview');
   }
@@ -511,7 +530,7 @@ export function App() {
       lines,
       returnView: stage ? 'practice' : 'home', // 레벨 진도 단계면 연습 메뉴로, 강화학습 경유면 홈으로
       begin: () => flow.beginSession(id, sessionCards, { intro: false, replace: true, practice: true, stage }),
-      countControl: { value: count, options: COMPOSE_COUNT_OPTIONS, onChange: (n) => openComposePreview(n, stage) },
+      countControl: { value: count, options: COMPOSE_COUNT_OPTIONS, onChange: (n) => { if (n !== 'all') openComposePreview(n, stage); } },
     });
     navigate('preview');
   }
@@ -581,12 +600,20 @@ export function App() {
     const quizOnly = selectQuizOnlyDeck(allCards, studyTest, quizTest, { quizCount, progress });
     return quizOnly.length > 0 ? quizOnly : vocabCards(groupId, quizCount);
   }
-  // 실제 세션 시작(미리보기의 "학습 시작" 또는 표 학습 화면의 퀴즈 버튼에서 호출).
+  // 표 학습 화면(숫자 학습 등)의 "N개 퀴즈로 확인" 버튼 전용 — 표가 이미 학습 단계라 퀴즈만.
   function beginVocabSession(groupId: string, quizCount: number) {
     let cards = vocabQuizOnly(groupId, quizCount);
     if (cards.length === 0) return;
     cards = withStudyTip(cards, VOCAB_TOPIC_KEYWORDS[groupId] ?? []);
     lastPracticeRef.current = () => beginVocabSession(groupId, quizCount);
+    flow.beginSession(nextSessionId(session), cards, { intro: false, replace: true, practice: true });
+  }
+  // 미리보기 화면의 "학습하기" 전용 — 항상 학습부터(고른 개수만큼 퀴즈까지 포함).
+  function beginVocabStudyThenQuiz(groupId: string, quizCount: number) {
+    let cards = vocabCards(groupId, quizCount);
+    if (cards.length === 0) return;
+    cards = withStudyTip(cards, VOCAB_TOPIC_KEYWORDS[groupId] ?? []);
+    lastPracticeRef.current = () => beginVocabStudyThenQuiz(groupId, quizCount);
     flow.beginSession(nextSessionId(session), cards, { intro: false, replace: true, practice: true });
   }
   function beginVocabStudyAll(groupId: string) {
@@ -596,44 +623,39 @@ export function App() {
     lastPracticeRef.current = () => beginVocabStudyAll(groupId);
     flow.beginSession(nextSessionId(session), cards, { intro: false, replace: true, practice: true });
   }
-  const VOCAB_COUNT_OPTIONS = [6, 10, 16];
+  const VOCAB_COUNT_OPTIONS: (number | 'all')[] = [6, 10, 16, 'all'];
   // 배너에서 바로 시작 — 미리보기(이번에 배울 단어 목록 + 퀴즈 개수 선택) 화면을 먼저 거친다.
   // (표 학습 화면이 있는 숫자 학습은 그 표가 이미 미리보기 역할을 해서 beginVocabSession으로 바로 감 — VocabTable.onQuiz 참고.)
-  function startVocabSession(groupId: string, quizCount?: number) {
+  function startVocabSession(groupId: string, quizCount?: number | 'all') {
     // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 groupId로 흘러들 수 있어(방어)
     if (typeof groupId !== 'string') groupId = 'all';
     const count = quizCount ?? VOCAB_COUNT_OPTIONS[0];
-    const cards = vocabCards(groupId, count);
+    const cards = count === 'all' ? allCards.filter((c) => c.kind === 'introduce' && vocabScopeTest(groupId)(c.id)) : vocabCards(groupId, count);
     if (cards.length === 0) return;
     const lines = cards
       .filter((c): c is IntroduceCard => c.kind === 'introduce')
       .map((c) => ({ ja: c.ja, kana: c.kana, korean: c.korean }));
     setPreview({
       title: vocabTitle(groupId),
-      subtitle: '바로 퀴즈를 풀거나, 전체를 먼저 학습한 뒤 퀴즈 개수를 골라보세요.',
+      subtitle: '퀴즈 개수를 고르고 학습하세요. "전체"를 고르면 퀴즈 없이 전부 학습해요.',
       lines,
       returnView: 'practice',
-      begin: () => beginVocabSession(groupId, count),
+      begin: () => (count === 'all' ? beginVocabStudyAll(groupId) : beginVocabStudyThenQuiz(groupId, count)),
       countControl: { value: count, options: VOCAB_COUNT_OPTIONS, onChange: (n) => startVocabSession(groupId, n) },
       backdropKind: vocabBackdropKind(groupId),
       stats: computePreviewStats(vocabScopeTest(groupId)),
-      studyAll: () => beginVocabStudyAll(groupId),
     });
     navigate('preview');
   }
   // 기본 인사 전용 세션 — 학습형. 다른 어휘 그룹과 동일하게 미리보기(배너+통계+학습/퀴즈 구분)를 거친다.
-  const GREETING_COUNT_OPTIONS = [6, 10, 16];
+  const GREETING_COUNT_OPTIONS: (number | 'all')[] = [6, 10, 16, 'all'];
   const greetingScope = (id: string) => id.startsWith('vocab:greetings:');
   function greetingCards(quizCount: number): Card[] {
     return selectStudyDeck(allCards, (id) => id.startsWith('vocab:greetings:study:'), (id) => id.startsWith('vocab:greetings:') && !isVocabStudy(id), { studyLimit: 18, quizCount, progress });
   }
-  // "바로 퀴즈 풀기" — 이전에 학습한 인사말만 퀴즈로. 한 번도 학습한 적 없으면(첫 승급 단계 등) greetingCards로 폴백.
-  function greetingQuizOnly(quizCount: number): Card[] {
-    const quizOnly = selectQuizOnlyDeck(allCards, (id) => id.startsWith('vocab:greetings:study:'), (id) => id.startsWith('vocab:greetings:') && !isVocabStudy(id), { quizCount, progress });
-    return quizOnly.length > 0 ? quizOnly : greetingCards(quizCount);
-  }
+  // 학습(먼저)+퀴즈(고른 개수만큼) — "바로 퀴즈 풀기"는 없애고 항상 학습부터.
   function beginGreetingSession(count: number, stage?: string | null) {
-    const cards = greetingQuizOnly(count);
+    const cards = greetingCards(count);
     if (cards.length === 0) return;
     lastPracticeRef.current = () => beginGreetingSession(count, stage);
     flow.beginSession(nextSessionId(session), cards, { intro: false, replace: true, practice: true, stage });
@@ -644,25 +666,24 @@ export function App() {
     lastPracticeRef.current = () => beginGreetingStudyAll(stage);
     flow.beginSession(nextSessionId(session), cards, { intro: false, replace: true, practice: true, stage });
   }
-  function startGreetingSession(stage?: string | null, count?: number) {
+  function startGreetingSession(stage?: string | null, count?: number | 'all') {
     // typeof 체크: onClick={fn} 형태로 콜백을 넘기면 클릭 이벤트가 stage로 흘러들 수 있어(방어)
     if (typeof stage !== 'string') stage = undefined;
     const c = count ?? GREETING_COUNT_OPTIONS[0];
-    const cards = greetingCards(c);
+    const cards = c === 'all' ? allCards.filter((card) => card.kind === 'introduce' && greetingScope(card.id)) : greetingCards(c);
     if (cards.length === 0) return;
     const lines = cards
       .filter((card): card is IntroduceCard => card.kind === 'introduce')
       .map((card) => ({ ja: card.ja, kana: card.kana, korean: card.korean }));
     setPreview({
       title: '기본 인사',
-      subtitle: '바로 퀴즈를 풀거나, 전체를 먼저 학습한 뒤 퀴즈 개수를 골라보세요.',
+      subtitle: '퀴즈 개수를 고르고 학습하세요. "전체"를 고르면 퀴즈 없이 전부 학습해요.',
       lines,
       returnView: stage ? 'practice' : 'home',
-      begin: () => beginGreetingSession(c, stage),
+      begin: () => (c === 'all' ? beginGreetingStudyAll(stage) : beginGreetingSession(c, stage)),
       countControl: { value: c, options: GREETING_COUNT_OPTIONS, onChange: (n) => startGreetingSession(stage, n) },
       backdropKind: 'greetings',
       stats: computePreviewStats(greetingScope),
-      studyAll: () => beginGreetingStudyAll(stage),
     });
     navigate('preview');
   }
@@ -682,15 +703,17 @@ export function App() {
     lastPracticeRef.current = () => beginAnnouncementStudyAll(category);
     flow.beginSession(nextSessionId(session), cards, { intro: false, replace: true, practice: true });
   }
-  function startAnnouncementSession(category?: AnnouncementCategory, count?: number) {
+  function startAnnouncementSession(category?: AnnouncementCategory, count?: number | 'all') {
     // 카테고리별 항목 수가 적으면(예: 매장 3개) 변형 퀴즈도 그만큼 적어(항목당 2개) 16개 옵션을 못 채운다 —
     // 실제로 만들 수 있는 최대치를 넘는 옵션은 아예 안 보여준다(선택은 됐는데 개수가 안 맞는 버그 방지).
     const itemCount = category ? (announcementCounts()[category] ?? 0) : Object.values(announcementCounts()).reduce((a, b) => a + b, 0);
     const maxAchievable = itemCount * 2;
-    const options = ANNOUNCEMENT_COUNT_OPTIONS.filter((n) => n <= maxAchievable);
-    if (options.length === 0) options.push(Math.max(1, maxAchievable));
-    const c = Math.min(count ?? options[0], maxAchievable);
-    const cards = selectAnnouncementDeck(category, c);
+    const numericOptions = ANNOUNCEMENT_COUNT_OPTIONS.filter((n) => n <= maxAchievable);
+    const options: (number | 'all')[] = [...(numericOptions.length ? numericOptions : [Math.max(1, maxAchievable)]), 'all'];
+    const c = count ?? options[0];
+    const cards = c === 'all'
+      ? selectAnnouncementDeck(category, 0).filter((card) => card.kind === 'introduce')
+      : selectAnnouncementDeck(category, Math.min(c, maxAchievable));
     if (cards.length === 0) return;
     const lines = cards
       .filter((card): card is IntroduceCard => card.kind === 'introduce')
@@ -699,13 +722,12 @@ export function App() {
       ? `방송 · ${ANNOUNCEMENT_CATEGORIES.find((x) => x.id === category)?.label ?? '방송'}`
       : '방송 메시지 모아 듣기';
     setPreview({
-      title, subtitle: '바로 퀴즈를 풀거나, 전체를 먼저 학습한 뒤 퀴즈 개수를 골라보세요.', lines,
+      title, subtitle: '퀴즈 개수를 고르고 학습하세요. "전체"를 고르면 퀴즈 없이 전부 학습해요.', lines,
       returnView: 'public',
-      begin: () => beginAnnouncementSession(category, c),
+      begin: () => (c === 'all' ? beginAnnouncementStudyAll(category) : beginAnnouncementSession(category, Math.min(c, maxAchievable))),
       countControl: { value: c, options, onChange: (n) => startAnnouncementSession(category, n) },
       backdropKind: 'signs',
       stats: computePreviewStats((id) => id.startsWith('announce:')),
-      studyAll: () => beginAnnouncementStudyAll(category),
     });
     navigate('preview');
   }
@@ -796,6 +818,7 @@ export function App() {
     onNavigate: (v: 'home' | 'practice' | 'map' | 'review' | 'gacha') => navigate(v),
     onOpenGuide: () => setShowGuide(true),
     onOpenSettings: () => setShowSettings(true),
+    onOpenTips: () => navigate('tips'),
     theme: settings.theme,
     onToggleTheme: toggleTheme,
   };
@@ -815,7 +838,24 @@ export function App() {
           onOpenBasics={() => navigate('vocabTable')}
           onOpenPublic={() => navigate('public')}
           onOpenEntertainment={() => navigate('ent')}
+          onOpenDiscoverGallery={() => navigate('discover')}
           onStartVocabGroup={startVocabSession}
+        />
+      );
+    }
+    if (view === 'tips') {
+      return <TipsLibrary nav={{ ...nav, current: 'practice' }} onBack={() => goBack('practice')} />;
+    }
+    if (view === 'discover') {
+      return (
+        <DiscoverGallery
+          nav={{ ...nav, current: 'practice' }}
+          onBack={() => goBack('practice')}
+          entries={readableDiscoveries()}
+          onSeenAll={(ids) => {
+            const nx = [...new Set([...discovered, ...ids])];
+            setDiscovered(nx); saveDiscovered(nx);
+          }}
         />
       );
     }
@@ -904,7 +944,7 @@ export function App() {
           countControl={preview.countControl}
           backdropKind={preview.backdropKind}
           stats={preview.stats}
-          onStudyAll={preview.studyAll}
+          defaultListOpen={preview.defaultListOpen}
         />
       );
     }

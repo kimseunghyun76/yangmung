@@ -57,7 +57,7 @@ export function PromotionResult({ fromLevel, toLevel, passed, score, quizSeen, s
       {/* 이 시험이 무엇을 확인하는지 */}
       <MascotBubble who="mung" style={{ marginTop: 22 }}>
         이 시험은 <strong>{fromLabel}</strong> 단계에서 배운 핵심 내용을 얼마나 익혔는지 확인해요.
-        20문제 중 90% 이상 맞히면 <strong>{toLabel}</strong>로 올라가요.
+        20문제 중 90% 이상 맞히면 <strong>{toLabel}</strong>으로 올라가요.
       </MascotBubble>
 
       {passed ? (

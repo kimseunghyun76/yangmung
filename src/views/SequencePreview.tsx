@@ -3,8 +3,9 @@
 // 무엇을 배울지 직접 골랐으므로 그 안내가 불필요하다. 대신 배울 문장 전체를 쭉 보여주고
 // 한 번에 듣게 한 뒤, 곧바로 기존 단락별 학습+퀴즈 세션으로 들어간다.
 // 2026-07-09: 다른 모든 학습 메뉴처럼 배너 이미지 + 오버레이 타이틀을 넣고, 누적 학습/퀴즈/평균 점수
-// 배지를 얹었다. 학습형 콘텐츠(간판·방송·어휘·인사)는 "바로 퀴즈 풀기"와 "전체 학습하기"를 나눠
-// 전체 학습을 먼저 끝내고 싶은 사람도 배려한다.
+// 배지를 얹었다.
+// 2026-07-20: 학습형 콘텐츠(간판·방송·어휘·인사)의 "바로 퀴즈 풀기"/"전체 학습하기" 이원 버튼을
+// 없애고, 퀴즈 개수 선택에 "전체"를 옵션으로 합쳐 단일 "학습하기" 버튼이 고른 옵션대로 동작하게 했다.
 import { useEffect, useRef, useState } from 'react';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
@@ -17,13 +18,16 @@ export interface PreviewLine {
   kana: string;
   korean: string;
   speaker?: string;
+  /** 발음 구분처럼 "단어 하나"가 아니라 두 발음을 비교하는 미리보기 항목일 때 반대쪽 발음. */
+  contrast?: { kana: string; korean: string };
 }
 
 // 퀴즈 개수 선택 — 있으면 프리뷰 상단에 세그먼트로 노출, 고르면 목록·개수가 다시 계산돼 렌더링됨.
+// 'all'을 고르면 퀴즈 없이 전체를 학습만 한다(옛 "전체 학습하기" 버튼을 이 옵션으로 흡수).
 export interface CountControl {
-  value: number;
-  options: number[];
-  onChange: (n: number) => void;
+  value: number | 'all';
+  options: (number | 'all')[];
+  onChange: (n: number | 'all') => void;
 }
 
 export interface PreviewStats {
@@ -42,15 +46,16 @@ interface Props {
   /** 배너 이미지 종류(quickPracticeBackdrop에 넘길 kind). 없으면 배너를 생략. */
   backdropKind?: string;
   stats?: PreviewStats;
-  /** 있으면 "바로 퀴즈 풀기"/"전체 학습하기" 두 갈래로 나눠 보여준다(학습형 콘텐츠 전용). */
-  onStudyAll?: () => void;
+  /** 발음 구분처럼 목록 자체가 학습 자료(스포일러가 아님)인 콘텐츠는 기본으로 펼쳐서 보여준다. */
+  defaultListOpen?: boolean;
 }
 
-export function SequencePreview({ title, subtitle, lines, onStart, onBack, countControl, backdropKind, stats, onStudyAll }: Props) {
+export function SequencePreview({ title, subtitle, lines, onStart, onBack, countControl, backdropKind, stats, defaultListOpen = false }: Props) {
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   // 미리보기 목록(=이번 퀴즈에 나올 내용) 기본은 접어둔다 — 선행학습 스포일러를 원치 않는 사람이 대다수라
   // 보고 싶은 사람만 펼쳐 보게 한다. 재생 중이면 강제로 펼쳐 따라 스크롤이 보이게 한다.
-  const [listOpen, setListOpen] = useState(false);
+  // defaultListOpen이 true면(예: 발음 구분) 목록 자체가 곧 학습 자료라 처음부터 펼쳐 둔다.
+  const [listOpen, setListOpen] = useState(defaultListOpen);
   const tokenRef = useRef(0);
   const lineRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -64,6 +69,13 @@ export function SequencePreview({ title, subtitle, lines, onStart, onBack, count
     return () => window.clearTimeout(t);
   }, [playingIndex]);
 
+  // 비교(contrast) 항목은 "단어 하나 듣기"가 아니라 두 발음을 이어 들려줘야 비교가 된다.
+  function speakLine(i: number, onEnd: () => void) {
+    const l = lines[i];
+    if (l.contrast) speak(l.kana, { onEnd: () => speak(l.contrast!.kana, { onEnd }) });
+    else speak(l.ja, { onEnd });
+  }
+
   function playAll() {
     stopSpeaking();
     const token = ++tokenRef.current;
@@ -71,8 +83,9 @@ export function SequencePreview({ title, subtitle, lines, onStart, onBack, count
     const next = () => {
       if (token !== tokenRef.current) return; // 다른 재생 요청이 끼어들면 중단
       if (i >= lines.length) { setPlayingIndex(null); return; }
-      setPlayingIndex(i);
-      speak(lines[i++].ja, { onEnd: next });
+      const idx = i++;
+      setPlayingIndex(idx);
+      speakLine(idx, next);
     };
     next();
   }
@@ -81,7 +94,7 @@ export function SequencePreview({ title, subtitle, lines, onStart, onBack, count
     stopSpeaking();
     tokenRef.current++; // 진행 중이던 전체 재생을 취소
     setPlayingIndex(i);
-    speak(lines[i].ja, { onEnd: () => setPlayingIndex((p) => (p === i ? null : p)) });
+    speakLine(i, () => setPlayingIndex((p) => (p === i ? null : p)));
   }
 
   return (
@@ -136,10 +149,13 @@ export function SequencePreview({ title, subtitle, lines, onStart, onBack, count
                   border: `1px solid ${active ? 'var(--ink)' : 'var(--glass-border)'}`,
                   background: active ? 'var(--accent)' : 'var(--glass-bg-strong)',
                   color: active ? 'var(--accent-ink)' : 'var(--ink-soft)',
-                }}>{n}개</button>
+                }}>{n === 'all' ? '전체' : `${n}개`}</button>
               );
             })}
           </div>
+          {countControl.value === 'all' && (
+            <p style={{ margin: '8px 0 0', fontSize: 11.5, color: 'var(--ink-faint)' }}>전체를 고르면 퀴즈 없이 내용 전부를 학습만 해요.</p>
+          )}
         </div>
       )}
 
@@ -175,10 +191,24 @@ export function SequencePreview({ title, subtitle, lines, onStart, onBack, count
                       border: '1px solid var(--accent)', borderRadius: 999, padding: '1px 7px', marginTop: 2,
                     }}>{l.speaker}</span>
                   )}
-                  <span style={{ flex: 1, minWidth: 0 }}>
-                    <span style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{l.ja}</span>
-                    <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 2 }}>{l.korean}</span>
-                  </span>
+                  {l.contrast ? (
+                    <span style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      <span>
+                        <span style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{l.kana}</span>
+                        <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 1 }}>{l.korean}</span>
+                      </span>
+                      <span style={{ fontSize: 10.5, fontWeight: 900, color: 'var(--ink-faint)', letterSpacing: '.03em' }}>↕ 대조</span>
+                      <span>
+                        <span style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{l.contrast.kana}</span>
+                        <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 1 }}>{l.contrast.korean}</span>
+                      </span>
+                    </span>
+                  ) : (
+                    <span style={{ flex: 1, minWidth: 0 }}>
+                      <span style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{l.ja}</span>
+                      <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 2 }}>{l.korean}</span>
+                    </span>
+                  )}
                   <Icon name="listen" size={16} style={{ flex: '0 0 16px', marginTop: 3, color: active ? 'var(--accent)' : 'var(--ink-faint)' }} />
                 </button>
               );
@@ -197,13 +227,7 @@ export function SequencePreview({ title, subtitle, lines, onStart, onBack, count
             <Icon name="listen" size={18} /> 전체 듣기 ({lines.length}문장)
           </button>
         )}
-        <PrimaryAction onClick={onStart}>{onStudyAll ? '바로 퀴즈 풀기' : '학습 시작'}</PrimaryAction>
-        {onStudyAll && (
-          <button className="ym-press" onClick={onStudyAll} style={{
-            width: '100%', padding: '13px 16px', borderRadius: 14, cursor: 'pointer', fontWeight: 800, fontSize: 14.5,
-            border: '1.5px solid var(--border)', background: 'var(--surface)', color: 'var(--ink)',
-          }}>전체 학습하기</button>
-        )}
+        <PrimaryAction onClick={onStart}>{countControl ? '학습하기' : '학습 시작'}</PrimaryAction>
       </div>
     </main>
   );

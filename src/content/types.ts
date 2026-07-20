@@ -127,14 +127,17 @@ export interface Choice {
 export interface GrammarPoint {
   id: string;
   label: string;
-  tipKo?: string;   // 10초 마이크로 정확도 팁 (한국어 대조, just-in-time 노출)
+  tipKo?: string;   // 10초 마이크로 정확도 팁 (한국어 대조, just-in-time 노출) — 세션 중 짧게만 노출
+  detail?: string;  // 배경·이유·맥락까지 담은 긴 설명 — "문화·여행 팁" 라이브러리 메뉴 전용
   exampleJa?: string;
   exampleKo?: string;
   commonMistake?: string;
   action?: string;
-  category?: string; // 팁 분류 배지 (문법·문화·발음·여행)
+  category?: string; // 팁 분류 배지 — "문화·여행 팁" 라이브러리 세부 카테고리 (TipsLibrary.tsx의 CATEGORY_GROUP 참고)
+  tags?: string[]; // 검색용 키워드 — "문화·여행 팁" 라이브러리 검색·태그 필터 전용
   n5Refs?: string[];
   missionIds?: string[]; // 이 팁과 특히 관련 있는 미션(CLevel) id들 — 미션 진입 시 우선 노출
+  libraryOnly?: boolean; // true면 세션 중 tip 카드로 안 뽑히고 "문화·여행 팁" 라이브러리에서만 보임(재미·잡학류)
 }
 
 export interface N5Entry {

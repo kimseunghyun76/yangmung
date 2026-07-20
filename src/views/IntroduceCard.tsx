@@ -7,7 +7,7 @@ import { vocabExampleFor } from '../content/vocabExamples';
 import { speak, ttsSupported } from '../tts';
 import { PRIMARY } from '../ui/styles';
 import { ReadingAid } from './ReadingAid';
-import { toReadingUnits } from '../learn/kanaReading';
+import { toRomaji } from '../learn/kanaReading';
 import { Icon } from '../ui/Icon';
 import { WordArt, hasWordArt, wordArtAssetSrcForId } from './WordArt';
 
@@ -28,6 +28,22 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
   function next() {
     onSeen();
     onNext();
+  }
+
+  // 발음 구분(최소 페어) 학습 카드 — 핵심은 "단어 하나 외우기"가 아니라 두 발음의 비교이므로,
+  // 장면 배너 이미지 없이 두 단어를 나란히 놓고 비교하는 전용 레이아웃을 쓴다.
+  if (card.contrast) {
+    return (
+      <div>
+        <h2 style={{ marginTop: 14, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="listen" size={22} /> 발음 비교</h2>
+        <PairCompareLearningPanel card={card} contrast={card.contrast} isKanaFamiliar={isKanaFamiliar} />
+        <button
+          className="ym-press"
+          style={{ ...PRIMARY, width: '100%', marginTop: 12, position: 'sticky', bottom: 'max(6px, env(safe-area-inset-bottom))', boxShadow: '0 -6px 18px rgba(20,14,10,.14)' }}
+          onClick={next}
+        >알겠어요</button>
+      </div>
+    );
   }
 
   return (
@@ -88,11 +104,6 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
       >알겠어요</button>
     </div>
   );
-}
-
-// 로마자 — 익숙도와 무관하게 항상 보여주는 보조 표기(ReadingAid는 익숙해지면 사라지는 학습용, 이건 참고용).
-function toRomaji(kana: string): string {
-  return toReadingUnits(kana).map((u) => (u.romaji === 'ー' ? '-' : u.romaji)).join('');
 }
 
 // 격식 배지 — 인사말처럼 상대에 따라 표현이 달라지는 항목에서 친한 사이/정중한 사이를 한눈에 구분.
@@ -163,6 +174,62 @@ function WordLearningPanel({ card, isKanaFamiliar, japaneseOnImage }: { card: In
 
       {!japaneseOnImage && <Icon name="listen" size={20} style={{ position: 'absolute', right: 12, top: 11, color: 'var(--accent)', opacity: 0.82 }} />}
     </button>
+  );
+}
+
+// 발음 구분 전용 — 한 단어를 다른 버튼 스타일(주/대조)로 재사용해 두 발음을 나란히 비교한다.
+function PairWordRow({ label, kana, korean, isKanaFamiliar, primary }: {
+  label: string; kana: string; korean: string; isKanaFamiliar: (char: string) => boolean; primary?: boolean;
+}) {
+  const romaji = toRomaji(kana);
+  return (
+    <button
+      onClick={() => speak(kana)}
+      disabled={!ttsSupported()}
+      style={{
+        width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
+        padding: '14px 16px', borderRadius: 16, cursor: 'pointer', textAlign: 'left',
+        border: `1px solid ${primary ? 'rgba(185,56,46,.28)' : 'var(--glass-border)'}`,
+        background: primary ? 'var(--accent-soft)' : 'var(--glass-bg-strong)',
+        color: 'var(--ink)',
+      }}
+    >
+      <span style={{ minWidth: 0, flex: 1 }}>
+        <span style={{ display: 'block', fontSize: 10.5, fontWeight: 850, color: 'var(--ink-soft)', marginBottom: 4 }}>{label}</span>
+        <span lang="ja" style={{ display: 'flex', alignItems: 'baseline', gap: 7, flexWrap: 'wrap' }}>
+          <ReadingAid text={kana} isFamiliar={isKanaFamiliar} fontSize={26} />
+          {romaji && <span lang="" style={{ fontSize: 12, fontWeight: 650, color: 'var(--ink-faint)' }}>[{romaji}]</span>}
+        </span>
+        <span style={{ display: 'block', marginTop: 4, fontSize: 13, fontWeight: 750, color: 'var(--ink-soft)', overflowWrap: 'anywhere' }}>{korean}</span>
+      </span>
+      <Icon name="listen" size={19} style={{ flex: '0 0 auto', color: primary ? 'var(--accent)' : 'var(--ink-faint)', opacity: 0.85 }} />
+    </button>
+  );
+}
+
+// 발음 구분 학습 카드 본문 — "단어 하나 외우기"가 아니라 비교가 핵심이라, 이번 문제 발음과 헷갈리는
+// 반대쪽 발음을 같은 크기로 나란히 놓고 각각 들어볼 수 있게 한다. 배너 이미지는 넣지 않는다.
+function PairCompareLearningPanel({ card, contrast, isKanaFamiliar }: {
+  card: IntroduceCard; contrast: { kana: string; korean: string }; isKanaFamiliar: (char: string) => boolean;
+}) {
+  return (
+    <div style={{ marginTop: 10 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <PairWordRow label="이번 발음" kana={card.kana} korean={card.korean} isKanaFamiliar={isKanaFamiliar} primary />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '0 4px' }}>
+          <span style={{ flex: 1, height: 1, background: 'var(--glass-border)' }} />
+          <span style={{ fontSize: 11, fontWeight: 900, color: 'var(--ink-faint)', letterSpacing: '.04em' }}>VS 헷갈리는 발음</span>
+          <span style={{ flex: 1, height: 1, background: 'var(--glass-border)' }} />
+        </div>
+        <PairWordRow label="대조" kana={contrast.kana} korean={contrast.korean} isKanaFamiliar={isKanaFamiliar} />
+      </div>
+      {card.tip && (
+        <div style={{ marginTop: 10, padding: 12, borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--surface-2)', display: 'flex', gap: 8 }}>
+          <Icon name="tip" size={15} style={{ flex: '0 0 auto', marginTop: 1, color: 'var(--accent)' }} />
+          <span style={{ fontSize: 13, lineHeight: 1.5, color: 'var(--ink-soft)' }}>{card.tip}</span>
+        </div>
+      )}
+    </div>
   );
 }
 
