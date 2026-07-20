@@ -408,7 +408,10 @@ export function App() {
   function beginPairSession(cards: Card[], stage?: string | null) {
     if (cards.length === 0) return;
     const withTip = withStudyTip(cards, ['발음', '촉음', '장음', 'ら행', 'ふ']);
-    lastPracticeRef.current = () => beginPairSession(selectPairStudyDeck(allCards, progress, nextSessionId(session), cards.length), stage);
+    // cards.length는 학습 카드까지 합친 전체 덱 크기라, 그대로 limit에 다시 넘기면 "다시 한번"을 누를 때마다
+    // 덱이 계속 불어난다 — 실제로 요청했던 퀴즈 개수(quiz 카드 수)만 다시 넘겨야 크기가 유지된다.
+    const quizCount = cards.filter((c) => c.kind === 'quiz').length;
+    lastPracticeRef.current = () => beginPairSession(selectPairStudyDeck(allCards, progress, nextSessionId(session), quizCount), stage);
     flow.beginSession(nextSessionId(session), withTip, { intro: false, replace: true, practice: true, stage });
   }
   function startPairSession(stage?: string | null, count?: number) {
