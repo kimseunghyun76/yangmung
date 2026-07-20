@@ -239,12 +239,22 @@ export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, pro
           <Icon name={stars >= 3 ? 'trophy' : strugglingResult ? 'target' : 'check'} size={38} />
         </div>
         <h1 style={{ margin: '16px 0 0', fontSize: 28 }}>세션 {sessionId} 완료</h1>
-        <p style={{ fontSize: 22, margin: '10px 0 0', letterSpacing: 2, color: 'var(--accent)' }}>
-          {'★'.repeat(stars)}<span style={{ color: 'var(--glass-border)' }}>{'★'.repeat(3 - stars)}</span>
-        </p>
-        <p style={{ color: 'var(--ink-soft)', fontSize: 14, margin: '8px 0 0', fontWeight: 600 }}>
-          첫 시도 {score}/{quizSeen}{speakCount > 0 ? ` · 말하기 ${speakCount}` : ''}
-        </p>
+        {/* 퀴즈 없이 전체 학습만 한 세션엔 별점·"0/0" 대신 학습한 카드 수를 보여준다 —
+            채점 대상이 없는데 별점/점수 UI를 그대로 쓰면 실패처럼 보였다. */}
+        {quizSeen > 0 ? (
+          <>
+            <p style={{ fontSize: 22, margin: '10px 0 0', letterSpacing: 2, color: 'var(--accent)' }}>
+              {'★'.repeat(stars)}<span style={{ color: 'var(--glass-border)' }}>{'★'.repeat(3 - stars)}</span>
+            </p>
+            <p style={{ color: 'var(--ink-soft)', fontSize: 14, margin: '8px 0 0', fontWeight: 600 }}>
+              첫 시도 {score}/{quizSeen}{speakCount > 0 ? ` · 말하기 ${speakCount}` : ''}
+            </p>
+          </>
+        ) : (
+          <p style={{ color: 'var(--ink-soft)', fontSize: 14, margin: '10px 0 0', fontWeight: 600 }}>
+            카드 {sessionCards.length}개 학습 완료
+          </p>
+        )}
         {strugglingResult && (
           <p style={{ color: 'var(--warn)', fontSize: 13, margin: '10px 0 0', fontWeight: 700 }}>
             이번엔 많이 낯설었어요 — 아래에서 다시 배우고 도전하면 훨씬 쉬워져요.

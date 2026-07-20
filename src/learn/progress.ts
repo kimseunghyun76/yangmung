@@ -558,6 +558,8 @@ export function selectSessionCards(
     if (c.kind === 'quiz' && c.id.startsWith('sign:')) continue;  // 거리 읽기는 전용 세션에서만
     if (c.kind === 'quiz' && c.id.startsWith('basic:')) continue; // 생활 기초는 전용 세션에서만
     if (c.kind === 'quiz' && c.id.startsWith('pair:')) continue;  // 발음 구분은 P 버킷으로 분리
+    if (c.id.startsWith('vocab:')) continue; // 주제 어휘(숫자·인사말 등)는 전용 메뉴에서 배우고 퀴즈까지 — 안 배운 퀴즈가 오늘의 학습에 섞이는 것 방지
+    if (c.kind === 'dictation' && c.promptKind !== 'korean') continue; // 받아쓰기는 전용 연습에서만 — 오늘의 학습 중간에 끼어들지 않게
     if (c.kind === 'introduce' && progress[c.id]) continue; // 새 표현 소개는 1회만 — 본 것은 제외(다른 새 표현으로)
     if (classifyCard(c, progress[c.id], currentSessionId) === 'cooldown') continue;
     // 레벨 필터 — 듣기·받아쓰기·작문 카드는 티어 범위 밖이면 제외(태그 없는 어휘·가나는 항상 포함).
@@ -616,12 +618,12 @@ export function selectSessionCards(
   const inRangeTips = [...tips].filter(tipInRange).sort(byFreshness);
   const outRangeTips = [...tips].filter((c) => !tipInRange(c)).sort(byFreshness);
   const tipsSel = [...inRangeTips, ...outRangeTips].slice(0, config.quotas.tip);
-  // 흐름: 새 표현 소개가 있으면 맨 앞 → 단어(B)·발음(P) 워밍업 → 장면 미션(C) → 팁.
   const warmup = interleave(kSel, interleave(bSel, pSel));
-  // 흐름: 새 표현 → 문법(tip) → (워밍업) → 장면 미션 퀴즈. 문법을 퀴즈 앞에 둔다.
+  // 흐름: 새 표현 소개 → 문법(tip) → 그 장면의 퀴즈(있으면, 소개 바로 뒤에 이어서) → 그 다음 단어(B)·발음(P) 복습 워밍업.
+  // 장면 소개와 그 장면 퀴즈 사이에 관계없는 복습 카드가 끼어들지 않도록, 장면 관련 카드를 항상 앞쪽에 붙여 모아둔다.
   return sceneIntroduces.length
-    ? [...sceneIntroduces, ...tutorialIntroduces, ...tipsSel, ...warmup, ...sceneRest]
-    : [...tipsSel, ...warmup, ...scene];
+    ? [...sceneIntroduces, ...tutorialIntroduces, ...tipsSel, ...sceneRest, ...warmup]
+    : [...tipsSel, ...scene, ...warmup];
 }
 
 // 홈에서 "시작 버튼이 정확히 몇 카드 시작인지" 표시용 (Done의 "한 세션 더" 가능 여부 판단에도 사용)
@@ -747,6 +749,23 @@ export function selectPairCards(allCards: Card[], progress: ProgressMap, current
     out.push(rest.splice(idx >= 0 ? idx : 0, 1)[0]);
   }
   return out;
+}
+
+// 발음 구분 학습 덱 — 퀴즈 전에 이번에 나올 쌍의 학습 카드를 먼저 보여준다.
+// "학습하지 않고 퀴즈만 풀 수는 없다"는 요청에 따라, 퀴즈에 포함된 쌍만큼만 학습 카드를 앞에 붙인다.
+export function selectPairStudyDeck(allCards: Card[], progress: ProgressMap, currentSessionId: number, limit = 12): Card[] {
+  const quiz = selectPairCards(allCards, progress, currentSessionId, limit);
+  if (quiz.length === 0) return [];
+  // 퀴즈에 같은 쌍의 a·b가 둘 다 뽑혀도 학습 카드는 쌍당 1장만 — 같은 대조를 두 번 공부하지 않는다.
+  const pairIds = [...new Set(quiz.map((c) => c.id.split(':')[1]))];
+  const studyByPair = new Map<string, IntroduceCard>();
+  for (const c of allCards) {
+    if (c.kind !== 'introduce' || !c.id.startsWith('pair:study:')) continue;
+    const pid = c.id.split(':')[2];
+    if (!studyByPair.has(pid) && pairIds.includes(pid)) studyByPair.set(pid, c);
+  }
+  const study = pairIds.map((pid) => studyByPair.get(pid)).filter((c): c is IntroduceCard => !!c);
+  return [...shuffleKana(study), ...quiz];
 }
 
 // 학습형 덱 — 항목을 모두 설명·듣기·읽기(introduce)한 뒤, 마지막에 "듣고 일본어 찾기" 퀴즈 몇 개만.

@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 export type View =
   | 'home' | 'practice' | 'map' | 'review' | 'gacha'
-  | 'vocabTable' | 'verbs' | 'kana' | 'public' | 'ent'
+  | 'vocabTable' | 'verbs' | 'kana' | 'public' | 'ent' | 'tips' | 'discover'
   | 'intro' | 'preview' | 'session' | 'done' | 'flash' | 'write' | 'kanaSpeak' | 'placement';
 
 const VIEW_TO_HASH: Record<View, string> = {
@@ -19,6 +19,8 @@ const VIEW_TO_HASH: Record<View, string> = {
   kana: '/kana',
   public: '/public',
   ent: '/ent',
+  tips: '/tips',
+  discover: '/discover',
   intro: '/session/intro',
   preview: '/session/preview',
   session: '/session',

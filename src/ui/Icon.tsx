@@ -4,7 +4,7 @@ export type IconName =
   | 'nav-home' | 'nav-map' | 'nav-review' | 'nav-guide' | 'nav-settings'
   | 'theme-day' | 'theme-night' | 'back'
   | 'target' | 'kana' | 'sign' | 'dictation' | 'listen' | 'speak' | 'discover' | 'tip' | 'flow' | 'recovery'
-  | 'check' | 'cross' | 'star' | 'trophy'
+  | 'check' | 'cross' | 'star' | 'trophy' | 'search'
   | 'plus' | 'chart' | 'celebrate' | 'mode' | 'fast'
   | 'scene-store' | 'scene-conbini' | 'scene-restaurant' | 'scene-train' | 'scene-hotel' | 'scene-street'
   | 'scene-pharmacy' | 'scene-shopping' | 'scene-taxi' | 'scene-airport' | 'scene-exchange' | 'scene-locker'

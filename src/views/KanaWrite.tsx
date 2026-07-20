@@ -67,6 +67,14 @@ export function KanaWrite({ items, onExit, onReplay, onKanaWritten }: Props) {
       </p>
 
       <TraceCanvas key={item.id} char={item.char} onComplete={complete} />
+
+      {/* 손으로 그리기 어려운 경우(키보드 전용 입력 등)를 위한 대체 경로 — 0점으로 기록하고 다음 글자로. */}
+      <button onClick={() => complete(0)} className="ym-press" style={{
+        display: 'block', margin: '14px auto 0', border: 0, background: 'transparent',
+        color: 'var(--ink-faint)', fontWeight: 700, fontSize: 13, cursor: 'pointer', padding: 4,
+      }}>
+        손으로 쓰기 어려우면 건너뛰기 →
+      </button>
     </main>
   );
 }

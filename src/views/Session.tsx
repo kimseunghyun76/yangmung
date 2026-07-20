@@ -65,22 +65,23 @@ export function Session({ card, index, total, picked, skipped, onChoose, onIntro
         padding: 'max(14px, env(safe-area-inset-top)) 16px 8px',
         background: 'var(--surface-2)',
       }}>
-        <button onClick={exit} aria-label="나가기" style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 15, fontWeight: 600, color: 'var(--ink)', display: 'flex', alignItems: 'center', gap: 4, padding: 4 }}>
-          <Icon name="back" size={18} /> 나가기
+        <button onClick={exit} aria-label="나가기" title="나가기" style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'var(--ink)', display: 'flex', alignItems: 'center', padding: 6 }}>
+          <Icon name="back" size={20} />
         </button>
         <Dots i={index} total={total} onScene={false} />
         <button
           onClick={onPrev}
           disabled={index === 0 || !onPrev}
           aria-label="이전 카드"
+          title="이전 카드"
           style={{
             border: 'none', background: 'none', cursor: index > 0 ? 'pointer' : 'default',
-            fontSize: 14, fontWeight: 600, color: index > 0 ? 'var(--ink)' : 'transparent',
-            display: 'flex', alignItems: 'center', gap: 3, padding: 4,
+            color: index > 0 ? 'var(--ink-soft)' : 'transparent',
+            display: 'flex', alignItems: 'center', padding: 6,
             pointerEvents: index > 0 ? 'auto' : 'none',
           }}
         >
-          ← 이전
+          <Icon name="back" size={16} />
         </button>
       </div>
 
@@ -278,7 +279,10 @@ const DIFF_COLOR: Record<DifficultyLabel, { bg: string; fg: string }> = {
 function DiffBadge({ level }: { level: DifficultyLabel }) {
   const c = DIFF_COLOR[level];
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 999, fontSize: 11.5, fontWeight: 850, background: c.bg, color: c.fg, border: `1px solid ${c.fg}` }}>
+    <span
+      title="카드 자체의 콘텐츠 난이도예요 — 지금 학습 중인 단계 레벨과는 별개예요."
+      style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 999, fontSize: 11.5, fontWeight: 850, background: c.bg, color: c.fg, border: `1px solid ${c.fg}` }}
+    >
       <span style={{ width: 6, height: 6, borderRadius: 99, background: c.fg }} />난이도 {level}
     </span>
   );

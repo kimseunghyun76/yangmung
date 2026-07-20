@@ -20,6 +20,7 @@ interface Props {
   onOpenBasics: () => void;
   onOpenPublic: () => void;
   onOpenEntertainment: () => void;
+  onOpenDiscoverGallery: () => void;
   onStartVocabGroup: (groupId: string) => void;
 }
 
@@ -33,6 +34,8 @@ interface PracticeItem {
   accent: string;
   stage?: ProgStage;
   onClick: () => void;
+  // stage 기반 순차 잠금과 다른 커스텀 해금 조건이 필요할 때만 지정(예: 히라가나+가타카나 완료).
+  unlockCheck?: (progression: ProgressionState) => boolean;
 }
 
 const LEVEL_RANK: Record<CoreLevel, number> = { beginner: 0, default: 1, express: 2, advanced: 3 };
@@ -85,6 +88,7 @@ function itemUnlocked(item: PracticeItem, coreLevel: CoreLevel, progression: Pro
   if (devUnlockAll) return true;
   if (LEVEL_RANK[item.level] < LEVEL_RANK[coreLevel]) return true;
   if (LEVEL_RANK[item.level] > LEVEL_RANK[coreLevel]) return false;
+  if (item.unlockCheck) return item.unlockCheck(progression);
   if (!item.stage) return true;
   const idx = LEVEL_STAGES[item.level].findIndex((stage) => stage.id === item.stage?.id);
   return idx < 0 ? true : isStageUnlocked(progression, item.level, idx);
@@ -94,7 +98,7 @@ function itemDone(item: PracticeItem, progression: ProgressionState): boolean {
   return !!item.stage && isStageComplete(progression, item.level, item.stage.id);
 }
 
-export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartStage, onPracticeWrite, onPracticeSpeak, onPracticeFlash, onOpenBasics, onOpenPublic, onOpenEntertainment, onStartVocabGroup }: Props) {
+export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartStage, onPracticeWrite, onPracticeSpeak, onPracticeFlash, onOpenBasics, onOpenPublic, onOpenEntertainment, onOpenDiscoverGallery, onStartVocabGroup }: Props) {
   // 어휘 커리큘럼 — 예전엔 "어휘 커리큘럼" 배너 하나로 뭉쳐 그 안의 하위 메뉴(/vocab)로 들어가야 했는데,
   // 그 메뉴 안에 기본 인사·생활 기초가 이미 별도 배너로 있는 내용과 중복돼 혼란스러웠다.
   // 이제 기본 인사(입문 단계로 이동)를 뺀 나머지 주제 그룹을 기본 레벨에 개별 배너로 바로 펼쳐 놓는다.
@@ -140,6 +144,17 @@ export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartSta
       icon: 'speak',
       accent: '#2f8b67',
       onClick: onPracticeSpeak,
+    },
+    {
+      key: 'beginner:discover',
+      label: '이제 읽을 수 있어요!',
+      sub: '히라가나·가타카나를 다 배운 뒤 모아보는 표현들',
+      level: 'beginner',
+      art: 'hiragana',
+      icon: 'discover',
+      accent: '#2f8b67',
+      onClick: onOpenDiscoverGallery,
+      unlockCheck: (p) => isStageComplete(p, 'beginner', 'hiragana') && isStageComplete(p, 'beginner', 'katakana'),
     },
     {
       key: 'express:vocab-all',
@@ -245,6 +260,7 @@ export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartSta
           <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)', flex: '0 0 auto' }} />
         </button>
       </section>
+
     </main>
   );
 }

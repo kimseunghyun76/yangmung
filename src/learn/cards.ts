@@ -170,6 +170,8 @@ export interface IntroduceCard {
   reviewTarget?: ReviewTarget;
   /** 격식 — 인사말 등에서 친한 사이/정중한 사이 구분 표시용(있을 때만 배지 노출). */
   register?: 'casual' | 'formal' | 'both';
+  /** 발음 구분(최소 페어) 전용 — 대조되는 반대쪽 발음. 있으면 단어 하나만이 아니라 나란히 비교해 보여준다. */
+  contrast?: { kana: string; korean: string };
 }
 
 // 장면 흐름 카드 — 정답 채점이 아니라 "흔한 흐름"을 보여주는 정보 카드.
@@ -740,6 +742,16 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
       { key: 'b' as const, self: mp.b, other: mp.a },
     ];
     for (const { key, self, other } of sides) {
+      // 학습 카드 — 퀴즈(듣고 구분) 전에 대조되는 두 발음을 먼저 눈으로 보여준다.
+      // "학습 없이 퀴즈만 풀 수는 없다"는 요청에 따라 selectPairStudyDeck이 이 카드를 퀴즈보다 앞에 배치한다.
+      cards.push({
+        kind: 'introduce', id: `pair:study:${mp.id}:${key}`, tag: '발음 구분',
+        phraseId: `pair:study:${mp.id}:${key}`,
+        ja: self.kana, kana: self.kana, korean: self.korean,
+        contrast: { kana: other.kana, korean: other.korean },
+        tip: mp.focus,
+        note: '두 발음을 나란히 듣고 비교해 보세요.',
+      });
       // 오답 2개 추가 — 같은 쌍(self·other)은 제외, 같은 tier(비슷한 난이도)를 우선.
       const excludeKana = new Set([self.kana, other.kana]);
       const pool = allPairSides.filter((s) => !excludeKana.has(s.kana));
@@ -1120,9 +1132,10 @@ export function buildCards(difficulty: 1 | 2 | 3 | 4 = 2): Card[] {
     });
   }
 
-  // 정확성 팁 (디브리프) — 전체 풀 생성, 세션 선별에서 안 본 것 1개씩 회전
+  // 정확성 팁 (디브리프) — 전체 풀 생성, 세션 선별에서 안 본 것 1개씩 회전.
+  // libraryOnly(재미·잡학류)는 학습 흐름을 끊지 않도록 세션에 안 섞고 "문화·여행 팁" 라이브러리에서만 노출.
   for (const g of grammar) {
-    if (!g.tipKo) continue;
+    if (!g.tipKo || g.libraryOnly) continue;
     cards.push({ kind: 'tip', id: `tip:${g.id}`, tag: g.category ?? '팁', label: g.label, tipKo: g.tipKo, tier: grammarLevel(g), missionIds: g.missionIds });
   }
 

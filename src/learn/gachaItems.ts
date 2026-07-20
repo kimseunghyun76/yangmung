@@ -1,4 +1,6 @@
 import type { Rarity } from './collection';
+import assetIndexV2Raw from '../content/data/gachaAssetIndex.json';
+import assetIndexV3Raw from '../content/data/gachaAssetIndexV3.json';
 
 export type ItemMotif = 'food' | 'drink' | 'ticket' | 'stay' | 'shopping' | 'service' | 'safety' | 'festival';
 
@@ -9,6 +11,60 @@ export interface GachaItemArt {
   motif: ItemMotif;
   image?: string;
   fallbackImage?: string;
+}
+
+// public/gacha/items/generated-v3는 재제작된 고품질 샘플만 우선 적용하고,
+// 나머지는 generated-v2 실사 이미지 인덱스로 폴백한다.
+// 미션별 아이템 제목이 이미지 생성 이후 리디자인되며 파일명과 어긋난 경우가 많아(정확매치 300개 중 10개뿐),
+// 세 단계로 폴백해 항상 실사 이미지가 뜨게 한다 — 플레이스홀더(CSS 아이콘)는 최후의 수단으로만 남긴다.
+interface AssetEntry { file: string; rarity: string; motif: string; title: string }
+const V2_ASSET_INDEX = assetIndexV2Raw as AssetEntry[];
+const V3_ASSET_INDEX = assetIndexV3Raw as AssetEntry[];
+
+const exactV3Index = new Map<string, string>();      // "rarity|motif|title" -> generated-v3 path
+const exactV2Index = new Map<string, string>();      // "rarity|motif|title" -> generated-v2 path
+const byTitleMotif = new Map<string, string[]>();    // "title|motif" -> generated-v2 path[] (등급 무관)
+const byRarityMotif = new Map<string, string[]>();   // "rarity|motif" -> generated-v2 path[] (같은 등급·모티프 풀)
+const byMotif = new Map<string, string[]>();         // "motif" -> generated-v2 path[] (최후 폴백 풀)
+
+function indexedAssetPath(version: 'generated-v2' | 'generated-v3', file: string): string {
+  return `/gacha/items/${version}/${file}`;
+}
+
+for (const e of V3_ASSET_INDEX) {
+  exactV3Index.set(`${e.rarity}|${e.motif}|${e.title}`, indexedAssetPath('generated-v3', e.file));
+}
+
+for (const e of V2_ASSET_INDEX) {
+  const path = indexedAssetPath('generated-v2', e.file);
+  exactV2Index.set(`${e.rarity}|${e.motif}|${e.title}`, path);
+  const tm = `${e.title}|${e.motif}`;
+  (byTitleMotif.get(tm) ?? byTitleMotif.set(tm, []).get(tm)!).push(path);
+  const rm = `${e.rarity}|${e.motif}`;
+  (byRarityMotif.get(rm) ?? byRarityMotif.set(rm, []).get(rm)!).push(path);
+  (byMotif.get(e.motif) ?? byMotif.set(e.motif, []).get(e.motif)!).push(path);
+}
+
+// 문자열 → 안정적인 정수 해시. 같은 제목·등급은 항상 같은 풀 안 이미지를 골라(랜덤 아님) 새로고침해도 안 바뀜.
+function stableHash(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return h;
+}
+
+function resolveImagePath(title: string, rarity: Rarity, motif: ItemMotif): string | undefined {
+  const lookupTitle = compactTitle(title);
+  const exactV3 = exactV3Index.get(`${rarity}|${motif}|${lookupTitle}`);
+  if (exactV3) return exactV3;
+  const exact = exactV2Index.get(`${rarity}|${motif}|${lookupTitle}`);
+  if (exact) return exact;
+  const byTM = byTitleMotif.get(`${lookupTitle}|${motif}`);
+  if (byTM?.length) return byTM[stableHash(lookupTitle) % byTM.length];
+  const byRM = byRarityMotif.get(`${rarity}|${motif}`);
+  if (byRM?.length) return byRM[stableHash(`${title}:${rarity}`) % byRM.length];
+  const byM = byMotif.get(motif);
+  if (byM?.length) return byM[stableHash(`${title}:${rarity}:${motif}`) % byM.length];
+  return undefined;
 }
 
 function compactTitle(title: string): string {
@@ -24,6 +80,7 @@ const GENERIC: Record<Rarity, GachaItemArt> = {
   xur: { title: '한정 교환권', jaTitle: '限定引換券', sub: '한정', motif: 'ticket' },
 };
 
+// 참고용 — 이미지 생성 시점에 실제로 쓰인 슬러그 인코딩(파일명 디코딩에 대응). 런타임 조회엔 안 쓰인다.
 export function gachaItemAssetSlug(title: string, rarity: Rarity, motif: ItemMotif): string {
   const body = compactTitle(title)
     .split('')
@@ -34,7 +91,7 @@ export function gachaItemAssetSlug(title: string, rarity: Rarity, motif: ItemMot
 }
 
 export function gachaItemAssetPath(title: string, rarity: Rarity, motif: ItemMotif): string {
-  return `/gacha/items/generated-v2/${gachaItemAssetSlug(title, rarity, motif)}.webp`;
+  return resolveImagePath(title, rarity, motif) ?? `/gacha/items/generated-v2/${gachaItemAssetSlug(title, rarity, motif)}.webp`;
 }
 
 export function gachaLuxuryItemAssetPath(title: string, rarity: Rarity, motif: ItemMotif): string {
@@ -42,9 +99,10 @@ export function gachaLuxuryItemAssetPath(title: string, rarity: Rarity, motif: I
 }
 
 function withGeneratedImage(item: GachaItemArt, rarity: Rarity): GachaItemArt {
+  const image = resolveImagePath(item.title, rarity, item.motif);
   return {
     ...item,
-    image: gachaItemAssetPath(item.title, rarity, item.motif),
+    image,
   };
 }
 
