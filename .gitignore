@@ -5,3 +5,4 @@ dist
 .vercel
 .asset-tmp
 /tmp/
+.env*
