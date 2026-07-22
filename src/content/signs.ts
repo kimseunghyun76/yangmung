@@ -58,7 +58,7 @@ export const signs: Sign[] = [
   { id: 'shinhatsubai', ja: '新発売', kana: 'しんはつばい', korean: '신발매', category: '안내', tip: "편의점·마트 신상품 진열대에 붙는 팝업 문구로, 갓 나온 상품임을 알려요." },
   { id: 'kikan_gentei', ja: '期間限定', kana: 'きかんげんてい', korean: '기간 한정', category: '안내', tip: "한정판이나 계절 메뉴, 이벤트 상품에 자주 붙어 서두르게 만드는 문구예요." },
   { id: 'zenpin', ja: '全品', kana: 'ぜんぴん', korean: '전 품목', category: '안내', tip: "매장 전체 세일 안내판에서 '전 품목 30% 할인'처럼 할인율과 함께 쓰여요." },
-  { id: 'tasuku', ja: '無料Wi-Fi', kana: 'むりょうWi-Fi', korean: '무료 와이파이', category: '안내', tip: "카페나 역, 공항에서 무료 인터넷 접속을 안내할 때 붙는 표시예요." },
+  { id: 'tasuku', ja: '無料Wi-Fi', kana: 'むりょうワイファイ', korean: '무료 와이파이', category: '안내', tip: "카페나 역, 공항에서 무료 인터넷 접속을 안내할 때 붙는 표시예요." },
 
   // ── 교통·길 ──
   { id: 'kakueki', ja: '各駅停車', kana: 'かくえきていしゃ', korean: '각역 정차(완행)', category: '교통', tip: "노선도나 전광판에서 모든 역에 서는 열차임을 급행·특급과 구분해 알려줘요." },
@@ -159,15 +159,32 @@ export const signs: Sign[] = [
   { id: 'shita', ja: '下', kana: 'した', korean: '아래', category: '안내', tip: "엘리베이터나 에스컬레이터, 안내판에서 아래층·아래쪽 방향을 가리킬 때 쓰는 표현이에요." },
   { id: 'toiu_koto', ja: 'ただいま混雑中', kana: 'ただいまこんざつちゅう', korean: '지금 혼잡 중', category: '안내', tip: "역이나 매장 안내방송에서 지금 혼잡하니 주의하라고 알릴 때 쓰는 표현이에요." },
   { id: 'go_annai', ja: 'ご案内', kana: 'ごあんない', korean: '안내 드립니다', category: '안내', tip: '역이나 공항 전광판·방송 안내에서 공지 제목처럼 보이는 표현이에요.' },
+
+  // ── 화장실 이용 표지 ──
+  { id: 'senjou_button', ja: '洗浄', kana: 'せんじょう', korean: '세정(비데 버튼)', category: '표지', tip: "일본 화장실 변기 옆 리모컨·버튼에서 물 세정 기능을 가리켜요. 大(강하게)·小(약하게)와 함께 표시되는 경우가 많아요." },
+  { id: 'kami_wo_nagasu', ja: 'トイレットペーパー以外は流さないでください', kana: 'トイレットペーパーいがいはながさないでください', korean: '휴지 외에는 변기에 버리지 마세요', category: '주의', tip: "칸막이 안쪽 벽에 자주 붙어 있어요. 물티슈·생리대 등은 별도 쓰레기통에 버려야 해요." },
+  { id: 'washlet', ja: '温水洗浄便座', kana: 'おんすいせんじょうべんざ', korean: '비데(온수 세정 변기)', category: '표지', tip: "일본 대부분의 화장실에 있는 온수 비데 기능을 가리키는 정식 명칭이에요." },
+  { id: 'toilet_slipper', ja: 'トイレ用スリッパ', kana: 'トイレようスリッパ', korean: '화장실 전용 슬리퍼', category: '표지', tip: "료칸·일본 가정집 화장실 입구에 놓여 있어요. 반드시 갈아 신고, 나올 때 벗어 두고 나와야 해요." },
+
+  // ── 쓰레기 분리수거 표지 ──
+  { id: 'moeru_gomi', ja: '燃えるごみ', kana: 'もえるごみ', korean: '가연 쓰레기(타는 쓰레기)', category: '주의', tip: "음식물·종이 등 태울 수 있는 일반 쓰레기예요. 지역마다 배출 요일이 정해져 있어요." },
+  { id: 'moenai_gomi', ja: '燃えないごみ', kana: 'もえないごみ', korean: '불연 쓰레기(안 타는 쓰레기)', category: '주의', tip: "금속·유리·도자기류 등 타지 않는 쓰레기예요. 燃えるごみ와 배출일이 달라요." },
+  { id: 'shigen_gomi', ja: '資源ごみ', kana: 'しげんごみ', korean: '재활용 쓰레기', category: '주의', tip: "캔·병·종이류처럼 재활용 가능한 쓰레기를 가리켜요. 페트병은 라벨을 떼고 배출해야 하는 지역이 많아요." },
+  { id: 'pet_bottle', ja: 'ペットボトル', kana: 'ペットボトル', korean: '페트병', category: '주의', tip: "가타카나로만 쓰는 외래어라 표기와 읽기가 같아요. 편의점·역 쓰레기통도 캔·페트병·타는 쓰레기 칸이 나뉘어 있어요." },
+  { id: 'gomibako_nashi', ja: 'ゴミ箱はありません', kana: 'ゴミばこはありません', korean: '쓰레기통이 없습니다', category: '주의', tip: "일본 길거리는 쓰레기통이 매우 적어요. 여행 중 나온 쓰레기는 봉투에 담아 숙소나 편의점까지 가져가는 경우가 많아요." },
+
+  // ── 긴급·재난 대비 표지 ──
+  { id: 'hinanbasho', ja: '避難場所', kana: 'ひなんばしょ', korean: '대피 장소', category: '주의', tip: "지진·재해 시 모여야 하는 지정 대피 장소를 알려주는 표지예요. 공원이나 학교 운동장에 많이 지정돼 있어요." },
+  { id: 'kinkyu_jishin', ja: '緊急地震速報', kana: 'きんきゅうじしんそくほう', korean: '긴급 지진 속보', category: '주의', tip: "지진 발생 직전·직후 스마트폰과 TV에 뜨는 경보 명칭이에요. 알람이 울리면 즉시 몸을 낮추고 튼튼한 물건 아래로 피하세요." },
 ];
 
 const hasId = (sign: Sign, ids: string[]) => ids.includes(sign.id);
 
 export function signSceneFor(sign: Sign): SignScene {
-  if (hasId(sign, ['men_toilet', 'women_toilet', 'danshi', 'josei', 'otearai'])) return 'restroom';
+  if (hasId(sign, ['men_toilet', 'women_toilet', 'danshi', 'josei', 'otearai', 'senjou_button', 'kami_wo_nagasu', 'washlet', 'toilet_slipper'])) return 'restroom';
   if (hasId(sign, ['deguchi', 'iriguchi', 'osu', 'hiku', 'eigyouchu', 'junbichu', 'koshouchu', 'uketsuke', 'shokuji', 'kaigi', 'locker_sign', 'kintsuen', 'floor_sign', 'chikashitsu'])) return 'mallEntrance';
   if (hasId(sign, ['kaisatsu', 'hijouguchi', 'annai', 'kinen', 'kakueki', 'kyuukou', 'tokkyuu', 'noriba', 'norikae_sign', 'kitaguchi', 'minamiguchi', 'higashiguchi', 'nishiguchi', 'terminal', 'jikoku', 'unchin', 'jiyuuseki', 'shitei_seki', 'green_sha', 'kinkyu_teishi', 'mannaka', 'kami', 'shita'])) return 'stationWayfinding';
-  if (hasId(sign, ['tachiiri', 'chuui', 'kiken', 'ashimoto', 'koujichu', 'satsuei_kinshi', 'ichiji_teishi', 'tachiiri_kinshi2', 'nohumi', 'nosmoke_area', 'setsubi', 'kiken_takaatsu', 'hizashi', 'kinshi_shinnyu'])) return 'construction';
+  if (hasId(sign, ['tachiiri', 'chuui', 'kiken', 'ashimoto', 'koujichu', 'satsuei_kinshi', 'ichiji_teishi', 'tachiiri_kinshi2', 'nohumi', 'nosmoke_area', 'setsubi', 'kiken_takaatsu', 'hizashi', 'kinshi_shinnyu', 'moeru_gomi', 'moenai_gomi', 'shigen_gomi', 'pet_bottle', 'gomibako_nashi', 'hinanbasho', 'kinkyu_jishin'])) return 'construction';
   if (hasId(sign, ['chien', 'untenkeshi', 'toiu_koto', 'go_annai'])) return 'transitBoard';
   if (hasId(sign, ['teikyuubi', 'rinji_kyuugyou', 'eigyoujikan', 'manshitsu', 'kuushitsu', 'baiten'])) return 'shopNotice';
   if (hasId(sign, ['zeikomi', 'shohizei', 'receipt'])) return 'receipt';

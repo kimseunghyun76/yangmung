@@ -49,7 +49,7 @@
       "recapPromptKo": "문제 있으세요?",
       "choices": [
         {
-          "text": "잠깐만요",
+          "text": "잠깐만 기다려 주세요",
           "phraseId": "p_chotto_matte",
           "correct": true,
           "feedback": "잘못 선택한 경우 취소를 요청하는 가장 직접적인 표현"
@@ -91,7 +91,7 @@
       "recapPromptKo": "이 ATM은 VISA와 Mastercard만 이용 가능합니다",
       "choices": [
         {
-          "text": "카드 되나요?",
+          "text": "카드 돼요?",
           "phraseId": "p_card_tsukaemasu_ka",
           "correct": true,
           "feedback": "내 카드가 사용 가능한지 재확인하는 직접적인 질문"
@@ -153,13 +153,13 @@
       "recapPromptKo": "영수증은 필요하세요?",
       "choices": [
         {
-          "text": "네, 주세요",
+          "text": "영수증 주세요",
           "phraseId": "p_reshiito_kudasai",
           "correct": true,
           "feedback": "영수증을 받을 때"
         },
         {
-          "text": "거스름돈 확인했어요",
+          "text": "확인했어요",
           "phraseId": "p_kakunin_shimashita",
           "correct": true,
           "feedback": "도움에 감사하며 마무리"
@@ -175,13 +175,13 @@
       "recapPromptKo": "카페라테 그란데, 뜨거운 것 맞죠?",
       "choices": [
         {
-          "text": "그래요, 맞아요",
+          "text": "그래요 / 맞아요",
           "phraseId": "p_sou_desu",
           "correct": true,
           "feedback": "주문이 정확하다고 확인할 때 쓰는 표현이에요"
         },
         {
-          "text": "예약했어요",
+          "text": "예약했습니다",
           "phraseId": "p_yoyaku_shiteimasu",
           "correct": false,
           "feedback": "이미 예약·주문 확인이 끝난 상황 — 반복은 맥락에 맞지 않아요"
@@ -369,7 +369,7 @@
           "feedback": "오마카세 마무리에 가장 좋은 칭찬"
         },
         {
-          "text": "맥주 한 잔 더요",
+          "text": "맥주 한 잔 더 주세요",
           "phraseId": "p_biiru_mou_ippai",
           "correct": false,
           "feedback": "계산 시점에 추가 음료를 시키면 흐름이 어색해요"
@@ -405,7 +405,7 @@
       "recapPromptKo": "같이 갈까요?",
       "choices": [
         {
-          "text": "잘 부탁드려요",
+          "text": "잘 부탁드립니다",
           "phraseId": "p_yoroshiku_onegai",
           "correct": true,
           "feedback": "친절한 제안을 수락하며 감사를 전달"

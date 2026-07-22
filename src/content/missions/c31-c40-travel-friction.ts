@@ -135,7 +135,7 @@ export const c33: Mission = {
   canDo: '사용자는 호텔 프런트에서 비가 올 때 우산 대여와 반납을 자연스럽게 요청할 수 있다',
   unlockAfter: ['C4'],
   sequence: ['비 확인', '우산 대여', '반납 확인'],
-  speakPhraseIds: ['p_kasa_kariremasu_ka', 'p_kasa_wo_kaeshimasu', 'p_wakarimashita_arigatou'],
+  speakPhraseIds: ['p_kasa_kariremasu_ka', 'p_kasa_wo_kaeshimasu', 'p_tasukarimashita'],
   steps: [
     {
       situationKo: '잠깐 외출하려는데 프런트에서 비가 온다고 알려준다',
@@ -226,7 +226,7 @@ export const c34: Mission = {
       speaker: '프런트 직원',
       promptPhraseId: 'p_atarashii_kagi',
       choices: [
-        { text: '잘 부탁드려요', phraseId: 'p_yoroshiku_onegai', correct: true, feedback: '「よろしくお願(ねが)いします」— 새 방 키를 받으며 건네는 응답' },
+        { text: '잘 부탁드립니다', phraseId: 'p_yoroshiku_onegai', correct: true, feedback: '「よろしくお願(ねが)いします」— 새 방 키를 받으며 건네는 응답' },
         { text: '방은 어디예요?', phraseId: 'p_heya_doko', correct: true, feedback: '「部屋(へや)はどこですか」— 새 방 위치와 층을 확인. 엘리베이터 방향도 함께 물어봐요' },
         { text: '트윈 침대 방이 있나요?', phraseId: 'p_tsuin_no_heya_arimasu_ka', correct: false, feedback: '이미 새 방을 안내받았어요 — 다른 방 문의는 끝났어요' },
       ],
@@ -343,7 +343,7 @@ export const c36: Mission = {
       promptPhraseId: 'p_tsui_ryoukin_kakarimasu',
       choices: [
         { text: '이걸 기내수하물로 하겠습니다', phraseId: 'p_kore_tebutsu_ni_shimasu', correct: true, feedback: '「これを手荷物(てにもつ)にします」— 위탁 수하물에서 빼 기내에 들고 타겠다는 표현. 액체·예리한 물건은 기내 반입 규정을 먼저 확인해요' },
-        { text: '잠시만 기다려 주세요', phraseId: 'p_chotto_matte', correct: true, feedback: '「ちょっと待ってください」— 가방을 열어 짐을 꺼내는 동안 시간을 버는 표현. 일본 직원은 기다려줘요' },
+        { text: '잠깐만 기다려 주세요', phraseId: 'p_chotto_matte', correct: true, feedback: '「ちょっと待ってください」— 가방을 열어 짐을 꺼내는 동안 시간을 버는 표현. 일본 직원은 기다려줘요' },
         { text: '추가 요금은 얼마인가요?', phraseId: 'p_tsui_ryoukin_ikura', correct: false, feedback: '요금은 이미 들었어요 — 지금은 짐을 어떻게 할지 정해요' },
       ],
     },
@@ -460,7 +460,7 @@ export const c38: Mission = {
       recapPromptKo: '다음은 무엇을 만들어 드릴까요?',
       choices: [
         { text: '추천 생선은 뭐예요?', phraseId: 'p_osusume_no_sakana', correct: true, feedback: '「おすすめの魚(さかな)は何(なん)ですか」— 제철 생선을 추천받는 최고의 방법. 장인이 그날 들어온 최고 재료를 알려줘요' },
-        { text: '아지는 뭐예요?', phraseId: 'p_aji_wa_nan_desu_ka', correct: true, feedback: '「アジは何(なん)ですか」— 모르는 생선 이름을 바로 물어봐요. アジ=전갱이(고등어 계열), 여름 제철로 지방이 오른 인기 초밥 재료예요' },
+        { text: '아지(전갱이)는 뭐예요?', phraseId: 'p_aji_wa_nan_desu_ka', correct: true, feedback: '「アジは何(なん)ですか」— 모르는 생선 이름을 바로 물어봐요. アジ=전갱이(고등어 계열), 여름 제철로 지방이 오른 인기 초밥 재료예요' },
         { text: '방어 주세요', phraseId: 'p_hamachi_kudasai', correct: false, feedback: '아직 추천을 받는 중이에요 — 생선 주문은 그다음에 해요' },
       ],
     },

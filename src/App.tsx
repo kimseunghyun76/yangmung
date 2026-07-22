@@ -993,7 +993,7 @@ export function App() {
           speakCount={snap.sessionCards.filter((c) => c.kind === 'speak').length}
           isQuickPractice={snap.isPractice}
           coreLevel={coreLevel} progression={progression} devUnlockAll={!!settings.devUnlockAll}
-          promotionResult={snap.promotionResult} onRetryPromotion={startPromotionQuiz} onOpenLevelGuide={setLevelGuide}
+          promotionResult={snap.promotionResult} onRetryPromotion={startPromotionQuiz} onStartPromotion={startPromotionQuiz} onOpenLevelGuide={setLevelGuide}
           onRetryWeak={flow.retryWeak} onRetrySame={snap.isPractice ? snap.retrySame ?? undefined : undefined} onContinue={startSession}
           onReview={startReviewSession} onDictation={startDictationSession} onCompose={startComposeSession} onSigns={startSignSession} onFlash={startFlashSession}
           onPracticeVocab={() => startVocabSession('all')}

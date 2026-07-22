@@ -11,7 +11,7 @@ export const c41: Mission = {
   scenario: '환불·교환',
   place: '쇼핑몰 서비스 데스크',
   sequence: ['영수증 제시', '이유 설명', '교환/환불 선택', '처리 완료'],
-  speakPhraseIds: ['p_reshiito_kudasai', 'p_hoka_no_iro_arimasu_ka'],
+  speakPhraseIds: ['p_koukan_shitai', 'p_henkin_de'],
   canDo: '구입한 상품에 문제가 있을 때 영수증을 내고 교환이나 환불을 요청할 수 있다',
   unlockAfter: ['C40'],
   steps: [
@@ -78,12 +78,12 @@ export const c42: Mission = {
   scenario: '자판기',
   place: '자판기',
   sequence: ['결제 수단 투입', '음료 선택', '잔돈 수령'],
-  speakPhraseIds: ['p_suica_de', 'p_kore_kudasai'],
+  speakPhraseIds: ['p_suica_de', 'p_tsukaikata'],
   canDo: '자판기에서 IC카드나 동전으로 음료를 사고, 사용법을 모를 때 도움을 요청할 수 있다',
   unlockAfter: ['C40'],
   steps: [
     {
-      situationKo: '자판기 앞에서 사람이 IC카드로 할지 현금으로 할지 물어본다',
+      situationKo: '자판기 앞에서 사람이 IC카드도 쓸 수 있다고 알려준다',
       speaker: '상대',
       recapPromptJa: 'ICカードが使えますよ',
       recapPromptKo: 'IC카드를 쓸 수 있어요',
@@ -99,7 +99,7 @@ export const c42: Mission = {
       recapPromptJa: '何にしますか',
       recapPromptKo: '무엇으로 하시겠어요?',
       choices: [
-        { text: '이 버튼 눌러 주세요', phraseId: 'p_kono_botan_oshite', correct: true, feedback: '「このボタンを押(お)してください」— 어떤 버튼인지 모를 때 직접 도움을 구하는 실용 표현. 화면을 가리키며 쓰면 바로 이해해줘요' },
+        { text: '이 버튼을 눌러 주세요', phraseId: 'p_kono_botan_oshite', correct: true, feedback: '「このボタンを押(お)してください」— 어떤 버튼인지 모를 때 직접 도움을 구하는 실용 표현. 화면을 가리키며 쓰면 바로 이해해줘요' },
         { text: '커피는 어디예요?', phraseId: 'p_koohii_wa_doko', correct: true, feedback: '「コーヒーはどこですか」— 원하는 음료 위치를 찾을 때. 자판기는 カテゴリー(コーヒー·炭酸/たんさん·お茶/おちゃ 등)별로 구분돼 있어요' },
         { text: '잔돈으로 해 주세요', phraseId: 'p_komakaku', correct: false, feedback: '자판기에서 잔돈 교환 요청은 불가능합니다' },
       ],
@@ -129,8 +129,8 @@ export const c42: Mission = {
       recapPromptJa: 'おつりは出ましたか',
       recapPromptKo: '거스름돈 나왔나요?',
       choices: [
-        { text: '잔돈 확인했어요', phraseId: 'p_kakunin_shimashita', correct: true, feedback: '「確認(かくにん)しました」— 잔돈을 그 자리에서 확인. 자판기·거스름돈은 바로 세어보는 게 좋아요' },
-        { text: '잘 모르겠어요', phraseId: 'p_wakarimasen', correct: true, feedback: '「分(わ)かりません」— 잔돈이 제대로 나왔는지 확신이 없을 때. おつりを確認(かくにん)してください라고 주변에 도움을 구할 수도 있어요' },
+        { text: '확인했어요', phraseId: 'p_kakunin_shimashita', correct: true, feedback: '「確認(かくにん)しました」— 잔돈을 그 자리에서 확인. 자판기·거스름돈은 바로 세어보는 게 좋아요' },
+        { text: '모르겠어요', phraseId: 'p_wakarimasen', correct: true, feedback: '「分(わ)かりません」— 잔돈이 제대로 나왔는지 확신이 없을 때. おつりを確認(かくにん)してください라고 주변에 도움을 구할 수도 있어요' },
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '잔돈을 확인하는 마무리예요 — 사용법은 앞서 익혔어요' },
       ],
     },
@@ -144,7 +144,7 @@ export const c43: Mission = {
   scenario: 'ATM',
   place: '편의점 ATM',
   sequence: ['언어 설정', '카드 삽입', '금액 입력', '현금 수령'],
-  speakPhraseIds: ['p_eigo_de', 'p_ikura_desu_ka'],
+  speakPhraseIds: ['p_tsukaikata', 'p_ichiman_de'],
   canDo: '편의점 ATM에서 외국 카드로 엔화를 인출할 때 안내 멘트를 듣고 필요한 표현을 구사할 수 있다',
   unlockAfter: ['C40'],
   steps: [
@@ -164,7 +164,7 @@ export const c43: Mission = {
       recapPromptJa: 'こちらにカードを入れてください',
       recapPromptKo: '이쪽에 카드를 넣어 주세요',
       choices: [
-        { text: '카드 되나요?', phraseId: 'p_card_tsukaemasu_ka', correct: false, feedback: '이미 카드를 쓰려고 준비한 상황 — 다시 물어볼 필요가 없어요' },
+        { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: false, feedback: '이미 카드를 쓰려고 준비한 상황 — 다시 물어볼 필요가 없어요' },
         { text: '이 방향 맞아요?', phraseId: 'p_new_kono_muki_de_ii', correct: true, feedback: '「この向(む)きで合(あ)ってますか」— 화살표 방향 안내를 듣고 카드를 넣기 직전에 방향을 재확인하는 자연스러운 대답이에요' },
       ],
     },
@@ -174,7 +174,7 @@ export const c43: Mission = {
       promptPhraseId: 'p_kingaku_nyuuryoku',
       choices: [
         { text: '만 엔으로 낼게요', phraseId: 'p_ichiman_de', correct: true, feedback: '「一万円(いちまんえん)で」— 인출 금액을 입력. 1,000엔·10,000엔 단위로 뽑을 수 있어요' },
-        { text: '카드 되나요?', phraseId: 'p_card_tsukaemasu_ka', correct: false, feedback: '이미 카드를 넣었어요 — 지금은 금액을 입력하면 돼요' },
+        { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: false, feedback: '이미 카드를 넣었어요 — 지금은 금액을 입력하면 돼요' },
       ],
     },
     {
@@ -192,7 +192,7 @@ export const c43: Mission = {
       recapPromptJa: '手数料が表示されていますが、よろしいですか',
       recapPromptKo: '수수료가 표시되어 있는데 괜찮으세요?',
       choices: [
-        { text: '추가 요금은 얼마예요?', phraseId: 'p_tsui_ryoukin_ikura', correct: true, feedback: '「追加料金(ついかりょうきん)はいくらですか」— 수수료를 명확히 확인하는 표현. 화면에 表示(ひょうじ)되는 금액을 직접 확인하는 것이 더 빠를 수 있어요' },
+        { text: '추가 요금은 얼마인가요?', phraseId: 'p_tsui_ryoukin_ikura', correct: true, feedback: '「追加料金(ついかりょうきん)はいくらですか」— 수수료를 명확히 확인하는 표현. 화면에 表示(ひょうじ)되는 금액을 직접 확인하는 것이 더 빠를 수 있어요' },
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '지금은 수수료를 확인하는 중이에요 — 진행 여부를 정하면 돼요' },
       ],
     },
@@ -206,7 +206,7 @@ export const c44: Mission = {
   scenario: '편의점 복합기',
   place: '편의점 복합기',
   sequence: ['기기 조작', '용지/컬러 선택', '결제'],
-  speakPhraseIds: ['p_tsukaikata', 'p_kore_de'],
+  speakPhraseIds: ['p_tsukaikata', 'p_new_karaa_a4_de'],
   canDo: '편의점 멀티복합기에서 복사·출력을 할 때 기기 조작법을 물어보고 결제까지 마무리할 수 있다',
   unlockAfter: ['C40'],
   steps: [
@@ -256,7 +256,7 @@ export const c44: Mission = {
       recapPromptKo: '결제는 어떻게 하시겠어요?',
       choices: [
         { text: '스이카로요', phraseId: 'p_suica_de', correct: true, feedback: '「Suicaで」— IC카드로 복합기 결제. タッチするだけで完了(かんりょう)! 가장 빠르고 편한 결제 방법이에요' },
-        { text: '예약했어요', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '복합기 이용에서 예약은 관계없는 개념입니다' },
+        { text: '예약했습니다', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '복합기 이용에서 예약은 관계없는 개념입니다' },
       ],
     },
   ],
@@ -279,7 +279,7 @@ export const c45: Mission = {
       recapPromptJa: 'モバイルオーダーのお客様ですか',
       recapPromptKo: '모바일 주문 고객이신가요?',
       choices: [
-        { text: '예약했어요', phraseId: 'p_yoyaku_shiteimasu', correct: true, feedback: '「予約(よやく)しています」— 모바일 주문 픽업 시 첫 마디. QR코드나 주문번호 화면을 미리 열어두면 더 빠르게 처리돼요' },
+        { text: '예약했습니다', phraseId: 'p_yoyaku_shiteimasu', correct: true, feedback: '「予約(よやく)しています」— 모바일 주문 픽업 시 첫 마디. QR코드나 주문번호 화면을 미리 열어두면 더 빠르게 처리돼요' },
         { text: '이름은요?', actionText: '이름은요?', correct: false, feedback: '지금 직원이 당신의 이름을 묻는 상황 — 내가 먼저 물어볼 필요가 없어요' },
       ],
     },
@@ -319,8 +319,7 @@ export const c45: Mission = {
       choices: [
         { text: '포장으로요', phraseId: 'p_mochikaeri_de', correct: true, feedback: '「持(も)ち帰(かえ)りで」— 포장을 명확히 전달하는 표현. スマホアプリで先払(さきばら)いの場合는 회계가 이미 완료된 상태예요' },
         { text: '매장에서요', phraseId: 'p_tennai_de', correct: true, feedback: '「店内(てんない)で」— 카페나 음식점에서 매장 이용 선택. 앉을 자리가 있을 때 선택하면 도자기 컵으로 서비스받을 수 있어요' },
-        { text: '포장으로 부탁해요', phraseId: 'p_mochikaeri_de', correct: true, feedback: '「持(も)ち帰(かえ)りでお願いします」— 매장에서 먹으면 「店内(てんない)で」. 픽업 상품은 포장이 기본이에요' },
-        { text: '예약했어요', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '이미 예약 확인이 끝난 상황 — 같은 말을 반복할 필요가 없어요' },
+        { text: '예약했습니다', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '이미 예약 확인이 끝난 상황 — 같은 말을 반복할 필요가 없어요' },
       ],
     },
   ],
@@ -333,7 +332,7 @@ export const c46: Mission = {
   scenario: '스포츠 관람',
   place: '야구장·스타디움',
   sequence: ['티켓 확인', '좌석 찾기', '스탠드 음식 주문'],
-  speakPhraseIds: ['p_chiketto_wa_kochira_desu', 'p_kore_hitotsu_de_yoroshii_desu_ka'],
+  speakPhraseIds: ['p_chiketto_wa_kochira_desu', 'p_basho_o_oshiete_kudasai'],
   canDo: '스타디움에서 티켓을 보여주고, 좌석 위치를 물어보고, 스탠드 음식을 주문할 수 있다',
   unlockAfter: ['C40'],
   steps: [
@@ -344,7 +343,7 @@ export const c46: Mission = {
       recapPromptKo: '티켓 확인을 하겠습니다',
       choices: [
         { text: '티켓은 이쪽입니다', phraseId: 'p_chiketto_wa_kochira_desu', correct: true, feedback: '「チケットはこちらです」— 티켓 제시 표현. こちらは"이쪽/여기"의 정중한 말투. 전자티켓(電子チケット)이라면 QR코드 화면을 보여주면 돼요' },
-        { text: '여권은 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: false, feedback: '스타디움 입장은 여권이 아닌 티켓이 필요합니다' },
+        { text: '여권 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: false, feedback: '스타디움 입장은 여권이 아닌 티켓이 필요합니다' },
         { text: '이 티켓 사용할 수 있나요?', phraseId: 'p_kono_chiketto_tsukaemasu_ka', correct: true, feedback: '「このチケットは使(つか)えますか」— 전자티켓 유효성이 불확실할 때. 화면을 밝게 하거나 미리 저장해두면 스캔이 빠르게 돼요' },
       ],
     },
@@ -356,7 +355,7 @@ export const c46: Mission = {
       choices: [
         { text: '장소를 알려 주세요', phraseId: 'p_basho_o_oshiete_kudasai', correct: true, feedback: '「場所(ばしょ)を教(おし)えてください」— 좌석 위치를 모를 때. 티켓에 적힌 座席番号(ざせきばんごう)를 보여주면 직원이 바로 안내해줘요' },
         { text: '한 명이요', phraseId: 'p_hitori_desu', correct: false, feedback: '이미 좌석이 배정된 상황 — 인원 안내는 맥락과 맞지 않아요' },
-        { text: '예약했어요', phraseId: 'p_yoyaku_shiteimasu', correct: true, feedback: '「予約(よやく)しています」— 예약 좌석임을 확인시키며 도움을 구할 때. 티켓 화면을 보여주면 직원이 쉽게 좌석 위치를 안내해줘요' },
+        { text: '예약했습니다', phraseId: 'p_yoyaku_shiteimasu', correct: true, feedback: '「予約(よやく)しています」— 예약 좌석임을 확인시키며 도움을 구할 때. 티켓 화면을 보여주면 직원이 쉽게 좌석 위치를 안내해줘요' },
       ],
     },
     {
@@ -365,7 +364,7 @@ export const c46: Mission = {
       promptPhraseId: 'p_sainyuujou',
       choices: [
         { text: '또 올게요', phraseId: 'p_mata_kimasu', correct: true, feedback: '「また来(き)ます」— 재입장 도장을 받고 잠깐 나갈 때 "다시 올게요"' },
-        { text: '여권은 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: false, feedback: '스탬프 안내 중이에요 — 여권은 필요하지 않아요' },
+        { text: '여권 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: false, feedback: '스탬프 안내 중이에요 — 여권은 필요하지 않아요' },
       ],
     },
     {
@@ -397,7 +396,7 @@ export const c47: Mission = {
   scenario: '쇼핑몰 안내소',
   place: '복합쇼핑몰',
   sequence: ['층 안내 확인', '목표 매장 위치', '화장실·편의시설 확인'],
-  speakPhraseIds: ['p_nanika_osagashi_desu_ka', 'p_toire_doko'],
+  speakPhraseIds: ['p_toire_doko', 'p_new_chizu_misete'],
   canDo: '복합쇼핑몰 안내소에서 원하는 매장 위치와 편의시설을 물어볼 수 있다',
   unlockAfter: ['C40'],
   steps: [
@@ -406,7 +405,7 @@ export const c47: Mission = {
       speaker: '직원',
       promptPhraseId: 'p_nanika_osagashi_desu_ka',
       choices: [
-        { text: '저거요', phraseId: 'p_are', correct: false, feedback: '안내소에서는 「あれ(저거)」처럼 막연하게 가리키지 말고 구체적인 장소나 물건을 말해야 합니다' },
+        { text: '저거', phraseId: 'p_are', correct: false, feedback: '안내소에서는 「あれ(저거)」처럼 막연하게 가리키지 말고 구체적인 장소나 물건을 말해야 합니다' },
         { text: '화장실 어디예요?', phraseId: 'p_toire_doko', correct: true, feedback: '「トイレはどこですか」— 화장실 위치 확인. 대형 쇼핑몰은 층별(フロアマップ)을 보거나 안내소에 物어보는 게 빠르기도 해요' },
         { text: '커피는 어디예요?', phraseId: 'p_koohii_wa_doko', correct: true, feedback: '「コーヒーはどこですか」— 안내소에서 특정 매장이나 상품 위치 확인. ○○はどこですか 패턴으로 어떤 매장이든 물어볼 수 있어요' },
       ],
@@ -459,7 +458,7 @@ export const c48: Mission = {
   scenario: '약국 처방전',
   place: '약국',
   sequence: ['처방전 제출', '대기', '약 수령·복약 설명'],
-  speakPhraseIds: ['p_kusuri_kudasai', 'p_shokugo_nonde'],
+  speakPhraseIds: ['p_kono_kusuri', 'p_shokugo_kakunin'],
   canDo: '일본 병원 처방전을 약국에 제출하고, 대기 시간을 확인하며, 복약 지도를 이해할 수 있다',
   unlockAfter: ['C40'],
   steps: [
@@ -469,8 +468,8 @@ export const c48: Mission = {
       recapPromptJa: 'お薬手帳はお持ちですか',
       recapPromptKo: '약 수첩이 있으신가요?',
       choices: [
-        { text: '아니요, 없어요 (약 수첩 미소지)', phraseId: 'p_iie_arimasen', correct: true, feedback: '「いいえ、ありません」— 처음 방문이라면 없는 것이 자연스러워요. 薬(くすり)手帳(てちょう)は継続的に薬を飲む방에게 있는 건강 관리 수첩이에요' },
-        { text: '네, 있어요 (약 수첩 소지)', phraseId: 'p_hai_arimasu', correct: true, feedback: '「はい、あります」— 약 수첩이 있을 때. 手帳(てちょう)を差(さ)し出(だ)しながら말하면 OK. 처방 이력 관리에 중요한 역할을 해요' },
+        { text: '아니요, 없어요', phraseId: 'p_iie_arimasen', correct: true, feedback: '「いいえ、ありません」— 처음 방문이라면 없는 것이 자연스러워요. 薬(くすり)手帳(てちょう)は継続的に薬を飲む방에게 있는 건강 관리 수첩이에요' },
+        { text: '네, 있어요', phraseId: 'p_hai_arimasu', correct: true, feedback: '「はい、あります」— 약 수첩이 있을 때. 手帳(てちょう)を差(さ)し出(だ)しながら말하면 OK. 처방 이력 관리에 중요한 역할을 해요' },
         { text: '보험증이 있나요?', actionText: '보험증이 있나요?', correct: false, feedback: '약사가 먼저 물어보는 상황 — 내가 되묻는 건 맥락과 맞지 않아요' },
       ],
     },
@@ -534,7 +533,7 @@ export const c49: Mission = {
       choices: [
         { text: '메밀·땅콩 알레르기가 있어요', phraseId: 'p_arerugi', correct: true, feedback: '「そばとピーナッツアレルギーがあります」— 오마카세에서 알레르기를 구체적으로 말하면 셰프가 코스 전체를 배려해줘요. えび(새우)·かに(게) 등 추가 원인도 함께 전달하는 게 안전해요' },
         { text: '이거 빼 주세요', phraseId: 'p_kore_nuite', correct: true, feedback: '「これを抜(ぬ)いてください」— 특정 재료를 제외해달라고 직접 요청. 재료를 가리키거나 말하면 셰프가 배려해줘요. 오마카세는 대화가 요리의 일부예요' },
-        { text: '아니요, 아무것도 없어요 (못 드시는 것 없음)', phraseId: 'p_iie_nanimoarimasen', correct: true, feedback: '「いいえ、何(なに)もありません」— 먹지 못하는 것이 없다는 명확한 답변. これで 安心(あんしん)して셰프가 코스를 진행할 수 있어요' },
+        { text: '아니요, 아무것도 없어요', phraseId: 'p_iie_nanimoarimasen', correct: true, feedback: '「いいえ、何(なに)もありません」— 먹지 못하는 것이 없다는 명확한 답변. これで 安心(あんしん)して셰프가 코스를 진행할 수 있어요' },
         { text: '와사비 괜찮으세요?', actionText: '와사비 괜찮으세요?', correct: false, feedback: '셰프가 묻는 역할 — 내가 되묻는 건 맥락이 바뀌어요' },
       ],
     },
@@ -547,7 +546,7 @@ export const c49: Mission = {
         { text: '추천 생선은 뭐예요?', phraseId: 'p_osusume_no_sakana', correct: true, feedback: '「おすすめの魚(さかな)は何(なに)ですか」— 셰프에게 오늘 제철 재료를 물어보는 표현. 오마카세에선 셰프와의 대화가 요리의 즐거움을 높여줘요' },
         { text: '참치 주세요', phraseId: 'p_maguro_kudasai', correct: true, feedback: '「まぐろください」— 참치는 스시의 대명사. 大トロ(おおとろ)·中トロ(ちゅうとろ)·赤身(あかみ) 등 부위별로 맛이 달라요' },
         { text: '연어 주세요', phraseId: 'p_saamon_kudasai', correct: true, feedback: '「サーモンください」— 연어(サーモン)는 외국인에게 가장 인기 있는 스시 재료. 실은 전통 에도마에 스시에는 없었던 比較的(ひかくてき)新(あたら)しい재료예요' },
-        { text: '마늘 빼 주세요', phraseId: 'p_ninniku_nuki', correct: false, feedback: '스시 오마카세에서 마늘 제외는 일반적이지 않아요' },
+        { text: '마늘 빼고 부탁합니다', phraseId: 'p_ninniku_nuki', correct: false, feedback: '스시 오마카세에서 마늘 제외는 일반적이지 않아요' },
       ],
     },
     {
@@ -556,7 +555,7 @@ export const c49: Mission = {
       promptPhraseId: 'p_omakase_course',
       choices: [
         { text: '추천 생선은 뭐예요?', phraseId: 'p_osusume_no_sakana', correct: true, feedback: '「おすすめの魚(さかな)は何(なに)ですか」— 코스 중에도 그날 특선을 물어봐요' },
-        { text: '마늘 빼 주세요', phraseId: 'p_ninniku_nuki', correct: false, feedback: '스시 오마카세에서 마늘 제외는 일반적이지 않아요 — 알레르기는 앞서 전했어요' },
+        { text: '마늘 빼고 부탁합니다', phraseId: 'p_ninniku_nuki', correct: false, feedback: '스시 오마카세에서 마늘 제외는 일반적이지 않아요 — 알레르기는 앞서 전했어요' },
       ],
     },
     {
@@ -613,7 +612,7 @@ export const c50: Mission = {
         { text: '역은 어디예요?', phraseId: 'p_eki_wa_doko', correct: true, feedback: '「駅(えき)はどこですか」— 역을 목적지로 삼을 때. 일본은 역이 랜드마크 역할을 해요. 역만 찾으면 대부분의 문제가 해결돼요' },
         { text: '신주쿠역은 어디예요?', phraseId: 'p_shinjuku_doko', correct: true, feedback: '「新宿駅(しんじゅくえき)はどこですか」— 구체적인 역명을 말할 때. ○○駅はどこですか 패턴 하나로 일본 어디서나 쓸 수 있어요' },
         { text: '장소를 알려 주세요', phraseId: 'p_basho_o_oshiete_kudasai', correct: true, feedback: '「場所(ばしょ)を教(おし)えてください」— 목적지 주소나 장소를 알려달라고 할 때. 스마트폰 지도를 보여주며 쓰면 더 효과적이에요' },
-        { text: '예약했어요', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '길을 물어보는 상황에서 예약 얘기는 맥락에 맞지 않아요' },
+        { text: '예약했습니다', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '길을 물어보는 상황에서 예약 얘기는 맥락에 맞지 않아요' },
       ],
     },
     {

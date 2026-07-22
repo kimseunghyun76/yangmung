@@ -298,7 +298,6 @@ function QuizBody({ card, picked, skipped, isMissionStep, isKanaFamiliar, onChoo
   // 보기 표시 난이도: 가나 퀴즈는 소리(한글) 유지, 표현/미션 보기는 일본어로(한글병기→가나만→한자).
   const settings = loadSettings();
   const choiceMode = settings.choiceMode;
-  const beginner = settings.mode === 'beginner' || settings.mode === 'kana'; // 초급에서만 한국어 해석 노출
   const isKanaQuiz = card.reviewTarget?.type === 'kana';
   const isKo2Ja = card.id.includes(':ko2ja:'); // 뜻 보고 일본어 고르기
   // 힌트: 답하기 전에 눌러 내 속도로 읽는다(정답 자동 넘김과 무관).
@@ -322,7 +321,7 @@ function QuizBody({ card, picked, skipped, isMissionStep, isKanaFamiliar, onChoo
           </button>
           <span className="ym-wave" aria-hidden><i /><i /><i /><i /><i /></span>
           <p lang="ja" style={{ margin: '4px 0 0', fontSize: 15, fontWeight: 800, color: 'var(--ink)' }}>聞いて意味を選びましょう</p>
-          {beginner && <p style={{ margin: '2px 0 0', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 600 }}>듣고 의미를 고르세요</p>}
+          <p style={{ margin: '2px 0 0', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 600 }}>듣고 의미를 고르세요</p>
         </div>
       ) : isMissionStep ? (
         <button onClick={() => card.bannerJa && speak(card.bannerJa)} disabled={!card.bannerJa || !ttsSupported()}

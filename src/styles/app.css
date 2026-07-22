@@ -109,6 +109,9 @@
       .ym-rise { animation: ym-rise 0.5s cubic-bezier(.2,.8,.2,1) both; }
       .ym-press { transition: transform 0.12s cubic-bezier(.2,.8,.2,1), box-shadow 0.15s ease; }
       .ym-press:not(:disabled):active { transform: scale(0.965); }
+      /* 접힌 카드의 펼치기 화살표 — 가만히 있지 않고 살짝 까딱여 "눌러서 펼칠 수 있다"는 걸 알려준다. */
+      @keyframes ym-expand-hint { 0%, 100% { transform: translateY(0) rotate(-90deg); } 50% { transform: translateY(2px) rotate(-90deg); } }
+      .ym-expand-hint { animation: ym-expand-hint 1.6s ease-in-out infinite; }
       /* iOS 터치 타깃 최소 44pt 권장 (HIG) */
       button { min-height: 44px; }
       /* 볼드 모던: 크고 무거운 타이포, 타이트 자간 */

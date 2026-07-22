@@ -31,12 +31,15 @@ export const ANNOUNCEMENTS: Announcement[] = [
   { id: 'a_train_door', category: 'train', ja: 'ドアが閉まります。ご注意ください。', kana: 'どあがしまります。ごちゅういください。', korean: '문이 닫힙니다. 주의해 주세요.', context: '출발 직전 문 닫힘', tip: '閉まります(しまります) = 닫힙니다.' },
   { id: 'a_train_exit', category: 'train', ja: 'お出口は、左側です。', kana: 'おでぐちは、ひだりがわです。', korean: '내리는 곳은 왼쪽입니다.', context: '하차 문 방향 안내', tip: '右側(みぎがわ)=오른쪽 / 左側(ひだりがわ)=왼쪽.' },
   { id: 'a_train_transfer', category: 'train', ja: 'お乗り換えのお客様は、こちらです。', kana: 'おのりかえのおきゃくさまは、こちらです。', korean: '환승하실 손님은 이쪽입니다.', context: '환승역 안내', tip: '乗り換え(のりかえ) = 환승.' },
+  { id: 'a_train_delay', category: 'train', ja: 'ただいま、人身事故の影響で、電車が遅れております。', kana: 'ただいま、じんしんじこのえいきょうで、でんしゃがおくれております。', korean: '현재 인명 사고의 영향으로 열차가 지연되고 있습니다.', context: '열차 지연 안내', tip: '遅れております(おくれております) = 지연되고 있습니다. 이유는 人身事故·車両点検(차량 점검) 등으로 자주 바뀌어요.' },
+  { id: 'a_train_suspend', category: 'train', ja: 'この電車は、当駅で運転を見合わせます。', kana: 'このでんしゃは、とうえきでうんてんをみあわせます。', korean: '이 열차는 이번 역에서 운행을 중단합니다.', context: '운행 중단 안내', tip: '運転見合わせ(うんてんみあわせ) = 운행 중단·잠정 정지.' },
 
   // ── 역 ──
   { id: 'a_sta_ticket', category: 'station', ja: '切符を お持ちください。', kana: 'きっぷを おもちください。', korean: '표를 소지해 주세요.', context: '개찰·승차 안내', tip: '切符(きっぷ) = 표.' },
   { id: 'a_sta_local', category: 'station', ja: 'この電車は、各駅停車です。', kana: 'このでんしゃは、かくえきていしゃです。', korean: '이 전철은 각 역 정차입니다.', context: '열차 종류 안내', tip: '各駅停車(かくえきていしゃ) = 모든 역에 정차.' },
   { id: 'a_sta_priority', category: 'station', ja: '優先席付近では、携帯電話の電源を お切りください。', kana: 'ゆうせんせきふきんでは、けいたいでんわのでんげんを おきりください。', korean: '우선석 부근에서는 휴대전화 전원을 꺼 주세요.', context: '우선석 매너 안내', tip: '電源を切る(でんげんをきる) = 전원을 끄다.' },
   { id: 'a_sta_gap', category: 'station', ja: '足元に ご注意ください。', kana: 'あしもとに ごちゅういください。', korean: '발밑을 조심해 주세요.', context: '승강장 틈·계단 주의', tip: '足元(あしもと) = 발밑.' },
+  { id: 'a_sta_earthquake', category: 'station', ja: 'ただいま、地震がありました。係員の指示に従ってください。', kana: 'ただいま、じしんがありました。かかりいんのしじにしたがってください。', korean: '방금 지진이 있었습니다. 직원의 지시에 따라 주세요.', context: '지진 발생 직후 역 구내 방송', tip: '指示に従う(しじにしたがう) = 지시를 따르다. 당황하지 말고 방송과 직원 안내를 먼저 들으세요.' },
 
   // ── 공항·비행기 ──
   { id: 'a_air_boarding', category: 'airport', ja: 'ただいまより、搭乗を開始いたします。', kana: 'ただいまより、とうじょうをかいしいたします。', korean: '지금부터 탑승을 시작하겠습니다.', context: '탑승 게이트', tip: '搭乗(とうじょう) = 탑승.' },

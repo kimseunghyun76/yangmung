@@ -15,11 +15,13 @@ interface Props {
   size?: number;
   style?: CSSProperties;
   title?: string;
+  className?: string;
 }
 
-export function Icon({ name, size = 18, style, title }: Props) {
+export function Icon({ name, size = 18, style, title, className }: Props) {
   return (
     <span
+      className={className}
       role={title ? 'img' : undefined}
       aria-label={title}
       aria-hidden={title ? undefined : true}

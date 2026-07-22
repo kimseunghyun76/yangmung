@@ -87,7 +87,7 @@ export const c15: Mission = {
       speaker: '점원',
       promptPhraseId: 'p_dore_ni_shimasu_ka',
       choices: [
-        { text: '이거랑 이거요', phraseId: 'p_kore_to_kore', correct: true, feedback: '「これとこれ」— 빵을 가리키며 말하는 가장 안전한 주문법. 일본 빵집은 트레이(トレー)와 집게(トング)로 직접 담는 곳이 많아요' },
+        { text: '이거랑 이거', phraseId: 'p_kore_to_kore', correct: true, feedback: '「これとこれ」— 빵을 가리키며 말하는 가장 안전한 주문법. 일본 빵집은 트레이(トレー)와 집게(トング)로 직접 담는 곳이 많아요' },
         { text: '하나 주세요', phraseId: 'p_hitotsu_kudasai', correct: true, feedback: '「一(ひと)つください」— 개수 표현은 ひとつ·ふたつ·みっつ 패턴. 손가락으로 숫자를 보여주면 더 확실해요' },
         { text: '봉투는 필요 없어요', phraseId: 'p_fukuro_iranai', correct: false, feedback: '먼저 빵을 고르세요 — 봉투는 계산 직전에 정해요' },
       ],
@@ -98,7 +98,7 @@ export const c15: Mission = {
       promptPhraseId: 'p_yakitate_desu',
       choices: [
         { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: true, feedback: '「おすすめは何(なん)ですか」— 가게 간판 빵을 물어봐요. メロンパン·あんパン·カレーパン 등 일본 특유의 빵이 많아요' },
-        { text: '하나 더 주세요', phraseId: 'p_hitotsu_kudasai', correct: true, feedback: '「もう一(ひと)つください」처럼 もう를 붙이면 "하나 더". 갓 구운 빵은 인기라 금방 팔려요' },
+        { text: '하나 주세요', phraseId: 'p_hitotsu_kudasai', correct: true, feedback: '「もう一(ひと)つください」처럼 もう를 붙이면 "하나 더". 갓 구운 빵은 인기라 금방 팔려요' },
         { text: '봉투는 필요 없어요', phraseId: 'p_fukuro_iranai', correct: false, feedback: '아직 빵을 고르는 중이에요 — 봉투는 계산할 때 정해요' },
       ],
     },
@@ -175,7 +175,7 @@ export const c16: Mission = {
       speaker: '점원',
       promptPhraseId: 'p_oryouri_ikaga',
       choices: [
-        { text: '이거랑 이거요', phraseId: 'p_kore_to_kore', correct: true, feedback: '「これとこれ」— 메뉴를 가리키며 주문. 焼(や)き鳥(とり)·枝豆(えだまめ)·唐揚(からあ)げ는 이자카야 정석 안주예요' },
+        { text: '이거랑 이거', phraseId: 'p_kore_to_kore', correct: true, feedback: '「これとこれ」— 메뉴를 가리키며 주문. 焼(や)き鳥(とり)·枝豆(えだまめ)·唐揚(からあ)げ는 이자카야 정석 안주예요' },
         { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: true, feedback: '「おすすめは何(なん)ですか」— 그날의 추천 안주(本日(ほんじつ)のおすすめ)를 물어봐요' },
         { text: '이거 빼 주세요', phraseId: 'p_kore_nuite', correct: true, feedback: '「これを抜(ぬ)いてください」— 못 먹는 재료가 있으면 빼 달라고 해요. 알레르기는 미리 전하면 안전해요' },
       ],
@@ -185,7 +185,7 @@ export const c16: Mission = {
       speaker: '점원',
       promptPhraseId: 'p_rasuto_ooda_desu',
       choices: [
-        { text: '이거랑 이거요', phraseId: 'p_kore_to_kore', correct: true, feedback: '「これとこれ」— 라스트 오더에도 메뉴를 가리키며 추가 주문 가능. 술은 もう一杯(いっぱい)도 써요' },
+        { text: '이거랑 이거', phraseId: 'p_kore_to_kore', correct: true, feedback: '「これとこれ」— 라스트 오더에도 메뉴를 가리키며 추가 주문 가능. 술은 もう一杯(いっぱい)도 써요' },
         { text: '예약했습니다', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '이미 입장해 식사 중이에요 — 라스트 오더엔 추가 주문이나 계산을 말해요' },
       ],
     },
@@ -267,8 +267,8 @@ export const c18: Mission = {
       speaker: '안내 직원',
       promptPhraseId: 'p_irasshai',
       choices: [
-        { text: '근처 관광지 추천해 주세요', phraseId: 'p_osusume_wa', correct: true, feedback: '「おすすめは何(なに)ですか」— 직원에게 먼저 추천을 요청하는 가장 효율적인 첫 마디. 지도·팸플릿·교통 방법까지 한꺼번에 안내받을 수 있어요' },
-        { text: '아사쿠사 가는 길 알려주세요', phraseId: 'p_michi_oshiete', correct: true, feedback: '「道(みち)を教(おし)えてください」— 목적지가 정해졌을 때 바로 길을 물어봐요. 지도 위에 경로를 직접 표시해달라고 하면 더 확실해요' },
+        { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: true, feedback: '「おすすめは何(なに)ですか」— 직원에게 먼저 추천을 요청하는 가장 효율적인 첫 마디. 지도·팸플릿·교통 방법까지 한꺼번에 안내받을 수 있어요' },
+        { text: '길을 가르쳐 주세요', phraseId: 'p_michi_oshiete', correct: true, feedback: '「道(みち)を教(おし)えてください」— 목적지가 정해졌을 때 바로 길을 물어봐요. 지도 위에 경로를 직접 표시해달라고 하면 더 확실해요' },
         { text: '표 주세요', phraseId: 'p_kippu_kudasai', correct: false, feedback: '관광안내소는 교통표를 파는 곳이 아니에요. 역 창구나 자동발매기를 이용해요' },
       ],
     },
@@ -570,7 +570,7 @@ export const c23: Mission = {
       speaker: '역무원',
       promptPhraseId: 'p_jiyuuseki_desu_ka',
       choices: [
-        { text: '네, 그렇습니다 (자유석 확인)', phraseId: 'p_hai_sou_desu', correct: true, feedback: '「はい、そうです」— 자유석(自由席) 확인. 혼잡 시간대엔 지정석(指定席)이 더 안전해요. 자유석은 저렴하지만 서서 갈 수도 있어요' },
+        { text: '네, 그렇습니다', phraseId: 'p_hai_sou_desu', correct: true, feedback: '「はい、そうです」— 자유석(自由席) 확인. 혼잡 시간대엔 지정석(指定席)이 더 안전해요. 자유석은 저렴하지만 서서 갈 수도 있어요' },
         { text: '표 주세요', phraseId: 'p_kippu_kudasai', correct: false, feedback: '이미 표를 사는 중이에요. 자유석인지 물었으니 はい、そうです로 답해요' },
         { text: '물 주세요', phraseId: 'p_mizu_kudasai', correct: false, feedback: '신칸센 표 구매 중에는 좌석/표 관련 답변이 맞아요' },
       ],
@@ -710,7 +710,7 @@ export const c25: Mission = {
       speaker: '접수 직원',
       promptPhraseId: 'p_hokenshou_wa_arimasu_ka',
       choices: [
-        { text: '아니요, 없어요 (보험증 미소지)', phraseId: 'p_iie_arimasen', correct: true, feedback: '「いいえ、ありません」— 외국인은 보험증 없음. 자비 진료 요금이 청구되는데 여행자 보험으로 나중에 청구 가능해요' },
+        { text: '아니요, 없어요', phraseId: 'p_iie_arimasen', correct: true, feedback: '「いいえ、ありません」— 외국인은 보험증 없음. 자비 진료 요금이 청구되는데 여행자 보험으로 나중에 청구 가능해요' },
         { text: '여권 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: true, feedback: '「パスポートはこちらです」— 병원 접수에서 외국인 신분 확인으로 여권을 요청하는 경우가 많아요' },
         { text: '머리가 아파요', phraseId: 'p_atama_itai', correct: false, feedback: '증상은 이미 말했어요 — 지금은 보험증이 있는지 답해요' },
       ],
@@ -720,7 +720,7 @@ export const c25: Mission = {
       speaker: '의료진',
       promptPhraseId: 'p_sensei_ga_setsumei_shimasu',
       choices: [
-        { text: '잘 부탁드려요', phraseId: 'p_yoroshiku_onegai', correct: true, feedback: '「よろしくお願(ねが)いします」— 진료를 시작하며 건네는 응답' },
+        { text: '잘 부탁드립니다', phraseId: 'p_yoroshiku_onegai', correct: true, feedback: '「よろしくお願(ねが)いします」— 진료를 시작하며 건네는 응답' },
         { text: '도와주세요', phraseId: 'p_tasukete', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
       ],
     },
