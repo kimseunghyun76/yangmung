@@ -17,6 +17,7 @@ import {
   LEVEL_STAGES,
   isStageComplete,
   isStageUnlocked,
+  nextLevel,
   type CoreLevel,
   type PracticeKey,
   type ProgStage,
@@ -72,6 +73,9 @@ interface Props {
   promotionResult?: { fromLevel: CoreLevel; toLevel: CoreLevel; passed: boolean };
   onOpenLevelGuide?: (level: CoreLevel) => void;
   onRetryPromotion?: (level: CoreLevel) => void;
+  /** 현재 레벨의 모든 단계를 통과했을 때 승급 시험으로 유도하는 배너용 — onRetryPromotion과 같은 동작이지만
+   * (재시험이 아닌) 처음 도전 문맥이라 별도 이름으로 받는다. */
+  onStartPromotion?: (level: CoreLevel) => void;
   onRetryWeak: () => void;
   onRetrySame?: () => void; // 방금 한 연습을 처음부터 다시(연습 완료 화면 전용)
   onContinue: () => void;
@@ -93,7 +97,7 @@ interface Props {
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place
   ?? CONTENT.missions.find((m) => m.id === id)?.scenario ?? id;
 
-export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, isQuickPractice = false, coreLevel, progression, devUnlockAll = false, promotionResult, onOpenLevelGuide, onRetryPromotion, onRetryWeak, onRetrySame, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onPracticeVocab, onPracticeGreetings, onPracticeKanaHiragana, onPracticeKanaKatakana, onPracticePairs, onPracticeWrite, onPracticeVerbs, onHome }: Props) {
+export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, isQuickPractice = false, coreLevel, progression, devUnlockAll = false, promotionResult, onOpenLevelGuide, onRetryPromotion, onStartPromotion, onRetryWeak, onRetrySame, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onPracticeVocab, onPracticeGreetings, onPracticeKanaHiragana, onPracticeKanaKatakana, onPracticePairs, onPracticeWrite, onPracticeVerbs, onHome }: Props) {
   // 훅은 이 아래 이른 반환(promotionResult)과 무관하게 항상 같은 순서로 호출돼야 한다(rules-of-hooks).
   const learningStats = useLearningStats(loadCollection());
   // 승급 시험이었으면 일반 결과 화면 대신 전용 합격/불합격 화면 — 캐릭터가 목적·결과·다음 행동을 설명한다.
@@ -128,22 +132,47 @@ export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, pro
   const stamps = clearedSceneIds.slice(0, 3);
   // 아직 도달 못한 레벨의 연습은 배너 자체를 안 보여준다(전엔 항상 다 보이고 눌리면 실제로 들어가지는 버그였음).
   const reach = (practice: PracticeKey, script?: 'hiragana' | 'katakana') => stageReachable(coreLevel, progression, devUnlockAll, practice, script);
+  // "다음엔 무엇을 할까" 추천은 reach보다 더 엄격하다 — reach는 "자유 연습으로 들어갈 수 있는지"(지난 레벨 포함)만
+  // 보지만, 추천은 "지금 배워야 할 것"만 골라야 한다. 지난 레벨(예: 기본 레벨인데 입문 스테이지)이나
+  // 이미 완료한 현재 레벨 스테이지는 추천 목록에서 뺀다. 레벨에 속하지 않는 자유 연습(가나 쓰기·속도전)은 항상 추천 가능.
+  const suggestable = (practice: PracticeKey, script?: 'hiragana' | 'katakana') => {
+    if (devUnlockAll) return true;
+    const found = findStageLevel(practice, script);
+    if (!found) return true;
+    if (CORE_LEVEL_RANK[found.level] !== CORE_LEVEL_RANK[coreLevel]) return false; // 지난/미래 레벨은 추천 제외
+    const stage = LEVEL_STAGES[found.level][found.idx];
+    return !isStageComplete(progression, found.level, stage.id);
+  };
   // "전체 어휘 세션"은 더 이상 LEVEL_STAGES 단계가 아니라(자유 배너) stageReachable이 무조건 통과시키지만,
   // Practice.tsx에서는 실제로 중급(express) 배너로 배치해뒀다 — 여기서도 같은 최소 레벨을 지켜야
   // 입문 유저 Done 화면에 중급 전용 메뉴가 새는 걸 막을 수 있다.
   const reachVocabAll = devUnlockAll || CORE_LEVEL_RANK[coreLevel] >= CORE_LEVEL_RANK.express;
+  // 현재 레벨의 모든 단계를 통과했으면(그리고 다음 레벨이 있으면) 승급 시험을 최우선으로 추천한다.
+  const allStagesComplete = LEVEL_STAGES[coreLevel].length > 0
+    && LEVEL_STAGES[coreLevel].every((stage) => isStageComplete(progression, coreLevel, stage.id))
+    && nextLevel(coreLevel) !== null;
+  const promotionAction: NextAction | null = allStagesComplete && onStartPromotion ? {
+    section: isQuickPractice ? 'quick' : 'guide',
+    icon: 'trophy',
+    accent: 'var(--accent)',
+    title: `${CORE_LEVEL_LABEL[coreLevel]} 레벨 테스트`,
+    sub: '모든 단계를 통과했어요 — 승급 시험을 보러 가요',
+    badge: '승급',
+    onClick: () => onStartPromotion(coreLevel),
+    preferred: true,
+  } : null;
   const quickPracticeActions: NextAction[] = [
     // 방금 한 연습을 처음부터 다시 — 항상 맨 앞(가장 예상되는 다음 행동)
     ...(onRetrySame ? [quickAction('retry-same', 'flow', 'var(--ok)', '다시 한번 학습', '방금 한 연습을 처음부터 다시', onRetrySame, true)] : []),
     ...(onPracticeVocab && reachVocabAll ? [quickAction('vocab', 'kana', 'var(--accent)', '전체 어휘 세션', '모든 주제를 SRS 방식으로 복습', onPracticeVocab, !onRetrySame)] : []),
-    ...(onPracticeGreetings && reach('greetings') ? [quickAction('greetings', 'speak', 'var(--ok)', '기본 인사', '듣고 바로 반응하기', onPracticeGreetings)] : []),
-    ...(onSigns && reach('signs') ? [quickAction('signs', 'sign', 'var(--accent)', '거리 읽기', '간판·메뉴·안내 읽기', onSigns)] : []),
-    ...(onDictation && reach('dictation') ? [quickAction('dictation', 'dictation', 'var(--warn)', '받아쓰기', '듣고 가나 타일로 쓰기', onDictation)] : []),
-    ...(onCompose && reach('compose') ? [quickAction('compose', 'speak', 'var(--accent)', '한→일 작문', '뜻을 보고 일본어 만들기', onCompose)] : []),
-    ...(onPracticeKanaHiragana && reach('kana', 'hiragana') ? [quickAction('hiragana', 'kana', 'var(--accent)', '히라가나', '글자 읽기 빠른 회전', onPracticeKanaHiragana)] : []),
-    ...(onPracticeKanaKatakana && reach('kana', 'katakana') ? [quickAction('katakana', 'kana', 'var(--accent)', '가타카나', '외래어 표기 읽기', onPracticeKanaKatakana)] : []),
-    ...(onPracticePairs && reach('pairs') ? [quickAction('pairs', 'listen', 'var(--warn)', '발음 구분', '비슷한 소리 듣고 고르기', onPracticePairs)] : []),
-    ...(onPracticeVerbs && reach('verbs') ? [quickAction('verbs', 'flow', 'var(--accent)', '동사 형태', '자주 쓰는 활용 패턴', onPracticeVerbs)] : []),
+    ...(onPracticeGreetings && suggestable('greetings') ? [quickAction('greetings', 'speak', 'var(--ok)', '기본 인사', '듣고 바로 반응하기', onPracticeGreetings)] : []),
+    ...(onSigns && suggestable('signs') ? [quickAction('signs', 'sign', 'var(--accent)', '거리 읽기', '간판·메뉴·안내 읽기', onSigns)] : []),
+    ...(onDictation && suggestable('dictation') ? [quickAction('dictation', 'dictation', 'var(--warn)', '받아쓰기', '듣고 가나 타일로 쓰기', onDictation)] : []),
+    ...(onCompose && suggestable('compose') ? [quickAction('compose', 'speak', 'var(--accent)', '한→일 작문', '뜻을 보고 일본어 만들기', onCompose)] : []),
+    ...(onPracticeKanaHiragana && suggestable('kana', 'hiragana') ? [quickAction('hiragana', 'kana', 'var(--accent)', '히라가나', '글자 읽기 빠른 회전', onPracticeKanaHiragana)] : []),
+    ...(onPracticeKanaKatakana && suggestable('kana', 'katakana') ? [quickAction('katakana', 'kana', 'var(--accent)', '가타카나', '외래어 표기 읽기', onPracticeKanaKatakana)] : []),
+    ...(onPracticePairs && suggestable('pairs') ? [quickAction('pairs', 'listen', 'var(--warn)', '발음 구분', '비슷한 소리 듣고 고르기', onPracticePairs)] : []),
+    ...(onPracticeVerbs && suggestable('verbs') ? [quickAction('verbs', 'flow', 'var(--accent)', '동사 형태', '자주 쓰는 활용 패턴', onPracticeVerbs)] : []),
     ...(onPracticeWrite ? [quickAction('kana-write', 'kana', 'var(--ok)', '가나 쓰기', '손으로 따라 쓰기', onPracticeWrite)] : []),
     ...(onFlash ? [quickAction('flash', 'fast', 'var(--accent)', '속도전 플래시', '제한시간 안에 빠르게 복습', onFlash)] : []),
   ];
@@ -201,8 +230,8 @@ export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, pro
   // 반대로 "오답과 복습" + 미션 다음 단계 가이드만(다른 연습 목록 X) — 서로의 다음 행동을 섞지 않는다.
   const actionSections = buildActionSections(CORE_LEVEL_LABEL[coreLevel], {
     recovery: weakActions,
-    guide: isQuickPractice ? [] : levelGuideActions,
-    quick: isQuickPractice ? quickPracticeActions : [],
+    guide: isQuickPractice ? [] : [...(promotionAction ? [promotionAction] : []), ...levelGuideActions],
+    quick: isQuickPractice ? [...(promotionAction ? [promotionAction] : []), ...quickPracticeActions] : [],
     next: isQuickPractice ? [] : [nextSceneAction, ...reinforcementActions].filter((action): action is NextAction => !!action),
   });
 

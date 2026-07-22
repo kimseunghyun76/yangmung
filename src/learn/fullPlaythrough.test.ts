@@ -44,12 +44,12 @@ console.log('=== 레벨 순차 완주(입문→고급) — 모든 단계 통과 
   })());
 }
 
-console.log('\n=== 전체 50개 미션 완전 마스터 시뮬레이션 ===');
+console.log('\n=== 전체 52개 미션 완전 마스터 시뮬레이션 ===');
 let progress: ProgressMap = {};
 let sid = 1;
 {
   const missions = CONTENT.missions.filter((m) => m.id !== 'C0');
-  check('미션 총 개수 51개(C0 제외 50개)', missions.length === 50, `실제 ${missions.length}`);
+  check('미션 총 개수 53개(C0 제외 52개)', missions.length === 52, `실제 ${missions.length}`);
   let crashed = 0;
   for (const m of missions) {
     const quizCards = cards.filter((c) => c.kind === 'quiz' && c.reviewTarget?.type === 'mission' && String(c.reviewTarget.id) === m.id);

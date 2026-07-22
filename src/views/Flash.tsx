@@ -459,6 +459,7 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
                 <Icon name="listen" size={44} />
               </button>
               <p lang="ja" style={{ margin: '10px 0 0', fontSize: 14, fontWeight: 800, color: '#fff7eb' }}>聞いて意味を選びましょう</p>
+              <p style={{ margin: '2px 0 0', fontSize: 12, fontWeight: 650, color: 'rgba(244,237,224,.66)' }}>듣고 의미를 고르세요</p>
             </>
           ) : (
             <div lang="ja" style={{ fontSize: promptFs, fontWeight: 1000, color: '#fff7eb', lineHeight: 1.16, wordBreak: 'keep-all' }}>{promptText}</div>

@@ -17,7 +17,7 @@ import { WRAP } from '../ui/styles';
 import { isMangaSceneImage, sceneVisualByMission, sceneVisualByPlace } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
-import { MascotEmpty, MascotFace } from './mascot';
+import { MascotEmpty } from './mascot';
 import { Icon } from '../ui/Icon';
 import { loadCollection } from '../learn/collection';
 import { useLearningStats, type LearningStats } from '../learn/learningStats';
@@ -74,7 +74,10 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
   const heroTitle = homeGoal(heroMission);
   const heroChips = heroMission ? phraseChips(heroMission.id).slice(0, 3) : kanaChips(allCards);
   const outcome = outcomeLine(heroMission, planned);
-  const coach = coachForHome(diagnosis, heroMission, plan.breakdown.B + plan.breakdown.C);
+  // 레벨 진도 중 잠기지 않았지만 아직 안 끝난 첫 단계 — "오늘의 코치"가 뭉뚱그린 응원 대신
+  // 구체적으로 뭘 하면 되는지 짚어줄 때 쓴다(레벨 진도 카드의 "다음" 강조와도 같은 기준).
+  const nextStage = LEVEL_STAGES[coreLevel].find((st, idx) => !isStageComplete(progression, coreLevel, st.id) && (devUnlockAll || isStageUnlocked(progression, coreLevel, idx)));
+  const coach = coachForHome(diagnosis, heroMission, plan.breakdown.B + plan.breakdown.C, nextStage);
 
   // 여행 루트 — 오늘의 미션(hero)과 중복되지 않게 나머지 열린 미션을 앞세워 최대 4개.
   // 열린 미션이 없으면 잠긴(다음) 미션을 잠금 카드로 보여준다(클릭 시 지도로 이동).
@@ -150,26 +153,10 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
         </GlassPanel>
       </div>
 
-      {/* 첫 실행: 수준 진단 권유 배너 */}
-      {!placementDone && (
-        <button className="ym-rise ym-press" onClick={onPlacement} style={{
-          width: '100%', textAlign: 'left', cursor: 'pointer', margin: '14px 0 0', display: 'flex', alignItems: 'center', gap: 13,
-          padding: '14px 16px', borderRadius: 18, border: '1px solid var(--accent)', color: 'var(--ink)',
-          background: 'linear-gradient(135deg, var(--accent-soft), var(--glass-bg-strong))',
-        }}>
-          <span style={{ fontSize: 28 }}>🎯</span>
-          <span style={{ flex: 1 }}>
-            <span style={{ display: 'block', fontSize: 15, fontWeight: 800 }}>내 수준 진단하고 시작하기</span>
-            <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 2 }}>10문제로 난이도를 추천받아요 (1분 · 언제든 설정에서 변경)</span>
-          </span>
-          <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)' }} />
-        </button>
-      )}
-
       {/* 레벨이 낮으면 빠른 연습(레벨 진도)을 오늘의 미션 위에, 높으면 미션을 위에 */}
       {lowLevel ? (<>{levelPanel}{missionPanel}</>) : (<>{missionPanel}{levelPanel}</>)}
 
-      {/* 속도전 대결 — 메인 제일 하단 */}
+      {/* 속도전 대결 */}
       <button className="ym-rise ym-press" onClick={onPracticeFlash} style={{
         width: '100%', marginTop: 14, textAlign: 'left', cursor: 'pointer',
         display: 'flex', alignItems: 'center', gap: 14, padding: '16px 18px', borderRadius: 20,
@@ -189,6 +176,24 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
         </span>
         <Icon name="flow" size={20} style={{ color: 'rgba(255,255,255,0.85)' }} />
       </button>
+
+      {/* 수준 진단 권유 배너 — placementDone(최초 진단을 하거나 건너뛴 적이 있는지)이 false일 때만,
+          즉 앱을 시작한 뒤 아직 한 번도 진단을 받지 않은 사용자에게만 보인다.
+          메인 흐름(오늘의 미션·레벨 진도·속도전)을 다 보여준 뒤 맨 아래에 보조 옵션으로 둔다. */}
+      {!placementDone && (
+        <button className="ym-rise ym-press" onClick={onPlacement} style={{
+          width: '100%', textAlign: 'left', cursor: 'pointer', margin: '14px 0 0', display: 'flex', alignItems: 'center', gap: 13,
+          padding: '14px 16px', borderRadius: 18, border: '1px solid var(--accent)', color: 'var(--ink)',
+          background: 'linear-gradient(135deg, var(--accent-soft), var(--glass-bg-strong))',
+        }}>
+          <span style={{ fontSize: 28 }}>🎯</span>
+          <span style={{ flex: 1 }}>
+            <span style={{ display: 'block', fontSize: 15, fontWeight: 800 }}>내 수준 진단하고 시작하기</span>
+            <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 2 }}>10문제로 난이도를 추천받아요 (1분 · 언제든 설정에서 변경)</span>
+          </span>
+          <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)' }} />
+        </button>
+      )}
 
       {!ttsSupported() && <p style={{ color: 'var(--warn)', fontSize: 13, marginTop: 16, fontWeight: 600 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
     </main>
@@ -420,21 +425,21 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPla
             width: 30, height: 30, flexShrink: 0, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
             borderRadius: 999, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink-soft)', cursor: 'pointer',
           }}>
-            <Icon name="flow" size={13} style={{ transform: expanded ? 'rotate(90deg)' : 'rotate(-90deg)', transition: 'transform .2s' }} />
+            {/* 접혀 있을 때만 살짝 까딱이는 모션으로 "눌러서 펼칠 수 있다"는 걸 알려준다. */}
+            <Icon
+              name="flow"
+              size={13}
+              className={expanded ? undefined : 'ym-expand-hint'}
+              style={{ transform: expanded ? 'rotate(90deg)' : 'rotate(-90deg)', transition: 'transform .2s' }}
+            />
           </button>
         </div>
       </div>
 
-      {/* 상태 분석: 캐릭터 + 가나 링 + 코치 한 줄 — 접혀 있어도 항상 보이는 요약.
-          캐릭터 표정은 최근 성과(struggling→복구, cruising→정답)에 맞춰 바뀐다. */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 14 }}>
-        <MascotFace
-          who="mung"
-          mood={d.level === 'struggling' ? 'recovery' : d.level === 'cruising' ? 'correct' : 'default'}
-          size={48}
-          style={{ filter: 'saturate(.85) brightness(1.05) drop-shadow(0 8px 14px rgba(0,0,0,.14))' }}
-        />
-        <Ring pct={kanaPct} size={56} />
+      {/* 상태 분석: 가나 링 + 코치 한 줄 — 접혀 있어도 항상 보이는 요약.
+          캐릭터를 빼고 링·문구에 가로 공간을 더 줬다(2026-07-22, 사용자 요청 — 공간 활용). */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 14 }}>
+        <Ring pct={kanaPct} size={60} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <p style={{ margin: 0, fontSize: 12, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.04em' }}>오늘의 코치</p>
           <p style={{ margin: '5px 0 0', fontSize: 13.5, fontWeight: 650, lineHeight: 1.5, color: 'var(--ink)' }}>{line}</p>
@@ -512,6 +517,8 @@ function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion,
   const promotionUnlocked = allDone || devUnlockAll;
   const nx = nextLevel(coreLevel);
   const artOf = (s: ProgStage) => s.script ?? s.practice;
+  // 잠기지 않았지만 아직 안 끝난 첫 단계 — "다음" 배지로 강조해 무엇부터 하면 되는지 한눈에 보여준다.
+  const nextIdx = stages.findIndex((st, idx) => !isStageComplete(progression, coreLevel, st.id) && (devUnlockAll || isStageUnlocked(progression, coreLevel, idx)));
   const freeExtras = coreLevel === 'default' ? [
     { key: 'basics', label: '숫자 학습', sub: '숫자·요일·시간·금액', art: 'basics', onClick: onOpenBasics },
     ...DEFAULT_PREVIEW_VOCAB_GROUPS.map((g) => ({ key: `vocab:${g.id}`, label: g.label, sub: g.description, art: vocabGroupArt(g.id), onClick: () => onStartVocabGroup(g.id) })),
@@ -529,6 +536,7 @@ function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion,
             key={st.id} order={idx + 1} stage={st} art={artOf(st)}
             done={isStageComplete(progression, coreLevel, st.id)}
             unlocked={devUnlockAll || isStageUnlocked(progression, coreLevel, idx)}
+            isNext={idx === nextIdx}
             onClick={() => onStartStage(st)}
           />
         ))}
@@ -566,14 +574,15 @@ function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion,
   );
 }
 
-function StageTile({ order, stage, art, done, unlocked, onClick }: {
-  order: number; stage: ProgStage; art: string; done: boolean; unlocked: boolean; onClick: () => void;
+function StageTile({ order, stage, art, done, unlocked, isNext, onClick }: {
+  order: number; stage: ProgStage; art: string; done: boolean; unlocked: boolean; isNext?: boolean; onClick: () => void;
 }) {
   return (
     <button key={stage.id} className="ym-press" onClick={onClick} disabled={!unlocked} style={{
       position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', textAlign: 'left', minWidth: 0,
-      border: done ? '1.5px solid var(--ok)' : '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
-      borderRadius: 14, padding: 0, cursor: unlocked ? 'pointer' : 'default', opacity: unlocked ? 1 : 0.62, boxShadow: '0 7px 16px rgba(89,58,28,.06)',
+      border: isNext ? '1.5px solid var(--accent)' : done ? '1.5px solid var(--ok)' : '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
+      borderRadius: 14, padding: 0, cursor: unlocked ? 'pointer' : 'default', opacity: unlocked ? 1 : 0.62,
+      boxShadow: isNext ? '0 0 0 3px var(--accent-soft), 0 7px 16px rgba(89,58,28,.06)' : '0 7px 16px rgba(89,58,28,.06)',
     }}>
       <span aria-hidden style={{ position: 'relative', display: 'block', width: '100%', aspectRatio: '4 / 3', overflow: 'hidden', background: 'rgba(255,247,235,.64)' }}>
         <img src={`/scenes/quick-practice/${art}.webp`} alt="" loading="lazy" decoding="async" style={{
@@ -583,8 +592,12 @@ function StageTile({ order, stage, art, done, unlocked, onClick }: {
         <span style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(255,247,235,.02), transparent 58%, rgba(48,34,18,.26))' }} />
         {/* 순서 배지 */}
         <span style={{ position: 'absolute', top: 7, left: 7, width: 22, height: 22, borderRadius: 99, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,.5)', color: '#fff', fontSize: 12, fontWeight: 900 }}>{order}</span>
-        {/* 상태 배지 */}
-        {done && <span style={{ position: 'absolute', top: 7, right: 7, padding: '3px 7px', borderRadius: 999, background: 'rgba(35,134,82,.96)', color: '#fff', fontSize: 10.5, fontWeight: 900 }}>완료 ✓</span>}
+        {/* 상태 배지 — 완료했으면 체크, 아직이면(그리고 지금 할 차례면) "다음"으로 뭘 해야 할지 짚어준다 */}
+        {done ? (
+          <span style={{ position: 'absolute', top: 7, right: 7, padding: '3px 7px', borderRadius: 999, background: 'rgba(35,134,82,.96)', color: '#fff', fontSize: 10.5, fontWeight: 900 }}>완료 ✓</span>
+        ) : isNext ? (
+          <span style={{ position: 'absolute', top: 7, right: 7, padding: '3px 7px', borderRadius: 999, background: 'var(--accent)', color: '#fff', fontSize: 10.5, fontWeight: 900 }}>다음</span>
+        ) : null}
         {!unlocked && (
           <span style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>🔒</span>
         )}
@@ -745,13 +758,26 @@ function outcomeLine(mission: ReturnType<typeof CONTENT.missions.find>, planned:
   return `오늘 ${planned}장이면 「${ko}」에 답할 수 있어요.`;
 }
 
-function coachForHome(d: Diagnosis, mission: ReturnType<typeof CONTENT.missions.find>, sceneWeight: number): { line: string } {
+function coachForHome(d: Diagnosis, mission: ReturnType<typeof CONTENT.missions.find>, sceneWeight: number, nextStage?: ProgStage): { line: string } {
+  // 약점이 있으면 그 정체를 구체적으로 짚어준다(가나 글자·장면 이름) — "막혔다"는 사실보다
+  // "무엇이 막혔는지"를 알아야 다음 행동을 정할 수 있다.
   if (d.level === 'struggling') {
-    return { line: '막히면 「もう一度お願いします」만 기억해도 대화는 이어져요.' };
+    if (d.weakKana.length > 0) {
+      const chars = d.weakKana.slice(0, 3).map((w) => w.label).join(' ');
+      return { line: `${chars} 이 글자들이 자꾸 헷갈려요 — 오늘은 이 글자들 위주로 짧게 복습해요.` };
+    }
+    if (d.weakScenes.length > 0) {
+      return { line: `'${d.weakScenes[0].label}' 장면이 아직 낯설어요 — 막히면 「もう一度お願いします」만 기억해도 대화는 이어져요.` };
+    }
+    return { line: '막히면 「もう一度お願いします」만 기억해도 대화는 이어져요. 오늘은 속도보다 정확하게 가요.' };
   }
   if (sceneWeight >= 4 && mission) {
     const p = phraseById(mission.steps.find((s) => s.promptPhraseId)?.promptPhraseId);
     if (p) return { line: `오늘은 「${p.kanji ?? p.displayKana ?? p.kana}」를 먼저 귀에 익혀요.` };
+  }
+  // 다음 레벨 단계가 남아 있으면 그 이름을 콕 집어 알려준다("짧게 한 판" 같은 뭉뚱그린 응원 대신).
+  if (nextStage) {
+    return { line: `'${nextStage.label}' 단계가 남았어요 — 짧게 한 판이면 오늘 분량은 끝낼 수 있어요.` };
   }
   return { line: '짧게 한 판만 해도 다음 장면이 훨씬 덜 낯설어요.' };
 }

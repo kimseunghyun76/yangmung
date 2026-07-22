@@ -44,7 +44,7 @@ export const phrases: Phrase[] = [
   { id: 'p_arigatou_gozaimasu', kana: 'ありがとうございます', kanji: 'ありがとうございます', korean: '감사합니다 (정중)', register: 'productive', tip: '「ありがとうございます」— 일본에서 가장 많이 쓰는 말 중 하나. 거스름돈을 받을 때, 안내를 받을 때, 배웅받을 때 자연스럽게 씁니다. 친구에게는 ありがとう로 줄여도 OK' },
 
   // ── Recovery 4종 마지막 = simplify ──
-  { id: 'p_yasashii_nihongo', missionScope: 'generic', kana: 'やさしいにほんごでおねがいします', kanji: 'やさしい日本語でお願いします', displayKana: 'やさしいにほんごで、おねがいします', korean: '쉬운 일본어로 부탁드려요', register: 'productive', recoveryType: 'simplify', tip: '「やさしい日本語(にほんご)でお願(ねが)いします」— 어려운 표현 대신 쉽게 말해달라는 요청. 観光地(かんこうち)では外国人向けに簡単な日本語で対応してくれる방이 많아요' },
+  { id: 'p_yasashii_nihongo', missionScope: 'generic', kana: 'やさしいにほんごでおねがいします', kanji: 'やさしい日本語でお願いします', displayKana: 'やさしいにほんごで、おねがいします', korean: '쉬운 일본어로 부탁드려요', register: 'productive', recoveryType: 'simplify', tip: '「やさしい日本語(にほんご)でお願(ねが)いします」— 어려운 표현 대신 쉽게 말해달라는 요청. 관광지에서는 외국인을 위해 쉬운 일본어로 응대해 주는 곳이 많아요' },
 
   // ── C1 편의점 두텁게 (결제·포인트·영수증·봉투·데우기) ──
   { id: 'p_shiharai_houhou', kana: 'おしはらいほうほうは', kanji: 'お支払い方法は', displayKana: 'おしはらいほうほうは？', korean: '결제 방법은요?', register: 'receptive' },
@@ -74,7 +74,7 @@ export const phrases: Phrase[] = [
   { id: 'p_eigo_de', missionScope: 'generic', kana: 'えいごでだいじょうぶですか', kanji: '英語で大丈夫ですか', displayKana: 'えいごで、だいじょうぶですか？', korean: '영어로 괜찮을까요?', register: 'productive', grammarRefs: ['g_masuka'], recoveryType: 'fallback', tip: '「英語(えいご)で大丈夫(だいじょうぶ)ですか」— 소통이 막혔을 때 쓰는 최후의 카드. 백화점·공항·대형 호텔에서는 영어 대응 가능한 경우가 많아요. 작은 가게에서는 스마트폰 번역앱을 함께 보여주면 더 효과적이에요' },
   { id: 'p_norikae_kudasai', kana: 'つぎのえきでのりかえてください', kanji: '次の駅で乗り換えてください', displayKana: 'つぎのえきで、のりかえてください', korean: '다음 역에서 갈아타세요', register: 'receptive' },
   { id: 'p_wakarimashita', missionScope: 'generic', kana: 'わかりました', kanji: '分かりました', korean: '알겠습니다', register: 'productive', tip: '「分(わ)かりました」— 직원의 안내나 설명을 이해했을 때. はい보다 더 적극적인 이해 확인이에요. ありがとうございます를 덧붙이면 더욱 자연스럽습니다' },
-  { id: 'p_dochira_desu_ka', kana: 'どちらですか', displayKana: 'どちらですか？', korean: '어느 쪽이에요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '「どちらですか」— どこ보다 정중한 표현으로 방향이나 장소를 물을 때 써요. 일본어에서 どちら는 どこ·どれの正中語(ていねいご)예요' },
+  { id: 'p_dochira_desu_ka', kana: 'どちらですか', displayKana: 'どちらですか？', korean: '어느 쪽이에요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '「どちらですか」— どこ보다 정중한 표현으로 방향이나 장소를 물을 때 써요. 일본어에서 どちら는 どこ·どれの丁寧語(ていねいご)예요' },
 
   // ── 전철·여행 기본 어휘 (인벤토리 — 미션 차차 사용) ──
   { id: 'p_eki', kana: 'えき', kanji: '駅', korean: '역', register: 'both' },
@@ -327,7 +327,7 @@ export const phrases: Phrase[] = [
 
   // ── C4 호텔 체크인 ──
   { id: 'p_checkin_onegai', kana: 'チェックインおねがいします', kanji: 'チェックインお願いします', displayKana: 'チェックイン、おねがいします', korean: '체크인 부탁드립니다', register: 'productive', tip: '「チェックインお願(ねが)いします」— 호텔에 도착하면 첫 마디. 영어 check-in을 그대로 외래어로 쓰는 표현이에요. 여권과 예약 확인서를 미리 준비해두면 빠르게 진행돼요' },
-  { id: 'p_yoyaku_shiteimasu', kana: 'よやくしています', kanji: '予約しています', korean: '예약했습니다', register: 'productive', tip: '「予約(よやく)しています」— 예약했음을 알리는 한 마디. 이름을 말하거나 예약 확인 화면을 보여주면 더 빠르게 체크인이 돼요. 야국·레스토랑에서도 쓸 수 있어요' },
+  { id: 'p_yoyaku_shiteimasu', kana: 'よやくしています', kanji: '予約しています', korean: '예약했습니다', register: 'productive', tip: '「予約(よやく)しています」— 예약했음을 알리는 한 마디. 이름을 말하거나 예약 확인 화면을 보여주면 더 빠르게 체크인이 돼요. 약국·레스토랑에서도 쓸 수 있어요' },
   { id: 'p_onamae_wa', kana: 'おなまえは', kanji: 'お名前は', displayKana: 'おなまえは？', korean: '성함은요?', register: 'receptive' },
   { id: 'p_passport_onegai', kana: 'パスポートおねがいします', kanji: 'パスポートお願いします', displayKana: 'パスポート、おねがいします', korean: '여권 부탁드립니다', register: 'receptive' },
   { id: 'p_kagi_desu', kana: 'かぎです', kanji: '鍵です', korean: '키입니다', register: 'receptive' },

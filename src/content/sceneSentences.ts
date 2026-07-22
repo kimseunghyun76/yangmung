@@ -161,4 +161,5 @@ export const SCENE_SENTENCES: Record<CLevel, SceneSentence[]> = {
   C41: buildScene('C41'), C42: buildScene('C42'), C43: buildScene('C43'), C44: buildScene('C44'),
   C45: buildScene('C45'), C46: buildScene('C46'), C47: buildScene('C47'), C48: buildScene('C48'),
   C49: buildScene('C49'), C50: buildScene('C50'),
+  C51: buildScene('C51'), C52: buildScene('C52'),
 };

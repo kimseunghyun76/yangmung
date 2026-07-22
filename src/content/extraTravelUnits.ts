@@ -30,4 +30,14 @@ export const extraTravelUnits: Unit[] = [
       'p_new_betsu_tsuuro_kakunin', 'p_new_koko_de_machimasu', 'p_onegai_shimasu',
     ],
   },
+  {
+    id: 'u_b4_crisis_response', track: 'lang', stage: 'B4', mode: 'action',
+    canDo: '사용자는 지진 등 재난 상황에서 안전을 확인하고, 병원 접수·카드 결제 문제에 대응할 수 있다',
+    newPhraseIds: [
+      'p_karada_wo_mamorimasu', 'p_kowai_desu', 'p_hinan_subeki_desu_ka', 'p_soto_ni_dete_mo_ii_desu_ka',
+      'p_hinanbasho_ni_ikimasu', 'p_itsu_saikai_desu_ka', 'p_watashi_wa_daijoubu_desu',
+      'p_hajimete_desu', 'p_nikaime_desu', 'p_ryokousha_hoken_ga_arimasu', 'p_junban_wo_machimasu', 'p_dorekurai_machimasu_ka',
+      'p_betsu_no_card_tameshite', 'p_genkin_de_haraimasu',
+    ],
+  },
 ];

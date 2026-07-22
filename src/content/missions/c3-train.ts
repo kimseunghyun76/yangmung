@@ -24,7 +24,7 @@ export const c3: Mission = {
       speaker: '나',
       choices: [
         { text: '표 주세요', phraseId: 'p_kippu_kudasai', correct: true, feedback: '「切符(きっぷ)ください」— 자동판매기보다 창구에서 목적지를 말하면 더 편해요' },
-        { text: '충전 부탁해요 (IC카드)', phraseId: 'p_chaaji_onegai', correct: true, feedback: 'Suica가 있으면 표 대신 충전만 하면 돼요' },
+        { text: '충전 부탁해요', phraseId: 'p_chaaji_onegai', correct: true, feedback: 'Suica가 있으면 표 대신 충전만 하면 돼요' },
       ],
     },
     {

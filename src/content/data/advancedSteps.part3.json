@@ -7,7 +7,7 @@
       "recapPromptKo": "오늘은 전갱이가 추천입니다. 만들어 드릴까요?",
       "choices": [
         {
-          "text": "아지는 뭐예요?",
+          "text": "아지(전갱이)는 뭐예요?",
           "phraseId": "p_aji_wa_nan_desu_ka",
           "correct": true,
           "feedback": "모르는 생선은 바로 물어봐요. 셰프와의 대화가 스시집의 묘미!"

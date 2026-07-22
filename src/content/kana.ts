@@ -26,7 +26,9 @@ const KATA_LEVEL: Record<string, KLevel> = {
 const DAKU_ROWS: { groupKo: string; level: KLevel; kataLevel: KLevel; kind: 'daku' | 'handaku'; hira: string[]; kata: string[]; romaji: string[]; korean: string[] }[] = [
   { groupKo: 'が행(탁음)', level: 'K21', kataLevel: 'K26', kind: 'daku', hira: ['が','ぎ','ぐ','げ','ご'], kata: ['ガ','ギ','グ','ゲ','ゴ'], romaji: ['ga','gi','gu','ge','go'], korean: ['가','기','구','게','고'] },
   { groupKo: 'ざ행(탁음)', level: 'K22', kataLevel: 'K27', kind: 'daku', hira: ['ざ','じ','ず','ぜ','ぞ'], kata: ['ザ','ジ','ズ','ゼ','ゾ'], romaji: ['za','ji','zu','ze','zo'], korean: ['자','지','즈','제','조'] },
-  { groupKo: 'だ행(탁음)', level: 'K23', kataLevel: 'K28', kind: 'daku', hira: ['だ','ぢ','づ','で','ど'], kata: ['ダ','ヂ','ヅ','デ','ド'], romaji: ['da','dji','dzu','de','do'], korean: ['다','지','즈','데','도'] },
+  // ぢ/づ는 현대 일본어에서 じ/ず와 발음이 같지만(koreanSound 참고), id·표기 충돌을 피하기 위해
+  // 가나표 관용 표기인 di/du를 romaji로 사용(연속 청음 구분용 표기이며 실제 발음 표기가 아님).
+  { groupKo: 'だ행(탁음)', level: 'K23', kataLevel: 'K28', kind: 'daku', hira: ['だ','ぢ','づ','で','ど'], kata: ['ダ','ヂ','ヅ','デ','ド'], romaji: ['da','di','du','de','do'], korean: ['다','지','즈','데','도'] },
   { groupKo: 'ば행(탁음)', level: 'K24', kataLevel: 'K29', kind: 'daku', hira: ['ば','び','ぶ','べ','ぼ'], kata: ['バ','ビ','ブ','ベ','ボ'], romaji: ['ba','bi','bu','be','bo'], korean: ['바','비','부','베','보'] },
   { groupKo: 'ぱ행(반탁음)', level: 'K25', kataLevel: 'K30', kind: 'handaku', hira: ['ぱ','ぴ','ぷ','ぺ','ぽ'], kata: ['パ','ピ','プ','ペ','ポ'], romaji: ['pa','pi','pu','pe','po'], korean: ['파','피','푸','페','포'] },
 ];
@@ -37,7 +39,7 @@ const CONFUSABLES: Record<string, string[]> = {
   ぬ: ['め'], め: ['ぬ'], れ: ['わ', 'ね'], わ: ['れ', 'ね'], ね: ['れ', 'わ'],
   る: ['ろ'], ろ: ['る'], は: ['ほ'], ほ: ['は'], し: ['つ'], つ: ['し', 'う'], う: ['つ'],
   シ: ['ツ', 'ソ', 'ン'], ツ: ['シ', 'ソ'], ソ: ['ン', 'シ'], ン: ['ソ', 'シ'],
-  ク: ['ケ', 'タ'], ケ: ['ク'], コ: ['ユ'], カ: ['カ'],
+  ク: ['ケ', 'タ'], ケ: ['ク'], コ: ['ユ'],
 };
 
 // 획순 가이드 — 청음 46+46(히라·가타)만 직접 기술. 탁음·반탁음·요음은 base 글자 획순에서 파생(build 참고).

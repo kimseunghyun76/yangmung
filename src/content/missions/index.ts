@@ -23,15 +23,16 @@ import { c13 } from './c13-ramen';
 import { moreMissions } from './c14-c30-more';
 import { frictionMissions } from './c31-c40-travel-friction';
 import { advancedMissions } from './c41-c50-advanced';
+import { crisisMissions } from './c51-c52-crisis';
 import advancedPart1 from '../data/advancedSteps.part1.json';
 import advancedPart2 from '../data/advancedSteps.part2.json';
 import advancedPart3 from '../data/advancedSteps.part3.json';
 import advancedPart4 from '../data/advancedSteps.part4.json';
 import advancedPart5 from '../data/advancedSteps.part5.json';
 
-const rawMissions: Mission[] = [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, ...moreMissions, ...frictionMissions, ...advancedMissions];
+const rawMissions: Mission[] = [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, ...moreMissions, ...frictionMissions, ...advancedMissions, ...crisisMissions];
 
-// ── 난이도 단계 (tier) — 단계별 정확히 10미션 ─────────────────────────
+// ── 난이도 단계 (tier) — tier 1~4는 각 10미션, tier 5는 12미션(위기 대응 2개 추가) ──
 // tier 1 입문: 생존 동선 (편의점·식당·전철·호텔·길·입국·라멘·카페·빵집·버스)
 // tier 2 기본: 생활 확장 (약국·쇼핑·택시·환전·로커·택배·이자카야·안내소·세탁·축제)
 // tier 3 응용: 문화·체험 (스시·신사·온천·료칸·신칸센·회전초밥·시착·우산·뷔페·파스타)
@@ -43,6 +44,8 @@ const TIER: Record<string, 1 | 2 | 3 | 4 | 5> = {
   C24: 4, C25: 4, C26: 4, C27: 4, C28: 4, C34: 4, C35: 4, C36: 4, C38: 4, C40: 4,
   // tier 5 고급심화: 마찰 교섭·복합 상황 (환불·자판기·ATM·복합기·픽업·스포츠·안내소·약국·오마카세·길잃음)
   C41: 5, C42: 5, C43: 5, C44: 5, C45: 5, C46: 5, C47: 5, C48: 5, C49: 5, C50: 5,
+  // tier 5 위기 대응: 재검수에서 확인된 공백 보강 (지진·재난 대응, 병원 접수)
+  C51: 5, C52: 5,
 };
 
 // ── 응용·종합 스텝 (4·5스텝) — JSON으로 관리되는 일본어 기반 콘텐츠 ────

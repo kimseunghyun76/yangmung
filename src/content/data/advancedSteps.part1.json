@@ -39,13 +39,13 @@
           "feedback": "「レシートをください」— 경비 처리·환불에 대비해 받아둬요. 필요 없으면 그 자리에서 버려도 돼요"
         },
         {
-          "text": "아니요, 괜찮습니다",
+          "text": "아니요, 괜찮습니다 (정중하게 거절)",
           "phraseId": "p_iie_kekkou",
           "correct": true,
           "feedback": "「いいえ、結構(けっこう)です」— 영수증이 필요 없을 때 정중한 거절. レシートはいりません도 OK"
         },
         {
-          "text": "거스름돈 확인했어요",
+          "text": "확인했어요",
           "phraseId": "p_kakunin_shimashita",
           "correct": true,
           "feedback": "「ありがとうございます」— 거스름돈을 받으며 마무리 인사. 짧아도 일본어로 하면 인상이 좋아요"
@@ -126,7 +126,7 @@
           "correct": true
         },
         {
-          "text": "네, 확인했어요",
+          "text": "확인했어요",
           "phraseId": "p_kakunin_shimashita",
           "correct": true
         },
@@ -409,12 +409,12 @@
       "recapPromptKo": "설탕과 우유는 저쪽에 있습니다. 천천히 즐기세요",
       "choices": [
         {
-          "text": "잘 마실게요",
+          "text": "잘 먹겠습니다",
           "phraseId": "p_itadakimasu",
           "correct": true
         },
         {
-          "text": "저쪽으로 가 볼게요",
+          "text": "가 볼게요",
           "phraseId": "p_itte_mimasu",
           "correct": true
         },
@@ -440,7 +440,7 @@
           "correct": true
         },
         {
-          "text": "이거랑 이거요",
+          "text": "이거랑 이거",
           "phraseId": "p_kore_to_kore",
           "correct": true,
           "feedback": "권유받은 것과 고른 것을 함께 사도 좋아요"

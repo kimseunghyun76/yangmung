@@ -15,7 +15,7 @@ export const c5: Mission = {
       situationKo: '가고 싶은 곳이 있어 행인에게 길을 묻는다',
       speaker: '나',
       choices: [
-        { text: '저기요, 길을 가르쳐 주세요', phraseId: 'p_michi_oshiete', correct: true, feedback: '「すみません、道(みち)を教(おし)えてください」— 먼저 すみません으로 부르고 길을 물어요. 지도 앱 화면을 보여주면 훨씬 정확하게 안내받아요' },
+        { text: '길을 가르쳐 주세요', phraseId: 'p_michi_oshiete', correct: true, feedback: '「すみません、道(みち)を教(おし)えてください」— 먼저 すみません으로 부르고 길을 물어요. 지도 앱 화면을 보여주면 훨씬 정확하게 안내받아요' },
         { text: '여기서 가까워요?', phraseId: 'p_chikai_desu_ka', correct: true, feedback: '「ここから近(ちか)いですか」— 목적지까지 거리를 가늠할 때. 멀면 교통편을 고려해요' },
         { text: '사진 찍어도 돼요?', phraseId: 'p_shashin_ii', correct: false, feedback: '지금은 길을 묻는 상황이에요 — 사진은 나중에 따로 부탁해요' },
       ],
@@ -53,7 +53,7 @@ export const c5: Mission = {
       speaker: '나',
       choices: [
         { text: '사진 찍어도 돼요?', phraseId: 'p_shashin_ii', correct: true, feedback: '「写真を撮ってもいいですか」— 허락을 먼저 구하는 게 일본 에티켓이에요. 신사·사찰은 촬영 금지 구역도 있어요' },
-        { text: '사진 부탁드려요 (찍어 주세요)', phraseId: 'p_shashin_onegai', correct: true, feedback: '「写真をお願いします」— 자신이 찍혀야 할 때 쓰는 표현. カメラをどうぞ와 함께 건네면 더 명확해요' },
+        { text: '사진 부탁드려요', phraseId: 'p_shashin_onegai', correct: true, feedback: '「写真をお願いします」— 자신이 찍혀야 할 때 쓰는 표현. カメラをどうぞ와 함께 건네면 더 명확해요' },
         { text: '화장실 어디예요?', phraseId: 'p_toire_doko', correct: false, feedback: '지금은 사진 상황 — 흐름이 어긋나요' },
       ],
     },

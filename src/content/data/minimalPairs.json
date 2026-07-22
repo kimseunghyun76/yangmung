@@ -13,7 +13,7 @@
     "tier": 1
   },
   {
-    "id": "mp_ja_za",
+    "id": "mp_ko_go",
     "a": {
       "kana": "こんにちは",
       "korean": "안녕하세요"
@@ -39,7 +39,7 @@
     "tier": 3
   },
   {
-    "id": "mp_shu_su",
+    "id": "mp_se_ze",
     "a": {
       "kana": "せんえん",
       "korean": "1000엔 (千円)"
@@ -65,7 +65,7 @@
     "tier": 1
   },
   {
-    "id": "mp_pa_ba",
+    "id": "mp_ha_ba",
     "a": {
       "kana": "はんがく",
       "korean": "반값 (半額)"

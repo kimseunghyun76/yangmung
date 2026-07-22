@@ -19,8 +19,8 @@ export const c1: Mission = {
       promptPhraseId: 'p_ijou_de_yoroshii',
       choices: [
         { text: '어묵 하나 주세요', phraseId: 'p_oden_hitotsu', correct: true, feedback: '「おでんを一(ひと)つください」— 계산대 옆 おでん(어묵)을 추가 주문. 겨울철 편의점의 인기 메뉴예요. 가리키며 말하면 점원이 골라 담아줍니다' },
-        { text: '닭튀김도 주세요', phraseId: 'p_karaage_kudasai', correct: true, feedback: '「唐揚(からあ)げをください」— 따뜻한 핫스낵 추가. ファミチキ·からあげクン 같은 체인별 인기 메뉴를 가리켜 주문할 수 있어요' },
-        { text: '네, 이게 다예요', phraseId: 'p_ijou_desu', correct: true, feedback: '「以上(いじょう)です」— 더 살 게 없으면 "이게 끝"이라는 마무리. 「以上で大丈夫です」도 자연스러워요' },
+        { text: '닭튀김 주세요', phraseId: 'p_karaage_kudasai', correct: true, feedback: '「唐揚(からあ)げをください」— 따뜻한 핫스낵 추가. ファミチキ·からあげクン 같은 체인별 인기 메뉴를 가리켜 주문할 수 있어요' },
+        { text: '이게 다예요', phraseId: 'p_ijou_desu', correct: true, feedback: '「以上(いじょう)です」— 더 살 게 없으면 "이게 끝"이라는 마무리. 「以上で大丈夫です」도 자연스러워요' },
       ],
     },
     {
@@ -39,7 +39,7 @@ export const c1: Mission = {
       choices: [
         { text: '큰 봉투로 부탁해요', phraseId: 'p_ookii_fukuro', correct: true, feedback: '「大(おお)きい袋(ふくろ)でお願(ねが)いします」— 짐이 많을 때 큰 봉투를 지정. 작은 건 小(ちい)さい袋. 봉투는 보통 3~5엔 유료예요' },
         { text: '봉투는 필요 없어요', phraseId: 'p_fukuro_iranai', correct: true, feedback: '「袋(ふくろ)はいりません」— 에코백(マイバッグ)이 있을 때. 일본은 봉투 줄이기 문화가 자리잡혀 거절해도 자연스러워요' },
-        { text: '포인트카드 없어요', phraseId: 'p_iie_arimasen', correct: false, feedback: '지금은 봉투 질문이에요 — 포인트카드는 조금 뒤에 물어봐요' },
+        { text: '아니요, 없어요', phraseId: 'p_iie_arimasen', correct: false, feedback: '지금은 봉투 질문이에요 — 포인트카드는 조금 뒤에 물어봐요' },
       ],
     },
     {
@@ -49,7 +49,7 @@ export const c1: Mission = {
       choices: [
         { text: '네, 데워 주세요', phraseId: 'p_hai_atatamete', correct: true, feedback: '「はい、温(あたた)めてください」— 도시락·삼각김밥·찐빵을 데울 때. 점원이 전자레인지(電子レンジ)에 넣어줍니다' },
         { text: '데워 주세요', phraseId: 'p_atatamete', correct: true, feedback: '「温(あたた)めてください」— はい 없이도 통하는 기본 표현. レンジでお願いします라고도 해요' },
-        { text: '그대로 주세요 (데우지 않아도 돼요)', phraseId: 'p_sono_mama_de', correct: true, feedback: '「そのままで」— 데울 필요 없을 때. 음료·과자·이미 따뜻한 식품엔 이 한마디로 빠르게 전달돼요' },
+        { text: '그대로 주세요', phraseId: 'p_sono_mama_de', correct: true, feedback: '「そのままで」— 데울 필요 없을 때. 음료·과자·이미 따뜻한 식품엔 이 한마디로 빠르게 전달돼요' },
         { text: '큰 봉투로 부탁해요', phraseId: 'p_ookii_fukuro', correct: false, feedback: '봉투는 이미 정했어요 — 지금은 데우기 질문이에요' },
       ],
     },
@@ -70,7 +70,7 @@ export const c1: Mission = {
       choices: [
         { text: '네, 있어요', phraseId: 'p_hai_arimasu', correct: true, feedback: '「はい、あります」— 포인트카드를 꺼내 건네요. Tポイント·Ponta·nanaco 등 편의점마다 시스템이 달라요' },
         { text: '아니요, 없어요', phraseId: 'p_iie_arimasen', correct: true, feedback: '「いいえ、ありません」— 없을 때. 「お作(つく)りしますか」(만들까요?)라고 물으면 「大丈夫です」로 거절하면 돼요' },
-        { text: '아니요, 괜찮습니다', phraseId: 'p_iie_kekkou', correct: true, feedback: '「いいえ、結構(けっこう)です」— 포인트카드 권유를 정중히 거절하는 표현이에요' },
+        { text: '아니요, 괜찮습니다 (정중하게 거절)', phraseId: 'p_iie_kekkou', correct: true, feedback: '「いいえ、結構(けっこう)です」— 포인트카드 권유를 정중히 거절하는 표현이에요' },
         { text: '영수증 주세요', phraseId: 'p_reshiito_kudasai', correct: false, feedback: '지금은 포인트카드 질문이에요 — 영수증은 계산 마무리에 받아요' },
       ],
     },

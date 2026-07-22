@@ -19,8 +19,8 @@ export const c0: Mission = {
       promptPhraseId: 'p_irasshai',
       choices: [
         { text: '안녕하세요', phraseId: 'p_konnichiwa', correct: true, feedback: '「こんにちは」— 낮 인사. 아침엔 おはようございます, 저녁엔 こんばんは. 가게에 들어서면 이렇게 인사해 봐요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: false, feedback: '「ありがとうございます」는 고맙거나 나갈 때 인사예요. 막 들어와 맞이 인사를 받았을 땐 こんにちは가 자연스러워요' },
-        { text: '다시 말해 주세요', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: false, feedback: '「ありがとうございます」는 고맙거나 나갈 때 인사예요. 막 들어와 맞이 인사를 받았을 땐 こんにちは가 자연스러워요' },
+        { text: '다시 한 번 부탁합니다', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],
     },
     {
@@ -32,7 +32,7 @@ export const c0: Mission = {
         { text: '네', phraseId: 'p_hai', correct: true, feedback: '「はい」— 가장 기본적인 긍정 응답. 어떤 확인 질문에도 쓸 수 있어요' },
         { text: '알겠습니다', phraseId: 'p_wakarimashita', correct: true, feedback: '「分(わ)かりました」— 안내나 설명을 이해했을 때. はい보다 더 적극적인 이해 확인이에요' },
         { text: '네, 알겠습니다', phraseId: 'p_hai_wakarimashita', correct: true, feedback: '「はい、分(わ)かりました」— はい를 더해 더 성실하고 확실한 이해를 표현해요' },
-        { text: '괜찮습니다', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 상황에 따라 "괜찮습니다/됐습니다"로 두루 쓰이는 만능 확인 표현이에요' },
+        { text: '괜찮습니다 (정중)', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 상황에 따라 "괜찮습니다/됐습니다"로 두루 쓰이는 만능 확인 표현이에요' },
         { text: '천천히 부탁합니다', phraseId: 'p_yukkuri', correct: true, recoveryType: 'slow', recoveryOutcome: 'partial' },
       ],
     },
@@ -40,8 +40,8 @@ export const c0: Mission = {
       situationKo: '멀리 있는 점원에게 뭔가 물어보고 싶어서 불러야 한다',
       speaker: '나',
       choices: [
-        { text: '저기요', phraseId: 'p_sumimasen', correct: true, feedback: '「すみません」— 주의를 끌 때·사과할 때·가볍게 감사할 때까지 만능 표현. 점원을 부를 때 가장 먼저 쓰는 말이에요' },
-        { text: '감사합니다', phraseId: 'p_arigatou_gozaimasu', correct: false, feedback: '아직 인사할 때가 아니에요 — 점원을 부르고 싶을 땐 すみません이 자연스러워요' },
+        { text: '저기요 / 죄송합니다', phraseId: 'p_sumimasen', correct: true, feedback: '「すみません」— 주의를 끌 때·사과할 때·가볍게 감사할 때까지 만능 표현. 점원을 부를 때 가장 먼저 쓰는 말이에요' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: false, feedback: '아직 인사할 때가 아니에요 — 점원을 부르고 싶을 땐 すみません이 자연스러워요' },
         { text: '쉬운 일본어로 부탁드려요', phraseId: 'p_yasashii_nihongo', correct: true, recoveryType: 'simplify', recoveryOutcome: 'partial' },
       ],
     },
@@ -52,7 +52,7 @@ export const c0: Mission = {
       recapPromptKo: '봉투 필요하세요?',
       choices: [
         { text: '네, 부탁합니다', phraseId: 'p_hai_onegai', correct: true, feedback: '「はい、お願(ねが)いします」— 봉투·데우기·포인트카드 등 모든 YES 답변에 쓸 수 있어요' },
-        { text: '괜찮습니다', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 필요 없다는 정중한 거절로도 자연스럽게 쓰여요' },
+        { text: '괜찮습니다 (정중)', phraseId: 'p_daijoubu_desu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 필요 없다는 정중한 거절로도 자연스럽게 쓰여요' },
         { text: '영어로 괜찮을까요?', phraseId: 'p_eigo_de', correct: true, recoveryType: 'fallback', recoveryOutcome: 'full' },
       ],
     },

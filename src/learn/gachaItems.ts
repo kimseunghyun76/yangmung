@@ -1,5 +1,4 @@
 import type { Rarity } from './collection';
-import assetIndexV2Raw from '../content/data/gachaAssetIndex.json';
 import assetIndexV3Raw from '../content/data/gachaAssetIndexV3.json';
 
 export type ItemMotif = 'food' | 'drink' | 'ticket' | 'stay' | 'shopping' | 'service' | 'safety' | 'festival';
@@ -13,31 +12,24 @@ export interface GachaItemArt {
   fallbackImage?: string;
 }
 
-// public/gacha/items/generated-v3는 재제작된 고품질 샘플만 우선 적용하고,
-// 나머지는 generated-v2 실사 이미지 인덱스로 폴백한다.
-// 미션별 아이템 제목이 이미지 생성 이후 리디자인되며 파일명과 어긋난 경우가 많아(정확매치 300개 중 10개뿐),
-// 세 단계로 폴백해 항상 실사 이미지가 뜨게 한다 — 플레이스홀더(CSS 아이콘)는 최후의 수단으로만 남긴다.
+// public/gacha/items/generated-v3만 사용한다(구 generated-v2 실사 이미지는 더 이상 폴백하지 않음).
+// v3에 아직 없는 조합은 아래 세 단계(제목+모티프 → 등급+모티프 → 모티프)로 "같은 계열의 다른 이미지"를
+// 찾아 대신 보여주고, 그마저 없으면 플레이스홀더(CSS 아이콘)로 자연스럽게 떨어진다.
 interface AssetEntry { file: string; rarity: string; motif: string; title: string }
-const V2_ASSET_INDEX = assetIndexV2Raw as AssetEntry[];
 const V3_ASSET_INDEX = assetIndexV3Raw as AssetEntry[];
 
-const exactV3Index = new Map<string, string>();      // "rarity|motif|title" -> generated-v3 path
-const exactV2Index = new Map<string, string>();      // "rarity|motif|title" -> generated-v2 path
-const byTitleMotif = new Map<string, string[]>();    // "title|motif" -> generated-v2 path[] (등급 무관)
-const byRarityMotif = new Map<string, string[]>();   // "rarity|motif" -> generated-v2 path[] (같은 등급·모티프 풀)
-const byMotif = new Map<string, string[]>();         // "motif" -> generated-v2 path[] (최후 폴백 풀)
+const exactIndex = new Map<string, string>();       // "rarity|motif|title" -> generated-v3 path
+const byTitleMotif = new Map<string, string[]>();    // "title|motif" -> generated-v3 path[] (등급 무관)
+const byRarityMotif = new Map<string, string[]>();   // "rarity|motif" -> generated-v3 path[] (같은 등급·모티프 풀)
+const byMotif = new Map<string, string[]>();         // "motif" -> generated-v3 path[] (최후 폴백 풀)
 
-function indexedAssetPath(version: 'generated-v2' | 'generated-v3', file: string): string {
-  return `/gacha/items/${version}/${file}`;
+function indexedAssetPath(file: string): string {
+  return `/gacha/items/generated-v3/${file}`;
 }
 
 for (const e of V3_ASSET_INDEX) {
-  exactV3Index.set(`${e.rarity}|${e.motif}|${e.title}`, indexedAssetPath('generated-v3', e.file));
-}
-
-for (const e of V2_ASSET_INDEX) {
-  const path = indexedAssetPath('generated-v2', e.file);
-  exactV2Index.set(`${e.rarity}|${e.motif}|${e.title}`, path);
+  const path = indexedAssetPath(e.file);
+  exactIndex.set(`${e.rarity}|${e.motif}|${e.title}`, path);
   const tm = `${e.title}|${e.motif}`;
   (byTitleMotif.get(tm) ?? byTitleMotif.set(tm, []).get(tm)!).push(path);
   const rm = `${e.rarity}|${e.motif}`;
@@ -54,9 +46,7 @@ function stableHash(s: string): number {
 
 function resolveImagePath(title: string, rarity: Rarity, motif: ItemMotif): string | undefined {
   const lookupTitle = compactTitle(title);
-  const exactV3 = exactV3Index.get(`${rarity}|${motif}|${lookupTitle}`);
-  if (exactV3) return exactV3;
-  const exact = exactV2Index.get(`${rarity}|${motif}|${lookupTitle}`);
+  const exact = exactIndex.get(`${rarity}|${motif}|${lookupTitle}`);
   if (exact) return exact;
   const byTM = byTitleMotif.get(`${lookupTitle}|${motif}`);
   if (byTM?.length) return byTM[stableHash(lookupTitle) % byTM.length];
@@ -91,7 +81,7 @@ export function gachaItemAssetSlug(title: string, rarity: Rarity, motif: ItemMot
 }
 
 export function gachaItemAssetPath(title: string, rarity: Rarity, motif: ItemMotif): string {
-  return resolveImagePath(title, rarity, motif) ?? `/gacha/items/generated-v2/${gachaItemAssetSlug(title, rarity, motif)}.webp`;
+  return resolveImagePath(title, rarity, motif) ?? `/gacha/items/generated-v3/${gachaItemAssetSlug(title, rarity, motif)}.webp`;
 }
 
 export function gachaLuxuryItemAssetPath(title: string, rarity: Rarity, motif: ItemMotif): string {
