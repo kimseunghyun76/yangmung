@@ -27,7 +27,7 @@ import { selectDialogueDeck, selectSongDeck } from './learn/entertainmentCards';
 import { buildPlacementCards } from './learn/placementCards';
 import { clearAllYangmung } from './learn/backup';
 import { clearMirror } from './learn/idbMirror';
-import { loadSettings, MODE_PRESETS, saveSettings, sceneSentenceLevelForMode, type Settings } from './learn/settings';
+import { loadSettings, MODE_PRESETS, saveSettings, sceneSentenceLevelForMode, TRAVEL_PURPOSE_TAG, type Settings, type TravelPurpose } from './learn/settings';
 import { sessionGoalText } from './views/goal';
 import { setListenRate } from './tts';
 import { WRAP } from './ui/styles';
@@ -112,8 +112,11 @@ export function App() {
   const [showWelcome, setShowWelcome] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [levelGuide, setLevelGuide] = useState<CoreLevel | null>(null); // 레벨 소개 가이드 대상(승급 성공 후 또는 설정 모드 변경 시)
+  const [tipsQuery, setTipsQuery] = useState(''); // 홈의 "여행 스타일" 배너에서 특정 태그로 팁 라이브러리 진입시킬 때 사용
 
   function updateSettings(s: Settings) { setSettings(s); saveSettings(s); }
+  // 여행 목적(당일치기/단기/한달살기)에 맞는 "일정별 팁"으로 팁 라이브러리를 바로 열어준다.
+  function openTipsForPurpose(p: TravelPurpose) { setTipsQuery(TRAVEL_PURPOSE_TAG[p]); navigate('tips'); }
   function toggleTheme() { updateSettings({ ...settings, theme: settings.theme === 'dark' ? 'light' : 'dark' }); }
   // 모드 선택 = 프리셋 적용(보조·속도) + 세션 구성 변경. readingAid/속도는 이후 개별 미세조정 가능.
   // 레벨 가이드는 여기서 자동으로 띄우지 않는다 — 승급 시험 통과 시엔 결과 화면을 먼저 보여준 뒤
@@ -821,7 +824,7 @@ export function App() {
     onNavigate: (v: 'home' | 'practice' | 'map' | 'review' | 'gacha') => navigate(v),
     onOpenGuide: () => setShowGuide(true),
     onOpenSettings: () => setShowSettings(true),
-    onOpenTips: () => navigate('tips'),
+    onOpenTips: () => { setTipsQuery(''); navigate('tips'); },
     theme: settings.theme,
     onToggleTheme: toggleTheme,
   };
@@ -847,7 +850,7 @@ export function App() {
       );
     }
     if (view === 'tips') {
-      return <TipsLibrary nav={{ ...nav, current: 'practice' }} onBack={() => goBack('practice')} />;
+      return <TipsLibrary nav={{ ...nav, current: 'practice' }} onBack={() => goBack('practice')} initialQuery={tipsQuery} />;
     }
     if (view === 'discover') {
       return (
@@ -1052,6 +1055,9 @@ export function App() {
         onStart={startSession} onPracticeScene={startSceneSession} onPracticeFlash={startFlashSession} onPracticeWrite={startKanaWrite} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
         coreLevel={coreLevel} progression={progression} devUnlockAll={!!settings.devUnlockAll} onStartStage={startStage} onStartPromotion={startPromotionQuiz}
         onOpenBasics={() => navigate('vocabTable')} onStartVocabGroup={startVocabSession}
+        travelPurpose={settings.travelPurpose}
+        onSetTravelPurpose={(p) => updateSettings({ ...settings, travelPurpose: p })}
+        onOpenTipsForPurpose={openTipsForPurpose}
       />
     );
   }

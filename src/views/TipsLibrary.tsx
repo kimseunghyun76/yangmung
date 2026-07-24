@@ -14,6 +14,7 @@ import { Modal } from './Modal';
 interface Props {
   nav: NavBarProps;
   onBack: () => void;
+  initialQuery?: string; // 홈의 "여행 스타일" 배너 등 외부에서 특정 태그로 바로 검색 진입시킬 때 사용
 }
 
 const GROUPS = ['언어 학습', '여행 실전', '문화·재미'] as const;
@@ -63,11 +64,11 @@ function normalize(s: string) {
   return s.trim().toLowerCase();
 }
 
-export function TipsLibrary({ nav, onBack }: Props) {
+export function TipsLibrary({ nav, onBack, initialQuery }: Props) {
   const [group, setGroup] = useState<Group>('문화·재미');
   const [category, setCategory] = useState<Category>('문화');
   const [selected, setSelected] = useState<GrammarPoint | null>(null);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(initialQuery ?? '');
   const categoriesInGroup = CATEGORIES.filter((c) => CATEGORY_GROUP[c] === group);
 
   const q = normalize(query);

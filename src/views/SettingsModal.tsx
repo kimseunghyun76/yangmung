@@ -1,6 +1,6 @@
 // 설정 — 글래스 하단 시트. 학습 모드·발음 보조·듣기 속도·자동 진행·백업·초기화.
 import { useRef } from 'react';
-import { MODE_PRESETS, LISTEN_RATES, type ChoiceMode, type LearnMode, type ReadingAidMode, type Settings } from '../learn/settings';
+import { MODE_PRESETS, LISTEN_RATES, TRAVEL_PURPOSE_LABEL, type ChoiceMode, type LearnMode, type ReadingAidMode, type Settings, type TravelPurpose } from '../learn/settings';
 import { downloadBackup, parseBackup, applyBackup } from '../learn/backup';
 import { mirrorSnapshot } from '../learn/idbMirror';
 import { GLASS_BTN, SECTION_HEAD, glassSeg, glassToggle } from '../ui/styles';
@@ -91,6 +91,14 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
           );
         })}
       </div>
+
+      <p style={{ ...head, marginTop: 18 }}><Icon name="nav-map" size={16} /> 여행 스타일</p>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        {(Object.keys(TRAVEL_PURPOSE_LABEL) as TravelPurpose[]).map((p) => (
+          <button key={p} className="ym-press" style={seg(settings.travelPurpose === p)} onClick={() => onChange({ ...settings, travelPurpose: p })}>{TRAVEL_PURPOSE_LABEL[p]}</button>
+        ))}
+      </div>
+      <p style={{ margin: '6px 2px 0', fontSize: 11.5, color: 'var(--ink-faint)' }}>일정 길이에 맞는 "일정별 팁"을 홈 화면에 보여줘요.</p>
 
       <p style={{ ...head, marginTop: 18 }}><Icon name="discover" size={16} /> 발음 보조 (로마자)</p>
       <div style={{ display: 'flex', gap: 8 }}>

@@ -23,6 +23,7 @@ import { loadCollection } from '../learn/collection';
 import { useLearningStats, type LearningStats } from '../learn/learningStats';
 import { StatTile, LearningHeatmap } from './StatsWidgets';
 import { VOCAB_GROUPS, vocabGroupArt } from '../content/thematicVocab';
+import { TRAVEL_PURPOSE_LABEL, TRAVEL_PURPOSE_TAG, type TravelPurpose } from '../learn/settings';
 
 interface Props {
   nav: NavBarProps;
@@ -48,11 +49,22 @@ interface Props {
   onStartPromotion: () => void;
   onOpenBasics: () => void;
   onStartVocabGroup: (groupId: string) => void;
+  // 여행 목적(당일치기/단기/한달살기) — 설정 전엔 undefined, 배너에서 1탭으로 고를 수 있다.
+  travelPurpose?: TravelPurpose;
+  onSetTravelPurpose: (p: TravelPurpose) => void;
+  onOpenTipsForPurpose: (p: TravelPurpose) => void;
+}
+
+// "일정별 팁" 카테고리에서 여행 목적 태그와 부분일치하는 첫 팁 하나만 홈에 미리보기로 보여준다.
+function travelPurposeTip(purpose: TravelPurpose | undefined) {
+  if (!purpose) return undefined;
+  const tag = TRAVEL_PURPOSE_TAG[purpose];
+  return CONTENT.grammar.find((g) => g.category === '일정별 팁' && g.tags?.some((t) => t.includes(tag)));
 }
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' };
 
-export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, missionsLocked, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeFlash, onPracticeWrite, onPlacement, placementDone, coreLevel, progression, devUnlockAll, onStartStage, onStartPromotion, onOpenBasics, onStartVocabGroup }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, missionsLocked, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeFlash, onPracticeWrite, onPlacement, placementDone, coreLevel, progression, devUnlockAll, onStartStage, onStartPromotion, onOpenBasics, onStartVocabGroup, travelPurpose, onSetTravelPurpose, onOpenTipsForPurpose }: Props) {
   const upcomingId = nextSessionId(session);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
   const planned = plan.size;
@@ -195,8 +207,55 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
         </button>
       )}
 
+      {/* 여행 목적별 학습 배너 — 수준 진단과 마찬가지로 메인 흐름 아래 보조 옵션으로 배치.
+          선택 전엔 1탭 칩으로 바로 고를 수 있고(강제 아님, 빠른 진입 유지), 고른 뒤엔 그 일정에 맞는
+          "일정별 팁" 하나를 미리 보여주고 더 보기로 팁 라이브러리에 필터링해 들어간다. */}
+      <TravelPurposeBanner purpose={travelPurpose} onSet={onSetTravelPurpose} onOpenTips={onOpenTipsForPurpose} />
+
       {!ttsSupported() && <p style={{ color: 'var(--warn)', fontSize: 13, marginTop: 16, fontWeight: 600 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
     </main>
+  );
+}
+
+function TravelPurposeBanner({ purpose, onSet, onOpenTips }: {
+  purpose: TravelPurpose | undefined; onSet: (p: TravelPurpose) => void; onOpenTips: (p: TravelPurpose) => void;
+}) {
+  if (!purpose) {
+    return (
+      <div className="ym-rise" style={{
+        marginTop: 14, padding: '14px 16px', borderRadius: 18, border: '1px solid var(--glass-border)',
+        background: 'var(--glass-bg-strong)',
+      }}>
+        <p style={{ margin: 0, fontSize: 13.5, fontWeight: 800 }}>🗓 이번 여행은 어떤 스타일이에요?</p>
+        <p style={{ margin: '3px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>고르면 그 일정에 맞는 팁을 챙겨드려요. 나중에 설정에서 바꿀 수 있어요.</p>
+        <div style={{ display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
+          {(Object.keys(TRAVEL_PURPOSE_LABEL) as TravelPurpose[]).map((p) => (
+            <button key={p} className="ym-press" onClick={() => onSet(p)} style={{
+              padding: '9px 14px', borderRadius: 999, border: '1px solid var(--glass-border)',
+              background: 'var(--glass-bg)', color: 'var(--ink)', fontSize: 12.5, fontWeight: 750, cursor: 'pointer',
+            }}>
+              {TRAVEL_PURPOSE_LABEL[p]}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  const tip = travelPurposeTip(purpose);
+  return (
+    <button className="ym-rise ym-press" onClick={() => onOpenTips(purpose)} style={{
+      width: '100%', textAlign: 'left', cursor: 'pointer', margin: '14px 0 0', display: 'flex', alignItems: 'center', gap: 13,
+      padding: '14px 16px', borderRadius: 18, border: '1px solid var(--glass-border)', color: 'var(--ink)',
+      background: 'var(--glass-bg-strong)',
+    }}>
+      <span style={{ fontSize: 28 }}>🗓</span>
+      <span style={{ flex: 1 }}>
+        <span style={{ display: 'block', fontSize: 11.5, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.03em' }}>{TRAVEL_PURPOSE_LABEL[purpose]} 맞춤 팁</span>
+        <span style={{ display: 'block', fontSize: 14, fontWeight: 800, marginTop: 2 }}>{tip ? tip.label : '일정에 맞는 팁을 모아봤어요'}</span>
+        {tip && <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-soft)', marginTop: 2 }}>{tip.tipKo}</span>}
+      </span>
+      <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)' }} />
+    </button>
   );
 }
 

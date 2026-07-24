@@ -6,6 +6,8 @@ export type LearnMode = 'beginner' | 'default' | 'express' | 'advanced' | 'revie
 export type ChoiceMode = 'kana_ko' | 'kana' | 'kanji';
 
 export type Theme = 'light' | 'dark';
+// 여행 목적(일정 길이) — "일정별 팁" 카테고리(그래머 콘텐츠) 태그와 매칭해 홈 배너·팁 라이브러리를 맞춤 노출.
+export type TravelPurpose = 'daytrip' | 'short' | 'month';
 export interface Settings {
   mode: LearnMode;
   readingAid: ReadingAidMode; // auto=익히면 사라짐, always=항상, off=끔
@@ -14,7 +16,16 @@ export interface Settings {
   theme: Theme;               // 주간/야간
   listenRate: number;         // 듣기 속도 배율 (x0.5~x2)
   devUnlockAll?: boolean;     // 개발용 — 모든 장면 lock 무시
+  travelPurpose?: TravelPurpose; // 설정 전엔 undefined — 홈에 선택 배너를 보여줌
 }
+
+export const TRAVEL_PURPOSE_LABEL: Record<TravelPurpose, string> = {
+  daytrip: '당일치기', short: '단기 여행(2~5박)', month: '한달살기(장기 체류)',
+};
+// "일정별 팁" 그래머 콘텐츠의 tags 필드와 부분일치(includes)로 매칭하는 검색 키워드.
+export const TRAVEL_PURPOSE_TAG: Record<TravelPurpose, string> = {
+  daytrip: '당일치기', short: '단기', month: '한달살기',
+};
 
 const KEY = 'yangmung:settings:v1';
 // 기본 외형은 야간(다크) — 시스템 설정과 무관하게 첫 실행은 항상 다크로 시작(2026-07-08, 사용자 요청).
