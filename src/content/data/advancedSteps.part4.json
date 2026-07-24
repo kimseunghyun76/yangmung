@@ -35,7 +35,7 @@
           "text": "여권 여기 있어요",
           "phraseId": "p_pasupooto_arimasu",
           "correct": false,
-          "feedback": "지금 상황에 맞는 답은 아니에요."
+          "feedback": "여권 확인은 이미 끝났어요 — 지금은 반납 조건을 기억해 두겠다고 답해요"
         }
       ]
     }
@@ -263,6 +263,26 @@
           "feedback": "여권 확인은 끝났어요"
         }
       ]
+    },
+    {
+      "situationKo": "매장을 나선 뒤 와이파이가 잡히지 않아 다시 들어와 도움을 청한다 (심화)",
+      "speaker": "점원",
+      "recapPromptJa": "どうされましたか",
+      "recapPromptKo": "무슨 일이세요?",
+      "choices": [
+        {
+          "text": "와이파이가 연결이 안 돼요",
+          "phraseId": "p_wifi_ga_tsunagarimasen",
+          "correct": true,
+          "feedback": "「Wi-Fiがつながりません」— 유심 설정 후에도 연결이 안 될 때 바로 알리는 표현이에요"
+        },
+        {
+          "text": "연결 방법을 알려주세요",
+          "phraseId": "p_setsuzoku_houhou_wo_oshiete_kudasai",
+          "correct": true,
+          "feedback": "「接続方法(せつぞくほうほう)を教(おし)えてください」— 설정을 처음부터 다시 안내받고 싶을 때 써요"
+        }
+      ]
     }
   ],
   "C34": [
@@ -423,6 +443,26 @@
           "phraseId": "p_tsui_ryoukin_ikura",
           "correct": false,
           "feedback": "요금 문제가 아니라 안전 규정이에요"
+        }
+      ]
+    },
+    {
+      "situationKo": "탑승 수속 중 항공편 지연 안내를 받는다 (심화)",
+      "speaker": "항공사 직원",
+      "recapPromptJa": "天候の影響で、出発が遅れております",
+      "recapPromptKo": "기상 영향으로 출발이 지연되고 있습니다",
+      "choices": [
+        {
+          "text": "언제 출발이에요?",
+          "phraseId": "p_itsu_shuppatsu_desu_ka",
+          "correct": true,
+          "feedback": "「いつ出発(しゅっぱつ)ですか」— 지연 안내를 들으면 바로 새 출발 시간을 확인해요"
+        },
+        {
+          "text": "대체 항공편이 있나요?",
+          "phraseId": "p_furikae_bin_wa_arimasu_ka",
+          "correct": true,
+          "feedback": "「振替便(ふりかえびん)はありますか」— 지연이 길어지거나 결항 가능성이 있을 때 대체편을 먼저 확인해요"
         }
       ]
     }

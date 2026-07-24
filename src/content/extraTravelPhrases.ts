@@ -85,7 +85,22 @@ export const extraTravelPhrases: Phrase[] = [
   { id: 'p_nikaime_desu', kana: 'にかいめです', kanji: '二回目です', korean: '두 번째예요', register: 'productive', tip: '「二回目(にかいめ)です」— 재방문임을 알릴 때. 진찰권(診察券)이 있으면 함께 보여줘요' },
   { id: 'p_ryokousha_hoken_ga_arimasu', kana: 'りょこうしゃほけんがあります', kanji: '旅行者保険があります', displayKana: 'りょこうしゃほけんが、あります', korean: '여행자 보험이 있어요', register: 'productive', tip: '「旅行者保険(りょこうしゃほけん)があります」— 일본 건강보험은 없어도 여행자보험 가입 여부를 알리면 영수증 발급 방식을 안내받을 수 있어요' },
   { id: 'p_dorekurai_machimasu_ka', kana: 'どれくらいまちますか', kanji: 'どれくらい待ちますか', displayKana: 'どれくらい、まちますか？', korean: '얼마나 기다려요?', register: 'productive', tip: '「どれくらい待(ま)ちますか」— 대기 시간을 미리 확인하면 계획을 세우기 편해요' },
-  { id: 'p_kaado_ga_tsukaenai_you_desu', kana: 'かーどがつかえないようです', kanji: 'カードが使えないようです', displayKana: 'カードが、つかえないようです', korean: '카드가 안 되는 것 같아요', register: 'receptive' },
-  { id: 'p_betsu_no_card_tameshite', kana: 'べつのかーどでためしてもいいですか', kanji: '別のカードで試してもいいですか', displayKana: 'べつのカードで、ためしてもいいですか？', korean: '다른 카드로 해봐도 될까요?', register: 'productive', tip: '「別(べつ)のカードで試(ため)してもいいですか」— 카드 결제가 거절됐을 때 당황하지 말고 이렇게 물어보세요' },
+  { id: 'p_kaado_ga_tsukaenai_you_desu', kana: 'カードがつかえないようです', kanji: 'カードが使えないようです', displayKana: 'カードが、つかえないようです', korean: '카드가 안 되는 것 같아요', register: 'receptive' },
+  { id: 'p_betsu_no_card_tameshite', kana: 'べつのカードでためしてもいいですか', kanji: '別のカードで試してもいいですか', displayKana: 'べつのカードで、ためしてもいいですか？', korean: '다른 카드로 해봐도 될까요?', register: 'productive', tip: '「別(べつ)のカードで試(ため)してもいいですか」— 카드 결제가 거절됐을 때 당황하지 말고 이렇게 물어보세요' },
   { id: 'p_genkin_de_haraimasu', kana: 'げんきんではらいます', kanji: '現金で払います', displayKana: 'げんきんで、はらいます', korean: '현금으로 낼게요', register: 'productive', tip: '「現金(げんきん)で払(はら)います」— 카드가 안 될 때 가장 확실한 대안. 소액 현금을 항상 여유 있게 챙겨두면 안심이에요' },
+
+  // C53 미아 찾기
+  { id: 'p_kodomo_wo_miushinaimashita', kana: 'こどもをみうしないました', kanji: '子供を見失いました', displayKana: 'こどもを、みうしないました', korean: '아이를 잃어버렸어요', register: 'productive', tip: '「子供(こども)を見失(みうしな)いました」— 아이가 안 보일 때 가장 먼저 알려야 할 한 마디. 침착하게 큰 소리로 도움을 구해요' },
+  { id: 'p_gosai_desu', kana: 'ごさいです', kanji: '五歳です', korean: '다섯 살이에요', register: 'productive', tip: '「五歳(ごさい)です」— 아이 나이를 알릴 때. 나이는 미아 방송·수색에서 가장 먼저 묻는 정보예요' },
+  { id: 'p_akai_fuku_wo_kiteimasu', kana: 'あかいふくをきています', kanji: '赤い服を着ています', displayKana: 'あかいふくを、きています', korean: '빨간 옷을 입고 있어요', register: 'productive', tip: '「赤(あか)い服(ふく)を着(き)ています」— 옷 색깔은 미아를 찾을 때 가장 빠른 단서예요. 색+服(ふく)로 다른 색도 바꿔 말할 수 있어요' },
+  { id: 'p_housou_de_sagashite_moraemasu_ka', kana: 'ほうそうでさがしてもらえますか', kanji: '放送で探してもらえますか', displayKana: 'ほうそうで、さがしてもらえますか？', korean: '방송으로 찾아주실 수 있나요?', register: 'productive', tip: '「放送(ほうそう)で探(さが)してもらえますか」— 매장·역 안내방송으로 미아를 찾아달라고 요청하는 표현이에요' },
+  { id: 'p_mitsukarimashita', kana: 'みつかりました', kanji: '見つかりました', korean: '찾았어요!', register: 'both', tip: '「見(み)つかりました」— 아이를 찾았을 때 안심하며 전하는 한마디. 도와준 직원에게도 꼭 알려주세요' },
+
+  // C36 공항수하물 확장 — 항공편 지연·결항
+  { id: 'p_itsu_shuppatsu_desu_ka', kana: 'いつしゅっぱつですか', kanji: 'いつ出発ですか', displayKana: 'いつ、しゅっぱつですか？', korean: '언제 출발이에요?', register: 'productive', tip: '「いつ出発(しゅっぱつ)ですか」— 지연 안내를 들으면 바로 새 출발 시간을 확인해요' },
+  { id: 'p_furikae_bin_wa_arimasu_ka', kana: 'ふりかえびんはありますか', kanji: '振替便はありますか', displayKana: 'ふりかえびんは、ありますか？', korean: '대체 항공편이 있나요?', register: 'productive', tip: '「振替便(ふりかえびん)はありますか」— 결항 시 가장 먼저 물어야 할 표현. 항공사 카운터나 앱에서 대체편을 안내받을 수 있어요' },
+
+  // C28 통신매장 확장 — 와이파이 문제
+  { id: 'p_wifi_ga_tsunagarimasen', kana: 'ワイファイがつながりません', kanji: 'Wi-Fiがつながりません', displayKana: 'ワイファイが、つながりません', korean: '와이파이가 연결이 안 돼요', register: 'productive', tip: '「Wi-Fiがつながりません」— 유심·포켓와이파이가 안 잡힐 때. 기기를 보여주면 직원이 빠르게 확인해줘요' },
+  { id: 'p_setsuzoku_houhou_wo_oshiete_kudasai', kana: 'せつぞくほうほうをおしえてください', kanji: '接続方法を教えてください', displayKana: 'せつぞくほうほうを、おしえてください', korean: '연결 방법을 알려주세요', register: 'productive', tip: '「接続方法(せつぞくほうほう)を教(おし)えてください」— 설정이 헷갈릴 때 처음부터 다시 안내받는 표현이에요' },
 ];

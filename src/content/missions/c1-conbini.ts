@@ -80,7 +80,7 @@ export const c1: Mission = {
       promptPhraseId: 'p_price',
       choices: [
         { text: '만 엔으로 낼게요', phraseId: 'p_ichiman_de', correct: true, feedback: '「一万円(いちまんえん)でお願(ねが)いします」— 큰 지폐로 낼 때. 점원이 「一万円お預(あず)かりします」라고 복창하고 거스름돈을 줘요' },
-        { text: '어묵 하나 주세요', phraseId: 'p_oden_hitotsu', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '어묵 하나 주세요', phraseId: 'p_oden_hitotsu', correct: false, feedback: '이미 합계 금액을 들었어요 — 지금은 어떻게 낼지 답할 차례예요' },
       ],
     },
     {

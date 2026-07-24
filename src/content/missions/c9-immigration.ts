@@ -36,7 +36,7 @@ export const c9: Mission = {
       promptPhraseId: 'p_doko_tomaru',
       choices: [
         { text: '호텔이에요', phraseId: 'p_hoteru_desu', correct: true, feedback: '「ホテルです」— 한 단어로 충분해요. 호텔명이나 예약확인서를 미리 꺼내두면 심사가 더 빨리 끝나요' },
-        { text: '관광이에요', phraseId: 'p_kankou_desu', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '관광이에요', phraseId: 'p_kankou_desu', correct: false, feedback: '방문 목적은 이미 답했어요 — 지금은 숙소를 물어요' },
       ],
     },
     {

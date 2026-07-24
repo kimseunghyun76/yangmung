@@ -46,7 +46,7 @@ export const c31: Mission = {
       recapPromptKo: '한 접시 더 어떠세요?',
       choices: [
         { text: '연어 주세요', phraseId: 'p_saamon_kudasai', correct: true, feedback: '「サーモンください」— 마음에 든 재료는 한 접시 더. 회전 레일보다 주문이 더 신선해요' },
-        { text: '두 명이요', phraseId: 'p_futari_desu', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '두 명이요', phraseId: 'p_futari_desu', correct: false, feedback: '인원수는 이미 말했어요 — 지금은 한 접시 더 고를지 답해요' },
       ],
     },
     {
@@ -174,7 +174,7 @@ export const c33: Mission = {
       recapPromptKo: '분실하시면 변상이 됩니다',
       choices: [
         { text: '조심할게요', phraseId: 'p_ki_o_tsukemasu', correct: true, feedback: '「気(き)をつけます」— 분실 시 변상 안내를 듣고 "조심하겠습니다"' },
-        { text: '우산을 빌릴 수 있나요?', phraseId: 'p_kasa_kariremasu_ka', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '우산을 빌릴 수 있나요?', phraseId: 'p_kasa_kariremasu_ka', correct: false, feedback: '우산은 이미 빌렸어요 — 지금은 변상 안내에 대한 응답이에요' },
       ],
     },
     {
@@ -238,7 +238,7 @@ export const c34: Mission = {
       recapPromptKo: '짐은 옮겨 드릴게요',
       choices: [
         { text: '제가 직접 옮길게요, 괜찮아요', phraseId: 'p_new_jibun_de_hakobimasu', correct: true, feedback: '「自分で運びますので、大丈夫です」— 「ので」로 이유를 붙여 직접 옮기겠다는 의사를 자연스럽게 전달해요' },
-        { text: '담배 냄새가 납니다', phraseId: 'p_tabako_no_nioi', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '담배 냄새가 납니다', phraseId: 'p_tabako_no_nioi', correct: false, feedback: '문제는 이미 말했어요 — 지금은 짐 옮김 제안에 답해요' },
       ],
     },
     {
@@ -301,7 +301,7 @@ export const c35: Mission = {
       recapPromptKo: '차액은 천 엔입니다',
       choices: [
         { text: '차액은 여기서 낼 수 있나요?', phraseId: 'p_new_sagaku_koko_de_haraeru', correct: true, feedback: '「差額(さがく)はここで払(はら)えますか」— 창구에서 즉시 정산이 가능한지 묻는 실용적인 질문이에요. 역에 따라 별도 정산기로 안내받는 경우도 있어서 확인해두면 좋아요' },
-        { text: '오픈 티켓을 교환하고 싶습니다', phraseId: 'p_open_ticket_koukan', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '오픈 티켓을 교환하고 싶습니다', phraseId: 'p_open_ticket_koukan', correct: false, feedback: '교환은 이미 요청했어요 — 지금은 차액 정산 방법을 물어요' },
       ],
     },
     {
@@ -363,7 +363,7 @@ export const c36: Mission = {
       recapPromptKo: '좌석은 통로 측으로 괜찮으세요?',
       choices: [
         { text: '통로 쪽으로 부탁해요', phraseId: 'p_new_tsuurogawa_de', correct: true, feedback: '「通路側(つうろがわ)でお願(ねが)いします」— 직원의 질문에 통로석을 원한다고 확실히 답하는 표현이에요. 화장실을 자주 갈 예정이면 이렇게 말해보세요' },
-        { text: '추가 요금은 얼마인가요?', phraseId: 'p_tsui_ryoukin_ikura', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '추가 요금은 얼마인가요?', phraseId: 'p_tsui_ryoukin_ikura', correct: false, feedback: '추가 요금은 이미 들었어요 — 지금은 좌석 위치를 답해요' },
       ],
     },
     {
@@ -427,7 +427,7 @@ export const c37: Mission = {
       recapPromptKo: '접시는 자유롭게 더 가져가셔도 돼요',
       choices: [
         { text: '조금 더 받을 수 있나요?', phraseId: 'p_mou_sukoshi_moraemasu_ka', correct: true, feedback: '「もう少(すこ)しもらえますか」— 즉석 조리 코너는 직원에게 부탁하면 더 줘요' },
-        { text: '음식이 부족합니다', phraseId: 'p_ryouri_sukunai', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '음식이 부족합니다', phraseId: 'p_ryouri_sukunai', correct: false, feedback: '부족하다는 건 이미 말했어요 — 지금은 리필 안내에 답해요' },
       ],
     },
     {
@@ -554,7 +554,7 @@ export const c39: Mission = {
       recapPromptKo: '음료는 어떠세요?',
       choices: [
         { text: '물 주세요', phraseId: 'p_mizu_kudasai', correct: true, feedback: '「お水(みず)ください」— 파스타집 물은 대부분 무료. 탄산수는 유료인 경우가 많아요' },
-        { text: '알덴테로 부탁합니다', phraseId: 'p_arudente_de', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '알덴테로 부탁합니다', phraseId: 'p_arudente_de', correct: false, feedback: '면 익힘은 이미 정했어요 — 지금은 음료를 답해요' },
       ],
     },
     {

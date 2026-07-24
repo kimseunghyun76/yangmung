@@ -40,4 +40,13 @@ export const extraTravelUnits: Unit[] = [
       'p_betsu_no_card_tameshite', 'p_genkin_de_haraimasu',
     ],
   },
+  {
+    id: 'u_b5_missing_situations', track: 'lang', stage: 'B5', mode: 'action',
+    canDo: '사용자는 아이를 잃어버렸을 때 도움을 요청하고, 항공편 지연이나 와이파이 문제에 대응할 수 있다',
+    newPhraseIds: [
+      'p_kodomo_wo_miushinaimashita', 'p_gosai_desu', 'p_akai_fuku_wo_kiteimasu', 'p_housou_de_sagashite_moraemasu_ka', 'p_mitsukarimashita',
+      'p_itsu_shuppatsu_desu_ka', 'p_furikae_bin_wa_arimasu_ka',
+      'p_wifi_ga_tsunagarimasen', 'p_setsuzoku_houhou_wo_oshiete_kudasai',
+    ],
+  },
 ];

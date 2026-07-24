@@ -36,7 +36,7 @@
           "text": "이걸 교환하고 싶어요",
           "phraseId": "p_koukan_shitai",
           "correct": false,
-          "feedback": "지금 상황에 맞는 답은 아니에요."
+          "feedback": "환불로 이미 결정했어요 — 지금은 현금과 카드 중 어떻게 받을지 답해요"
         }
       ]
     }
@@ -120,7 +120,7 @@
           "text": "사용법 알려 주세요",
           "phraseId": "p_tsukaikata",
           "correct": false,
-          "feedback": "지금 상황에 맞는 답은 아니에요."
+          "feedback": "사용법은 이미 물었어요 — 지금은 금액을 줄여보겠다고 답해요"
         }
       ]
     }
@@ -142,7 +142,7 @@
           "text": "사용법 알려 주세요",
           "phraseId": "p_tsukaikata",
           "correct": false,
-          "feedback": "지금 상황에 맞는 답은 아니에요."
+          "feedback": "사용법은 이미 물었어요 — 지금은 기다리겠다고 답해요"
         }
       ]
     },
@@ -204,7 +204,7 @@
           "text": "예약했습니다",
           "phraseId": "p_yoyaku_shiteimasu",
           "correct": false,
-          "feedback": "지금 상황에 맞는 답은 아니에요."
+          "feedback": "예약 확인은 이미 끝났어요 — 지금은 음료를 받으며 감사 인사로 답해요"
         }
       ]
     }
@@ -246,7 +246,7 @@
           "text": "티켓은 이쪽입니다",
           "phraseId": "p_chiketto_wa_kochira_desu",
           "correct": false,
-          "feedback": "지금 상황에 맞는 답은 아니에요."
+          "feedback": "티켓 확인은 경기 시작 전에 끝났어요 — 지금은 작별 인사로 답해요"
         }
       ]
     }
@@ -288,7 +288,7 @@
           "text": "저거",
           "phraseId": "p_are",
           "correct": false,
-          "feedback": "지금 상황에 맞는 답은 아니에요."
+          "feedback": "「저거」로는 뜻이 전달되지 않아요 — 도움을 받아 도착했다는 감사 인사로 답해요"
         }
       ]
     }
@@ -310,7 +310,7 @@
           "text": "아니요, 없어요",
           "phraseId": "p_iie_arimasen",
           "correct": false,
-          "feedback": "지금 상황에 맞는 답은 아니에요."
+          "feedback": "지금은 부작용 설명을 듣는 중이에요 — 약에 대해 물어보는 게 자연스러워요"
         }
       ]
     },
@@ -330,7 +330,7 @@
           "text": "아니요, 없어요",
           "phraseId": "p_iie_arimasen",
           "correct": false,
-          "feedback": "지금 상황에 맞는 답은 아니에요."
+          "feedback": "지금은 결제하는 중이에요 — 결제 수단을 답해요"
         }
       ]
     }
@@ -394,7 +394,7 @@
           "text": "실례합니다, 여기가 어디예요?",
           "phraseId": "p_sumimasen_koko_doko",
           "correct": false,
-          "feedback": "지금 상황에 맞는 답은 아니에요."
+          "feedback": "위치는 이미 물어봤어요 — 지금은 지도 앱을 함께 보자는 제안에 답해요"
         }
       ]
     },

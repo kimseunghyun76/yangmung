@@ -39,7 +39,7 @@ export const c13: Mission = {
       promptPhraseId: 'p_shokken_douzo',
       choices: [
         { text: '네, 여기 있어요', phraseId: 'p_new_shokken_douzo', correct: true, feedback: '「はい、これです」— 식권을 내밀며 건넬 때 쓰는 자연스러운 표현이에요. 손으로 건네는 동작과 함께 쓰면 딱 맞아요' },
-        { text: '식권기 어디예요?', phraseId: 'p_kenbaiki', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '식권기 어디예요?', phraseId: 'p_kenbaiki', correct: false, feedback: '식권은 이미 뽑았어요 — 지금은 점원에게 건네는 차례예요' },
       ],
     },
     {

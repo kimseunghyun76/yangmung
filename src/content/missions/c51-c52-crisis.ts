@@ -102,8 +102,8 @@ export const c52: Mission = {
       ],
     },
     {
-      situationKo: '의사가 증상을 묻는다',
-      speaker: '의사',
+      situationKo: '접수 직원이 진료과를 정하기 위해 증상을 묻는다',
+      speaker: '직원',
       promptPhraseId: 'p_dou_nasaimashita_ka',
       choices: [
         { text: '배가 아파요', phraseId: 'p_onaka_itai', correct: true, feedback: '「お腹(なか)が痛(いた)いです」— 증상을 명확하게 말해요. 어디가·언제부터 아픈지 덧붙이면 더 정확해요' },

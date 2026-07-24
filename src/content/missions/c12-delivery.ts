@@ -35,7 +35,7 @@ export const c12: Mission = {
       recapPromptKo: '전표에 성함과 연락처를 부탁드립니다',
       choices: [
         { text: '잠깐만 기다려 주세요', phraseId: 'p_chotto_matte', correct: true, feedback: '호텔 주소를 찾는 동안 자연스럽게 쓰는 표현이에요' },
-        { text: '이거 보내고 싶어요', phraseId: 'p_okuritai', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '이거 보내고 싶어요', phraseId: 'p_okuritai', correct: false, feedback: '보내고 싶다는 건 이미 말했어요 — 지금은 전표를 작성하는 중이니 기다려 달라고 하면 자연스러워요' },
       ],
     },
     {

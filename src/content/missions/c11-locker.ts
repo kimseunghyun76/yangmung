@@ -35,7 +35,7 @@ export const c11: Mission = {
       promptPhraseId: 'p_kono_botan_oshite',
       choices: [
         { text: '사용법 알겠어요', phraseId: 'p_tsukaikata_wakatta', correct: true, feedback: '「使(つか)い方(かた)が分(わ)かりました」— 설명을 듣고 이해했다는 신호. 정말 이해했을 때만 쓰고, 헷갈리면 もう一度를 청하는 게 좋아요' },
-        { text: '코인로커 어디예요?', phraseId: 'p_koinrokkaa', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '코인로커 어디예요?', phraseId: 'p_koinrokkaa', correct: false, feedback: '코인로커는 이미 찾았어요 — 지금은 사용법을 이해했다고 답해요' },
       ],
     },
     {

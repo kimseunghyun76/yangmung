@@ -86,7 +86,7 @@
           "text": "실례합니다, 여기가 어디예요?",
           "phraseId": "p_sumimasen_koko_doko",
           "correct": false,
-          "feedback": "지금 상황에 맞는 답은 아니에요."
+          "feedback": "위치는 이미 알고 있어요 — 지금은 고슈인 개수를 답해요"
         }
       ]
     }

@@ -108,7 +108,7 @@ export const c15: Mission = {
       promptPhraseId: 'p_betsubetsu_tsutsumi',
       choices: [
         { text: '따로따로요', phraseId: 'p_betsubetsu_de', correct: true, feedback: '「別々(べつべつ)で」— 선물용이거나 나눠줄 때 따로 포장을 부탁해요. 일본 빵집의 개별 포장은 정성스러워요' },
-        { text: '이거랑 이거', phraseId: 'p_kore_to_kore', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '이거랑 이거', phraseId: 'p_kore_to_kore', correct: false, feedback: '상품은 이미 골랐어요 — 지금은 포장 방식을 답해요' },
       ],
     },
     {
@@ -140,7 +140,7 @@ export const c16: Mission = {
   canDo: '사용자는 이자카야에서 예약·음료·추가 주문·마지막 주문을 처리할 수 있다',
   unlockAfter: ['C2'],
   sequence: ['예약 확인', '첫 음료', '오토시 안내', '음식 추가', '추가 주문'],
-  speakPhraseIds: ['p_futari_desu', 'p_osusume_wa', 'p_okaikei'],
+  speakPhraseIds: ['p_futari_desu', 'p_osusume_wa', 'p_kore_to_kore'],
   steps: [
     {
       situationKo: '입구에서 예약이 있는지 묻는다',
@@ -259,7 +259,7 @@ export const c18: Mission = {
   canDo: '사용자는 관광안내소에서 추천 관광지·가는 방법·지도를 요청하고 감사 인사로 마무리할 수 있다',
   unlockAfter: ['C5'],
   sequence: ['추천 장소 묻기', '가는 방법 확인', '지도 받고 마무리'],
-  speakPhraseIds: ['p_osusume_wa', 'p_michi_oshiete', 'p_doko_desu_ka'],
+  speakPhraseIds: ['p_osusume_wa', 'p_michi_oshiete', 'p_tasukarimashita'],
   steps: [
     {
       // 관광안내소 첫 마디 — 원하는 정보(추천·길)를 직원에게 말한다
@@ -300,7 +300,7 @@ export const c18: Mission = {
       promptPhraseId: 'p_tenimotsu_azukari',
       choices: [
         { text: '짐 좀 부탁드려요', phraseId: 'p_new_nimotsu_onegai', correct: true, feedback: '「荷物をお願いします」— 짐 보관 서비스를 이용하겠다는 뜻으로, 직원의 안내에 자연스럽게 응답하는 표현이에요' },
-        { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: false, feedback: '추천은 이미 받았어요 — 지금은 짐 보관 안내에 답해요' },
       ],
     },
     {
@@ -323,7 +323,7 @@ export const c19: Mission = {
   canDo: '사용자는 신사에서 조용히 길을 묻고, 참배법·촬영·오미쿠지·부적을 안내받을 수 있다',
   unlockAfter: ['C5'],
   sequence: ['조용히 묻기', '참배 방법', '촬영 확인', '오미쿠지', '부적 위치'],
-  speakPhraseIds: ['p_sumimasen_koko_doko', 'p_shashin_ii', 'p_arigatou_gozaimasu'],
+  speakPhraseIds: ['p_sumimasen_koko_doko', 'p_shashin_ii', 'p_sagashite_mimasu'],
   steps: [
     {
       situationKo: '경내에서 길을 몰라 신사 직원에게 말을 건다',
@@ -383,7 +383,7 @@ export const c20: Mission = {
   canDo: '사용자는 온천에서 요금·신발장·문신 규정·수건·입욕 규칙을 이해하고 되물을 수 있다',
   unlockAfter: ['C4'],
   sequence: ['요금 확인', '신발장 안내', '문신 확인', '수건 대여', '입욕 규칙'],
-  speakPhraseIds: ['p_ikura_desu_ka', 'p_hai', 'p_wakarimashita_arigatou'],
+  speakPhraseIds: ['p_card_tsukaemasu_ka', 'p_sou_shimasu', 'p_oboete_okimasu'],
   steps: [
     {
       situationKo: '온천 접수에서 입욕료를 안내받는다',
@@ -391,7 +391,7 @@ export const c20: Mission = {
       promptPhraseId: 'p_nyuuyokuryou_wa_happyakuen_desu',
       choices: [
         { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: true, feedback: '「カード使(つか)えますか」— 온천에 따라 현금만 받는 곳도 있어요. 작은 동네 온천일수록 현금 준비를 권해요' },
-        { text: '그렇게 할게요', phraseId: 'p_sou_shimasu', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '그렇게 할게요', phraseId: 'p_sou_shimasu', correct: false, feedback: '아직 결제 방법을 정하는 중이에요 — 카드가 되는지부터 확인해요' },
       ],
     },
     {
@@ -418,7 +418,7 @@ export const c20: Mission = {
       promptPhraseId: 'p_taoru_wa_irimasu_ka',
       choices: [
         { text: '아니요, 필요 없어요', phraseId: 'p_iie_irimasen', correct: true, feedback: '자신의 수건을 갖고 있을 때 — 「いいえ、いりません」으로 간단하게 사양해요' },
-        { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: false, feedback: '결제는 이미 끝났어요 — 지금은 수건이 필요한지 답해요' },
       ],
     },
     {
@@ -503,7 +503,7 @@ export const c22: Mission = {
   canDo: '사용자는 버스에서 목적지·IC카드·정리권·하차 벨·하차 위치를 확인할 수 있다',
   unlockAfter: ['C3'],
   sequence: ['목적지 확인', 'IC카드', '정리권', '하차 벨', '하차'],
-  speakPhraseIds: ['p_doko_desu_ka', 'p_tsugi_de_orimasu', 'p_wakarimashita_arigatou'],
+  speakPhraseIds: ['p_made_onegai', 'p_card_tsukaemasu_ka', 'p_tsugi_de_orimasu'],
   steps: [
     {
       situationKo: '운전사가 어디까지 가는지 확인한다',
@@ -563,7 +563,7 @@ export const c23: Mission = {
   canDo: '사용자는 신칸센 표·좌석/호차·승강장·시간·차내 판매를 확인할 수 있다',
   unlockAfter: ['C3'],
   sequence: ['표 종류', '호차 확인', '승강장', '시간 확인', '차내 판매'],
-  speakPhraseIds: ['p_kippu_kudasai', 'p_nan_gousha', 'p_wakarimashita_arigatou'],
+  speakPhraseIds: ['p_hai_sou_desu', 'p_nan_gousha', 'p_new_bentou_hitotsu'],
   steps: [
     {
       situationKo: '역무원이 자유석인지 확인한다',
@@ -624,7 +624,7 @@ export const c24: Mission = {
   canDo: '사용자는 렌터카 카운터에서 면허증·보험·반납 장소·내비·주유 조건을 확인할 수 있다',
   unlockAfter: ['C8'],
   sequence: ['면허증 제시', '보험 선택', '반납 장소', '내비 안내', '주유 조건'],
-  speakPhraseIds: ['p_yoyaku_shiteimasu', 'p_card_de', 'p_ryoushuusho'],
+  speakPhraseIds: ['p_pasupooto_arimasu', 'p_osusume_wa', 'p_sou_shimasu'],
   steps: [
     {
       situationKo: '렌터카 카운터에서 면허증을 요청받는다',
@@ -661,7 +661,7 @@ export const c24: Mission = {
       promptPhraseId: 'p_navi_nihongo',
       choices: [
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: true, feedback: '「使(つか)い方(かた)を教(おし)えてください」— 내비는 전화번호나 マップコード(맵코드)로 목적지를 입력해요. 직원이 기본 조작을 알려줘요' },
-        { text: '여권 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '여권 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: false, feedback: '여권·면허 확인은 이미 끝났어요 — 지금은 내비 사용법에 답해요' },
       ],
     },
     {
@@ -684,7 +684,7 @@ export const c25: Mission = {
   canDo: '사용자는 병원에서 문진표·증상·보험·진료 설명·처방전을 안전하게 처리할 수 있다',
   unlockAfter: ['C6'],
   sequence: ['문진표 작성', '증상 설명', '보험 확인', '진료 설명', '처방전'],
-  speakPhraseIds: ['p_atama_itai', 'p_onaka_itai', 'p_yasashii_nihongo'],
+  speakPhraseIds: ['p_atama_itai', 'p_onaka_itai', 'p_yoroshiku_onegai'],
   steps: [
     {
       situationKo: '접수에서 문진표를 작성해 달라고 한다',
@@ -692,7 +692,7 @@ export const c25: Mission = {
       promptPhraseId: 'p_monshinhyou',
       choices: [
         { text: '도와주세요', phraseId: 'p_tasukete', correct: true, feedback: '「助(たす)けてください」— 한자 양식이 어려우면 도움을 요청해요. 접수처에서 함께 작성해줄 수 있어요' },
-        { text: '머리가 아파요', phraseId: 'p_atama_itai', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '머리가 아파요', phraseId: 'p_atama_itai', correct: false, feedback: '증상을 말하기 전이에요 — 지금은 문진표 작성에 도움을 청해요' },
       ],
     },
     {
@@ -721,7 +721,7 @@ export const c25: Mission = {
       promptPhraseId: 'p_sensei_ga_setsumei_shimasu',
       choices: [
         { text: '잘 부탁드립니다', phraseId: 'p_yoroshiku_onegai', correct: true, feedback: '「よろしくお願(ねが)いします」— 진료를 시작하며 건네는 응답' },
-        { text: '도와주세요', phraseId: 'p_tasukete', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '도와주세요', phraseId: 'p_tasukete', correct: false, feedback: '지금은 도움이 필요한 상황이 아니에요 — 진료를 시작하는 인사로 답해요' },
       ],
     },
     {
@@ -730,7 +730,7 @@ export const c25: Mission = {
       promptPhraseId: 'p_shohousen_tonari',
       choices: [
         { text: '가 볼게요', phraseId: 'p_itte_mimasu', correct: true, feedback: '「行(い)ってみます」— 옆 약국으로 가 보겠다는 응답' },
-        { text: '도와주세요', phraseId: 'p_tasukete', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '도와주세요', phraseId: 'p_tasukete', correct: false, feedback: '이미 진료가 끝났어요 — 안내받은 대로 가 보겠다고 답해요' },
       ],
     },
   ],
@@ -744,7 +744,7 @@ export const c26: Mission = {
   canDo: '사용자는 경찰서에서 분실물 종류·시간·연락처·신고서 작성을 처리할 수 있다',
   unlockAfter: ['C5'],
   sequence: ['도움 요청', '분실물 종류', '잃어버린 시간', '연락처 남기기', '신고서 작성'],
-  speakPhraseIds: ['p_tasukete', 'p_saifu_nakushita', 'p_michi_oshiete'],
+  speakPhraseIds: ['p_tasukete', 'p_saifu_nakushita', 'p_renraku_kudasai'],
   steps: [
     {
       situationKo: '파출소에 들어서자 경찰관이 무슨 일인지 묻는다',
@@ -792,7 +792,7 @@ export const c26: Mission = {
       promptPhraseId: 'p_funshitsu_todoke',
       choices: [
         { text: '잠깐만 기다려 주세요', phraseId: 'p_chotto_matte', correct: true, feedback: '「ちょっと待(ま)ってください」— 필요한 정보를 정리하는 동안 양해를 구해요' },
-        { text: '도와주세요', phraseId: 'p_tasukete', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '도와주세요', phraseId: 'p_tasukete', correct: false, feedback: '도움 요청은 이미 했어요 — 지금은 신고서 작성에 답해요' },
       ],
     },
   ],
@@ -806,7 +806,7 @@ export const c27: Mission = {
   canDo: '사용자는 긴급상황에서 도움 요청·거동 상태·증상·지병·위치를 짧고 명확하게 전달할 수 있다',
   unlockAfter: ['C26'],
   sequence: ['도움 요청', '거동 확인', '구급차 호출', '지병·약', '위치 전달'],
-  speakPhraseIds: ['p_tasukete', 'p_atama_itai', 'p_doko_desu_ka'],
+  speakPhraseIds: ['p_tasukete', 'p_atama_itai', 'p_ugokemasen'],
   steps: [
     {
       situationKo: '행인이 괜찮은지 묻는다',
@@ -866,7 +866,7 @@ export const c28: Mission = {
   canDo: '사용자는 통신매장에서 요금제·데이터 용량·이용 기간·여권 확인·설정을 처리할 수 있다',
   unlockAfter: ['C7'],
   sequence: ['요금제 선택', '데이터 용량', '이용 기간', '여권 확인', '설정 도움'],
-  speakPhraseIds: ['p_kore_ikura', 'p_card_tsukaemasu_ka', 'p_card_de'],
+  speakPhraseIds: ['p_kore_ikura', 'p_osusume_wa', 'p_pasupooto_arimasu'],
   steps: [
     {
       situationKo: '점원이 어떤 요금제를 원하는지 묻는다',
@@ -914,7 +914,7 @@ export const c28: Mission = {
       promptPhraseId: 'p_settei_o_tetsudaimasu',
       choices: [
         { text: '부탁드립니다', phraseId: 'p_onegai_shimasu', correct: true, feedback: '「お願(ねが)いします」— 도움을 제안받았을 때 이 한마디로 흔쾌히 부탁한다는 뜻을 전할 수 있어요' },
-        { text: '이거 얼마예요?', phraseId: 'p_kore_ikura', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '이거 얼마예요?', phraseId: 'p_kore_ikura', correct: false, feedback: '가격은 이미 확인했어요 — 지금은 설정 도움을 받아들이는 응답이에요' },
       ],
     },
   ],
@@ -928,7 +928,7 @@ export const c29: Mission = {
   canDo: '사용자는 코인세탁소에서 기계 위치·세탁/건조 코스·세제·완료 시간·건조 완료를 확인할 수 있다',
   unlockAfter: ['C4'],
   sequence: ['기계 찾기', '코스 선택', '세제 확인', '완료 시간', '건조 완료'],
-  speakPhraseIds: ['p_tsukaikata', 'p_sentaku_de', 'p_wakarimashita_arigatou'],
+  speakPhraseIds: ['p_tsukaikata', 'p_sentaku_de', 'p_kakunin_shimashita'],
   steps: [
     {
       situationKo: '직원 또는 주변 사람이 세탁기 위치를 알려준다',
@@ -987,7 +987,7 @@ export const c30: Mission = {
   canDo: '사용자는 축제에서 표·먹거리·노점 게임·입구 방향·불꽃놀이 자리를 확인할 수 있다',
   unlockAfter: ['C18'],
   sequence: ['표 사기', '먹거리 주문', '노점 게임', '입구 확인', '불꽃놀이 자리'],
-  speakPhraseIds: ['p_kippu_kudasai', 'p_kore_kudasai', 'p_shashin_ii'],
+  speakPhraseIds: ['p_kippu_nimai_kudasai', 'p_hitotsu_kudasai', 'p_shashin_ii'],
   steps: [
     {
       situationKo: '행사 입구에서 표가 몇 장인지 묻는다',
@@ -1013,7 +1013,7 @@ export const c30: Mission = {
       promptPhraseId: 'p_kingyo_sukui',
       choices: [
         { text: '이건 뭐예요?', phraseId: 'p_kore_nani', correct: true, feedback: '「これは何(なん)ですか」— 처음 보는 게임이나 간식을 물어봐요. 점원이 신나게 설명해줘요' },
-        { text: '표 두 장 주세요', phraseId: 'p_kippu_nimai_kudasai', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '표 두 장 주세요', phraseId: 'p_kippu_nimai_kudasai', correct: false, feedback: '입장권은 이미 샀어요 — 지금은 새로운 게임을 물어봐요' },
       ],
     },
     {

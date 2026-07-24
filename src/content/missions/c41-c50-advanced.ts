@@ -54,7 +54,7 @@ export const c41: Mission = {
       promptPhraseId: 'p_henkin_card',
       choices: [
         { text: '사용했던 카드랑 같은 건가요?', phraseId: 'p_new_card_kakunin', correct: true, feedback: '「使(つか)ったカードと同(おな)じですか」— 환불 카드가 원래 결제 카드와 같은지 재차 확인하면 착오를 막을 수 있어요' },
-        { text: '이걸 교환하고 싶어요', phraseId: 'p_koukan_shitai', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '이걸 교환하고 싶어요', phraseId: 'p_koukan_shitai', correct: false, feedback: '교환·환불 의사는 이미 밝혔어요 — 지금은 환불 카드가 맞는지 확인해요' },
       ],
     },
     {
@@ -120,7 +120,7 @@ export const c42: Mission = {
       promptPhraseId: 'p_urikire',
       choices: [
         { text: '이건 뭐예요?', phraseId: 'p_kore_nani', correct: true, feedback: '「これは何(なん)ですか」— 처음 보는 음료를 물어봐요. 신상·한정 음료가 자주 나와요' },
-        { text: '스이카로요', phraseId: 'p_suica_de', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '스이카로요', phraseId: 'p_suica_de', correct: false, feedback: '결제 수단은 이미 정했어요 — 지금은 품절 안내에 답해요' },
       ],
     },
     {
@@ -183,7 +183,7 @@ export const c43: Mission = {
       promptPhraseId: 'p_meisai',
       choices: [
         { text: '처분해 주세요', phraseId: 'p_new_meisai_shobun', correct: true, feedback: '「処分(しょぶん)しておいてください」— 명세표를 굳이 받지 않고 기기 쪽에서 파기해달라고 요청하는 자연스러운 대답이에요. 명세표엔 계좌 정보가 있어 이렇게 처리하는 사람이 많아요' },
-        { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '사용법은 이미 물었어요 — 지금은 명세표가 필요한지 답해요' },
       ],
     },
     {
@@ -246,7 +246,7 @@ export const c44: Mission = {
       promptPhraseId: 'p_ryoumen',
       choices: [
         { text: '양면으로 부탁해요', phraseId: 'p_new_ryoumen_de', correct: true, feedback: '「両面(りょうめん)でお願(ねが)いします」— 직원의 양면 인쇄 확인에 그렇게 해달라고 답하는 표현이에요. 종이를 아낄 때 자주 쓰는 선택이죠' },
-        { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '사용법은 이미 물었어요 — 지금은 양면 인쇄 여부를 답해요' },
       ],
     },
     {
@@ -298,7 +298,7 @@ export const c45: Mission = {
       promptPhraseId: 'p_chuumon_bangou',
       choices: [
         { text: '번호는 7번이에요', phraseId: 'p_new_bangou_nana_desu', correct: true, feedback: '「番号(ばんごう)は7番(ななばん)です」— 주문번호를 묻는 질문에 구체적인 숫자로 바로 답하는 가장 직접적인 대응이에요' },
-        { text: '예약했습니다', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '예약했습니다', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '예약 확인은 이미 끝났어요 — 지금은 주문번호를 답해요' },
       ],
     },
     {
@@ -308,7 +308,7 @@ export const c45: Mission = {
       recapPromptKo: '더 주문하실 것 있으세요?',
       choices: [
         { text: '이제 충분해요', phraseId: 'p_mou_juubun', correct: true, feedback: '「もう十分(じゅうぶん)です」— 더 권유받을 때 "이제 충분합니다"로 깔끔하게 마무리' },
-        { text: '예약했습니다', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '예약했습니다', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '예약 확인은 이미 끝났어요 — 지금은 추가 주문 여부를 답해요' },
       ],
     },
     {
@@ -373,7 +373,7 @@ export const c46: Mission = {
       promptPhraseId: 'p_megaphone',
       choices: [
         { text: '무슨 색이 있어요?', phraseId: 'p_new_megahon_iro', correct: true, feedback: '「何色(なにいろ)がありますか」— 팀 컬러 굿즈를 살 때 색상 옵션부터 확인하는 실용적인 질문이에요. 「色」는 いろ로 읽어요' },
-        { text: '티켓은 이쪽입니다', phraseId: 'p_chiketto_wa_kochira_desu', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '티켓은 이쪽입니다', phraseId: 'p_chiketto_wa_kochira_desu', correct: false, feedback: '티켓 확인은 이미 끝났어요 — 지금은 굿즈 색상을 물어봐요' },
       ],
     },
     {
@@ -417,7 +417,7 @@ export const c47: Mission = {
       recapPromptKo: '3층 에스컬레이터 옆에 있습니다',
       choices: [
         { text: '지도로 보여주실 수 있어요?', phraseId: 'p_new_chizu_misete', correct: true, feedback: '「地図で見せてもらえますか」— 매장 위치 설명이 복잡할 때 지도를 보여달라고 요청하는 게 다시 말해달라는 것보다 더 확실해요' },
-        { text: '저거', phraseId: 'p_are', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '저거', phraseId: 'p_are', correct: false, feedback: '「저거」처럼 막연하게 가리키면 안 돼요 — 지도를 보여달라고 구체적으로 요청해요' },
       ],
     },
     {
@@ -426,7 +426,7 @@ export const c47: Mission = {
       promptPhraseId: 'p_elevator',
       choices: [
         { text: '가 볼게요', phraseId: 'p_itte_mimasu', correct: true, feedback: '「行(い)ってみます」— 엘리베이터 위치를 안내받고 바로 가 보겠다는 응답' },
-        { text: '저거', phraseId: 'p_are', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '저거', phraseId: 'p_are', correct: false, feedback: '「저거」로는 뜻이 전달되지 않아요 — 안내받은 대로 가 보겠다고 답해요' },
       ],
     },
     {
@@ -435,7 +435,7 @@ export const c47: Mission = {
       promptPhraseId: 'p_menzei_counter8',
       choices: [
         { text: '찾아볼게요', phraseId: 'p_sagashite_mimasu', correct: true, feedback: '「探(さが)してみます」— 면세 카운터를 직접 찾아보겠다는 표현' },
-        { text: '저거', phraseId: 'p_are', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '저거', phraseId: 'p_are', correct: false, feedback: '「저거」로는 뜻이 전달되지 않아요 — 직접 찾아보겠다고 답해요' },
       ],
     },
     {
@@ -445,7 +445,7 @@ export const c47: Mission = {
       recapPromptKo: '안내가 되셨나요?',
       choices: [
         { text: '덕분에 도움이 됐어요', phraseId: 'p_tasukarimashita', correct: true, feedback: '「助(たす)かりました」— 여러 번 안내해 준 데 대한 자연스러운 응답' },
-        { text: '저거', phraseId: 'p_are', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '저거', phraseId: 'p_are', correct: false, feedback: '「저거」로는 뜻이 전달되지 않아요 — 도움을 받았다는 감사 인사로 마무리해요' },
       ],
     },
   ],
@@ -499,7 +499,7 @@ export const c48: Mission = {
       promptPhraseId: 'p_generic',
       choices: [
         { text: '이 약은 뭐예요?', phraseId: 'p_kono_kusuri', correct: true, feedback: '「この薬(くすり)は何(なん)ですか」— 약의 용도·성분을 확인해요' },
-        { text: '아니요, 없어요', phraseId: 'p_iie_arimasen', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '아니요, 없어요', phraseId: 'p_iie_arimasen', correct: false, feedback: '지금은 제네릭 약으로 해도 되는지 묻고 있어요 — 약에 대해 되물어보는 게 자연스러워요' },
       ],
     },
     {
@@ -631,7 +631,7 @@ export const c50: Mission = {
       promptPhraseId: 'p_meijirushi',
       choices: [
         { text: '가 볼게요', phraseId: 'p_itte_mimasu', correct: true, feedback: '「行(い)ってみます」— 편의점을 표지 삼아 가 보겠다는 응답' },
-        { text: '실례합니다, 여기가 어디예요?', phraseId: 'p_sumimasen_koko_doko', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '실례합니다, 여기가 어디예요?', phraseId: 'p_sumimasen_koko_doko', correct: false, feedback: '위치는 이미 물어봤어요 — 지금은 안내받은 대로 가 보겠다고 답해요' },
       ],
     },
     {

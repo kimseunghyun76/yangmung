@@ -45,7 +45,7 @@ export const c10: Mission = {
       promptPhraseId: 'p_sen_en_satsu',
       choices: [
         { text: '잔돈으로 해 주세요', phraseId: 'p_komakaku', correct: true, feedback: '「細(こま)かくしてください」— 동전·소액권으로 더 잘게. IC카드 충전이나 신사 봉납금에 잔돈이 필요해요' },
-        { text: '환전해 주세요', phraseId: 'p_ryougae', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '환전해 주세요', phraseId: 'p_ryougae', correct: false, feedback: '환전은 이미 요청했어요 — 지금은 잔돈 단위를 정해요' },
       ],
     },
     {

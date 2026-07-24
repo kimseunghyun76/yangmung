@@ -47,6 +47,8 @@ export const ANNOUNCEMENTS: Announcement[] = [
   { id: 'a_air_landing', category: 'airport', ja: 'まもなく、着陸いたします。', kana: 'まもなく、ちゃくりくいたします。', korean: '곧 착륙하겠습니다.', context: '착륙 직전 기내', tip: '着陸(ちゃくりく) = 착륙.' },
   { id: 'a_air_restroom', category: 'airport', ja: 'お手洗いは、ご利用いただけません。', kana: 'おてあらいは、ごりよういただけません。', korean: '화장실은 이용하실 수 없습니다.', context: '이착륙 시 안내', tip: 'お手洗い(おてあらい) = 화장실.' },
   { id: 'a_air_final', category: 'airport', ja: '最終のご案内です。', kana: 'さいしゅうのごあんないです。', korean: '마지막 안내입니다.', context: '탑승 마감 방송', tip: '最終(さいしゅう) = 최종·마지막.' },
+  { id: 'a_air_delay', category: 'airport', ja: '天候の影響で、出発が遅れております。', kana: 'てんこうのえいきょうで、しゅっぱつがおくれております。', korean: '기상 영향으로 출발이 지연되고 있습니다.', context: '항공편 지연 안내', tip: '遅(おく)れております = 지연되고 있습니다. 이유는 天候(てんこう)·機材(きざい)点検 등으로 자주 바뀌어요.' },
+  { id: 'a_air_cancel', category: 'airport', ja: '本日の便は欠航となりました。', kana: 'ほんじつのびんは、けっこうとなりました。', korean: '오늘 편은 결항되었습니다.', context: '항공편 결항 안내', tip: '欠航(けっこう) = 결항. 카운터에서 振替便(ふりかえびん, 대체편)을 바로 문의해요.' },
 
   // ── 버스 ──
   { id: 'a_bus_stop', category: 'bus', ja: '次、止まります。', kana: 'つぎ、とまります。', korean: '다음 정류장에 섭니다.', context: '하차 벨이 눌렸을 때', tip: '止まります(とまります) = 멈춥니다.' },

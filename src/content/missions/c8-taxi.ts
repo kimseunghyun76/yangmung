@@ -52,7 +52,7 @@ export const c8: Mission = {
       speaker: '나',
       choices: [
         { text: '여기서 세워 주세요', phraseId: 'p_koko_de_tomete', correct: true, feedback: '「ここで止(と)めてください」— 정확한 위치에서 내리려면 「その角(かど)で」(그 모퉁이에서)와 함께 써요' },
-        { text: '시부야까지 가주세요', phraseId: 'p_made_onegai', correct: false, feedback: '지금 상황에 맞는 답은 아니에요.' },
+        { text: '시부야까지 가주세요', phraseId: 'p_made_onegai', correct: false, feedback: '행선지는 이미 말했어요 — 지금은 내릴 위치를 부탁해요' },
       ],
     },
     {
