@@ -315,11 +315,15 @@ export function cardDifficulty(card: Card): DifficultyLabel | null {
     return TIER_TO_DIFF[(card.tier ?? 1) - 1] ?? '입문';
   }
   if (card.kind === 'dictation') {
-    return card.promptKind === 'korean' ? '입문' : '고급'; // 한→일 작문=입문, 받아쓰기=고급
+    // 2026-07-26 버그 수정: 2026-07-06 레벨 재편(LEVEL_STAGES)으로 작문·받아쓰기 모두 중급(express)
+    // 단계로 이동했는데 이 라벨은 그 전 기준(작문=입문·받아쓰기=고급)에 머물러 있었다.
+    return '중급';
   }
   if (card.kind === 'quiz') {
     const id = card.id;
-    if (id.startsWith('kana:') || id.startsWith('pair:')) return '입문';
+    if (id.startsWith('kana:')) return '입문';
+    // pair:(발음 구분)도 위와 같은 이유로 중급 — kana만 입문에 남음.
+    if (id.startsWith('pair:')) return '중급';
     if (id.startsWith('vocab:') || id.startsWith('sign:') || id.startsWith('basic:')) return '기본';
     if (card.tier) return TIER_TO_DIFF[card.tier - 1] ?? '기본';
     return '기본';

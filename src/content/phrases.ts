@@ -148,6 +148,14 @@ export const phrases: Phrase[] = [
   { id: 'p_takkyubin', kana: 'たっきゅうびんおねがいします', kanji: '宅急便お願いします', displayKana: 'たっきゅうびん、おねがいします', korean: '택배 부탁해요', register: 'productive', tip: '「宅急便(たっきゅうびん)」는 야마토 운수 브랜드명이 일반명사처럼 굳어진 표현. 전국 편의점 어디서나 접수 가능하고, 배송 추적도 앱으로 실시간 확인할 수 있어요' },
   { id: 'p_reshiito_irimasu_ka', kana: 'レシートはいりますか', displayKana: 'レシートは、いりますか？', korean: '영수증 필요하세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
 
+  // ── C54 택배 재배달 신청 ──
+  { id: 'p_saihaitatsu_onegai', kana: 'さいはいたつをおねがいします', kanji: '再配達をお願いします', displayKana: 'さいはいたつを、おねがいします', korean: '재배달 부탁드려요', register: 'productive', tip: '「再配達(さいはいたつ)をお願(ねが)いします」— 부재중 택배 스티커(不在票/ふざいひょう)에 적힌 번호로 전화하거나 택배사 앱·QR코드로도 신청할 수 있어요' },
+  { id: 'p_itsu_ga_yoroshii', kana: 'いつがよろしいですか', displayKana: 'いつが、よろしいですか？', korean: '언제가 편하세요?', register: 'receptive' },
+  { id: 'p_ashita_gogo_de', kana: 'あしたのごごでおねがいします', kanji: '明日の午後でお願いします', displayKana: 'あしたの、ごごで、おねがいします', korean: '내일 오후로 부탁드려요', register: 'productive', tip: '「明日(あした)の午後(ごご)でお願(ねが)いします」— 재배달은 보통 당일 저녁부터, 다음날은 오전·오후 모두 가능해요' },
+  { id: 'p_nanji_kara_nanji_made', kana: 'なんじからなんじまでがよろしいですか', displayKana: 'なんじから、なんじまでが、よろしいですか？', korean: '몇 시부터 몇 시까지가 편하세요?', register: 'receptive' },
+  { id: 'p_niji_kara_yoji_made', kana: 'にじからよじまでです', kanji: '2時から4時までです', displayKana: 'にじから、よじまでです', korean: '2시부터 4시까지요', register: 'productive', tip: '「2時(にじ)から4時(よじ)までです」— 일본 택배는 보통 2시간 단위 시간대(午前中(ごぜんちゅう)·14~16時·16~18時 등)로 나뉘어요' },
+  { id: 'p_saihaitatsu_arigatou', kana: 'ありがとうございますよろしくおねがいします', kanji: 'ありがとうございます、よろしくお願いします', displayKana: 'ありがとうございます、よろしくおねがいします', korean: '감사합니다, 잘 부탁드려요', register: 'productive' },
+
   // ── C13 라멘 식권기 ──
   { id: 'p_kenbaiki', kana: 'けんばいきはどこですか', kanji: '券売機はどこですか', displayKana: 'けんばいきは、どこですか？', korean: '식권기 어디예요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '「券売機(けんばいき)はどこですか」— 라멘·소바 가게 입구에 주로 있어요. 사진 메뉴 버튼을 고르면 돼요. 모르면 店員(てんいん)さんに聞(き)いて！' },
   { id: 'p_oomori', kana: 'おおもりできますか', kanji: '大盛りできますか', displayKana: 'おおもり、できますか？', korean: '곱빼기 되나요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '「大盛(おおも)りできますか」— 라멘·덮밥류에서 양을 늘릴 때. 많은 가게에서 무료 또는 100엔 추가예요. 반대로 小盛(こも)り(소량)를 요청할 수도 있어요' },

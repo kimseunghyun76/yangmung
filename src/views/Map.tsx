@@ -1,5 +1,6 @@
 // 학습 지도 — 추천 / 열린 장면 / 곧 열릴 여행지 3구획. (정보 밀도 정리)
 import { CONTENT } from '../content';
+import { ROUTES } from '../content/routes';
 import type { Card } from '../learn/cards';
 import { kanaReadMastery, missionProgress, type ProgressMap } from '../learn/progress';
 import { isSceneOpen } from '../learn/unlocks';
@@ -27,20 +28,23 @@ interface Props {
   openMissions: string[];
   missionsLocked: boolean;
   devUnlockAll: boolean;
+  preferredRouteLabel?: string;      // undefined=자동, 'random'=무작위 명시 유지, 그 외=선택한 루트 라벨
+  autoSuggestedLabels: string[];     // 출국일 임박으로 자동 추천 중인 루트 라벨(선택 안 했을 때만 채워짐)
+  onSetPreferredRoute: (label: string | undefined) => void;
   onPracticeScene: (missionId: string) => void;
   onBack: () => void;
 }
 
 const kicker: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase', margin: 0 };
 
-// 오픈은 랜덤 순차 — 지금 열린 미션을 충분히 학습하면 다음 장면이 무작위로 열린다.
-function lockHint(): string {
-  return '열린 미션을 더 학습하면 다음 장면이 무작위로 열려요';
+// 오픈은 우선 루트가 있으면 그 루트 우선, 없으면 순수 랜덤 — 지금 열린 미션을 충분히 학습하면 다음 장면이 열린다.
+function lockHint(hasPreferred: boolean): string {
+  return hasPreferred ? '열린 미션을 더 학습하면 우선 카테고리에서 다음 장면이 열려요' : '열린 미션을 더 학습하면 다음 장면이 무작위로 열려요';
 }
 
 interface SceneItem { m: typeof CONTENT.missions[number]; sv: SceneVisual; unlocked: boolean; done: boolean; started: boolean; mastered: number; total: number }
 
-export function Map({ nav, allCards, progress, openMissions, missionsLocked, devUnlockAll, onPracticeScene, onBack }: Props) {
+export function Map({ nav, allCards, progress, openMissions, missionsLocked, devUnlockAll, preferredRouteLabel, autoSuggestedLabels, onSetPreferredRoute, onPracticeScene, onBack }: Props) {
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
   const hira = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'hiragana').map((k) => k.id));
   const kata = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'katakana').map((k) => k.id));
@@ -72,6 +76,7 @@ export function Map({ nav, allCards, progress, openMissions, missionsLocked, dev
     );
   }
 
+  const hasPreferred = (!!preferredRouteLabel && preferredRouteLabel !== 'random') || autoSuggestedLabels.length > 0;
   const items: SceneItem[] = scenes.map((m) => {
     const unlocked = isSceneOpen(m.id, openMissions, devUnlockAll);
     const p = missionProgress(allCards, progress, m.id);
@@ -95,7 +100,15 @@ export function Map({ nav, allCards, progress, openMissions, missionsLocked, dev
         <strong style={{ position: 'absolute', left: 14, bottom: 12, color: '#fff', fontSize: 16, textShadow: '0 2px 10px rgba(0,0,0,.5)' }}>열린 장면을 골라 연습해요</strong>
       </div>
       <p style={{ margin: '-4px 0 14px', color: 'var(--ink-soft)', fontSize: 13, fontWeight: 700 }}>열린 장면 {open.length} · 잠긴 장면 {locked.length} (전체 {scenes.length})</p>
-      <MascotBubble who="duo" size={44} style={{ marginBottom: 14 }}>지금 열린 장면을 충분히 학습하면 다음 장면이 무작위로 열려요.</MascotBubble>
+      <MascotBubble who="duo" size={44} style={{ marginBottom: 14 }}>
+        {preferredRouteLabel && preferredRouteLabel !== 'random'
+          ? `"${preferredRouteLabel}"을(를) 우선으로 다음 장면이 열려요.`
+          : autoSuggestedLabels.length > 0
+          ? '출국이 임박해 생존 표현부터 우선 열리도록 자동으로 맞췄어요.'
+          : '지금 열린 장면을 충분히 학습하면 다음 장면이 무작위로 열려요.'}
+      </MascotBubble>
+
+      <RoutePreference preferredRouteLabel={preferredRouteLabel} autoSuggestedLabels={autoSuggestedLabels} onSetPreferredRoute={onSetPreferredRoute} />
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14, marginTop: -8 }}>
         <DeckButton />
@@ -127,15 +140,17 @@ export function Map({ nav, allCards, progress, openMissions, missionsLocked, dev
         </GlassPanel>
       </section>
 
-      {/* 아직 안 열린 장면 — 무작위로 열림. 미스터리 카드로만 표시 */}
+      {/* 아직 안 열린 장면 — 우선 루트가 있으면 그 안에서, 없으면 무작위로 열림. 미스터리 카드로만 표시 */}
       {locked.length > 0 && (
         <section style={{ marginBottom: 18 }}>
           <p style={{ ...kicker, marginBottom: 10 }}>아직 안 열린 장면 · {locked.length}</p>
           <GlassPanel style={{ padding: 12 }}>
-            <p style={{ fontSize: 12.5, color: 'var(--ink-soft)', margin: '0 0 10px', fontWeight: 700 }}>열린 장면을 충분히 학습하면, 이 중 하나가 <b style={{ color: 'var(--accent)' }}>무작위로</b> 열려요.</p>
+            <p style={{ fontSize: 12.5, color: 'var(--ink-soft)', margin: '0 0 10px', fontWeight: 700 }}>
+              열린 장면을 충분히 학습하면, 이 중 하나가 {hasPreferred ? <><b style={{ color: 'var(--accent)' }}>우선 카테고리에서</b> 먼저</> : <><b style={{ color: 'var(--accent)' }}>무작위로</b></>} 열려요.
+            </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 8 }}>
               {locked.map((x) => (
-                <div key={x.m.id} aria-hidden title={lockHint()}
+                <div key={x.m.id} aria-hidden title={lockHint(hasPreferred)}
                   style={{ minWidth: 0, aspectRatio: '1', borderRadius: 12, border: '1px dashed var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, color: 'var(--ink-faint)', opacity: 0.6 }}>🔒</div>
               ))}
             </div>
@@ -282,6 +297,39 @@ function RouteSceneCard({ item, onPracticeScene, featured = false, compact = fal
         }}>{item.m.canDo}</span>
       </span>
     </button>
+  );
+}
+
+// 우선 학습 카테고리 선택 — 무작위 순차 오픈에 "이 루트부터" 선호를 얹는다(난이도 게이팅은 그대로 유지).
+function RoutePreference({ preferredRouteLabel, autoSuggestedLabels, onSetPreferredRoute }: {
+  preferredRouteLabel?: string; autoSuggestedLabels: string[]; onSetPreferredRoute: (label: string | undefined) => void;
+}) {
+  const isRandomActive = preferredRouteLabel === 'random' || (preferredRouteLabel === undefined && autoSuggestedLabels.length === 0);
+  const chipStyle = (active: boolean): React.CSSProperties => ({
+    padding: '7px 12px', borderRadius: 999, fontSize: 12.5, fontWeight: 750, cursor: 'pointer',
+    border: `1px solid ${active ? 'var(--accent)' : 'var(--glass-border)'}`,
+    background: active ? 'var(--accent-soft)' : 'var(--glass-bg-strong)',
+    color: active ? 'var(--accent)' : 'var(--ink-soft)', whiteSpace: 'nowrap',
+  });
+  return (
+    <GlassPanel style={{ marginBottom: 14 }}>
+      <p style={{ ...kicker, marginBottom: 8 }}>우선 학습 카테고리</p>
+      <p style={{ margin: '0 0 10px', fontSize: 12, color: 'var(--ink-faint)', lineHeight: 1.5 }}>
+        고르면 다음에 열리는 장면이 이 카테고리 안에서 먼저 나와요(이미 열린 장면은 그대로 유지).
+      </p>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <button className="ym-press" onClick={() => onSetPreferredRoute('random')} style={chipStyle(isRandomActive)}>🎲 무작위(기본)</button>
+        {ROUTES.map((r) => {
+          const active = preferredRouteLabel === r.label || (preferredRouteLabel === undefined && autoSuggestedLabels.includes(r.label));
+          const isAutoOnly = active && preferredRouteLabel === undefined;
+          return (
+            <button key={r.label} className="ym-press" onClick={() => onSetPreferredRoute(r.label)} style={chipStyle(active)}>
+              {r.label}{isAutoOnly ? ' · 출국 임박 추천' : ''}
+            </button>
+          );
+        })}
+      </div>
+    </GlassPanel>
   );
 }
 

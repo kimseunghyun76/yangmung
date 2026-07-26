@@ -4,7 +4,7 @@ import type { IconName } from '../ui/Icon';
 
 export interface SceneVisual { emoji: string; icon: IconName; bg: string; accent: string; thumb?: string; hero?: string; backdrop?: string; success?: string; loop?: string }
 
-const SESSION_MANGA_IDS = new Set(Array.from({ length: 50 }, (_, i) => `C${i + 1}`));
+const SESSION_MANGA_IDS = new Set(Array.from({ length: 54 }, (_, i) => `C${i + 1}`));
 const SESSION_MANGA_NAMES = [
   'solo-shop-01',
   'solo-restaurant-02',
@@ -52,7 +52,7 @@ function hashIndex(key: string, size: number): number {
   return Math.abs(h) % size;
 }
 
-// 장면에 맞는 3컷(solo·ff·mf) 풀. C1~C50은 미션별 전용 WebP를 사용한다.
+// 장면에 맞는 3컷(solo·ff·mf) 풀. C1~C54는 미션별 전용 WebP를 사용한다.
 function mangaBackdropPool(missionId: string, place?: string): readonly string[] {
   const group = mangaBackdropGroup(place);
   if (SESSION_MANGA_IDS.has(missionId)) {
@@ -146,6 +146,9 @@ const BY_PLACE: Record<string, SceneVisual> = {
   '스시 오마카세': { emoji: '鮨', icon: 'scene-restaurant', bg: '#ecfeff', accent: '#0e7490' },
   길거리: { emoji: '道', icon: 'scene-street', bg: '#f0fdfa', accent: '#0d9488' },
   가게: { emoji: '店', icon: 'scene-store', bg: '#fdf2f8', accent: '#db2777' },
+  // C51~C54도 전용 삽화와 함께 장소에 맞는 아이콘·색을 유지한다.
+  '실내·길거리': { emoji: '避', icon: 'emergency', bg: '#fff1f2', accent: '#dc2626' },
+  '쇼핑몰·역': { emoji: '迷', icon: 'scene-shopping', bg: '#eff6ff', accent: '#2563eb' },
 };
 
 const DEFAULT: SceneVisual = { emoji: '旅', icon: 'scene-store', bg: '#f6e4df', accent: '#c8453a' };

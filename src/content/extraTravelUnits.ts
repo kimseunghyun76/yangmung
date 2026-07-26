@@ -49,4 +49,13 @@ export const extraTravelUnits: Unit[] = [
       'p_wifi_ga_tsunagarimasen', 'p_setsuzoku_houhou_wo_oshiete_kudasai',
     ],
   },
+  {
+    id: 'u_b5_missing_situations2', track: 'lang', stage: 'B5', mode: 'action',
+    canDo: '사용자는 전철에 물건을 두고 내렸을 때 신고하고, 호텔 예약이 안 보일 때 확인시켜주고, 길거리 호객을 거절할 수 있다',
+    newPhraseIds: [
+      'p_densha_ni_kasa_wo_wasuremashita',
+      'p_yoyaku_kakunin_meeru_wo_misemasu',
+      'p_kyoumi_arimasen',
+    ],
+  },
 ];

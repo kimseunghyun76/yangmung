@@ -4,8 +4,13 @@ import { CONTENT } from '../content';
 import type { Card } from './cards';
 import type { SessionLogEntry } from './progress';
 
+// 2026-07-26: 승급 시험 결과의 "약점" 안내가 전부 "표현"으로 뭉뚱그려져 있어 무엇을 다시 봐야 할지
+// 알 수 없었다(사용자 리포트) — dictation 세부종류(작문/받아쓰기)와 phrase id 접두어(pair:/vocab:greetings:
+// 등)로 실제 학습 단계 이름까지 구분해 정확히 안내한다. promotionPool()의 카드 출처와 1:1로 맞춰뒀다.
 export function categoryLabel(card: Card | undefined): string {
-  if (!card || !('reviewTarget' in card) || !card.reviewTarget) return '기타';
+  if (!card) return '기타';
+  if (card.kind === 'dictation') return card.promptKind === 'korean' ? '작문' : '받아쓰기';
+  if (!('reviewTarget' in card) || !card.reviewTarget) return '기타';
   const rt = card.reviewTarget;
   if (rt.type === 'kana') return '가나 읽기';
   if (rt.type === 'grammar') return '문법';
@@ -13,6 +18,12 @@ export function categoryLabel(card: Card | undefined): string {
     const m = CONTENT.missions.find((x) => x.id === rt.id);
     return m ? `미션 · ${m.place ?? m.scenario}` : '미션';
   }
+  const id = String(rt.id);
+  if (id.startsWith('pair:')) return '발음 구분';
+  if (id.startsWith('vocab:greetings:')) return '기본 인사';
+  if (id.startsWith('basic:')) return '숫자·기본 어휘';
+  if (id.startsWith('vocab:')) return '어휘';
+  if (id.startsWith('sign:')) return '간판·표지';
   return '표현';
 }
 

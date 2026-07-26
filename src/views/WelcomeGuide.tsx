@@ -14,6 +14,7 @@ const STEPS: Step[] = [
   { icon: 'target', title: '1분 수준 진단', desc: '가나·듣기·상황 회화 몇 문제로 내 실력을 파악해요.' },
   { icon: 'nav-map', title: '맞춤 난이도로 학습', desc: '진단 결과에 맞춰 가나부터 여행 상황 미션까지 순서대로 안내해요.' },
   { icon: 'recovery', title: '자동 복습', desc: '틀린 것 위주로 다음 세션에 다시 나와요. 매일 짧게만 해도 충분해요.' },
+  { icon: 'tip', title: '여행 스타일 맞춤 팁', desc: '당일치기·단기·한달살기 중 골라두면 그 일정에 맞는 팁을 홈에서 챙겨드려요.' },
 ];
 
 export function WelcomeGuide({ onStart, onSkip }: { onStart: () => void; onSkip: () => void }) {

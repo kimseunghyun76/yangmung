@@ -103,4 +103,13 @@ export const extraTravelPhrases: Phrase[] = [
   // C28 통신매장 확장 — 와이파이 문제
   { id: 'p_wifi_ga_tsunagarimasen', kana: 'ワイファイがつながりません', kanji: 'Wi-Fiがつながりません', displayKana: 'ワイファイが、つながりません', korean: '와이파이가 연결이 안 돼요', register: 'productive', tip: '「Wi-Fiがつながりません」— 유심·포켓와이파이가 안 잡힐 때. 기기를 보여주면 직원이 빠르게 확인해줘요' },
   { id: 'p_setsuzoku_houhou_wo_oshiete_kudasai', kana: 'せつぞくほうほうをおしえてください', kanji: '接続方法を教えてください', displayKana: 'せつぞくほうほうを、おしえてください', korean: '연결 방법을 알려주세요', register: 'productive', tip: '「接続方法(せつぞくほうほう)を教(おし)えてください」— 설정이 헷갈릴 때 처음부터 다시 안내받는 표현이에요' },
+
+  // C3 전철 확장 — 전철에 물건을 두고 내렸을 때
+  { id: 'p_densha_ni_kasa_wo_wasuremashita', kana: 'でんしゃにかさをわすれました', kanji: '電車に傘を忘れました', displayKana: 'でんしゃに、かさをわすれました', korean: '전철에 우산을 두고 내렸어요', register: 'productive', tip: '「電車(でんしゃ)に傘(かさ)を忘(わす)れました」— 두고 내린 물건은 傘 대신 かばん(가방)・スマホ 등으로 바꿔 말할 수 있어요. 몇 호차·몇 시 열차인지 함께 말하면 찾기 쉬워요' },
+
+  // C4 호텔 확장 — 예약이 시스템에 안 보일 때
+  { id: 'p_yoyaku_kakunin_meeru_wo_misemasu', kana: 'よやくかくにんメールをみせます', kanji: '予約確認メールを見せます', displayKana: 'よやくかくにんメールを、みせます', korean: '예약 확인 메일을 보여드릴게요', register: 'productive', tip: '「予約確認(よやくかくにん)メールを見(み)せます」— 예약이 시스템에 안 보인다고 할 때, 스마트폰의 예약 확인 메일이나 앱 화면을 보여주면 가장 빠르게 해결돼요' },
+
+  // C5 거리 확장 — 길거리 호객 거절
+  { id: 'p_kyoumi_arimasen', kana: 'きょうみありません', kanji: '興味ありません', korean: '관심 없어요', register: 'productive', tip: '「興味(きょうみ)ありません」— 大丈夫です보다 더 분명하게 거절하는 표현. 호객꾼에게는 걸음을 멈추지 않고 말하는 게 좋아요' },
 ];

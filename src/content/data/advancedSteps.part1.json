@@ -162,6 +162,30 @@
           "feedback": "지금은 막차 시간 확인 단계예요"
         }
       ]
+    },
+    {
+      "situationKo": "역을 나선 뒤 우산을 전철에 두고 내린 걸 깨닫는다 (심화)",
+      "speaker": "나",
+      "choices": [
+        {
+          "text": "전철에 우산을 두고 내렸어요",
+          "phraseId": "p_densha_ni_kasa_wo_wasuremashita",
+          "correct": true,
+          "feedback": "「電車(でんしゃ)に傘(かさ)を忘(わす)れました」— 역무원에게 바로 신고하면 전철역 분실물센터(忘れ物センター)로 연결해줘요"
+        },
+        {
+          "text": "기억해 둘게요",
+          "phraseId": "p_oboete_okimasu",
+          "correct": true,
+          "feedback": "「覚(おぼ)えておきます」— 몇 호차·몇 시 열차였는지 기억해 두면 분실물을 찾기 훨씬 쉬워져요"
+        },
+        {
+          "text": "표 두 장 주세요",
+          "phraseId": "p_kippu_nimai_kudasai",
+          "correct": false,
+          "feedback": "지금은 표를 사는 상황이 아니에요 — 두고 내린 물건부터 신고해요"
+        }
+      ]
     }
   ],
   "C4": [
@@ -221,6 +245,32 @@
           "feedback": "체크인은 이미 끝났어요"
         }
       ]
+    },
+    {
+      "situationKo": "체크인하려는데 직원이 예약 내역이 보이지 않는다고 한다 (심화)",
+      "speaker": "프런트",
+      "recapPromptJa": "恐れ入りますが、ご予約が見当たりません",
+      "recapPromptKo": "죄송하지만 예약이 보이지 않습니다",
+      "choices": [
+        {
+          "text": "예약 확인 메일을 보여드릴게요",
+          "phraseId": "p_yoyaku_kakunin_meeru_wo_misemasu",
+          "correct": true,
+          "feedback": "「予約確認(よやくかくにん)メールを見(み)せます」— 부킹 앱 예약 확인 화면을 보여주면 직원이 빠르게 다시 찾아줘요"
+        },
+        {
+          "text": "예약한 야마다예요",
+          "phraseId": "p_new_yoyaku_namae_desu",
+          "correct": true,
+          "feedback": "예약자 이름을 다시 말해주는 것도 도움이 돼요 — 이름 철자가 다르게 등록됐을 수 있어요"
+        },
+        {
+          "text": "와이파이는 있나요?",
+          "phraseId": "p_wifi_arimasu_ka",
+          "correct": false,
+          "feedback": "지금은 예약부터 확인해야 하는 상황이에요"
+        }
+      ]
     }
   ],
   "C5": [
@@ -265,6 +315,32 @@
           "phraseId": "p_tasukete",
           "correct": false,
           "feedback": "이미 도와주고 있어요. 감사나 사양으로 답해요"
+        }
+      ]
+    },
+    {
+      "situationKo": "번화가를 걷는데 호객꾼이 다가와 술집을 권한다 (심화)",
+      "speaker": "호객꾼",
+      "recapPromptJa": "安くしますよ、いかがですか",
+      "recapPromptKo": "싸게 해드릴게요, 어떠세요?",
+      "choices": [
+        {
+          "text": "이제 괜찮습니다",
+          "phraseId": "p_mou_daijoubu_desu",
+          "correct": true,
+          "feedback": "「もう大丈夫(だいじょうぶ)です」— 걸음을 멈추지 않고 부드럽게 거절하는 표현이에요"
+        },
+        {
+          "text": "관심 없어요",
+          "phraseId": "p_kyoumi_arimasen",
+          "correct": true,
+          "feedback": "「興味(きょうみ)ありません」— 좀 더 분명하게 거절하고 싶을 때 써요"
+        },
+        {
+          "text": "사진 찍어도 돼요?",
+          "phraseId": "p_shashin_ii",
+          "correct": false,
+          "feedback": "지금 상황과 관계없는 질문이에요"
         }
       ]
     }

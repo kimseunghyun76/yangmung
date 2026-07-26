@@ -65,10 +65,6 @@ export function Session({ card, index, total, picked, skipped, onChoose, onIntro
         padding: 'max(14px, env(safe-area-inset-top)) 16px 8px',
         background: 'var(--surface-2)',
       }}>
-        <button onClick={exit} aria-label="나가기" title="나가기" style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'var(--ink)', display: 'flex', alignItems: 'center', padding: 6 }}>
-          <Icon name="back" size={20} />
-        </button>
-        <Dots i={index} total={total} onScene={false} />
         <button
           onClick={onPrev}
           disabled={index === 0 || !onPrev}
@@ -82,6 +78,11 @@ export function Session({ card, index, total, picked, skipped, onChoose, onIntro
           }}
         >
           <Icon name="back" size={16} />
+        </button>
+        <Dots i={index} total={total} onScene={false} />
+        {/* 나가기 — 화면 이동(뒤로가기)과 구분되도록 X 아이콘 + 우측 배치(2026-07-27, 사용성 지적) */}
+        <button onClick={exit} aria-label="나가기" title="나가기" style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'var(--ink)', display: 'flex', alignItems: 'center', padding: 6 }}>
+          <Icon name="cross" size={20} />
         </button>
       </div>
 
@@ -215,11 +216,9 @@ function TipBody({ card, onNext }: { card: Extract<Card, { kind: 'tip' }>; onNex
               )}
               {detail?.commonMistake && <TipDetail label="흔한 실수" text={detail.commonMistake} tone="var(--warn)" />}
               {detail?.action && <TipDetail label="바로 해보기" text={detail.action} tone="var(--ok)" />}
-              {detail?.n5Refs && detail.n5Refs.length > 0 && (
-                <div style={{ marginTop: 10, fontSize: 12, color: 'var(--ink-faint)' }}>
-                  JLPT N5 참고: {detail.n5Refs.join(' · ')}
-                </div>
-              )}
+              {/* n5Refs(JLPT N5 커버리지 태그)는 npm run report:n5 전용 내부 QA 데이터라 사용자 화면엔 노출하지 않는다 —
+                  과거엔 "n5_g_masu" 같은 원시 식별자가 그대로 보여 여행 회화 학습자에게 낯선 전문용어 노이즈였고,
+                  거꾸로 JLPT 준비생에겐 이 앱에 시험 대비 콘텐츠가 있다는 오해를 줬다(2026-07-25 사용성 테스트). */}
               <MascotLine key={`${card.id}:tip`} copyKey="tip" style={{ marginTop: 14 }} />
               <PrimaryAction onClick={onNext} style={{ marginTop: 16 }}>다음</PrimaryAction>
     </>

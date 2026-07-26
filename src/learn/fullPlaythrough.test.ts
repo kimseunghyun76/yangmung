@@ -44,12 +44,13 @@ console.log('=== 레벨 순차 완주(입문→고급) — 모든 단계 통과 
   })());
 }
 
-console.log('\n=== 전체 53개 미션 완전 마스터 시뮬레이션 ===');
+console.log('\n=== 전체 54개 미션 완전 마스터 시뮬레이션 ===');
 let progress: ProgressMap = {};
 let sid = 1;
 {
   const missions = CONTENT.missions.filter((m) => m.id !== 'C0');
-  check('미션 총 개수 54개(C0 제외 53개)', missions.length === 53, `실제 ${missions.length}`);
+  // 2026-07-26: C54(택배 재배달 신청) 신규 추가로 53→54개(C0 제외)로 변경.
+  check('미션 총 개수 55개(C0 제외 54개)', missions.length === 54, `실제 ${missions.length}`);
   let crashed = 0;
   for (const m of missions) {
     const quizCards = cards.filter((c) => c.kind === 'quiz' && c.reviewTarget?.type === 'mission' && String(c.reviewTarget.id) === m.id);

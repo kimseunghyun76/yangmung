@@ -14,6 +14,7 @@ import { selectSessionCards, type ProgressMap, type CardProgress, type SessionCo
 import { reconcileOpenMissions } from './unlocks';
 import { missionDifficultyWindow } from './missionMix';
 import { MODE_PRESETS, type LearnMode } from './settings';
+import { ROUTES } from '../content/routes';
 import { check } from '../test/check';
 
 
@@ -86,6 +87,15 @@ console.log('=== ① tier 분류 무결성 ===');
   check('모든 미션(C0 제외)에 tier 배정', untagged === 0, `미지정 ${untagged}`);
   check('tier1~5 모두 미션 존재', [1, 2, 3, 4, 5].every((t) => perTier[t] > 0), JSON.stringify(perTier));
   check('총 미션 = tier별 합', POOL.length === Object.values(perTier).reduce((a, b) => a + b, 0));
+}
+
+console.log('=== ①-1 ROUTES 경계 — tier1~4는 전부 등록, tier5는 의도적으로 제외 ===');
+{
+  const routedIds = new Set(ROUTES.flatMap((r) => r.ids));
+  const missingLow = POOL.filter((id) => (tierMap.get(id) ?? 1) <= 4 && !routedIds.has(id));
+  const leakedHigh = POOL.filter((id) => (tierMap.get(id) ?? 1) === 5 && routedIds.has(id));
+  check('tier1~4 미션은 모두 ROUTES에 등록됨(등록 누락 방지)', missingLow.length === 0, `누락 ${missingLow.join(',')}`);
+  check('tier5 미션은 ROUTES에 없음(의도된 설계 — routes.ts 주석 참고)', leakedHigh.length === 0, `잘못 포함됨 ${leakedHigh.join(',')}`);
 }
 
 const RUNS = 10;

@@ -25,28 +25,39 @@ import { frictionMissions } from './c31-c40-travel-friction';
 import { advancedMissions } from './c41-c50-advanced';
 import { crisisMissions } from './c51-c52-crisis';
 import { c53 } from './c53-lost-child';
+import { c54 } from './c54-redelivery';
 import advancedPart1 from '../data/advancedSteps.part1.json';
 import advancedPart2 from '../data/advancedSteps.part2.json';
 import advancedPart3 from '../data/advancedSteps.part3.json';
 import advancedPart4 from '../data/advancedSteps.part4.json';
 import advancedPart5 from '../data/advancedSteps.part5.json';
 
-const rawMissions: Mission[] = [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, ...moreMissions, ...frictionMissions, ...advancedMissions, ...crisisMissions, c53];
+const rawMissions: Mission[] = [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, ...moreMissions, ...frictionMissions, ...advancedMissions, ...crisisMissions, c53, c54];
 
-// ── 난이도 단계 (tier) — tier 1~4는 각 10미션, tier 5는 12미션(위기 대응 2개 추가) ──
+// ── 난이도 단계 (tier) — tier 1~3는 각 10미션, tier4는 14미션(위기대응 3+환불 1 재배정 포함), tier5는 8미션 ──
+// (2026-07-25 사용성 테스트 후속: 안전·트러블 콘텐츠가 가장 늦게 열리는 tier5에 몰려 도달 불가였던 문제로
+// C41·C51~53을 tier4로 재배정. src/content/routes.ts도 함께 갱신됨 — missionCoverage.test.ts가 정합성 검증.)
 // tier 1 입문: 생존 동선 (편의점·식당·전철·호텔·길·입국·라멘·카페·빵집·버스)
 // tier 2 기본: 생활 확장 (약국·쇼핑·택시·환전·로커·택배·이자카야·안내소·세탁·축제)
 // tier 3 응용: 문화·체험 (스시·신사·온천·료칸·신칸센·회전초밥·시착·우산·뷔페·파스타)
-// tier 4 고급: 트러블·교섭 (렌터카·병원·분실·긴급·유심·방교체·티켓교환·수하물·스시추가·면세계산)
+// tier 4 고급: 트러블·교섭 (렌터카·병원·분실·긴급·유심·방교체·티켓교환·수하물·스시추가·면세계산·환불교환·지진재난·병원접수·미아찾기)
 const TIER: Record<string, 1 | 2 | 3 | 4 | 5> = {
   C1: 1, C2: 1, C3: 1, C4: 1, C5: 1, C9: 1, C13: 1, C14: 1, C15: 1, C22: 1,
   C6: 2, C7: 2, C8: 2, C10: 2, C11: 2, C12: 2, C16: 2, C18: 2, C29: 2, C30: 2,
   C17: 3, C19: 3, C20: 3, C21: 3, C23: 3, C31: 3, C32: 3, C33: 3, C37: 3, C39: 3,
   C24: 4, C25: 4, C26: 4, C27: 4, C28: 4, C34: 4, C35: 4, C36: 4, C38: 4, C40: 4,
-  // tier 5 고급심화: 마찰 교섭·복합 상황 (환불·자판기·ATM·복합기·픽업·스포츠·안내소·약국·오마카세·길잃음)
-  C41: 5, C42: 5, C43: 5, C44: 5, C45: 5, C46: 5, C47: 5, C48: 5, C49: 5, C50: 5,
-  // tier 5 위기 대응: 재검수에서 확인된 공백 보강 (지진·재난 대응, 병원 접수, 미아 찾기)
-  C51: 5, C52: 5, C53: 5,
+  // 위기 대응(지진·재난 대응, 병원 접수, 미아 찾기)은 tier4로 배정 — 트러블·교섭(C25~27)과 같은 급으로 묶어
+  // "긴급 도움" 화면(항상 접근 가능, src/views/Emergency.tsx)뿐 아니라 정상 진행(중급 floor=1)에서도
+  // tier5보다 훨씬 빨리 자연 도달하게 한다. 2026-07-25 사용성 테스트에서 tier5(=ROUTES 밖, 가장 늦게 열림)에
+  // 있던 게 안전 콘텐츠 도달 불가(S0)의 핵심 원인으로 지목되어 재배정.
+  C51: 4, C52: 4, C53: 4,
+  // 환불·교환(C41)도 같은 이유로 tier4로 재배정 — "여행 경험은 있지만 발화가 어려운" 사용자(승급 시험 없이
+  // 중급 직행 가능)에게 필요한 트러블 대응 콘텐츠가 tier5(=가장 늦게 열림)에 있던 문제(persona-04 후속 과제).
+  C41: 4,
+  // 택배 재배달 신청(C54, 신규) — 장기체류자 후속 과제(persona-06). C12(발송)의 확장이라 같은 tier·"문제 해결" 루트에 배정.
+  C54: 4,
+  // tier 5 고급심화: 마찰 교섭·복합 상황 (자판기·ATM·복합기·픽업·스포츠·안내소·약국·오마카세·길잃음) — 환불(C41)은 위에서 tier4로 이동
+  C42: 5, C43: 5, C44: 5, C45: 5, C46: 5, C47: 5, C48: 5, C49: 5, C50: 5,
 };
 
 // ── 응용·종합 스텝 (4·5스텝) — JSON으로 관리되는 일본어 기반 콘텐츠 ────

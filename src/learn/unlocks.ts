@@ -54,7 +54,10 @@ function pick<T>(arr: T[]): T { return arr[Math.floor(Math.random() * arr.length
 // (핵심: 창 밖으로 밀려난 지난 tier 미션은 목표 계산에서 제외해야, 창이 올라갔을 때 새 tier 미션이 열린다.
 //  전엔 창 밖 성숙 미션까지 세어 목표가 이미 충족→새 미션이 안 열려 진행이 막히는 버그가 있었다.)
 // 창 밖 기존 open 미션은 복습용으로 보존한다(닫지 않음).
-export function reconcileOpenMissions(open: string[], progress: ProgressMap, tierWindow?: [number, number], floorTier = 1): string[] {
+// preferredIds(선택): 사용자가 미션 지도에서 고른 "우선 학습" 루트의 미션 id 집합.
+// 창 안 후보 중 preferredIds에 속한 것이 있으면 그중에서만 추첨하고, 없을 때만 창 전체로 폴백한다
+// (난이도 창 게이팅은 그대로 유지 — 선호는 같은 난이도 안에서의 순서만 바꾼다).
+export function reconcileOpenMissions(open: string[], progress: ProgressMap, tierWindow?: [number, number], floorTier = 1, preferredIds?: Set<string>): string[] {
   const pool = mainMissions();
   const tierOf = (id: string) => missionTier.get(id) ?? 1;
   const inWin = (id: string) => !tierWindow || (tierOf(id) >= tierWindow[0] && tierOf(id) <= tierWindow[1]);
@@ -72,7 +75,8 @@ export function reconcileOpenMissions(open: string[], progress: ProgressMap, tie
   while (result.filter(inWin).length < target && guard++ < pool.length) {
     const closedInWin = pool.filter((id) => !result.includes(id) && inWin(id));
     if (closedInWin.length === 0) break;
-    result.push(pick(closedInWin)); // 창 안에서 무작위 추첨
+    const preferredClosed = preferredIds ? closedInWin.filter((id) => preferredIds.has(id)) : [];
+    result.push(pick(preferredClosed.length > 0 ? preferredClosed : closedInWin)); // 선호 루트 우선, 없으면 창 안 무작위
   }
   // 창 안 후보가 아예 없는 막다른 창(예: 존재하지 않는 tier)에서도 최소 1개는 보장.
   if (result.length === 0) result = [pick(narrowToWindow(pool, tierWindow, floorTier))];

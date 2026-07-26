@@ -1,0 +1,50 @@
+{
+  "style": "session-variant semi-realistic anime illustration matching public/scenes/session-variants/C1..C50 (human characters, NOT the Yang/Mung mascot chibi style used elsewhere in this repo — see docs/asset-gaps/README.md for the distinction). 16:9-ish landscape, warm lighting, no text overlay needed (UI adds its own text).",
+  "note": "File names are fixed by src/views/scene.ts mangaBackdropPool() grouping logic — all four missions below fall into the 'street' bucket (their place strings aren't in SHOP_PLACES/RESTAURANT_PLACES), so each mission needs exactly these 3 file names. The CONTENT of each image should depict the real scenario below, not generic street imagery — only the filename is constrained, not the subject matter.",
+  "missions": [
+    {
+      "id": "C51",
+      "place": "실내·길거리",
+      "scenario": "지진·재난 대응 (earthquake / disaster response)",
+      "sceneNotes": "실내에서 지진이 발생해 몸을 보호하는 순간, 또는 대피소로 이동하는 길거리 장면. 공황이 아니라 침착하게 대응하는 톤으로.",
+      "files": [
+        "public/scenes/session-variants/C51/solo-street-03.webp",
+        "public/scenes/session-variants/C51/ff-street-03.webp",
+        "public/scenes/session-variants/C51/mf-street-03.webp"
+      ]
+    },
+    {
+      "id": "C52",
+      "place": "병원",
+      "scenario": "병원 접수 (hospital reception desk)",
+      "sceneNotes": "외국인 환자가 접수처에서 문진표를 작성하거나 직원과 대화하는 장면.",
+      "files": [
+        "public/scenes/session-variants/C52/solo-street-03.webp",
+        "public/scenes/session-variants/C52/ff-street-03.webp",
+        "public/scenes/session-variants/C52/mf-street-03.webp"
+      ]
+    },
+    {
+      "id": "C53",
+      "place": "쇼핑몰·역",
+      "scenario": "미아 찾기 (lost child in a mall/station)",
+      "sceneNotes": "쇼핑몰 또는 역 안내데스크에서 아이를 잃어버린 보호자가 직원에게 도움을 요청하는 장면. 긴박하지만 침착한 톤.",
+      "files": [
+        "public/scenes/session-variants/C53/solo-street-03.webp",
+        "public/scenes/session-variants/C53/ff-street-03.webp",
+        "public/scenes/session-variants/C53/mf-street-03.webp"
+      ]
+    },
+    {
+      "id": "C54",
+      "place": "택배",
+      "scenario": "택배 재배달 신청 (requesting parcel redelivery)",
+      "sceneNotes": "편의점 계산대 또는 전화로 택배 재배달을 요청하는 장면 — 기존 C12(택배 발송) 이미지와 톤은 맞추되 '수령/재배달' 맥락이 드러나게.",
+      "files": [
+        "public/scenes/session-variants/C54/solo-street-03.webp",
+        "public/scenes/session-variants/C54/ff-street-03.webp",
+        "public/scenes/session-variants/C54/mf-street-03.webp"
+      ]
+    }
+  ]
+}

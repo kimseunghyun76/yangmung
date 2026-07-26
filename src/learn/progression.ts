@@ -30,6 +30,14 @@ export interface ProgStage {
 // 가나를 넘어서는 산출 난이도라 중급으로, 받아쓰기(청해+표기 동시 요구)도 중급에 모았다.
 // 어휘 커리큘럼은 더 이상 하나의 단계가 아니라(주제 그룹이 서로 선후행 관계가 없어)
 // 기본 레벨 안에 배너로 펼쳐 자유 연습으로 노출한다(Practice.tsx의 VOCAB_GROUPS 참고).
+//
+// 2026-07-27 추가: 기본 레벨의 첫 단계가 "간판·메뉴"(표지판 읽기) 하나뿐이라, 수준진단으로
+// 입문을 건너뛰고 곧장 기본으로 배치된 사용자에게는 첫 학습 경험이 딱딱한 읽기 드릴로만
+// 시작돼 흥미가 떨어진다는 사용성 지적이 있었다(입문의 "기본 인사"를 못 해본 채로 넘어옴).
+// id는 입문과 똑같이 'greetings'를 재사용하지만 stageKey가 레벨을 접두어로 붙이므로
+// ("beginner:greetings" vs "default:greetings") 진척은 완전히 분리된다 — 입문→기본을 순서대로
+// 밟아온 사용자는 이미 배운 내용이라 이 단계를 빠르게 복습 삼아 통과하고, 수준진단으로 기본에
+// 바로 배치된 사용자는 이 단계에서 처음으로 친근한 인사말을 접한 뒤 간판·메뉴로 넘어간다.
 export const LEVEL_STAGES: Record<CoreLevel, ProgStage[]> = {
   beginner: [
     { id: 'hiragana', label: '히라가나', sub: '표 학습 → 읽기 퀴즈', practice: 'kana', script: 'hiragana' },
@@ -37,6 +45,7 @@ export const LEVEL_STAGES: Record<CoreLevel, ProgStage[]> = {
     { id: 'greetings', label: '기본 인사', sub: '첫 만남·감사·부탁', practice: 'greetings' },
   ],
   default: [
+    { id: 'greetings', label: '기본 인사', sub: '가볍게 몸풀기 — 첫 만남·감사·부탁', practice: 'greetings' },
     { id: 'signs', label: '간판·메뉴', sub: '역·식당·주의 표지 읽기', practice: 'signs' },
   ],
   express: [

@@ -100,6 +100,20 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
       </div>
       <p style={{ margin: '6px 2px 0', fontSize: 11.5, color: 'var(--ink-faint)' }}>일정 길이에 맞는 "일정별 팁"을 홈 화면에 보여줘요.</p>
 
+      <p style={{ ...head, marginTop: 18 }}><Icon name="target" size={16} /> 출국일</p>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <input
+          type="date"
+          value={settings.travelDate ?? ''}
+          onChange={(e) => onChange({ ...settings, travelDate: e.target.value || undefined })}
+          style={{ ...gbtn, flex: 1, textAlign: 'left', colorScheme: 'dark light' }}
+        />
+        {settings.travelDate && (
+          <button className="ym-press" style={{ ...gbtn, flex: '0 0 auto' }} onClick={() => onChange({ ...settings, travelDate: undefined })}>지우기</button>
+        )}
+      </div>
+      <p style={{ margin: '6px 2px 0', fontSize: 11.5, color: 'var(--ink-faint)' }}>설정하면 홈 화면에 출국까지 남은 일수(D-day)를 보여줘요.</p>
+
       <p style={{ ...head, marginTop: 18 }}><Icon name="discover" size={16} /> 발음 보조 (로마자)</p>
       <div style={{ display: 'flex', gap: 8 }}>
         {AID_OPTIONS.map((o) => (

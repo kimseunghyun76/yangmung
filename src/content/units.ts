@@ -114,8 +114,8 @@ export const units: Unit[] = [
   },
   {
     id: 'u_b1_delivery_core', track: 'lang', stage: 'B1', mode: 'action',
-    canDo: '사용자는 편의점에서 물건을 부치겠다고 말하고 요금을 물을 수 있다',
-    newPhraseIds: ['p_okuritai', 'p_takkyubin', 'p_maebarai_de', 'p_chakubarai_de'],
+    canDo: '사용자는 편의점에서 물건을 부치겠다고 말하고 요금을 물으며, 부재중 택배의 재배달을 요청하고 희망 날짜·시간대를 말할 수 있다',
+    newPhraseIds: ['p_okuritai', 'p_takkyubin', 'p_maebarai_de', 'p_chakubarai_de', 'p_saihaitatsu_onegai', 'p_ashita_gogo_de', 'p_niji_kara_yoji_made', 'p_saihaitatsu_arigatou'],
   },
   {
     id: 'u_b1_ramen_core', track: 'lang', stage: 'B1', mode: 'action',

@@ -27,7 +27,8 @@ import { selectDialogueDeck, selectSongDeck } from './learn/entertainmentCards';
 import { buildPlacementCards } from './learn/placementCards';
 import { clearAllYangmung } from './learn/backup';
 import { clearMirror } from './learn/idbMirror';
-import { loadSettings, MODE_PRESETS, saveSettings, sceneSentenceLevelForMode, TRAVEL_PURPOSE_TAG, type Settings, type TravelPurpose } from './learn/settings';
+import { daysUntilTravel, loadSettings, MODE_PRESETS, saveSettings, sceneSentenceLevelForMode, TRAVEL_PURPOSE_TAG, type Settings, type TravelPurpose } from './learn/settings';
+import { ROUTES } from './content/routes';
 import { sessionGoalText } from './views/goal';
 import { setListenRate } from './tts';
 import { WRAP } from './ui/styles';
@@ -43,6 +44,7 @@ const Intro = lazy(() => import('./views/Intro').then((m) => ({ default: m.Intro
 const Session = lazy(() => import('./views/Session').then((m) => ({ default: m.Session })));
 const Done = lazy(() => import('./views/Done').then((m) => ({ default: m.Done })));
 const MapView = lazy(() => import('./views/Map').then((m) => ({ default: m.Map })));
+const Emergency = lazy(() => import('./views/Emergency').then((m) => ({ default: m.Emergency })));
 const Practice = lazy(() => import('./views/Practice').then((m) => ({ default: m.Practice })));
 const GachaPage = lazy(() => import('./views/GachaPage').then((m) => ({ default: m.GachaPage })));
 const Flash = lazy(() => import('./views/Flash').then((m) => ({ default: m.Flash })));
@@ -95,11 +97,28 @@ export function App() {
   const lastPracticeRef = useRef<(() => void) | null>(null);                // Done "다시 한번 학습" — 방금 시작한 빠른 연습 재현
   const [seenKana, setSeenKana] = useState<SeenKana>(() => loadSeenKana());
   const [discovered, setDiscovered] = useState<string[]>(() => loadDiscovered());
-  // 열린 미션(랜덤 순차 오픈) — 최초 1개 랜덤(단, 실력 tier 범위 우선), 앞 미션 학습할수록 다음 미션 랜덤 추첨 오픈.
+  // 우선 학습 루트 — 사용자가 미션 지도에서 명시적으로 고르면 그 루트가, 안 골랐고(undefined) 출국일이
+  // 임박(D-14 이하)하면 "첫 여행 생존"+"문제 해결"(생존 표현)이 자동으로 새 미션 추첨 시 우선된다.
+  // 'random'은 "무작위로 유지"를 명시적으로 고른 것 — 임박해도 자동 추천을 덮어써 무작위를 유지한다.
+  const daysLeft = daysUntilTravel(settings.travelDate);
+  const autoRouteLabels = daysLeft !== null && daysLeft <= 14 ? ['첫 여행 생존', '문제 해결'] : [];
+  const activeRouteLabels =
+    settings.preferredRouteLabel === undefined ? autoRouteLabels
+    : settings.preferredRouteLabel === 'random' ? []
+    : [settings.preferredRouteLabel];
+  const preferredRouteKey = activeRouteLabels.slice().sort().join('|');
+  const preferredMissionIds = useMemo(() => {
+    if (!preferredRouteKey) return undefined;
+    const ids = new Set<string>();
+    for (const r of ROUTES) if (activeRouteLabels.includes(r.label)) for (const id of r.ids) ids.add(id);
+    return ids;
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- activeRouteLabels는 preferredRouteKey와 같은 렌더에서 계산되어 항상 동기화됨
+  }, [preferredRouteKey]);
+  // 열린 미션(랜덤 순차 오픈) — 최초 1개 랜덤(단, 실력 tier 범위 우선, 선호 루트가 있으면 그 루트 우선), 앞 미션 학습할수록 다음 미션 추첨 오픈.
   // 초기값 계산 시점엔 아직 missionWindow(useMemo, 아래 선언)를 못 쓰므로 동일 로직을 직접 호출.
   const [openMissions, setOpenMissions] = useState<string[]>(() => {
     const initProgress = loadProgress();
-    const o = reconcileOpenMissions(loadOpenMissions(), initProgress, missionDifficultyWindow(allCards, initProgress, missionFloor), missionFloor);
+    const o = reconcileOpenMissions(loadOpenMissions(), initProgress, missionDifficultyWindow(allCards, initProgress, missionFloor), missionFloor, preferredMissionIds);
     saveOpenMissions(o);
     return o;
   });
@@ -130,7 +149,8 @@ export function App() {
     const prevLevel = coreLevelOf(settings.mode);
     selectMode(mode);
     const nx = coreLevelOf(mode);
-    if (nx !== prevLevel) setLevelGuide(nx);
+    // 레벨이 바뀌면 설정 모달을 닫고 레벨 가이드를 띄운다 — 안 닫으면 두 모달이 겹쳐 쌓인다.
+    if (nx !== prevLevel) { setShowSettings(false); setLevelGuide(nx); }
   }
 
   // ── 세션 카드 상태머신 (진행·채점·타이머·TTS) — src/app/useSessionFlow ──
@@ -247,17 +267,17 @@ export function App() {
   useEffect(() => { document.documentElement.dataset.theme = settings.theme; }, [settings.theme]);
   // 듣기 속도 — 설정값을 tts 전역에 반영 (마운트 시 포함)
   useEffect(() => { setListenRate(settings.listenRate); }, [settings.listenRate]);
-  // 미션 오픈 — 진척·난이도창이 바뀔 때마다 보충(앞 미션을 충분히 학습하면 다음 미션 랜덤 오픈).
+  // 미션 오픈 — 진척·난이도창·선호 루트가 바뀔 때마다 보충(앞 미션을 충분히 학습하면 다음 미션 오픈).
   // missionWindow도 의존 — 레벨 변경(예: 고급 배치)으로 하한이 오르면 하한 미만 미시작 미션을 상위로 교체.
   useEffect(() => {
     setOpenMissions((prev) => {
-      const next = reconcileOpenMissions(prev, progress, missionWindow, missionFloor);
+      const next = reconcileOpenMissions(prev, progress, missionWindow, missionFloor, preferredMissionIds);
       const same = next.length === prev.length && next.every((id) => prev.includes(id));
       if (same) return prev;
       saveOpenMissions(next);
       return next;
     });
-  }, [progress, missionWindow, missionFloor]);
+  }, [progress, missionWindow, missionFloor, preferredMissionIds]);
 
   // ── 세션 시작 액션 ─────────────────────────────────
   // 발견 카드: 배운 가나로만 된(2자 이상) 아직 축하 안 한 표현 1개 → 세션 끝 보상으로
@@ -352,17 +372,25 @@ export function App() {
     }
   }
   // 승급 시험 — 현재 레벨 내용에서 20문항, ≥90% 통과 시 다음 레벨로.
+  // 2026-07-26 버그 수정: 입문 시험이 pair:(발음 구분)·dictation korean(작문) 카드를 출제하고 있었는데,
+  // 이 둘은 2026-07-06 레벨 재편(LEVEL_STAGES 참고)으로 중급(express)의 학습 단계로 이동한 지 오래라
+  // 입문 사용자는 애초에 배운 적이 없는 내용이었다(사용자 리포트로 발견). 입문의 실제 커리큘럼
+  // (히라가나·가타카나·기본 인사)에 맞춰 가나 + 기본 인사(vocab:greetings:)만 출제하도록 수정.
   function promotionPool(level: typeof coreLevel): Card[] {
     if (level === 'beginner') return allCards.filter((c) =>
       (c.kind === 'quiz' && /^kana:.*:(read|listen)$/.test(c.id))
-      || (c.kind === 'quiz' && c.id.startsWith('pair:'))
-      || (c.kind === 'dictation' && c.promptKind === 'korean')); // 작문만 — 받아쓰기는 고급으로 이동
+      || (c.kind === 'quiz' && greetingScope(c.id)));
     if (level === 'default') return allCards.filter((c) =>
       c.kind === 'quiz' && (c.id.startsWith('vocab:') || c.id.startsWith('sign:') || c.id.startsWith('basic:')) && !c.id.includes(':study:'));
-    // express는 이제 동사 형태(verbs)만 남았는데, verbs는 자체 퀴즈 시스템이라 세션 카드로 못 씀 —
-    // 대신 이 레벨에서 실전 검증 의미가 통하는 초중급 미션 회화(tier 1~2)로 승급 시험을 구성.
+    // 2026-07-26 버그 수정(위 입문과 동일 원인): 이 분기의 기존 주석은 "express는 이제 동사 형태(verbs)만
+    // 남았다"고 했으나, 2026-07-06 레벨 재편 이후 LEVEL_STAGES.express는 실제로 발음 구분(pair:)·
+    // 한→일 작문(dictation korean)·동사 형태·받아쓰기(dictation) 4단계다 — 주석이 최신 구조를 반영하지
+    // 못한 채 tier1~2 미션 회화로 시험을 구성하고 있어, 중급 사용자가 실제로 순서대로 통과해 온
+    // 4단계 내용은 전혀 출제되지 않았다. verbs는 여전히 자체 퀴즈 시스템이라 세션 카드로 못 쓰므로
+    // 제외하고, 나머지 3단계(발음 구분·작문·받아쓰기) 내용으로 시험을 구성한다.
     if (level === 'express') return allCards.filter((c) =>
-      c.kind === 'quiz' && c.reviewTarget?.type === 'mission' && (c.tier ?? 1) <= 2);
+      (c.kind === 'quiz' && c.id.startsWith('pair:'))
+      || c.kind === 'dictation'); // dictation은 promptKind로 작문/받아쓰기 둘 다 포함(둘 다 express 단계)
     return [];
   }
   function startPromotionQuiz(level: CoreLevel = coreLevel) {
@@ -778,12 +806,23 @@ export function App() {
     setPlacementCards(cards);
     navigate('placement');
   }
+  function markPlacementDone() {
+    try { localStorage.setItem('yangmung:placement:v1', '1'); } catch { /* noop */ }
+  }
   function finishPlacement(mode: Settings['mode'], markKana: boolean, overrides?: { readingAid?: Settings['readingAid'] }) {
     // 프로필 차등: 듣기 강·읽기 약(애니파)은 중급이어도 발음 보조를 유지(프리셋 off를 덮어씀)
     const p = MODE_PRESETS[mode];
     updateSettings({ ...settings, mode, readingAid: overrides?.readingAid ?? p.readingAid, choiceMode: p.choiceMode });
     if (markKana) markAllKanaKnown();
-    try { localStorage.setItem('yangmung:placement:v1', '1'); } catch { /* noop */ }
+    markPlacementDone();
+    navigate('home');
+  }
+  // 진단은 끝까지 마쳤지만 추천 난이도를 적용하지 않고 "나중에/직접 고르기"를 고른 경우 —
+  // 설정은 그대로 두되 진단 완료만 기록해, 홈의 진단 유도 배너가 다시 뜨지 않게 한다
+  // (2026-07-27 사용성 지적: 진단을 끝까지 했는데도 배너가 계속 보임 — 이전엔 이 경로가
+  // 진단을 아예 안 한 것과 같은 onSkip으로 처리돼 있었다).
+  function finishPlacementWithoutApplying() {
+    markPlacementDone();
     navigate('home');
   }
   // 설정 일괄: 가나(히라+가타) 전부 안다고 표시 — 거주자가 가나 트랙 건너뛰기
@@ -811,7 +850,7 @@ export function App() {
   }
 
   // 미션 오픈만 초기화(진척은 유지) — 설정의 개발 도구. 다시 랜덤 1개부터.
-  function resetUnlocks() { resetOpenMissions(); setOpenMissions(reconcileOpenMissions([], progress, missionWindow, missionFloor)); }
+  function resetUnlocks() { resetOpenMissions(); setOpenMissions(reconcileOpenMissions([], progress, missionWindow, missionFloor, preferredMissionIds)); }
   // 개발용: 모든 미션 장면에 가챠 카드 30장씩 채움(테스트 편의).
   function fillDevCardsAll() {
     const ids = CONTENT.missions.filter((m) => m.id !== 'C0').map((m) => m.id);
@@ -825,6 +864,7 @@ export function App() {
     onOpenGuide: () => setShowGuide(true),
     onOpenSettings: () => setShowSettings(true),
     onOpenTips: () => { setTipsQuery(''); navigate('tips'); },
+    onOpenEmergency: () => navigate('emergency'),
     theme: settings.theme,
     onToggleTheme: toggleTheme,
   };
@@ -886,7 +926,13 @@ export function App() {
       );
     }
     if (view === 'map') {
-      return <MapView nav={{ ...nav, current: 'map' }} allCards={allCards} progress={progress} openMissions={visibleOpenMissions} missionsLocked={missionsLocked} devUnlockAll={!!settings.devUnlockAll} onPracticeScene={startSceneSession} onBack={() => goBack('home')} />;
+      return <MapView nav={{ ...nav, current: 'map' }} allCards={allCards} progress={progress} openMissions={visibleOpenMissions} missionsLocked={missionsLocked} devUnlockAll={!!settings.devUnlockAll}
+        preferredRouteLabel={settings.preferredRouteLabel} autoSuggestedLabels={settings.preferredRouteLabel === undefined ? autoRouteLabels : []}
+        onSetPreferredRoute={(label) => updateSettings({ ...settings, preferredRouteLabel: label })}
+        onPracticeScene={startSceneSession} onBack={() => goBack('home')} />;
+    }
+    if (view === 'emergency') {
+      return <Emergency nav={{ ...nav, current: 'emergency' }} onPracticeScene={startSceneSession} onBack={() => goBack('home')} />;
     }
     if (view === 'review') {
       return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} openMissions={visibleOpenMissions} devUnlockAll={!!settings.devUnlockAll} onStartReview={startReviewSession} onPracticeScene={startSceneSession} onStartWeakKanaReview={startWeakKanaReview} onBack={() => goBack('home')} />;
@@ -899,7 +945,7 @@ export function App() {
       return <Flash cards={flashCards} unlockedSceneIds={unlockedSceneIds} onExit={() => goBack('home')} onReplay={(mode, count) => startFlashSession(mode, count)} />;
     }
     if (view === 'placement') {
-      return <Placement cards={placementCards} onDone={finishPlacement} onSkip={() => navigate('home')} />;
+      return <Placement cards={placementCards} onDone={finishPlacement} onSkip={() => navigate('home')} onFinishWithoutApplying={finishPlacementWithoutApplying} />;
     }
     if (view === 'kana') {
       return (
@@ -1006,6 +1052,7 @@ export function App() {
           onPracticePairs={startPairSession}
           onPracticeWrite={startKanaWrite}
           onPracticeVerbs={() => navigate('verbs')}
+          onOpenVocabGroups={() => navigate('practice')}
           onHome={() => navigate('home')}
         />
       );
@@ -1052,12 +1099,13 @@ export function App() {
         openMissions={visibleOpenMissions} missionsLocked={missionsLocked}
         diagnosis={diag}
         modeLabel={MODE_PRESETS[settings.mode].label}
-        onStart={startSession} onPracticeScene={startSceneSession} onPracticeFlash={startFlashSession} onPracticeWrite={startKanaWrite} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
+        onStart={startSession} onPracticeScene={startSceneSession} onPracticeFlash={startFlashSession} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
         coreLevel={coreLevel} progression={progression} devUnlockAll={!!settings.devUnlockAll} onStartStage={startStage} onStartPromotion={startPromotionQuiz}
         onOpenBasics={() => navigate('vocabTable')} onStartVocabGroup={startVocabSession}
         travelPurpose={settings.travelPurpose}
         onSetTravelPurpose={(p) => updateSettings({ ...settings, travelPurpose: p })}
         onOpenTipsForPurpose={openTipsForPurpose}
+        travelDate={settings.travelDate}
       />
     );
   }

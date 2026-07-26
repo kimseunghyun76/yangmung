@@ -91,13 +91,17 @@ interface Props {
   onPracticePairs?: () => void;
   onPracticeWrite?: () => void;
   onPracticeVerbs?: () => void;
+  /** 기본 레벨은 스테이지가 "간판·메뉴" 하나뿐이라, 통과 직후 승급 시험 배너만 뜨고
+   * 실제로 존재하는 다음 학습(주제별 어휘)으로 가는 길이 안 보이는 문제(2026-07-27 사용성 지적)의 해결책 —
+   * 학습 탭(주제별 어휘가 개별 배너로 있는 곳)으로 보낸다. */
+  onOpenVocabGroups?: () => void;
   onHome: () => void;
 }
 
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place
   ?? CONTENT.missions.find((m) => m.id === id)?.scenario ?? id;
 
-export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, isQuickPractice = false, coreLevel, progression, devUnlockAll = false, promotionResult, onOpenLevelGuide, onRetryPromotion, onStartPromotion, onRetryWeak, onRetrySame, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onPracticeVocab, onPracticeGreetings, onPracticeKanaHiragana, onPracticeKanaKatakana, onPracticePairs, onPracticeWrite, onPracticeVerbs, onHome }: Props) {
+export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, isQuickPractice = false, coreLevel, progression, devUnlockAll = false, promotionResult, onOpenLevelGuide, onRetryPromotion, onStartPromotion, onRetryWeak, onRetrySame, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onPracticeVocab, onPracticeGreetings, onPracticeKanaHiragana, onPracticeKanaKatakana, onPracticePairs, onPracticeWrite, onPracticeVerbs, onOpenVocabGroups, onHome }: Props) {
   // 훅은 이 아래 이른 반환(promotionResult)과 무관하게 항상 같은 순서로 호출돼야 한다(rules-of-hooks).
   const learningStats = useLearningStats(loadCollection());
   // 승급 시험이었으면 일반 결과 화면 대신 전용 합격/불합격 화면 — 캐릭터가 목적·결과·다음 행동을 설명한다.
@@ -114,6 +118,13 @@ export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, pro
         onOpenLevelGuide={() => onOpenLevelGuide?.(promotionResult.toLevel)}
         onRetry={() => onRetryPromotion?.(promotionResult.fromLevel)}
         onHome={onHome}
+        onPracticeGreetings={onPracticeGreetings}
+        onPracticeKanaHiragana={onPracticeKanaHiragana}
+        onPracticePairs={onPracticePairs}
+        onCompose={onCompose}
+        onDictation={onDictation}
+        onPracticeVocab={onPracticeVocab}
+        onSigns={onSigns}
       />
     );
   }
@@ -160,6 +171,19 @@ export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, pro
     badge: '승급',
     onClick: () => onStartPromotion(coreLevel),
     preferred: true,
+  } : null;
+  // 기본 레벨은 스테이지가 "간판·메뉴" 하나뿐이라, 통과 직후 승급 시험 배너만 뜨고 실제로 존재하는
+  // 다음 학습(주제별 어휘: 숫자·신체·운동·동물 등, 학습 탭에 이미 배너로 있음)으로 가는 길이 안 보였다
+  // (2026-07-27 사용성 지적). 승급 시험을 대체하지 않고 나란히 보여줘, "이 레벨엔 더 배울 게 없다"는
+  // 인상을 주지 않는다.
+  const vocabGroupsAction: NextAction | null = allStagesComplete && coreLevel === 'default' && onOpenVocabGroups ? {
+    section: 'guide',
+    icon: 'kana',
+    accent: 'var(--ok)',
+    title: '어휘 주제 계속 학습하기',
+    sub: '숫자·신체·운동·동물 등 학습 탭의 다른 주제도 있어요',
+    badge: '어휘',
+    onClick: onOpenVocabGroups,
   } : null;
   const quickPracticeActions: NextAction[] = [
     // 방금 한 연습을 처음부터 다시 — 항상 맨 앞(가장 예상되는 다음 행동)
@@ -230,8 +254,11 @@ export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, pro
   // 반대로 "오답과 복습" + 미션 다음 단계 가이드만(다른 연습 목록 X) — 서로의 다음 행동을 섞지 않는다.
   const actionSections = buildActionSections(CORE_LEVEL_LABEL[coreLevel], {
     recovery: weakActions,
-    guide: isQuickPractice ? [] : [...(promotionAction ? [promotionAction] : []), ...levelGuideActions],
-    quick: isQuickPractice ? [...(promotionAction ? [promotionAction] : []), ...quickPracticeActions] : [],
+    guide: isQuickPractice ? [] : [...(promotionAction ? [promotionAction] : []), ...(vocabGroupsAction ? [vocabGroupsAction] : []), ...levelGuideActions],
+    // 레벨 단계(간판·메뉴 등)는 실제로 항상 practice:true로 시작돼(App.tsx의 begin*Session) isQuickPractice가
+    // 늘 true다 — 그래서 vocabGroupsAction은 guide뿐 아니라 quick 배열에도 넣어야 실제로 이 화면에 뜬다
+    // (guide에만 있었다면 이 시나리오에선 죽은 코드였다, 2026-07-27 브라우저 검증 중 발견).
+    quick: isQuickPractice ? [...(promotionAction ? [promotionAction] : []), ...(vocabGroupsAction ? [vocabGroupsAction] : []), ...quickPracticeActions] : [],
     next: isQuickPractice ? [] : [nextSceneAction, ...reinforcementActions].filter((action): action is NextAction => !!action),
   });
 

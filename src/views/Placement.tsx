@@ -13,6 +13,10 @@ interface Props {
   cards: Card[];
   onDone: (mode: LearnMode, markKanaKnown: boolean, overrides?: { readingAid?: ReadingAidMode }) => void;
   onSkip: () => void;
+  /** 결과 화면에서 "나중에/직접 고르기"를 눌렀을 때 — 진단은 끝까지 마쳤으므로(onSkip과 달리)
+   * 추천 난이도만 적용하지 않을 뿐, "진단 완료" 자체는 기록해야 홈의 진단 유도 배너가
+   * 다시 뜨지 않는다(2026-07-27 사용성 지적: 진단을 다 하고도 배너가 계속 보임). */
+  onFinishWithoutApplying: () => void;
 }
 
 // 3축: 읽기(가나 6문) / 듣기(표현 5문) / 상황(장면 5문) = 총 16문항.
@@ -124,7 +128,7 @@ export function recommend(read: number, listen: number, situation: number): Reco
   };
 }
 
-export function Placement({ cards, onDone, onSkip }: Props) {
+export function Placement({ cards, onDone, onSkip, onFinishWithoutApplying }: Props) {
   const [idx, setIdx] = useState(0);
   const [hits, setHits] = useState<Record<SkillAxis, { ok: number; total: number }>>({
     read: { ok: 0, total: 0 },
@@ -190,7 +194,7 @@ export function Placement({ cards, onDone, onSkip }: Props) {
           </div>
           <h1 style={{ margin: '16px 0 0', fontSize: 24 }}>진단 결과</h1>
           <p style={{ margin: '6px 0 0', fontSize: 15, fontWeight: 800, color: 'var(--accent)' }}>{r.profile}</p>
-          <p style={{ margin: '4px 0 0', fontSize: 13, color: 'var(--ink-faint)', fontWeight: 700 }}>{totalOk} / {totalN} 정답</p>
+          <p style={{ margin: '4px 0 0', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>{totalOk} / {totalN} 정답</p>
 
           {/* 3축 스킬 바 */}
           <div style={{ marginTop: 18, display: 'flex', flexDirection: 'column', gap: 12, textAlign: 'left' }}>
@@ -219,7 +223,7 @@ export function Placement({ cards, onDone, onSkip }: Props) {
 
         <div className="ym-rise" style={{ animationDelay: '.08s', marginTop: 22, display: 'flex', flexDirection: 'column', gap: 10 }}>
           <PrimaryAction onClick={apply}><Icon name="check" size={18} /> 이 난이도로 시작</PrimaryAction>
-          <button className="ym-press" onClick={onSkip} style={ghostBtn}>나중에 / 직접 고르기</button>
+          <button className="ym-press" onClick={onFinishWithoutApplying} style={ghostBtn}>나중에 / 직접 고르기</button>
           <p style={{ fontSize: 12, color: 'var(--ink-faint)', textAlign: 'center', margin: '2px 0 0' }}>난이도는 설정에서 언제든 바꿀 수 있어요.</p>
         </div>
       </main>
@@ -306,6 +310,14 @@ export function Placement({ cards, onDone, onSkip }: Props) {
           </p>
         )}
       </div>
+
+      {/* 상황 축 첫 문항 진입 시 1회 안내 — 선택지를 한글로 바꾸지 않는 이유(측정 의도)는 유지하되,
+          완전 초보자가 연속 오답/패스에 좌절하지 않도록 미리 마음의 준비를 시켜준다(2026-07-25 사용성 테스트). */}
+      {axis === 'situation' && idx === readCount + listenCount && (
+        <p style={{ textAlign: 'center', margin: '10px 0 0', fontSize: 12, color: 'var(--ink-soft)', lineHeight: 1.5 }}>
+          💡 이 구간은 실제 일본어 실력을 그대로 측정해요. 몰라도 정상이니 편하게 &lsquo;모르겠어요&rsquo;를 눌러도 괜찮아요.
+        </p>
+      )}
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 16 }}>
         {card.choices.map((c, i) => {

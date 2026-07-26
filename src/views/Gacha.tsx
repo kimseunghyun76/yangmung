@@ -866,7 +866,7 @@ export function DeckBrowser() {
           모든 장면 선물을 모으면 큰 선물이 열려요. 관리자랑 데이트하기, 일본여행 같이 가기 같은 최종 보상을 암시하는 카드입니다.
         </span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(150px, 1fr))', gap: 14 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 14 }}>
         {SCENES.map((m) => {
           const card = collection.cards[m.id];
           const owned = totalItems(card) > 0;

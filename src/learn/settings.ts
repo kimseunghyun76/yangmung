@@ -17,6 +17,18 @@ export interface Settings {
   listenRate: number;         // 듣기 속도 배율 (x0.5~x2)
   devUnlockAll?: boolean;     // 개발용 — 모든 장면 lock 무시
   travelPurpose?: TravelPurpose; // 설정 전엔 undefined — 홈에 선택 배너를 보여줌
+  travelDate?: string;        // 출국일(ISO yyyy-mm-dd) — 설정하면 홈에 D-day 배지 표시. 미설정 시 undefined
+  preferredRouteLabel?: string; // 미션 지도에서 고른 "우선 학습" 루트(routes.ts ROUTES의 label). 미설정=무작위(기존 동작)
+}
+
+// travelDate 기준 남은 일수(자정 기준). 지난 날짜·미설정이면 null.
+export function daysUntilTravel(travelDate: string | undefined, now = new Date()): number | null {
+  if (!travelDate) return null;
+  const target = new Date(`${travelDate}T00:00:00`);
+  if (Number.isNaN(target.getTime())) return null;
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const diffDays = Math.round((target.getTime() - today.getTime()) / 86_400_000);
+  return diffDays >= 0 ? diffDays : null;
 }
 
 export const TRAVEL_PURPOSE_LABEL: Record<TravelPurpose, string> = {

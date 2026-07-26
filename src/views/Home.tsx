@@ -1,5 +1,5 @@
 // 홈 — Immersive Scene Coach. 오늘의 루트 + 장면 히어로 + 가나/여행 루트 진입.
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
 import type { Diagnosis } from '../learn/adaptive';
@@ -23,7 +23,8 @@ import { loadCollection } from '../learn/collection';
 import { useLearningStats, type LearningStats } from '../learn/learningStats';
 import { StatTile, LearningHeatmap } from './StatsWidgets';
 import { VOCAB_GROUPS, vocabGroupArt } from '../content/thematicVocab';
-import { TRAVEL_PURPOSE_LABEL, TRAVEL_PURPOSE_TAG, type TravelPurpose } from '../learn/settings';
+import { daysUntilTravel, TRAVEL_PURPOSE_LABEL, type TravelPurpose } from '../learn/settings';
+import type { GrammarPoint } from '../content/types';
 
 interface Props {
   nav: NavBarProps;
@@ -38,7 +39,6 @@ interface Props {
   onStart: () => void;
   onPracticeScene: (missionId: string) => void;
   onPracticeFlash: () => void;
-  onPracticeWrite: () => void;
   onPlacement: () => void;
   placementDone: boolean;
   // 레벨 진도
@@ -53,18 +53,26 @@ interface Props {
   travelPurpose?: TravelPurpose;
   onSetTravelPurpose: (p: TravelPurpose) => void;
   onOpenTipsForPurpose: (p: TravelPurpose) => void;
+  // 출국일(ISO yyyy-mm-dd) — 설정 전엔 undefined, 설정하면 D-day 배지 표시.
+  travelDate?: string;
 }
 
-// "일정별 팁" 카테고리에서 여행 목적 태그와 부분일치하는 첫 팁 하나만 홈에 미리보기로 보여준다.
-function travelPurposeTip(purpose: TravelPurpose | undefined) {
+// 여행 목적(daytrip/short/month)에 맞는 "일정별 팁"(id가 g_trip_{purpose}_로 시작)에서 하나를 골라 홈에 미리보기로 보여준다.
+// tips.ts의 pickTipForMission/pickTipForTopic과 같은 규칙 — 안 본 것 중 무작위, 다 봤으면 가장 오래 안 본 것.
+// (고정된 첫 항목만 계속 보여주면 매번 똑같아 금방 질리므로 같은 회전 로직을 재사용한다.)
+function travelPurposeTip(purpose: TravelPurpose | undefined, progress: ProgressMap): GrammarPoint | undefined {
   if (!purpose) return undefined;
-  const tag = TRAVEL_PURPOSE_TAG[purpose];
-  return CONTENT.grammar.find((g) => g.category === '일정별 팁' && g.tags?.some((t) => t.includes(tag)));
+  const pool = CONTENT.grammar.filter((g) => g.id.startsWith(`g_trip_${purpose}_`));
+  if (pool.length === 0) return undefined;
+  const unseen = pool.filter((g) => !progress[`tip:${g.id}`]);
+  if (unseen.length > 0) return unseen[Math.floor(Math.random() * unseen.length)];
+  return [...pool].sort((a, b) => (progress[`tip:${a.id}`]?.lastSeenAt ?? '') < (progress[`tip:${b.id}`]?.lastSeenAt ?? '') ? -1 : 1)[0];
 }
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' };
 
-export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, missionsLocked, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeFlash, onPracticeWrite, onPlacement, placementDone, coreLevel, progression, devUnlockAll, onStartStage, onStartPromotion, onOpenBasics, onStartVocabGroup, travelPurpose, onSetTravelPurpose, onOpenTipsForPurpose }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, missionsLocked, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeFlash, onPlacement, placementDone, coreLevel, progression, devUnlockAll, onStartStage, onStartPromotion, onOpenBasics, onStartVocabGroup, travelPurpose, onSetTravelPurpose, onOpenTipsForPurpose, travelDate }: Props) {
+  const dDay = daysUntilTravel(travelDate);
   const upcomingId = nextSessionId(session);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
   const planned = plan.size;
@@ -146,7 +154,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
 
   const levelPanel = (
     <div className="ym-rise" style={{ marginTop: 14 }}>
-      <LevelProgress coreLevel={coreLevel} progression={progression} onStartStage={onStartStage} onStartPromotion={onStartPromotion} onPracticeWrite={onPracticeWrite} devUnlockAll={devUnlockAll} onOpenBasics={onOpenBasics} onStartVocabGroup={onStartVocabGroup} onSeeAll={() => nav.onNavigate('practice')} />
+      <LevelProgress coreLevel={coreLevel} progression={progression} onStartStage={onStartStage} onStartPromotion={onStartPromotion} devUnlockAll={devUnlockAll} onOpenBasics={onOpenBasics} onStartVocabGroup={onStartVocabGroup} onSeeAll={() => nav.onNavigate('practice')} />
     </div>
   );
 
@@ -164,6 +172,25 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
           />
         </GlassPanel>
       </div>
+
+      {/* 수준 진단 권유 배너 — placementDone(최초 진단을 하거나 건너뛴 적이 있는지)이 false일 때만,
+          즉 앱을 시작한 뒤 아직 한 번도 진단을 받지 않은 사용자에게만 보인다.
+          아직 진단 전이라면 게임성 CTA(속도전)보다 먼저 눈에 띄어야 난이도가 안 맞는 채로
+          헤매는 걸 막을 수 있어, 레벨 진도/오늘의 미션보다도 위에 둔다(온보딩 우선순위). */}
+      {!placementDone && (
+        <button className="ym-rise ym-press" onClick={onPlacement} style={{
+          width: '100%', textAlign: 'left', cursor: 'pointer', marginTop: 14, display: 'flex', alignItems: 'center', gap: 13,
+          padding: '14px 16px', borderRadius: 18, border: '1px solid var(--accent)', color: 'var(--ink)',
+          background: 'linear-gradient(135deg, var(--accent-soft), var(--glass-bg-strong))',
+        }}>
+          <span style={{ fontSize: 28 }}>🎯</span>
+          <span style={{ flex: 1 }}>
+            <span style={{ display: 'block', fontSize: 15, fontWeight: 800 }}>내 수준 진단하고 시작하기</span>
+            <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 2 }}>10문제로 난이도를 추천받아요 (1분 · 언제든 설정에서 변경)</span>
+          </span>
+          <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)' }} />
+        </button>
+      )}
 
       {/* 레벨이 낮으면 빠른 연습(레벨 진도)을 오늘의 미션 위에, 높으면 미션을 위에 */}
       {lowLevel ? (<>{levelPanel}{missionPanel}</>) : (<>{missionPanel}{levelPanel}</>)}
@@ -189,37 +216,38 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
         <Icon name="flow" size={20} style={{ color: 'rgba(255,255,255,0.85)' }} />
       </button>
 
-      {/* 수준 진단 권유 배너 — placementDone(최초 진단을 하거나 건너뛴 적이 있는지)이 false일 때만,
-          즉 앱을 시작한 뒤 아직 한 번도 진단을 받지 않은 사용자에게만 보인다.
-          메인 흐름(오늘의 미션·레벨 진도·속도전)을 다 보여준 뒤 맨 아래에 보조 옵션으로 둔다. */}
-      {!placementDone && (
-        <button className="ym-rise ym-press" onClick={onPlacement} style={{
-          width: '100%', textAlign: 'left', cursor: 'pointer', margin: '14px 0 0', display: 'flex', alignItems: 'center', gap: 13,
-          padding: '14px 16px', borderRadius: 18, border: '1px solid var(--accent)', color: 'var(--ink)',
-          background: 'linear-gradient(135deg, var(--accent-soft), var(--glass-bg-strong))',
-        }}>
-          <span style={{ fontSize: 28 }}>🎯</span>
-          <span style={{ flex: 1 }}>
-            <span style={{ display: 'block', fontSize: 15, fontWeight: 800 }}>내 수준 진단하고 시작하기</span>
-            <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 2 }}>10문제로 난이도를 추천받아요 (1분 · 언제든 설정에서 변경)</span>
-          </span>
-          <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)' }} />
-        </button>
-      )}
-
-      {/* 여행 목적별 학습 배너 — 수준 진단과 마찬가지로 메인 흐름 아래 보조 옵션으로 배치.
+      {/* 여행 목적별 학습 배너 — 수준 진단 배너와 달리 강제성이 없는 보조 옵션이라 맨 아래에 둔다.
+          진단 배너가 위로 옮겨져(온보딩 우선순위) 더는 이 배너와 바로 붙어 있지 않으므로,
+          비슷하게 생긴 카드형 배너 두 개가 연달아 보이는 배너 피로감도 함께 줄어든다.
           선택 전엔 1탭 칩으로 바로 고를 수 있고(강제 아님, 빠른 진입 유지), 고른 뒤엔 그 일정에 맞는
           "일정별 팁" 하나를 미리 보여주고 더 보기로 팁 라이브러리에 필터링해 들어간다. */}
-      <TravelPurposeBanner purpose={travelPurpose} onSet={onSetTravelPurpose} onOpenTips={onOpenTipsForPurpose} />
+      {/* D-day 배지 — 설정에서 출국일을 입력했을 때만(2026-07-26, persona-02 후속).
+          14일 이하로 임박하면(2026-07-27 후속) 미션 지도의 "우선 학습 카테고리"가 자동으로
+          생존·문제해결 루트로 맞춰진다 — 사용자가 직접 카테고리를 고르지 않은 경우에 한함. */}
+      {dDay !== null && (
+        <div className="ym-rise" style={{
+          marginTop: 14, padding: '10px 16px', borderRadius: 999, border: '1px solid var(--glass-border)',
+          background: 'var(--glass-bg-strong)', display: 'inline-flex', alignItems: 'center', gap: 8,
+        }}>
+          <span aria-hidden style={{ fontSize: 16 }}>🗓</span>
+          <span style={{ fontSize: 13.5, fontWeight: 800 }}>출국 {dDay === 0 ? 'D-day' : `D-${dDay}`}</span>
+          {dDay <= 14 && <span style={{ fontSize: 12, color: 'var(--ink-faint)', fontWeight: 700 }}>· 생존 표현부터 우선 열려요</span>}
+        </div>
+      )}
+      <TravelPurposeBanner purpose={travelPurpose} progress={progress} onSet={onSetTravelPurpose} onOpenTips={onOpenTipsForPurpose} />
 
       {!ttsSupported() && <p style={{ color: 'var(--warn)', fontSize: 13, marginTop: 16, fontWeight: 600 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
     </main>
   );
 }
 
-function TravelPurposeBanner({ purpose, onSet, onOpenTips }: {
-  purpose: TravelPurpose | undefined; onSet: (p: TravelPurpose) => void; onOpenTips: (p: TravelPurpose) => void;
+function TravelPurposeBanner({ purpose, progress, onSet, onOpenTips }: {
+  purpose: TravelPurpose | undefined; progress: ProgressMap; onSet: (p: TravelPurpose) => void; onOpenTips: (p: TravelPurpose) => void;
 }) {
+  // early return보다 위로 옮김 — Hooks는 조건부로 호출하면 안 됨(purpose가 undefined↔값있음으로
+  // 바뀌는 순간 "Rendered fewer hooks than expected" 런타임 에러가 날 수 있었던 기존 버그를 함께 수정).
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- 매 렌더마다 무작위로 다시 뽑히면 화면이 깜빡이므로 purpose가 바뀔 때만 재선정
+  const tip = useMemo(() => travelPurposeTip(purpose, progress), [purpose]);
   if (!purpose) {
     return (
       <div className="ym-rise" style={{
@@ -227,7 +255,7 @@ function TravelPurposeBanner({ purpose, onSet, onOpenTips }: {
         background: 'var(--glass-bg-strong)',
       }}>
         <p style={{ margin: 0, fontSize: 13.5, fontWeight: 800 }}>🗓 이번 여행은 어떤 스타일이에요?</p>
-        <p style={{ margin: '3px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>고르면 그 일정에 맞는 팁을 챙겨드려요. 나중에 설정에서 바꿀 수 있어요.</p>
+        <p style={{ margin: '3px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>고르면 일정에 맞는 문화·여행 팁을 보여드려요(학습 순서·미션 구성은 그대로예요). 나중에 설정에서 바꿀 수 있어요.</p>
         <div style={{ display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
           {(Object.keys(TRAVEL_PURPOSE_LABEL) as TravelPurpose[]).map((p) => (
             <button key={p} className="ym-press" onClick={() => onSet(p)} style={{
@@ -241,7 +269,6 @@ function TravelPurposeBanner({ purpose, onSet, onOpenTips }: {
       </div>
     );
   }
-  const tip = travelPurposeTip(purpose);
   return (
     <button className="ym-rise ym-press" onClick={() => onOpenTips(purpose)} style={{
       width: '100%', textAlign: 'left', cursor: 'pointer', margin: '14px 0 0', display: 'flex', alignItems: 'center', gap: 13,
@@ -565,9 +592,9 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPla
 const DEFAULT_PREVIEW_VOCAB_GROUPS = VOCAB_GROUPS.filter((g) => g.id !== 'greetings').slice(0, 3);
 
 // 레벨 진도 패널 — 현재 레벨의 단계를 순서대로, 잠금/완료 상태로. 모두 통과 시 승급 시험.
-function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion, onPracticeWrite, onOpenBasics, onStartVocabGroup, onSeeAll, devUnlockAll }: {
+function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion, onOpenBasics, onStartVocabGroup, onSeeAll, devUnlockAll }: {
   coreLevel: CoreLevel; progression: ProgressionState;
-  onStartStage: (stage: ProgStage) => void; onStartPromotion: () => void; onPracticeWrite: () => void;
+  onStartStage: (stage: ProgStage) => void; onStartPromotion: () => void;
   onOpenBasics: () => void; onStartVocabGroup: (groupId: string) => void; onSeeAll: () => void;
   devUnlockAll: boolean;
 }) {
@@ -610,6 +637,9 @@ function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion,
         }}>학습 탭에서 어휘 주제 전체 보기 →</button>
       )}
 
+      {/* '쓰기 시험' 배너는 제거됨(2026-07-27) — 히라가나·가타카나 단계 안에 이미 쓰기 연습이
+          포함돼 있어 별도 "시험"으로 노출하면 중복이라는 사용성 지적. Practice.tsx의 "가나 쓰기"
+          자유 연습 배너는 그대로 유지(이건 Home 진입점만 없앤 것). */}
       {nx ? (
         <button className="ym-press" onClick={onStartPromotion} disabled={!promotionUnlocked} style={{
           width: '100%', marginTop: 12, padding: '14px 16px', borderRadius: 14, cursor: promotionUnlocked ? 'pointer' : 'default',
@@ -624,11 +654,6 @@ function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion,
           고급은 승급 시험 없이 위 단계와 아래 <strong style={{ color: 'var(--ink)' }}>여행 미션</strong>으로 계속 실력을 다져요.
         </p>
       )}
-
-      <button className="ym-press" onClick={onPracticeWrite} style={{
-        width: '100%', marginTop: 10, padding: '11px 14px', borderRadius: 12, cursor: 'pointer',
-        border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink-soft)', fontWeight: 750, fontSize: 13,
-      }}>✍️ 쓰기 시험 — 가나 따라쓰기 (자유 연습)</button>
     </GlassPanel>
   );
 }

@@ -133,6 +133,41 @@ console.log('\n=== reconcileOpenMissions — 레벨 상승 시 하한 미만 미
   }
 }
 
+console.log('\n=== reconcileOpenMissions — preferredIds(카테고리 지정 오픈) ===');
+{
+  // 창 안에 선호 후보가 있으면 선호 후보 중에서만 추첨.
+  const tierOf = new Map<string, number>(CONTENT.missions.map((m) => [m.id, m.tier ?? 1]));
+  const tier1 = POOL.filter((id) => tierOf.get(id) === 1);
+  const [pref0, pref1, ...rest] = tier1;
+  const preferredIds = new Set([pref0, pref1]);
+  let allFromPreferred = true;
+  for (let t = 0; t < 50; t++) {
+    const a = reconcileOpenMissions([], {}, [1, 1], 1, preferredIds);
+    if (!preferredIds.has(a[0])) allFromPreferred = false;
+  }
+  check('선호 루트가 창 안에 있으면 그 안에서만 추첨', allFromPreferred);
+  check('테스트 전제: 선호 후보가 tier1 전체보다 작음(의미 있는 검증)', rest.length > 0);
+}
+{
+  // 선호 후보가 창 밖(다른 tier)이면 선호를 무시하고 창 전체에서 추첨(크래시 없이 폴백).
+  const tierOf = new Map<string, number>(CONTENT.missions.map((m) => [m.id, m.tier ?? 1]));
+  const tier1 = POOL.filter((id) => tierOf.get(id) === 1);
+  const tier3 = POOL.filter((id) => tierOf.get(id) === 3);
+  const preferredIds = new Set(tier3); // 창은 [1,1]인데 선호는 전부 tier3
+  let allTier1 = true;
+  for (let t = 0; t < 50; t++) {
+    const a = reconcileOpenMissions([], {}, [1, 1], 1, preferredIds);
+    if (tierOf.get(a[0]) !== 1) allTier1 = false;
+  }
+  check('선호 후보가 창 밖이면 무시하고 창 전체에서 폴백', allTier1);
+  void tier1;
+}
+{
+  // preferredIds 미지정(undefined) → 기존 순수 랜덤 동작과 동일(회귀 없음).
+  const a = reconcileOpenMissions([], {}, [1, 1], 1, undefined);
+  check('preferredIds 미지정 시 기존 동작 그대로(1개 오픈)', a.length === 1);
+}
+
 console.log('\n=== isSceneOpen ===');
 {
   check('C0(튜토리얼)은 항상 열림', isSceneOpen('C0', []));
