@@ -10,10 +10,13 @@
 - `src/views/scene.ts`의 전용 삽화 범위를 C1~C54로 확장해 새 이미지가 실제 세션에서 선택되도록 연결
 - 공식 양·뭉 의상 가이드 생성: [`yangmung-character-outfit-guide.webp`](./yangmung-character-outfit-guide.webp)
 - 대표 오류 카드 `danshi.webp`, `kiken.webp`를 공식 삼색 고양이 양·시바견 뭉과 서로 다른 의상으로 교체
+- 공용 원본 템플릿 10장을 공식 의상 기준으로 교체하고 일본어 문자 좌표를 재조정
+- `sign-art/generated` 전체 114장을 다시 렌더링하고 누락됐던 `exit_floor.webp`까지 추가
+- 대표 오류 카드 `danshi.webp`, `kiken.webp`는 개별 제작본을 유지
 - 현재 콘텐츠 기준 미생성 프리미엄 표현 음성 67개 생성 완료(조사 당시 66개에서 표현 1개가 추가됨)
 - Azure Nanami 음성과 `public/audio/manifest.json` 갱신 완료
 
-`sign-art/generated`의 나머지 카드는 한 번에 교체하지 않았다. 새 공식 의상 가이드를 기준으로 노출 우선순위에 따라 순차 교체한다.
+`sign-art/generated`의 마스코트 의상 교체와 문자 재렌더링은 전체 완료했다. 이후 개별 카드의 장면 특화 품질이 필요한 경우 공식 의상 가이드를 기준으로 해당 카드만 우선 제작본으로 교체한다.
 
 ## 이 앱의 그림 스타일 두 가지 (혼동 주의)
 

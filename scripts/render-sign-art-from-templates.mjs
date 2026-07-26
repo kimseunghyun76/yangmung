@@ -17,24 +17,20 @@ const W = 1024;
 const H = 1024;
 
 const boxes = {
-  checkout: { x: 455, y: 210, w: 410, h: 560, max: 145, color: '#172f2b', shadow: 'light' },
+  checkout: { x: 340, y: 220, w: 340, h: 500, max: 125, color: '#172f2b', shadow: 'light' },
   construction: { x: 315, y: 165, w: 450, h: 660, max: 135, color: '#201914', shadow: 'light' },
-  mallEntrance: { x: 305, y: 125, w: 640, h: 300, max: 175, color: '#211914', shadow: 'light' },
+  mallEntrance: { x: 285, y: 65, w: 460, h: 300, max: 160, color: '#211914', shadow: 'light' },
   receipt: { x: 330, y: 215, w: 280, h: 675, max: 130, color: '#26211c', shadow: 'light' },
-  restaurantMenu: { x: 300, y: 165, w: 600, h: 675, max: 165, color: '#281b13', shadow: 'light' },
-  restroom: { x: 335, y: 175, w: 560, h: 235, max: 150, color: '#1f1712', shadow: 'light' },
-  shopNotice: { x: 465, y: 400, w: 335, h: 265, max: 120, color: '#241a13', shadow: 'light' },
-  stationWayfinding: { x: 305, y: 150, w: 630, h: 205, max: 130, color: '#181f24', shadow: 'light' },
-  storePromo: { x: 465, y: 245, w: 350, h: 660, max: 135, color: '#241913', shadow: 'light' },
-  transitBoard: { x: 465, y: 215, w: 560, h: 255, max: 125, color: '#94ffd8', shadow: 'dark' },
+  restaurantMenu: { x: 300, y: 170, w: 420, h: 620, max: 145, color: '#281b13', shadow: 'light' },
+  restroom: { x: 330, y: 100, w: 360, h: 320, max: 125, color: '#1f1712', shadow: 'light' },
+  shopNotice: { x: 380, y: 260, w: 300, h: 280, max: 110, color: '#241a13', shadow: 'light' },
+  stationWayfinding: { x: 300, y: 190, w: 440, h: 220, max: 120, color: '#181f24', shadow: 'light' },
+  storePromo: { x: 340, y: 220, w: 380, h: 560, max: 125, color: '#241913', shadow: 'light' },
+  transitBoard: { x: 220, y: 220, w: 620, h: 300, max: 120, color: '#94ffd8', shadow: 'dark' },
 };
 
 function esc(s) {
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function wrap(text) {
@@ -56,9 +52,10 @@ function wrap(text) {
 
 function htmlFor(sign, templateUrl, box) {
   const lines = wrap(sign.ja).map(esc).join('<br>');
-  const shadow = box.shadow === 'dark'
-    ? '0 2px 0 rgba(0,0,0,.75), 0 0 10px rgba(0,0,0,.42)'
-    : '0 2px 0 rgba(255,255,255,.46), 0 0 8px rgba(255,255,255,.32)';
+  const shadow =
+    box.shadow === 'dark'
+      ? '0 2px 0 rgba(0,0,0,.75), 0 0 10px rgba(0,0,0,.42)'
+      : '0 2px 0 rgba(255,255,255,.46), 0 0 8px rgba(255,255,255,.32)';
   return `<!doctype html>
 <html lang="ja">
 <head>
@@ -142,14 +139,9 @@ for (const sign of manifest.sign) {
   });
   await page.screenshot({ path: pngOut, clip: { x: 0, y: 0, width: W, height: H } });
 
-  const result = spawnSync('cwebp', [
-    '-quiet',
-    '-q', '82',
-    '-m', '6',
-    '-resize', '512', '512',
-    pngOut,
-    '-o', webpOut,
-  ], { stdio: 'inherit' });
+  const result = spawnSync('cwebp', ['-quiet', '-q', '82', '-m', '6', '-resize', '512', '512', pngOut, '-o', webpOut], {
+    stdio: 'inherit',
+  });
   if (result.status !== 0) throw new Error(`cwebp failed for ${sign.id}`);
   rendered++;
 }
