@@ -160,7 +160,6 @@
       @keyframes ym-gacha-rare-aura { 0%,100%{opacity:.48; transform:scale(.92) rotate(0)} 50%{opacity:.95; transform:scale(1.1) rotate(8deg)} }
       @keyframes ym-gacha-rare-flip { 0%{opacity:.7; transform:perspective(760px) rotateY(0) scale(.96)} 42%{opacity:1; transform:perspective(760px) rotateY(88deg) scale(1.035)} 58%{transform:perspective(760px) rotateY(92deg) scale(1.06); filter:drop-shadow(0 0 18px var(--rarity-color,#f0a23a))} 100%{opacity:1; transform:perspective(760px) rotateY(0) scale(1); filter:drop-shadow(0 0 10px color-mix(in srgb, var(--rarity-color,#f0a23a), transparent 30%))} }
       @keyframes ym-gacha-rare-sheen { from{background-position:-180% 0, 0 0, 0 0} to{background-position:220% 0, 0 0, 0 0} }
-      @keyframes ym-gacha-rare-burst { 0%{opacity:0; transform:translate(-50%,-50%) scale(.34) rotate(-5deg); filter:blur(8px) brightness(.75)} 18%{opacity:.82; transform:translate(-50%,-50%) scale(.92) rotate(1deg); filter:blur(1px) brightness(1.18)} 46%{opacity:1; transform:translate(-50%,-50%) scale(1.08) rotate(0); filter:blur(0) brightness(1.38)} 78%{opacity:1; transform:translate(-50%,-50%) scale(1) rotate(0); filter:brightness(1.08)} 100%{opacity:0; transform:translate(-50%,-56%) scale(1.08) rotate(0); filter:brightness(1)} }
       @keyframes ym-gacha-rare-back { 0%,100%{filter:brightness(1) saturate(1); transform:translateY(0) rotate(-.4deg)} 50%{filter:brightness(1.32) saturate(1.35); transform:translateY(-2px) rotate(.5deg)} }
       @keyframes ym-gacha-back-rainbow { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
       @keyframes ym-gacha-starfall { 0%{opacity:0; transform:translateY(-20px) scale(.4) rotate(0)} 20%{opacity:1} 100%{opacity:0; transform:translateY(80px) scale(1.05) rotate(160deg)} }
@@ -733,11 +732,6 @@
         54% { transform: translateY(0) scale(1.02) rotate(0); filter: brightness(1.08); }
         100% { transform: translateY(0) scale(1); filter: brightness(1); }
       }
-      @keyframes ym-item-reveal-aura {
-        0% { opacity: 0; transform: scale(.4) rotate(0); }
-        30% { opacity: .86; }
-        100% { opacity: .44; transform: scale(1.16) rotate(28deg); }
-      }
       .ym-item-reveal {
         position: relative; width: min(86vw, 390px); min-height: 338px; border: 0; border-radius: 32px;
         display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
@@ -751,13 +745,6 @@
       .ym-item-reveal.is-repeat { animation-duration: .24s; }
       .ym-item-reveal.is-new:not(.is-premium) { animation-duration: .58s; }
       .ym-item-reveal.is-premium { min-height: 390px; animation: ym-item-reveal-premium 1.14s cubic-bezier(.16,.88,.22,1.14) both; }
-      .ym-item-reveal-aura {
-        position: absolute; inset: 9%; border-radius: 999px; z-index: -1;
-        background:
-          conic-gradient(from 0deg, transparent, color-mix(in srgb, var(--rarity-color,#d8a24a), #fff 18%), transparent 32%, rgba(255,255,255,.26), transparent 64%),
-          radial-gradient(circle, color-mix(in srgb, var(--rarity-color,#d8a24a), transparent 34%), transparent 62%);
-        filter: blur(.4px); animation: ym-item-reveal-aura .9s ease-out both;
-      }
       .ym-item-reveal-mascots {
         position: absolute;
         left: 50%;
@@ -773,8 +760,6 @@
         background: rgba(255,255,255,.86);
         box-shadow: 0 8px 18px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.72);
       }
-      .ym-item-reveal.is-repeat .ym-item-reveal-aura { opacity: .24; animation-duration: .28s; }
-      .ym-item-reveal.is-premium .ym-item-reveal-aura { inset: -2%; animation-duration: 2.1s; animation-iteration-count: 2; mix-blend-mode: screen; }
       .ym-item-reveal-art {
         position: relative; z-index: 2; width: min(62vw, 230px); height: min(62vw, 230px);
         display: grid; place-items: center; overflow: visible;
@@ -795,17 +780,6 @@
       }
       .ym-item-reveal.is-premium .ym-item-reveal-art img { animation-duration: 1s, 2.2s; }
       .ym-item-reveal.is-repeat .ym-item-reveal-art img { animation-duration: .36s, 2.2s; }
-      .ym-item-burst-spark {
-        position: absolute; left: 50%; top: 50%; margin: -3px 0 0 -3px;
-        animation: ym-item-burst-spark .78s cubic-bezier(.14,.8,.24,1) both;
-      }
-      .ym-item-reveal.is-premium .ym-item-burst-spark { animation-duration: 1.05s; }
-      .ym-item-reveal.is-repeat .ym-item-burst-spark { display: none; }
-      @keyframes ym-item-burst-spark {
-        0% { opacity: 0; transform: translate(0,0) scale(0); }
-        14% { opacity: 1; }
-        100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1); }
-      }
       .ym-item-reveal-copy {
         position: relative; z-index: 3; width: min(100%, 360px); display: flex; flex-direction: column; align-items: center; gap: 4px;
         padding: 12px 14px; border-radius: 20px;
@@ -821,58 +795,6 @@
       .ym-item-reveal-copy strong { color: #fffdf5; font-size: clamp(24px, 7vw, 40px); line-height: 1.05; font-weight: 1000; text-align: center; text-shadow: 0 0 18px color-mix(in srgb, var(--rarity-color,#d8a24a), transparent 54%); }
       .ym-item-reveal-copy em { font-style: normal; color: rgba(255,247,235,.86); font-size: 14px; font-weight: 900; }
       .ym-item-reveal-copy span:last-child { color: rgba(255,247,235,.72); font-size: 12.5px; line-height: 1.45; font-weight: 760; text-align: center; }
-      .ym-premium-mystery {
-        position: relative; width: min(84vw, 430px); min-height: min(78vw, 360px); display: flex; flex-direction: column;
-        align-items: center; justify-content: center; gap: 12px; border-radius: 34px; isolation: isolate;
-        background:
-          radial-gradient(circle at 18% 18%, rgba(255,255,255,.22), transparent 18%),
-          radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--rarity-color,#e8c45a), transparent 48%), transparent 48%),
-          linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.025));
-        border: 1px solid color-mix(in srgb, var(--rarity-color,#e8c45a), transparent 34%);
-        box-shadow: 0 0 38px color-mix(in srgb, var(--rarity-color,#e8c45a), transparent 44%), inset 0 1px 0 rgba(255,255,255,.16);
-        animation: ym-item-reveal-premium 1.2s cubic-bezier(.16,.88,.22,1.14) both;
-      }
-      .ym-premium-mystery-ring {
-        position: absolute; width: min(62vw, 260px); height: min(62vw, 260px); border-radius: 999px;
-        border: 2px solid color-mix(in srgb, var(--rarity-color,#e8c45a), #fff 22%);
-        box-shadow: 0 0 28px color-mix(in srgb, var(--rarity-color,#e8c45a), transparent 28%), inset 0 0 36px color-mix(in srgb, var(--rarity-color,#e8c45a), transparent 62%);
-        animation: ym-shuffle-ring 1.9s ease-out infinite;
-      }
-      .ym-premium-mystery-gem {
-        position: relative; z-index: 2; width: min(38vw, 148px); height: min(38vw, 148px); border-radius: 34%;
-        display: grid; place-items: center; color: #fffdf6; font-size: clamp(18px, 6vw, 30px); font-weight: 1000; letter-spacing: .05em;
-        background:
-          linear-gradient(135deg, rgba(255,255,255,.62), transparent 38%, rgba(255,255,255,.28)),
-          radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--rarity-color,#e8c45a), #fff 22%), color-mix(in srgb, var(--rarity-color,#e8c45a), #111 14%));
-        box-shadow: 0 0 34px color-mix(in srgb, var(--rarity-color,#e8c45a), transparent 20%), inset 0 1px 0 rgba(255,255,255,.56);
-      }
-      .ym-premium-mystery-gem img {
-        width: 58%;
-        height: 58%;
-        object-fit: contain;
-        filter: drop-shadow(0 8px 12px rgba(0,0,0,.24));
-      }
-      .ym-premium-mystery-gem b {
-        position: absolute;
-        left: 50%;
-        bottom: 10%;
-        transform: translateX(-50%);
-        padding: 2px 8px;
-        border-radius: 999px;
-        background: rgba(33,25,18,.72);
-        color: #fff7eb;
-        font-size: .5em;
-        line-height: 1.2;
-      }
-      .ym-premium-mystery strong,
-      .ym-premium-mystery em {
-        position: relative; z-index: 2; width: min(92%, 360px); text-align: center; font-style: normal;
-      }
-      .ym-premium-mystery strong {
-        color: #fffdf5; font-size: clamp(22px, 6vw, 34px); line-height: 1.14; font-weight: 1000;
-        text-shadow: 0 0 18px color-mix(in srgb, var(--rarity-color,#e8c45a), transparent 38%);
-      }
-      .ym-premium-mystery em { color: rgba(255,247,235,.76); font-size: 13px; font-weight: 850; line-height: 1.45; }
       .ym-gacha-result-stage {
         position: relative; z-index: 3; width: min(100%, 760px); height: min(100%, 720px);
         display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 12px; align-items: stretch;
@@ -1052,25 +974,6 @@
       .ym-gacha-opened-stack-card:nth-child(2n + 1) { transform: translateY(-2px) rotate(-1.5deg); }
       .ym-gacha-opened-stack-card:hover,
       .ym-gacha-opened-stack-card:focus-within { transform: translateY(-8px) rotate(0); filter: drop-shadow(0 18px 22px rgba(0,0,0,.38)); z-index: 30; }
-      .ym-gacha-rare-burst {
-        position: fixed; left: 50%; top: 16%; z-index: 12; transform: translate(-50%,-50%);
-        display: flex; flex-direction: column; align-items: center; gap: 3px; pointer-events: none; text-align: center; white-space: nowrap;
-        padding: 11px 26px 12px; border-radius: 999px;
-        color: #fff8dc; border: 1px solid color-mix(in srgb, var(--rarity-color,#f0a23a), #fff 34%);
-        background:
-          linear-gradient(120deg, transparent 0 32%, rgba(255,255,255,.4) 48%, transparent 64%),
-          linear-gradient(150deg, color-mix(in srgb, var(--rarity-color,#f0a23a), #fff 16%), color-mix(in srgb, var(--rarity-color,#f0a23a), #000 32%));
-        box-shadow: 0 0 30px color-mix(in srgb, var(--rarity-color,#f0a23a), transparent 32%), 0 16px 34px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.5);
-        animation: ym-gacha-rare-burst 2.2s cubic-bezier(.16,.88,.22,1.14) both;
-      }
-      .ym-gacha-rare-burst span {
-        display: inline-flex; align-items: center; gap: 8px;
-        font-size: clamp(16px, 4.6vw, 21px); line-height: 1.1; font-weight: 1000; letter-spacing: .1em;
-        color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.36), 0 0 16px rgba(255,255,255,.42);
-      }
-      .ym-gacha-rare-burst span i { font-style: normal; font-size: .68em; opacity: .85; }
-      .ym-gacha-rare-burst strong { font-size: 10.5px; font-weight: 900; letter-spacing: .18em; color: rgba(255,255,255,.82); text-shadow: 0 1px 4px rgba(0,0,0,.3); }
-      .ym-gacha-rare-burst.is-diamond { color: #f1feff; animation-duration: 2.5s; }
       .ym-gacha-detail-backdrop {
         position: fixed; inset: 0; z-index: 16; display: grid; place-items: center; padding: 18px;
         background: rgba(0,0,0,.46); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);

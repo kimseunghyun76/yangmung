@@ -81,33 +81,6 @@ function CardBack({ rarity = 'basic', size = 82 }: { rarity?: Rarity; size?: num
   );
 }
 
-// 아이템 등장 파티클 — 아트 중앙에서 사방으로 방사(각도·거리는 인덱스 기반이라 매번 동일하고 예측 가능).
-function ItemBurstParticles({ color, premium }: { color: string; premium?: boolean }) {
-  const count = premium ? 20 : 13;
-  return (
-    <span aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'visible' }}>
-      {Array.from({ length: count }).map((_, i) => {
-        const angle = (i / count) * Math.PI * 2 + (i % 2 ? 0.22 : -0.22);
-        const dist = (premium ? 78 : 58) + (i % 3) * (premium ? 34 : 24);
-        const dx = Math.cos(angle) * dist;
-        const dy = Math.sin(angle) * dist;
-        const size = i % 3 === 0 ? (premium ? 9 : 7) : (premium ? 6 : 4);
-        return (
-          <i key={i} className="ym-item-burst-spark" style={{
-            ['--dx' as string]: `${dx}px`,
-            ['--dy' as string]: `${dy}px`,
-            width: size, height: size,
-            borderRadius: i % 2 === 0 ? 999 : 2,
-            background: i % 4 === 0 ? '#fff' : color,
-            boxShadow: `0 0 10px ${color}`,
-            animationDelay: `${i * 0.014}s`,
-          }} />
-        );
-      })}
-    </span>
-  );
-}
-
 function ItemReveal({ item, index, onNext }: { item: DropResult; index: number; onNext: () => void }) {
   const meta = rarityMeta(item.rarity);
   const art = gachaLabItemForMission(item.sceneId, item.rarity);
@@ -123,14 +96,12 @@ function ItemReveal({ item, index, onNext }: { item: DropResult; index: number; 
       onClick={(e) => { e.stopPropagation(); onNext(); }}
       style={{ ['--rarity-color' as string]: meta.color, ['--intro-index' as string]: index }}
     >
-      <span className="ym-item-reveal-aura" aria-hidden />
       <span className="ym-item-reveal-art">
         {src ? (
           <img src={src} alt="" draggable={false} onError={() => advanceImageSource(sourceIndex, sources, setSourceIndex, setFailed)} />
         ) : (
           <span className={`ym-gacha-item-illustration is-${art.motif} is-${item.rarity}`} />
         )}
-        {item.isNew && <ItemBurstParticles key={`${item.sceneId}:${item.rarity}:${index}`} color={meta.color} premium={premium} />}
       </span>
       <span className="ym-item-reveal-copy">
         <span className="ym-item-reveal-rarity">{meta.label}{item.isNew ? ' · NEW' : ''}</span>
@@ -139,22 +110,6 @@ function ItemReveal({ item, index, onNext }: { item: DropResult; index: number; 
         <span>{itemKoreanDescription(placeOf(item.sceneId), art.title, item.rarity)}</span>
       </span>
     </button>
-  );
-}
-
-function PremiumMysteryReveal({ rarity }: { rarity: Rarity }) {
-  const meta = rarityMeta(rarity);
-  const lead = rarity === 'xur' ? '초월 등급의 봉인이 열립니다' : rarity === 'diamond' ? '푸른 보석빛이 카드에 모입니다' : '덱 안에서 황금빛이 천천히 깨어납니다';
-  const sub = rarity === 'xur' ? '병합으로만 닿는 XUR 아이템이 잠시 후 모습을 드러냅니다' : rarity === 'diamond' ? 'UR 아이템이 천천히 공개됩니다' : 'SSR 아이템이 천천히 공개됩니다';
-  return (
-    <div className={`ym-premium-mystery is-${rarity}`} style={{ ['--rarity-color' as string]: meta.color }}>
-      <span className="ym-premium-mystery-ring" aria-hidden />
-      <span className="ym-premium-mystery-gem" aria-hidden>
-        <b>{meta.label}</b>
-      </span>
-      <strong>{lead}</strong>
-      <em>{sub}</em>
-    </div>
   );
 }
 
@@ -275,15 +230,13 @@ function randomGachaDrawCount(): number {
   return 1;
 }
 
-export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘의 카드 뽑기', drawCount, randomDrawCount = false, afterRevealLabel, onAfterReveal, onClaimed }: {
+export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘의 카드 뽑기', drawCount, randomDrawCount = false, onClaimed }: {
   sessionId: number;
   sceneIds: string[];
   grade?: BoxGrade;
   label?: string;
   drawCount?: number;
   randomDrawCount?: boolean;
-  afterRevealLabel?: string;
-  onAfterReveal?: () => void;
   onClaimed?: (results: DropResult[]) => void;
 }) {
   const box = BOX[grade];
@@ -294,12 +247,9 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
   const [flipped, setFlipped] = useState<Set<number>>(new Set());
   const [visibleCount, setVisibleCount] = useState(1);
   const [currentDraws, setCurrentDraws] = useState(drawCount ?? box.draws);
-  const [rareBurst, setRareBurst] = useState<{ index: number; rarity: Rarity; key: number } | null>(null);
-  const [premiumIntro, setPremiumIntro] = useState<{ index: number; rarity: Rarity; key: number } | null>(null);
   const [deck, setDeck] = useState(false);
   const plannedDrawsRef = useRef(drawCount ?? box.draws);
   const timersRef = useRef<number[]>([]);
-  const introSeenRef = useRef<Set<number>>(new Set());
   const displayDraws = currentDraws;
   const closedDrawLabel = randomDrawCount ? '여행 선물 카드 1~30장 랜덤' : `여행 선물 카드 ${displayDraws}장`;
   const allFlipped = results.length > 0 && flipped.size >= results.length;
@@ -313,23 +263,6 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
   const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 850, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase', margin: '0 0 12px', textAlign: 'center' };
 
   useEffect(() => () => { timersRef.current.forEach((t) => window.clearTimeout(t)); }, []);
-  useEffect(() => {
-    if (phase !== 'open' || stage !== 'cards' || !activeResult || introSeenRef.current.has(activeIndex)) return;
-    introSeenRef.current.add(activeIndex);
-    if (isPremiumReveal(activeResult.rarity)) {
-      setRareBurst({ index: activeIndex, rarity: activeResult.rarity, key: Date.now() });
-      setPremiumIntro({ index: activeIndex, rarity: activeResult.rarity, key: Date.now() });
-      playSfx(activeResult.rarity === 'diamond' ? 'UR REVEAL' : activeResult.rarity === 'xur' ? 'XUR REVEAL' : 'SSR REVEAL', activeResult.rarity === 'diamond' || activeResult.rarity === 'xur' ? 48 : 42);
-      const hold = activeResult.rarity === 'xur' ? 6200 : activeResult.rarity === 'diamond' ? 5200 : 4300;
-      const introHold = activeResult.rarity === 'xur' ? 3800 : activeResult.rarity === 'diamond' ? 3200 : 2700;
-      after(introHold, () => setPremiumIntro((cur) => (cur?.index === activeIndex ? null : cur)));
-      after(hold, () => setRareBurst((cur) => (cur?.index === activeIndex ? null : cur)));
-    } else if (activeResult.isNew) {
-      playSfx('NEW!', 30);
-    } else {
-      playSfx(rarityMeta(activeResult.rarity).label, 22);
-    }
-  }, [phase, stage, activeIndex, activeResult]);
 
   if (sceneIds.length === 0) return null;
 
@@ -355,10 +288,7 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
     setStage('shuffle');
     setSfx(null);
     setFlipped(new Set());
-    introSeenRef.current = new Set();
     setVisibleCount(1);
-    setRareBurst(null);
-    setPremiumIntro(null);
     setPhase('open');
     const best = r.reduce<Rarity | undefined>((acc, item) => !acc || rarityToTier(item.rarity) > rarityToTier(acc) ? item.rarity : acc, undefined);
     const premium = !!best && isPremiumReveal(best);
@@ -387,8 +317,6 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
   function finishReveal() {
     setFlipped(new Set(results.map((_, i) => i)));
     setVisibleCount(results.length);
-    setRareBurst(null);
-    setPremiumIntro(null);
     setPhase('revealed');
   }
 
@@ -418,12 +346,6 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
             style={{ width: '100%', marginTop: 16, padding: '12px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)', fontWeight: 750, fontSize: 14, cursor: 'pointer' }}>
             내 도감 보기
           </button>
-          {afterRevealLabel && (
-            <button className="ym-press" onClick={onAfterReveal}
-              style={{ width: '100%', marginTop: 9, padding: '12px', borderRadius: 14, border: 'none', background: 'var(--accent)', color: 'var(--accent-ink)', fontWeight: 850, fontSize: 14, cursor: 'pointer' }}>
-              {afterRevealLabel}
-            </button>
-          )}
         </div>
       )}
 
@@ -447,13 +369,6 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
           }}>
           <span className="ym-gacha-comic-bg" aria-hidden />
           <span className="ym-gacha-show-lights" aria-hidden />
-          {stage === 'cards' && <BurstParticles color={box.colors[1]} />}
-          {rareBurst && !premiumIntro && (
-            <div key={`rare:${rareBurst.key}`} className={`ym-gacha-rare-burst is-${rareBurst.rarity}`} style={{ ['--rarity-color' as string]: rarityMeta(rareBurst.rarity).color }} aria-hidden>
-              <span><i aria-hidden>✦</i>{rareBurst.rarity === 'xur' ? 'XUR CARD' : rareBurst.rarity === 'diamond' ? 'UR CARD' : 'SSR CARD'}<i aria-hidden>✦</i></span>
-              <strong>{rarityMeta(rareBurst.rarity).label} SPECIAL REVEAL</strong>
-            </div>
-          )}
           {sfx && (
             <span key={`sfx:${sfx.key}`} className="ym-manga-sfx" aria-hidden style={{ fontSize: sfx.size, top: stage === 'shuffle' ? '30%' : '42%' }}>{sfx.text}</span>
           )}
@@ -480,9 +395,7 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
                 style={{ ['--rarity-color' as string]: activeResult ? rarityMeta(activeResult.rarity).color : box.colors[1] }}
               >
                 <div className="ym-gacha-result-spot">
-                  {activeResult && premiumIntro?.index === activeIndex ? (
-                    <PremiumMysteryReveal key={`mystery:${premiumIntro.key}`} rarity={activeResult.rarity} />
-                  ) : activeResult && (
+                  {activeResult && (
                     <ItemReveal
                       key={`active:${activeIndex}:${activeResult.sceneId}:${activeResult.rarity}`}
                       item={activeResult}

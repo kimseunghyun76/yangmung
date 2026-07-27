@@ -1,7 +1,7 @@
 {
   "style": "word-art high-quality warm 3D mascot scene, no cropped subject, generated raster image, optimized to webp after approval",
   "bodyCount": 18,
-  "signCount": 114,
+  "signCount": 124,
   "body": [
     {
       "id": "b_atama",
@@ -404,7 +404,7 @@
     {
       "id": "tasuku",
       "ja": "無料Wi-Fi",
-      "kana": "むりょうWi-Fi",
+      "kana": "むりょうワイファイ",
       "korean": "무료 와이파이",
       "category": "안내",
       "scene": "storePromo",
@@ -897,15 +897,6 @@
       "path": "public/vocab/sign-art/generated/chikashitsu.webp"
     },
     {
-      "id": "exit_floor",
-      "ja": "出口",
-      "kana": "でぐち",
-      "korean": "출구(층)",
-      "category": "표지",
-      "scene": "mallEntrance",
-      "path": "public/vocab/sign-art/generated/exit_floor.webp"
-    },
-    {
       "id": "terminal",
       "ja": "終点",
       "kana": "しゅうてん",
@@ -1138,6 +1129,105 @@
       "category": "안내",
       "scene": "transitBoard",
       "path": "public/vocab/sign-art/generated/go_annai.webp"
+    },
+    {
+      "id": "senjou_button",
+      "ja": "洗浄",
+      "kana": "せんじょう",
+      "korean": "세정(비데 버튼)",
+      "category": "표지",
+      "scene": "restroom",
+      "path": "public/vocab/sign-art/generated/senjou_button.webp"
+    },
+    {
+      "id": "kami_wo_nagasu",
+      "ja": "トイレットペーパー以外は流さないでください",
+      "kana": "トイレットペーパーいがいはながさないでください",
+      "korean": "휴지 외에는 변기에 버리지 마세요",
+      "category": "주의",
+      "scene": "restroom",
+      "path": "public/vocab/sign-art/generated/kami_wo_nagasu.webp"
+    },
+    {
+      "id": "washlet",
+      "ja": "温水洗浄便座",
+      "kana": "おんすいせんじょうべんざ",
+      "korean": "비데(온수 세정 변기)",
+      "category": "표지",
+      "scene": "restroom",
+      "path": "public/vocab/sign-art/generated/washlet.webp"
+    },
+    {
+      "id": "toilet_slipper",
+      "ja": "トイレ用スリッパ",
+      "kana": "トイレようスリッパ",
+      "korean": "화장실 전용 슬리퍼",
+      "category": "표지",
+      "scene": "restroom",
+      "path": "public/vocab/sign-art/generated/toilet_slipper.webp"
+    },
+    {
+      "id": "moeru_gomi",
+      "ja": "燃えるごみ",
+      "kana": "もえるごみ",
+      "korean": "가연 쓰레기(타는 쓰레기)",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/moeru_gomi.webp"
+    },
+    {
+      "id": "moenai_gomi",
+      "ja": "燃えないごみ",
+      "kana": "もえないごみ",
+      "korean": "불연 쓰레기(안 타는 쓰레기)",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/moenai_gomi.webp"
+    },
+    {
+      "id": "shigen_gomi",
+      "ja": "資源ごみ",
+      "kana": "しげんごみ",
+      "korean": "재활용 쓰레기",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/shigen_gomi.webp"
+    },
+    {
+      "id": "pet_bottle",
+      "ja": "ペットボトル",
+      "kana": "ペットボトル",
+      "korean": "페트병",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/pet_bottle.webp"
+    },
+    {
+      "id": "gomibako_nashi",
+      "ja": "ゴミ箱はありません",
+      "kana": "ゴミばこはありません",
+      "korean": "쓰레기통이 없습니다",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/gomibako_nashi.webp"
+    },
+    {
+      "id": "hinanbasho",
+      "ja": "避難場所",
+      "kana": "ひなんばしょ",
+      "korean": "대피 장소",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/hinanbasho.webp"
+    },
+    {
+      "id": "kinkyu_jishin",
+      "ja": "緊急地震速報",
+      "kana": "きんきゅうじしんそくほう",
+      "korean": "긴급 지진 속보",
+      "category": "주의",
+      "scene": "construction",
+      "path": "public/vocab/sign-art/generated/kinkyu_jishin.webp"
     }
   ]
 }

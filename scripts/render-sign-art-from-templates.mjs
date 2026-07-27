@@ -1,8 +1,9 @@
 import { createRequire } from 'node:module';
-import { existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { signSceneFor, signs } from '../src/content/signs.ts';
 
 const require = createRequire(import.meta.url);
 const { chromium } = require('/Users/dennis/kana-master/kana-master/node_modules/playwright');
@@ -15,6 +16,7 @@ const tmpDir = join(root, '.asset-tmp', 'sign-art-rendered-png');
 
 const W = 1024;
 const H = 1024;
+const preservedAssetIds = new Set(['danshi', 'kiken']);
 
 const boxes = {
   checkout: { x: 340, y: 220, w: 340, h: 500, max: 125, color: '#172f2b', shadow: 'light' },
@@ -104,6 +106,21 @@ function htmlFor(sign, templateUrl, box) {
 }
 
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+manifest.sign = signs.map((sign) => {
+  const { id, ja, kana, korean, category } = sign;
+  return {
+    id,
+    ja,
+    kana,
+    korean,
+    category,
+    scene: signSceneFor(sign),
+    path: `public/vocab/sign-art/generated/${id}.webp`,
+  };
+});
+manifest.signCount = manifest.sign.length;
+writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+
 mkdirSync(outDir, { recursive: true });
 mkdirSync(tmpDir, { recursive: true });
 
@@ -111,14 +128,20 @@ const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
 
 let rendered = 0;
+let preserved = 0;
 for (const sign of manifest.sign) {
+  const webpOut = join(root, sign.path);
+  if (preservedAssetIds.has(sign.id) && existsSync(webpOut)) {
+    preserved++;
+    continue;
+  }
+
   const template = join(templateDir, `${sign.scene}.webp`);
   if (!existsSync(template)) throw new Error(`Missing template for ${sign.scene}: ${template}`);
   const box = boxes[sign.scene];
   if (!box) throw new Error(`Missing text box for scene: ${sign.scene}`);
 
   const pngOut = join(tmpDir, `${sign.id}.png`);
-  const webpOut = join(root, sign.path);
   const templateUrl = `data:image/webp;base64,${readFileSync(template).toString('base64')}`;
   await page.setContent(htmlFor(sign, templateUrl, box), { waitUntil: 'load' });
   await page.evaluate(async () => {
@@ -147,4 +170,6 @@ for (const sign of manifest.sign) {
 }
 
 await browser.close();
-console.log(`rendered ${rendered} sign-art WebP assets with browser-fitted text`);
+console.log(
+  `rendered ${rendered} sign-art WebP assets with browser-fitted text; preserved ${preserved} priority assets`,
+);

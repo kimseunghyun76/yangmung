@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { sceneBackdropForCard } from './scene';
+import { quickPracticeBackdrop, sceneBackdropForCard } from './scene';
 
 const NEW_MISSION_IDS = ['C51', 'C52', 'C53', 'C54'];
 const EXPECTED_FILES = ['solo-street-03.webp', 'ff-street-03.webp', 'mf-street-03.webp'];
@@ -15,5 +15,14 @@ describe('C51-C54 session artwork', () => {
     for (const assetPath of paths) {
       expect(fs.existsSync(path.join(process.cwd(), 'public', assetPath!))).toBe(true);
     }
+  });
+});
+
+describe('result-page artwork', () => {
+  it('provides a dedicated level-test banner', () => {
+    const assetPath = quickPracticeBackdrop('level-test');
+
+    expect(assetPath).toBe('/scenes/quick-practice/level-test.webp');
+    expect(fs.existsSync(path.join(process.cwd(), 'public', assetPath))).toBe(true);
   });
 });

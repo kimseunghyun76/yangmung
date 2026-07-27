@@ -12,7 +12,7 @@
     "assets:variants": "tsx scripts/generate-session-variants.mjs",
     "assets:vocab": "node scripts/generate-vocab-word-assets.mjs && node scripts/optimize-vocab-assets.mjs --remove-png",
     "assets:signs": "tsx scripts/generate-sign-art-assets.ts && node scripts/optimize-vocab-assets.mjs --remove-png",
-    "assets:signs:rendered": "node scripts/render-sign-art-from-templates.mjs",
+    "assets:signs:rendered": "tsx scripts/render-sign-art-from-templates.mjs",
     "assets:vocab:optimize": "node scripts/optimize-vocab-assets.mjs --remove-png",
     "assets:gacha": "tsx scripts/generate-gacha-item-assets.mjs && node scripts/optimize-gacha-assets.mjs --remove-png && node scripts/zoom-gacha-item-assets.mjs",
     "assets:gacha:optimize": "node scripts/optimize-gacha-assets.mjs --remove-png",

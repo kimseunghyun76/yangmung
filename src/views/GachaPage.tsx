@@ -49,7 +49,6 @@ function saveDailyClaimCount(key: string, count: number): void {
 export function GachaPage({ nav, openMissions }: Props) {
   const key = todayKey();
   const [claimedCount, setClaimedCount] = useState(() => loadDailyClaimCount(key));
-  const [dailyRun, setDailyRun] = useState(0);
   const [showLastDailyResult, setShowLastDailyResult] = useState(false);
   const [deckVersion, setDeckVersion] = useState(0);
   const remainingFree = Math.max(0, DAILY_FREE_LIMIT - claimedCount);
@@ -104,17 +103,11 @@ export function GachaPage({ nav, openMissions }: Props) {
             </div>
           ) : (
             <GachaBox
-              key={dailyRun}
               sessionId={dailySessionId(key, nextFreeOrdinal)}
               sceneIds={unlockedSceneIds}
               grade="wood"
               label={`무료 뽑기 ${nextFreeOrdinal}/${DAILY_FREE_LIMIT}`}
               randomDrawCount
-              afterRevealLabel={claimedCount < DAILY_FREE_LIMIT ? `다음 무료 뽑기 (${DAILY_FREE_LIMIT - claimedCount}회 남음)` : undefined}
-              onAfterReveal={() => {
-                setShowLastDailyResult(false);
-                setDailyRun((n) => n + 1);
-              }}
               onClaimed={(results) => {
                 if (results.length > 0) {
                   setShowLastDailyResult(true);

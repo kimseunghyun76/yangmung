@@ -168,6 +168,7 @@ export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, pro
     accent: 'var(--accent)',
     title: `${CORE_LEVEL_LABEL[coreLevel]} 레벨 테스트`,
     sub: '모든 단계를 통과했어요 — 승급 시험을 보러 가요',
+    image: quickPracticeBackdrop('level-test'),
     badge: '승급',
     onClick: () => onStartPromotion(coreLevel),
     preferred: true,
@@ -182,6 +183,7 @@ export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, pro
     accent: 'var(--ok)',
     title: '어휘 주제 계속 학습하기',
     sub: '숫자·신체·운동·동물 등 학습 탭의 다른 주제도 있어요',
+    image: quickPracticeBackdrop('vocab'),
     badge: '어휘',
     onClick: onOpenVocabGroups,
   } : null;
