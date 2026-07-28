@@ -45,6 +45,7 @@ const Session = lazy(() => import('./views/Session').then((m) => ({ default: m.S
 const Done = lazy(() => import('./views/Done').then((m) => ({ default: m.Done })));
 const MapView = lazy(() => import('./views/Map').then((m) => ({ default: m.Map })));
 const Emergency = lazy(() => import('./views/Emergency').then((m) => ({ default: m.Emergency })));
+const ListenMode = lazy(() => import('./views/ListenMode').then((m) => ({ default: m.ListenMode })));
 const Practice = lazy(() => import('./views/Practice').then((m) => ({ default: m.Practice })));
 const GachaPage = lazy(() => import('./views/GachaPage').then((m) => ({ default: m.GachaPage })));
 const Flash = lazy(() => import('./views/Flash').then((m) => ({ default: m.Flash })));
@@ -865,6 +866,7 @@ export function App() {
     onOpenSettings: () => setShowSettings(true),
     onOpenTips: () => { setTipsQuery(''); navigate('tips'); },
     onOpenEmergency: () => navigate('emergency'),
+    onOpenListen: () => navigate('listen'),
     theme: settings.theme,
     onToggleTheme: toggleTheme,
   };
@@ -876,6 +878,7 @@ export function App() {
           nav={{ ...nav, current: 'practice' }}
           coreLevel={coreLevel}
           progression={progression}
+          progress={progress}
           devUnlockAll={!!settings.devUnlockAll}
           onStartStage={startStage}
           onPracticeWrite={startKanaWrite}
@@ -933,6 +936,9 @@ export function App() {
     }
     if (view === 'emergency') {
       return <Emergency nav={{ ...nav, current: 'emergency' }} onPracticeScene={startSceneSession} onBack={() => goBack('home')} />;
+    }
+    if (view === 'listen') {
+      return <ListenMode nav={{ ...nav, current: 'listen' }} allCards={allCards} progress={progress} onBack={() => goBack('home')} />;
     }
     if (view === 'review') {
       return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} openMissions={visibleOpenMissions} devUnlockAll={!!settings.devUnlockAll} onStartReview={startReviewSession} onPracticeScene={startSceneSession} onStartWeakKanaReview={startWeakKanaReview} onBack={() => goBack('home')} />;
@@ -1037,7 +1043,7 @@ export function App() {
           sessionId={snap.sessionId} score={snap.score} quizSeen={snap.quizSeen} sessionLog={snap.sessionLog}
           sessionCards={snap.sessionCards}
           progress={progress} canContinue={canContinue}
-          clearedSceneIds={clearedSceneIds} nextSceneId={nextSceneId}
+          clearedSceneIds={clearedSceneIds} openMissions={visibleOpenMissions} nextSceneId={nextSceneId}
           reviewCount={reviewCount} dictationCount={dictationCount} composeCount={composeCount} signCount={signCount}
           speakCount={snap.sessionCards.filter((c) => c.kind === 'speak').length}
           isQuickPractice={snap.isPractice}

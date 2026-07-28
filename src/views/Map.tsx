@@ -2,7 +2,7 @@
 import { CONTENT } from '../content';
 import { ROUTES } from '../content/routes';
 import type { Card } from '../learn/cards';
-import { kanaReadMastery, missionProgress, type ProgressMap } from '../learn/progress';
+import { missionProgress, type ProgressMap } from '../learn/progress';
 import { isSceneOpen } from '../learn/unlocks';
 import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
@@ -11,7 +11,6 @@ import { sceneVisualByMission, type SceneVisual } from './scene';
 import { NavBar, type NavBarProps } from './NavBar';
 import { PageHead } from './ui';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
-import { DeckButton } from './Gacha';
 import { MascotBubble } from './mascot';
 
 const RECOVERY = [
@@ -46,8 +45,6 @@ interface SceneItem { m: typeof CONTENT.missions[number]; sv: SceneVisual; unloc
 
 export function Map({ nav, allCards, progress, openMissions, missionsLocked, devUnlockAll, preferredRouteLabel, autoSuggestedLabels, onSetPreferredRoute, onPracticeScene, onBack }: Props) {
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
-  const hira = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'hiragana').map((k) => k.id));
-  const kata = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'katakana').map((k) => k.id));
 
   // 여행 미션은 입문·기본에서는 절대 노출하지 않는다(요청) — 장면 그리드 대신 명확한 안내로 대체.
   if (missionsLocked && !devUnlockAll) {
@@ -84,11 +81,24 @@ export function Map({ nav, allCards, progress, openMissions, missionsLocked, dev
   });
   const open = items.filter((x) => x.unlocked);
   const locked = items.filter((x) => !x.unlocked);
+
+  // 우선 학습 카테고리가 있으면(선택했거나 출국 임박 자동 추천) 그 카테고리 소속 장면만 추천·목록에 먼저 보여준다.
+  // 아직 그 카테고리 안에 열린 장면이 하나도 없으면(막 골랐을 때 흔함) 전체 열린 장면으로 자연스럽게 대체한다.
+  const activeLabels = preferredRouteLabel && preferredRouteLabel !== 'random'
+    ? [preferredRouteLabel]
+    : preferredRouteLabel === undefined ? autoSuggestedLabels : [];
+  const activeMissionIds = activeLabels.length > 0
+    ? new Set(ROUTES.filter((r) => activeLabels.includes(r.label)).flatMap((r) => r.ids))
+    : null;
+  const categoryOpen = activeMissionIds ? open.filter((x) => activeMissionIds.has(x.m.id)) : open;
+  const isCategoryFiltered = activeMissionIds !== null && categoryOpen.length > 0;
+  const openForDisplay = isCategoryFiltered ? categoryOpen : open;
+
   // 열린 장면 정렬: 진행 중 → 시작 전 → 완료
   const rank = (x: SceneItem) => (x.done ? 2 : x.started ? 0 : 1);
-  const openSorted = [...open].sort((a, b) => rank(a) - rank(b));
+  const openSorted = [...openForDisplay].sort((a, b) => rank(a) - rank(b));
   // 추천: 진행 중(미완료) 우선 → 시작 전 → (없으면) 첫 열린 장면
-  const recommended = open.find((x) => x.started && !x.done) ?? open.find((x) => !x.started) ?? open[0];
+  const recommended = openForDisplay.find((x) => x.started && !x.done) ?? openForDisplay.find((x) => !x.started) ?? openForDisplay[0];
 
   return (
     <main style={WRAP}>
@@ -110,16 +120,6 @@ export function Map({ nav, allCards, progress, openMissions, missionsLocked, dev
 
       <RoutePreference preferredRouteLabel={preferredRouteLabel} autoSuggestedLabels={autoSuggestedLabels} onSetPreferredRoute={onSetPreferredRoute} />
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14, marginTop: -8 }}>
-        <DeckButton />
-      </div>
-
-      <GlassPanel style={{ marginBottom: 18 }}>
-        <p style={{ ...kicker, marginBottom: 10 }}>가나 · 읽기 기준</p>
-        <Bar label="히라가나" m={hira} />
-        <Bar label="가타카나" m={kata} />
-      </GlassPanel>
-
       {/* 추천 */}
       {recommended && (
         <section style={{ marginBottom: 18 }}>
@@ -128,9 +128,11 @@ export function Map({ nav, allCards, progress, openMissions, missionsLocked, dev
         </section>
       )}
 
-      {/* 열린 장면 — 진행 중 → 시작 전 → 완료 순 */}
+      {/* 열린 장면 — 진행 중 → 시작 전 → 완료 순. 우선 카테고리가 있고 그 안에 열린 장면이 있으면 그것만 먼저 보여준다. */}
       <section style={{ marginBottom: 18 }}>
-        <p style={{ ...kicker, marginBottom: 10 }}>열린 장면 · {open.length}</p>
+        <p style={{ ...kicker, marginBottom: 10 }}>
+          열린 장면 · {openForDisplay.length}{isCategoryFiltered ? ` · ${activeLabels.join(' · ')}` : ''}
+        </p>
         <GlassPanel style={{ padding: 10 }}>
           <div style={{ display: 'grid', gridTemplateColumns: openSorted.length > 1 ? 'repeat(2, minmax(0, 1fr))' : '1fr', gap: 10 }}>
             {openSorted.map((x) => (
@@ -330,22 +332,5 @@ function RoutePreference({ preferredRouteLabel, autoSuggestedLabels, onSetPrefer
         })}
       </div>
     </GlassPanel>
-  );
-}
-
-function Bar({ label, m }: { label: string; m: { mastered: number; total: number } }) {
-  const SEG = 18;
-  const filled = Math.round((m.mastered / Math.max(1, m.total)) * SEG);
-  return (
-    <div style={{ marginTop: 10 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, fontWeight: 700 }}>
-        <span>{label}</span><span style={{ color: 'var(--ink-faint)', fontVariantNumeric: 'tabular-nums' }}><strong style={{ color: 'var(--ink)' }}>{m.mastered}</strong>/{m.total}</span>
-      </div>
-      <div style={{ display: 'flex', gap: 3, marginTop: 7 }}>
-        {Array.from({ length: SEG }, (_, i) => (
-          <span key={i} style={{ flex: 1, height: 8, borderRadius: 2, background: i < filled ? 'var(--accent)' : 'var(--glass-border)' }} />
-        ))}
-      </div>
-    </div>
   );
 }

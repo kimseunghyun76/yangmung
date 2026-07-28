@@ -23,13 +23,16 @@ export interface Collection {
 const KEY = 'yangmung:collection:v1';
 const EMPTY: Collection = { cards: {}, sentences: {}, trophies: {}, lastClaimedSessionId: 0 };
 
+// 등급 라벨 — 2026-07-29 사용성 개편: 내부 6단계·미션별 아이템 콘텐츠(gachaItems.ts, 300개)는
+// 그대로 두되(무손실), 사용자에게 보이는 이름만 게임 용어(N/R/SR/SSR/UR/XUR) 대신 이해하기 쉬운
+// 한글 이름으로 순화 — 인접한 두 단계가 "일반/일반+"처럼 같은 계열임을 알 수 있게 묶어 표기한다.
 export const RARITIES: { key: Rarity; label: string; color: string; weight: number }[] = [
-  { key: 'basic', label: 'N', color: '#8b95a3', weight: 50 },
-  { key: 'bronze', label: 'R', color: '#b77a42', weight: 30 },
-  { key: 'silver', label: 'SR', color: '#9aa3ad', weight: 10 },
-  { key: 'gold', label: 'SSR', color: '#d9a531', weight: 7 },
-  { key: 'diamond', label: 'UR', color: '#5bc7e0', weight: 3 },
-  { key: 'xur', label: 'XUR', color: '#b996ff', weight: 0 },
+  { key: 'basic', label: '일반', color: '#8b95a3', weight: 50 },
+  { key: 'bronze', label: '일반+', color: '#b77a42', weight: 30 },
+  { key: 'silver', label: '특별', color: '#9aa3ad', weight: 10 },
+  { key: 'gold', label: '특별+', color: '#d9a531', weight: 7 },
+  { key: 'diamond', label: '희귀', color: '#5bc7e0', weight: 3 },
+  { key: 'xur', label: '희귀+', color: '#b996ff', weight: 0 },
 ];
 
 export const DRAW_COUNT = 10;

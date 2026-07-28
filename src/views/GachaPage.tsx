@@ -15,7 +15,10 @@ interface Props {
 }
 
 const DAILY_KEY = 'yangmung:gacha:daily:v1';
-const DAILY_FREE_LIMIT = 100;
+// 2026-07-29 사용성 개편: 학습과 느슨하게만 연결돼 있던 "하루 100회 무료"를 소량으로 줄이고,
+// 대신 학습 세션을 완료할 때마다 카드 상자를 1개씩 주는 것으로 보상의 중심을 옮겼다(Done.tsx 참고).
+// 이 소량 무료는 그날 학습을 아직 안 했어도 부담 없이 접속해 뭔가 받아볼 수 있게 하는 최소한의 몫이다.
+const DAILY_FREE_LIMIT = 5;
 
 function todayKey(): string {
   const d = new Date();
@@ -68,10 +71,10 @@ export function GachaPage({ nav, openMissions }: Props) {
   return (
     <main style={WRAP}>
       <NavBar {...nav} />
-      <PageHead title="도감" sub="수업 보상으로 여행 카드를 모으고, 부족한 장면은 다시 연습해요" />
+      <PageHead title="수집함" sub="수업 보상으로 여행 카드를 모으고, 부족한 장면은 다시 연습해요" />
 
       <MascotBubble who="mung" mood="correct" size={46} style={{ marginBottom: 14 }}>
-        카드 뽑기는 학습 보상이에요. 현금 뽑기 없이 하루 100회 무료와 수업 완료 보상만 있어요.
+        카드 뽑기는 학습 보상이에요. 현금 뽑기 없이, 학습 세션을 마칠 때마다 카드 상자를 받고 매일 소량의 무료 뽑기도 있어요.
       </MascotBubble>
 
       <GlassPanel strong style={{ position: 'relative', overflow: 'hidden', marginBottom: 18 }}>
@@ -80,7 +83,7 @@ export function GachaPage({ nav, openMissions }: Props) {
           <p style={{ margin: '0 0 6px', fontSize: 12, fontWeight: 900, letterSpacing: '0.06em', color: 'var(--accent)' }}>DAILY FREE</p>
           <h2 style={{ margin: 0, fontSize: 23, lineHeight: 1.18, color: 'var(--ink)' }}>오늘의 무료 카드 뽑기</h2>
           <p style={{ margin: '8px 0 14px', fontSize: 13, lineHeight: 1.55, color: 'var(--ink-soft)', fontWeight: 650 }}>
-            현재 열린 장면에서만 카드가 나와요. 도감이 비어 있는 장면은 미션 지도에서 연습하면 보상이 더 잘 이어집니다.
+            현재 열린 장면에서만 카드가 나와요. 수집함이 비어 있는 장면은 미션 지도에서 연습하면 보상이 더 잘 이어집니다.
           </p>
           <div style={{ display: 'flex', gap: 7, flexWrap: 'wrap', marginBottom: claimed ? 0 : 4 }}>
             {previewScenes.map((s) => (
@@ -98,7 +101,7 @@ export function GachaPage({ nav, openMissions }: Props) {
           </p>
           {claimed ? (
             <div style={{ marginTop: 16, padding: 14, borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)' }}>
-              <strong style={{ display: 'block', fontSize: 16 }}>오늘 무료 뽑기 100회를 모두 받았어요.</strong>
+              <strong style={{ display: 'block', fontSize: 16 }}>오늘 무료 뽑기 {DAILY_FREE_LIMIT}회를 모두 받았어요.</strong>
               <span style={{ display: 'block', marginTop: 5, fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 700 }}>내일 다시 열리고, 수업 완료 보상은 계속 받을 수 있어요.</span>
             </div>
           ) : (

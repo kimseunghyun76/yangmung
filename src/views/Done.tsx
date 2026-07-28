@@ -1,8 +1,10 @@
 // 세션 완료 — Immersive Scene Coach. 장면 클리어 감정 + 여권 스탬프 + 다음 장면 예고.
+import { useState } from 'react';
 import { CONTENT } from '../content';
 import type { Card } from '../learn/cards';
-import { loadCollection } from '../learn/collection';
+import { boxGrade, loadCollection } from '../learn/collection';
 import { useLearningStats } from '../learn/learningStats';
+import { GachaBox } from './Gacha';
 import { sessionResult, summarize, type ProgressMap, type SessionLogEntry } from '../learn/progress';
 import { categoryBreakdown } from '../learn/sessionCategories';
 import { WRAP } from '../ui/styles';
@@ -60,6 +62,8 @@ interface Props {
   speakCount: number;
   canContinue: boolean;
   clearedSceneIds: string[];
+  /** 세션 완료 보상 카드 뽑기용 장면 후보 — 없으면(승급 시험 등) 보상을 생략. */
+  openMissions?: string[];
   nextSceneId?: string;
   reviewCount?: number;
   dictationCount?: number;
@@ -101,9 +105,20 @@ interface Props {
 const placeOf = (id: string) => CONTENT.missions.find((m) => m.id === id)?.place
   ?? CONTENT.missions.find((m) => m.id === id)?.scenario ?? id;
 
-export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, progress, speakCount, canContinue, clearedSceneIds, nextSceneId, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, isQuickPractice = false, coreLevel, progression, devUnlockAll = false, promotionResult, onOpenLevelGuide, onRetryPromotion, onStartPromotion, onRetryWeak, onRetrySame, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onPracticeVocab, onPracticeGreetings, onPracticeKanaHiragana, onPracticeKanaKatakana, onPracticePairs, onPracticeWrite, onPracticeVerbs, onOpenVocabGroups, onHome }: Props) {
+export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, progress, speakCount, canContinue, clearedSceneIds, openMissions, nextSceneId, reviewCount = 0, dictationCount = 0, composeCount = 0, signCount = 0, isQuickPractice = false, coreLevel, progression, devUnlockAll = false, promotionResult, onOpenLevelGuide, onRetryPromotion, onStartPromotion, onRetryWeak, onRetrySame, onContinue, onReview, onDictation, onCompose, onSigns, onFlash, onPracticeVocab, onPracticeGreetings, onPracticeKanaHiragana, onPracticeKanaKatakana, onPracticePairs, onPracticeWrite, onPracticeVerbs, onOpenVocabGroups, onHome }: Props) {
   // 훅은 이 아래 이른 반환(promotionResult)과 무관하게 항상 같은 순서로 호출돼야 한다(rules-of-hooks).
   const learningStats = useLearningStats(loadCollection());
+  // 세션 완료 보상 카드 뽑기 — 2026-07-29 사용성 개편: 하루 무료 뽑기(100회, 학습과 느슨히 연결)만 있던 것을
+  // "세션 완료당 1회 + 소량 일일무료"로 재편하며 추가. 승급 시험·퀴즈 없는 순수 학습(quizSeen=0)은 채점 기준이
+  // 없어 등급(boxGrade)을 매길 수 없으므로 제외. sessionId로 claim()의 중복 방지 가드를 그대로 재사용해
+  // 같은 세션 화면이 다시 그려져도 중복 지급되지 않는다.
+  const [reward] = useState<{ scenes: string[]; grade: ReturnType<typeof boxGrade> } | null>(() => {
+    if (promotionResult || quizSeen === 0 || !openMissions || openMissions.length === 0) return null;
+    const pool = [...openMissions];
+    for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+    const stars = Math.round((score / quizSeen) * 3);
+    return { scenes: pool.slice(0, score >= quizSeen ? 2 : 1), grade: boxGrade(stars, 0) };
+  });
   // 승급 시험이었으면 일반 결과 화면 대신 전용 합격/불합격 화면 — 캐릭터가 목적·결과·다음 행동을 설명한다.
   if (promotionResult) {
     return (
@@ -319,6 +334,13 @@ export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, pro
           </p>
         )}
       </div>
+
+      {/* 세션 완료 보상 — 퀴즈가 있던 세션마다 카드 상자 1개(정답률에 따라 등급·장수 차등) */}
+      {reward && (
+        <div className="ym-rise" style={{ animationDelay: '.06s', marginTop: 20 }}>
+          <GachaBox sessionId={sessionId} sceneIds={reward.scenes} grade={reward.grade} />
+        </div>
+      )}
 
       {/* 여권 스탬프 — 오늘 해낸 장면 */}
       {stamps.length > 0 && (

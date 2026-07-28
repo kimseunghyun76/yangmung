@@ -1,17 +1,21 @@
+import { CONTENT } from '../content';
 import {
   CORE_LEVEL_LABEL, CORE_LEVELS, LEVEL_STAGES, isStageComplete, isStageUnlocked,
   type CoreLevel, type ProgStage, type ProgressionState,
 } from '../learn/progression';
+import { kanaReadMastery, type ProgressMap } from '../learn/progress';
 import { VOCAB_GROUPS, vocabGroupArt } from '../content/thematicVocab';
 import { WRAP } from '../ui/styles';
 import { Icon, type IconName } from '../ui/Icon';
 import { NavBar, type NavBarProps } from './NavBar';
+import { PageHead } from './ui';
 import { GlassPanel, hexA } from './shell';
 
 interface Props {
   nav: NavBarProps;
   coreLevel: CoreLevel;
   progression: ProgressionState;
+  progress: ProgressMap;
   devUnlockAll: boolean;
   onStartStage: (stage: ProgStage) => void;
   onPracticeWrite: () => void;
@@ -67,6 +71,7 @@ const LEVEL_ACCENT: Record<CoreLevel, string> = {
   express: '#3867b7',
   advanced: '#8d63c7',
 };
+const kicker: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase', margin: 0 };
 
 function stageItems(onStartStage: (stage: ProgStage) => void): PracticeItem[] {
   return CORE_LEVELS.flatMap((level) =>
@@ -98,7 +103,9 @@ function itemDone(item: PracticeItem, progression: ProgressionState): boolean {
   return !!item.stage && isStageComplete(progression, item.level, item.stage.id);
 }
 
-export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartStage, onPracticeWrite, onPracticeSpeak, onPracticeFlash, onOpenBasics, onOpenPublic, onOpenEntertainment, onOpenDiscoverGallery, onStartVocabGroup }: Props) {
+export function Practice({ nav, coreLevel, progression, progress, devUnlockAll, onStartStage, onPracticeWrite, onPracticeSpeak, onPracticeFlash, onOpenBasics, onOpenPublic, onOpenEntertainment, onOpenDiscoverGallery, onStartVocabGroup }: Props) {
+  const hira = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'hiragana').map((k) => k.id));
+  const kata = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'katakana').map((k) => k.id));
   // 어휘 커리큘럼 — 예전엔 "어휘 커리큘럼" 배너 하나로 뭉쳐 그 안의 하위 메뉴(/vocab)로 들어가야 했는데,
   // 그 메뉴 안에 기본 인사·생활 기초가 이미 별도 배너로 있는 내용과 중복돼 혼란스러웠다.
   // 이제 기본 인사(입문 단계로 이동)를 뺀 나머지 주제 그룹을 기본 레벨에 개별 배너로 바로 펼쳐 놓는다.
@@ -188,39 +195,64 @@ export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartSta
     },
   ];
 
+  // 오늘의 추천 — 현재 레벨에서 아직 안 끝낸, 잠기지 않은 첫 스테이지(순서대로). 미션 지도의
+  // "추천" 카드와 같은 역할: 여러 섹션을 훑어보지 않고도 바로 다음 할 일을 알 수 있게 한다.
+  const recommended = items.find((item) => item.level === coreLevel && item.stage
+    && itemUnlocked(item, coreLevel, progression, devUnlockAll) && !itemDone(item, progression));
+
   return (
     <main style={WRAP}>
       <NavBar {...nav} />
-      <GlassPanel>
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
-          <div>
-            <p style={{ margin: 0, fontSize: 12, fontWeight: 900, color: 'var(--accent)', letterSpacing: '.06em' }}>STUDY</p>
-            <h1 style={{ margin: '5px 0 0', fontSize: 25, lineHeight: 1.12, letterSpacing: 0 }}>학습</h1>
-          </div>
+      <PageHead title="학습 지도" sub="레벨별 단계를 순서대로 밟고, 자유 연습으로 언제든 복습해요" />
+
+      {/* 진행률 배너 — 미션 지도의 "가나·읽기 기준" 진행바와 같은 자리, 레벨별로 확장 */}
+      <GlassPanel style={{ marginBottom: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+          <p style={{ ...kicker, margin: 0 }}>내 진행률</p>
           <span style={{
-            flex: '0 0 auto',
-            padding: '7px 10px',
-            borderRadius: 999,
+            padding: '4px 9px', borderRadius: 999,
             background: devUnlockAll ? 'var(--accent)' : 'var(--glass-bg-strong)',
             color: devUnlockAll ? 'var(--accent-ink)' : 'var(--ink-soft)',
-            border: '1px solid var(--glass-border)',
-            fontSize: 12,
-            fontWeight: 900,
+            border: '1px solid var(--glass-border)', fontSize: 11, fontWeight: 900,
           }}>
-            {devUnlockAll ? '제한 해제' : CORE_LEVEL_LABEL[coreLevel]}
+            {devUnlockAll ? '제한 해제' : `현재 · ${CORE_LEVEL_LABEL[coreLevel]}`}
           </span>
         </div>
+        {CORE_LEVELS.map((level) => (
+          <LevelProgressRow key={level} level={level} isCurrent={level === coreLevel} progression={progression} />
+        ))}
       </GlassPanel>
+
+      {/* 가나 읽기 기준 — 여행 미션(미션 지도)이 아니라 학습 자체의 진도이므로 여기가 더 맞는 자리(2026-07-29 이동) */}
+      <GlassPanel style={{ marginBottom: 16 }}>
+        <p style={{ ...kicker, marginBottom: 10 }}>가나 · 읽기 기준</p>
+        <KanaMasteryBar label="히라가나" m={hira} />
+        <KanaMasteryBar label="가타카나" m={kata} />
+      </GlassPanel>
+
+      {/* 오늘의 추천 */}
+      {recommended && (
+        <section className="ym-rise" style={{ marginBottom: 18 }}>
+          <p style={{ ...kicker, marginBottom: 10 }}>오늘의 추천</p>
+          <PracticeCard item={recommended} unlocked done={false} featured />
+        </section>
+      )}
 
       {CORE_LEVELS.map((level) => {
         const group = items.filter((item) => item.level === level);
         if (!group.length) return null;
         const lockedLevel = !devUnlockAll && LEVEL_RANK[level] > LEVEL_RANK[coreLevel];
+        // 아직 도달 못한 레벨은 이미지 카드 대신 미션 지도의 "아직 안 열린 장면"처럼 자물쇠 그리드로
+        // 압축해 보여준다 — 레벨마다 큰 이미지 카드가 반복돼 화면이 답답해 보이던 문제(2026-07-29 지적)의 해결책.
+        if (lockedLevel) {
+          return <LockedLevelSection key={level} level={level} count={group.length} />;
+        }
         return (
           <section key={level} className="ym-rise" style={{ marginTop: 14 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, margin: '0 2px 9px' }}>
               <h2 style={{ margin: 0, fontSize: 15, color: 'var(--ink)', lineHeight: 1.2 }}>{CORE_LEVEL_LABEL[level]}</h2>
-              {lockedLevel && <span style={{ fontSize: 11.5, color: 'var(--ink-faint)', fontWeight: 850 }}>잠김</span>}
+              {level === coreLevel && <span style={{ fontSize: 11, color: 'var(--accent)', fontWeight: 900 }}>현재 레벨</span>}
+              {LEVEL_RANK[level] < LEVEL_RANK[coreLevel] && <span style={{ fontSize: 11, color: 'var(--ink-faint)', fontWeight: 850 }}>지난 레벨 · 자유 복습</span>}
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
               {group.map((item) => (
@@ -265,7 +297,7 @@ export function Practice({ nav, coreLevel, progression, devUnlockAll, onStartSta
   );
 }
 
-function PracticeCard({ item, unlocked, done }: { item: PracticeItem; unlocked: boolean; done: boolean }) {
+function PracticeCard({ item, unlocked, done, featured = false }: { item: PracticeItem; unlocked: boolean; done: boolean; featured?: boolean }) {
   return (
     <button
       className="ym-press"
@@ -274,17 +306,18 @@ function PracticeCard({ item, unlocked, done }: { item: PracticeItem; unlocked: 
       style={{
         position: 'relative',
         minWidth: 0,
+        width: '100%',
         overflow: 'hidden',
-        aspectRatio: '4 / 3',
-        border: `1px solid ${unlocked ? 'var(--glass-border)' : 'rgba(127,127,127,.18)'}`,
-        borderRadius: 16,
+        aspectRatio: featured ? '16 / 9' : '4 / 3',
+        border: featured ? `1.5px solid ${hexA(item.accent, 0.5)}` : `1px solid ${unlocked ? 'var(--glass-border)' : 'rgba(127,127,127,.18)'}`,
+        borderRadius: featured ? 22 : 16,
         padding: 0,
         background: 'var(--glass-bg-strong)',
         color: '#fff',
         cursor: unlocked ? 'pointer' : 'default',
         opacity: unlocked ? 1 : 0.58,
         textAlign: 'left',
-        boxShadow: unlocked ? '0 10px 22px rgba(89,58,28,.09)' : 'none',
+        boxShadow: featured ? '0 14px 32px rgba(89,58,28,.14)' : unlocked ? '0 10px 22px rgba(89,58,28,.09)' : 'none',
       }}
     >
       <img
@@ -313,12 +346,12 @@ function PracticeCard({ item, unlocked, done }: { item: PracticeItem; unlocked: 
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: 10,
+        padding: featured ? 16 : 10,
       }}>
         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
           <span style={{
-            width: 34,
-            height: 34,
+            width: featured ? 42 : 34,
+            height: featured ? 42 : 34,
             borderRadius: 11,
             display: 'inline-flex',
             alignItems: 'center',
@@ -327,7 +360,7 @@ function PracticeCard({ item, unlocked, done }: { item: PracticeItem; unlocked: 
             border: '1px solid rgba(255,255,255,.22)',
             color: '#fff',
           }}>
-            <Icon name={item.icon} size={18} />
+            <Icon name={item.icon} size={featured ? 22 : 18} />
           </span>
           <span style={{
             padding: '4px 7px',
@@ -338,14 +371,81 @@ function PracticeCard({ item, unlocked, done }: { item: PracticeItem; unlocked: 
             fontWeight: 950,
             color: '#fff',
           }}>
-            {done ? '완료' : unlocked ? '열림' : 'LOCK'}
+            {done ? '완료' : unlocked ? (featured ? '바로 시작' : '열림') : 'LOCK'}
           </span>
         </span>
         <span style={{ display: 'block', minWidth: 0 }}>
-          <strong style={{ display: 'block', fontSize: 17, lineHeight: 1.08, fontWeight: 950, textShadow: '0 2px 8px rgba(0,0,0,.45)', overflowWrap: 'anywhere' }}>{item.label}</strong>
-          <span style={{ display: 'block', marginTop: 4, fontSize: 11.5, lineHeight: 1.28, fontWeight: 760, color: 'rgba(255,255,255,.82)', overflowWrap: 'anywhere' }}>{item.sub}</span>
+          <strong style={{ display: 'block', fontSize: featured ? 22 : 17, lineHeight: 1.08, fontWeight: 950, textShadow: '0 2px 8px rgba(0,0,0,.45)', overflowWrap: 'anywhere' }}>{item.label}</strong>
+          <span style={{ display: 'block', marginTop: 4, fontSize: featured ? 13 : 11.5, lineHeight: 1.28, fontWeight: 760, color: 'rgba(255,255,255,.82)', overflowWrap: 'anywhere' }}>{item.sub}</span>
         </span>
       </span>
     </button>
+  );
+}
+
+// 가나 읽기 숙련도 막대(예전 미션 지도에 있던 것을 여기로 이동, 2026-07-29).
+function KanaMasteryBar({ label, m }: { label: string; m: { mastered: number; total: number } }) {
+  const SEG = 18;
+  const filled = Math.round((m.mastered / Math.max(1, m.total)) * SEG);
+  return (
+    <div style={{ marginTop: 10 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, fontWeight: 700 }}>
+        <span>{label}</span><span style={{ color: 'var(--ink-faint)', fontVariantNumeric: 'tabular-nums' }}><strong style={{ color: 'var(--ink)' }}>{m.mastered}</strong>/{m.total}</span>
+      </div>
+      <div style={{ display: 'flex', gap: 3, marginTop: 7 }}>
+        {Array.from({ length: SEG }, (_, i) => (
+          <span key={i} style={{ flex: 1, height: 8, borderRadius: 2, background: i < filled ? 'var(--accent)' : 'var(--glass-border)' }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// 레벨별 진행률 한 줄 — 상단 배너에서 4개 레벨을 한눈에 훑어보게 한다("진행률 상단 표기", 2026-07-29).
+// 고급은 순차 단계가 없어(LEVEL_STAGES.advanced = []) 막대 대신 "자유 학습"으로 표시.
+function LevelProgressRow({ level, isCurrent, progression }: { level: CoreLevel; isCurrent: boolean; progression: ProgressionState }) {
+  const stages = LEVEL_STAGES[level];
+  const total = stages.length;
+  const completed = stages.filter((s) => isStageComplete(progression, level, s.id)).length;
+  const pct = total ? completed / total : 1;
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0' }}>
+      <span style={{ flex: '0 0 46px', fontSize: 12.5, fontWeight: isCurrent ? 950 : 750, color: isCurrent ? 'var(--accent)' : 'var(--ink-soft)' }}>
+        {CORE_LEVEL_LABEL[level]}
+      </span>
+      {total > 0 ? (
+        <>
+          <div style={{ flex: 1, height: 8, borderRadius: 999, background: 'var(--glass-border)', overflow: 'hidden' }}>
+            <div style={{ width: `${pct * 100}%`, height: '100%', borderRadius: 999, background: LEVEL_ACCENT[level], transition: 'width .4s ease' }} />
+          </div>
+          <span style={{ flex: '0 0 auto', fontSize: 11.5, fontWeight: 800, color: 'var(--ink-faint)', fontVariantNumeric: 'tabular-nums' }}>{completed}/{total}</span>
+        </>
+      ) : (
+        <span style={{ flex: 1, fontSize: 11.5, color: 'var(--ink-faint)', fontWeight: 700 }}>단계 없이 자유 학습</span>
+      )}
+    </div>
+  );
+}
+
+// 아직 도달 못한 레벨 — 미션 지도의 "아직 안 열린 장면"과 같은 자물쇠 그리드로 압축 표시.
+// 레벨마다 이미지 카드가 그대로 반복되면 화면이 길고 답답해 보이던 문제의 해결책.
+function LockedLevelSection({ level, count }: { level: CoreLevel; count: number }) {
+  return (
+    <section className="ym-rise" style={{ marginTop: 14 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, margin: '0 2px 9px' }}>
+        <h2 style={{ margin: 0, fontSize: 15, color: 'var(--ink)', lineHeight: 1.2 }}>{CORE_LEVEL_LABEL[level]}</h2>
+        <span style={{ fontSize: 11.5, color: 'var(--ink-faint)', fontWeight: 850 }}>잠김 · {count}개</span>
+      </div>
+      <GlassPanel style={{ padding: 12 }}>
+        <p style={{ fontSize: 12.5, color: 'var(--ink-soft)', margin: '0 0 10px', fontWeight: 700 }}>
+          {CORE_LEVEL_LABEL[level]} 레벨로 승급하면 열려요.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, minmax(0, 1fr))', gap: 8 }}>
+          {Array.from({ length: count }, (_, i) => (
+            <div key={i} aria-hidden style={{ aspectRatio: '1', borderRadius: 10, border: '1px dashed var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, color: 'var(--ink-faint)', opacity: 0.6 }}>🔒</div>
+          ))}
+        </div>
+      </GlassPanel>
+    </section>
   );
 }

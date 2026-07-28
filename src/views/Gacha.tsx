@@ -339,12 +339,12 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
           <GachaGlow color={box.colors[1]} strong />
           <div style={{ marginBottom: 14, textAlign: 'center' }}>
             <strong style={{ display: 'block', color: 'var(--ink)', fontSize: 16 }}>오늘 얻은 카드</strong>
-            <span style={{ display: 'block', marginTop: 4, color: 'var(--ink-soft)', fontSize: 12.5, fontWeight: 750 }}>획득한 아이템이 여행 도감에 저장되었습니다.</span>
+            <span style={{ display: 'block', marginTop: 4, color: 'var(--ink-soft)', fontSize: 12.5, fontWeight: 750 }}>획득한 아이템이 여행 수집함에 저장되었습니다.</span>
           </div>
           <RevealCards results={results} />
           <button className="ym-press" onClick={() => setDeck(true)}
             style={{ width: '100%', marginTop: 16, padding: '12px', borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)', fontWeight: 750, fontSize: 14, cursor: 'pointer' }}>
-            내 도감 보기
+            내 수집함 보기
           </button>
         </div>
       )}
@@ -687,7 +687,7 @@ export function DeckBrowser() {
     const ownedRarities = RARITIES.filter((r) => items[r.key] > 0).map((r) => r.key);
     return (
       <>
-        <button className="ym-press" onClick={() => { setSelected(undefined); setSelectedDetail(null); }} style={{ border: 0, background: 'transparent', color: 'var(--ink-soft)', fontWeight: 800, padding: '4px 0 12px', cursor: 'pointer' }}>← 도감으로</button>
+        <button className="ym-press" onClick={() => { setSelected(undefined); setSelectedDetail(null); }} style={{ border: 0, background: 'transparent', color: 'var(--ink-soft)', fontWeight: 800, padding: '4px 0 12px', cursor: 'pointer' }}>← 수집함으로</button>
         <p style={{ margin: '0 0 14px', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>
           {placeOf(selected)}에서 모은 선물 카드예요. 획득한 카드만 눌러 상세 문장을 볼 수 있습니다.
         </p>
@@ -742,7 +742,7 @@ export function DeckBrowser() {
         <div style={{ padding: 14, borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', marginBottom: 12 }}>
           <strong style={{ display: 'block', color: 'var(--ink)', fontSize: 14 }}>최종 미션 카드</strong>
           <span style={{ display: 'block', marginTop: 5, color: 'var(--ink-soft)', fontSize: 12.5, lineHeight: 1.5, fontWeight: 700 }}>
-            모든 여행 선물을 모으면 특별한 최종 카드가 열립니다. 관리자랑 데이트하기, 일본여행 같이 가기 같은 큰 선물이 숨어 있어요.
+            모든 여행 선물을 모으면 특별한 최종 카드가 열립니다. 벚꽃놀이, 온천 여행처럼 일본 여행의 특별한 순간이 담긴 큰 선물이 숨어 있어요.
           </span>
         </div>
         {!ownedRarities.length && <p style={{ margin: 0, color: 'var(--ink-faint)', fontSize: 13, fontWeight: 700 }}>아직 이 장면의 선물 카드가 없어요.</p>}
@@ -757,7 +757,7 @@ export function DeckBrowser() {
     <>
       <div style={{ margin: '0 0 16px', padding: 14, borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8 }}>
-          <strong style={{ fontSize: 15, color: 'var(--ink)' }}>여행 도감 수집률</strong>
+          <strong style={{ fontSize: 15, color: 'var(--ink)' }}>여행 카드 수집률</strong>
           <span style={{ fontSize: 20, fontWeight: 950, color: 'var(--accent)', fontVariantNumeric: 'tabular-nums' }}>{completionPct}%</span>
         </div>
         <div style={{ height: 10, borderRadius: 999, background: 'var(--glass-bg)', overflow: 'hidden', border: '1px solid var(--glass-border)' }}>
@@ -771,12 +771,12 @@ export function DeckBrowser() {
         </p>
       </div>
       <p style={{ margin: '0 0 14px', fontSize: 12, color: 'var(--ink-faint)', lineHeight: 1.5 }}>
-        같은 장면의 같은 테크트리에서만 병합돼요. N 10장→R, R 5장→SR, SR 5장→SSR, SSR 5장→UR, UR 3장→XUR입니다.
+        같은 장면의 같은 종류끼리만 병합돼요. 일반 10장→일반+, 일반+ 5장→특별, 특별 5장→특별+, 특별+ 5장→희귀, 희귀 3장→희귀+입니다.
       </p>
       <div style={{ margin: '0 0 14px', padding: 14, borderRadius: 16, border: `1px solid ${finalGift.ready ? 'var(--accent)' : 'var(--glass-border)'}`, background: finalGift.ready ? 'var(--accent-soft)' : 'var(--glass-bg-strong)', color: 'var(--ink)' }}>
         <strong style={{ display: 'block', fontSize: 15 }}>비밀 최종 미션 카드</strong>
         <span style={{ display: 'block', marginTop: 5, fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 700, lineHeight: 1.5 }}>
-          모든 장면 선물을 모으면 큰 선물이 열려요. 관리자랑 데이트하기, 일본여행 같이 가기 같은 최종 보상을 암시하는 카드입니다.
+          모든 장면 선물을 모으면 큰 선물이 열려요. 벚꽃놀이, 온천 여행처럼 일본 여행의 특별한 순간을 암시하는 카드입니다.
         </span>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 14 }}>
@@ -824,7 +824,7 @@ export function DeckBrowser() {
 
 export function DeckModal({ onClose }: { onClose: () => void }) {
   return (
-    <Modal title="내 여행 도감" onClose={onClose}>
+    <Modal title="내 여행 수집함" onClose={onClose}>
       <DeckBrowser />
     </Modal>
   );
@@ -837,7 +837,7 @@ export function DeckButton({ style }: { style?: React.CSSProperties }) {
     <>
       <button className="ym-press" onClick={() => setOpen(true)}
         style={{ display: 'inline-flex', alignItems: 'center', gap: 7, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', borderRadius: 999, padding: '9px 14px', fontSize: 13, fontWeight: 800, cursor: 'pointer', ...style }}>
-        🎁 도감 {ownedCount(c)}/{SCENES.length}
+        🎁 수집함 {ownedCount(c)}/{SCENES.length}
       </button>
       {open && <DeckModal onClose={() => setOpen(false)} />}
     </>

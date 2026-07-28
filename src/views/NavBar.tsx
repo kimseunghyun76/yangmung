@@ -1,7 +1,7 @@
 // 상단 네비게이션 — 에디토리얼: 텍스트 탭 + 朱 언더라인, 모노 컨트롤.
 import { Icon, type IconName } from '../ui/Icon';
 type NavTabView = 'home' | 'practice' | 'map' | 'review' | 'gacha';
-type NavView = NavTabView | 'emergency';
+type NavView = NavTabView | 'emergency' | 'listen';
 
 export interface NavBarProps {
   current: NavView;
@@ -10,6 +10,7 @@ export interface NavBarProps {
   onOpenSettings: () => void;
   onOpenTips: () => void;
   onOpenEmergency: () => void;
+  onOpenListen: () => void;
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
 }
@@ -39,7 +40,7 @@ function CtrlButton({ icon, label, onClick, tone }: { icon: IconName; label: str
   );
 }
 
-export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings, onOpenTips, onOpenEmergency, theme, onToggleTheme }: Props) {
+export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings, onOpenTips, onOpenEmergency, onOpenListen, theme, onToggleTheme }: Props) {
   const tab = (active: boolean): React.CSSProperties => ({
     border: 'none', background: 'none', cursor: 'pointer', fontSize: 15,
     padding: '4px 1px', color: active ? 'var(--ink)' : 'var(--ink-faint)',
@@ -57,6 +58,7 @@ export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings, onOpe
       ))}
       <span style={{ flex: 1 }} />
       <CtrlButton icon="emergency" label="긴급" tone="warn" onClick={onOpenEmergency} />
+      <CtrlButton icon="listen" label="듣기" onClick={onOpenListen} />
       <CtrlButton icon={theme === 'dark' ? 'theme-day' : 'theme-night'} label="주야" onClick={onToggleTheme} />
       <CtrlButton icon="tip" label="팁" onClick={onOpenTips} />
       <CtrlButton icon="nav-guide" label="가이드" onClick={onOpenGuide} />
