@@ -15,6 +15,8 @@
 - 대표 오류 카드 `danshi.webp`, `kiken.webp`는 개별 제작본을 유지
 - 현재 콘텐츠 기준 미생성 프리미엄 표현 음성 67개 생성 완료(조사 당시 66개에서 표현 1개가 추가됨)
 - Azure Nanami 음성과 `public/audio/manifest.json` 갱신 완료
+- 2026-07-30 전체 음성 범위를 다시 생성: 통합 중복 제거 후 신규 207종 가운데 기존 자산 3종 재사용, Azure Nanami 204종 생성, 실패 0
+- 독립 파일 대조 결과: 표현 466·문장 1,028·문법 팁 고유 109·카드 변형 고유 2,156의 재생 가능한 대상 누락 0
 
 `sign-art/generated`의 마스코트 의상 교체와 문자 재렌더링은 전체 완료했다. 이후 개별 카드의 장면 특화 품질이 필요한 경우 공식 의상 가이드를 기준으로 해당 카드만 우선 제작본으로 교체한다.
 
@@ -67,7 +69,9 @@
 
 **참고 스타일**: 기존 `public/scenes/session-variants/C1/*.webp` 등(세미리얼 애니메 인물 일러스트, 문제 1과는 다른 화풍임에 유의).
 
-## 문제 3 — 프리미엄 음성(TTS) 없는 표현 66개
+## 문제 3 — 프리미엄 음성(TTS) 없는 표현 66개 (해결됨)
+
+> 아래 내용은 2026-07-27 당시의 조사 기록이다. 표현 음성은 당시 67개를 생성했고, 2026-07-30에는 문장·팁·카드 변형까지 포함한 전체 통합 생성을 완료했다. 현재 `npm run audio:dry`의 신규 작업은 0이며, 매니페스트와 실제 MP3 파일을 독립 대조한 결과 요청 범주의 누락도 0이다. 카드 원본의 고유 음성 문자열 2,156개 중 단독 장음 기호 `ー` 1종은 의도적으로 발음 대상에서 제외된다.
 
 `public/audio/manifest.json`(Azure TTS로 사전 생성된 음성 매니페스트, `scripts/generate-audio.mjs`가 만듦)을 전체 466개 표현(Phrase)과 대조한 결과, **66개(약 14%)가 미생성** 상태다. 이 표현들은 지금 브라우저 Web Speech API 폴백(`src/tts.ts`)으로만 재생되며, 품질·안정성이 프리미엄 음성보다 떨어진다.
 
@@ -79,7 +83,7 @@
 ```bash
 npx tsx scripts/generate-audio.mjs --only phrases
 ```
-단, `AZURE_SPEECH_KEY`·`AZURE_SPEECH_REGION` 환경변수(Azure Speech 자격증명)가 필요하며 이 세션은 해당 자격증명이 없어 직접 실행하지 못했다. 자격증명을 가진 사용자가 직접 실행하거나, ChatGPT 세션에 자격증명을 안전하게 전달해 실행을 위임할 수 있다. 목록 전체는 아래 접이식 표에 정리했다.
+이 명령은 당시 누락을 조사할 때 사용했다. 실제 생성에는 `AZURE_SPEECH_KEY`·`AZURE_SPEECH_REGION` 환경변수가 필요하며, 2026-07-30 생성은 자격증명이 설정된 환경에서 완료됐다. 목록 전체는 아래 접이식 표에 과거 조사 기록으로 남긴다.
 
 <details>
 <summary>미생성 66개 표현 전체 목록 (펼치기)</summary>
@@ -158,7 +162,7 @@ npx tsx scripts/generate-audio.mjs --only phrases
 ## 검증 방법 (작업 완료 후)
 
 - 이미지: 새 파일을 정확한 경로/파일명에 넣은 뒤 `npm run dev`로 실행, 앱에서 실제로 해당 화면(간판·메뉴 카드, C51~C54 미션 세션)을 열어 이미지가 뜨는지 육안 확인. `.webp` 형식 유지.
-- 오디오: `npx tsx scripts/generate-audio.mjs --only phrases` 실행 후 `public/audio/manifest.json`에 해당 표현들이 새로 추가됐는지 확인, `npm run lint:content`로 전체 콘텐츠 검증.
+- 오디오: `npm run audio:dry`가 `new jobs : 0`인지 확인하고, `public/audio/manifest.json`의 경로가 실제 MP3 파일로 연결되는지 대조한 뒤 `npm run lint:content`로 전체 콘텐츠를 검증.
 - 캐릭터 의상 교체: 기존 파일을 덮어쓴 뒤 시각적으로 뭉·양이 확실히 구분되는지, 전체적으로 같은 화풍(3D chibi, 눈 크기·비율 등)이 유지되는지 확인.
 
 ## 범위 밖(이 문서가 다루지 않는 것)

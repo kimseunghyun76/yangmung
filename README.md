@@ -67,9 +67,9 @@ Vite SPA — 별도 설정 없이 동작. 환경변수 없음.
 
 ## 기술 스택
 
-React 18 · Vite 6 · TypeScript 5 · LocalStorage SRS · Web Speech API (TTS 폴백)
+React 18 · Vite 6 · TypeScript 5 · LocalStorage SRS · Azure 사전 생성 MP3 · Web Speech API (TTS 폴백)
 
-오디오 자산은 후행 — 현재는 브라우저 TTS(ja-JP)로 듣기 루프 확보.
+학습 콘텐츠 음성은 Azure Nanami 사전 생성 MP3를 우선 재생하고, 파일 재생이 불가능할 때만 브라우저 TTS(ja-JP)로 폴백한다. 2026-07-30 기준 `phrases`·`sentences`·`tips`·`cards` 생성 대상의 실제 파일 누락은 0개다.
 
 ## 설계 문서
 
@@ -79,7 +79,7 @@ React 18 · Vite 6 · TypeScript 5 · LocalStorage SRS · Web Speech API (TTS �
 
 ## 로드맵 (다음)
 
-- [ ] TTS 핵심 표현 사전 mp3 (Azure 파이프라인, 음질 격상)
+- [x] TTS 학습 콘텐츠 사전 MP3 (Azure Nanami, 2026-07-30 전체 생성 대상 누락 0)
 - [ ] 60→200 phrase 점진 확장 (author-time AI 가속)
 - [ ] 새 미션 C4~C7 (호텔·길찾기·쇼핑·응급)
 - [ ] AI 회화 파트너 (runtime LLM, 우리 미션 스키마가 가드레일)
