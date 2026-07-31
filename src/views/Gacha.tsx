@@ -752,6 +752,11 @@ export function DeckBrowser() {
   const finalGift = finalGiftProgress(collection);
 
   const completionPct = SCENES.length ? Math.round((ownedCount(collection) / SCENES.length) * 100) : 0;
+  // 잠긴(미획득) 장면을 개별 카드로 전부 나열하면 미션 진행이 얼마 안 된 사용자에게 자물쇠
+  // 카드 수십 장이 그대로 쏟아져 화면이 어수선해진다(사용자 피드백) — 획득한 카드만 그리드로
+  // 보여주고, 미획득분은 한 줄 요약으로 압축한다.
+  const ownedScenes = SCENES.filter((m) => totalItems(collection.cards[m.id]) > 0);
+  const lockedCount = SCENES.length - ownedScenes.length;
 
   return (
     <>
@@ -779,45 +784,42 @@ export function DeckBrowser() {
           모든 장면 선물을 모으면 큰 선물이 열려요. 벚꽃놀이, 온천 여행처럼 일본 여행의 특별한 순간을 암시하는 카드입니다.
         </span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 14 }}>
-        {SCENES.map((m) => {
-          const card = collection.cards[m.id];
-          const owned = totalItems(card) > 0;
-          const items = itemsOf(card);
-          const rarity = bestRarity(card);
-          if (!owned) {
+      {ownedScenes.length > 0 && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 14 }}>
+          {ownedScenes.map((m) => {
+            const card = collection.cards[m.id];
+            const items = itemsOf(card);
+            const rarity = bestRarity(card);
+            const bestItem = gachaItemForMission(m.id, rarity);
             return (
-              <div key={m.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '15px 10px', borderRadius: 16, border: '1px dashed var(--glass-border)', background: 'var(--glass-bg)' }}>
-                <span style={{ position: 'relative', display: 'inline-flex' }}>
-                  <CardBack rarity="basic" size={150} />
-                  <span style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>🔒</span>
-                </span>
-                <span style={{ fontSize: 12, fontWeight: 750, color: 'var(--ink-faint)' }}>{placeOf(m.id)}</span>
-                <span style={{ fontSize: 10.5, color: 'var(--ink-faint)', fontWeight: 800 }}>미션을 완료하면 카드가 열려요</span>
+              <div key={m.id} className="ym-gacha-merge-host" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 9, padding: '15px 10px', borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', position: 'relative', overflow: 'hidden' }}>
+                <button className="ym-press" onClick={() => setSelected(m.id)} style={{ border: 0, background: 'transparent', color: 'var(--ink)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, padding: 0, width: '100%' }}>
+                  <DeckCardFace sceneId={m.id} rarity={rarity} size={150} />
+                  <span style={{ fontSize: 12, fontWeight: 850 }}>{placeOf(m.id)}</span>
+                  <span lang="ja" style={{ fontSize: 11, fontWeight: 750, color: 'var(--ink-soft)' }}>{bestItem.jaTitle ?? bestItem.title}</span>
+                </button>
+                <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}>
+                  {RARITIES.map((r) => {
+                    const count = items[r.key];
+                    const label = count > 0 ? `${gachaItemForMission(m.id, r.key).title} ${count}` : '미획득';
+                    return <span key={r.key} style={{ fontSize: 10.5, fontWeight: 850, color: count > 0 ? r.color : 'var(--ink-faint)', border: `1px solid ${count > 0 ? r.color : 'var(--glass-border)'}`, borderRadius: 999, padding: '2px 5px' }}>{label}</span>;
+                  })}
+                </div>
+                <span style={{ fontSize: 10.5, color: 'var(--ink-faint)', fontWeight: 800 }}>같은 테크트리 수동 병합</span>
+                <span style={{ fontSize: 10, color: 'var(--ink-faint)', fontWeight: 750 }}>선물 카드 {totalItems(card)}장</span>
               </div>
             );
-          }
-          const bestItem = gachaItemForMission(m.id, rarity);
-          return (
-            <div key={m.id} className="ym-gacha-merge-host" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 9, padding: '15px 10px', borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', position: 'relative', overflow: 'hidden' }}>
-              <button className="ym-press" onClick={() => setSelected(m.id)} style={{ border: 0, background: 'transparent', color: 'var(--ink)', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, padding: 0, width: '100%' }}>
-                <DeckCardFace sceneId={m.id} rarity={rarity} size={150} />
-                <span style={{ fontSize: 12, fontWeight: 850 }}>{placeOf(m.id)}</span>
-                <span lang="ja" style={{ fontSize: 11, fontWeight: 750, color: 'var(--ink-soft)' }}>{bestItem.jaTitle ?? bestItem.title}</span>
-              </button>
-              <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}>
-                {RARITIES.map((r) => {
-                  const count = items[r.key];
-                  const label = count > 0 ? `${gachaItemForMission(m.id, r.key).title} ${count}` : '미획득';
-                  return <span key={r.key} style={{ fontSize: 10.5, fontWeight: 850, color: count > 0 ? r.color : 'var(--ink-faint)', border: `1px solid ${count > 0 ? r.color : 'var(--glass-border)'}`, borderRadius: 999, padding: '2px 5px' }}>{label}</span>;
-                })}
-              </div>
-              <span style={{ fontSize: 10.5, color: 'var(--ink-faint)', fontWeight: 800 }}>같은 테크트리 수동 병합</span>
-              <span style={{ fontSize: 10, color: 'var(--ink-faint)', fontWeight: 750 }}>선물 카드 {totalItems(card)}장</span>
-            </div>
-          );
-        })}
-      </div>
+          })}
+        </div>
+      )}
+      {lockedCount > 0 && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: ownedScenes.length > 0 ? 14 : 0, padding: '14px 16px', borderRadius: 16, border: '1px dashed var(--glass-border)', background: 'var(--glass-bg)' }}>
+          <span style={{ width: 42, height: 42, flex: '0 0 auto', borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)' }}>🔒</span>
+          <span style={{ fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 750, lineHeight: 1.5 }}>
+            아직 못 받은 카드 <strong style={{ color: 'var(--ink)' }}>{lockedCount}장</strong> — 미션 지도에서 장면을 완료하면 하나씩 열려요.
+          </span>
+        </div>
+      )}
     </>
   );
 }
