@@ -205,7 +205,8 @@ export function Practice({ nav, coreLevel, progression, progress, devUnlockAll, 
       <NavBar {...nav} />
       <PageHead title="학습 지도" sub="레벨별 단계를 순서대로 밟고, 자유 연습으로 언제든 복습해요" />
 
-      {/* 진행률 배너 — 미션 지도의 "가나·읽기 기준" 진행바와 같은 자리, 레벨별로 확장 */}
+      {/* 진행률 + 가나 읽기 기준 — 예전엔 비슷한 "요약 지표" 패널 두 개가 따로 붙어 있어
+          화면이 길어 보였다(사용자 지적: 화면이 어수선함). 한 카드 안에 구분선으로만 나눴다. */}
       <GlassPanel style={{ marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
           <p style={{ ...kicker, margin: 0 }}>내 진행률</p>
@@ -221,13 +222,11 @@ export function Practice({ nav, coreLevel, progression, progress, devUnlockAll, 
         {CORE_LEVELS.map((level) => (
           <LevelProgressRow key={level} level={level} isCurrent={level === coreLevel} progression={progression} />
         ))}
-      </GlassPanel>
-
-      {/* 가나 읽기 기준 — 여행 미션(미션 지도)이 아니라 학습 자체의 진도이므로 여기가 더 맞는 자리(2026-07-29 이동) */}
-      <GlassPanel style={{ marginBottom: 16 }}>
-        <p style={{ ...kicker, marginBottom: 10 }}>가나 · 읽기 기준</p>
-        <KanaMasteryBar label="히라가나" m={hira} />
-        <KanaMasteryBar label="가타카나" m={kata} />
+        <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--glass-border)' }}>
+          <p style={{ ...kicker, marginBottom: 10 }}>가나 · 읽기 기준</p>
+          <KanaMasteryBar label="히라가나" m={hira} />
+          <KanaMasteryBar label="가타카나" m={kata} />
+        </div>
       </GlassPanel>
 
       {/* 오늘의 추천 */}

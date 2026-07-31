@@ -313,12 +313,11 @@ function RoutePreference({ preferredRouteLabel, autoSuggestedLabels, onSetPrefer
     background: active ? 'var(--accent-soft)' : 'var(--glass-bg-strong)',
     color: active ? 'var(--accent)' : 'var(--ink-soft)', whiteSpace: 'nowrap',
   });
+  {/* 설명 문단은 바로 위 마스코트 말풍선이 같은 내용을 이미 전달해 중복이었다(사용자 지적:
+      화면이 어수선함) — 카테고리 제목 + 칩만 남겨 한 단락 분량을 줄였다. */}
   return (
     <GlassPanel style={{ marginBottom: 14 }}>
-      <p style={{ ...kicker, marginBottom: 8 }}>우선 학습 카테고리</p>
-      <p style={{ margin: '0 0 10px', fontSize: 12, color: 'var(--ink-faint)', lineHeight: 1.5 }}>
-        고르면 다음에 열리는 장면이 이 카테고리 안에서 먼저 나와요(이미 열린 장면은 그대로 유지).
-      </p>
+      <p style={{ ...kicker, marginBottom: 10 }}>우선 학습 카테고리</p>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         <button className="ym-press" onClick={() => onSetPreferredRoute('random')} style={chipStyle(isRandomActive)}>🎲 무작위(기본)</button>
         {ROUTES.map((r) => {

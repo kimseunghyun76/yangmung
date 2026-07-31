@@ -38,7 +38,6 @@ interface Props {
   modeLabel: string;
   onStart: () => void;
   onPracticeScene: (missionId: string) => void;
-  onPracticeFlash: () => void;
   onPlacement: () => void;
   placementDone: boolean;
   // 레벨 진도
@@ -71,7 +70,7 @@ function travelPurposeTip(purpose: TravelPurpose | undefined, progress: Progress
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' };
 
-export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, missionsLocked, diagnosis, modeLabel, onStart, onPracticeScene, onPracticeFlash, onPlacement, placementDone, coreLevel, progression, devUnlockAll, onStartStage, onStartPromotion, onOpenBasics, onStartVocabGroup, travelPurpose, onSetTravelPurpose, onOpenTipsForPurpose, travelDate }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, missionsLocked, diagnosis, modeLabel, onStart, onPracticeScene, onPlacement, placementDone, coreLevel, progression, devUnlockAll, onStartStage, onStartPromotion, onOpenBasics, onStartVocabGroup, travelPurpose, onSetTravelPurpose, onOpenTipsForPurpose, travelDate }: Props) {
   const dDay = daysUntilTravel(travelDate);
   const upcomingId = nextSessionId(session);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
@@ -176,59 +175,26 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
     <main style={WRAP}>
       <NavBar {...nav} />
 
-      {/* ⓪ 내 학습 현황 — 상태 분석(코치·학습 상태·가나 안정도·난이도)을 한 카드에 */}
+      {/* ⓪ 내 학습 현황 — 상태 분석(코치·학습 상태·가나 안정도·난이도)을 한 카드에.
+          진단 전 유도 문구는 예전엔 이 카드 바로 아래 완전히 별도인 배너로 한 번 더 있었다 —
+          이 카드 헤더에 이미 있는 "진단" 버튼과 사실상 같은 행동을 두 번 권하는 셈이라
+          (사용자 지적: 화면이 어수선함) 배너를 없애고 이 카드 하나에 그 역할까지 흡수시켰다. */}
       <div className="ym-rise">
         <GlassPanel>
           <StatusDashboard
             d={diagnosis} line={coach.line}
             hira={hira} kata={kata} kanaPct={kanaPct} stats={stats}
-            modeLabel={modeLabel} onPlacement={onPlacement}
+            modeLabel={modeLabel} onPlacement={onPlacement} placementDone={placementDone}
           />
         </GlassPanel>
       </div>
 
-      {/* 수준 진단 권유 배너 — placementDone(최초 진단을 하거나 건너뛴 적이 있는지)이 false일 때만,
-          즉 앱을 시작한 뒤 아직 한 번도 진단을 받지 않은 사용자에게만 보인다.
-          아직 진단 전이라면 게임성 CTA(속도전)보다 먼저 눈에 띄어야 난이도가 안 맞는 채로
-          헤매는 걸 막을 수 있어, 레벨 진도/오늘의 미션보다도 위에 둔다(온보딩 우선순위). */}
-      {!placementDone && (
-        <button className="ym-rise ym-press" onClick={onPlacement} style={{
-          width: '100%', textAlign: 'left', cursor: 'pointer', marginTop: 14, display: 'flex', alignItems: 'center', gap: 13,
-          padding: '14px 16px', borderRadius: 18, border: '1px solid var(--accent)', color: 'var(--ink)',
-          background: 'linear-gradient(135deg, var(--accent-soft), var(--glass-bg-strong))',
-        }}>
-          <span style={{ fontSize: 28 }}>🎯</span>
-          <span style={{ flex: 1 }}>
-            <span style={{ display: 'block', fontSize: 15, fontWeight: 800 }}>내 수준 진단하고 시작하기</span>
-            <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 2 }}>10문제로 난이도를 추천받아요 (1분 · 언제든 설정에서 변경)</span>
-          </span>
-          <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)' }} />
-        </button>
-      )}
-
       {/* 레벨이 낮으면 빠른 연습(레벨 진도)을 오늘의 미션 위에, 높으면 미션을 위에 */}
       {lowLevel ? (<>{levelPanel}{missionPanel}</>) : (<>{missionPanel}{levelPanel}</>)}
 
-      {/* 속도전 대결 — 예전엔 화면 전체를 붉은 그라데이션으로 채운 히어로 배너라 "오늘의 미션"과
-          시선을 다퉜다(사용자 지적: 화면이 어수선함). 보조 게임 모드이므로 아래 여행 배너들과
-          같은 옅은 카드 톤으로 낮췄다 — 기능은 그대로, 시각적 무게만 줄였다. */}
-      <button className="ym-rise ym-press" onClick={onPracticeFlash} style={{
-        width: '100%', marginTop: 14, textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 13,
-        padding: '14px 16px', borderRadius: 18, border: '1px solid var(--glass-border)', color: 'var(--ink)',
-        background: 'var(--glass-bg-strong)',
-      }}>
-        <span style={{
-          width: 40, height: 40, flex: '0 0 40px', borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          background: 'var(--accent-soft)', color: 'var(--accent)',
-        }}>
-          <Icon name="fast" size={19} />
-        </span>
-        <span style={{ flex: 1 }}>
-          <span style={{ display: 'block', fontSize: 14, fontWeight: 800 }}>속도전 대결</span>
-          <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-soft)', marginTop: 2 }}>제한시간 안에 빠르게! 높은 점수로 보석함 획득</span>
-        </span>
-        <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)' }} />
-      </button>
+      {/* 속도전 대결은 학습 탭(Practice)에도 같은 버튼이 있어 홈에 또 두면 중복이었다
+          (사용자 지적: 화면이 너무 어수선함 — 기능을 한 화면에 다 담으려 하지 말 것).
+          홈은 "오늘 할 일"에 집중하고, 보조 게임 모드는 학습 탭에서만 들어가게 정리했다. */}
 
       {/* 여행 목적별 학습 배너 + D-day — 예전엔 D-day 배지가 별도 줄로 떠 있어 배너가 하나 더
           있는 것처럼 보였다(사용자 지적). 같은 "여행 일정" 정보이므로 배너 안에 한 줄로 합쳤다. */}
@@ -490,17 +456,19 @@ function HomeSceneCard({ hero, accent, kicker, title, chips, planned, onStart }:
 
 // 상태 대시보드 — 코치·학습 상태·가나 안정도·난이도(진단)를 한 카드로 묶어 "한눈에".
 // 접었을 때도 등급·코치 한 줄은 보이고, 펼치면 학습 상태·가나 안정도·성장 기록·보유 카드·약점까지.
-function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPlacement }: {
+function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPlacement, placementDone }: {
   d: Diagnosis; line: string;
   hira: { mastered: number; total: number }; kata: { mastered: number; total: number };
-  kanaPct: number; stats: LearningStats; modeLabel: string; onPlacement: () => void;
+  kanaPct: number; stats: LearningStats; modeLabel: string; onPlacement: () => void; placementDone: boolean;
 }) {
   // 기본은 접힌 상태로 시작(2026-07-08, 사용자 요청) — 요약(코치 한 줄)은 접혀 있어도 항상 보임.
   const [expanded, setExpanded] = useState(false);
   const tone = d.level === 'struggling' ? 'var(--warn)' : d.level === 'cruising' ? 'var(--ok)' : 'var(--accent)';
   return (
     <>
-      {/* 헤더: 제목 + 등급 뱃지 + 난이도/진단 칩 + 접기/펼치기 */}
+      {/* 헤더: 제목 + 등급 뱃지 + 난이도/진단 칩 + 접기/펼치기.
+          진단 전엔 이 진단 버튼을 강조색으로 채워 눈에 띄게 하고, 아래 코치 줄에도 안내를 더한다
+          — 예전엔 이 아래 완전히 별도 배너로 같은 행동을 한 번 더 권했었다(사용자 지적: 중복). */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
           <p style={{ margin: 0, ...label }}>내 학습 현황</p>
@@ -509,11 +477,17 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPla
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
           <button className="ym-press" onClick={onPlacement} title="수준 진단으로 난이도 재조정" style={{
             display: 'inline-flex', alignItems: 'center', gap: 7, padding: '7px 12px', borderRadius: 999,
-            border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
-            fontSize: 12.5, fontWeight: 750, cursor: 'pointer', whiteSpace: 'nowrap',
+            border: placementDone ? '1px solid var(--glass-border)' : '1px solid var(--accent)',
+            background: placementDone ? 'var(--glass-bg-strong)' : 'var(--accent)',
+            color: placementDone ? 'var(--ink)' : 'var(--accent-ink)',
+            fontSize: 12.5, fontWeight: 800, cursor: 'pointer', whiteSpace: 'nowrap',
           }}>
-            <span style={{ width: 7, height: 7, borderRadius: 99, background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)' }} />
-            {modeLabel} · 진단
+            {placementDone ? (
+              <>
+                <span style={{ width: 7, height: 7, borderRadius: 99, background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)' }} />
+                {modeLabel} · 진단
+              </>
+            ) : '🎯 수준 진단하기'}
           </button>
           <button className="ym-press" onClick={() => setExpanded((v) => !v)} aria-label={expanded ? '내 학습 현황 접기' : '내 학습 현황 펼치기'} style={{
             width: 30, height: 30, flexShrink: 0, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
@@ -536,7 +510,9 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPla
         <Ring pct={kanaPct} size={60} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <p style={{ margin: 0, fontSize: 12, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.04em' }}>오늘의 코치</p>
-          <p style={{ margin: '5px 0 0', fontSize: 13.5, fontWeight: 650, lineHeight: 1.5, color: 'var(--ink)' }}>{line}</p>
+          <p style={{ margin: '5px 0 0', fontSize: 13.5, fontWeight: 650, lineHeight: 1.5, color: 'var(--ink)' }}>
+            {placementDone ? line : '아직 수준 진단 전이에요 — 위 버튼으로 10문제만 풀면 난이도를 딱 맞춰드려요.'}
+          </p>
         </div>
       </div>
 

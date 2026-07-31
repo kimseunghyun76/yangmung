@@ -1090,7 +1090,7 @@ export function App() {
         openMissions={visibleOpenMissions} missionsLocked={missionsLocked}
         diagnosis={diag}
         modeLabel={MODE_PRESETS[settings.mode].label}
-        onStart={startSession} onPracticeScene={startSceneSession} onPracticeFlash={startFlashSession} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
+        onStart={startSession} onPracticeScene={startSceneSession} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
         coreLevel={coreLevel} progression={progression} devUnlockAll={!!settings.devUnlockAll} onStartStage={startStage} onStartPromotion={startPromotionQuiz}
         onOpenBasics={() => navigate('vocabTable')} onStartVocabGroup={startVocabSession}
         travelPurpose={settings.travelPurpose}
