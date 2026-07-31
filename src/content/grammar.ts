@@ -410,6 +410,11 @@ const GRAMMAR_LEVEL: Record<string, 1 | 2 | 3 | 4 | 5> = {
   g_card_declined: 3, g_onsen_towel_rule: 3, g_shinkansen_green_car: 3,
   g_grammar_tara_to_conditional: 3, g_conv_listening_keigo_basics: 3,
   g_lost_item_report: 4, g_hospital_reception: 4,
+  // N4 후반~N3 수준 문법 심화 — tier 지정을 빠뜨리면 기본값(2)으로 떨어져 입문·기본
+  // 단계에도 노출될 위험이 있어(BL-05, learning-expert-audit.md §6) 명시적으로 지정한다.
+  g_grammar_tari_tari: 4, g_grammar_sugiru: 4, g_grammar_yasui_nikui: 4,
+  g_grammar_n_desu: 4, g_grammar_sou_desu: 4, g_grammar_nakutemo_ii: 4,
+  g_grammar_ba_conditional: 4, g_grammar_ta_koto_ga_aru: 4, g_grammar_toki_ni: 4,
 };
 
 /** 팁 난이도(레벨). 매핑이 없으면 기본 2(생활)로 둔다 — 항상 안전한 폴백. */
