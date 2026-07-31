@@ -62,6 +62,7 @@ const KanaTable = lazy(() => import('./views/KanaTable').then((m) => ({ default:
 const PublicExpressions = lazy(() => import('./views/PublicExpressions').then((m) => ({ default: m.PublicExpressions })));
 const EntertainmentLearning = lazy(() => import('./views/EntertainmentLearning').then((m) => ({ default: m.EntertainmentLearning })));
 const TipsLibrary = lazy(() => import('./views/TipsLibrary').then((m) => ({ default: m.TipsLibrary })));
+const GrammarPath = lazy(() => import('./views/GrammarPath').then((m) => ({ default: m.GrammarPath })));
 const DiscoverGallery = lazy(() => import('./views/DiscoverGallery').then((m) => ({ default: m.DiscoverGallery })));
 const SequencePreview = lazy(() => import('./views/SequencePreview').then((m) => ({ default: m.SequencePreview })));
 
@@ -876,12 +877,16 @@ export function App() {
           onOpenPublic={() => navigate('public')}
           onOpenEntertainment={() => navigate('ent')}
           onOpenDiscoverGallery={() => navigate('discover')}
+          onOpenGrammar={() => navigate('grammar')}
           onStartVocabGroup={startVocabSession}
         />
       );
     }
     if (view === 'tips') {
       return <TipsLibrary nav={{ ...nav, current: 'practice' }} onBack={() => goBack('practice')} initialQuery={tipsQuery} />;
+    }
+    if (view === 'grammar') {
+      return <GrammarPath nav={{ ...nav, current: 'practice' }} onBack={() => goBack('practice')} />;
     }
     if (view === 'discover') {
       return (
