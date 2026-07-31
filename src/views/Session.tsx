@@ -122,11 +122,12 @@ export function Session({ card, index, total, picked, skipped, onChoose, onIntro
             }}>
               <img src={cardBackdrop} alt="" aria-hidden style={{
                 width: '100%',
-                // 새 표현·미션 퀴즈 카드는 배너처럼 짧게(스크롤 방지) — 장면명·안내는 오버레이로 부각
-                height: card.kind === 'introduce' ? 184 : isMissionStep ? 100 : 'auto',
+                // 짧은 고정 높이 + cover 조합이 이미지 상단을 잘라내는 문제(사용자 지적)가 있어
+                // 모든 카드 종류에서 원본 비율 그대로 잘리지 않게 표시한다(contain + 자동 높이).
+                height: 'auto',
+                maxHeight: card.kind === 'introduce' ? 220 : isMissionStep ? 160 : undefined,
                 display: 'block',
-                objectFit: (card.kind === 'introduce' || isMissionStep) ? 'cover' : 'contain',
-                objectPosition: (card.kind === 'introduce' || isMissionStep) ? 'center 38%' : 'center',
+                objectFit: 'contain',
                 filter: 'saturate(.88) contrast(.98)',
               }} />
               {/* 새 표현 — 라벨을 크게, 장면명(예: 편의점 계산대)을 부각해 배경 하단에 얹는다 */}
@@ -234,8 +235,11 @@ function TipDetail({ label, text, tone }: { label: string; text: string; tone: s
 // 일본어로 나와 정답이 질문과 똑같아 보이는 자기참조 버그가 된다(예: 질문 柔道 → 정답 선택지도 柔道).
 function ChoiceText({ c, mode, kanaQuiz, reveal }: { c: Choice; mode: 'kana_ko' | 'kana' | 'kanji'; kanaQuiz: boolean; reveal: boolean }) {
   const p = c.phrase;
-  const isMeaningChoice = !!p && c.label === p.korean;
-  if (kanaQuiz || !p || isMeaningChoice) return <span style={{ flex: 1 }}>{c.label}</span>;
+  // 이전엔 c.label이 한국어 뜻과 같으면("의미 맞히기" 보기) 한글 그대로 노출했다 —
+  // 이 때문에 퀴즈 보기 대부분이 한글로 나오는 문제(사용자 지적)가 있었다. 가나 발음
+  // 퀴즈(kanaQuiz, 답이 곧 소리 표기)만 예외로 두고, 그 외엔 항상 일본어를 먼저 보여주고
+  // 한글은 정답 공개(reveal) 뒤 해석으로만 덧붙인다.
+  if (kanaQuiz || !p) return <span style={{ flex: 1 }}>{c.label}</span>;
   const primary = mode === 'kanji' ? (p.kanji ?? p.kana) : p.kana;
   const showKo = reveal;
   return (

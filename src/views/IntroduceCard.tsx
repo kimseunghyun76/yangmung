@@ -496,7 +496,9 @@ function QuickPracticeWordScene({ card }: { card: IntroduceCard }) {
       <div style={{
         position: 'relative',
         width: '100%',
-        minHeight: 'min(54vh, 430px)',
+        // 실제 자산 비율(4:3)과 다른 높이를 강제하면 cover가 이미지 양옆을 잘라낸다(사용자 지적) —
+        // 자산 비율에 맞춰 잘리지 않게 전체 표시한다.
+        aspectRatio: '4 / 3',
         overflow: 'hidden',
         borderRadius: 24,
         border: '1px solid var(--glass-border)',
@@ -513,7 +515,7 @@ function QuickPracticeWordScene({ card }: { card: IntroduceCard }) {
             inset: 0,
             width: '100%',
             height: '100%',
-            objectFit: 'cover',
+            objectFit: 'contain',
             objectPosition: 'center',
             opacity: 1,
             filter: 'saturate(1.04) contrast(1.02)',
