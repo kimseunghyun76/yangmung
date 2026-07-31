@@ -126,6 +126,20 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
           지금은 가나·기본 단어를 다지는 단계예요. 아래 <strong style={{ color: 'var(--ink)' }}>레벨 진도</strong>를 다 통과하고
           중급으로 승급하면 편의점·식당 같은 실전 여행 장면이 열려요.
         </p>
+        {/* 출국이 임박한데 아직 입문·기본이면, 순서를 다 못 밟아도 여행 미션부터 볼 수 있는 기존
+            수단(설정 > 학습 모드 수동 변경)을 여기서 바로 찾을 수 있게 한다 — 이 수단 자체는 이미
+            있었지만 설정 화면 깊숙이 있어 발견하기 어려웠다(UX 감사·페르소나 회귀 테스트 지적). */}
+        {dDay !== null && dDay <= 14 && (
+          <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--glass-border)' }}>
+            <p style={{ margin: '0 0 8px', fontSize: 12.5, color: 'var(--ink-soft)', lineHeight: 1.6 }}>
+              🗓 출국이 {dDay}일 남았어요. 순서대로 다 못 밟아도 괜찮다면 설정에서 난이도를 직접 올려 여행 미션부터 먼저 볼 수 있어요.
+            </p>
+            <button className="ym-press" onClick={nav.onOpenSettings} style={{
+              width: '100%', padding: '11px 14px', borderRadius: 12, cursor: 'pointer',
+              border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 750, fontSize: 13.5,
+            }}>설정에서 난이도 바로 올리기</button>
+          </div>
+        )}
       </GlassPanel>
     </div>
   ) : (
