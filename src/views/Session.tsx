@@ -475,12 +475,15 @@ function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 
   const wrongTip = isWrong ? relatedGrammar(card) : undefined;
   // 가나 퀴즈면 정답/오답 상관없이 "자세히" 눌러 로마자·한글음·연상팁을 펼쳐볼 수 있게.
   const kanaId = card.reviewTarget?.type === 'kana' ? card.reviewTarget.id : undefined;
+  // BL-09: 순수 글자-소리 매칭 문제에 상황회화용 "자연스러워요/이 상황에선 어색해요" 문구가
+  // 그대로 붙어 있었다 — 가나 퀴즈에는 글자-소리 매칭에 맞는 문구로 분기한다.
+  const isKanaQuiz = !!kanaId;
 
   return (
     <div className="ym-reveal" style={{ marginTop: 14 }}>
       {isCorrect && (
         <div style={{ background: 'var(--ok-soft)', padding: 14, borderRadius: 14, marginBottom: 10 }}>
-          <p style={{ margin: 0, color: 'var(--ok)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="check" size={18} /> 자연스러워요</p>
+          <p style={{ margin: 0, color: 'var(--ok)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="check" size={18} /> {isKanaQuiz ? '정답이에요' : '자연스러워요'}</p>
           {ja && <PhraseLine ja={ja} korean={c.phrase!.korean} />}
           {c.phrase?.tip && <FeedbackText>{c.phrase.tip}</FeedbackText>}
           {c.feedback && <FeedbackText>{c.feedback}</FeedbackText>}
@@ -496,8 +499,8 @@ function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 
       )}
       {isWrong && (
         <div style={{ background: 'var(--accent-soft)', padding: 14, borderRadius: 14, marginBottom: 10 }}>
-          <p style={{ margin: 0, color: 'var(--accent)', fontWeight: 700 }}>이 상황에선 어색해요</p>
-          <FeedbackText>{c.feedback ?? '문맥과 맞지 않아 듣는 사람이 갸웃할 수 있어요.'}</FeedbackText>
+          <p style={{ margin: 0, color: 'var(--accent)', fontWeight: 700 }}>{isKanaQuiz ? '정답이 아니에요' : '이 상황에선 어색해요'}</p>
+          <FeedbackText>{c.feedback ?? (isKanaQuiz ? '다른 글자의 소리예요 — 다시 한번 잘 들어보세요.' : '문맥과 맞지 않아 듣는 사람이 갸웃할 수 있어요.')}</FeedbackText>
           {correctRef && (
             <p style={{ margin: '8px 0 0', fontSize: 14 }}>
               자연스러운 답 → <strong>{correctRef.phrase!.kanji ?? correctRef.phrase!.kana}</strong>

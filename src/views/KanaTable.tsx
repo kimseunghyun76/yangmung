@@ -206,10 +206,33 @@ function KanaDetail({ item, prev, next, onPrev, onNext, onClose, onKanaWritten }
         </button>
       </div>
 
-      {/* ① 읽기 — 글자·로마자·한글 소리(공간 절약을 위해 한 줄로 압축) */}
+      {/* ① 읽기 — 글자·로마자·한글 소리(공간 절약을 위해 한 줄로 압축).
+          BL-07: 열릴 때 한 번 자동 재생된 뒤엔 다시 들을 방법이 없었다 — 글자 자체를
+          버튼으로 만들어 눌러서 몇 번이든 반복 재생할 수 있게 한다. */}
       <Section icon="kana" title="읽기">
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div lang="ja" style={{ fontSize: 44, fontWeight: 900, lineHeight: 1, color: 'var(--ink)' }}>{item.char}</div>
+          <button
+            className="ym-press"
+            onClick={() => speak(item.char)}
+            disabled={!ttsSupported()}
+            aria-label={`${item.char} 소리 다시 듣기`}
+            title="다시 듣기"
+            style={{
+              position: 'relative', border: 'none', background: 'none', padding: 0, cursor: ttsSupported() ? 'pointer' : 'default',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            <span lang="ja" style={{ fontSize: 44, fontWeight: 900, lineHeight: 1, color: 'var(--ink)' }}>{item.char}</span>
+            {ttsSupported() && (
+              <span aria-hidden style={{
+                position: 'absolute', right: -8, bottom: -6, width: 22, height: 22, borderRadius: 99,
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                background: 'var(--accent)', color: 'var(--accent-ink)', boxShadow: '0 2px 6px rgba(0,0,0,.22)',
+              }}>
+                <Icon name="listen" size={12} />
+              </span>
+            )}
+          </button>
           <div>
             <p style={{ margin: 0, fontSize: 17, fontWeight: 800 }}>{item.romaji} <span style={{ fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>· 한글 소리 「{item.koreanSound}」</span></p>
             {confus.length > 0 && (
