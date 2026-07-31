@@ -209,67 +209,58 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
       {/* 레벨이 낮으면 빠른 연습(레벨 진도)을 오늘의 미션 위에, 높으면 미션을 위에 */}
       {lowLevel ? (<>{levelPanel}{missionPanel}</>) : (<>{missionPanel}{levelPanel}</>)}
 
-      {/* 속도전 대결 */}
+      {/* 속도전 대결 — 예전엔 화면 전체를 붉은 그라데이션으로 채운 히어로 배너라 "오늘의 미션"과
+          시선을 다퉜다(사용자 지적: 화면이 어수선함). 보조 게임 모드이므로 아래 여행 배너들과
+          같은 옅은 카드 톤으로 낮췄다 — 기능은 그대로, 시각적 무게만 줄였다. */}
       <button className="ym-rise ym-press" onClick={onPracticeFlash} style={{
-        width: '100%', marginTop: 14, textAlign: 'left', cursor: 'pointer',
-        display: 'flex', alignItems: 'center', gap: 14, padding: '16px 18px', borderRadius: 20,
-        border: '1px solid var(--accent)', color: '#fff',
-        background: 'linear-gradient(135deg, #b9382e, #e0564a 60%, #f0a23a)',
-        boxShadow: '0 12px 30px rgba(185,56,46,0.34)',
+        width: '100%', marginTop: 14, textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 13,
+        padding: '14px 16px', borderRadius: 18, border: '1px solid var(--glass-border)', color: 'var(--ink)',
+        background: 'var(--glass-bg-strong)',
       }}>
         <span style={{
-          width: 42, height: 42, borderRadius: 14, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          background: 'rgba(255,255,255,.14)', color: '#fff', border: '1px solid rgba(255,255,255,.24)', flex: '0 0 42px',
+          width: 40, height: 40, flex: '0 0 40px', borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          background: 'var(--accent-soft)', color: 'var(--accent)',
         }}>
-          <Icon name="fast" size={21} />
+          <Icon name="fast" size={19} />
         </span>
         <span style={{ flex: 1 }}>
-          <span style={{ display: 'block', fontSize: 18, fontWeight: 900, letterSpacing: '-0.02em' }}>속도전 대결</span>
-          <span style={{ display: 'block', fontSize: 12.5, fontWeight: 700, color: 'rgba(255,255,255,0.9)', marginTop: 2 }}>제한시간 안에 빠르게! 높은 점수로 보석함 획득</span>
+          <span style={{ display: 'block', fontSize: 14, fontWeight: 800 }}>속도전 대결</span>
+          <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-soft)', marginTop: 2 }}>제한시간 안에 빠르게! 높은 점수로 보석함 획득</span>
         </span>
-        <Icon name="flow" size={20} style={{ color: 'rgba(255,255,255,0.85)' }} />
+        <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)' }} />
       </button>
 
-      {/* 여행 목적별 학습 배너 — 수준 진단 배너와 달리 강제성이 없는 보조 옵션이라 맨 아래에 둔다.
-          진단 배너가 위로 옮겨져(온보딩 우선순위) 더는 이 배너와 바로 붙어 있지 않으므로,
-          비슷하게 생긴 카드형 배너 두 개가 연달아 보이는 배너 피로감도 함께 줄어든다.
-          선택 전엔 1탭 칩으로 바로 고를 수 있고(강제 아님, 빠른 진입 유지), 고른 뒤엔 그 일정에 맞는
-          "일정별 팁" 하나를 미리 보여주고 더 보기로 팁 라이브러리에 필터링해 들어간다. */}
-      {/* D-day 배지 — 설정에서 출국일을 입력했을 때만(2026-07-26, persona-02 후속).
-          14일 이하로 임박하면(2026-07-27 후속) 미션 지도의 "우선 학습 카테고리"가 자동으로
-          생존·문제해결 루트로 맞춰진다 — 사용자가 직접 카테고리를 고르지 않은 경우에 한함. */}
-      {dDay !== null && (
-        <div className="ym-rise" style={{
-          marginTop: 14, padding: '10px 16px', borderRadius: 999, border: '1px solid var(--glass-border)',
-          background: 'var(--glass-bg-strong)', display: 'inline-flex', alignItems: 'center', gap: 8,
-        }}>
-          <span aria-hidden style={{ fontSize: 16 }}>🗓</span>
-          <span style={{ fontSize: 13.5, fontWeight: 800 }}>출국 {dDay === 0 ? 'D-day' : `D-${dDay}`}</span>
-          {dDay <= 14 && <span style={{ fontSize: 12, color: 'var(--ink-faint)', fontWeight: 700 }}>· 생존 표현부터 우선 열려요</span>}
-        </div>
-      )}
-      <TravelPurposeBanner purpose={travelPurpose} progress={progress} onSet={onSetTravelPurpose} onOpenTips={onOpenTipsForPurpose} />
+      {/* 여행 목적별 학습 배너 + D-day — 예전엔 D-day 배지가 별도 줄로 떠 있어 배너가 하나 더
+          있는 것처럼 보였다(사용자 지적). 같은 "여행 일정" 정보이므로 배너 안에 한 줄로 합쳤다. */}
+      <TravelPurposeBanner purpose={travelPurpose} progress={progress} onSet={onSetTravelPurpose} onOpenTips={onOpenTipsForPurpose} dDay={dDay} />
 
       {!ttsSupported() && <p style={{ color: 'var(--warn)', fontSize: 13, marginTop: 16, fontWeight: 600 }}>이 브라우저는 음성(TTS) 미지원 — 텍스트로만 진행됩니다.</p>}
     </main>
   );
 }
 
-function TravelPurposeBanner({ purpose, progress, onSet, onOpenTips }: {
-  purpose: TravelPurpose | undefined; progress: ProgressMap; onSet: (p: TravelPurpose) => void; onOpenTips: (p: TravelPurpose) => void;
+function TravelPurposeBanner({ purpose, progress, onSet, onOpenTips, dDay }: {
+  purpose: TravelPurpose | undefined; progress: ProgressMap; onSet: (p: TravelPurpose) => void; onOpenTips: (p: TravelPurpose) => void; dDay: number | null;
 }) {
   // early return보다 위로 옮김 — Hooks는 조건부로 호출하면 안 됨(purpose가 undefined↔값있음으로
   // 바뀌는 순간 "Rendered fewer hooks than expected" 런타임 에러가 날 수 있었던 기존 버그를 함께 수정).
   // eslint-disable-next-line react-hooks/exhaustive-deps -- 매 렌더마다 무작위로 다시 뽑히면 화면이 깜빡이므로 purpose가 바뀔 때만 재선정
   const tip = useMemo(() => travelPurposeTip(purpose, progress), [purpose]);
+  const dDayText = dDay === null ? undefined : dDay === 0 ? 'D-day' : `D-${dDay}`;
   if (!purpose) {
     return (
       <div className="ym-rise" style={{
         marginTop: 14, padding: '14px 16px', borderRadius: 18, border: '1px solid var(--glass-border)',
         background: 'var(--glass-bg-strong)',
       }}>
-        <p style={{ margin: 0, fontSize: 13.5, fontWeight: 800 }}>🗓 이번 여행은 어떤 스타일이에요?</p>
-        <p style={{ margin: '3px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>고르면 일정에 맞는 문화·여행 팁을 보여드려요(학습 순서·미션 구성은 그대로예요). 나중에 설정에서 바꿀 수 있어요.</p>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+          <p style={{ margin: 0, fontSize: 13.5, fontWeight: 800 }}>🗓 이번 여행은 어떤 스타일이에요?</p>
+          {dDayText && <span style={{ flex: '0 0 auto', fontSize: 12, fontWeight: 800, color: 'var(--accent)' }}>출국 {dDayText}</span>}
+        </div>
+        <p style={{ margin: '3px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>
+          고르면 일정에 맞는 문화·여행 팁을 보여드려요(학습 순서·미션 구성은 그대로예요). 나중에 설정에서 바꿀 수 있어요.
+          {dDay !== null && dDay <= 14 && ' 출국이 임박해 생존 표현부터 우선 열려요.'}
+        </p>
         <div style={{ display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
           {(Object.keys(TRAVEL_PURPOSE_LABEL) as TravelPurpose[]).map((p) => (
             <button key={p} className="ym-press" onClick={() => onSet(p)} style={{
@@ -291,7 +282,10 @@ function TravelPurposeBanner({ purpose, progress, onSet, onOpenTips }: {
     }}>
       <span style={{ fontSize: 28 }}>🗓</span>
       <span style={{ flex: 1 }}>
-        <span style={{ display: 'block', fontSize: 11.5, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.03em' }}>{TRAVEL_PURPOSE_LABEL[purpose]} 맞춤 팁</span>
+        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+          <span style={{ fontSize: 11.5, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.03em' }}>{TRAVEL_PURPOSE_LABEL[purpose]} 맞춤 팁</span>
+          {dDayText && <span style={{ flex: '0 0 auto', fontSize: 11.5, fontWeight: 800, color: 'var(--accent)' }}>출국 {dDayText}</span>}
+        </span>
         <span style={{ display: 'block', fontSize: 14, fontWeight: 800, marginTop: 2 }}>{tip ? tip.label : '일정에 맞는 팁을 모아봤어요'}</span>
         {tip && <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-soft)', marginTop: 2 }}>{tip.tipKo}</span>}
       </span>
