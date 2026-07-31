@@ -29,7 +29,6 @@ const label: React.CSSProperties = {
 };
 
 // 셀 상태 — 읽기 안정(2회 연속 정답)=익힘, 시도 흔적 있으면=본 적 있음.
-// Review.tsx의 가나 탭도 이 분류를 그대로 재사용(중복 로직 방지).
 export function cellState(progress: ProgressMap, id: string): 'mastered' | 'seen' | 'new' {
   const read = progress[`kana:${id}:read`];
   if (read && read.consecutiveCorrect >= 2) return 'mastered';

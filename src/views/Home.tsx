@@ -485,8 +485,8 @@ function HomeSceneCard({ hero, accent, kicker, title, chips, planned, onStart }:
           {planned === 0 ? '오늘 학습할 카드가 없어요' : `시작 · ${planned}장`}
         </PrimaryAction>
         {planned === 0 && (
-          <MascotEmpty who="duo" size={48} title="오늘은 복습장으로 가볼까요?" style={{ padding: '12px 0 0' }}>
-            미션 지도나 복습장에서 다시 듣고 익숙한 표현을 확인할 수 있어요.
+          <MascotEmpty who="duo" size={48} title="오늘은 듣기로 가볼까요?" style={{ padding: '12px 0 0' }}>
+            미션 지도나 듣기에서 배운 표현을 다시 듣고 익숙하게 만들 수 있어요.
           </MascotEmpty>
         )}
       </div>

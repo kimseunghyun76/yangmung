@@ -4,7 +4,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export type View =
-  | 'home' | 'practice' | 'map' | 'review' | 'gacha' | 'emergency'
+  | 'home' | 'practice' | 'map' | 'gacha' | 'emergency'
   | 'vocabTable' | 'verbs' | 'kana' | 'public' | 'ent' | 'tips' | 'discover' | 'listen'
   | 'intro' | 'preview' | 'session' | 'done' | 'flash' | 'write' | 'kanaSpeak' | 'placement';
 
@@ -12,7 +12,6 @@ const VIEW_TO_HASH: Record<View, string> = {
   home: '/',
   practice: '/practice',
   map: '/map',
-  review: '/review',
   gacha: '/gacha',
   emergency: '/emergency',
   vocabTable: '/vocab/basics',

@@ -52,7 +52,6 @@ const Flash = lazy(() => import('./views/Flash').then((m) => ({ default: m.Flash
 const KanaWrite = lazy(() => import('./views/KanaWrite').then((m) => ({ default: m.KanaWrite })));
 const KanaSpeak = lazy(() => import('./views/KanaSpeak').then((m) => ({ default: m.KanaSpeak })));
 const Placement = lazy(() => import('./views/Placement').then((m) => ({ default: m.Placement })));
-const Review = lazy(() => import('./views/Review').then((m) => ({ default: m.Review })));
 const Guide = lazy(() => import('./views/Guide').then((m) => ({ default: m.Guide })));
 const WelcomeGuide = lazy(() => import('./views/WelcomeGuide').then((m) => ({ default: m.WelcomeGuide })));
 const LevelIntroGuide = lazy(() => import('./views/LevelIntroGuide').then((m) => ({ default: m.LevelIntroGuide })));
@@ -415,16 +414,6 @@ export function App() {
     // 입문 단계에서 친 가나 읽기 퀴즈는 해당 스크립트 단계를 통과시킨다.
     const stage = coreLevel === 'beginner' ? stageKey('beginner', script) : null;
     flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true, stage });
-  }
-  // 복습장 "약점" 탭 전용 — 지금 화면에 뜬 약한 글자들만 콕 집어 퀴즈로 해소.
-  // 일반 복습(startReviewSession)은 quotas.K:0라 가나가 아예 안 나오는 별개 세션이라, 이걸 새로 만들었다.
-  function startWeakKanaReview(weakKeys: string[], count: number) {
-    if (weakKeys.length === 0) return;
-    const ids = new Set(weakKeys);
-    const cards = selectScriptKanaCards(allCards, progress, nextSessionId(session), ids, count);
-    if (cards.length === 0) return;
-    lastPracticeRef.current = () => startWeakKanaReview(weakKeys, count);
-    flow.beginSession(nextSessionId(session), cards, { intro: true, practice: true });
   }
   // 학습 연습(발음구분·간판·받아쓰기·작문·어휘·방송·명장면 등)에도 항상 문법/문화 팁 1개 이상 —
   // 입문은 제외(미션과 마찬가지로 기본 등급부터). 주제 키워드로 연관 팁을 우선 찾고 없으면 전체 풀에서 회전.
@@ -861,12 +850,11 @@ export function App() {
   // ── 라우팅 ───────────────────────────────────────
   // 허브 화면(홈·지도·복습)엔 상단 네비게이션 — 자유 이동 + 가이드/설정.
   const nav = {
-    onNavigate: (v: 'home' | 'practice' | 'map' | 'review' | 'gacha') => navigate(v),
+    onNavigate: (v: 'home' | 'practice' | 'map' | 'listen' | 'gacha') => navigate(v),
     onOpenGuide: () => setShowGuide(true),
     onOpenSettings: () => setShowSettings(true),
     onOpenTips: () => { setTipsQuery(''); navigate('tips'); },
     onOpenEmergency: () => navigate('emergency'),
-    onOpenListen: () => navigate('listen'),
     theme: settings.theme,
     onToggleTheme: toggleTheme,
   };
@@ -939,9 +927,6 @@ export function App() {
     }
     if (view === 'listen') {
       return <ListenMode nav={{ ...nav, current: 'listen' }} allCards={allCards} progress={progress} onBack={() => goBack('home')} />;
-    }
-    if (view === 'review') {
-      return <Review nav={{ ...nav, current: 'review' }} allCards={allCards} progress={progress} seenKana={seenKana} openMissions={visibleOpenMissions} devUnlockAll={!!settings.devUnlockAll} onStartReview={startReviewSession} onPracticeScene={startSceneSession} onStartWeakKanaReview={startWeakKanaReview} onBack={() => goBack('home')} />;
     }
     if (view === 'gacha') {
       return <GachaPage nav={{ ...nav, current: 'gacha' }} openMissions={visibleOpenMissions} />;

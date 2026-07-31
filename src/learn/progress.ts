@@ -158,30 +158,6 @@ export function countSeenKana(seen: SeenKana): number {
   return Object.keys(seen).length;
 }
 
-// ── 약점(복습장) 무시 목록 — diagnose()는 순수 계산이라 스스로 "치웠다"는 상태를 못 가지므로,
-// 사용자가 직접 지운 항목의 당시 점수를 기억해뒀다가, 그 점수보다 더 나빠지면(재퇴보) 다시 보여준다.
-const DISMISSED_WEAK_KEY = 'yangmung:dismissedweak:v1';
-export type DismissedWeak = Record<string, number>; // key(가나 id·미션 id) → 지울 당시 score
-
-export function loadDismissedWeak(): DismissedWeak {
-  if (typeof window === 'undefined') return {};
-  try {
-    const raw = window.localStorage.getItem(DISMISSED_WEAK_KEY);
-    return raw ? (JSON.parse(raw) as DismissedWeak) : {};
-  } catch { return {}; }
-}
-
-export function saveDismissedWeak(d: DismissedWeak): void {
-  if (typeof window === 'undefined') return;
-  saveDeferred(DISMISSED_WEAK_KEY, d);
-}
-
-// 지금은 약해도 무시 목록에 있고 그때보다 나빠지지 않았으면 숨긴다.
-export function isWeakDismissed(dismissed: DismissedWeak, key: string, currentScore: number): boolean {
-  const at = dismissed[key];
-  return at !== undefined && currentScore >= at - 0.001;
-}
-
 // 가나 글자가 "익숙"한가 — 충분히 자주 마주쳤으면. (드릴 카드도 등장 시 seen 적립됨)
 export function isKanaFamiliar(char: string, seen: SeenKana): boolean {
   return (seen[char] ?? 0) >= KANA_FAMILIAR_AT;
@@ -467,6 +443,22 @@ export function masteredPhraseIds(allCards: Card[], progress: ProgressMap): Set<
     if (c.reviewTarget?.type !== 'phrase') continue;
     const p = progress[c.id];
     if (p && p.consecutiveCorrect >= PHRASE_MASTERED_STREAK) out.add(String(c.reviewTarget.id));
+  }
+  return out;
+}
+// 정답 여부와 무관하게 한 번이라도 마주친(=학습한) 표현 id 전체 — masteredPhraseIds보다 느슨한 기준.
+// 듣기 모드(ListenMode)·복습 라이브러리에서 "이미 배운 표현" 범위를 정할 때 쓴다.
+export function collectSeenPhraseIds(allCards: Card[], progress: ProgressMap): Set<string> {
+  const out = new Set<string>();
+  for (const c of allCards) {
+    if (!progress[c.id]) continue;
+    if (c.kind === 'introduce') out.add(c.phraseId);
+    if (c.kind === 'speak') { const pid = c.id.split(':').slice(2).join(':'); if (pid) out.add(pid); }
+    if (c.kind === 'quiz' && c.id.startsWith('listen:')) { const pid = c.id.slice('listen:'.length); if (pid) out.add(pid); }
+    if (c.kind === 'quiz') {
+      if (c.promptPhrase?.id) out.add(c.promptPhrase.id);
+      for (const choice of c.choices) if (choice.phrase?.id) out.add(choice.phrase.id);
+    }
   }
   return out;
 }

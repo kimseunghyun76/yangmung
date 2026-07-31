@@ -1,11 +1,14 @@
-// 듣기 모드 — 이동 중(화면을 안 봐도) 학습한 표현을 이어서 반복 재생해 귀에 익히는 화면.
-// 2026-07-29 신규: "자주 들어야 익숙해진다"는 요청에 따라, 탭/클릭 없이 문장이 계속 이어지도록 구성.
+// 듣기 — 이동 중(화면을 안 봐도) 학습한 표현을 이어서 반복 재생해 귀에 익히는 화면.
+// 2026-07-29 신규, 2026-08-01 확장: 예전 "복습장"의 표현·장면별·약점 탭을 이 화면에 통합했다
+// (가나 탭은 제외 — 학습 탭에서 계속 다룬다). 복습을 별도 화면으로 두기보다, 이미 배운 표현을
+// "다시 듣는" 한 가지 동작으로 모으는 편이 더 자주 쓰인다는 판단.
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CONTENT } from '../content';
 import type { Phrase } from '../content';
 import type { Card } from '../learn/cards';
-import type { ProgressMap } from '../learn/progress';
-import { collectSeenPhraseIds } from './Review';
+import { collectSeenPhraseIds, type ProgressMap } from '../learn/progress';
+import { diagnose } from '../learn/adaptive';
+import { patternForPhrase } from '../content/patterns';
 import { phraseIdsByPlace, sceneVisualByPlace } from './scene';
 import { speak, stopSpeaking, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
@@ -14,6 +17,7 @@ import { NavBar, type NavBarProps } from './NavBar';
 import { PageHead } from './ui';
 import { GlassPanel, hexA } from './shell';
 import { MascotEmpty } from './mascot';
+import { BigTextOverlay, ZoomButton } from './BigText';
 
 interface Props {
   nav: NavBarProps;
@@ -26,22 +30,35 @@ const RATE_OPTIONS = [0.8, 1, 1.25] as const;
 const REPEAT_OPTIONS = [1, 2, 3] as const;
 const GAP_MS = 900;       // 다음 문장으로 넘어가기 전 여백
 const REPEAT_GAP_MS = 450; // 같은 문장 반복 사이 여백
+const WEAK_SCOPE = '__weak__';
 const kicker: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase', margin: 0 };
 
 export function ListenMode({ nav, allCards, progress, onBack }: Props) {
   const phraseSeen = useMemo(() => collectSeenPhraseIds(allCards, progress), [allCards, progress]);
   const places = useMemo(() => phraseIdsByPlace(), []);
   const byId = useMemo(() => Object.fromEntries(CONTENT.phrases.map((p) => [p.id, p])), []);
+  const diag = useMemo(() => diagnose(allCards, progress, 0), [allCards, progress]);
   // 학습한 표현이 하나라도 있는 장면만 선택지로 노출 — 빈 장면을 골라 "표현이 없어요"를 보게 하지 않는다.
   const scenePlaces = useMemo(() => places.filter((p) => p.phraseIds.some((id) => phraseSeen.has(id))), [places, phraseSeen]);
+  // 약점 장면(정답률 낮음)의 표현들 — "약점" 스코프 전용 후보 풀.
+  const weakPhraseIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const w of diag.weakScenes) {
+      const place = places.find((p) => p.id === w.key);
+      if (place) for (const pid of place.phraseIds) if (phraseSeen.has(pid)) ids.add(pid);
+    }
+    return ids;
+  }, [diag.weakScenes, places, phraseSeen]);
 
-  const [scope, setScope] = useState<string>('all'); // 'all' | place.id
+  const [scope, setScope] = useState<string>('all'); // 'all' | WEAK_SCOPE | place.id
   const list = useMemo<Phrase[]>(() => {
     const ids = scope === 'all'
       ? CONTENT.phrases.filter((p) => phraseSeen.has(p.id)).map((p) => p.id)
+      : scope === WEAK_SCOPE
+      ? [...weakPhraseIds]
       : (places.find((p) => p.id === scope)?.phraseIds ?? []).filter((id) => phraseSeen.has(id));
     return ids.map((id) => byId[id]).filter((p): p is Phrase => Boolean(p));
-  }, [scope, phraseSeen, places, byId]);
+  }, [scope, phraseSeen, places, byId, weakPhraseIds]);
 
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -49,10 +66,13 @@ export function ListenMode({ nav, allCards, progress, onBack }: Props) {
   const [repeatEach, setRepeatEach] = useState<number>(2);
   const [rate, setRate] = useState<number>(1);
   const [keepAwake, setKeepAwake] = useState(true);
+  const [zoom, setZoom] = useState(false);
+  const [showPattern, setShowPattern] = useState(false);
   const wakeLockRef = useRef<{ release: () => Promise<void> } | null>(null);
 
-  useEffect(() => { setIndex(0); setPlaying(false); }, [scope]);
+  useEffect(() => { setIndex(0); setPlaying(false); setShowPattern(false); }, [scope]);
   useEffect(() => { if (index >= list.length) setIndex(0); }, [list, index]);
+  useEffect(() => { setShowPattern(false); }, [index]);
 
   // 재생 엔진 — 현재 문장을 repeatEach번 반복한 뒤 다음 문장으로. 목록 끝에서 loopAll이면 처음으로.
   useEffect(() => {
@@ -110,11 +130,15 @@ export function ListenMode({ nav, allCards, progress, onBack }: Props) {
 
   const current = list[index];
   const supported = ttsSupported();
+  const pattern = current ? patternForPhrase(current.id) : undefined;
+  const patternSiblings = pattern && current
+    ? pattern.phraseIds.filter((id) => id !== current.id && phraseSeen.has(id)).map((id) => byId[id]).filter((p): p is Phrase => Boolean(p))
+    : [];
 
   return (
     <main style={WRAP}>
       <NavBar {...nav} current="listen" />
-      <PageHead title="듣기 모드" sub="화면을 안 봐도 학습한 표현이 계속 이어져요 — 이동하면서 자주 들으면 귀에 익어요" />
+      <PageHead title="듣기" sub="배운 표현·장면·약점을 골라 반복해서 들어요 — 화면을 안 봐도 괜찮아요" />
 
       {!supported && (
         <GlassPanel style={{ marginBottom: 16 }}><MascotEmpty who="yang" title="이 기기에서는 음성 재생을 지원하지 않아요">다른 기기나 브라우저에서 시도해보세요.</MascotEmpty></GlassPanel>
@@ -134,6 +158,16 @@ export function ListenMode({ nav, allCards, progress, onBack }: Props) {
               background: scope === 'all' ? 'var(--accent)' : 'var(--glass-bg-strong)',
               color: scope === 'all' ? 'var(--accent-ink)' : 'var(--ink)',
             }}>전체 · {CONTENT.phrases.filter((p) => phraseSeen.has(p.id)).length}</button>
+            {weakPhraseIds.size > 0 && (
+              <button className="ym-press" onClick={() => setScope(WEAK_SCOPE)} style={{
+                flex: '0 0 auto', display: 'flex', alignItems: 'center', gap: 6, padding: '9px 13px', borderRadius: 999, cursor: 'pointer', fontWeight: 750, fontSize: 13.5, whiteSpace: 'nowrap',
+                border: `1px solid ${scope === WEAK_SCOPE ? 'var(--warn)' : 'var(--glass-border)'}`,
+                background: scope === WEAK_SCOPE ? 'var(--warn)' : 'var(--glass-bg-strong)',
+                color: scope === WEAK_SCOPE ? '#fff' : 'var(--warn)',
+              }}>
+                <Icon name="recovery" size={15} /> 약점 · {weakPhraseIds.size}
+              </button>
+            )}
             {scenePlaces.map((p) => {
               const active = scope === p.id;
               const sv = sceneVisualByPlace(p.place);
@@ -155,15 +189,45 @@ export function ListenMode({ nav, allCards, progress, onBack }: Props) {
           {/* 재생 카드 — 큼직하게, 한눈에 들어오도록 */}
           <GlassPanel strong style={{ position: 'relative', overflow: 'hidden', marginBottom: 16, textAlign: 'center', padding: '30px 20px' }}>
             <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(circle at 50% 0%, rgba(185,56,46,.14), transparent 46%)' }} />
-            <p style={{ ...kicker, position: 'relative', marginBottom: 14 }}>{index + 1} / {list.length}</p>
+            <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <p style={{ ...kicker, margin: 0 }}>{index + 1} / {list.length}</p>
+              {current && <ZoomButton size={34} onClick={() => setZoom(true)} />}
+            </div>
             {current && (
-              <div style={{ position: 'relative' }}>
+              <div style={{ position: 'relative', marginTop: 10 }}>
                 <p lang="ja" style={{ margin: 0, fontSize: 30, fontWeight: 800, color: 'var(--ink)', lineHeight: 1.35 }}>{current.kanji ?? current.displayKana ?? current.kana}</p>
                 {current.kanji && <p lang="ja" style={{ margin: '8px 0 0', fontSize: 16, color: 'var(--ink-soft)', fontWeight: 650 }}>{current.displayKana ?? current.kana}</p>}
                 <p style={{ margin: '10px 0 0', fontSize: 16, color: 'var(--accent)', fontWeight: 750 }}>{current.korean}</p>
+                {pattern && (
+                  <div style={{ marginTop: 10 }}>
+                    <button className="ym-press" onClick={() => setShowPattern((v) => !v)} style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 5, padding: '5px 10px', borderRadius: 999,
+                      border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--accent)',
+                      fontSize: 11.5, fontWeight: 800, cursor: 'pointer',
+                    }}>
+                      <Icon name="flow" size={12} /> 같은 틀 · {pattern.structure}
+                    </button>
+                    {showPattern && (
+                      <div style={{ marginTop: 8, padding: '9px 10px', borderRadius: 10, background: 'var(--glass-bg)', border: '1px dashed var(--glass-border)', textAlign: 'left' }}>
+                        <p style={{ margin: '0 0 6px', fontSize: 11.5, color: 'var(--ink-faint)', fontWeight: 700 }}>{pattern.label} — 단어만 바꿔 쓰는 같은 틀이에요</p>
+                        {patternSiblings.length > 0 ? (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                            {patternSiblings.map((s) => (
+                              <p key={s.id} style={{ margin: 0, fontSize: 12.5, color: 'var(--ink)' }}>
+                                {s.kanji ?? s.displayKana ?? s.kana} <span style={{ color: 'var(--ink-faint)' }}>· {s.korean}</span>
+                              </p>
+                            ))}
+                          </div>
+                        ) : (
+                          <p style={{ margin: 0, fontSize: 12, color: 'var(--ink-faint)' }}>같은 틀을 쓰는 다른 표현은 아직 학습 전이에요.</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginTop: 26 }}>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginTop: 22 }}>
               <button className="ym-press" onClick={() => goTo(index - 1)} aria-label="이전 문장"
                 style={{ width: 46, height: 46, borderRadius: 999, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Icon name="back" size={18} />
@@ -196,6 +260,10 @@ export function ListenMode({ nav, allCards, progress, onBack }: Props) {
               <ToggleChip active={keepAwake} onClick={() => setKeepAwake((v) => !v)} icon="theme-day" label="화면 유지" />
             </div>
           </GlassPanel>
+
+          {zoom && current && (
+            <BigTextOverlay ja={current.kanji ?? current.displayKana ?? current.kana} sub={current.korean} onClose={() => setZoom(false)} />
+          )}
         </>
       )}
 
