@@ -50,13 +50,13 @@ export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings, onOpe
     whiteSpace: 'nowrap', flex: '0 0 auto',
   });
   return (
-    <nav style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 22 }}>
+    <nav className="ym-navbar-scroll" style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 22, paddingRight: 16 }}>
       {items.map((it) => (
         <button key={it.key} style={tab(current === it.key)} onClick={() => onNavigate(it.key)}>
           {it.label}
         </button>
       ))}
-      <span style={{ flex: 1 }} />
+      <span style={{ flex: 1, flexShrink: 0, minWidth: 8 }} />
       <CtrlButton icon="emergency" label="긴급" tone="warn" onClick={onOpenEmergency} />
       <CtrlButton icon="listen" label="듣기" onClick={onOpenListen} />
       <CtrlButton icon={theme === 'dark' ? 'theme-day' : 'theme-night'} label="주야" onClick={onToggleTheme} />

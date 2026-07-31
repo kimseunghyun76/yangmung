@@ -867,6 +867,15 @@
         -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
         mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
       }
+      /* 상단 내비게이션 — 좁은 화면(≈375px 이하)에서는 탭+유틸 버튼 전체 폭이
+         뷰포트를 넘어서서 뒤쪽(팁·가이드·설정)이 잘려 아예 누를 수 없었던 문제(2026-07-31 UX 감사 P0-1).
+         가로 스크롤을 허용하고, 오른쪽 끝을 살짝 페이드 처리해 "더 있다"는 것을 알 수 있게 한다. */
+      .ym-navbar-scroll {
+        overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none;
+        -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 16px), transparent 100%);
+        mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 16px), transparent 100%);
+      }
+      .ym-navbar-scroll::-webkit-scrollbar { display: none; }
       .ym-item-thumb {
         position: relative; flex: 0 0 auto; width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center;
         background:
