@@ -154,6 +154,13 @@ export function App() {
     if (nx !== prevLevel) { setShowSettings(false); setLevelGuide(nx); }
   }
 
+  // 단계 통과(퀴즈 정답률 ≥80% 또는 문법 학습의 "전부 봤음") → 진도 기록.
+  // 학습 지도(퀴즈 세션)와 문법 학습(GrammarPath) 양쪽에서 같은 진도 하나를 공유하기 위해
+  // 세션 흐름 훅과 GrammarPath 모두 이 함수를 그대로 호출한다.
+  function markStagePassed(key: string) {
+    setProgression((p) => { const np = markStageComplete(p, key); saveProgression(np); return np; });
+  }
+
   // ── 세션 카드 상태머신 (진행·채점·타이머·TTS) — src/app/useSessionFlow ──
   const flow = useSessionFlow({
     view,
@@ -164,8 +171,7 @@ export function App() {
     commitSession: (s) => { setSession(s); saveSession(s); },
     creditKanaSeen: (chars) => setSeenKana((prev) => { const nx = markKanaSeen(prev, chars); saveSeenKana(nx); return nx; }),
     creditKanaKnown: (chars) => setSeenKana((prev) => { const nx = markKanaKnown(prev, chars); saveSeenKana(nx); return nx; }),
-    // 단계 통과(정답률 ≥80%) → 진도 기록
-    onStagePass: (key) => setProgression((p) => { const np = markStageComplete(p, key); saveProgression(np); return np; }),
+    onStagePass: markStagePassed,
     // 승급 통과(정답률 ≥90%) → 다음 레벨 모드로
     onPromotionPass: (level) => { const nx = nextLevel(level); if (nx) selectMode(nx); },
     getRetrySame: () => lastPracticeRef.current,
@@ -370,6 +376,7 @@ export function App() {
       case 'signs': startSignSession(key); break;
       case 'compose': startComposeSession(key); break;
       case 'verbs': verbsStageKeyRef.current = key; verbsScoreRef.current = { ok: 0, n: 0 }; navigate('verbs'); break;
+      case 'grammar': navigate('grammar'); break; // 통과 판정은 GrammarPath에서 그 단계의 문법을 전부 봤을 때
     }
   }
   // 승급 시험 — 현재 레벨 내용에서 20문항, ≥90% 통과 시 다음 레벨로.
@@ -877,7 +884,6 @@ export function App() {
           onOpenPublic={() => navigate('public')}
           onOpenEntertainment={() => navigate('ent')}
           onOpenDiscoverGallery={() => navigate('discover')}
-          onOpenGrammar={() => navigate('grammar')}
           onStartVocabGroup={startVocabSession}
         />
       );
@@ -886,7 +892,7 @@ export function App() {
       return <TipsLibrary nav={{ ...nav, current: 'practice' }} onBack={() => goBack('practice')} initialQuery={tipsQuery} />;
     }
     if (view === 'grammar') {
-      return <GrammarPath nav={{ ...nav, current: 'practice' }} coreLevel={coreLevel} devUnlockAll={!!settings.devUnlockAll} onBack={() => goBack('practice')} />;
+      return <GrammarPath nav={{ ...nav, current: 'practice' }} coreLevel={coreLevel} devUnlockAll={!!settings.devUnlockAll} onBack={() => goBack('practice')} onStagePass={markStagePassed} />;
     }
     if (view === 'discover') {
       return (
@@ -1097,7 +1103,6 @@ export function App() {
         modeLabel={MODE_PRESETS[settings.mode].label}
         onStart={startSession} onPracticeScene={startSceneSession} onPlacement={startPlacement} placementDone={typeof localStorage !== 'undefined' && !!localStorage.getItem('yangmung:placement:v1')}
         coreLevel={coreLevel} progression={progression} devUnlockAll={!!settings.devUnlockAll} onStartStage={startStage} onStartPromotion={startPromotionQuiz}
-        onOpenBasics={() => navigate('vocabTable')} onStartVocabGroup={startVocabSession}
         travelPurpose={settings.travelPurpose}
         onSetTravelPurpose={(p) => updateSettings({ ...settings, travelPurpose: p })}
         onOpenTipsForPurpose={openTipsForPurpose}

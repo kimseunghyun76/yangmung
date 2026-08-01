@@ -17,7 +17,7 @@ describe('Done result recommendations', () => {
       clearedSceneIds: [],
       isQuickPractice: true,
       coreLevel: 'default',
-      progression: { completed: ['default:greetings', 'default:signs'] },
+      progression: { completed: ['default:greetings', 'default:grammar', 'default:signs'] },
       onStartPromotion: vi.fn(),
       onOpenVocabGroups: vi.fn(),
       onRetryWeak: vi.fn(),

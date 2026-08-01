@@ -25,7 +25,6 @@ interface Props {
   onOpenPublic: () => void;
   onOpenEntertainment: () => void;
   onOpenDiscoverGallery: () => void;
-  onOpenGrammar: () => void;
   onStartVocabGroup: (groupId: string) => void;
 }
 
@@ -54,6 +53,7 @@ const STAGE_ART: Record<string, string> = {
   vocab: 'vocab',
   compose: 'compose',
   verbs: 'verbs',
+  grammar: 'vocab', // 전용 자산 없음 — 다른 자유 연습과 같은 일반 어휘 이미지를 재사용
 };
 const STAGE_ICON: Record<string, IconName> = {
   hiragana: 'kana',
@@ -65,6 +65,7 @@ const STAGE_ICON: Record<string, IconName> = {
   vocab: 'kana',
   compose: 'flow',
   verbs: 'flow',
+  grammar: 'tip',
 };
 const LEVEL_ACCENT: Record<CoreLevel, string> = {
   beginner: '#b9382e',
@@ -104,7 +105,7 @@ function itemDone(item: PracticeItem, progression: ProgressionState): boolean {
   return !!item.stage && isStageComplete(progression, item.level, item.stage.id);
 }
 
-export function Practice({ nav, coreLevel, progression, progress, devUnlockAll, onStartStage, onPracticeWrite, onPracticeSpeak, onPracticeFlash, onOpenBasics, onOpenPublic, onOpenEntertainment, onOpenDiscoverGallery, onOpenGrammar, onStartVocabGroup }: Props) {
+export function Practice({ nav, coreLevel, progression, progress, devUnlockAll, onStartStage, onPracticeWrite, onPracticeSpeak, onPracticeFlash, onOpenBasics, onOpenPublic, onOpenEntertainment, onOpenDiscoverGallery, onStartVocabGroup }: Props) {
   const hira = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'hiragana').map((k) => k.id));
   const kata = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'katakana').map((k) => k.id));
   // 어휘 커리큘럼 — 예전엔 "어휘 커리큘럼" 배너 하나로 뭉쳐 그 안의 하위 메뉴(/vocab)로 들어가야 했는데,
@@ -229,27 +230,6 @@ export function Practice({ nav, coreLevel, progression, progress, devUnlockAll, 
           <KanaMasteryBar label="가타카나" m={kata} />
         </div>
       </GlassPanel>
-
-      {/* 문법 학습 — 장면(미션) 중심 학습과 반대로, 문법 규칙을 먼저 보고 그 규칙을 쓰는 문장을
-          짧은 것부터 긴 것까지 순서대로 익히고 싶다는 요청으로 신설. 레벨 구분 없이 항상 들어갈 수
-          있게 레벨별 그리드 밖, 눈에 잘 띄는 자리에 둔다. */}
-      <button className="ym-press" onClick={onOpenGrammar} style={{
-        width: '100%', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 13, padding: '14px 16px',
-        borderRadius: 18, border: '1px solid var(--glass-border)', cursor: 'pointer', textAlign: 'left',
-        background: 'var(--glass-bg-strong)',
-      }}>
-        <span style={{
-          flex: '0 0 auto', width: 42, height: 42, borderRadius: 12, display: 'inline-flex',
-          alignItems: 'center', justifyContent: 'center', background: hexA('#4c6ef5', 0.16), color: '#4c6ef5',
-        }}>
-          <Icon name="tip" size={20} />
-        </span>
-        <span style={{ flex: 1, minWidth: 0 }}>
-          <strong style={{ display: 'block', fontSize: 15, color: 'var(--ink)' }}>문법 학습</strong>
-          <span style={{ display: 'block', marginTop: 3, fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 650 }}>핵심 문형부터 보고, 짧은 문장 → 긴 문장 → 응용 문장 순으로 확장해요</span>
-        </span>
-        <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)', flex: '0 0 auto' }} />
-      </button>
 
       {/* 오늘의 추천 */}
       {recommended && (

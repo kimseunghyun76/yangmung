@@ -37,13 +37,17 @@ console.log('=== 멱등성/승급 ===');
 }
 check('nextLevel: beginner→default', nextLevel('beginner') === 'default');
 check('nextLevel: advanced→null', nextLevel('advanced') === null);
-// 고급(2026-07-06 개편)은 더 이상 단계가 없다(받아쓰기는 중급으로 이동) — 단계 없는 레벨은
-// levelAllComplete가 항상 true(승급 시험 없이 여행 미션으로 계속 진행하는 설계, Home.tsx 참고).
-check('고급은 단계가 없어 항상 완료(승급 시험 없음)', levelAllComplete(empty, 'advanced'));
+// 2026-08-01: 고급에 문법 응용·심화 단계가 하나 생겨(학습 연속성 개편으로 문법 학습을 레벨
+// 사다리에 편입) 더 이상 "단계 없는 레벨"이 아니다 — 다른 레벨과 동일하게 완료 전엔 미완료.
+check('고급도 이제 문법 단계가 있어 빈 상태는 미완료', !levelAllComplete(empty, 'advanced'));
+{
+  const s = LEVEL_STAGES.advanced.reduce((acc, st) => markStageComplete(acc, stageKey('advanced', st.id)), empty);
+  check('고급 문법 단계 완료 → levelAllComplete(승급 시험은 여전히 없음)', levelAllComplete(s, 'advanced'));
+}
 check('중급(받아쓰기 포함) 빈 상태는 미완료', !levelAllComplete(empty, 'express'));
 {
   const s = LEVEL_STAGES.express.reduce((acc, st) => markStageComplete(acc, stageKey('express', st.id)), empty);
-  check('중급 모든 단계(발음구분·작문·동사형태·받아쓰기) 완료 → levelAllComplete', levelAllComplete(s, 'express'));
+  check('중급 모든 단계(발음구분·실전 문법·작문·동사형태·받아쓰기) 완료 → levelAllComplete', levelAllComplete(s, 'express'));
 }
 
 console.log('=== coreLevelOf ===');

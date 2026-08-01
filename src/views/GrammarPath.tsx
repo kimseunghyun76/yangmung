@@ -14,7 +14,7 @@ import { useMemo, useState } from 'react';
 import { CONTENT } from '../content';
 import { grammarLevel } from '../content/grammar';
 import type { GrammarPoint, Phrase } from '../content/types';
-import { CORE_LEVELS, CORE_LEVEL_LABEL, type CoreLevel } from '../learn/progression';
+import { CORE_LEVELS, CORE_LEVEL_LABEL, LEVEL_STAGES, stageKey, type CoreLevel } from '../learn/progression';
 import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
@@ -27,6 +27,9 @@ interface Props {
   coreLevel: CoreLevel;
   devUnlockAll: boolean;
   onBack: () => void;
+  // 학습 지도의 "문법" 단계(progression.ts LEVEL_STAGES)와 완료 상태를 공유한다 — 이 단계가
+  // 다루는 문법(grammarTiers)을 전부 한 번씩 보면 다른 단계처럼 완료 처리되어 다음 단계가 열린다.
+  onStagePass: (key: string) => void;
 }
 
 type Tier = 1 | 2 | 3 | 4 | 5;
@@ -64,7 +67,7 @@ function relatedPhrases(g: GrammarPoint): Phrase[] {
     .sort((a, b) => a.kana.length - b.kana.length);
 }
 
-export function GrammarPath({ nav, coreLevel, devUnlockAll, onBack }: Props) {
+export function GrammarPath({ nav, coreLevel, devUnlockAll, onBack, onStagePass }: Props) {
   const [selected, setSelected] = useState<GrammarPoint | null>(null);
   const [seen, setSeen] = useState(() => loadSeen());
   const items = useMemo(() => CONTENT.grammar.filter((g) => g.category === '문법'), []);
@@ -89,12 +92,25 @@ export function GrammarPath({ nav, coreLevel, devUnlockAll, onBack }: Props) {
     return undefined;
   }, [byTier, seen, myRank, devUnlockAll]);
 
+  // 이 문법(tier)을 담당하는 학습 지도 단계를 찾아, 그 단계가 다루는 문법을 전부 봤으면
+  // 다른 단계(퀴즈 점수 통과)와 똑같이 완료 처리한다 — 두 화면이 같은 진도 하나를 공유한다.
+  function checkStagePass(tier: Tier, seenNow: Set<string>) {
+    const level = TIER_REQUIRES[tier];
+    const stage = LEVEL_STAGES[level].find((st) => st.practice === 'grammar' && st.grammarTiers?.includes(tier));
+    if (!stage) return;
+    const tierIds = items.filter((g) => stage.grammarTiers!.includes(grammarLevel(g))).map((g) => g.id);
+    if (tierIds.length > 0 && tierIds.every((id) => seenNow.has(id))) {
+      onStagePass(stageKey(level, stage.id));
+    }
+  }
+
   function select(g: GrammarPoint) {
     setSelected(g);
     setSeen((prev) => {
       if (prev.has(g.id)) return prev;
       const next = new Set(prev).add(g.id);
       saveSeen(next);
+      checkStagePass(grammarLevel(g) as Tier, next);
       return next;
     });
   }

@@ -15,7 +15,7 @@ export const PROMO_PASS = 0.9;       // 승급 시험 통과 기준
 export const PROMO_COUNT = 20;       // 승급 시험 문항 수
 
 // 단계가 어떤 빠른 연습으로 진입하는지
-export type PracticeKey = 'kana' | 'pairs' | 'dictation' | 'greetings' | 'signs' | 'vocab' | 'compose' | 'verbs';
+export type PracticeKey = 'kana' | 'pairs' | 'dictation' | 'greetings' | 'signs' | 'vocab' | 'compose' | 'verbs' | 'grammar';
 
 export interface ProgStage {
   id: string;            // 단계 키 (레벨 내 고유)
@@ -23,6 +23,7 @@ export interface ProgStage {
   sub: string;
   practice: PracticeKey;
   script?: 'hiragana' | 'katakana'; // practice === 'kana'일 때
+  grammarTiers?: number[]; // practice === 'grammar'일 때 — 이 단계가 다루는 문법 난이도(1~5)
 }
 
 // 3-1 ~ 3-4: 레벨별 순차 단계 (2026-07-06 개편)
@@ -38,23 +39,33 @@ export interface ProgStage {
 // ("beginner:greetings" vs "default:greetings") 진척은 완전히 분리된다 — 입문→기본을 순서대로
 // 밟아온 사용자는 이미 배운 내용이라 이 단계를 빠르게 복습 삼아 통과하고, 수준진단으로 기본에
 // 바로 배치된 사용자는 이 단계에서 처음으로 친근한 인사말을 접한 뒤 간판·메뉴로 넘어간다.
+// 2026-08-01 추가: "학습이 하나의 순서로 이어지게 해달라"는 요청으로, 그동안 학습 지도와
+// 별도 메뉴였던 문법 학습(GrammarPath)의 난이도 1~5단계를 이 레벨 사다리 안의 실제 "단계"로
+// 편입했다. 문법 단계의 완료 기준은 다른 단계(퀴즈 점수)와 달리 "그 난이도의 문법을 전부
+// 한 번씩 봤는지"(GrammarPath의 seen 기록)로 판정한다 — App.tsx에서 문법 화면을 나갈 때
+// 확인해 통과 처리한다.
 export const LEVEL_STAGES: Record<CoreLevel, ProgStage[]> = {
   beginner: [
     { id: 'hiragana', label: '히라가나', sub: '표 학습 → 읽기 퀴즈', practice: 'kana', script: 'hiragana' },
     { id: 'katakana', label: '가타카나', sub: '표 학습 → 읽기 퀴즈', practice: 'kana', script: 'katakana' },
+    { id: 'grammar', label: '기초 문법', sub: '문장을 만드는 가장 기본 틀', practice: 'grammar', grammarTiers: [1] },
     { id: 'greetings', label: '기본 인사', sub: '첫 만남·감사·부탁', practice: 'greetings' },
   ],
   default: [
     { id: 'greetings', label: '기본 인사', sub: '가볍게 몸풀기 — 첫 만남·감사·부탁', practice: 'greetings' },
+    { id: 'grammar', label: '기본 문법', sub: '조사·정중체를 조금 더 넓게', practice: 'grammar', grammarTiers: [2] },
     { id: 'signs', label: '간판·메뉴', sub: '역·식당·주의 표지 읽기', practice: 'signs' },
   ],
   express: [
     { id: 'pairs', label: '발음 구분', sub: '비슷한 소리 변별', practice: 'pairs' },
+    { id: 'grammar', label: '실전 문법', sub: '허가·정도 표현으로 확장', practice: 'grammar', grammarTiers: [3] },
     { id: 'compose', label: '한→일 작문', sub: '뜻을 보고 일본어 만들기', practice: 'compose' },
     { id: 'verbs', label: '동사 형태', sub: 'ます·たい·ながら 활용', practice: 'verbs' },
     { id: 'dictation', label: '받아쓰기', sub: '듣고 가나로 쓰기', practice: 'dictation' },
   ],
-  advanced: [],
+  advanced: [
+    { id: 'grammar', label: '응용·심화 문법', sub: '추량·복문 등 실전 응용 문형', practice: 'grammar', grammarTiers: [4, 5] },
+  ],
 };
 
 // settings.mode → 진도 레벨(핵심 4단계). 유틸 모드(review/kana)는 입문으로 간주.

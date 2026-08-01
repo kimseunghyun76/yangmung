@@ -5,7 +5,7 @@ import type { Card } from '../learn/cards';
 import type { Diagnosis } from '../learn/adaptive';
 import { LEVEL_LABEL } from '../learn/adaptive';
 import {
-  CORE_LEVEL_LABEL, LEVEL_STAGES, isStageComplete, isStageUnlocked, levelAllComplete, nextLevel,
+  LEVEL_STAGES, isStageComplete, isStageUnlocked,
   type CoreLevel, type ProgStage, type ProgressionState,
 } from '../learn/progression';
 import {
@@ -22,7 +22,7 @@ import { Icon } from '../ui/Icon';
 import { loadCollection } from '../learn/collection';
 import { useLearningStats, type LearningStats } from '../learn/learningStats';
 import { StatTile, LearningHeatmap } from './StatsWidgets';
-import { VOCAB_GROUPS, vocabGroupArt } from '../content/thematicVocab';
+import { LearningRoadmap } from './Roadmap';
 import { daysUntilTravel, TRAVEL_PURPOSE_LABEL, type TravelPurpose } from '../learn/settings';
 import type { GrammarPoint } from '../content/types';
 
@@ -46,8 +46,6 @@ interface Props {
   devUnlockAll: boolean;
   onStartStage: (stage: ProgStage) => void;
   onStartPromotion: () => void;
-  onOpenBasics: () => void;
-  onStartVocabGroup: (groupId: string) => void;
   // 여행 목적(당일치기/단기/한달살기) — 설정 전엔 undefined, 배너에서 1탭으로 고를 수 있다.
   travelPurpose?: TravelPurpose;
   onSetTravelPurpose: (p: TravelPurpose) => void;
@@ -70,7 +68,7 @@ function travelPurposeTip(purpose: TravelPurpose | undefined, progress: Progress
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' };
 
-export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, missionsLocked, diagnosis, modeLabel, onStart, onPracticeScene, onPlacement, placementDone, coreLevel, progression, devUnlockAll, onStartStage, onStartPromotion, onOpenBasics, onStartVocabGroup, travelPurpose, onSetTravelPurpose, onOpenTipsForPurpose, travelDate }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, missionsLocked, diagnosis, modeLabel, onStart, onPracticeScene, onPlacement, placementDone, coreLevel, progression, devUnlockAll, onStartStage, onStartPromotion, travelPurpose, onSetTravelPurpose, onOpenTipsForPurpose, travelDate }: Props) {
   const dDay = daysUntilTravel(travelDate);
   const upcomingId = nextSessionId(session);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
@@ -109,38 +107,22 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
   // 레벨이 낮은 사람(입문·기본)은 레벨 진도(빠른 연습)를 오늘의 미션보다 위에 둔다.
   const lowLevel = coreLevel === 'beginner' || coreLevel === 'default';
 
-  // 여행 미션은 입문·기본에서는 절대 노출하지 않는다(요청) — 오늘의 미션 히어로·여행 루트 대신
-  // "왜 안 보이는지 + 언제 열리는지"를 분명히 알려주는 안내 카드로 대체.
+  // 여행 미션은 입문·기본에서는 절대 노출하지 않는다(요청) — 잠긴 이유는 이제 로드맵의 해당
+  // 레벨 줄이 설명하므로, 여기서는 출국 임박 안내(로드맵이 다루지 않는 것)만 남긴다.
   const missionPanel = missionsLocked ? (
-    <div className="ym-rise" style={{ marginTop: 14 }}>
-      <GlassPanel>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span aria-hidden style={{ fontSize: 26 }}>🔒</span>
-          <div>
-            <p style={{ margin: 0, ...label }}>여행 미션</p>
-            <strong style={{ display: 'block', marginTop: 3, fontSize: 16 }}>미션은 중급부터 열려요</strong>
-          </div>
-        </div>
-        <p style={{ margin: '10px 0 0', fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.6 }}>
-          지금은 가나·기본 단어를 다지는 단계예요. 아래 <strong style={{ color: 'var(--ink)' }}>레벨 진도</strong>를 다 통과하고
-          중급으로 승급하면 편의점·식당 같은 실전 여행 장면이 열려요.
-        </p>
-        {/* 출국이 임박한데 아직 입문·기본이면, 순서를 다 못 밟아도 여행 미션부터 볼 수 있는 기존
-            수단(설정 > 학습 모드 수동 변경)을 여기서 바로 찾을 수 있게 한다 — 이 수단 자체는 이미
-            있었지만 설정 화면 깊숙이 있어 발견하기 어려웠다(UX 감사·페르소나 회귀 테스트 지적). */}
-        {dDay !== null && dDay <= 14 && (
-          <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--glass-border)' }}>
-            <p style={{ margin: '0 0 8px', fontSize: 12.5, color: 'var(--ink-soft)', lineHeight: 1.6 }}>
-              🗓 출국이 {dDay}일 남았어요. 순서대로 다 못 밟아도 괜찮다면 설정에서 난이도를 직접 올려 여행 미션부터 먼저 볼 수 있어요.
-            </p>
-            <button className="ym-press" onClick={nav.onOpenSettings} style={{
-              width: '100%', padding: '11px 14px', borderRadius: 12, cursor: 'pointer',
-              border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 750, fontSize: 13.5,
-            }}>설정에서 난이도 바로 올리기</button>
-          </div>
-        )}
-      </GlassPanel>
-    </div>
+    dDay !== null && dDay <= 14 ? (
+      <div className="ym-rise" style={{ marginTop: 14 }}>
+        <GlassPanel>
+          <p style={{ margin: 0, fontSize: 12.5, color: 'var(--ink-soft)', lineHeight: 1.6 }}>
+            🗓 출국이 {dDay}일 남았어요. 순서대로 다 못 밟아도 괜찮다면 설정에서 난이도를 직접 올려 여행 미션부터 먼저 볼 수 있어요.
+          </p>
+          <button className="ym-press" onClick={nav.onOpenSettings} style={{
+            width: '100%', marginTop: 10, padding: '11px 14px', borderRadius: 12, cursor: 'pointer',
+            border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 750, fontSize: 13.5,
+          }}>설정에서 난이도 바로 올리기</button>
+        </GlassPanel>
+      </div>
+    ) : null
   ) : (
     <>
       {/* 오늘의 여행 미션 히어로 + 시작 CTA */}
@@ -165,9 +147,14 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
     </>
   );
 
-  const levelPanel = (
+  // 학습 로드맵 — 입문→기본→중급→고급 전체를 하나의 세로 경로로 보여준다("학습의 연속성을
+  // 다시 설계해달라"는 요청). 예전의 "레벨 진도" 그리드 패널을 대체한다.
+  const roadmapPanel = (
     <div className="ym-rise" style={{ marginTop: 14 }}>
-      <LevelProgress coreLevel={coreLevel} progression={progression} onStartStage={onStartStage} onStartPromotion={onStartPromotion} devUnlockAll={devUnlockAll} onOpenBasics={onOpenBasics} onStartVocabGroup={onStartVocabGroup} onSeeAll={() => nav.onNavigate('practice')} />
+      <LearningRoadmap
+        coreLevel={coreLevel} progression={progression} devUnlockAll={devUnlockAll} missionsLocked={missionsLocked}
+        onStartStage={onStartStage} onStartPromotion={onStartPromotion} onOpenMap={() => nav.onNavigate('map')}
+      />
     </div>
   );
 
@@ -189,8 +176,8 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
         </GlassPanel>
       </div>
 
-      {/* 레벨이 낮으면 빠른 연습(레벨 진도)을 오늘의 미션 위에, 높으면 미션을 위에 */}
-      {lowLevel ? (<>{levelPanel}{missionPanel}</>) : (<>{missionPanel}{levelPanel}</>)}
+      {/* 레벨이 낮으면 로드맵(다음 할 일)을 오늘의 미션 위에, 높으면 미션을 위에 */}
+      {lowLevel ? (<>{roadmapPanel}{missionPanel}</>) : (<>{missionPanel}{roadmapPanel}</>)}
 
       {/* 속도전 대결은 학습 탭(Practice)에도 같은 버튼이 있어 홈에 또 두면 중복이었다
           (사용자 지적: 화면이 너무 어수선함 — 기능을 한 화면에 다 담으려 하지 말 것).
@@ -567,136 +554,6 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPla
         </>
       )}
     </>
-  );
-}
-
-// 기본 레벨은 순차 단계가 간판·메뉴 하나뿐이라(어휘 주제는 순서 없는 자유 연습으로 뺐음),
-// 레벨 진도 패널이 너무 휑해 보이지 않게 생활 기초 + 어휘 주제 일부를 미리보기로 함께 보여준다.
-// 나머지 주제는 학습 탭(Practice)에서 전부 볼 수 있다(TravelRoute의 "최대 4개 미리보기" 관례와 동일).
-const DEFAULT_PREVIEW_VOCAB_GROUPS = VOCAB_GROUPS.filter((g) => g.id !== 'greetings').slice(0, 3);
-
-// 레벨 진도 패널 — 현재 레벨의 단계를 순서대로, 잠금/완료 상태로. 모두 통과 시 승급 시험.
-function LevelProgress({ coreLevel, progression, onStartStage, onStartPromotion, onOpenBasics, onStartVocabGroup, onSeeAll, devUnlockAll }: {
-  coreLevel: CoreLevel; progression: ProgressionState;
-  onStartStage: (stage: ProgStage) => void; onStartPromotion: () => void;
-  onOpenBasics: () => void; onStartVocabGroup: (groupId: string) => void; onSeeAll: () => void;
-  devUnlockAll: boolean;
-}) {
-  const stages = LEVEL_STAGES[coreLevel];
-  const allDone = levelAllComplete(progression, coreLevel);
-  const promotionUnlocked = allDone || devUnlockAll;
-  const nx = nextLevel(coreLevel);
-  const artOf = (s: ProgStage) => s.script ?? s.practice;
-  // 잠기지 않았지만 아직 안 끝난 첫 단계 — "다음" 배지로 강조해 무엇부터 하면 되는지 한눈에 보여준다.
-  const nextIdx = stages.findIndex((st, idx) => !isStageComplete(progression, coreLevel, st.id) && (devUnlockAll || isStageUnlocked(progression, coreLevel, idx)));
-  const freeExtras = coreLevel === 'default' ? [
-    { key: 'basics', label: '숫자 학습', sub: '숫자·요일·시간·금액', art: 'basics', onClick: onOpenBasics },
-    ...DEFAULT_PREVIEW_VOCAB_GROUPS.map((g) => ({ key: `vocab:${g.id}`, label: g.label, sub: g.description, art: vocabGroupArt(g.id), onClick: () => onStartVocabGroup(g.id) })),
-  ] : [];
-  return (
-    <GlassPanel>
-      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 10 }}>
-        <p style={{ margin: 0, ...label }}>레벨 진도 · {CORE_LEVEL_LABEL[coreLevel]}</p>
-        <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--ink-faint)' }}>통과하면 다음이 열려요</span>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 12 }}>
-        {stages.map((st, idx) => (
-          <StageTile
-            key={st.id} order={idx + 1} stage={st} art={artOf(st)}
-            done={isStageComplete(progression, coreLevel, st.id)}
-            unlocked={devUnlockAll || isStageUnlocked(progression, coreLevel, idx)}
-            isNext={idx === nextIdx}
-            onClick={() => onStartStage(st)}
-          />
-        ))}
-        {freeExtras.map((it) => (
-          <FreeTile key={it.key} label={it.label} sub={it.sub} art={it.art} onClick={it.onClick} />
-        ))}
-      </div>
-      {freeExtras.length > 0 && (
-        <button className="ym-press" onClick={onSeeAll} style={{
-          width: '100%', marginTop: 10, padding: '9px 12px', borderRadius: 10, cursor: 'pointer',
-          border: 'none', background: 'none', color: 'var(--accent)', fontWeight: 750, fontSize: 12.5,
-        }}>학습 탭에서 어휘 주제 전체 보기 →</button>
-      )}
-
-      {/* '쓰기 시험' 배너는 제거됨(2026-07-27) — 히라가나·가타카나 단계 안에 이미 쓰기 연습이
-          포함돼 있어 별도 "시험"으로 노출하면 중복이라는 사용성 지적. Practice.tsx의 "가나 쓰기"
-          자유 연습 배너는 그대로 유지(이건 Home 진입점만 없앤 것). */}
-      {nx ? (
-        <button className="ym-press" onClick={onStartPromotion} disabled={!promotionUnlocked} style={{
-          width: '100%', marginTop: 12, padding: '14px 16px', borderRadius: 14, cursor: promotionUnlocked ? 'pointer' : 'default',
-          fontWeight: 850, fontSize: 14.5, opacity: promotionUnlocked ? 1 : 0.55,
-          background: promotionUnlocked ? 'linear-gradient(135deg, #b9382e, #e0564a)' : 'var(--glass-bg-strong)',
-          color: promotionUnlocked ? '#fff' : 'var(--ink-faint)', border: promotionUnlocked ? 'none' : '1px solid var(--glass-border)',
-        }}>
-          {promotionUnlocked ? `🎯 ${CORE_LEVEL_LABEL[nx]} 승급 시험 — 20문항·90%` : '🔒 모든 단계를 통과하면 승급 시험이 열려요'}
-        </button>
-      ) : (
-        <p style={{ margin: '12px 0 0', fontSize: 13.5, color: 'var(--ink-soft)', fontWeight: 700, lineHeight: 1.5 }}>
-          고급은 승급 시험 없이 위 단계와 아래 <strong style={{ color: 'var(--ink)' }}>여행 미션</strong>으로 계속 실력을 다져요.
-        </p>
-      )}
-    </GlassPanel>
-  );
-}
-
-function StageTile({ order, stage, art, done, unlocked, isNext, onClick }: {
-  order: number; stage: ProgStage; art: string; done: boolean; unlocked: boolean; isNext?: boolean; onClick: () => void;
-}) {
-  return (
-    <button key={stage.id} className="ym-press" onClick={onClick} disabled={!unlocked} style={{
-      position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', textAlign: 'left', minWidth: 0,
-      border: isNext ? '1.5px solid var(--accent)' : done ? '1.5px solid var(--ok)' : '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
-      borderRadius: 14, padding: 0, cursor: unlocked ? 'pointer' : 'default', opacity: unlocked ? 1 : 0.62,
-      boxShadow: isNext ? '0 0 0 3px var(--accent-soft), 0 7px 16px rgba(89,58,28,.06)' : '0 7px 16px rgba(89,58,28,.06)',
-    }}>
-      <span aria-hidden style={{ position: 'relative', display: 'block', width: '100%', aspectRatio: '4 / 3', overflow: 'hidden', background: 'rgba(255,247,235,.64)' }}>
-        <img src={`/scenes/quick-practice/${art}.webp`} alt="" loading="lazy" decoding="async" style={{
-          width: '100%', height: '100%', objectFit: 'cover', display: 'block',
-          filter: unlocked ? 'saturate(.9) contrast(.97) brightness(1.02)' : 'grayscale(.85) brightness(.92)',
-        }} />
-        <span style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(255,247,235,.02), transparent 58%, rgba(48,34,18,.26))' }} />
-        {/* 순서 배지 */}
-        <span style={{ position: 'absolute', top: 7, left: 7, width: 22, height: 22, borderRadius: 99, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,.5)', color: '#fff', fontSize: 12, fontWeight: 900 }}>{order}</span>
-        {/* 상태 배지 — 완료했으면 체크, 아직이면(그리고 지금 할 차례면) "다음"으로 뭘 해야 할지 짚어준다 */}
-        {done ? (
-          <span style={{ position: 'absolute', top: 7, right: 7, padding: '3px 7px', borderRadius: 999, background: 'rgba(35,134,82,.96)', color: '#fff', fontSize: 10.5, fontWeight: 900 }}>완료 ✓</span>
-        ) : isNext ? (
-          <span style={{ position: 'absolute', top: 7, right: 7, padding: '3px 7px', borderRadius: 999, background: 'var(--accent)', color: '#fff', fontSize: 10.5, fontWeight: 900 }}>다음</span>
-        ) : null}
-        {!unlocked && (
-          <span style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>🔒</span>
-        )}
-      </span>
-      <span style={{ minWidth: 0, display: 'block', padding: '10px 11px 11px' }}>
-        <span style={{ display: 'block', fontSize: 14, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{stage.label}</span>
-        <span style={{ display: 'block', fontSize: 11, color: 'var(--ink-faint)', fontWeight: 700, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{stage.sub}</span>
-      </span>
-    </button>
-  );
-}
-
-// 순서 없는 자유 연습 항목(어휘 주제 등) — 늘 열려 있어 순번·잠금 배지가 없다는 점만 StageTile과 다르다.
-function FreeTile({ label: lbl, sub, art, onClick }: { label: string; sub: string; art: string; onClick: () => void }) {
-  return (
-    <button className="ym-press" onClick={onClick} style={{
-      position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', textAlign: 'left', minWidth: 0,
-      border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
-      borderRadius: 14, padding: 0, cursor: 'pointer', boxShadow: '0 7px 16px rgba(89,58,28,.06)',
-    }}>
-      <span aria-hidden style={{ position: 'relative', display: 'block', width: '100%', aspectRatio: '4 / 3', overflow: 'hidden', background: 'rgba(255,247,235,.64)' }}>
-        <img src={`/scenes/quick-practice/${art}.webp`} alt="" loading="lazy" decoding="async" style={{
-          width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'saturate(.9) contrast(.97) brightness(1.02)',
-        }} />
-        <span style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(255,247,235,.02), transparent 58%, rgba(48,34,18,.26))' }} />
-      </span>
-      <span style={{ minWidth: 0, display: 'block', padding: '10px 11px 11px' }}>
-        <span style={{ display: 'block', fontSize: 14, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{lbl}</span>
-        <span style={{ display: 'block', fontSize: 11, color: 'var(--ink-faint)', fontWeight: 700, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sub}</span>
-      </span>
-    </button>
   );
 }
 
