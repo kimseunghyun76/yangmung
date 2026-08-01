@@ -3,10 +3,18 @@
 // 이 화면은 반대로 문법 규칙을 먼저 보여준 뒤, 그 문법을 실제로 쓰는 표현들을(phrases.grammarRefs로
 // 이미 연결돼 있던 것) 짧은 문장 → 긴 문장 순으로 늘어놓아 "핵심 → 확장 → 응용" 흐름을 만든다.
 // 새 문장을 짓지 않고 기존 grammar.ts·phrases.ts 데이터만 재구성한다.
+//
+// 2026-08-01 개편: 처음엔 전 단계가 항상 다 열려 있는 자유 열람 목록이었는데, "학습 전체가
+// 순차적으로 이어지게 구성해달라"는 요청으로 학습 지도(Practice)의 레벨 잠금과 같은 방식을
+// 그대로 가져왔다 — 문법 단계(1~5)를 레벨(입문~고급)에 대응시켜, 지금 레벨에서 아직 안 열린
+// 단계는 미션 지도의 잠금 그리드처럼 압축 표시하고, 열린 단계 안에서는 본 것/다음 것을 배지로
+// 표시한다. 이렇게 하면 문법 학습도 "학습 지도 → 문법 학습 → 미션 지도"가 같은 하나의 레벨
+// 진행을 공유하는 것처럼 느껴진다(각자 따로 노는 별도 메뉴가 아니라).
 import { useMemo, useState } from 'react';
 import { CONTENT } from '../content';
 import { grammarLevel } from '../content/grammar';
 import type { GrammarPoint, Phrase } from '../content/types';
+import { CORE_LEVELS, CORE_LEVEL_LABEL, type CoreLevel } from '../learn/progression';
 import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
@@ -16,16 +24,37 @@ import { Modal } from './Modal';
 
 interface Props {
   nav: NavBarProps;
+  coreLevel: CoreLevel;
+  devUnlockAll: boolean;
   onBack: () => void;
 }
 
-const TIER_LABEL: Record<1 | 2 | 3 | 4 | 5, string> = {
+type Tier = 1 | 2 | 3 | 4 | 5;
+
+const TIER_LABEL: Record<Tier, string> = {
   1: '기초', 2: '기본', 3: '실전', 4: '응용', 5: '심화',
+};
+// 문법 난이도(1~5)를 학습 지도의 레벨(입문~고급)에 대응 — 같은 하나의 레벨 사다리를 공유한다.
+const TIER_REQUIRES: Record<Tier, CoreLevel> = {
+  1: 'beginner', 2: 'default', 3: 'express', 4: 'advanced', 5: 'advanced',
 };
 
 const label: React.CSSProperties = {
   fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase',
 };
+
+const SEEN_KEY = 'yangmung:grammarSeen:v1';
+function loadSeen(): Set<string> {
+  if (typeof window === 'undefined') return new Set();
+  try {
+    const raw = window.localStorage.getItem(SEEN_KEY);
+    return new Set(raw ? (JSON.parse(raw) as string[]) : []);
+  } catch { return new Set(); }
+}
+function saveSeen(ids: Set<string>): void {
+  if (typeof window === 'undefined') return;
+  try { window.localStorage.setItem(SEEN_KEY, JSON.stringify([...ids])); } catch { /* noop */ }
+}
 
 // 이 문법을 실제로 쓰는 표현들 — 이미 있는 phrases.grammarRefs 연결을 그대로 쓴다(신규 문장 없음).
 // 길이(가나 기준)로 정렬해 "짧고 단순한 문장 → 길고 복잡한 문장" 순서를 만든다.
@@ -35,18 +64,40 @@ function relatedPhrases(g: GrammarPoint): Phrase[] {
     .sort((a, b) => a.kana.length - b.kana.length);
 }
 
-export function GrammarPath({ nav, onBack }: Props) {
+export function GrammarPath({ nav, coreLevel, devUnlockAll, onBack }: Props) {
   const [selected, setSelected] = useState<GrammarPoint | null>(null);
+  const [seen, setSeen] = useState(() => loadSeen());
   const items = useMemo(() => CONTENT.grammar.filter((g) => g.category === '문법'), []);
   const byTier = useMemo(() => {
-    const m = new Map<number, GrammarPoint[]>();
+    const m = new Map<Tier, GrammarPoint[]>();
     for (const g of items) {
-      const t = grammarLevel(g);
+      const t = grammarLevel(g) as Tier;
       const arr = m.get(t);
       if (arr) arr.push(g); else m.set(t, [g]);
     }
     return [...m.entries()].sort((a, b) => a[0] - b[0]);
   }, [items]);
+  const myRank = CORE_LEVELS.indexOf(coreLevel);
+  const unlockedAt = (tier: Tier) => devUnlockAll || CORE_LEVELS.indexOf(TIER_REQUIRES[tier]) <= myRank;
+  // 열린 단계 중에서 아직 안 본 첫 항목 하나에만 "다음" 배지를 준다(학습 지도 StageTile과 동일 규칙).
+  const nextId = useMemo(() => {
+    for (const [tier, group] of byTier) {
+      if (!(devUnlockAll || CORE_LEVELS.indexOf(TIER_REQUIRES[tier]) <= myRank)) continue;
+      const next = group.find((g) => !seen.has(g.id));
+      if (next) return next.id;
+    }
+    return undefined;
+  }, [byTier, seen, myRank, devUnlockAll]);
+
+  function select(g: GrammarPoint) {
+    setSelected(g);
+    setSeen((prev) => {
+      if (prev.has(g.id)) return prev;
+      const next = new Set(prev).add(g.id);
+      saveSeen(next);
+      return next;
+    });
+  }
 
   return (
     <main style={WRAP}>
@@ -62,35 +113,66 @@ export function GrammarPath({ nav, onBack }: Props) {
         <h1 style={{ margin: '8px 0 4px', fontSize: 25, fontWeight: 900, letterSpacing: '-0.03em' }}>핵심 문형부터 차근차근</h1>
         <p style={{ margin: 0, fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.5 }}>
           문법 규칙을 먼저 보고, 그 규칙을 쓰는 문장을 짧은 것부터 긴 것까지 순서대로 익혀요.
+          학습 지도와 같은 레벨 순서로 열려요.
         </p>
       </div>
 
-      {byTier.map(([tier, group]) => (
-        <section key={tier} style={{ marginBottom: 18 }}>
-          <p style={{ ...label, marginBottom: 10 }}>{TIER_LABEL[tier as 1 | 2 | 3 | 4 | 5] ?? `${tier}단계`} · {group.length}개</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {group.map((g) => {
-              const related = relatedPhrases(g);
-              return (
-                <button key={g.id} className="ym-press" onClick={() => setSelected(g)} style={{
-                  width: '100%', textAlign: 'left', padding: '13px 14px', borderRadius: 14, cursor: 'pointer',
-                  border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
-                  display: 'flex', alignItems: 'center', gap: 10,
-                }}>
-                  <span style={{ flex: 1, minWidth: 0 }}>
-                    <strong style={{ display: 'block', fontSize: 14.5 }}>{g.label}</strong>
-                    <span style={{ display: 'block', marginTop: 3, fontSize: 12.5, color: 'var(--ink-soft)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{g.tipKo}</span>
-                    {related.length > 0 && (
-                      <span style={{ display: 'block', marginTop: 5, fontSize: 11, color: 'var(--ink-faint)', fontWeight: 700 }}>확장 문장 {related.length}개</span>
-                    )}
-                  </span>
-                  <Icon name="flow" size={14} style={{ color: 'var(--ink-faint)', flex: '0 0 auto' }} />
-                </button>
-              );
-            })}
-          </div>
-        </section>
-      ))}
+      {byTier.map(([tier, group]) => {
+        const unlocked = unlockedAt(tier);
+        if (!unlocked) {
+          return (
+            <section key={tier} style={{ marginBottom: 18 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                <p style={{ ...label, margin: 0 }}>{TIER_LABEL[tier]}</p>
+                <span style={{ fontSize: 11.5, color: 'var(--ink-faint)', fontWeight: 850 }}>잠김 · {group.length}개</span>
+              </div>
+              <GlassPanel style={{ padding: 12 }}>
+                <p style={{ fontSize: 12.5, color: 'var(--ink-soft)', margin: '0 0 10px', fontWeight: 700 }}>
+                  {CORE_LEVEL_LABEL[TIER_REQUIRES[tier]]} 레벨로 승급하면 열려요.
+                </p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, minmax(0, 1fr))', gap: 8 }}>
+                  {group.map((g) => (
+                    <div key={g.id} aria-hidden style={{ aspectRatio: '1', borderRadius: 10, border: '1px dashed var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, color: 'var(--ink-faint)', opacity: 0.6 }}>🔒</div>
+                  ))}
+                </div>
+              </GlassPanel>
+            </section>
+          );
+        }
+        return (
+          <section key={tier} style={{ marginBottom: 18 }}>
+            <p style={{ ...label, marginBottom: 10 }}>{TIER_LABEL[tier]} · {group.length}개</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {group.map((g) => {
+                const related = relatedPhrases(g);
+                const done = seen.has(g.id);
+                const isNext = g.id === nextId;
+                return (
+                  <button key={g.id} className="ym-press" onClick={() => select(g)} style={{
+                    width: '100%', textAlign: 'left', padding: '13px 14px', borderRadius: 14, cursor: 'pointer',
+                    border: isNext ? '1.5px solid var(--accent)' : '1px solid var(--glass-border)',
+                    background: 'var(--glass-bg-strong)', color: 'var(--ink)',
+                    display: 'flex', alignItems: 'center', gap: 10,
+                  }}>
+                    <span style={{ flex: 1, minWidth: 0 }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 7, flexWrap: 'wrap' }}>
+                        <strong style={{ fontSize: 14.5 }}>{g.label}</strong>
+                        {done && <span style={{ padding: '2px 7px', borderRadius: 999, background: 'var(--ok-soft)', color: 'var(--ok)', fontSize: 10.5, fontWeight: 900 }}>완료 ✓</span>}
+                        {!done && isNext && <span style={{ padding: '2px 7px', borderRadius: 999, background: 'var(--accent)', color: 'var(--accent-ink)', fontSize: 10.5, fontWeight: 900 }}>다음</span>}
+                      </span>
+                      <span style={{ display: 'block', marginTop: 3, fontSize: 12.5, color: 'var(--ink-soft)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{g.tipKo}</span>
+                      {related.length > 0 && (
+                        <span style={{ display: 'block', marginTop: 5, fontSize: 11, color: 'var(--ink-faint)', fontWeight: 700 }}>확장 문장 {related.length}개</span>
+                      )}
+                    </span>
+                    <Icon name="flow" size={14} style={{ color: 'var(--ink-faint)', flex: '0 0 auto' }} />
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+        );
+      })}
 
       {selected && <GrammarDetailModal g={selected} related={relatedPhrases(selected)} onClose={() => setSelected(null)} />}
     </main>

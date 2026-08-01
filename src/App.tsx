@@ -886,7 +886,7 @@ export function App() {
       return <TipsLibrary nav={{ ...nav, current: 'practice' }} onBack={() => goBack('practice')} initialQuery={tipsQuery} />;
     }
     if (view === 'grammar') {
-      return <GrammarPath nav={{ ...nav, current: 'practice' }} onBack={() => goBack('practice')} />;
+      return <GrammarPath nav={{ ...nav, current: 'practice' }} coreLevel={coreLevel} devUnlockAll={!!settings.devUnlockAll} onBack={() => goBack('practice')} />;
     }
     if (view === 'discover') {
       return (
