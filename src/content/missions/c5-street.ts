@@ -45,7 +45,7 @@ export const c5: Mission = {
       speaker: '나',
       choices: [
         { text: '화장실 어디예요?', phraseId: 'p_toire_doko', correct: true, feedback: '「トイレはどこですか」— 가장 실용적인 여행 표현. 편의점은 화장실이 무료라 대피소로 활용해도 돼요' },
-        { text: '어느 쪽이에요?', phraseId: 'p_dochira_desu_ka', correct: true, feedback: '「どちらですか」는 どこより 공손한 방향 묻기예요. 손짓을 함께 하면 이해도가 훨씬 높아져요' },
+        { text: '어느 쪽이에요?', phraseId: 'p_dochira_desu_ka', correct: false, feedback: '무엇을 묻는지가 빠져 있어요 — 「どちらですか」는 이미 화장실 얘기가 나온 뒤에 방향만 다시 확인할 때 쓰는 말이라, 급하게 먼저 꺼낼 말로는 「トイレはどこですか」가 맞아요' },
       ],
     },
     {

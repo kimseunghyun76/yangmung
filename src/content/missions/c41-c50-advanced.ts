@@ -642,7 +642,7 @@ export const c50: Mission = {
       choices: [
         { text: '덕분에 도움이 됐어요', phraseId: 'p_tasukarimashita', correct: true, feedback: '「助(たす)かりました」— 방향을 알려준 데 대한 응답' },
         { text: '걸어가 볼게요', phraseId: 'p_aruite_mimasu', correct: true, feedback: '「歩(ある)いてみます」— 도보 5분이면 걸어가 보겠다는 응답' },
-        { text: '어느 쪽이에요?', phraseId: 'p_dochira_desu_ka', correct: true, feedback: '「どちらですか」— 상대가 가리키는 방향을 재확인할 때. 손으로 방향을 가리키며 함께 쓰면 더 자연스러워요. まっすぐ(직진)·右(오른쪽)·左(왼쪽)도 함께 알아두세요' },
+        { text: '어느 쪽이에요?', phraseId: 'p_dochira_desu_ka', correct: false, feedback: '상대가 방금 "저쪽입니다(あちらです)"라고 방향을 가리켜 알려줬어요 — 지금은 같은 질문을 반복하기보다 감사·확인으로 답해요' },
       ],
     },
   ],
