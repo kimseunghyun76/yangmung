@@ -1,5 +1,10 @@
-// 가나 → 로마자 발음 보조. 콘텐츠(KanaItem)와 무관하게 모든 표현을 커버하는 정적 맵.
+// 가나 → 로마자/한글 발음 보조. 콘텐츠(KanaItem)와 무관하게 모든 표현을 커버하는 정적 맵.
 // 가타카나는 코드포인트 시프트로 히라가나로 정규화해 동일 표를 재사용.
+//
+// 2026-08-02: 한국어 사용자에게는 로마자(영어 알파벳)보다 한글 표기가 훨씬 직관적이라는
+// 사용자 지적으로 한글 발음 표를 추가했다. 글자마다 새로 만들지 않고, 이미 검수된
+// content/kana.ts(KanaItem.koreanSound)에서 그대로 끌어와 재사용한다(신규 데이터 없음).
+import { CONTENT } from '../content';
 
 // 히라가나 읽기 단위 → 로마자 (기본 + 탁음 + 반탁음)
 const HIRA: Record<string, string> = {
@@ -19,6 +24,11 @@ const HIRA: Record<string, string> = {
   ば: 'ba', び: 'bi', ぶ: 'bu', べ: 'be', ぼ: 'bo',
   ぱ: 'pa', ぴ: 'pi', ぷ: 'pu', ぺ: 'pe', ぽ: 'po',
 };
+
+// 히라가나(요음 2글자 조합 포함) → 한글 소리. content/kana.ts가 이미 가진 koreanSound를 그대로 맵으로.
+const KO: Record<string, string> = Object.fromEntries(
+  CONTENT.kana.filter((k) => k.script === 'hiragana').map((k) => [k.char, k.koreanSound]),
+);
 
 const SMALL_Y: Record<string, 'a' | 'u' | 'o'> = { ゃ: 'a', ゅ: 'u', ょ: 'o' };
 
@@ -43,9 +53,9 @@ const isSmallY = (ch: string) => ch === 'ゃ' || ch === 'ゅ' || ch === 'ょ' ||
 const isSokuon = (ch: string) => ch === 'っ' || ch === 'ッ';
 const isLong = (ch: string) => ch === 'ー';
 
-export interface ReadingUnit { text: string; romaji: string; chars: string[] }
+export interface ReadingUnit { text: string; romaji: string; korean: string; chars: string[] }
 
-// 표시는 원문 그대로, 로마자는 정규화로 계산. 가나가 아닌 문자는 romaji '' (보조 없음).
+// 표시는 원문 그대로, 로마자/한글은 정규화로 계산. 가나가 아닌 문자는 둘 다 '' (보조 없음).
 export function toReadingUnits(s: string): ReadingUnit[] {
   const out: ReadingUnit[] = [];
   const chars = [...s];
@@ -55,14 +65,16 @@ export function toReadingUnits(s: string): ReadingUnit[] {
     if (next && isSmallY(next)) {
       const base = toHira(ch);
       const small = toHira(next) as keyof typeof SMALL_Y;
-      out.push({ text: ch + next, romaji: yoon(base, SMALL_Y[small]), chars: [ch, next] });
+      const combo = base + toHira(next);
+      out.push({ text: ch + next, romaji: yoon(base, SMALL_Y[small]), korean: KO[combo] ?? '', chars: [ch, next] });
       i++;
       continue;
     }
-    if (isLong(ch)) { out.push({ text: ch, romaji: 'ー', chars: [] }); continue; }
-    if (isSokuon(ch)) { out.push({ text: ch, romaji: '', chars: [] }); continue; }
-    const romaji = HIRA[toHira(ch)] ?? '';
-    out.push({ text: ch, romaji, chars: romaji ? [ch] : [] });
+    if (isLong(ch)) { out.push({ text: ch, romaji: 'ー', korean: '', chars: [] }); continue; }
+    if (isSokuon(ch)) { out.push({ text: ch, romaji: '', korean: '', chars: [] }); continue; }
+    const hira = toHira(ch);
+    const romaji = HIRA[hira] ?? '';
+    out.push({ text: ch, romaji, korean: KO[hira] ?? '', chars: romaji ? [ch] : [] });
   }
   return out;
 }
@@ -93,4 +105,12 @@ export function toRomaji(s: string): string {
     geminate = false;
   }
   return out;
+}
+
+// 한글 발음 표기 문자열 — 로마자 대신 한글로 소리를 안내해달라는 요청(한국어 사용자에게
+// 알파벳 로마자보다 훨씬 직관적). 촉음(っ)·장음(ー)은 한글 음절 조합으로 정확히 옮기기
+// 어려워(로마자처럼 낱자를 겹치거나 모음을 늘일 수 없음) 그 글자 자체는 생략한다 —
+// 어차피 실제 화면(ReadingAid)에서도 이 두 글자는 보조 표시 대상에서 빠진다.
+export function toKorean(s: string): string {
+  return toReadingUnits(s).map((u) => u.korean).join('');
 }

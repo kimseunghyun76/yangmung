@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { CONTENT } from '../content';
 import type { Phrase } from '../content';
 import type { Card } from '../learn/cards';
+import { isAmbiguousReply } from '../learn/cards';
 import { collectSeenPhraseIds, type ProgressMap } from '../learn/progress';
 import { diagnose } from '../learn/adaptive';
 import { patternForPhrase } from '../content/patterns';
@@ -18,6 +19,33 @@ import { PageHead } from './ui';
 import { GlassPanel, hexA } from './shell';
 import { MascotEmpty } from './mascot';
 import { BigTextOverlay, ZoomButton } from './BigText';
+import { Furigana } from './Furigana';
+
+// 한국어 번역문의 부정 표지로 긍정/부정을 나눈다(일본어 형태소 분석 없이, 이미 있는 번역
+// 텍스트만으로 안전하게 판별) — "긍정·부정 답변을 함께 보여달라"는 요청 대응.
+function isNegativeKo(korean: string): boolean {
+  return /(안\s|않|없|아니|못\s|말아|마세요|말고)/.test(korean);
+}
+
+// 지금 표현의 "응용 표현"(같은 문형·같은 문법을 쓰는 다른 표현) — 하나만 달랑 보여주지 말고
+// 문형 그룹(PATTERNS)이 있으면 그걸, 없으면 문법 태그(grammarRefs)가 겹치는 표현으로 폭넓게
+// 찾는다(신규 문장 없이 기존 phrases.grammarRefs 연결만 재사용).
+function relatedPhrasesFor(current: Phrase, byId: Record<string, Phrase>, seen: Set<string>): Phrase[] {
+  const pattern = patternForPhrase(current.id);
+  if (pattern) {
+    return pattern.phraseIds
+      .filter((id) => id !== current.id && seen.has(id))
+      .map((id) => byId[id])
+      .filter((p): p is Phrase => !!p && !isAmbiguousReply(p));
+  }
+  if (current.grammarRefs?.length) {
+    return CONTENT.phrases.filter((p) =>
+      p.id !== current.id && seen.has(p.id) && !isAmbiguousReply(p)
+      && p.grammarRefs?.some((g) => current.grammarRefs!.includes(g)),
+    ).slice(0, 6);
+  }
+  return [];
+}
 
 interface Props {
   nav: NavBarProps;
@@ -38,27 +66,34 @@ export function ListenMode({ nav, allCards, progress, onBack }: Props) {
   const places = useMemo(() => phraseIdsByPlace(), []);
   const byId = useMemo(() => Object.fromEntries(CONTENT.phrases.map((p) => [p.id, p])), []);
   const diag = useMemo(() => diagnose(allCards, progress, 0), [allCards, progress]);
+  // 듣기에 실제로 올릴 후보 — 배운 표현 중 단답형(네/감사합니다류)은 빼고 문장 형태만
+  // ("간단한 내용보다 문장으로, 단답형은 제외해달라"는 요청).
+  const listenableIds = useMemo(() => {
+    const s = new Set<string>();
+    for (const id of phraseSeen) { const p = byId[id]; if (p && !isAmbiguousReply(p)) s.add(id); }
+    return s;
+  }, [phraseSeen, byId]);
   // 학습한 표현이 하나라도 있는 장면만 선택지로 노출 — 빈 장면을 골라 "표현이 없어요"를 보게 하지 않는다.
-  const scenePlaces = useMemo(() => places.filter((p) => p.phraseIds.some((id) => phraseSeen.has(id))), [places, phraseSeen]);
+  const scenePlaces = useMemo(() => places.filter((p) => p.phraseIds.some((id) => listenableIds.has(id))), [places, listenableIds]);
   // 약점 장면(정답률 낮음)의 표현들 — "약점" 스코프 전용 후보 풀.
   const weakPhraseIds = useMemo(() => {
     const ids = new Set<string>();
     for (const w of diag.weakScenes) {
       const place = places.find((p) => p.id === w.key);
-      if (place) for (const pid of place.phraseIds) if (phraseSeen.has(pid)) ids.add(pid);
+      if (place) for (const pid of place.phraseIds) if (listenableIds.has(pid)) ids.add(pid);
     }
     return ids;
-  }, [diag.weakScenes, places, phraseSeen]);
+  }, [diag.weakScenes, places, listenableIds]);
 
   const [scope, setScope] = useState<string>('all'); // 'all' | WEAK_SCOPE | place.id
   const list = useMemo<Phrase[]>(() => {
     const ids = scope === 'all'
-      ? CONTENT.phrases.filter((p) => phraseSeen.has(p.id)).map((p) => p.id)
+      ? [...listenableIds]
       : scope === WEAK_SCOPE
       ? [...weakPhraseIds]
-      : (places.find((p) => p.id === scope)?.phraseIds ?? []).filter((id) => phraseSeen.has(id));
+      : (places.find((p) => p.id === scope)?.phraseIds ?? []).filter((id) => listenableIds.has(id));
     return ids.map((id) => byId[id]).filter((p): p is Phrase => Boolean(p));
-  }, [scope, phraseSeen, places, byId, weakPhraseIds]);
+  }, [scope, listenableIds, places, byId, weakPhraseIds]);
 
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -67,12 +102,10 @@ export function ListenMode({ nav, allCards, progress, onBack }: Props) {
   const [rate, setRate] = useState<number>(1);
   const [keepAwake, setKeepAwake] = useState(true);
   const [zoom, setZoom] = useState(false);
-  const [showPattern, setShowPattern] = useState(false);
   const wakeLockRef = useRef<{ release: () => Promise<void> } | null>(null);
 
-  useEffect(() => { setIndex(0); setPlaying(false); setShowPattern(false); }, [scope]);
+  useEffect(() => { setIndex(0); setPlaying(false); }, [scope]);
   useEffect(() => { if (index >= list.length) setIndex(0); }, [list, index]);
-  useEffect(() => { setShowPattern(false); }, [index]);
 
   // 재생 엔진 — 현재 문장을 repeatEach번 반복한 뒤 다음 문장으로. 목록 끝에서 loopAll이면 처음으로.
   useEffect(() => {
@@ -131,9 +164,11 @@ export function ListenMode({ nav, allCards, progress, onBack }: Props) {
   const current = list[index];
   const supported = ttsSupported();
   const pattern = current ? patternForPhrase(current.id) : undefined;
-  const patternSiblings = pattern && current
-    ? pattern.phraseIds.filter((id) => id !== current.id && phraseSeen.has(id)).map((id) => byId[id]).filter((p): p is Phrase => Boolean(p))
-    : [];
+  const related = current ? relatedPhrasesFor(current, byId, listenableIds) : [];
+  // "긍정과 부정 답변도 함께 제공해달라" — 응용 표현 안에서 부정형(한국어 번역 기준)이 있으면
+  // 긍정/부정으로 나눠 보여준다. 부정형이 없는 표현이면 억지로 만들지 않고 있는 그대로 보여준다.
+  const relatedNegative = related.filter((p) => isNegativeKo(p.korean));
+  const relatedAffirmative = related.filter((p) => !isNegativeKo(p.korean));
 
   return (
     <main style={WRAP}>
@@ -157,7 +192,7 @@ export function ListenMode({ nav, allCards, progress, onBack }: Props) {
               border: `1px solid ${scope === 'all' ? 'var(--ink)' : 'var(--glass-border)'}`,
               background: scope === 'all' ? 'var(--accent)' : 'var(--glass-bg-strong)',
               color: scope === 'all' ? 'var(--accent-ink)' : 'var(--ink)',
-            }}>전체 · {CONTENT.phrases.filter((p) => phraseSeen.has(p.id)).length}</button>
+            }}>전체 · {listenableIds.size}</button>
             {weakPhraseIds.size > 0 && (
               <button className="ym-press" onClick={() => setScope(WEAK_SCOPE)} style={{
                 flex: '0 0 auto', display: 'flex', alignItems: 'center', gap: 6, padding: '9px 13px', borderRadius: 999, cursor: 'pointer', fontWeight: 750, fontSize: 13.5, whiteSpace: 'nowrap',
@@ -171,7 +206,7 @@ export function ListenMode({ nav, allCards, progress, onBack }: Props) {
             {scenePlaces.map((p) => {
               const active = scope === p.id;
               const sv = sceneVisualByPlace(p.place);
-              const count = p.phraseIds.filter((id) => phraseSeen.has(id)).length;
+              const count = p.phraseIds.filter((id) => listenableIds.has(id)).length;
               return (
                 <button key={p.id} className="ym-press" onClick={() => setScope(p.id)} style={{
                   flex: '0 0 auto', display: 'flex', alignItems: 'center', gap: 6, padding: '9px 13px', borderRadius: 999, cursor: 'pointer', fontWeight: 750, fontSize: 13.5, whiteSpace: 'nowrap',
@@ -195,33 +230,23 @@ export function ListenMode({ nav, allCards, progress, onBack }: Props) {
             </div>
             {current && (
               <div style={{ position: 'relative', marginTop: 10 }}>
-                <p lang="ja" style={{ margin: 0, fontSize: 30, fontWeight: 800, color: 'var(--ink)', lineHeight: 1.35 }}>{current.kanji ?? current.displayKana ?? current.kana}</p>
-                {current.kanji && <p lang="ja" style={{ margin: '8px 0 0', fontSize: 16, color: 'var(--ink-soft)', fontWeight: 650 }}>{current.displayKana ?? current.kana}</p>}
+                <Furigana kanji={current.kanji} kana={current.displayKana ?? current.kana}
+                  style={{ display: 'block', fontSize: 30, fontWeight: 800, color: 'var(--ink)', lineHeight: 1.7 }} />
                 <p style={{ margin: '10px 0 0', fontSize: 16, color: 'var(--accent)', fontWeight: 750 }}>{current.korean}</p>
-                {pattern && (
-                  <div style={{ marginTop: 10 }}>
-                    <button className="ym-press" onClick={() => setShowPattern((v) => !v)} style={{
-                      display: 'inline-flex', alignItems: 'center', gap: 5, padding: '5px 10px', borderRadius: 999,
-                      border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--accent)',
-                      fontSize: 11.5, fontWeight: 800, cursor: 'pointer',
-                    }}>
-                      <Icon name="flow" size={12} /> 같은 틀 · {pattern.structure}
-                    </button>
-                    {showPattern && (
-                      <div style={{ marginTop: 8, padding: '9px 10px', borderRadius: 10, background: 'var(--glass-bg)', border: '1px dashed var(--glass-border)', textAlign: 'left' }}>
-                        <p style={{ margin: '0 0 6px', fontSize: 11.5, color: 'var(--ink-faint)', fontWeight: 700 }}>{pattern.label} — 단어만 바꿔 쓰는 같은 틀이에요</p>
-                        {patternSiblings.length > 0 ? (
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                            {patternSiblings.map((s) => (
-                              <p key={s.id} style={{ margin: 0, fontSize: 12.5, color: 'var(--ink)' }}>
-                                {s.kanji ?? s.displayKana ?? s.kana} <span style={{ color: 'var(--ink-faint)' }}>· {s.korean}</span>
-                              </p>
-                            ))}
-                          </div>
-                        ) : (
-                          <p style={{ margin: 0, fontSize: 12, color: 'var(--ink-faint)' }}>같은 틀을 쓰는 다른 표현은 아직 학습 전이에요.</p>
-                        )}
-                      </div>
+
+                {/* 응용 표현 — 하나만 보여주지 않고 늘 함께 펼쳐 보여준다("응용 표현도 함께
+                    제시해달라"는 요청 — 예전엔 눌러야만 보이는 토글이었다). 긍정/부정이 섞여
+                    있으면 나눠서, 하나만 있으면 있는 대로 보여준다. */}
+                {related.length > 0 && (
+                  <div style={{ marginTop: 14, padding: '10px 12px', borderRadius: 12, background: 'var(--glass-bg)', border: '1px dashed var(--glass-border)', textAlign: 'left' }}>
+                    <p style={{ margin: '0 0 8px', fontSize: 11.5, color: 'var(--ink-faint)', fontWeight: 800, display: 'flex', alignItems: 'center', gap: 5 }}>
+                      <Icon name="flow" size={12} /> {pattern ? `같은 틀 · ${pattern.structure}` : '응용 표현'}
+                    </p>
+                    {relatedAffirmative.length > 0 && (
+                      <RelatedGroup label={relatedNegative.length > 0 ? '긍정' : undefined} items={relatedAffirmative} />
+                    )}
+                    {relatedNegative.length > 0 && (
+                      <RelatedGroup label="부정" items={relatedNegative} style={{ marginTop: relatedAffirmative.length > 0 ? 10 : 0 }} />
                     )}
                   </div>
                 )}
@@ -272,6 +297,28 @@ export function ListenMode({ nav, allCards, progress, onBack }: Props) {
         border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 750, fontSize: 14,
       }}>← 홈으로</button>
     </main>
+  );
+}
+
+// 응용 표현 한 묶음 — label이 있으면(긍정/부정 둘 다 있을 때) 작은 배지로, 없으면 라벨 없이.
+function RelatedGroup({ label, items, style }: { label?: string; items: Phrase[]; style?: React.CSSProperties }) {
+  return (
+    <div style={style}>
+      {label && (
+        <span style={{
+          display: 'inline-block', marginBottom: 5, padding: '1px 7px', borderRadius: 999,
+          fontSize: 10, fontWeight: 900, color: label === '부정' ? 'var(--warn)' : 'var(--ok)',
+          background: label === '부정' ? 'var(--warn-soft)' : 'var(--ok-soft)',
+        }}>{label}</span>
+      )}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        {items.map((s) => (
+          <p key={s.id} lang="ja" style={{ margin: 0, fontSize: 12.5, color: 'var(--ink)' }}>
+            {s.kanji ?? s.displayKana ?? s.kana} <span lang="ko" style={{ color: 'var(--ink-faint)' }}>· {s.korean}</span>
+          </p>
+        ))}
+      </div>
+    </div>
   );
 }
 

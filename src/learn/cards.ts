@@ -397,8 +397,9 @@ function buildBasicLifeCards(): Card[] {
 // 오답(distractor)이 "헷갈리는 단답"이 되지 않게 거른다.
 // 네/예/아니요/알겠습니다/감사합니다 같은 짧은 반응은 거의 모든 질문에 어중간하게 들어맞아
 // 정답처럼 보인다 → 완전히 다른 '문장형' 표현만 오답 후보로 써서 오해를 없앤다.
+// 듣기(ListenMode)에서도 "단답형 질문·대답은 빼고 문장 형태로 구성해달라"는 요청으로 재사용한다.
 const cleanLen = (s: string) => s.replace(/[\s,.!?·~()]/g, '').length;
-const isAmbiguousReply = (p: Phrase): boolean => {
+export const isAmbiguousReply = (p: Phrase): boolean => {
   const ko = p.korean.trim();
   if (cleanLen(ko) <= 5) return true; // 단답형
   return /^(네|예|응|아니|아뇨|알겠|감사|고마|고맙|괜찮|그래|맞아|좋아|싫|있어요|없어요|부탁(합니다|해요|드려요|드립니다)$)/.test(ko);

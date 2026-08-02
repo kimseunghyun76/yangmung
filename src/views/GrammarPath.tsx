@@ -21,6 +21,7 @@ import { Icon } from '../ui/Icon';
 import { NavBar, type NavBarProps } from './NavBar';
 import { GlassPanel } from './shell';
 import { Modal } from './Modal';
+import { Furigana } from './Furigana';
 
 interface Props {
   nav: NavBarProps;
@@ -195,16 +196,16 @@ export function GrammarPath({ nav, coreLevel, devUnlockAll, onBack, onStagePass 
   );
 }
 
-function SpeakLine({ ja, korean }: { ja: string; korean: string }) {
+function SpeakLine({ kanji, kana, korean }: { kanji?: string; kana: string; korean: string }) {
   return (
-    <button className="ym-press" onClick={() => speak(ja)} disabled={!ttsSupported()} style={{
+    <button className="ym-press" onClick={() => speak(kana)} disabled={!ttsSupported()} style={{
       width: '100%', padding: 12, borderRadius: 12, border: '1px solid var(--glass-border)',
       background: 'var(--glass-bg-strong)', textAlign: 'left', cursor: 'pointer', color: 'var(--ink)',
       display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
     }}>
       <span style={{ minWidth: 0 }}>
-        <strong lang="ja" style={{ display: 'block', fontSize: 16 }}>{ja}</strong>
-        <span style={{ display: 'block', marginTop: 2, fontSize: 12.5, color: 'var(--ink-soft)' }}>{korean}</span>
+        <Furigana kanji={kanji} kana={kana} style={{ display: 'block', fontSize: 16, fontWeight: 700, lineHeight: 1.6 }} />
+        <span lang="ko" style={{ display: 'block', marginTop: 2, fontSize: 12.5, color: 'var(--ink-soft)' }}>{korean}</span>
       </span>
       <Icon name="listen" size={16} style={{ color: 'var(--accent)', flex: '0 0 auto' }} />
     </button>
@@ -227,7 +228,7 @@ function GrammarDetailModal({ g, related, onClose }: { g: GrammarPoint; related:
         <>
           <p style={{ margin: '0 0 6px', fontSize: 11, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.04em' }}>기본 문장</p>
           <div style={{ marginBottom: 14 }}>
-            <SpeakLine ja={g.exampleJa} korean={g.exampleKo ?? ''} />
+            <SpeakLine kana={g.exampleJa} korean={g.exampleKo ?? ''} />
           </div>
         </>
       )}
@@ -236,7 +237,7 @@ function GrammarDetailModal({ g, related, onClose }: { g: GrammarPoint; related:
         <>
           <p style={{ margin: '0 0 6px', fontSize: 11, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.04em' }}>확장 문장 — 조금 더 길게</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 14 }}>
-            {expand.map((p) => <SpeakLine key={p.id} ja={p.kanji ?? p.displayKana ?? p.kana} korean={p.korean} />)}
+            {expand.map((p) => <SpeakLine key={p.id} kanji={p.kanji} kana={p.displayKana ?? p.kana} korean={p.korean} />)}
           </div>
         </>
       )}
@@ -245,7 +246,7 @@ function GrammarDetailModal({ g, related, onClose }: { g: GrammarPoint; related:
         <>
           <p style={{ margin: '0 0 6px', fontSize: 11, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.04em' }}>응용 문장 — 실전에서 이렇게도</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 14 }}>
-            {applied.map((p) => <SpeakLine key={p.id} ja={p.kanji ?? p.displayKana ?? p.kana} korean={p.korean} />)}
+            {applied.map((p) => <SpeakLine key={p.id} kanji={p.kanji} kana={p.displayKana ?? p.kana} korean={p.korean} />)}
           </div>
         </>
       )}

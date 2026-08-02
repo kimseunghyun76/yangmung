@@ -7,7 +7,8 @@ import { vocabExampleFor } from '../content/vocabExamples';
 import { speak, ttsSupported } from '../tts';
 import { PRIMARY } from '../ui/styles';
 import { ReadingAid } from './ReadingAid';
-import { toRomaji } from '../learn/kanaReading';
+import { toKorean } from '../learn/kanaReading';
+import { Furigana } from './Furigana';
 import { Icon } from '../ui/Icon';
 import { WordArt, hasWordArt, wordArtAssetSrcForId } from './WordArt';
 
@@ -121,7 +122,7 @@ function RegisterBadge({ register }: { register: 'casual' | 'formal' | 'both' })
 // japaneseOnImage: 이미지 위에 표기(+격식 배지)가 이미 오버레이됐으면 이 카드에서는 중복 표시를 뺀다
 // (표기 텍스트, 격식 배지, 코너의 다시 듣기 아이콘 모두 이미지 쪽에만 남긴다).
 function WordLearningPanel({ card, isKanaFamiliar, japaneseOnImage }: { card: IntroduceCard; isKanaFamiliar: (char: string) => boolean; japaneseOnImage?: boolean }) {
-  const romaji = toRomaji(card.kana);
+  const koreanReading = toKorean(card.kana);
   return (
     <button
       onClick={() => speak(card.ja)}
@@ -150,18 +151,18 @@ function WordLearningPanel({ card, isKanaFamiliar, japaneseOnImage }: { card: In
             <span style={{ fontSize: 11, fontWeight: 850, color: 'var(--ink-soft)', lineHeight: 1 }}>표기</span>
             {card.register && <RegisterBadge register={card.register} />}
           </span>
-          <span lang="ja" style={{ display: 'block', fontSize: 34, lineHeight: 1.1, fontWeight: 950, color: 'var(--ink)', letterSpacing: 0, overflowWrap: 'anywhere' }}>{card.ja}</span>
+          <Furigana kanji={card.ja} kana={card.kana} style={{ display: 'block', fontSize: 34, lineHeight: 1.6, fontWeight: 950, color: 'var(--ink)', letterSpacing: 0, overflowWrap: 'anywhere' }} />
         </span>
       )}
 
-      {/* 읽기 + 로마자 — 작게 */}
+      {/* 읽기 + 한글 발음 — 작게 */}
       <span style={{ display: 'grid', gap: 3, minWidth: 0, paddingTop: japaneseOnImage ? 0 : 7, borderTop: japaneseOnImage ? 'none' : '1px solid rgba(185,56,46,.18)' }}>
         <span style={{ fontSize: 10.5, fontWeight: 850, color: 'var(--ink-soft)', lineHeight: 1 }}>읽기</span>
         <span lang="ja" style={{ display: 'flex', alignItems: 'baseline', gap: 6, flexWrap: 'wrap' }}>
           <span style={{ fontWeight: 850, lineHeight: 1.15, color: 'var(--ink)', overflowWrap: 'anywhere' }}>
             <ReadingAid text={card.kana} isFamiliar={isKanaFamiliar} fontSize={17} />
           </span>
-          {romaji && <span lang="" style={{ fontSize: 12, fontWeight: 650, color: 'var(--ink-faint)' }}>[{romaji}]</span>}
+          {koreanReading && <span lang="ko" style={{ fontSize: 12, fontWeight: 650, color: 'var(--ink-faint)' }}>[{koreanReading}]</span>}
         </span>
       </span>
 
@@ -181,7 +182,7 @@ function WordLearningPanel({ card, isKanaFamiliar, japaneseOnImage }: { card: In
 function PairWordRow({ label, kana, korean, isKanaFamiliar, primary }: {
   label: string; kana: string; korean: string; isKanaFamiliar: (char: string) => boolean; primary?: boolean;
 }) {
-  const romaji = toRomaji(kana);
+  const koreanReading = toKorean(kana);
   return (
     <button
       onClick={() => speak(kana)}
@@ -198,7 +199,7 @@ function PairWordRow({ label, kana, korean, isKanaFamiliar, primary }: {
         <span style={{ display: 'block', fontSize: 10.5, fontWeight: 850, color: 'var(--ink-soft)', marginBottom: 4 }}>{label}</span>
         <span lang="ja" style={{ display: 'flex', alignItems: 'baseline', gap: 7, flexWrap: 'wrap' }}>
           <ReadingAid text={kana} isFamiliar={isKanaFamiliar} fontSize={26} />
-          {romaji && <span lang="" style={{ fontSize: 12, fontWeight: 650, color: 'var(--ink-faint)' }}>[{romaji}]</span>}
+          {koreanReading && <span lang="ko" style={{ fontSize: 12, fontWeight: 650, color: 'var(--ink-faint)' }}>[{koreanReading}]</span>}
         </span>
         <span style={{ display: 'block', marginTop: 4, fontSize: 13, fontWeight: 750, color: 'var(--ink-soft)', overflowWrap: 'anywhere' }}>{korean}</span>
       </span>

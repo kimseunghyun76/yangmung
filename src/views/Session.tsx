@@ -14,6 +14,7 @@ import { SpeakCardView } from './SpeakCard';
 import { DictationCardView } from './DictationCard';
 import { DiscoverCardView } from './DiscoverCard';
 import { ReadingAid } from './ReadingAid';
+import { Furigana } from './Furigana';
 import { sceneVisualByMission, sceneBackdropForCard } from './scene';
 import { Icon } from '../ui/Icon';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
@@ -409,7 +410,7 @@ function QuizBody({ card, picked, skipped, isMissionStep, isKanaFamiliar, onChoo
 }
 
 function RecoverySkipAction({ choice, onClick }: { choice: Choice; onClick: () => void }) {
-  const ja = choice.phrase ? (choice.phrase.kanji ?? choice.phrase.kana) : choice.ja;
+  const kana = choice.phrase?.kana ?? choice.ja;
   const ko = choice.phrase?.korean ?? choice.label;
   return (
     <button
@@ -430,8 +431,8 @@ function RecoverySkipAction({ choice, onClick }: { choice: Choice; onClick: () =
       <span style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--warn)', fontSize: 12, fontWeight: 900 }}>
         <Icon name="recovery" size={15} /> 막혔을 때 대화 넘기기
       </span>
-      {ja && <strong lang="ja" style={{ display: 'block', marginTop: 8, fontSize: 16, color: 'var(--ink)' }}>{ja}</strong>}
-      <span style={{ display: 'block', marginTop: 2, fontSize: 13, color: 'var(--ink-soft)', fontWeight: 750 }}>{ko}</span>
+      {kana && <Furigana kanji={choice.phrase?.kanji} kana={kana} style={{ display: 'block', marginTop: 8, fontSize: 16, fontWeight: 700, color: 'var(--ink)', lineHeight: 1.7 }} />}
+      <span lang="ko" style={{ display: 'block', marginTop: 2, fontSize: 13, color: 'var(--ink-soft)', fontWeight: 750 }}>{ko}</span>
     </button>
   );
 }
@@ -470,7 +471,6 @@ function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 
   const invFail = inverted && !c.correct;       // 자연스러운 답을 골랐다(실패)
   const correctRef = card.choices.find((x) => x.correct && !x.recovery && x.phrase);
   const target = inverted ? card.choices.find((x) => x.correct) : undefined; // 어색한 답(타깃)
-  const ja = c.phrase ? (c.phrase.kanji ?? c.phrase.kana) : undefined;
   // 오답일 때 이 표현과 연결된 문법 팁을 즉시 노출(세션 끝 무작위 팁과 별개로 "맞는 순간" 학습)
   const wrongTip = isWrong ? relatedGrammar(card) : undefined;
   // 가나 퀴즈면 정답/오답 상관없이 "자세히" 눌러 로마자·한글음·연상팁을 펼쳐볼 수 있게.
@@ -484,7 +484,7 @@ function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 
       {isCorrect && (
         <div style={{ background: 'var(--ok-soft)', padding: 14, borderRadius: 14, marginBottom: 10 }}>
           <p style={{ margin: 0, color: 'var(--ok)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="check" size={18} /> {isKanaQuiz ? '정답이에요' : '자연스러워요'}</p>
-          {ja && <PhraseLine ja={ja} korean={c.phrase!.korean} />}
+          {c.phrase && <PhraseLine kanji={c.phrase.kanji} kana={c.phrase.kana} korean={c.phrase.korean} />}
           {c.phrase?.tip && <FeedbackText>{c.phrase.tip}</FeedbackText>}
           {c.feedback && <FeedbackText>{c.feedback}</FeedbackText>}
         </div>
@@ -493,7 +493,7 @@ function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 
         <div style={{ background: 'var(--warn-soft)', padding: 14, borderRadius: 14, marginBottom: 10, border: '1px solid var(--warn)' }}>
           <p style={{ margin: 0, color: 'var(--warn)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="recovery" size={18} /> 복구 전략 — 실패가 아니에요</p>
           <p style={{ margin: '4px 0 0', fontSize: 13, color: 'var(--ink-soft)' }}>막혀도 이렇게 넘어가면 대화는 계속됩니다.</p>
-          {ja && <PhraseLine ja={ja} korean={c.phrase!.korean} />}
+          {c.phrase && <PhraseLine kanji={c.phrase.kanji} kana={c.phrase.kana} korean={c.phrase.korean} />}
           {c.feedback && <FeedbackText>{c.feedback}</FeedbackText>}
         </div>
       )}
@@ -503,8 +503,8 @@ function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 
           <FeedbackText>{c.feedback ?? (isKanaQuiz ? '다른 글자의 소리예요 — 다시 한번 잘 들어보세요.' : '문맥과 맞지 않아 듣는 사람이 갸웃할 수 있어요.')}</FeedbackText>
           {correctRef && (
             <p style={{ margin: '8px 0 0', fontSize: 14 }}>
-              자연스러운 답 → <strong>{correctRef.phrase!.kanji ?? correctRef.phrase!.kana}</strong>
-              <span style={{ color: 'var(--ink-soft)' }}> — {correctRef.phrase!.korean}</span>
+              자연스러운 답 → <Furigana kanji={correctRef.phrase!.kanji} kana={correctRef.phrase!.kana} style={{ fontWeight: 700 }} />
+              <span lang="ko" style={{ color: 'var(--ink-soft)' }}> — {correctRef.phrase!.korean}</span>
             </p>
           )}
           {wrongTip && <WrongTip g={wrongTip} />}
@@ -513,7 +513,7 @@ function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 
       {invSuccess && (
         <div style={{ background: 'var(--ok-soft)', padding: 14, borderRadius: 14, marginBottom: 10 }}>
           <p style={{ margin: 0, color: 'var(--ok)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="check" size={18} /> 정답! 이 답이 어색해요</p>
-          {ja && <PhraseLine ja={ja} korean={c.phrase!.korean} />}
+          {c.phrase && <PhraseLine kanji={c.phrase.kanji} kana={c.phrase.kana} korean={c.phrase.korean} />}
           {c.feedback && <FeedbackText>{c.feedback}</FeedbackText>}
         </div>
       )}
@@ -522,8 +522,8 @@ function ChoiceFeedback({ card, picked, onNext }: { card: Extract<Card, { kind: 
           <p style={{ margin: 0, color: 'var(--accent)', fontWeight: 700 }}>이건 자연스러운 답이에요 — 어색한 답을 골라야 해요</p>
           {target?.phrase && (
             <p style={{ margin: '8px 0 0', fontSize: 14 }}>
-              어색한 답 → <strong lang="ja">{target.phrase.kanji ?? target.phrase.kana}</strong>
-              <span style={{ color: 'var(--ink-soft)' }}> — {target.phrase.korean}</span>
+              어색한 답 → <Furigana kanji={target.phrase.kanji} kana={target.phrase.kana} style={{ fontWeight: 700 }} />
+              <span lang="ko" style={{ color: 'var(--ink-soft)' }}> — {target.phrase.korean}</span>
             </p>
           )}
           {target?.feedback && <FeedbackText>{target.feedback}</FeedbackText>}
@@ -550,7 +550,7 @@ function relatedGrammar(card: Extract<Card, { kind: 'quiz' }>): GrammarPoint | u
   return CONTENT.grammar.find((g) => g.id === gid);
 }
 
-interface HintExplainProps { ja?: string; korean?: string; tip?: string; feedback?: string }
+interface HintExplainProps { kanji?: string; kana?: string; korean?: string; tip?: string; feedback?: string }
 
 // 문법 규칙이 없을 때의 힌트 폴백 — 정답 표현의 설명(tip/feedback).
 // tip은 CONTENT의 phrase에서 id로 조회(선택지에 안 실려도 잡힘). 설명이 없으면 힌트를 띄우지 않는다.
@@ -561,12 +561,13 @@ function buildHintFallback(card: Extract<Card, { kind: 'quiz' }>, c?: Choice): H
   const tip = p?.tip ?? c.phrase?.tip;
   const feedback = c.feedback;
   if (!tip && !feedback) return undefined;
-  const ja = c.phrase ? (c.phrase.kanji ?? c.phrase.kana) : (p ? (p.kanji ?? p.kana) : c.ja);
+  const kanji = c.phrase?.kanji ?? p?.kanji;
+  const kana = c.phrase?.kana ?? p?.kana ?? c.ja;
   const korean = c.phrase?.korean ?? p?.korean;
-  return { ja, korean, tip, feedback };
+  return { kanji, kana, korean, tip, feedback };
 }
 
-function HintExplain({ ja, korean, tip, feedback }: HintExplainProps) {
+function HintExplain({ kanji, kana, korean, tip, feedback }: HintExplainProps) {
   return (
     <div style={{ marginTop: 10, padding: 12, borderRadius: 12, background: 'var(--surface-2)', border: '1px solid var(--glass-border)' }}>
       <p style={{ margin: 0, fontSize: 12, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.03em', display: 'flex', alignItems: 'center', gap: 5 }}>
@@ -574,9 +575,9 @@ function HintExplain({ ja, korean, tip, feedback }: HintExplainProps) {
       </p>
       {tip && <p style={{ margin: '6px 0 0', fontSize: 13.5, lineHeight: 1.55, color: 'var(--ink-soft)' }}>{tip}</p>}
       {feedback && feedback !== tip && <p style={{ margin: '6px 0 0', fontSize: 13.5, lineHeight: 1.55, color: 'var(--ink-soft)' }}>{feedback}</p>}
-      {ja && (
+      {kana && (
         <p style={{ margin: '8px 0 0', fontSize: 14 }}>
-          <strong lang="ja">{ja}</strong>{korean ? <span style={{ color: 'var(--ink-soft)' }}> — {korean}</span> : null}
+          <Furigana kanji={kanji} kana={kana} style={{ fontWeight: 700 }} />{korean ? <span lang="ko" style={{ color: 'var(--ink-soft)' }}> — {korean}</span> : null}
         </p>
       )}
     </div>
@@ -587,12 +588,12 @@ function HintExplain({ ja, korean, tip, feedback }: HintExplainProps) {
 // 어떤 보기도 "내가 고른 오답"으로 빨갛게 표시하지 않는다(고르지 않았으니까) — 정답만 초록으로.
 function SkippedFeedback({ card, onNext }: { card: Extract<Card, { kind: 'quiz' }>; onNext: () => void }) {
   const correct = card.choices.find((x) => x.correct && !x.recovery) ?? card.choices.find((x) => x.correct);
-  const ja = correct?.phrase ? (correct.phrase.kanji ?? correct.phrase.kana) : correct?.ja;
+  const kana = correct?.phrase?.kana ?? correct?.ja;
   return (
     <div className="ym-reveal" style={{ marginTop: 14 }}>
       <div style={{ background: 'var(--accent-soft)', padding: 14, borderRadius: 14, marginBottom: 10 }}>
         <p style={{ margin: 0, color: 'var(--accent)', fontWeight: 700 }}>건너뛰었어요 — 정답은 이거예요</p>
-        {ja && <PhraseLine ja={ja} korean={correct?.phrase?.korean ?? correct?.label ?? ''} />}
+        {kana && <PhraseLine kanji={correct?.phrase?.kanji} kana={kana} korean={correct?.phrase?.korean ?? correct?.label ?? ''} />}
         <p style={{ margin: '6px 0 0', fontSize: 12.5, color: 'var(--ink-soft)' }}>복습 큐에 다시 나와요 — 다음에 한 번 더 풀어봐요.</p>
       </div>
       <PrimaryAction onClick={onNext}>다음</PrimaryAction>
@@ -619,11 +620,11 @@ function WrongTip({ g }: { g: GrammarPoint }) {
   );
 }
 
-function PhraseLine({ ja, korean }: { ja: string; korean: string }) {
+function PhraseLine({ kanji, kana, korean }: { kanji?: string; kana: string; korean: string }) {
   return (
     <p style={{ margin: '8px 0 0', fontSize: 18 }}>
-      <strong>{ja}</strong>
-      <span style={{ color: 'var(--ink-soft)', fontSize: 15 }}> — {korean}</span>
+      <Furigana kanji={kanji} kana={kana} style={{ fontWeight: 700, lineHeight: 1.7 }} />
+      <span lang="ko" style={{ color: 'var(--ink-soft)', fontSize: 15 }}> — {korean}</span>
     </p>
   );
 }
