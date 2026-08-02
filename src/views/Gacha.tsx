@@ -212,31 +212,12 @@ function groupResults(results: DropResult[]): DropResult[] {
 
 const reduceMotion = () => typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
-function randomGachaDrawCount(): number {
-  const table: { count: number; weight: number }[] = [
-    { count: 1, weight: 30 },
-    { count: 2, weight: 20 },
-    { count: 5, weight: 20 },
-    { count: 10, weight: 10 },
-    { count: 20, weight: 7 },
-    { count: 30, weight: 3 },
-  ];
-  const total = table.reduce((sum, item) => sum + item.weight, 0);
-  let roll = Math.random() * total;
-  for (const item of table) {
-    roll -= item.weight;
-    if (roll < 0) return item.count;
-  }
-  return 1;
-}
-
-export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘의 카드 뽑기', drawCount, randomDrawCount = false, onClaimed }: {
+export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘의 카드 뽑기', drawCount, onClaimed }: {
   sessionId: number;
   sceneIds: string[];
   grade?: BoxGrade;
   label?: string;
   drawCount?: number;
-  randomDrawCount?: boolean;
   onClaimed?: (results: DropResult[]) => void;
 }) {
   const box = BOX[grade];
@@ -251,7 +232,7 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
   const plannedDrawsRef = useRef(drawCount ?? box.draws);
   const timersRef = useRef<number[]>([]);
   const displayDraws = currentDraws;
-  const closedDrawLabel = randomDrawCount ? '여행 선물 카드 1~30장 랜덤' : `여행 선물 카드 ${displayDraws}장`;
+  const closedDrawLabel = `여행 선물 카드 ${displayDraws}장`;
   const allFlipped = results.length > 0 && flipped.size >= results.length;
   const activeIndex = Math.min(Math.max(visibleCount - 1, 0), Math.max(results.length - 1, 0));
   const activeResult = results[activeIndex];
@@ -280,7 +261,7 @@ export function GachaBox({ sessionId, sceneIds, grade = 'wood', label = '오늘�
     return r;
   }
   function start() {
-    const planned = Math.min(MAX_GACHA_DRAWS, Math.max(1, randomDrawCount ? randomGachaDrawCount() : (drawCount ?? box.draws)));
+    const planned = Math.min(MAX_GACHA_DRAWS, Math.max(1, drawCount ?? box.draws));
     plannedDrawsRef.current = planned;
     setCurrentDraws(planned);
     if (reduceMotion()) { doClaim(); setPhase('revealed'); return; }

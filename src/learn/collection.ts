@@ -35,7 +35,8 @@ export const RARITIES: { key: Rarity; label: string; color: string; weight: numb
   { key: 'xur', label: '희귀+', color: '#b996ff', weight: 0 },
 ];
 
-export const DRAW_COUNT = 10;
+// 카드 상자는 항상 1장만 뽑는다(2026-08-02, 사용자 요청 — 예전엔 등급별로 여러 장씩 나왔다).
+export const DRAW_COUNT = 1;
 export const MERGE_NEED: Record<Rarity, number> = {
   basic: 10,
   bronze: 5,

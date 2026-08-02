@@ -8,10 +8,13 @@ import { GlassPanel } from './shell';
 import { DeckBrowser, GachaBox } from './Gacha';
 import { MascotBubble } from './mascot';
 import { sceneVisualByMission } from './scene';
+import { DAILY_MISSION_TARGET, todayLearnedCount } from '../learn/dailyMission';
+import type { ProgressMap } from '../learn/progress';
 
 interface Props {
   nav: NavBarProps;
   openMissions: string[];
+  progress: ProgressMap;
 }
 
 const DAILY_KEY = 'yangmung:gacha:daily:v1';
@@ -49,11 +52,15 @@ function saveDailyClaimCount(key: string, count: number): void {
   try { window.localStorage.setItem(DAILY_KEY, JSON.stringify({ date: key, count })); } catch { /* noop */ }
 }
 
-export function GachaPage({ nav, openMissions }: Props) {
+export function GachaPage({ nav, openMissions, progress }: Props) {
   const key = todayKey();
   const [claimedCount, setClaimedCount] = useState(() => loadDailyClaimCount(key));
   const [showLastDailyResult, setShowLastDailyResult] = useState(false);
   const [deckVersion, setDeckVersion] = useState(0);
+  // 오늘의 무료 뽑기는 이제 데일리 미션(오늘 표현 몇 개 학습)을 완료해야 열린다(2026-08-02, 사용자
+  // 요청) — 접속만 해도 받던 것에서, 조금이라도 학습해야 받는 걸로 바꿔 학습 동기를 붙였다.
+  const dailyDone = todayLearnedCount(progress);
+  const missionComplete = dailyDone >= DAILY_MISSION_TARGET;
   const remainingFree = Math.max(0, DAILY_FREE_LIMIT - claimedCount);
   const claimed = remainingFree <= 0 && !showLastDailyResult;
   const nextFreeOrdinal = Math.min(DAILY_FREE_LIMIT, claimedCount + 1);
@@ -96,33 +103,52 @@ export function GachaPage({ nav, openMissions }: Props) {
               <span style={{ padding: '6px 9px', borderRadius: 999, background: 'var(--glass-bg)', color: 'var(--ink-faint)', fontSize: 12, fontWeight: 800 }}>+{unlockedSceneIds.length - previewScenes.length}</span>
             )}
           </div>
-          <p style={{ margin: claimed ? '14px 0 0' : '14px 0 0', fontSize: 13, color: 'var(--ink)', fontWeight: 850 }}>
-            오늘 남은 무료 뽑기 {remainingFree}/{DAILY_FREE_LIMIT}
-          </p>
-          {claimed ? (
-            <div style={{ marginTop: 16, padding: 14, borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)' }}>
-              <strong style={{ display: 'block', fontSize: 16 }}>오늘 무료 뽑기 {DAILY_FREE_LIMIT}회를 모두 받았어요.</strong>
-              <span style={{ display: 'block', marginTop: 5, fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 700 }}>내일 다시 열리고, 수업 완료 보상은 계속 받을 수 있어요.</span>
+          {!missionComplete ? (
+            <div style={{ marginTop: 6 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ flex: 1, height: 7, borderRadius: 99, background: 'var(--glass-bg)', overflow: 'hidden' }}>
+                  <div style={{ width: `${Math.min(100, Math.round((dailyDone / DAILY_MISSION_TARGET) * 100))}%`, height: '100%', background: 'var(--accent)', borderRadius: 99, transition: 'width .4s ease' }} />
+                </div>
+                <span style={{ flexShrink: 0, fontSize: 12.5, fontWeight: 800, color: 'var(--ink)', fontVariantNumeric: 'tabular-nums' }}>{Math.min(dailyDone, DAILY_MISSION_TARGET)}/{DAILY_MISSION_TARGET}</span>
+              </div>
+              <div style={{ marginTop: 12, padding: 14, borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)' }}>
+                <strong style={{ display: 'block', fontSize: 15 }}>오늘 표현 {DAILY_MISSION_TARGET}개를 학습하면 무료 카드를 받을 수 있어요.</strong>
+                <button className="ym-press" onClick={() => nav.onNavigate('home')} style={{
+                  width: '100%', marginTop: 10, padding: '11px 14px', borderRadius: 12, cursor: 'pointer',
+                  border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 750, fontSize: 13.5,
+                }}>홈에서 학습하러 가기</button>
+              </div>
             </div>
           ) : (
-            <GachaBox
-              sessionId={dailySessionId(key, nextFreeOrdinal)}
-              sceneIds={unlockedSceneIds}
-              grade="wood"
-              label={`무료 뽑기 ${nextFreeOrdinal}/${DAILY_FREE_LIMIT}`}
-              randomDrawCount
-              onClaimed={(results) => {
-                if (results.length > 0) {
-                  setShowLastDailyResult(true);
-                  setClaimedCount((prev) => {
-                    const next = Math.min(DAILY_FREE_LIMIT, prev + 1);
-                    saveDailyClaimCount(key, next);
-                    return next;
-                  });
-                  setDeckVersion((n) => n + 1);
-                }
-              }}
-            />
+            <>
+              <p style={{ margin: '14px 0 0', fontSize: 13, color: 'var(--ink)', fontWeight: 850 }}>
+                오늘 남은 무료 뽑기 {remainingFree}/{DAILY_FREE_LIMIT}
+              </p>
+              {claimed ? (
+                <div style={{ marginTop: 16, padding: 14, borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)' }}>
+                  <strong style={{ display: 'block', fontSize: 16 }}>오늘 무료 뽑기 {DAILY_FREE_LIMIT}회를 모두 받았어요.</strong>
+                  <span style={{ display: 'block', marginTop: 5, fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 700 }}>내일 다시 열리고, 수업 완료 보상은 계속 받을 수 있어요.</span>
+                </div>
+              ) : (
+                <GachaBox
+                  sessionId={dailySessionId(key, nextFreeOrdinal)}
+                  sceneIds={unlockedSceneIds}
+                  grade="wood"
+                  label={`무료 뽑기 ${nextFreeOrdinal}/${DAILY_FREE_LIMIT}`}
+                  onClaimed={(results) => {
+                    if (results.length > 0) {
+                      setShowLastDailyResult(true);
+                      setClaimedCount((prev) => {
+                        const next = Math.min(DAILY_FREE_LIMIT, prev + 1);
+                        saveDailyClaimCount(key, next);
+                        return next;
+                      });
+                      setDeckVersion((n) => n + 1);
+                    }
+                  }}
+                />
+              )}
+            </>
           )}
         </div>
       </GlassPanel>

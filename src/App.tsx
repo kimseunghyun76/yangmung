@@ -940,7 +940,7 @@ export function App() {
       return <ListenMode nav={{ ...nav, current: 'listen' }} allCards={allCards} progress={progress} onBack={() => goBack('home')} />;
     }
     if (view === 'gacha') {
-      return <GachaPage nav={{ ...nav, current: 'gacha' }} openMissions={visibleOpenMissions} />;
+      return <GachaPage nav={{ ...nav, current: 'gacha' }} openMissions={visibleOpenMissions} progress={progress} />;
     }
     if (view === 'flash') {
       const unlockedSceneIds = CONTENT.missions.filter((m) => m.id !== 'C0' && isSceneOpen(m.id, openMissions, !!settings.devUnlockAll)).map((m) => m.id);

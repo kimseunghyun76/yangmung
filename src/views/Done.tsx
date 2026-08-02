@@ -335,7 +335,7 @@ export function Done({ sessionId, score, quizSeen, sessionLog, sessionCards, pro
         )}
       </div>
 
-      {/* 세션 완료 보상 — 퀴즈가 있던 세션마다 카드 상자 1개(정답률에 따라 등급·장수 차등) */}
+      {/* 세션 완료 보상 — 퀴즈가 있던 세션마다 카드 상자 1개(정답률에 따라 등급 차등, 뽑는 카드는 항상 1장) */}
       {reward && (
         <div className="ym-rise" style={{ animationDelay: '.06s', marginTop: 20 }}>
           <GachaBox sessionId={sessionId} sceneIds={reward.scenes} grade={reward.grade} />
