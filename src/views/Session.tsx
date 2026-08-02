@@ -13,7 +13,6 @@ import { OrderCardView, type PickMap } from './OrderCard';
 import { SpeakCardView } from './SpeakCard';
 import { DictationCardView } from './DictationCard';
 import { DiscoverCardView } from './DiscoverCard';
-import { ReadingAid } from './ReadingAid';
 import { Furigana } from './Furigana';
 import { sceneVisualByMission, sceneBackdropForCard } from './scene';
 import { Icon } from '../ui/Icon';
@@ -53,6 +52,12 @@ export function Session({ card, index, total, picked, skipped, onChoose, onIntro
   const speaker = isMissionStep ? card.sub : '';
   const scenario = 'scenario' in card ? card.scenario : undefined;
   const plainTag = !sv && card.kind !== 'tip' && card.kind !== 'discover' ? card.tag : '';
+  // 미션 스텝의 일본어 질문·한국어 해석 — 배경 이미지가 있으면 이미지 하단 오버레이 안에 바로
+  // 얹어(공간 절약 요청) 그 아래 별도 블록을 다시 만들지 않는다. 배경 이미지가 없는 미션 스텝은
+  // QuizBody가 지금처럼 별도 블록으로 그린다.
+  const missionPrompt = card.kind === 'quiz' ? card.promptPhrase : undefined;
+  const missionBannerJa = card.kind === 'quiz' ? card.bannerJa : undefined;
+  const promptInOverlay = isMissionStep && !!cardBackdrop && !!missionPrompt;
   // 장면 진입 모션 키 — 같은 장면(미션) 안에서는 유지, 새 장면으로 바뀔 때만 재생.
   const sceneKey = sv && 'reviewTarget' in card && card.reviewTarget ? `sc-${String(card.reviewTarget.id)}` : 'plain';
 
@@ -126,7 +131,8 @@ export function Session({ card, index, total, picked, skipped, onChoose, onIntro
                 // 짧은 고정 높이 + cover 조합이 이미지 상단을 잘라내는 문제(사용자 지적)가 있어
                 // 모든 카드 종류에서 원본 비율 그대로 잘리지 않게 표시한다(contain + 자동 높이).
                 height: 'auto',
-                maxHeight: card.kind === 'introduce' ? 220 : isMissionStep ? 160 : undefined,
+                // 미션 스텝은 오버레이에 질문·해석까지 얹으므로(아래) 조금 더 여유를 둔다.
+                maxHeight: card.kind === 'introduce' ? 220 : isMissionStep ? 210 : undefined,
                 display: 'block',
                 objectFit: 'contain',
                 filter: 'saturate(.88) contrast(.98)',
@@ -144,20 +150,32 @@ export function Session({ card, index, total, picked, skipped, onChoose, onIntro
                   <p style={{ margin: '3px 0 0', fontSize: 25, lineHeight: 1.14, fontWeight: 900, color: '#fff', textShadow: '0 2px 10px rgba(0,0,0,.55)' }}>{scenario ?? card.note}</p>
                 </div>
               )}
-              {/* 미션 퀴즈 — 장면명·화자·할 일 안내를 배경 하단에 얹는다 */}
+              {/* 미션 퀴즈 — 장면명·화자에 이어 실제 질문(일본어·해석)까지 배경 하단 오버레이에
+                  바로 얹는다("배경 이미지+퀴즈 부분은 오버레이로 공간을 아끼자"는 요청) — 이미지
+                  아래 다시 같은 내용을 그리지 않도록 QuizBody 쪽은 promptInOverlay일 때 이 줄을 건너뛴다. */}
               {isMissionStep && (
                 <div style={{
-                  position: 'absolute', left: 0, right: 0, bottom: 0, padding: '40px 16px 12px',
-                  background: 'linear-gradient(to top, rgba(20,12,8,.82), rgba(20,12,8,.38) 60%, transparent)',
+                  position: 'absolute', left: 0, right: 0, bottom: 0, padding: '40px 16px 14px',
+                  background: 'linear-gradient(to top, rgba(20,12,8,.88), rgba(20,12,8,.55) 55%, transparent)',
                   color: '#fff', textAlign: 'left',
                 }}>
                   <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
                     {scenario && <span style={{ padding: '3px 10px', borderRadius: 999, fontSize: 12.5, fontWeight: 800, background: hexA(accent, 0.92), color: '#fff' }}>{scenario}</span>}
                     {speaker && <span style={{ padding: '3px 10px', borderRadius: 999, fontSize: 12.5, fontWeight: 800, background: 'rgba(255,255,255,.22)', color: '#fff' }}>{speaker}</span>}
                   </div>
-                  <p style={{ margin: '6px 0 0', fontSize: 14, lineHeight: 1.4, fontWeight: 750, color: 'rgba(255,255,255,.96)', textShadow: '0 1px 6px rgba(0,0,0,.55)' }}>
-                    {speaker ? `${speaker}의 말을 듣고, 아래에서 가장 자연스러운 답을 골라보세요.` : '아래에서 가장 자연스러운 답을 골라보세요.'}
-                  </p>
+                  {promptInOverlay ? (
+                    <>
+                      <button onClick={() => missionBannerJa && speak(missionBannerJa)} disabled={!missionBannerJa || !ttsSupported()}
+                        style={{ display: 'block', width: '100%', textAlign: 'left', marginTop: 8, border: 'none', background: 'none', padding: 0, cursor: missionBannerJa ? 'pointer' : 'default', color: '#fff' }}>
+                        <Furigana kanji={missionPrompt!.kanji} kana={missionPrompt!.kana} style={{ display: 'block', fontSize: 22, fontWeight: 800, lineHeight: 1.5 }} />
+                      </button>
+                      <p style={{ margin: '5px 0 0', fontSize: 13, lineHeight: 1.4, color: 'rgba(255,255,255,.88)', fontWeight: 650, textShadow: '0 1px 6px rgba(0,0,0,.55)' }}>{missionPrompt!.korean}</p>
+                    </>
+                  ) : (
+                    <p style={{ margin: '6px 0 0', fontSize: 14, lineHeight: 1.4, fontWeight: 750, color: 'rgba(255,255,255,.96)', textShadow: '0 1px 6px rgba(0,0,0,.55)' }}>
+                      {speaker ? `${speaker}의 말을 듣고, 아래에서 가장 자연스러운 답을 골라보세요.` : '아래에서 가장 자연스러운 답을 골라보세요.'}
+                    </p>
+                  )}
                 </div>
               )}
             </div>
@@ -175,7 +193,7 @@ export function Session({ card, index, total, picked, skipped, onChoose, onIntro
           ) : card.kind === 'discover' ? (
             <DiscoverCardView key={card.id} card={card} onNext={onNext} />
           ) : (
-            <QuizBody key={card.id} card={card} picked={picked} skipped={skipped} isMissionStep={isMissionStep} isKanaFamiliar={isKanaFamiliar} onChoose={onChoose} onNext={onNext} onKnown={onKnown} onSkip={onSkip} />
+            <QuizBody key={card.id} card={card} picked={picked} skipped={skipped} isMissionStep={isMissionStep} promptInOverlay={promptInOverlay} onChoose={onChoose} onNext={onNext} onKnown={onKnown} onSkip={onSkip} />
           )}
         </div>
       </GlassPanel>
@@ -293,9 +311,12 @@ function DiffBadge({ level }: { level: DifficultyLabel }) {
 }
 
 // 퀴즈/듣기 본문 — 일본어(주인공) → 듣기(1급) → 선택(행동) → 한국어(보조)
-function QuizBody({ card, picked, skipped, isMissionStep, isKanaFamiliar, onChoose, onNext, onKnown, onSkip }: {
+function QuizBody({ card, picked, skipped, isMissionStep, promptInOverlay, onChoose, onNext, onKnown, onSkip }: {
   card: Extract<Card, { kind: 'quiz' }>; picked: number | null; skipped: boolean; isMissionStep: boolean;
-  isKanaFamiliar: (c: string) => boolean; onChoose: (i: number, c: Choice) => void; onNext: () => void; onKnown: () => void; onSkip: () => void;
+  // 배경 이미지가 있는 미션 스텝은 질문(일본어·해석)이 이미 그 이미지 하단 오버레이에 그려져
+  // 있으므로(Session 본문 참고) 여기선 건너뛴다 — 배경 이미지가 없는 미션 스텝만 여기서 그린다.
+  promptInOverlay: boolean;
+  onChoose: (i: number, c: Choice) => void; onNext: () => void; onKnown: () => void; onSkip: () => void;
 }) {
   const reveal = picked !== null || skipped;
   const big = card.tag.startsWith('K') ? 68 : 30;
@@ -327,19 +348,19 @@ function QuizBody({ card, picked, skipped, isMissionStep, isKanaFamiliar, onChoo
           <p lang="ja" style={{ margin: '4px 0 0', fontSize: 15, fontWeight: 800, color: 'var(--ink)' }}>聞いて意味を選びましょう</p>
           <p style={{ margin: '2px 0 0', fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 600 }}>듣고 의미를 고르세요</p>
         </div>
-      ) : isMissionStep ? (
+      ) : isMissionStep && !promptInOverlay ? (
         <button onClick={() => card.bannerJa && speak(card.bannerJa)} disabled={!card.bannerJa || !ttsSupported()}
           style={{ display: 'block', width: '100%', textAlign: 'center', marginBottom: 4, border: 'none', background: 'none', cursor: card.bannerJa ? 'pointer' : 'default', color: 'var(--ink)' }}>
-          <ReadingAid text={card.promptPhrase!.kana} isFamiliar={isKanaFamiliar} fontSize={28} />
+          <Furigana kanji={card.promptPhrase!.kanji} kana={card.promptPhrase!.kana} style={{ display: 'block', fontSize: 28, fontWeight: 700 }} />
         </button>
-      ) : (
+      ) : isMissionStep ? null : (
         <button onClick={() => card.bannerJa && speak(card.bannerJa)} disabled={!card.bannerJa || !ttsSupported()}
           style={{ display: 'block', width: '100%', fontSize: big, fontWeight: 700, textAlign: 'center', margin: '4px 0', border: 'none', background: 'none', cursor: card.bannerJa ? 'pointer' : 'default', color: 'var(--ink)' }}>{card.banner}</button>
       )}
 
       {/* 2. 한국어 해석 — 일본어 바로 아래(힌트 위). ko2ja(뜻→일본어)는 질문을 또렷이. */}
       {isMissionStep ? (
-        <p style={{ textAlign: 'center', color: 'var(--ink-soft)', fontSize: 14, margin: '8px 0 0' }}>{card.promptPhrase!.korean}</p>
+        promptInOverlay ? null : <p style={{ textAlign: 'center', color: 'var(--ink-soft)', fontSize: 14, margin: '8px 0 0' }}>{card.promptPhrase!.korean}</p>
       ) : card.listen ? null : card.sub ? (
         <p style={{ textAlign: 'center', color: isKo2Ja ? 'var(--ink)' : 'var(--ink-faint)', fontSize: isKo2Ja ? 15.5 : 14, fontWeight: isKo2Ja ? 800 : 400, margin: '8px 0 0' }}>{card.sub}</p>
       ) : null}
