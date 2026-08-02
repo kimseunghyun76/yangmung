@@ -25,6 +25,8 @@ import { StatTile, LearningHeatmap } from './StatsWidgets';
 import { LearningRoadmap } from './Roadmap';
 import { daysUntilTravel, TRAVEL_PURPOSE_LABEL, type TravelPurpose } from '../learn/settings';
 import type { GrammarPoint } from '../content/types';
+import { GachaBox } from './Gacha';
+import { DAILY_MISSION_TARGET, dailyMissionSessionId, isDailyMissionClaimed, markDailyMissionClaimed, todayLearnedCount } from '../learn/dailyMission';
 
 interface Props {
   nav: NavBarProps;
@@ -82,6 +84,13 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
   const stats = useLearningStats(collection);
   const scenes = CONTENT.missions.filter((m) => m.id !== 'C0');
   const openScenes = scenes.filter((m) => openMissions.includes(m.id));
+
+  // 데일리 미션 — "매일매일 와서 틈나는 대로 한 번만 해도 보상"(사용자 요청).
+  // 새 진행률 저장소 없이, 이미 답할 때마다 갱신되는 progress.lastSeenAt을 오늘 날짜로 세기만 한다.
+  const dailyDone = todayLearnedCount(progress);
+  const dailyComplete = dailyDone >= DAILY_MISSION_TARGET;
+  const [dailyClaimed, setDailyClaimed] = useState(() => isDailyMissionClaimed());
+  const dailySceneIds = openScenes.length ? openScenes.map((m) => m.id) : ['C1'];
 
   // 오늘의 장면 = goal과 동일 기준(튜토리얼 C0 제외한 첫 장면). 없으면 가나 위주의 날.
   const primary = plan.missions.find((m) => m.id !== 'C0') ?? plan.missions[0];
@@ -172,9 +181,31 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
             d={diagnosis} line={coach.line}
             hira={hira} kata={kata} kanaPct={kanaPct} stats={stats}
             modeLabel={modeLabel} onPlacement={onPlacement} placementDone={placementDone}
+            dailyDone={dailyDone} dailyClaimed={dailyClaimed}
           />
         </GlassPanel>
       </div>
+
+      {/* 데일리 미션 보상 — 목표를 채운 날에만 나타나는 보상 상자. 못 채운 날엔 위 요약 한 줄만
+          보이고 이 패널 자체가 없어 화면을 더 차지하지 않는다. */}
+      {dailyComplete && !dailyClaimed && (
+        <div className="ym-rise" style={{ marginTop: 14 }}>
+          <GlassPanel strong>
+            <p style={{ margin: 0, ...label }}>🎁 데일리 미션 완료</p>
+            <p style={{ margin: '6px 0 12px', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700, lineHeight: 1.5 }}>
+              오늘 표현 {DAILY_MISSION_TARGET}개를 익혔어요. 보상 상자를 열어보세요!
+            </p>
+            <GachaBox
+              sessionId={dailyMissionSessionId()}
+              sceneIds={dailySceneIds}
+              grade="silver"
+              label="데일리 미션 보상"
+              randomDrawCount
+              onClaimed={() => { markDailyMissionClaimed(); setDailyClaimed(true); }}
+            />
+          </GlassPanel>
+        </div>
+      )}
 
       {/* 레벨이 낮으면 로드맵(다음 할 일)을 오늘의 미션 위에, 높으면 미션을 위에 */}
       {lowLevel ? (<>{roadmapPanel}{missionPanel}</>) : (<>{missionPanel}{roadmapPanel}</>)}
@@ -443,10 +474,11 @@ function HomeSceneCard({ hero, accent, kicker, title, chips, planned, onStart }:
 
 // 상태 대시보드 — 코치·학습 상태·가나 안정도·난이도(진단)를 한 카드로 묶어 "한눈에".
 // 접었을 때도 등급·코치 한 줄은 보이고, 펼치면 학습 상태·가나 안정도·성장 기록·보유 카드·약점까지.
-function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPlacement, placementDone }: {
+function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPlacement, placementDone, dailyDone, dailyClaimed }: {
   d: Diagnosis; line: string;
   hira: { mastered: number; total: number }; kata: { mastered: number; total: number };
   kanaPct: number; stats: LearningStats; modeLabel: string; onPlacement: () => void; placementDone: boolean;
+  dailyDone: number; dailyClaimed: boolean;
 }) {
   // 기본은 접힌 상태로 시작(2026-07-08, 사용자 요청) — 요약(코치 한 줄)은 접혀 있어도 항상 보임.
   const [expanded, setExpanded] = useState(false);
@@ -501,6 +533,24 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPla
             {placementDone ? line : '아직 수준 진단 전이에요 — 위 버튼으로 10문제만 풀면 난이도를 딱 맞춰드려요.'}
           </p>
         </div>
+      </div>
+
+      {/* 데일리 미션 요약 — 접혀 있어도 항상 보이는 한 줄. 목표를 채운 날엔 보상 패널이
+          이 카드 바로 아래(별도)에 나타나므로 여긴 안내 문구만 남긴다. */}
+      <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 800, color: 'var(--accent)' }}>🎁 데일리</span>
+        {dailyClaimed ? (
+          <span style={{ fontSize: 12, fontWeight: 750, color: 'var(--ink-soft)' }}>오늘 미션 완료 · 보상 받음 ✓</span>
+        ) : dailyDone >= DAILY_MISSION_TARGET ? (
+          <span style={{ fontSize: 12, fontWeight: 750, color: 'var(--accent)' }}>오늘 미션 완료! 아래에서 보상을 받아요 🎉</span>
+        ) : (
+          <>
+            <div style={{ flex: 1, height: 6, borderRadius: 99, background: 'var(--glass-bg-strong)', overflow: 'hidden' }}>
+              <div style={{ width: `${Math.round((dailyDone / DAILY_MISSION_TARGET) * 100)}%`, height: '100%', background: 'var(--accent)', borderRadius: 99, transition: 'width .4s ease' }} />
+            </div>
+            <span style={{ flexShrink: 0, fontSize: 12, fontWeight: 800, color: 'var(--ink-soft)', fontVariantNumeric: 'tabular-nums' }}>{Math.min(dailyDone, DAILY_MISSION_TARGET)}/{DAILY_MISSION_TARGET}</span>
+          </>
+        )}
       </div>
 
       {!expanded ? null : (
