@@ -2,6 +2,7 @@
 // goal은 App에서 planSession 기반으로 계산해 전달(복습 뉘앙스 포함).
 // 2026-07-08: 배경 상황을 떠올리라는 문구만 있던 걸, 실제 이번 세션에 나올 내용(표현 목록)을
 // 미리 훑어볼 수 있는 요약으로 바꿨다 — 테마와 무관하게 항상 같은 자리에서 확인 가능.
+import { useState } from 'react';
 import type { Card } from '../learn/cards';
 import { itemMastery, type ProgressMap } from '../learn/progress';
 import { CONTENT } from '../content';
@@ -166,7 +167,11 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
   const points = mission ? memoryPoints(mission, weak, attempts) : quickPracticePoints(cards);
   const sessionKind = missionCount > 0 ? `${missionCount}개 상황 카드` : `${expressionCount || cards.length}개 표현 카드`;
   const preview = contentSummary(cards);
-  const subtitle = preview.length > 0 ? `이번엔 ${sessionKind}로 만나요 — 아래에서 먼저 훑어보세요.` : '오늘 필요한 표현만 짧게 모아 연습해요.';
+  // 누적 시도·기억한 카드·이번 연습 구성 — 예전엔 배지 3개가 각각 줄을 차지했다. 이미지가
+  // 있으면 그 하단 오버레이("이번엔 N개 상황 카드로 만나요 — 아래에서 먼저 훑어보세요")
+  // 자리에 이 한 줄로 대신 넣어 공간을 아낀다(사용자 요청).
+  const statsLine = `누적 시도 ${attempts}회 · 기억한 카드 ${seen}개 · ${sessionKind}`;
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   return (
     <main style={{ ...WRAP, minHeight: '100dvh', display: 'flex', flexDirection: 'column', paddingBottom: 24 }}>
@@ -204,7 +209,7 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
                 {scenario}
               </p>
               <p style={{ margin: '8px 0 0', fontSize: 13, lineHeight: 1.5, fontWeight: 600, color: 'rgba(255,255,255,.92)', textShadow: '0 1px 6px rgba(0,0,0,.5)' }}>
-                {subtitle}
+                {statsLine}
               </p>
             </div>
           </div>
@@ -220,44 +225,43 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
           {!backdrop && <h1 style={{ margin: '7px 0 0', lineHeight: 1.22 }}>{goal}</h1>}
           {!backdrop && (
             <p style={{ color: 'var(--ink-soft)', fontSize: 15, lineHeight: 1.65, marginTop: 14, maxWidth: 640 }}>
-              {subtitle}
+              {statsLine}
             </p>
           )}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 16 }}>
-            <span style={{ borderRadius: 999, padding: '8px 12px', background: hexA(sv.accent, 0.12), border: `1px solid ${hexA(sv.accent, 0.22)}`, color: sv.accent, fontSize: 13, fontWeight: 800 }}>
-              누적 시도 {attempts}회
-            </span>
-            <span style={{ borderRadius: 999, padding: '8px 12px', background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--ink-soft)', fontSize: 13, fontWeight: 750 }}>
-              기억한 카드 {seen}개
-            </span>
-            <span style={{ borderRadius: 999, padding: '8px 12px', background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--ink-soft)', fontSize: 13, fontWeight: 750 }}>
-              이번 연습 {sessionKind}
-            </span>
-          </div>
         </div>
         {preview.length > 0 && (
           <GlassPanel>
-            <p style={{ margin: '0 0 10px', color: 'var(--ink-faint)', fontSize: 12, fontWeight: 850, letterSpacing: '0.08em' }}>이번에 배울 내용</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {preview.map((item, idx) => (
-                <button
-                  key={`${item.ja ?? item.ko}-${idx}`}
-                  className="ym-press"
-                  onClick={() => item.ja && speak(item.ja)}
-                  disabled={!item.ja || !ttsSupported()}
-                  style={{
-                    width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 10,
-                    padding: '10px 12px', borderRadius: 12, cursor: item.ja ? 'pointer' : 'default',
-                    border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)',
-                  }}>
-                  <span style={{ flex: 1, minWidth: 0 }}>
-                    {item.ja && <span lang="ja" style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{item.ja}</span>}
-                    <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: item.ja ? 2 : 0 }}>{item.ko}</span>
-                  </span>
-                  {item.ja && <Icon name="listen" size={15} style={{ flex: '0 0 15px', color: 'var(--ink-faint)' }} />}
-                </button>
-              ))}
-            </div>
+            {/* 기본은 접힌 상태 — "강좌 첫 페이지"가 미리보기 목록으로 길어지지 않게(사용자 요청).
+                접혀 있어도 제목·개수는 항상 보이고, 눌러서 펼치면 목록이 나온다. */}
+            <button className="ym-press" onClick={() => setPreviewOpen((o) => !o)} style={{
+              width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              border: 'none', background: 'none', cursor: 'pointer', padding: 0, color: 'inherit',
+            }}>
+              <span style={{ color: 'var(--ink-faint)', fontSize: 12, fontWeight: 850, letterSpacing: '0.08em' }}>이번에 배울 내용 · {preview.length}개</span>
+              <Icon name="flow" size={13} style={{ color: 'var(--ink-faint)', transform: previewOpen ? 'rotate(90deg)' : 'rotate(-90deg)', transition: 'transform .2s' }} />
+            </button>
+            {previewOpen && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 10 }}>
+                {preview.map((item, idx) => (
+                  <button
+                    key={`${item.ja ?? item.ko}-${idx}`}
+                    className="ym-press"
+                    onClick={() => item.ja && speak(item.ja)}
+                    disabled={!item.ja || !ttsSupported()}
+                    style={{
+                      width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 10,
+                      padding: '10px 12px', borderRadius: 12, cursor: item.ja ? 'pointer' : 'default',
+                      border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)',
+                    }}>
+                    <span style={{ flex: 1, minWidth: 0 }}>
+                      {item.ja && <span lang="ja" style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{item.ja}</span>}
+                      <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: item.ja ? 2 : 0 }}>{item.ko}</span>
+                    </span>
+                    {item.ja && <Icon name="listen" size={15} style={{ flex: '0 0 15px', color: 'var(--ink-faint)' }} />}
+                  </button>
+                ))}
+              </div>
+            )}
           </GlassPanel>
         )}
         <div style={{ position: 'relative' }}>
