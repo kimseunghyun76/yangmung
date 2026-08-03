@@ -129,6 +129,12 @@
           "correct": true
         },
         {
+          "text": "고속도로로 부탁드려요",
+          "phraseId": "p_kousoku_de_onegai",
+          "correct": true,
+          "feedback": "시간이 급하면 반대로 고속도로 이용을 요청해도 돼요"
+        },
+        {
           "text": "여기서 세워 주세요",
           "phraseId": "p_koko_de_tomete",
           "correct": false,
@@ -147,6 +153,12 @@
           "phraseId": "p_ryoushuusho",
           "correct": true,
           "feedback": "물건을 두고 내렸을 때 영수증의 차량 번호가 큰 도움이 돼요"
+        },
+        {
+          "text": "거스름돈은 괜찮아요",
+          "phraseId": "p_otsuri_daijoubu",
+          "correct": true,
+          "feedback": "잔돈을 사양하며 마무리해도 자연스러워요"
         },
         {
           "text": "시부야까지 가주세요",
@@ -175,6 +187,12 @@
           "phraseId": "p_new_sono_reeto_de_onegai",
           "correct": true,
           "feedback": "「そのレートでお願いします」— 안내받은 환율 그대로 진행해 달라는 뜻이에요. 「そのレートで大丈夫です」도 비슷하게 쓸 수 있어요"
+        },
+        {
+          "text": "괜찮아요",
+          "phraseId": "p_daijoubu",
+          "correct": true,
+          "feedback": "안내받은 환율 그대로 괜찮다면 짧게 이렇게 답해도 돼요"
         }
       ]
     },
@@ -188,6 +206,12 @@
           "text": "잠깐만 기다려 주세요",
           "phraseId": "p_chotto_matte",
           "correct": true
+        },
+        {
+          "text": "금액 확인했어요",
+          "phraseId": "p_kingaku_kakunin",
+          "correct": true,
+          "feedback": "서명 전에 금액을 확인했다고 짧게 알려도 자연스러워요"
         },
         {
           "text": "잔돈으로 해 주세요",
@@ -215,6 +239,12 @@
           "text": "그렇게 할게요",
           "phraseId": "p_sou_shimasu",
           "correct": true
+        },
+        {
+          "text": "감사합니다 (정중)",
+          "phraseId": "p_arigatou_gozaimasu",
+          "correct": true,
+          "feedback": "안내에 짧게 감사로 답해도 자연스러워요"
         },
         {
           "text": "코인로커 어디예요?",
@@ -287,6 +317,12 @@
           "phraseId": "p_card_tsukaemasu_ka",
           "correct": true,
           "feedback": "확인과 함께 결제 수단을 물어보는 자연스러운 진행이에요"
+        },
+        {
+          "text": "괜찮아요",
+          "phraseId": "p_daijoubu",
+          "correct": true,
+          "feedback": "도착 시간과 요금이 괜찮다면 짧게 답해요"
         },
         {
           "text": "이거 보내고 싶어요",

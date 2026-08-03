@@ -28,6 +28,7 @@ export const c12: Mission = {
       choices: [
         { text: '이거 보내고 싶어요', phraseId: 'p_okuritai', correct: false, feedback: '부치는 건 이미 말했어요 — 지금은 배송일이 괜찮은지 답할 차례예요' },
         { text: '더 빨리 도착할 수 있나요?', phraseId: 'p_new_motto_hayaku_todoku', correct: true, feedback: '「もっと早(はや)く届(とど)きますか」— 제시된 배송일보다 빠른 방법이 있는지 확인하는 자연스러운 되물음이에요. 급한 소포를 보낼 때 유용해요' },
+        { text: '괜찮아요', phraseId: 'p_daijoubu', correct: true, feedback: '「大丈夫(だいじょうぶ)」— 제시된 배송일이 괜찮다면 짧게 답해요' },
       ],
     },
     {

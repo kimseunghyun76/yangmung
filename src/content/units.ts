@@ -97,7 +97,7 @@ export const units: Unit[] = [
   {
     id: 'u_b1_taxi_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 택시에서 행선지를 말하고 세워 달라고 하며 영수증을 받을 수 있다',
-    newPhraseIds: ['p_takushi_onegai', 'p_made_onegai', 'p_koko_de_tomete', 'p_ryoushuusho', 'p_ippan_michi_de', 'p_otsuri_daijoubu'],
+    newPhraseIds: ['p_takushi_onegai', 'p_made_onegai', 'p_koko_de_tomete', 'p_ryoushuusho', 'p_ippan_michi_de', 'p_otsuri_daijoubu', 'p_kousoku_de_onegai', 'p_sono_kado_de_tomete'],
   },
   {
     id: 'u_b1_airport_core', track: 'lang', stage: 'B1', mode: 'action',

@@ -36,6 +36,7 @@ export const c8: Mission = {
       choices: [
         { text: '여기서 세워 주세요', phraseId: 'p_koko_de_tomete', correct: false, feedback: '이제 막 출발하는 참이에요 — 세우는 건 목적지 근처에서 말해요' },
         { text: '짐이 두 개 있어요', phraseId: 'p_new_nimotsu_futatsu', correct: true, feedback: '「荷物(にもつ)が二(ふた)つあります」— \'짐 있으세요?\'라는 질문에 개수까지 구체적으로 답하면 기사가 트렁크를 미리 열어줘요' },
+        { text: '짐 없어요', phraseId: 'p_new_nimotsu_arimasen', correct: true, feedback: '「荷物(にもつ)はありません」— 짐이 없으면 짧게 이렇게 답해요' },
       ],
     },
     {
@@ -44,6 +45,7 @@ export const c8: Mission = {
       promptPhraseId: 'p_kousoku_tsukaimasu_ka',
       choices: [
         { text: '일반도로로 가주세요', phraseId: 'p_ippan_michi_de', correct: true, feedback: '「一般道(いっぱんどう)でお願いします」— 통행료를 아끼고 싶을 때. 시간 여유가 있으면 일반도로도 좋아요' },
+        { text: '고속도로로 부탁드려요', phraseId: 'p_kousoku_de_onegai', correct: true, feedback: '「高速(こうそく)でお願いします」— 시간이 급하면 고속도로 이용을 요청해요' },
         { text: '시부야까지 가주세요', phraseId: 'p_made_onegai', correct: false, feedback: '행선지는 이미 말했어요 — 지금은 경로(고속/일반)를 정하는 중이에요' },
       ],
     },
@@ -52,6 +54,7 @@ export const c8: Mission = {
       speaker: '나',
       choices: [
         { text: '여기서 세워 주세요', phraseId: 'p_koko_de_tomete', correct: true, feedback: '「ここで止(と)めてください」— 정확한 위치에서 내리려면 「その角(かど)で」(그 모퉁이에서)와 함께 써요' },
+        { text: '그 모퉁이에서 세워 주세요', phraseId: 'p_sono_kado_de_tomete', correct: true, feedback: '「その角(かど)で止(と)めてください」— 위치를 더 구체적으로 짚어 알려줘요' },
         { text: '시부야까지 가주세요', phraseId: 'p_made_onegai', correct: false, feedback: '행선지는 이미 말했어요 — 지금은 내릴 위치를 부탁해요' },
       ],
     },

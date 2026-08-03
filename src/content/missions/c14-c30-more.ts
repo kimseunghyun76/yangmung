@@ -743,6 +743,7 @@ export const c25: Mission = {
       promptPhraseId: 'p_sensei_ga_setsumei_shimasu',
       choices: [
         { text: '잘 부탁드립니다', phraseId: 'p_yoroshiku_onegai', correct: true, feedback: '「よろしくお願(ねが)いします」— 진료를 시작하며 건네는 응답' },
+        { text: '부탁드립니다', phraseId: 'p_onegai_shimasu', correct: true, feedback: '「お願(ねが)いします」— よろしくお願いします보다 짧은 응답이에요' },
         { text: '도와주세요', phraseId: 'p_tasukete', correct: false, feedback: '지금은 도움이 필요한 상황이 아니에요 — 진료를 시작하는 인사로 답해요' },
       ],
     },
@@ -752,6 +753,7 @@ export const c25: Mission = {
       promptPhraseId: 'p_shohousen_tonari',
       choices: [
         { text: '가 볼게요', phraseId: 'p_itte_mimasu', correct: true, feedback: '「行(い)ってみます」— 옆 약국으로 가 보겠다는 응답' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '안내받은 뒤 짧게 감사로 답해도 자연스러워요' },
         { text: '도와주세요', phraseId: 'p_tasukete', correct: false, feedback: '이미 진료가 끝났어요 — 안내받은 대로 가 보겠다고 답해요' },
       ],
     },
@@ -814,6 +816,7 @@ export const c26: Mission = {
       promptPhraseId: 'p_funshitsu_todoke',
       choices: [
         { text: '잠깐만 기다려 주세요', phraseId: 'p_chotto_matte', correct: true, feedback: '「ちょっと待(ま)ってください」— 필요한 정보를 정리하는 동안 양해를 구해요' },
+        { text: '부탁드립니다', phraseId: 'p_onegai_shimasu', correct: true, feedback: '「お願(ねが)いします」— 신고서를 작성해 달라고 수락하는 응답이에요' },
         { text: '도와주세요', phraseId: 'p_tasukete', correct: false, feedback: '도움 요청은 이미 했어요 — 지금은 신고서 작성에 답해요' },
       ],
     },

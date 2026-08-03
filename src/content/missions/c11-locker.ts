@@ -35,6 +35,7 @@ export const c11: Mission = {
       promptPhraseId: 'p_kono_botan_oshite',
       choices: [
         { text: '사용법 알겠어요', phraseId: 'p_tsukaikata_wakatta', correct: true, feedback: '「使(つか)い方(かた)が分(わ)かりました」— 설명을 듣고 이해했다는 신호. 정말 이해했을 때만 쓰고, 헷갈리면 もう一度를 청하는 게 좋아요' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '설명을 들은 뒤 짧게 감사로 답해도 자연스러워요' },
         { text: '코인로커 어디예요?', phraseId: 'p_koinrokkaa', correct: false, feedback: '코인로커는 이미 찾았어요 — 지금은 사용법을 이해했다고 답해요' },
       ],
     },
@@ -45,6 +46,7 @@ export const c11: Mission = {
       choices: [
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '사용법은 이미 안내받았어요 — 지금은 요금 결제 수단을 말해요' },
         { text: '동전밖에 없는데, 괜찮아요?', phraseId: 'p_new_kozeni_shika_nai', correct: true, feedback: '「小銭(こぜに)しかないんですけど、大丈夫(だいじょうぶ)ですか」— 천 엔이라는 금액을 듣고 동전 결제 가능 여부를 되묻는 자연스러운 반응이에요. 코인로커 특성상 실제로 많이 쓰이는 표현입니다' },
+        { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: true, feedback: '「カードは使(つか)えますか」— 동전이 없다면 카드 결제가 되는지부터 물어봐도 돼요' },
       ],
     },
     {
