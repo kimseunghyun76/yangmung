@@ -120,6 +120,7 @@ export const c42: Mission = {
       promptPhraseId: 'p_urikire',
       choices: [
         { text: '이건 뭐예요?', phraseId: 'p_kore_nani', correct: true, feedback: '「これは何(なん)ですか」— 처음 보는 음료를 물어봐요. 신상·한정 음료가 자주 나와요' },
+        { text: '괜찮아요', phraseId: 'p_daijoubu', correct: true, feedback: '「大丈夫(だいじょうぶ)」— 품절이면 다른 걸 고르겠다고 짧게 답해도 돼요' },
         { text: '스이카로요', phraseId: 'p_suica_de', correct: false, feedback: '결제 수단은 이미 정했어요 — 지금은 품절 안내에 답해요' },
       ],
     },
@@ -183,6 +184,7 @@ export const c43: Mission = {
       promptPhraseId: 'p_meisai',
       choices: [
         { text: '처분해 주세요', phraseId: 'p_new_meisai_shobun', correct: true, feedback: '「処分(しょぶん)しておいてください」— 명세표를 굳이 받지 않고 기기 쪽에서 파기해달라고 요청하는 자연스러운 대답이에요. 명세표엔 계좌 정보가 있어 이렇게 처리하는 사람이 많아요' },
+        { text: '영수증 주세요', phraseId: 'p_reshiito_kudasai', correct: true, feedback: '명세표를 받고 싶다면 반대로 이렇게 답해요' },
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '사용법은 이미 물었어요 — 지금은 명세표가 필요한지 답해요' },
       ],
     },
@@ -193,6 +195,7 @@ export const c43: Mission = {
       recapPromptKo: '수수료가 표시되어 있는데 괜찮으세요?',
       choices: [
         { text: '추가 요금은 얼마인가요?', phraseId: 'p_tsui_ryoukin_ikura', correct: true, feedback: '「追加料金(ついかりょうきん)はいくらですか」— 수수료를 명확히 확인하는 표현. 화면에 表示(ひょうじ)되는 금액을 직접 확인하는 것이 더 빠를 수 있어요' },
+        { text: '괜찮아요', phraseId: 'p_daijoubu', correct: true, feedback: '표시된 수수료가 괜찮다면 짧게 답하고 진행해도 돼요' },
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '지금은 수수료를 확인하는 중이에요 — 진행 여부를 정하면 돼요' },
       ],
     },
@@ -246,6 +249,7 @@ export const c44: Mission = {
       promptPhraseId: 'p_ryoumen',
       choices: [
         { text: '양면으로 부탁해요', phraseId: 'p_new_ryoumen_de', correct: true, feedback: '「両面(りょうめん)でお願(ねが)いします」— 직원의 양면 인쇄 확인에 그렇게 해달라고 답하는 표현이에요. 종이를 아낄 때 자주 쓰는 선택이죠' },
+        { text: '단면으로 부탁해요', phraseId: 'p_new_katamen_de', correct: true, feedback: '「片面(かためん)でお願(ねが)いします」— 한 면만 원하면 반대로 이렇게 답해요' },
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '사용법은 이미 물었어요 — 지금은 양면 인쇄 여부를 답해요' },
       ],
     },
@@ -256,6 +260,7 @@ export const c44: Mission = {
       recapPromptKo: '결제는 어떻게 하시겠어요?',
       choices: [
         { text: '스이카로요', phraseId: 'p_suica_de', correct: true, feedback: '「Suicaで」— IC카드로 복합기 결제. タッチするだけで完了(かんりょう)! 가장 빠르고 편한 결제 방법이에요' },
+        { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: true, feedback: '「カードは使えますか」— IC카드 대신 신용카드가 되는지 먼저 물어봐도 자연스러워요' },
         { text: '예약했습니다', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '복합기 이용에서 예약은 관계없는 개념입니다' },
       ],
     },
@@ -308,6 +313,7 @@ export const c45: Mission = {
       recapPromptKo: '더 주문하실 것 있으세요?',
       choices: [
         { text: '이제 충분해요', phraseId: 'p_mou_juubun', correct: true, feedback: '「もう十分(じゅうぶん)です」— 더 권유받을 때 "이제 충분합니다"로 깔끔하게 마무리' },
+        { text: '괜찮아요', phraseId: 'p_daijoubu', correct: true, feedback: '더 필요한 게 없다면 짧게 사양해도 돼요' },
         { text: '예약했습니다', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '예약 확인은 이미 끝났어요 — 지금은 추가 주문 여부를 답해요' },
       ],
     },
@@ -364,6 +370,7 @@ export const c46: Mission = {
       promptPhraseId: 'p_sainyuujou',
       choices: [
         { text: '또 올게요', phraseId: 'p_mata_kimasu', correct: true, feedback: '「また来(き)ます」— 재입장 도장을 받고 잠깐 나갈 때 "다시 올게요"' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '스탬프를 찍어주는 것에 짧게 감사로 답해도 자연스러워요' },
         { text: '여권 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: false, feedback: '스탬프 안내 중이에요 — 여권은 필요하지 않아요' },
       ],
     },
@@ -426,6 +433,7 @@ export const c47: Mission = {
       promptPhraseId: 'p_elevator',
       choices: [
         { text: '가 볼게요', phraseId: 'p_itte_mimasu', correct: true, feedback: '「行(い)ってみます」— 엘리베이터 위치를 안내받고 바로 가 보겠다는 응답' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '위치 안내에 짧게 감사로 답해도 자연스러워요' },
         { text: '저거', phraseId: 'p_are', correct: false, feedback: '「저거」로는 뜻이 전달되지 않아요 — 안내받은 대로 가 보겠다고 답해요' },
       ],
     },
@@ -435,6 +443,7 @@ export const c47: Mission = {
       promptPhraseId: 'p_menzei_counter8',
       choices: [
         { text: '찾아볼게요', phraseId: 'p_sagashite_mimasu', correct: true, feedback: '「探(さが)してみます」— 면세 카운터를 직접 찾아보겠다는 표현' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '위치 안내에 짧게 감사로 답해도 자연스러워요' },
         { text: '저거', phraseId: 'p_are', correct: false, feedback: '「저거」로는 뜻이 전달되지 않아요 — 직접 찾아보겠다고 답해요' },
       ],
     },
@@ -445,6 +454,7 @@ export const c47: Mission = {
       recapPromptKo: '안내가 되셨나요?',
       choices: [
         { text: '덕분에 도움이 됐어요', phraseId: 'p_tasukarimashita', correct: true, feedback: '「助(たす)かりました」— 여러 번 안내해 준 데 대한 자연스러운 응답' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '짧게 감사로 답해도 자연스러워요' },
         { text: '저거', phraseId: 'p_are', correct: false, feedback: '「저거」로는 뜻이 전달되지 않아요 — 도움을 받았다는 감사 인사로 마무리해요' },
       ],
     },
@@ -482,6 +492,7 @@ export const c48: Mission = {
         { text: '완료까지 30분입니다', actionText: '완료까지 30분입니다', correct: false, feedback: '약사가 이미 말한 내용 — 내가 반복할 필요가 없어요' },
         { text: '전화번호를 적어 주세요', actionText: '전화번호를 적어 주세요', correct: false, feedback: '약국 대기 상황에서 연락처 요청은 맥락과 다릅니다' },
         { text: '여기서 기다릴게요', phraseId: 'p_new_koko_de_machimasu', correct: true, feedback: '「ここで待っています」— 30분 정도 걸린다는 안내에 자연스럽게 그 자리에서 기다리겠다고 응답하는 말이에요' },
+        { text: '괜찮아요', phraseId: 'p_daijoubu', correct: true, feedback: '「大丈夫(だいじょうぶ)」— 기다리는 것이 괜찮다면 짧게 답해도 돼요' },
       ],
     },
     {
@@ -499,6 +510,7 @@ export const c48: Mission = {
       promptPhraseId: 'p_generic',
       choices: [
         { text: '이 약은 뭐예요?', phraseId: 'p_kono_kusuri', correct: true, feedback: '「この薬(くすり)は何(なん)ですか」— 약의 용도·성분을 확인해요' },
+        { text: '괜찮아요', phraseId: 'p_daijoubu', correct: true, feedback: '「大丈夫(だいじょうぶ)」— 제네릭 약으로도 괜찮다면 짧게 답해요' },
         { text: '아니요, 없어요', phraseId: 'p_iie_arimasen', correct: false, feedback: '지금은 제네릭 약으로 해도 되는지 묻고 있어요 — 약에 대해 되물어보는 게 자연스러워요' },
       ],
     },
@@ -555,6 +567,7 @@ export const c49: Mission = {
       promptPhraseId: 'p_omakase_course',
       choices: [
         { text: '추천 생선은 뭐예요?', phraseId: 'p_osusume_no_sakana', correct: true, feedback: '「おすすめの魚(さかな)は何(なに)ですか」— 코스 중에도 그날 특선을 물어봐요' },
+        { text: '괜찮아요', phraseId: 'p_daijoubu', correct: true, feedback: '「大丈夫(だいじょうぶ)」— 오마카세 코스로 그대로 진행해도 괜찮다면 짧게 답해요' },
         { text: '마늘 빼고 부탁합니다', phraseId: 'p_ninniku_nuki', correct: false, feedback: '스시 오마카세에서 마늘 제외는 일반적이지 않아요 — 알레르기는 앞서 전했어요' },
       ],
     },
@@ -631,6 +644,7 @@ export const c50: Mission = {
       promptPhraseId: 'p_meijirushi',
       choices: [
         { text: '가 볼게요', phraseId: 'p_itte_mimasu', correct: true, feedback: '「行(い)ってみます」— 편의점을 표지 삼아 가 보겠다는 응답' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '안내에 짧게 감사로 답해도 자연스러워요' },
         { text: '실례합니다, 여기가 어디예요?', phraseId: 'p_sumimasen_koko_doko', correct: false, feedback: '위치는 이미 물어봤어요 — 지금은 안내받은 대로 가 보겠다고 답해요' },
       ],
     },

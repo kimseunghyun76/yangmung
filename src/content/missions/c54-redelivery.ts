@@ -48,6 +48,7 @@ export const c54: Mission = {
       recapPromptKo: '내일 14시부터 16시로 접수됐습니다',
       choices: [
         { text: '감사합니다, 잘 부탁드려요', phraseId: 'p_saihaitatsu_arigatou', correct: true, feedback: '「ありがとうございます、よろしくお願(ねが)いします」— 통화를 마칠 때 자연스러운 마무리 인사예요' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '더 짧게 감사 인사만으로 마무리해도 자연스러워요' },
         { text: '재배달 부탁드려요', phraseId: 'p_saihaitatsu_onegai', correct: false, feedback: '이미 예약이 완료됐어요 — 지금은 감사 인사로 마무리할 차례예요' },
       ],
     },

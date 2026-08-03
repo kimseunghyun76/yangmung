@@ -243,6 +243,7 @@ export const c34: Mission = {
       recapPromptKo: '짐은 옮겨 드릴게요',
       choices: [
         { text: '제가 직접 옮길게요, 괜찮아요', phraseId: 'p_new_jibun_de_hakobimasu', correct: true, feedback: '「自分で運びますので、大丈夫です」— 「ので」로 이유를 붙여 직접 옮기겠다는 의사를 자연스럽게 전달해요' },
+        { text: '부탁드립니다', phraseId: 'p_onegai_shimasu', correct: true, feedback: '직접 옮기지 않고 도움을 받아들여도 자연스러워요' },
         { text: '담배 냄새가 납니다', phraseId: 'p_tabako_no_nioi', correct: false, feedback: '문제는 이미 말했어요 — 지금은 짐 옮김 제안에 답해요' },
       ],
     },
@@ -253,6 +254,7 @@ export const c34: Mission = {
       recapPromptKo: '다른 방을 준비하겠습니다',
       choices: [
         { text: '그걸로 부탁드려요', phraseId: 'p_sorede_onegai', correct: true, feedback: '「それでお願(ねが)いします」— 안내받은 방으로 하겠다는 수락' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '방을 준비해 준 것에 짧게 감사로 답해도 자연스러워요' },
         { text: '방을 바꿔 주세요', phraseId: 'p_heya_kaete_kudasai', correct: false, feedback: '새 방을 안내받는 마무리예요 — 감사 인사로 답하면 돼요' },
       ],
     },
@@ -296,6 +298,7 @@ export const c35: Mission = {
       promptPhraseId: 'p_jiyuuseki_shitei',
       choices: [
         { text: '네, 그렇습니다', phraseId: 'p_hai_sou_desu', correct: true, feedback: '「はい、そうです」— 지정석은 좌석이 보장돼 짐이 많을 때 편해요. N\'EX는 전 좌석 지정석이에요' },
+        { text: '지정석으로 부탁해요', phraseId: 'p_shiteiseki_de', correct: true, feedback: '「指定席(していせき)でお願いします」— 확인 질문에 다시 한번 명확히 지정석을 요청해도 자연스러워요' },
         { text: '시간을 바꾸고 싶어요', phraseId: 'p_jikan_kaetai', correct: false, feedback: '먼저 좌석 종류를 정해요 — 시간 변경은 앞서 정했어요' },
       ],
     },
@@ -306,6 +309,7 @@ export const c35: Mission = {
       recapPromptKo: '차액은 천 엔입니다',
       choices: [
         { text: '차액은 여기서 낼 수 있나요?', phraseId: 'p_new_sagaku_koko_de_haraeru', correct: true, feedback: '「差額(さがく)はここで払(はら)えますか」— 창구에서 즉시 정산이 가능한지 묻는 실용적인 질문이에요. 역에 따라 별도 정산기로 안내받는 경우도 있어서 확인해두면 좋아요' },
+        { text: '괜찮아요', phraseId: 'p_daijoubu', correct: true, feedback: '차액을 그대로 지불하는 것이 괜찮다면 짧게 답해요' },
         { text: '오픈 티켓을 교환하고 싶습니다', phraseId: 'p_open_ticket_koukan', correct: false, feedback: '교환은 이미 요청했어요 — 지금은 차액 정산 방법을 물어요' },
       ],
     },
@@ -315,6 +319,7 @@ export const c35: Mission = {
       promptPhraseId: 'p_noriba_wa_jyuunibansen_desu',
       choices: [
         { text: '가 볼게요', phraseId: 'p_itte_mimasu', correct: true, feedback: '「行(い)ってみます」— 안내받은 승강장으로 가 보겠다는 응답' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '승강장 안내에 짧게 감사로 답해도 자연스러워요' },
         { text: '몇 번 선이에요?', phraseId: 'p_nanbansen', correct: false, feedback: '방금 12번선이라고 들었어요. 들은 정보를 다시 묻지 않아요' },
         { text: '이 티켓 사용할 수 있나요?', phraseId: 'p_kono_chiketto_tsukaemasu_ka', correct: false, feedback: '승강장 안내를 들었어요 — 표 교환은 이미 끝났어요' },
       ],
@@ -368,6 +373,7 @@ export const c36: Mission = {
       recapPromptKo: '좌석은 통로 측으로 괜찮으세요?',
       choices: [
         { text: '통로 쪽으로 부탁해요', phraseId: 'p_new_tsuurogawa_de', correct: true, feedback: '「通路側(つうろがわ)でお願(ねが)いします」— 직원의 질문에 통로석을 원한다고 확실히 답하는 표현이에요. 화장실을 자주 갈 예정이면 이렇게 말해보세요' },
+        { text: '창가 쪽으로 부탁해요', phraseId: 'p_new_madogawa_de', correct: true, feedback: '「窓側(まどがわ)でお願(ねが)いします」— 창밖 풍경을 보고 싶다면 반대로 이렇게 답해요' },
         { text: '추가 요금은 얼마인가요?', phraseId: 'p_tsui_ryoukin_ikura', correct: false, feedback: '추가 요금은 이미 들었어요 — 지금은 좌석 위치를 답해요' },
       ],
     },
@@ -378,6 +384,7 @@ export const c36: Mission = {
       recapPromptKo: '다시 한 번 무게를 재겠습니다',
       choices: [
         { text: '확인했어요', phraseId: 'p_kakunin_shimashita', correct: true, feedback: '「確認(かくにん)しました」— 짐 무게를 다시 확인했다는 표현' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '무게를 다시 재준 것에 짧게 감사로 답해도 자연스러워요' },
         { text: '이걸 기내수하물로 하겠습니다', phraseId: 'p_kore_tebutsu_ni_shimasu', correct: false, feedback: '짐을 뺀 뒤 다시 무게를 재는 마무리예요 — 확인·감사로 답해요' },
       ],
     },
@@ -508,6 +515,7 @@ export const c38: Mission = {
       recapPromptKo: '추가 주문 있으세요?',
       choices: [
         { text: '잘 먹었습니다', phraseId: 'p_gochisousama', correct: true, feedback: '「ごちそうさまでした」— 식사 후 반드시 해야 하는 인사. 장인과 홀 직원 모두에게 전하면 최고의 마무리예요' },
+        { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: true, feedback: '「カードは使えますか」— 계산을 요청하며 결제 수단을 함께 물어봐도 자연스러워요' },
         { text: '방어 주세요', phraseId: 'p_hamachi_kudasai', correct: false, feedback: '계산하는 마무리예요 — 추가 주문은 계산 전에 해요' },
       ],
     },
@@ -606,6 +614,7 @@ export const c40: Mission = {
       recapPromptKo: '포장해 드릴까요?',
       choices: [
         { text: '선물 포장 부탁합니다', phraseId: 'p_gift_wrapping_onegai', correct: true, feedback: '「ギフトラッピングお願いします」— 일본 백화점·편집샵의 선물 포장 수준은 세계 최고예요. 대부분 무료 또는 저렴해요' },
+        { text: '괜찮아요', phraseId: 'p_daijoubu', correct: true, feedback: '포장이 필요 없다면 짧게 사양해도 돼요' },
         { text: '면세 부탁합니다', phraseId: 'p_menzei_onegai', correct: false, feedback: '면세는 이미 요청했어요 — 지금은 포장·결제 방식을 정해요' },
       ],
     },
@@ -615,6 +624,7 @@ export const c40: Mission = {
       promptPhraseId: 'p_fukuro_iru',
       choices: [
         { text: '봉투는 필요 없어요', phraseId: 'p_fukuro_iranai', correct: true, feedback: '「袋(ふくろ)はいりません」— 에코백이 있으면 사양해요' },
+        { text: '부탁드립니다', phraseId: 'p_onegai_shimasu', correct: true, feedback: '봉투가 필요하다면 반대로 이렇게 답해요' },
         { text: '면세 부탁합니다', phraseId: 'p_menzei_onegai', correct: false, feedback: '면세는 앞서 요청했어요 — 지금은 봉투 여부를 답해요' },
       ],
     },
