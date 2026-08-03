@@ -12,6 +12,7 @@ import { Icon } from '../ui/Icon';
 import { GlassPanel, PrimaryAction } from './shell';
 import { speak, stopSpeaking } from '../tts';
 import { quickPracticeBackdrop } from './scene';
+import { Furigana } from './Furigana';
 
 export interface PreviewLine {
   ja: string;
@@ -205,7 +206,7 @@ export function SequencePreview({ title, subtitle, lines, onStart, onBack, count
                     </span>
                   ) : (
                     <span style={{ flex: 1, minWidth: 0 }}>
-                      <span style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{l.ja}</span>
+                      <Furigana kanji={l.ja} kana={l.kana} style={{ display: 'block', fontSize: 15, fontWeight: 700 }} />
                       <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 2 }}>{l.korean}</span>
                     </span>
                   )}

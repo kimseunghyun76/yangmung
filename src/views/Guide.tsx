@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Modal } from './Modal';
 import { Icon, type IconName } from '../ui/Icon';
+import { Furigana } from './Furigana';
 
 // ── 탭 구조 ──────────────────────────────────────────────────────────────────
 type TabId = 'system' | 'modes' | 'mission' | 'recovery' | 'tips';
@@ -173,8 +174,7 @@ function TabRecovery() {
             { ja: '英語で', kana: 'えいごで', ko: '영어로', out: 'FULL' },
           ].map(({ ja, kana, ko, out }) => (
             <div key={ja} style={{ padding: '10px 12px', borderRadius: 12, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)' }}>
-              <div lang="ja" style={{ fontSize: 18, fontWeight: 800 }}>{ja}</div>
-              <div style={{ fontSize: 11, color: 'var(--ink-faint)' }}>{kana}</div>
+              <Furigana kanji={ja} kana={kana} style={{ display: 'block', fontSize: 18, fontWeight: 800 }} />
               <div style={{ fontSize: 12.5, color: 'var(--ink-soft)', marginTop: 2 }}>{ko}</div>
               <span style={{ marginTop: 4, display: 'inline-block', fontSize: 10, fontWeight: 800, padding: '1px 6px', borderRadius: 99, background: out === 'FULL' ? 'var(--ok-soft)' : 'var(--warn-soft)', color: out === 'FULL' ? 'var(--ok)' : 'var(--warn)' }}>{out}</span>
             </div>

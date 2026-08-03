@@ -12,12 +12,13 @@ import { NavBar, type NavBarProps } from './NavBar';
 import { PageHead } from './ui';
 import { GlassPanel, PrimaryAction, hexA } from './shell';
 import { MascotBubble } from './mascot';
+import { Furigana } from './Furigana';
 
 const RECOVERY = [
-  { ja: 'もう一度お願いします', ko: '다시 말해 주세요' },
-  { ja: 'ゆっくりお願いします', ko: '천천히 말해 주세요' },
-  { ja: 'やさしい日本語で', ko: '쉬운 일본어로' },
-  { ja: '英語で大丈夫ですか', ko: '영어로 괜찮을까요' },
+  { ja: 'もう一度お願いします', kana: 'もういちどおねがいします', ko: '다시 말해 주세요' },
+  { ja: 'ゆっくりお願いします', kana: 'ゆっくりおねがいします', ko: '천천히 말해 주세요' },
+  { ja: 'やさしい日本語で', kana: 'やさしいにほんごで', ko: '쉬운 일본어로' },
+  { ja: '英語で大丈夫ですか', kana: 'えいごでだいじょうぶですか', ko: '영어로 괜찮을까요' },
 ];
 
 interface Props {
@@ -166,7 +167,7 @@ export function Map({ nav, allCards, progress, openMissions, missionsLocked, dev
         {RECOVERY.map((r) => (
           <button key={r.ja} className="ym-press" onClick={() => speak(r.ja)} disabled={!ttsSupported()}
             style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', gap: 10, padding: '8px 0', border: 'none', background: 'none', cursor: 'pointer', textAlign: 'left' }}>
-            <span style={{ color: 'var(--ink)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name="listen" size={15} style={{ color: 'var(--accent)' }} />{r.ja}</span>
+            <span style={{ color: 'var(--ink)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name="listen" size={15} style={{ color: 'var(--accent)' }} /><Furigana kanji={r.ja} kana={r.kana} /></span>
             <span style={{ color: 'var(--ink-faint)', fontSize: 13 }}>{r.ko}</span>
           </button>
         ))}

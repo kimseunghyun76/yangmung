@@ -6,6 +6,7 @@ import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
 import { PrimaryAction } from './shell';
+import { Furigana } from './Furigana';
 
 type Focus = 'all' | VerbFormKey;
 const FOCUS_TABS: { v: Focus; label: string }[] = [
@@ -127,7 +128,7 @@ function Browse() {
           <div key={v.id} style={{ padding: 14, borderRadius: 16, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 }}>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, minWidth: 0 }}>
-                <span lang="ja" style={{ fontSize: 20, fontWeight: 800 }}>{v.dict.ja}</span>
+                <Furigana kanji={v.dict.ja} kana={v.dict.kana} style={{ fontSize: 20, fontWeight: 800 }} />
                 <span style={{ fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>{v.ko}</span>
               </div>
               <span style={{ fontSize: 10.5, fontWeight: 800, color: 'var(--ink-faint)', border: '1px solid var(--glass-border)', borderRadius: 999, padding: '2px 7px', flex: '0 0 auto' }}>{GROUP_LABEL[v.group]}</span>
@@ -140,8 +141,7 @@ function Browse() {
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, width: '100%', padding: '9px 11px', borderRadius: 11, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)', cursor: 'pointer', textAlign: 'left' }}>
                     <span style={{ minWidth: 0 }}>
                       <span style={{ fontSize: 10.5, fontWeight: 800, color: 'var(--accent)' }} lang="ja">{VERB_FORM_INFO[k].label}</span>
-                      <span lang="ja" style={{ display: 'block', fontSize: 16, fontWeight: 700, marginTop: 1 }}>{f.ja}</span>
-                      <span style={{ display: 'block', fontSize: 11.5, color: 'var(--ink-faint)' }} lang="ja">{f.kana}</span>
+                      <Furigana kanji={f.ja} kana={f.kana} style={{ display: 'block', fontSize: 16, fontWeight: 700, marginTop: 1 }} />
                     </span>
                     <Icon name="listen" size={17} style={{ color: 'var(--accent)', flex: '0 0 auto' }} />
                   </button>
@@ -217,10 +217,9 @@ function Quiz({ progress, onAnswer, count, onRestart }: { progress?: ProgressMap
       <div style={{ padding: 18, borderRadius: 18, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', textAlign: 'center' }}>
         <span style={{ fontSize: 12, fontWeight: 800, color: 'var(--accent)' }} lang="ja">{info.label} <span style={{ color: 'var(--ink-faint)' }}>{info.sub}</span></span>
         <p style={{ margin: '8px 0 0' }}>
-          <span lang="ja" style={{ fontSize: 26, fontWeight: 800 }}>{q.verb.dict.ja}</span>
+          <Furigana kanji={q.verb.dict.ja} kana={q.verb.dict.kana} style={{ fontSize: 26, fontWeight: 800 }} />
           <span style={{ fontSize: 15, color: 'var(--ink-soft)', fontWeight: 700, marginLeft: 8 }}>{q.verb.ko}</span>
         </p>
-        <p style={{ margin: '4px 0 0', color: 'var(--ink-faint)', fontSize: 13 }} lang="ja">{q.verb.dict.kana}</p>
         <button className="ym-press" onClick={() => speak(q.verb.dict.kana)} disabled={!ttsSupported()}
           style={{ marginTop: 8, padding: '6px 14px', borderRadius: 999, border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--accent)', fontWeight: 700, fontSize: 13, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
           <Icon name="listen" size={15} /> 기본형 듣기
@@ -239,8 +238,7 @@ function Quiz({ progress, onAnswer, count, onRestart }: { progress?: ProgressMap
             <button key={c.ja} className="ym-press" disabled={reveal} onClick={() => choose(c)}
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, padding: '13px 14px', borderRadius: 14, border: `1px solid ${bd}`, background: bg, color: 'var(--ink)', cursor: reveal ? 'default' : 'pointer', textAlign: 'left' }}>
               <span style={{ minWidth: 0 }}>
-                <span lang="ja" style={{ display: 'block', fontSize: 17, fontWeight: 700 }}>{c.ja}</span>
-                <span lang="ja" style={{ display: 'block', fontSize: 12, color: 'var(--ink-faint)' }}>{c.kana}</span>
+                <Furigana kanji={c.ja} kana={c.kana} style={{ display: 'block', fontSize: 17, fontWeight: 700 }} />
               </span>
               {reveal && isAnswer && <Icon name="check" size={18} style={{ color: 'var(--ok)', flex: '0 0 auto' }} />}
             </button>
@@ -251,7 +249,7 @@ function Quiz({ progress, onAnswer, count, onRestart }: { progress?: ProgressMap
       {reveal && (
         <div className="ym-reveal" style={{ marginTop: 12 }}>
           <p style={{ margin: 0, padding: 12, borderRadius: 12, fontWeight: 800, textAlign: 'center', background: picked === q.answer.ja ? 'var(--ok-soft)' : 'var(--warn-soft)', color: picked === q.answer.ja ? 'var(--ok)' : 'var(--warn)' }}>
-            {picked === q.answer.ja ? '정답!' : '아쉬워요'} <span lang="ja" style={{ fontWeight: 900 }}>{q.answer.ja}</span> <span style={{ fontWeight: 600 }}>({q.verb.ko} — {info.sub})</span>
+            {picked === q.answer.ja ? '정답!' : '아쉬워요'} <Furigana kanji={q.answer.ja} kana={q.answer.kana} style={{ fontWeight: 900 }} /> <span style={{ fontWeight: 600 }}>({q.verb.ko} — {info.sub})</span>
           </p>
           <PrimaryAction onClick={next} style={{ marginTop: 10 }}>다음 문제</PrimaryAction>
         </div>

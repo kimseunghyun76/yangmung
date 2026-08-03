@@ -14,6 +14,7 @@ import { speakSequence, ttsSupported } from '../tts';
 import { loadSettings, sceneSentenceLevelForMode } from '../learn/settings';
 import { Modal } from './Modal';
 import { sceneVisualByMission } from './scene';
+import { Furigana } from './Furigana';
 
 const SCENES = CONTENT.missions.filter((m) => m.id !== 'C0');
 const MAX_GACHA_DRAWS = 30;
@@ -586,7 +587,7 @@ function CollectionCardDetailModal({ sceneId, rarity, count, onClose }: { sceneI
         </div>
         {dialogue.lines.map((line, i) => (
           <div key={i} style={{ padding: i === 0 ? '0 0 10px' : '10px 0 0', borderTop: i === 0 ? 'none' : '1px solid var(--glass-border)' }}>
-            <p lang="ja" style={{ margin: 0, color: 'var(--ink)', fontSize: 18, lineHeight: 1.38, fontWeight: 900 }}>{line.ja}</p>
+            <Furigana kanji={line.ja} kana={line.kana} style={{ display: 'block', color: 'var(--ink)', fontSize: 18, lineHeight: 1.38, fontWeight: 900 }} />
             <p style={{ margin: '4px 0 0', color: 'var(--ink-soft)', fontSize: 13, lineHeight: 1.45, fontWeight: 700 }}>{line.ko}</p>
           </div>
         ))}
@@ -595,48 +596,48 @@ function CollectionCardDetailModal({ sceneId, rarity, count, onClose }: { sceneI
   );
 }
 
-function giftDialogue(place: string, itemTitle: string, rarity: Rarity): { title: string; lines: { ja: string; ko: string }[] } {
+function giftDialogue(place: string, itemTitle: string, rarity: Rarity): { title: string; lines: { ja: string; kana: string; ko: string }[] } {
   const koItem = `${place}의 ${itemTitle}`;
-  const map: Record<Rarity, { title: string; lines: { ja: string; ko: string }[] }> = {
+  const map: Record<Rarity, { title: string; lines: { ja: string; kana: string; ko: string }[] }> = {
     basic: {
       title: '간단한 한마디',
       lines: [
-        { ja: 'これ、ください', ko: `${koItem}, 이거 주세요.` },
+        { ja: 'これ、ください', kana: 'これ、ください', ko: `${koItem}, 이거 주세요.` },
       ],
     },
     bronze: {
       title: '조금 더 자연스럽게',
       lines: [
-        { ja: 'こちらを一つ、いただけますか', ko: `${koItem} 하나 받을 수 있을까요?` },
-        { ja: '袋は小さいもので大丈夫です', ko: '봉투는 작은 것으로 괜찮아요.' },
+        { ja: 'こちらを一つ、いただけますか', kana: 'こちらをひとつ、いただけますか', ko: `${koItem} 하나 받을 수 있을까요?` },
+        { ja: '袋は小さいもので大丈夫です', kana: 'ふくろはちいさいものでだいじょうぶです', ko: '봉투는 작은 것으로 괜찮아요.' },
       ],
     },
     silver: {
       title: '상황을 덧붙이는 대화',
       lines: [
-        { ja: 'おすすめの組み合わせで用意できますか', ko: '추천 조합으로 준비할 수 있나요?' },
-        { ja: '初めてなので、食べ方も説明してもらえますか', ko: '처음이라 먹는 방법도 설명받을 수 있을까요?' },
+        { ja: 'おすすめの組み合わせで用意できますか', kana: 'おすすめのくみあわせでよういできますか', ko: '추천 조합으로 준비할 수 있나요?' },
+        { ja: '初めてなので、食べ方も説明してもらえますか', kana: 'はじめてなので、たべかたもせつめいしてもらえますか', ko: '처음이라 먹는 방법도 설명받을 수 있을까요?' },
       ],
     },
     gold: {
       title: '정중하고 구체적인 요청',
       lines: [
-        { ja: '旅の記念にしたいので、特別なものを選びたいです', ko: '여행 기념으로 삼고 싶어서 특별한 것을 고르고 싶어요.' },
-        { ja: '持ち帰りやすい形で包めますでしょうか', ko: '가지고 가기 편한 형태로 포장 가능할까요?' },
+        { ja: '旅の記念にしたいので、特別なものを選びたいです', kana: 'たびのきねんにしたいので、とくべつなものをえらびたいです', ko: '여행 기념으로 삼고 싶어서 특별한 것을 고르고 싶어요.' },
+        { ja: '持ち帰りやすい形で包めますでしょうか', kana: 'もちかえりやすいかたちでつつめますでしょうか', ko: '가지고 가기 편한 형태로 포장 가능할까요?' },
       ],
     },
     diamond: {
       title: '최종 선물을 암시하는 긴 대화',
       lines: [
-        { ja: '大切な人への贈り物として、今日いちばん印象に残る品を探しています', ko: '소중한 사람에게 줄 선물로 오늘 가장 기억에 남을 물건을 찾고 있어요.' },
-        { ja: '可能でしたら、限定仕様や背景の物語も添えてくださいますか', ko: '가능하다면 한정 사양이나 배경 이야기도 함께 받을 수 있을까요?' },
+        { ja: '大切な人への贈り物として、今日いちばん印象に残る品を探しています', kana: 'たいせつなひとへのおくりものとして、きょういちばんいんしょうにのこるしなをさがしています', ko: '소중한 사람에게 줄 선물로 오늘 가장 기억에 남을 물건을 찾고 있어요.' },
+        { ja: '可能でしたら、限定仕様や背景の物語も添えてくださいますか', kana: 'かのうでしたら、げんていしようやはいけいのものがたりもそえてくださいますか', ko: '가능하다면 한정 사양이나 배경 이야기도 함께 받을 수 있을까요?' },
       ],
     },
     xur: {
       title: '초월 선물의 약속',
       lines: [
-        { ja: 'この特別な招待状で、次の旅の約束を形にしたいです', ko: '이 특별한 초대장으로 다음 여행의 약속을 구체적으로 만들고 싶어요.' },
-        { ja: '二人だけの記念になるように、いちばん美しい形で残していただけますか', ko: '둘만의 기념이 되도록 가장 아름다운 형태로 남겨 주실 수 있을까요?' },
+        { ja: 'この特別な招待状で、次の旅の約束を形にしたいです', kana: 'このとくべつなしょうたいじょうで、つぎのたびのやくそくをかたちにしたいです', ko: '이 특별한 초대장으로 다음 여행의 약속을 구체적으로 만들고 싶어요.' },
+        { ja: '二人だけの記念になるように、いちばん美しい形で残していただけますか', kana: 'ふたりだけのきねんになるように、いちばんうつくしいかたちでのこしていただけますか', ko: '둘만의 기념이 되도록 가장 아름다운 형태로 남겨 주실 수 있을까요?' },
       ],
     },
   };

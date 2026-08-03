@@ -2,20 +2,22 @@
 // 학습 화면과 달리 설명·버튼 없이 "보여줄 문장 하나"만 최대한 크게 띄우는 것이 목적.
 import { createPortal } from 'react-dom';
 import { Icon } from '../ui/Icon';
+import { Furigana } from './Furigana';
 
 interface OverlayProps {
-  ja: string;
+  kanji?: string;
+  kana: string;
   sub?: string;
   onClose: () => void;
 }
 
-export function BigTextOverlay({ ja, sub, onClose }: OverlayProps) {
+export function BigTextOverlay({ kanji, kana, sub, onClose }: OverlayProps) {
   if (typeof document === 'undefined') return null;
   return createPortal(
     <div
       role="dialog"
       aria-modal="true"
-      aria-label={ja}
+      aria-label={kanji ?? kana}
       onClick={onClose}
       style={{
         position: 'fixed', inset: 0, zIndex: 200, background: '#000',
@@ -33,9 +35,7 @@ export function BigTextOverlay({ ja, sub, onClose }: OverlayProps) {
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
         }}
       >✕</button>
-      <p lang="ja" style={{ margin: 0, fontSize: 'clamp(32px, 12vw, 64px)', fontWeight: 900, color: '#fff', textAlign: 'center', lineHeight: 1.3, overflowWrap: 'anywhere' }}>
-        {ja}
-      </p>
+      <Furigana kanji={kanji} kana={kana} style={{ display: 'block', fontSize: 'clamp(32px, 12vw, 64px)', fontWeight: 900, color: '#fff', textAlign: 'center', lineHeight: 1.3, overflowWrap: 'anywhere' }} />
       {sub && <p style={{ margin: '18px 0 0', fontSize: 15, color: 'rgba(255,255,255,.5)', textAlign: 'center' }}>{sub}</p>}
       <p style={{ margin: '28px 0 0', fontSize: 12, color: 'rgba(255,255,255,.35)' }}>화면 아무 곳이나 탭하면 닫혀요</p>
     </div>,

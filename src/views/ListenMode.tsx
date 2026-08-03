@@ -287,7 +287,7 @@ export function ListenMode({ nav, allCards, progress, onBack }: Props) {
           </GlassPanel>
 
           {zoom && current && (
-            <BigTextOverlay ja={current.kanji ?? current.displayKana ?? current.kana} sub={current.korean} onClose={() => setZoom(false)} />
+            <BigTextOverlay kanji={current.kanji} kana={current.displayKana ?? current.kana} sub={current.korean} onClose={() => setZoom(false)} />
           )}
         </>
       )}

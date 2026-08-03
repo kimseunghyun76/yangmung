@@ -10,6 +10,7 @@ import { PrimaryAction } from './shell';
 import { GachaBox } from './Gacha';
 import { boxGrade } from '../learn/collection';
 import { loadFlashBest, saveFlashRun, type FlashBest } from '../learn/flashScores';
+import { Furigana } from './Furigana';
 
 const vibrate = (p: number | number[]) => { try { navigator.vibrate?.(p); } catch { /* 미지원 무시 */ } };
 // 콤보 단계 칭호 — 3 HOT · 6 FEVER · 10 PERFECT
@@ -230,7 +231,7 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
   const correctRef = useRef(0);      // 맞힌 개수(정답률·보상 판정용)
   const bestComboRef = useRef(0);
   const reactSumRef = useRef(0);     // 정답까지 걸린 시간 합(평균 반응속도용)
-  const missedRef = useRef<{ ja: string; ko: string }[]>([]); // 틀린 표현(다시보기용)
+  const missedRef = useRef<{ ja: string; kana: string; ko: string }[]>([]); // 틀린 표현(다시보기용)
   const shownRef = useRef(Date.now());
   const [floatPts, setFloatPts] = useState<{ n: number; key: number } | null>(null); // 정답 시 +점수 플로팅
   const [screenFx, setScreenFx] = useState<{ kind: 'perfect' | 'good' | 'miss'; label: string; color: string; key: number } | null>(null);
@@ -314,8 +315,9 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
       vibrate([20, 40, 20]);
       const target = card.choices.find((c) => c.correct && !c.recovery);
       const ja = card.bannerJa || target?.ja || card.banner;
+      const kana = target?.phrase?.kana ?? ja;
       const ko = target?.phrase?.korean || target?.label || '';
-      if (ja && !missedRef.current.some((m) => m.ja === ja)) missedRef.current.push({ ja, ko });
+      if (ja && !missedRef.current.some((m) => m.ja === ja)) missedRef.current.push({ ja, kana, ko });
     }
     advRef.current = window.setTimeout(() => {
       if (idx + 1 >= cards.length) finishGame(); else setIdx((i) => i + 1);
@@ -365,7 +367,7 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
                 <button key={i} className="ym-press" onClick={() => speak(m.ja)} disabled={!ttsSupported()}
                   style={{ display: 'flex', alignItems: 'center', gap: 10, textAlign: 'left', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', borderRadius: 12, padding: '9px 12px', cursor: 'pointer', color: 'var(--ink)' }}>
                   <Icon name="listen" size={15} style={{ color: 'var(--accent)', flex: '0 0 auto' }} />
-                  <span lang="ja" style={{ fontSize: 16, fontWeight: 800 }}>{m.ja}</span>
+                  <Furigana kanji={m.ja} kana={m.kana} style={{ fontSize: 16, fontWeight: 800 }} />
                   {m.ko && <span style={{ fontSize: 12.5, color: 'var(--ink-soft)', marginLeft: 'auto' }}>{m.ko}</span>}
                 </button>
               ))}

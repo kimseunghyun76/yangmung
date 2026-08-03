@@ -12,6 +12,7 @@ import { quickPracticeBackdrop, sceneVisualByMission } from './scene';
 import { PrimaryAction, GlassPanel, hexA } from './shell';
 import { MascotFace, MascotLine } from './mascot';
 import { speak, ttsSupported } from '../tts';
+import { Furigana } from './Furigana';
 
 interface IntroProps {
   cards: Card[];
@@ -27,11 +28,11 @@ function missionIdOf(card: Card): string | undefined {
   return card.reviewTarget?.type === 'mission' ? String(card.reviewTarget.id) : undefined;
 }
 
-function cardBrief(card: Card): { ja?: string; ko: string } | undefined {
-  if (card.kind === 'introduce') return { ja: card.ja, ko: card.korean };
+function cardBrief(card: Card): { ja?: string; kana?: string; ko: string } | undefined {
+  if (card.kind === 'introduce') return { ja: card.ja, kana: card.kana, ko: card.korean };
   if (card.kind === 'quiz') return { ja: card.promptPhrase?.kana ?? card.bannerJa, ko: card.promptPhrase?.korean ?? card.banner };
   if (card.kind === 'speak') return { ja: card.kana, ko: card.korean };
-  if (card.kind === 'dictation') return { ja: card.ja, ko: card.korean };
+  if (card.kind === 'dictation') return { ja: card.ja, kana: card.answer.join(''), ko: card.korean };
   if (card.kind === 'order') return { ko: card.items.slice(0, 3).map((x) => x.label).join(' → ') };
   return undefined;
 }
@@ -39,13 +40,13 @@ function cardBrief(card: Card): { ja?: string; ko: string } | undefined {
 // 이번 세션에 실제로 나올 내용 미리보기 — 새 표현(introduce)을 먼저, 그다음 나머지 카드 순서로
 // 중복 없이 몇 개만 뽑는다. 테마(가나·미션·어휘·발음 등)와 무관하게 항상 실제 카드에서 뽑으므로
 // "배경 상황을 떠올리세요" 같은 막연한 문구 대신 무엇을 배울지 구체적으로 보여준다.
-function contentSummary(cards: Card[], limit = 6): { ja?: string; ko: string }[] {
+function contentSummary(cards: Card[], limit = 6): { ja?: string; kana?: string; ko: string }[] {
   const ordered = [
     ...cards.filter((c) => c.kind === 'introduce'),
     ...cards.filter((c) => c.kind !== 'introduce' && c.kind !== 'tip' && c.kind !== 'discover'),
   ];
   const seen = new Set<string>();
-  const items: { ja?: string; ko: string }[] = [];
+  const items: { ja?: string; kana?: string; ko: string }[] = [];
   for (const c of ordered) {
     const brief = cardBrief(c);
     if (!brief?.ko) continue;
@@ -254,7 +255,7 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
                       border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)',
                     }}>
                     <span style={{ flex: 1, minWidth: 0 }}>
-                      {item.ja && <span lang="ja" style={{ display: 'block', fontSize: 15, fontWeight: 700 }}>{item.ja}</span>}
+                      {item.ja && <Furigana kanji={item.kana ? item.ja : undefined} kana={item.kana ?? item.ja} style={{ display: 'block', fontSize: 15, fontWeight: 700 }} />}
                       <span style={{ display: 'block', fontSize: 12.5, color: 'var(--ink-soft)', marginTop: item.ja ? 2 : 0 }}>{item.ko}</span>
                     </span>
                     {item.ja && <Icon name="listen" size={15} style={{ flex: '0 0 15px', color: 'var(--ink-faint)' }} />}

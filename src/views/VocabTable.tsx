@@ -8,6 +8,7 @@ import { WRAP } from '../ui/styles';
 import { NavBar, type NavBarProps } from './NavBar';
 import { GlassPanel, PrimaryAction } from './shell';
 import { Icon } from '../ui/Icon';
+import { Furigana } from './Furigana';
 
 interface Props {
   nav: NavBarProps;
@@ -82,8 +83,7 @@ export function VocabTable({ nav, progress, onQuiz, onBack }: Props) {
                     <button key={it.id} className="ym-press" onClick={() => speak(speakable(it.kana))} disabled={!ttsSupported()}
                       title={st === 'mastered' ? '익힘' : st === 'seen' ? '본 적 있음' : '아직'}
                       style={{ padding: '9px 5px', borderRadius: 12, cursor: 'pointer', textAlign: 'center', border: `1px solid ${border}`, background: bg, color: 'var(--ink)', minWidth: 0 }}>
-                      <div lang="ja" style={{ fontSize: 19, fontWeight: 800, lineHeight: 1.15, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{it.ja}</div>
-                      <div lang="ja" style={{ fontSize: 10.5, color: 'var(--ink-faint)', marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{it.kana}</div>
+                      <Furigana kanji={it.ja} kana={it.kana} style={{ display: 'block', fontSize: 19, fontWeight: 800, lineHeight: 1.15, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} />
                       <div style={{ fontSize: 11, color: 'var(--ink-soft)', fontWeight: 700, marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{it.korean}</div>
                     </button>
                   );

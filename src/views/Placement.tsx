@@ -8,6 +8,7 @@ import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
 import { Icon } from '../ui/Icon';
 import { PrimaryAction } from './shell';
+import { Furigana } from './Furigana';
 
 interface Props {
   cards: Card[];
@@ -356,7 +357,8 @@ function AnswerExplanation({ card, picked, onNext }: { card: Extract<Card, { kin
   const pickedChoice = picked >= 0 ? card.choices[picked] : undefined;
   const isCorrect = !!pickedChoice && pickedChoice.correct && !pickedChoice.recovery;
   const correct = card.choices.find((x) => x.correct && !x.recovery) ?? card.choices.find((x) => x.correct);
-  const ja = correct?.phrase ? (correct.phrase.kanji ?? correct.phrase.kana) : correct?.ja;
+  const kanji = correct?.phrase?.kanji;
+  const kana = correct?.phrase ? correct.phrase.kana : correct?.ja;
   const korean = correct?.phrase?.korean ?? correct?.label;
   const heading = isCorrect ? '정답이에요' : picked === -1 ? '패스했어요 — 정답은 이거예요' : '아쉬워요 — 정답은 이거예요';
   const tone = isCorrect ? 'var(--ok)' : 'var(--accent)';
@@ -367,9 +369,9 @@ function AnswerExplanation({ card, picked, onNext }: { card: Extract<Card, { kin
         <p style={{ margin: 0, color: tone, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 6 }}>
           {isCorrect && <Icon name="check" size={18} />} {heading}
         </p>
-        {ja && (
+        {kana && (
           <p style={{ margin: '8px 0 0', fontSize: 18 }}>
-            <strong lang="ja">{ja}</strong>
+            <Furigana kanji={kanji} kana={kana} style={{ fontWeight: 700 }} />
             {korean && <span style={{ color: 'var(--ink-soft)', fontSize: 15 }}> — {korean}</span>}
           </p>
         )}

@@ -12,6 +12,7 @@ import { PageHead } from './ui';
 import { GlassPanel, hexA } from './shell';
 import { sceneVisualByMission } from './scene';
 import { BigTextOverlay, ZoomButton } from './BigText';
+import { Furigana } from './Furigana';
 
 interface Props {
   nav: NavBarProps;
@@ -47,7 +48,7 @@ const CONTACTS: ContactRow[] = [
 ];
 
 export function Emergency({ nav, onPracticeScene, onBack }: Props) {
-  const [zoom, setZoom] = useState<{ ja: string; ko: string } | null>(null);
+  const [zoom, setZoom] = useState<{ kanji?: string; kana: string; ko: string } | null>(null);
   const showPhrases = SHOW_PHRASE_IDS
     .map((id) => CONTENT.phrases.find((p) => p.id === id))
     .filter((p): p is NonNullable<typeof p> => !!p);
@@ -64,11 +65,11 @@ export function Emergency({ nav, onPracticeScene, onBack }: Props) {
         {showPhrases.map((p) => (
           <div key={p.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, padding: '9px 4px', borderTop: '1px solid var(--glass-border)' }}>
             <div style={{ minWidth: 0 }}>
-              <p lang="ja" style={{ margin: 0, fontSize: 15, fontWeight: 700, color: 'var(--ink)' }}>{p.kanji ?? p.displayKana ?? p.kana}</p>
+              <Furigana kanji={p.kanji} kana={p.displayKana ?? p.kana} style={{ display: 'block', fontSize: 15, fontWeight: 700, color: 'var(--ink)' }} />
               <p style={{ margin: '2px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>{p.korean}</p>
             </div>
             <div style={{ display: 'flex', gap: 6, flex: '0 0 auto' }}>
-              <ZoomButton size={38} onClick={() => setZoom({ ja: p.kanji ?? p.displayKana ?? p.kana, ko: p.korean })} />
+              <ZoomButton size={38} onClick={() => setZoom({ kanji: p.kanji, kana: p.displayKana ?? p.kana, ko: p.korean })} />
               <button className="ym-press" onClick={() => speak(p.displayKana ?? p.kana)} disabled={!ttsSupported()}
                 style={{ width: 38, height: 38, flex: '0 0 38px', borderRadius: 10, border: '1px solid var(--glass-border)', background: 'var(--accent-soft)', color: 'var(--accent)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Icon name="listen" size={16} />
@@ -135,7 +136,7 @@ export function Emergency({ nav, onPracticeScene, onBack }: Props) {
         border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', fontWeight: 750, fontSize: 14,
       }}>← 홈으로</button>
 
-      {zoom && <BigTextOverlay ja={zoom.ja} sub={zoom.ko} onClose={() => setZoom(null)} />}
+      {zoom && <BigTextOverlay kanji={zoom.kanji} kana={zoom.kana} sub={zoom.ko} onClose={() => setZoom(null)} />}
     </main>
   );
 }
