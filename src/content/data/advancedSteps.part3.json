@@ -304,6 +304,12 @@
           "correct": true
         },
         {
+          "text": "감사합니다 (정중)",
+          "phraseId": "p_arigatou_gozaimasu",
+          "correct": true,
+          "feedback": "계산 안내에 짧게 감사로 답해도 자연스러워요"
+        },
+        {
           "text": "맥주 한 잔 더 주세요",
           "phraseId": "p_biiru_mou_ippai",
           "correct": false,
@@ -342,6 +348,12 @@
           "phraseId": "p_new_tsume_dorekurai_kakaru",
           "correct": true,
           "feedback": "「お直(なお)し、どれくらいかかりますか」— 수선 제안을 받아들일지 결정하기 전에 걸리는 시간부터 확인하는 자연스러운 반응이에요"
+        },
+        {
+          "text": "그걸로 부탁드려요",
+          "phraseId": "p_sorede_onegai",
+          "correct": true,
+          "feedback": "수선 제안을 시간 확인 없이 바로 수락해도 자연스러워요"
         }
       ]
     },
@@ -453,6 +465,12 @@
           "phraseId": "p_new_omelette_cheese_ire",
           "correct": true,
           "feedback": "「チーズを入(い)れてください」— 오믈렛처럼 즉석 조리 요리는 원하는 재료를 직접 말하면 셰프가 그대로 반영해줘요. 「入れる」는 재료를 넣다는 뜻의 기본 동사예요"
+        },
+        {
+          "text": "괜찮아요",
+          "phraseId": "p_daijoubu",
+          "correct": true,
+          "feedback": "「大丈夫(だいじょうぶ)」— 치즈 없이 기본 오믈렛으로 괜찮다면 짧게 답해요"
         }
       ]
     },
@@ -466,6 +484,12 @@
           "text": "물 주세요",
           "phraseId": "p_mizu_kudasai",
           "correct": true
+        },
+        {
+          "text": "괜찮아요",
+          "phraseId": "p_daijoubu",
+          "correct": true,
+          "feedback": "직접 가져오겠다면 짧게 사양해도 돼요"
         },
         {
           "text": "커피는 어디예요?",
@@ -500,6 +524,12 @@
           "phraseId": "p_new_supu_mo_onegai",
           "correct": true,
           "feedback": "「大盛りでお願いします。スープもお願いします」— 점원의 두 가지 제안(곱빼기 무료, 수프 추가)에 모두 예스로 답하는 자연스러운 응답이에요"
+        },
+        {
+          "text": "보통으로 부탁합니다",
+          "phraseId": "p_futsuu_de",
+          "correct": true,
+          "feedback": "곱빼기는 사양하고 보통 양으로 답해도 자연스러워요"
         }
       ]
     },
@@ -513,6 +543,12 @@
           "text": "치즈를 추가해 주세요",
           "phraseId": "p_chiizu_tsuika",
           "correct": true
+        },
+        {
+          "text": "괜찮아요",
+          "phraseId": "p_daijoubu",
+          "correct": true,
+          "feedback": "치즈 없이 괜찮다면 짧게 사양해도 돼요"
         },
         {
           "text": "마늘 빼고 부탁합니다",

@@ -939,6 +939,7 @@ export const c28: Mission = {
       promptPhraseId: 'p_settei_o_tetsudaimasu',
       choices: [
         { text: '부탁드립니다', phraseId: 'p_onegai_shimasu', correct: true, feedback: '「お願(ねが)いします」— 도움을 제안받았을 때 이 한마디로 흔쾌히 부탁한다는 뜻을 전할 수 있어요' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '도움 제안에 짧게 감사로 답해도 자연스러워요' },
         { text: '이거 얼마예요?', phraseId: 'p_kore_ikura', correct: false, feedback: '가격은 이미 확인했어요 — 지금은 설정 도움을 받아들이는 응답이에요' },
       ],
     },
@@ -980,6 +981,7 @@ export const c29: Mission = {
       promptPhraseId: 'p_senzai_wa_jidou_desu',
       choices: [
         { text: '그렇게 할게요', phraseId: 'p_sou_shimasu', correct: true, feedback: '「そうします」— 세제가 자동이라는 안내를 따르겠다는 응답' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '세제 안내에 짧게 감사로 답해도 자연스러워요' },
         { text: '스이카로요', phraseId: 'p_suica_de', correct: false, feedback: '세제 안내 중에는 결제 수단보다 이해 확인이 먼저예요' },
       ],
     },
@@ -989,6 +991,7 @@ export const c29: Mission = {
       promptPhraseId: 'p_kanryou_made_sanjuppun_desu',
       choices: [
         { text: '기억해 둘게요', phraseId: 'p_oboete_okimasu', correct: true, feedback: '「覚(おぼ)えておきます」— 세탁 완료 시간을 기억해 두는 응답' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '완료 시간 안내에 짧게 감사로 답해도 자연스러워요' },
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: false, feedback: '사용법은 이미 익혔어요 — 지금은 완료 시간을 확인하면 돼요' },
       ],
     },

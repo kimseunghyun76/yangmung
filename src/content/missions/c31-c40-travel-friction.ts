@@ -46,6 +46,7 @@ export const c31: Mission = {
       recapPromptKo: '한 접시 더 어떠세요?',
       choices: [
         { text: '연어 주세요', phraseId: 'p_saamon_kudasai', correct: true, feedback: '「サーモンください」— 마음에 든 재료는 한 접시 더. 회전 레일보다 주문이 더 신선해요' },
+        { text: '참치 주세요', phraseId: 'p_maguro_kudasai', correct: true, feedback: '「マグロください」— 한 접시 더 원하는 재료로 다시 주문해도 돼요' },
         { text: '두 명이요', phraseId: 'p_futari_desu', correct: false, feedback: '인원수는 이미 말했어요 — 지금은 한 접시 더 고를지 답해요' },
       ],
     },
@@ -57,6 +58,7 @@ export const c31: Mission = {
         { text: '맥주 한 잔 더 주세요', phraseId: 'p_biiru_mou_ippai', correct: false, feedback: '접시를 세며 계산하는 중이에요. 추가 주문은 계산 전에 해요' },
         { text: '참치 주세요', phraseId: 'p_maguro_kudasai', correct: false, feedback: '접시를 세어 계산하는 중이에요 — 추가 주문은 계산 전에 해요' },
         { text: '접시를 세어 주세요', phraseId: 'p_new_sara_kazoete', correct: true, feedback: '「皿を数えてください」— 회전초밥 특유의 접시 계산 방식에 맞춰, 세어 달라고 구체적으로 요청하는 자연스러운 표현이에요' },
+        { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: true, feedback: '「カードは使えますか」— 접시를 세는 것과 함께 결제 수단을 물어봐도 자연스러워요' },
       ],
     },
   ],
@@ -88,6 +90,7 @@ export const c32: Mission = {
       promptPhraseId: 'p_shichakushitsu_kochira',
       choices: [
         { text: '가 볼게요', phraseId: 'p_itte_mimasu', correct: true, feedback: '「行(い)ってみます」— 피팅룸 위치를 안내받고 가 보겠다는 응답' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '피팅룸 위치 안내에 짧게 감사로 답해도 자연스러워요' },
         { text: '이걸로 할게요', phraseId: 'p_kore_kudasai_shop', correct: false, feedback: '아직 입어보기 전이에요. 피팅룸 안내에는 확인 응답이 자연스러워요' },
         { text: '입어 봐도 돼요?', phraseId: 'p_shichaku', correct: false, feedback: '피팅룸 안내를 받는 중이에요 — 입어봐도 되는지는 이미 물었어요' },
       ],
@@ -153,6 +156,7 @@ export const c33: Mission = {
       promptPhraseId: 'p_kasa_wa_front_desu',
       choices: [
         { text: '찾아볼게요', phraseId: 'p_sagashite_mimasu', correct: true, feedback: '「探(さが)してみます」— 우산 둔 곳을 직접 찾아보겠다는 표현' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '위치 안내에 짧게 감사로 답해도 자연스러워요' },
         { text: '우산을 반납하겠습니다', phraseId: 'p_kasa_wo_kaeshimasu', correct: false, feedback: '지금은 빌리는 중이에요. 반납 표현은 돌아온 뒤에 써요' },
         { text: '우산을 빌릴 수 있나요?', phraseId: 'p_kasa_kariremasu_ka', correct: false, feedback: '방금 빌렸어요 — 지금은 위치 안내를 듣는 중이에요' },
       ],
@@ -174,6 +178,7 @@ export const c33: Mission = {
       recapPromptKo: '분실하시면 변상이 됩니다',
       choices: [
         { text: '조심할게요', phraseId: 'p_ki_o_tsukemasu', correct: true, feedback: '「気(き)をつけます」— 분실 시 변상 안내를 듣고 "조심하겠습니다"' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '변상 안내에 짧게 감사로 답해도 자연스러워요' },
         { text: '우산을 빌릴 수 있나요?', phraseId: 'p_kasa_kariremasu_ka', correct: false, feedback: '우산은 이미 빌렸어요 — 지금은 변상 안내에 대한 응답이에요' },
       ],
     },
@@ -427,6 +432,7 @@ export const c37: Mission = {
       recapPromptKo: '접시는 자유롭게 더 가져가셔도 돼요',
       choices: [
         { text: '조금 더 받을 수 있나요?', phraseId: 'p_mou_sukoshi_moraemasu_ka', correct: true, feedback: '「もう少(すこ)しもらえますか」— 즉석 조리 코너는 직원에게 부탁하면 더 줘요' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '리필이 자유롭다는 안내에 짧게 감사로 답해도 자연스러워요' },
         { text: '음식이 부족합니다', phraseId: 'p_ryouri_sukunai', correct: false, feedback: '부족하다는 건 이미 말했어요 — 지금은 리필 안내에 답해요' },
       ],
     },
@@ -437,6 +443,7 @@ export const c37: Mission = {
       recapPromptKo: '잠시만 기다려 주세요',
       choices: [
         { text: '이제 충분해요', phraseId: 'p_mou_juubun', correct: true, feedback: '「もう十分(じゅうぶん)です」— 충분히 받았으면 깔끔하게 마무리' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '기다려 달라는 안내에 짧게 감사로 답해도 자연스러워요' },
         { text: '조금 더 받을 수 있나요?', phraseId: 'p_mou_sukoshi_moraemasu_ka', correct: false, feedback: '추가 요청은 이미 했어요 — 기다리겠다는 인사로 마무리해요' },
       ],
     },
@@ -554,6 +561,7 @@ export const c39: Mission = {
       recapPromptKo: '음료는 어떠세요?',
       choices: [
         { text: '물 주세요', phraseId: 'p_mizu_kudasai', correct: true, feedback: '「お水(みず)ください」— 파스타집 물은 대부분 무료. 탄산수는 유료인 경우가 많아요' },
+        { text: '괜찮아요', phraseId: 'p_daijoubu', correct: true, feedback: '「大丈夫(だいじょうぶ)」— 음료가 필요 없다면 짧게 사양해도 돼요' },
         { text: '알덴테로 부탁합니다', phraseId: 'p_arudente_de', correct: false, feedback: '면 익힘은 이미 정했어요 — 지금은 음료를 답해요' },
       ],
     },
@@ -564,6 +572,7 @@ export const c39: Mission = {
       recapPromptKo: '다른 요청 있으세요?',
       choices: [
         { text: '물 주세요', phraseId: 'p_mizu_kudasai', correct: true, feedback: '「お水ください」— 파스타집에서도 물은 대부분 무료. お水(물)와 スパークリングウォーター(탄산수)를 구분해서 요청해요' },
+        { text: '이게 다예요', phraseId: 'p_ijou_desu', correct: true, feedback: '「以上(いじょう)です」— 다른 요청 없이 주문을 마무리할 때' },
         { text: '치즈를 추가해 주세요', phraseId: 'p_chiizu_tsuika', correct: false, feedback: '주문을 마무리하는 단계예요 — 추가 옵션은 앞서 골랐어요' },
       ],
     },
