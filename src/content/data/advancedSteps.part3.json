@@ -147,6 +147,12 @@
           "correct": true
         },
         {
+          "text": "감사합니다 (정중)",
+          "phraseId": "p_arigatou_gozaimasu",
+          "correct": true,
+          "feedback": "마무리 안내를 들은 뒤 짧게 감사로 답해도 자연스러워요"
+        },
+        {
           "text": "사용법 알려 주세요",
           "phraseId": "p_tsukaikata",
           "correct": false,

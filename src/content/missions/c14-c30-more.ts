@@ -429,6 +429,7 @@ export const c20: Mission = {
       promptPhraseId: 'p_taoru_wa_irimasu_ka',
       choices: [
         { text: '아니요, 필요 없어요', phraseId: 'p_iie_irimasen', correct: true, feedback: '자신의 수건을 갖고 있을 때 — 「いいえ、いりません」으로 간단하게 사양해요' },
+        { text: '부탁드립니다', phraseId: 'p_onegai_shimasu', correct: true, feedback: '수건이 필요하면 이 한마디로 짧게 요청해도 충분해요' },
         { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: false, feedback: '결제는 이미 끝났어요 — 지금은 수건이 필요한지 답해요' },
       ],
     },
@@ -438,6 +439,7 @@ export const c20: Mission = {
       promptPhraseId: 'p_karada_o_aratte_kudasai',
       choices: [
         { text: '기억해 둘게요', phraseId: 'p_oboete_okimasu', correct: true, feedback: '「覚(おぼ)えておきます」— 이용 규칙을 잊지 않게 기억해 두는 응답' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '규칙을 안내해 준 데 대해 짧게 감사로 답해도 자연스러워요' },
         { text: '영수증 주세요', phraseId: 'p_ryoushuusho', correct: false, feedback: '규칙 안내를 듣는 중이라 먼저 이해/확인을 답하는 게 좋아요' },
       ],
     },
@@ -500,6 +502,7 @@ export const c21: Mission = {
       promptPhraseId: 'p_ofuton',
       choices: [
         { text: '그걸로 부탁드려요', phraseId: 'p_sorede_onegai', correct: true, feedback: '「それでお願(ねが)いします」— 나중에 깔아 준다는 제안을 수락' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '제안을 그대로 받아들이며 짧게 감사로 답해도 자연스러워요' },
         { text: '와이파이는 있나요?', phraseId: 'p_wifi_arimasu_ka', correct: false, feedback: '와이파이는 이미 확인했어요 — 지금은 이부자리 안내에 답할 차례예요' },
       ],
     },
@@ -542,6 +545,7 @@ export const c22: Mission = {
       promptPhraseId: 'p_seiriken',
       choices: [
         { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: true, feedback: '「カード使(つか)えますか」— IC카드를 쓰면 정리권 없이 탈 때·내릴 때 터치만 하면 돼요' },
+        { text: '그렇게 할게요', phraseId: 'p_sou_shimasu', correct: true, feedback: '「そうします」— 정리권을 뽑으라는 안내를 그대로 따르겠다는 응답이에요' },
         { text: '어느 쪽이에요?', phraseId: 'p_dochira_desu_ka', correct: false, feedback: '지금은 정리권 안내를 따르는 단계예요 — 방향은 내릴 때 확인해요' },
       ],
     },
@@ -582,6 +586,7 @@ export const c23: Mission = {
       promptPhraseId: 'p_jiyuuseki_desu_ka',
       choices: [
         { text: '네, 그렇습니다', phraseId: 'p_hai_sou_desu', correct: true, feedback: '「はい、そうです」— 자유석(自由席) 확인. 혼잡 시간대엔 지정석(指定席)이 더 안전해요. 자유석은 저렴하지만 서서 갈 수도 있어요' },
+        { text: '지정석으로 부탁해요', phraseId: 'p_shiteiseki_de', correct: true, feedback: '「指定席(していせき)でお願いします」— 자유석 대신 지정석을 원하면 이렇게 반대로 답해요' },
         { text: '표 주세요', phraseId: 'p_kippu_kudasai', correct: false, feedback: '이미 표를 사는 중이에요. 자유석인지 물었으니 はい、そうです로 답해요' },
         { text: '물 주세요', phraseId: 'p_mizu_kudasai', correct: false, feedback: '신칸센 표 구매 중에는 좌석/표 관련 답변이 맞아요' },
       ],
@@ -601,6 +606,7 @@ export const c23: Mission = {
       promptPhraseId: 'p_noriba_wa_jyuunibansen_desu',
       choices: [
         { text: '기억해 둘게요', phraseId: 'p_oboete_okimasu', correct: true, feedback: '「覚(おぼ)えておきます」— 승강장 번호를 기억해 두는 응답' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '승강장 안내를 들은 뒤 짧게 감사로 답해도 자연스러워요' },
         { text: '몇 번 선이에요?', phraseId: 'p_nanbansen', correct: false, feedback: '방금 12번선이라고 들었어요. 이미 들은 정보를 다시 물으면 어색해요' },
         { text: '표 주세요', phraseId: 'p_kippu_kudasai', correct: false, feedback: '표는 이미 샀어요 — 지금은 승강장 안내를 확인해요' },
       ],
@@ -611,6 +617,7 @@ export const c23: Mission = {
       promptPhraseId: 'p_jikan_ni_gochuui_kudasai',
       choices: [
         { text: '조심할게요', phraseId: 'p_ki_o_tsukemasu', correct: true, feedback: '「気(き)をつけます」— 출발 시간에 늦지 않게 "조심하겠습니다"' },
+        { text: '기억해 둘게요', phraseId: 'p_oboete_okimasu', correct: true, feedback: '「覚(おぼ)えておきます」— 출발 시간을 잊지 않게 기억해 두는 응답이에요' },
         { text: '다음은 시부야예요?', phraseId: 'p_tsugi_wa_shibuya', correct: false, feedback: '시간 주의 안내에 노선 질문은 어긋나요. 먼저 알겠다고 답해요' },
         { text: '몇 번 선이에요?', phraseId: 'p_nanbansen', correct: false, feedback: '승강장은 이미 안내받았어요 — 지금은 출발 시간 주의를 확인해요' },
       ],
@@ -622,6 +629,7 @@ export const c23: Mission = {
       choices: [
         { text: '몇 호차예요?', phraseId: 'p_nan_gousha', correct: false, feedback: '이미 자리에 앉았어요 — 지금은 차내 판매에 답하는 상황이에요' },
         { text: '도시락 하나 주세요', phraseId: 'p_new_bentou_hitotsu', correct: true, feedback: '「お弁当(べんとう)を一(ひと)つください」— 판매원의 권유에 도시락을 주문하는 자연스러운 대답이에요. 음료는 飲(の)み物(もの)라고 해요' },
+        { text: '부탁드립니다', phraseId: 'p_onegai_shimasu', correct: true, feedback: '판매원의 권유를 그대로 받아들일 때 이 한마디로도 충분해요' },
       ],
     },
   ],
@@ -654,6 +662,7 @@ export const c24: Mission = {
       promptPhraseId: 'p_hoken_dou',
       choices: [
         { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: true, feedback: '「おすすめは何(なん)ですか」— 보험 종류가 헷갈리면 추천을 물어봐요. 외국인 여행자는 풀커버를 택하는 경우가 많아요' },
+        { text: '필요 없어요', phraseId: 'p_irimasen', correct: true, feedback: '「要(い)りません」— 추가 보험이 필요 없다면 이렇게 정중히 사양해요' },
         { text: '영수증 주세요', phraseId: 'p_ryoushuusho', correct: false, feedback: '아직 계약 중이에요 — 영수증은 정산할 때 받아요' },
       ],
     },
@@ -663,6 +672,7 @@ export const c24: Mission = {
       promptPhraseId: 'p_henkyaku_basho_wa_kochira_desu',
       choices: [
         { text: '기억해 둘게요', phraseId: 'p_oboete_okimasu', correct: true, feedback: '「覚(おぼ)えておきます」— 반납 장소를 기억해 두는 응답' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '반납 장소를 안내받은 뒤 짧게 감사로 답해도 자연스러워요' },
         { text: '영수증 주세요', phraseId: 'p_ryoushuusho', correct: false, feedback: '반납 장소 안내 단계예요. 영수증은 계산할 때 요청해요' },
       ],
     },
@@ -672,6 +682,7 @@ export const c24: Mission = {
       promptPhraseId: 'p_navi_nihongo',
       choices: [
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: true, feedback: '「使(つか)い方(かた)を教(おし)えてください」— 내비는 전화번호나 マップコード(맵코드)로 목적지를 입력해요. 직원이 기본 조작을 알려줘요' },
+        { text: '괜찮습니다', phraseId: 'p_daijoubu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 일본어만 돼도 괜찮다면 이렇게 답해요' },
         { text: '여권 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: false, feedback: '여권·면허 확인은 이미 끝났어요 — 지금은 내비 사용법에 답해요' },
       ],
     },

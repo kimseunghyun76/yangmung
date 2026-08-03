@@ -301,6 +301,7 @@ export const phrases: Phrase[] = [
   { id: 'p_nanbon_kasa', kana: 'なんぼんおつかいになりますか', kanji: '何本お使いになりますか', displayKana: 'なんぼん、おつかいになりますか？', korean: '몇 개 쓰시겠어요?', register: 'receptive' },
   { id: 'p_atarashii_kagi', kana: 'あたらしいおへやのかぎです', kanji: '新しいお部屋の鍵です', displayKana: 'あたらしいおへやの、かぎです', korean: '새 방 열쇠입니다', register: 'receptive' },
   { id: 'p_jiyuuseki_shitei', kana: 'じゆうせきとしていせきどちらにしますか', kanji: '自由席と指定席、どちらにしますか', displayKana: 'じゆうせきと していせき、どちらにしますか？', korean: '자유석과 지정석 중 어느 걸로 하시겠어요?', register: 'receptive' },
+  { id: 'p_shiteiseki_de', kana: 'していせきでおねがいします', kanji: '指定席でお願いします', displayKana: 'していせきで、おねがいします', korean: '지정석으로 부탁해요', register: 'productive' },
   { id: 'p_pasupooto_misete', kana: 'とうじょうけんとパスポートをみせてください', kanji: '搭乗券とパスポートを見せてください', displayKana: 'とうじょうけんと パスポートを、みせてください', korean: '탑승권과 여권을 보여 주세요', register: 'receptive' },
   { id: 'p_drink_bar', kana: 'ドリンクバーもございます', displayKana: 'ドリンクバーも、ございます', korean: '드링크바도 있어요', register: 'receptive' },
   { id: 'p_agari_douzo', kana: 'あがりをどうぞ', kanji: 'あがりをどうぞ', displayKana: 'あがりを、どうぞ', korean: '뜨거운 차(아가리) 드세요', register: 'receptive' },

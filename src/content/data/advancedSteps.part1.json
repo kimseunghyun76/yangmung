@@ -614,6 +614,12 @@
           "correct": true
         },
         {
+          "text": "감사합니다 (정중)",
+          "phraseId": "p_arigatou_gozaimasu",
+          "correct": true,
+          "feedback": "안내를 들은 뒤 짧게 감사로 답해도 자연스러워요"
+        },
+        {
           "text": "스이카로요",
           "phraseId": "p_suica_de",
           "correct": false,
