@@ -70,6 +70,7 @@ export const c0: Mission = {
       speaker: '나',
       choices: [
         { text: '계산 부탁드립니다', phraseId: 'p_okaikei', correct: true, feedback: '「お会計(かいけい)お願(ねが)いします」— 자리에서 직원을 부르거나 계산대로 가서 씁니다' },
+        { text: '계산대 부탁드려요', phraseId: 'p_reji_onegai', correct: true, feedback: '「レジお願(ねが)いします」— お会計お願いします와 같은 뜻의 더 캐주얼한 말이에요' },
         { text: '이거 주세요', phraseId: 'p_kore_kudasai', correct: false, feedback: '지금은 물건을 고르는 게 아니라 계산을 요청할 차례예요' },
       ],
     },

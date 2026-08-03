@@ -73,6 +73,12 @@
           "feedback": "감상을 먼저 전하면 대화가 따뜻해져요"
         },
         {
+          "text": "디저트 하나 주세요",
+          "phraseId": "p_dessert_hitotsu",
+          "correct": true,
+          "feedback": "디저트 질문에 바로 답해 주문까지 이어가는 답이에요"
+        },
+        {
           "text": "두 명이요",
           "phraseId": "p_futari_desu",
           "correct": false,
@@ -148,6 +154,12 @@
           "text": "기억해 둘게요",
           "phraseId": "p_oboete_okimasu",
           "correct": true
+        },
+        {
+          "text": "감사합니다 (정중)",
+          "phraseId": "p_arigatou_gozaimasu",
+          "correct": true,
+          "feedback": "긴 안내를 다 들은 뒤 짧게 감사로 답해도 자연스러워요"
         },
         {
           "text": "몇 번 선이에요?",

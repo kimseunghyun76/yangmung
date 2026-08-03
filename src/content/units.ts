@@ -59,18 +59,20 @@ export const units: Unit[] = [
       'p_oden_hitotsu', 'p_karaage_kudasai', 'p_ijou_desu', 'p_hatachi_ijou_desu',
       'p_ookii_fukuro', 'p_supuun_kudasai', 'p_card_de_onegai', 'p_suica_de_onegai',
       'p_ichiman_de', 'p_sen_en_chaaji',
+      // 응용 답변 보강(2026-08-04) — 같은 상황에서 고를 수 있는 다른 자연스러운 답
+      'p_reji_onegai', 'p_gamen_touch_shimashita', 'p_kore_shika_nai_daijoubu',
     ],
     reviewPhraseIds: ['p_hai', 'p_iie'],
   },
   {
     id: 'u_b1_restaurant_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 식당에서 인원수를 답하고, 주문·추천·음료·개수를 요청하거나 거절하고, 식사 후 계산을 마무리할 수 있다',
-    newPhraseIds: ['p_kore_kudasai', 'p_osusume_wa', 'p_menu_misete', 'p_chotto_matte', 'p_mizu_kudasai', 'p_okaikei', 'p_irimasen', 'p_oishii', 'p_hoshii_desu', 'p_hitotsu_kudasai', 'p_futatsu_kudasai', 'p_kore_to_kore', 'p_karai_desu_ka', 'p_tabemasu', 'p_hitori_desu', 'p_futari_desu', 'p_gochisousama', 'p_arerugi', 'p_kore_nuite'],
+    newPhraseIds: ['p_kore_kudasai', 'p_osusume_wa', 'p_menu_misete', 'p_chotto_matte', 'p_mizu_kudasai', 'p_okaikei', 'p_irimasen', 'p_oishii', 'p_hoshii_desu', 'p_hitotsu_kudasai', 'p_futatsu_kudasai', 'p_kore_to_kore', 'p_karai_desu_ka', 'p_tabemasu', 'p_hitori_desu', 'p_futari_desu', 'p_gochisousama', 'p_arerugi', 'p_kore_nuite', 'p_dessert_hitotsu'],
   },
   {
     id: 'u_b1_station_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 역에서 행선지·환승·표·개찰구를 묻고 안내를 듣고 다음 행동을 정할 수 있다',
-    newPhraseIds: ['p_shinjuku_doko', 'p_michi_oshiete', 'p_dochira_desu_ka', 'p_ikura_desu_ka', 'p_doko_desu_ka', 'p_eki', 'p_norikae', 'p_kaisatsu', 'p_kippu', 'p_kippu_kudasai', 'p_chaaji_onegai', 'p_kaisatsu_doko', 'p_nanbansen', 'p_tsugi_wa_shibuya', 'p_nan_gousha', 'p_tsugi_de_orimasu', 'p_eki_wa_doko'],
+    newPhraseIds: ['p_shinjuku_doko', 'p_michi_oshiete', 'p_dochira_desu_ka', 'p_ikura_desu_ka', 'p_doko_desu_ka', 'p_eki', 'p_norikae', 'p_kaisatsu', 'p_kippu', 'p_kippu_kudasai', 'p_chaaji_onegai', 'p_kaisatsu_doko', 'p_nanbansen', 'p_tsugi_wa_shibuya', 'p_nan_gousha', 'p_tsugi_de_orimasu', 'p_eki_wa_doko', 'p_koko_de_orireba_ii'],
   },
   {
     id: 'u_b1_hotel_core', track: 'lang', stage: 'B1', mode: 'action',
@@ -80,7 +82,7 @@ export const units: Unit[] = [
   {
     id: 'u_b1_street_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 길에서 목적지·방향·거리를 묻고, 화장실·사진을 부탁하고 도움을 청할 수 있다',
-    newPhraseIds: ['p_toire_doko', 'p_shashin_ii', 'p_shashin_onegai', 'p_tasukete', 'p_chikai_desu_ka', 'p_hidari_migi', 'p_aruite_nanpun', 'p_tasukarimashita'],
+    newPhraseIds: ['p_toire_doko', 'p_shashin_ii', 'p_shashin_onegai', 'p_tasukete', 'p_chikai_desu_ka', 'p_hidari_migi', 'p_aruite_nanpun', 'p_tasukarimashita', 'p_toire_tsukatte_ii', 'p_michi_ni_mayoimashita'],
   },
   {
     id: 'u_b1_pharmacy_core', track: 'lang', stage: 'B1', mode: 'action',

@@ -29,6 +29,7 @@ export const c1: Mission = {
       promptPhraseId: 'p_nenrei_kakunin',
       choices: [
         { text: '스무 살 넘었어요', phraseId: 'p_hatachi_ijou_desu', correct: true, feedback: '「二十歳(はたち)以上(いじょう)です」— 말로 확인해줄 때. 二十歳는 はたち로 읽는 특별한 단어라 알아두면 좋아요' },
+        { text: '화면 터치했어요', phraseId: 'p_gamen_touch_shimashita', correct: true, feedback: '「画面(がめん)にタッチしました」— 터치스크린으로 확인한 뒤 말로도 알려줄 때 써요' },
         { text: '카드로 부탁드려요', phraseId: 'p_card_de_onegai', correct: false, feedback: '아직 결제 단계가 아니에요 — 지금은 연령 확인을 먼저 해야 해요' },
       ],
     },
@@ -80,6 +81,7 @@ export const c1: Mission = {
       promptPhraseId: 'p_price',
       choices: [
         { text: '만 엔으로 낼게요', phraseId: 'p_ichiman_de', correct: true, feedback: '「一万円(いちまんえん)でお願(ねが)いします」— 큰 지폐로 낼 때. 점원이 「一万円お預(あず)かりします」라고 복창하고 거스름돈을 줘요' },
+        { text: '이거밖에 없는데, 괜찮아요?', phraseId: 'p_kore_shika_nai_daijoubu', correct: true, feedback: '「これしかないんですけど、大丈夫(だいじょうぶ)ですか」— 큰 지폐만 있을 때 미리 양해를 구하면 더 자연스러워요' },
         { text: '어묵 하나 주세요', phraseId: 'p_oden_hitotsu', correct: false, feedback: '이미 합계 금액을 들었어요 — 지금은 어떻게 낼지 답할 차례예요' },
       ],
     },

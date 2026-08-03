@@ -51,6 +51,7 @@ export const c3: Mission = {
       promptPhraseId: 'p_norikae_kudasai',
       choices: [
         { text: '덕분에 도움이 됐어요', phraseId: 'p_tasukarimashita', correct: true, feedback: '「助(たす)かりました」— 환승 안내를 받은 뒤 "덕분에 살았어요". 그냥 감사보다 도움이 됐다는 실감을 전하는 게 더 자연스러워요' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '「ありがとうございます」— 짧고 정중하게 감사를 표하는 것만으로도 충분해요' },
         { text: '신주쿠역은 어디예요?', phraseId: 'p_shinjuku_doko', correct: false, feedback: '신주쿠역 위치는 이미 물어봤어요 — 지금은 환승 안내에 감사로 답해요' },
       ],
     },
@@ -59,6 +60,7 @@ export const c3: Mission = {
       speaker: '나',
       choices: [
         { text: '다음은 시부야예요?', phraseId: 'p_tsugi_wa_shibuya', correct: true, feedback: '「次は渋谷ですか」— 차내 안내방송을 못 들었을 때 옆 승객에게 확인하는 실용 표현' },
+        { text: '여기서 내리면 되나요?', phraseId: 'p_koko_de_orireba_ii', correct: true, feedback: '「ここで降(お)りればいいですか」— 역 이름 대신 "지금 내릴 타이밍"만 확인하고 싶을 때도 자연스러워요' },
         { text: '신주쿠역은 어디예요?', phraseId: 'p_shinjuku_doko', correct: false, feedback: '신주쿠역은 이미 물어봤어요 — 지금은 내릴 역이 맞는지 확인해요' },
       ],
     },

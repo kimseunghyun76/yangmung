@@ -33,6 +33,13 @@ export const phrases: Phrase[] = [
   { id: 'p_nomimono', kana: 'おのみものは', kanji: 'お飲み物は', displayKana: 'おのみものは？', korean: '음료는요?', register: 'receptive' },
   { id: 'p_mizu_kudasai', kana: 'みずをください', kanji: '水をください', korean: '물 주세요', register: 'productive', tip: '「水(みず)をください」— 일본 식당은 물을 자동으로 안 주는 경우가 많아요. お水(みず)をください라고 해도 OK. 셀프 서비스인 곳도 많습니다' },
   { id: 'p_okaikei', missionScope: 'generic', kana: 'おかいけいおねがいします', kanji: 'お会計お願いします', displayKana: 'おかいけい、おねがいします', korean: '계산 부탁드립니다', register: 'productive', tip: '「お会計(かいけい)お願(ねが)いします」— 자리에서 직원을 부르거나 계산대로 가서 씁니다. 손을 X자로 교차하는 제스처도 일본에서 통해요' },
+  { id: 'p_reji_onegai', kana: 'れじおねがいします', kanji: 'レジお願いします', displayKana: 'れじ、おねがいします', korean: '계산대 부탁드려요', register: 'productive', tip: '「レジお願(ねが)いします」— お会計お願いします와 같은 뜻의 더 캐주얼한 말. 편의점·패스트푸드점에서 자주 들려요' },
+  { id: 'p_gamen_touch_shimashita', kana: 'がめんにタッチしました', kanji: '画面にタッチしました', displayKana: 'がめんに、タッチしました', korean: '화면 터치했어요', register: 'productive', tip: '「画面(がめん)にタッチしました」— 연령 확인 터치스크린에서 말로도 확인해줄 때 써요' },
+  { id: 'p_kore_shika_nai_daijoubu', kana: 'これしかないんですけどだいじょうぶですか', kanji: 'これしかないんですけど、大丈夫ですか', displayKana: 'これしかないんですけど、だいじょうぶですか', korean: '이거밖에 없는데, 괜찮아요?', register: 'productive', tip: '「これしかないんですけど、大丈夫(だいじょうぶ)ですか」— 큰 지폐만 있을 때 미리 양해를 구하는 자연스러운 말이에요' },
+  { id: 'p_dessert_hitotsu', kana: 'デザートをひとつください', kanji: 'デザートを一つください', displayKana: 'デザートを、ひとつください', korean: '디저트 하나 주세요', register: 'productive', tip: '「デザートを一(ひと)つください」— 맛 감상에 이어 디저트까지 바로 주문할 때 써요' },
+  { id: 'p_koko_de_orireba_ii', kana: 'ここでおりればいいですか', kanji: 'ここで降りればいいですか', displayKana: 'ここで、おりればいいですか？', korean: '여기서 내리면 되나요?', register: 'productive', tip: '「ここで降(お)りればいいですか」— 다음 역이 맞는지와 함께, 내려야 할 타이밍 자체를 확인할 때도 자연스러운 말이에요' },
+  { id: 'p_toire_tsukatte_ii', kana: 'トイレをつかってもいいですか', kanji: 'トイレを使ってもいいですか', displayKana: 'トイレを、つかってもいいですか？', korean: '화장실 좀 써도 될까요?', register: 'productive', tip: '「トイレを使(つか)ってもいいですか」— トイレはどこですか보다 조금 더 정중하게 허락을 구하는 표현이에요' },
+  { id: 'p_michi_ni_mayoimashita', kana: 'みちにまよいました', kanji: '道に迷いました', displayKana: 'みちに、まよいました', korean: '길을 잃었어요', register: 'productive', tip: '「道(みち)に迷(まよ)いました」— 助けてください 앞에 이 한마디를 붙이면 상황이 훨씬 명확하게 전달돼요' },
 
   // ── B0/B1 narrow: C 미션이 끌어쓰는 핵심 (발달식 thesis 전면 검증 X, MVP 한정) ──
   { id: 'p_sumimasen', missionScope: 'generic', kana: 'すみません', korean: '저기요 / 죄송합니다', register: 'both', tip: '「すみません」— 주의를 끌 때·사과할 때·가볍게 감사할 때까지 만능 표현. 가게에서 직원을 부를 때, 길을 물을 때, 자리를 지나칠 때 모두 써요' },

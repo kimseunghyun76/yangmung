@@ -45,6 +45,7 @@ export const c5: Mission = {
       speaker: '나',
       choices: [
         { text: '화장실 어디예요?', phraseId: 'p_toire_doko', correct: true, feedback: '「トイレはどこですか」— 가장 실용적인 여행 표현. 편의점은 화장실이 무료라 대피소로 활용해도 돼요' },
+        { text: '화장실 좀 써도 될까요?', phraseId: 'p_toire_tsukatte_ii', correct: true, feedback: '「トイレを使(つか)ってもいいですか」— どこですか보다 조금 더 정중하게 허락까지 구하는 말이에요' },
         { text: '어느 쪽이에요?', phraseId: 'p_dochira_desu_ka', correct: false, feedback: '무엇을 묻는지가 빠져 있어요 — 「どちらですか」는 이미 화장실 얘기가 나온 뒤에 방향만 다시 확인할 때 쓰는 말이라, 급하게 먼저 꺼낼 말로는 「トイレはどこですか」가 맞아요' },
       ],
     },
@@ -62,6 +63,7 @@ export const c5: Mission = {
       speaker: '나',
       choices: [
         { text: '도와주세요', phraseId: 'p_tasukete', correct: true, feedback: '「助けて(たすけて)」— 긴급 SOS. 크게 외치면 일본인이 즉시 반응해요. 위험 시에는 주저 없이 써요' },
+        { text: '길을 잃었어요', phraseId: 'p_michi_ni_mayoimashita', correct: true, feedback: '「道(みち)に迷(まよ)いました」— 助けてください 앞에 붙이면 상황이 훨씬 명확하게 전달돼요' },
         { text: '사진 찍어도 돼요?', phraseId: 'p_shashin_ii', correct: false, feedback: '급할 땐 たすけて·どこですか가 먼저예요' },
       ],
     },
