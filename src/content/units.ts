@@ -77,7 +77,7 @@ export const units: Unit[] = [
   {
     id: 'u_b1_hotel_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 호텔 프런트에서 체크인을 요청하고, 예약·여권·방 위치·조식·와이파이를 확인할 수 있다',
-    newPhraseIds: ['p_checkin_onegai', 'p_yoyaku_shiteimasu', 'p_heya_doko', 'p_wifi_arimasu_ka', 'p_choushoku_wa', 'p_yoroshiku_onegai'],
+    newPhraseIds: ['p_checkin_onegai', 'p_yoyaku_shiteimasu', 'p_heya_doko', 'p_wifi_arimasu_ka', 'p_choushoku_wa', 'p_yoroshiku_onegai', 'p_hai_kamaimasen'],
   },
   {
     id: 'u_b1_street_core', track: 'lang', stage: 'B1', mode: 'action',
@@ -102,7 +102,7 @@ export const units: Unit[] = [
   {
     id: 'u_b1_airport_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 입국심사에서 목적·체류기간·숙소를 답할 수 있다',
-    newPhraseIds: ['p_kankou_desu', 'p_shigoto_desu', 'p_isshuukan', 'p_mikka', 'p_hoteru_desu', 'p_kaishain_desu', 'p_gakusei_desu', 'p_yubi_okimasu'],
+    newPhraseIds: ['p_kankou_desu', 'p_shigoto_desu', 'p_isshuukan', 'p_mikka', 'p_hoteru_desu', 'p_kaishain_desu', 'p_gakusei_desu', 'p_yubi_okimasu', 'p_guesthouse_desu', 'p_ofuku_desu', 'p_kou_desu_ka', 'p_hai_hajimete', 'p_koko_ni_kakimasu'],
   },
   {
     id: 'u_b1_exchange_core', track: 'lang', stage: 'B1', mode: 'action',
@@ -139,6 +139,7 @@ export const units: Unit[] = [
       'p_mou_juubun', 'p_aruite_mimasu', 'p_matte_imasu', 'p_itadakimasu',
       'p_renraku_kudasai', 'p_isoide_kudasai', 'p_koko_de_orimasu', 'p_tadaima',
       'p_koukan_shitai', 'p_henkin_de',
+      'p_syrup_tsuika', 'p_issho_ni_irete',
     ],
   },
   {

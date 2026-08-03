@@ -56,6 +56,7 @@ export const c14: Mission = {
       promptPhraseId: 'p_custom_arimasu',
       choices: [
         { text: '샷 추가요', phraseId: 'p_shotto_tsuika', correct: true, feedback: '「ショット追加(ついか)で」— 에스프레소 샷 추가로 진하게. シロップ(시럽)·ミルク変更(우유 변경)도 같은 방식으로 요청해요' },
+        { text: '시럽 추가요', phraseId: 'p_syrup_tsuika', correct: true, feedback: '「シロップ追加(ついか)で」— 샷 추가와 같은 「〇〇追加で」패턴. 바닐라·카라멜 시럽 추가할 때 써요' },
         { text: '따뜻한 걸로요', phraseId: 'p_hotto_de', correct: false, feedback: '따뜻함/아이스는 이미 정했어요 — 지금은 추가 커스텀이 있는지 답해요' },
       ],
     },
@@ -66,6 +67,7 @@ export const c14: Mission = {
       recapPromptKo: '다른 주문 있으세요?',
       choices: [
         { text: '물 주세요', phraseId: 'p_mizu_kudasai', correct: true, feedback: '「お水(みず)ください」— 카페에서도 물을 무료로 주는 곳이 많아요. セルフサービスのコップがあれば自分でどうぞ' },
+        { text: '이게 다예요', phraseId: 'p_ijou_desu', correct: true, feedback: '「以上(いじょう)です」— 다른 주문이 있는지 물었을 때 "이걸로 끝"이라고 답하는 마무리 표현이에요' },
         { text: '샷 추가요', phraseId: 'p_shotto_tsuika', correct: false, feedback: '커스텀은 이미 정했어요 — 지금은 추가 주문이나 계산을 말해요' },
       ],
     },
@@ -108,6 +110,7 @@ export const c15: Mission = {
       promptPhraseId: 'p_betsubetsu_tsutsumi',
       choices: [
         { text: '따로따로요', phraseId: 'p_betsubetsu_de', correct: true, feedback: '「別々(べつべつ)で」— 선물용이거나 나눠줄 때 따로 포장을 부탁해요. 일본 빵집의 개별 포장은 정성스러워요' },
+        { text: '같이 넣어 주세요', phraseId: 'p_issho_ni_irete', correct: true, feedback: '「一緒(いっしょ)に入(い)れてください」— 따로 포장이 필요 없을 때는 반대로 이렇게 답해요' },
         { text: '이거랑 이거', phraseId: 'p_kore_to_kore', correct: false, feedback: '상품은 이미 골랐어요 — 지금은 포장 방식을 답해요' },
       ],
     },
@@ -117,6 +120,7 @@ export const c15: Mission = {
       promptPhraseId: 'p_fukuro_otsuke_shimasu_ka',
       choices: [
         { text: '봉투는 필요 없어요', phraseId: 'p_fukuro_iranai', correct: true, feedback: '「袋(ふくろ)はいりません」— 환경 보호를 위한 봉투 절약. マイバッグ(에코백)을 챙기면 이 표현을 자주 쓰게 돼요' },
+        { text: '부탁드립니다', phraseId: 'p_onegai_shimasu', correct: true, feedback: '봉투가 필요하면 이 한마디로 짧게 요청해도 충분해요' },
         { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: false, feedback: '봉투 여부를 먼저 답해요 — 추천 질문은 여기서는 흐름이 맞지 않아요' },
       ],
     },
@@ -127,6 +131,7 @@ export const c15: Mission = {
       choices: [
         { text: '하나 주세요', phraseId: 'p_hitotsu_kudasai', correct: false, feedback: '빵은 이미 골랐어요 — 지금은 결제 방법을 답해요' },
         { text: '1200엔이요', phraseId: 'p_new_sen_nihyaku_en_desune', correct: true, feedback: '「千二百円(せんにひゃくえん)ですね」— 점원이 부른 금액을 그대로 되짚어 확인하는 자연스러운 반응이에요. 돈을 꺼내며 이렇게 말하면 딱 맞아요' },
+        { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: true, feedback: '「カードは使(つか)えますか」— 금액을 들은 뒤 결제 수단을 확인하는 것도 자연스러운 반응이에요' },
       ],
     },
   ],
@@ -186,6 +191,7 @@ export const c16: Mission = {
       promptPhraseId: 'p_rasuto_ooda_desu',
       choices: [
         { text: '이거랑 이거', phraseId: 'p_kore_to_kore', correct: true, feedback: '「これとこれ」— 라스트 오더에도 메뉴를 가리키며 추가 주문 가능. 술은 もう一杯(いっぱい)도 써요' },
+        { text: '이게 다예요', phraseId: 'p_ijou_desu', correct: true, feedback: '「以上(いじょう)です」— 추가 주문 없이 이대로 마무리하고 싶을 때 답하는 표현이에요' },
         { text: '예약했습니다', phraseId: 'p_yoyaku_shiteimasu', correct: false, feedback: '이미 입장해 식사 중이에요 — 라스트 오더엔 추가 주문이나 계산을 말해요' },
       ],
     },
@@ -208,6 +214,7 @@ export const c17: Mission = {
       promptPhraseId: 'p_kauntaa_de_yoroshii_desu_ka',
       choices: [
         { text: '두 명이요', phraseId: 'p_futari_desu', correct: true, feedback: '「二人(ふたり)です」— 카운터 2인석을 안내받을 때. ひとり·ふたり는 불규칙 형태라 주의해요' },
+        { text: '혼자예요', phraseId: 'p_hitori_desu', correct: true, feedback: '「一人(ひとり)です」— 혼밥일 때는 이렇게 답해요. 카운터석은 혼자 가기에도 좋아요' },
         { text: '이거 빼 주세요', phraseId: 'p_kore_nuite', correct: false, feedback: '아직 자리 안내 단계예요 — 못 먹는 재료는 주문할 때 말해요' },
       ],
     },
@@ -236,6 +243,7 @@ export const c17: Mission = {
       promptPhraseId: 'p_sabi_wa_daijoubu_desu_ka',
       choices: [
         { text: '이거 빼 주세요', phraseId: 'p_kore_nuite', correct: true, feedback: '「これを抜(ぬ)いてください」— 와사비를 빼달라는 뜻으로도 써요. 「サビ抜きで」라고도 해요' },
+        { text: '괜찮습니다', phraseId: 'p_daijoubu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 와사비가 있어도 괜찮다면 이렇게 짧게 답해요' },
         { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: false, feedback: '와사비 여부를 먼저 답하세요 — 추천 질문은 다른 상황이에요' },
       ],
     },
@@ -291,6 +299,7 @@ export const c18: Mission = {
       promptPhraseId: 'p_chizu_wa_irimasu_ka',
       choices: [
         { text: '그걸로 부탁드려요', phraseId: 'p_sorede_onegai', correct: true, feedback: '「それでお願(ねが)いします」— 지도를 권하면 "그걸로 주세요"로 수락' },
+        { text: '필요 없어요', phraseId: 'p_irimasen', correct: true, feedback: '「要(い)りません」— 지도가 필요 없다면 이렇게 정중히 사양해요' },
         { text: '사진 찍어도 돼요?', phraseId: 'p_shashin_ii', correct: false, feedback: '지도를 받는 상황에서 촬영 허가를 묻는 건 맥락이 맞지 않아요. 사진 질문은 신사나 박물관에서 해요' },
       ],
     },
@@ -300,6 +309,7 @@ export const c18: Mission = {
       promptPhraseId: 'p_tenimotsu_azukari',
       choices: [
         { text: '짐 좀 부탁드려요', phraseId: 'p_new_nimotsu_onegai', correct: true, feedback: '「荷物をお願いします」— 짐 보관 서비스를 이용하겠다는 뜻으로, 직원의 안내에 자연스럽게 응답하는 표현이에요' },
+        { text: '괜찮습니다', phraseId: 'p_daijoubu', correct: true, feedback: '「大丈夫(だいじょうぶ)です」— 짐 보관이 필요 없다면 이렇게 짧게 사양해요' },
         { text: '추천이 뭐예요?', phraseId: 'p_osusume_wa', correct: false, feedback: '추천은 이미 받았어요 — 지금은 짐 보관 안내에 답해요' },
       ],
     },
@@ -369,6 +379,7 @@ export const c19: Mission = {
       promptPhraseId: 'p_omamori_wa_kochira_desu',
       choices: [
         { text: '찾아볼게요', phraseId: 'p_sagashite_mimasu', correct: true, feedback: '「探(さが)してみます」— 부적(お守り) 파는 곳을 찾아보겠다는 응답' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '위치를 안내받은 데 대해 짧게 감사로 답해도 자연스러워요' },
         { text: '사진 찍어도 돼요?', phraseId: 'p_shashin_ii', correct: false, feedback: '부적을 고르는 중이에요 — 촬영 허가는 앞서 확인했어요' },
       ],
     },

@@ -40,6 +40,14 @@ export const phrases: Phrase[] = [
   { id: 'p_koko_de_orireba_ii', kana: 'ここでおりればいいですか', kanji: 'ここで降りればいいですか', displayKana: 'ここで、おりればいいですか？', korean: '여기서 내리면 되나요?', register: 'productive', tip: '「ここで降(お)りればいいですか」— 다음 역이 맞는지와 함께, 내려야 할 타이밍 자체를 확인할 때도 자연스러운 말이에요' },
   { id: 'p_toire_tsukatte_ii', kana: 'トイレをつかってもいいですか', kanji: 'トイレを使ってもいいですか', displayKana: 'トイレを、つかってもいいですか？', korean: '화장실 좀 써도 될까요?', register: 'productive', tip: '「トイレを使(つか)ってもいいですか」— トイレはどこですか보다 조금 더 정중하게 허락을 구하는 표현이에요' },
   { id: 'p_michi_ni_mayoimashita', kana: 'みちにまよいました', kanji: '道に迷いました', displayKana: 'みちに、まよいました', korean: '길을 잃었어요', register: 'productive', tip: '「道(みち)に迷(まよ)いました」— 助けてください 앞에 이 한마디를 붙이면 상황이 훨씬 명확하게 전달돼요' },
+  { id: 'p_hai_kamaimasen', kana: 'はいかまいません', kanji: 'はい、構いません', displayKana: 'はい、かまいません', korean: '네, 상관없어요', register: 'productive', tip: '「はい、構(かま)いません」— 제안을 그대로 받아들일 때. 大丈夫です보다 조금 더 격식 있는 수락 표현이에요' },
+  { id: 'p_guesthouse_desu', kana: 'ゲストハウスです', kanji: 'ゲストハウスです', korean: '게스트하우스예요', register: 'productive', tip: '「ゲストハウスです」— ホテル 외에 게스트하우스·료칸에 묵을 때도 한 단어로 답하면 충분해요' },
+  { id: 'p_ofuku_desu', kana: 'おうふくです', kanji: '往復です', displayKana: 'おうふくです', korean: '왕복이에요', register: 'productive', tip: '「往復(おうふく)です」— 돌아가는 항공권이 왕복표라는 걸 짧게 밝히는 표현이에요' },
+  { id: 'p_kou_desu_ka', kana: 'こうですか', kanji: 'こうですか', korean: '이렇게요?', register: 'productive', tip: '「こうですか」— 지문·사진 촬영처럼 행동으로 따라야 할 때, 맞게 하고 있는지 되묻는 자연스러운 한마디예요' },
+  { id: 'p_hai_hajimete', kana: 'はいはじめてです', kanji: 'はい、初めてです', displayKana: 'はい、はじめてです', korean: '네, 처음이에요', register: 'productive', tip: '「はい、初(はじ)めてです」— 처음 방문이 맞을 때. 아니요만큼이나 자주 나오는 자연스러운 대답이에요' },
+  { id: 'p_koko_ni_kakimasu', kana: 'ここにかきます', kanji: 'ここに書きます', displayKana: 'ここに、かきます', korean: '여기 적을게요', register: 'productive', tip: '「ここに書(か)きます」— 서류 작성을 요청받았을 때, 잠깐 기다려 달라는 말과 함께 쓸 수 있는 표현이에요' },
+  { id: 'p_syrup_tsuika', kana: 'しろっぷついかで', kanji: 'シロップ追加で', displayKana: 'しろっぷ、ついかで', korean: '시럽 추가요', register: 'productive', tip: '「シロップ追加(ついか)で」— ショット追加で와 같은 패턴. 바닐라·카라멜 시럽 추가할 때 써요' },
+  { id: 'p_issho_ni_irete', kana: 'いっしょにいれてください', kanji: '一緒に入れてください', displayKana: 'いっしょに、いれてください', korean: '같이 넣어 주세요', register: 'productive', tip: '「一緒(いっしょ)に入(い)れてください」— 別々で(따로따로)의 반대. 다 같이 한 봉투에 넣어 달라고 할 때 써요' },
 
   // ── B0/B1 narrow: C 미션이 끌어쓰는 핵심 (발달식 thesis 전면 검증 X, MVP 한정) ──
   { id: 'p_sumimasen', missionScope: 'generic', kana: 'すみません', korean: '저기요 / 죄송합니다', register: 'both', tip: '「すみません」— 주의를 끌 때·사과할 때·가볍게 감사할 때까지 만능 표현. 가게에서 직원을 부를 때, 길을 물을 때, 자리를 지나칠 때 모두 써요' },

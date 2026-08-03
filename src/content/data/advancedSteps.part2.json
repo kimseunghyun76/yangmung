@@ -335,6 +335,12 @@
           "correct": true
         },
         {
+          "text": "이게 다예요",
+          "phraseId": "p_ijou_desu",
+          "correct": true,
+          "feedback": "추가 주문 없이 마무리하고 싶을 때 답하는 표현이에요"
+        },
+        {
           "text": "예약했습니다",
           "phraseId": "p_yoyaku_shiteimasu",
           "correct": false,

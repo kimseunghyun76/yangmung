@@ -224,6 +224,12 @@
           "phraseId": "p_new_kinen_de_onegai",
           "correct": true,
           "feedback": "「禁煙(きんえん)でお願(ねが)いします」— 객실 타입(금연/흡연) 확인 질문에는 이렇게 원하는 쪽을 명시해서 답하는 게 자연스러워요. 체크인 서류에도 바로 반영됩니다"
+        },
+        {
+          "text": "네, 상관없어요",
+          "phraseId": "p_hai_kamaimasen",
+          "correct": true,
+          "feedback": "「はい、構(かま)いません」— 제안된 그대로 받아들일 때도 자연스러운 답이에요"
         }
       ]
     },
@@ -298,6 +304,12 @@
           "correct": true
         },
         {
+          "text": "감사합니다 (정중)",
+          "phraseId": "p_arigatou_gozaimasu",
+          "correct": true,
+          "feedback": "길게 설명해 준 데 대한 감사만으로도 자연스럽게 마무리돼요"
+        },
+        {
           "text": "어느 쪽이에요?",
           "phraseId": "p_dochira_desu_ka",
           "correct": false,
@@ -321,6 +333,12 @@
           "text": "덕분에 도움이 됐어요",
           "phraseId": "p_tasukarimashita",
           "correct": true
+        },
+        {
+          "text": "부탁드립니다",
+          "phraseId": "p_onegai_shimasu",
+          "correct": true,
+          "feedback": "안내해 주겠다는 제안을 그대로 받아들일 때도 자연스러운 대답이에요"
         },
         {
           "text": "도와주세요",
@@ -370,6 +388,12 @@
           "correct": true
         },
         {
+          "text": "네, 처음이에요",
+          "phraseId": "p_hai_hajimete",
+          "correct": true,
+          "feedback": "「はい、初(はじ)めてです」— 실제로 처음 방문이라면 이렇게 답해요"
+        },
+        {
           "text": "관광이에요",
           "phraseId": "p_kankou_desu",
           "correct": false,
@@ -394,6 +418,12 @@
           "phraseId": "p_chotto_matte",
           "correct": true,
           "feedback": "예약 화면에서 주소를 찾는 동안 쓰는 자연스러운 표현이에요"
+        },
+        {
+          "text": "여기 적을게요",
+          "phraseId": "p_koko_ni_kakimasu",
+          "correct": true,
+          "feedback": "「ここに書(か)きます」— 요청받은 그대로 바로 적겠다고 답하는 것도 자연스러워요"
         },
         {
           "text": "호텔이에요",
@@ -475,6 +505,12 @@
           "text": "그래요 / 맞아요",
           "phraseId": "p_sou_desu",
           "correct": true
+        },
+        {
+          "text": "그걸로 부탁드려요",
+          "phraseId": "p_sorede_onegai",
+          "correct": true,
+          "feedback": "확인해 준 내용을 그대로 받아들이는 자연스러운 답이에요"
         },
         {
           "text": "S 사이즈로요",

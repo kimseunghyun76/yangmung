@@ -36,6 +36,7 @@ export const c9: Mission = {
       promptPhraseId: 'p_doko_tomaru',
       choices: [
         { text: '호텔이에요', phraseId: 'p_hoteru_desu', correct: true, feedback: '「ホテルです」— 한 단어로 충분해요. 호텔명이나 예약확인서를 미리 꺼내두면 심사가 더 빨리 끝나요' },
+        { text: '게스트하우스예요', phraseId: 'p_guesthouse_desu', correct: true, feedback: '「ゲストハウスです」— ホテル 외에 다른 숙소 형태도 이렇게 한 단어로 답하면 충분해요' },
         { text: '관광이에요', phraseId: 'p_kankou_desu', correct: false, feedback: '방문 목적은 이미 답했어요 — 지금은 숙소를 물어요' },
       ],
     },
@@ -55,6 +56,7 @@ export const c9: Mission = {
       promptPhraseId: 'p_kaeri_koukuuken',
       choices: [
         { text: '네, 있어요', phraseId: 'p_hai_arimasu', correct: true, feedback: '「はい、あります」— 왕복·귀국 항공권 확인. 단기 관광은 돌아갈 일정이 있는지 확인해요. 예약 화면을 보여줘도 좋아요' },
+        { text: '왕복이에요', phraseId: 'p_ofuku_desu', correct: true, feedback: '「往復(おうふく)です」— 표가 왕복표라는 걸 짧게 밝히는 것도 자연스러운 답이에요' },
         { text: '호텔이에요', phraseId: 'p_hoteru_desu', correct: false, feedback: '숙소는 이미 답했어요 — 지금은 돌아가는 항공권을 묻고 있어요' },
       ],
     },
@@ -64,6 +66,7 @@ export const c9: Mission = {
       promptPhraseId: 'p_shimon_shashin',
       choices: [
         { text: '네, 손가락 올릴게요', phraseId: 'p_yubi_okimasu', correct: true, feedback: '「指(ゆび)を置(お)きます」— 지문 인식 안내를 행동으로 받는 표현. 감사 인사보다 안내를 따라 움직이는 게 이 장면에 훨씬 자연스러워요' },
+        { text: '이렇게요?', phraseId: 'p_kou_desu_ka', correct: true, feedback: '「こうですか」— 행동을 따라 하면서 맞는지 되묻는 것도 자연스러운 반응이에요' },
         { text: '관광이에요', phraseId: 'p_kankou_desu', correct: false, feedback: '지금은 지문·사진 안내를 따르는 단계예요 — 목적은 앞서 답했어요' },
       ],
     },
