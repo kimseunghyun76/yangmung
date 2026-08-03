@@ -402,6 +402,7 @@ export const c20: Mission = {
       promptPhraseId: 'p_nyuuyokuryou_wa_happyakuen_desu',
       choices: [
         { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: true, feedback: '「カード使(つか)えますか」— 온천에 따라 현금만 받는 곳도 있어요. 작은 동네 온천일수록 현금 준비를 권해요' },
+        { text: '현금으로 낼게요', phraseId: 'p_genkin_de_haraimasu', correct: true, feedback: '「現金(げんきん)で払(はら)います」— 카드가 걱정되면 바로 현금으로 내겠다고 답해도 돼요' },
         { text: '그렇게 할게요', phraseId: 'p_sou_shimasu', correct: false, feedback: '아직 결제 방법을 정하는 중이에요 — 카드가 되는지부터 확인해요' },
       ],
     },
@@ -411,6 +412,7 @@ export const c20: Mission = {
       promptPhraseId: 'p_getabako_e',
       choices: [
         { text: '그렇게 할게요', phraseId: 'p_sou_shimasu', correct: true, feedback: '「そうします」— 신발을 신발장에 넣으라는 안내를 따르겠다는 응답' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '안내에 짧게 감사로 답해도 자연스러워요' },
         { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: false, feedback: '결제는 이미 끝났어요 — 지금은 신발장 안내를 따르는 단계예요' },
       ],
     },
@@ -525,6 +527,7 @@ export const c22: Mission = {
       promptPhraseId: 'p_dochira_made_ikimasu_ka',
       choices: [
         { text: '시부야까지 가주세요', phraseId: 'p_made_onegai', correct: true, feedback: '「渋谷(しぶや)までお願いします」— 버스는 탈 때 목적지를 말하거나 정류장 안내판을 확인하면 돼요. 均一料金(균일요금)인 버스도 있어요' },
+        { text: '이 버스 맞아요?', phraseId: 'p_kono_basu_de_ii_desu_ka', correct: true, feedback: '「このバスでいいですか」— 목적지 이름 대신 지도 앱을 보여주며 이 버스가 맞는지 확인해도 돼요' },
         { text: '다음은 시부야예요?', phraseId: 'p_tsugi_wa_shibuya', correct: false, feedback: '목적지를 묻는 질문에는 "〇〇까지 가주세요"로 행선지를 답해요' },
         { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: false, feedback: '먼저 목적지를 말해요 — 결제 수단은 그다음에 확인해요' },
       ],
@@ -692,6 +695,7 @@ export const c24: Mission = {
       promptPhraseId: 'p_gasorin_mantan_de_onegai_shimasu',
       choices: [
         { text: '그렇게 할게요', phraseId: 'p_sou_shimasu', correct: true, feedback: '「そうします」— 가득 채워 반납하라는 조건을 따르겠다는 응답' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '조건 안내에 짧게 감사로 답해도 자연스러워요' },
         { text: '여권 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: false, feedback: '면허·여권 확인은 이미 끝났어요 — 지금은 주유 조건을 확인해요' },
       ],
     },
@@ -714,6 +718,7 @@ export const c25: Mission = {
       promptPhraseId: 'p_monshinhyou',
       choices: [
         { text: '도와주세요', phraseId: 'p_tasukete', correct: true, feedback: '「助(たす)けてください」— 한자 양식이 어려우면 도움을 요청해요. 접수처에서 함께 작성해줄 수 있어요' },
+        { text: '일본어는 조금만 할 수 있어요', phraseId: 'p_nihongo_sukoshi_dake', correct: true, feedback: '「日本語(にほんご)は少(すこ)しだけです」— 일본어 수준을 먼저 알리면 접수 직원이 쉬운 말이나 영어로 도와줘요' },
         { text: '머리가 아파요', phraseId: 'p_atama_itai', correct: false, feedback: '증상을 말하기 전이에요 — 지금은 문진표 작성에 도움을 청해요' },
       ],
     },
@@ -797,6 +802,7 @@ export const c26: Mission = {
       promptPhraseId: 'p_itsu_nakushimashita_ka',
       choices: [
         { text: '모르겠어요', phraseId: 'p_wakarimasen', correct: true, feedback: '「わかりません」— 언제 잃어버렸는지 모를 때 솔직하게. 경찰관이 다른 방법(사진·CCTV 등)으로 확인해줄 수 있어요' },
+        { text: '아침쯤이었어요', phraseId: 'p_asa_gurai_deshita', correct: true, feedback: '「朝(あさ)ぐらいでした」— 정확한 시간은 몰라도 대략적인 때가 기억나면 이렇게 답해요' },
         { text: '도와주세요', phraseId: 'p_tasukete', correct: false, feedback: '도움 요청은 이미 했어요 — 지금은 언제 잃어버렸는지 답해요' },
       ],
     },
@@ -929,6 +935,7 @@ export const c28: Mission = {
       promptPhraseId: 'p_pasupooto_kakunin_shimasu',
       choices: [
         { text: '여권 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: true, feedback: '「パスポートはこちらです」— 일본 통신 SIM 개통에는 여권이 필수. 외국인 등록 의무에 따라 신분 확인이 필요해요' },
+        { text: '잠깐만 기다려 주세요', phraseId: 'p_chotto_matte', correct: true, feedback: '「ちょっと待(ま)ってください」— 가방에서 여권을 꺼내는 동안 양해를 구해도 자연스러워요' },
         { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: false, feedback: '여권 확인 단계예요. 결제 질문은 개통이 끝난 뒤에 해요' },
         { text: '이거 얼마예요?', phraseId: 'p_kore_ikura', correct: false, feedback: '지금은 여권을 보여줄 차례예요 — 가격은 이미 확인했어요' },
       ],
@@ -962,6 +969,7 @@ export const c29: Mission = {
       promptPhraseId: 'p_senntakuki_wa_kochira_desu',
       choices: [
         { text: '사용법 알려 주세요', phraseId: 'p_tsukaikata', correct: true, feedback: '「使い方を教えてください」— 일본 코인세탁기는 세탁→헹굼→탈수 코스를 선택하는 형식이에요. 직접 눌러줄 만큼 친절해요' },
+        { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: true, feedback: '위치를 알려준 것에 짧게 감사로 답해도 자연스러워요' },
         { text: '스이카로요', phraseId: 'p_suica_de', correct: false, feedback: '코인세탁기는 보통 동전으로 써요 — 먼저 사용법을 물어봐요' },
       ],
     },
@@ -1023,6 +1031,7 @@ export const c30: Mission = {
       promptPhraseId: 'p_nanmai_desu_ka',
       choices: [
         { text: '표 두 장 주세요', phraseId: 'p_kippu_nimai_kudasai', correct: true, feedback: '「切符(きっぷ)2枚(まい)ください」— 일본 축제·행사 입장권. 현금만 받는 곳이 많으니 小銭(こぜに)를 준비해요' },
+        { text: '표 한 장 주세요', phraseId: 'p_kippu_ichimai_kudasai', correct: true, feedback: '「切符(きっぷ)一枚(いちまい)ください」— 혼자 입장한다면 한 장으로 답해요' },
         { text: '사진 찍어도 돼요?', phraseId: 'p_shashin_ii', correct: false, feedback: '먼저 입장권을 사요 — 촬영은 입장한 뒤에 확인해요' },
       ],
     },
@@ -1032,6 +1041,7 @@ export const c30: Mission = {
       promptPhraseId: 'p_kore_hitotsu_de_yoroshii_desu_ka',
       choices: [
         { text: '하나 주세요', phraseId: 'p_hitotsu_kudasai', correct: true, feedback: '「一(ひと)つください」— 노점 먹거리는 보통 1개 단위. 手(て)で受(う)け取(と)れるものが多い(손으로 받는 것이 많아요)' },
+        { text: '두 개 주세요', phraseId: 'p_futatsu_kudasai', correct: true, feedback: '「二(ふた)つください」— 일행과 나눠 먹으려면 두 개로 답해요' },
         { text: '표 두 장 주세요', phraseId: 'p_kippu_nimai_kudasai', correct: false, feedback: '입장권은 이미 샀어요 — 지금은 먹거리를 주문해요' },
       ],
     },
@@ -1041,6 +1051,7 @@ export const c30: Mission = {
       promptPhraseId: 'p_kingyo_sukui',
       choices: [
         { text: '이건 뭐예요?', phraseId: 'p_kore_nani', correct: true, feedback: '「これは何(なん)ですか」— 처음 보는 게임이나 간식을 물어봐요. 점원이 신나게 설명해줘요' },
+        { text: '괜찮아요', phraseId: 'p_daijoubu', correct: true, feedback: '「大丈夫(だいじょうぶ)」— 게임에 참여하지 않겠다면 짧게 사양해도 돼요' },
         { text: '표 두 장 주세요', phraseId: 'p_kippu_nimai_kudasai', correct: false, feedback: '입장권은 이미 샀어요 — 지금은 새로운 게임을 물어봐요' },
       ],
     },

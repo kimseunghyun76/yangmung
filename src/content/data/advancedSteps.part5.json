@@ -323,6 +323,12 @@
           "phraseId": "p_new_betsu_tsuuro_kakunin",
           "correct": true,
           "feedback": "「どの通路(つうろ)ですか」— 우회로 안내를 받고 방향이 헷갈릴 때 이렇게 되물으면 직원이 손으로 짚어가며 알려줘요"
+        },
+        {
+          "text": "감사합니다 (정중)",
+          "phraseId": "p_arigatou_gozaimasu",
+          "correct": true,
+          "feedback": "다시 묻지 않고 안내에 짧게 감사로 답해도 자연스러워요"
         }
       ]
     },

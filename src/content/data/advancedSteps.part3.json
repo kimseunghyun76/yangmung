@@ -232,6 +232,12 @@
           "feedback": "권유를 받아들여 한 대 뒤로 바꾸는 자연스러운 응답이에요"
         },
         {
+          "text": "괜찮아요",
+          "phraseId": "p_daijoubu",
+          "correct": true,
+          "feedback": "붐벼도 그대로 타겠다면 짧게 답해도 돼요"
+        },
+        {
           "text": "몇 번 선이에요?",
           "phraseId": "p_nanbansen",
           "correct": false,
@@ -262,6 +268,12 @@
           "phraseId": "p_new_bentou_hitotsu",
           "correct": true,
           "feedback": "「お弁当(べんとう)を一(ひと)つください」— 판매원이 카트를 끌고 지나갈 때 이렇게 말하면 자리에서 바로 구매할 수 있어요"
+        },
+        {
+          "text": "괜찮아요",
+          "phraseId": "p_daijoubu",
+          "correct": true,
+          "feedback": "도시락·음료가 필요 없다면 짧게 사양해도 돼요"
         }
       ]
     }

@@ -16,6 +16,7 @@ export const c8: Mission = {
       speaker: '나',
       choices: [
         { text: '시부야까지 가주세요', phraseId: 'p_made_onegai', correct: true, feedback: '「渋谷(しぶや)までお願(ねが)いします」— 목적지 뒤에 まで를 붙이면 어디든 전달 가능. 일본 택시는 자동문이라 직접 열지 않아도 되고, 주소 메모나 지도 화면을 보여주면 더 정확해요' },
+        { text: '이 주소로 가주세요', phraseId: 'p_kono_juusho_de', correct: true, feedback: '「この住所(じゅうしょ)でお願(ねが)いします」— 지명을 몰라도 지도 앱에 저장한 주소를 보여주며 말할 수 있어요' },
         { text: '택시 불러주세요', phraseId: 'p_takushi_onegai', correct: false, feedback: '이미 택시에 탔어요. 부르는 표현은 호텔 프런트에서 써요' },
         { text: '신주쿠역은 어디예요?', phraseId: 'p_shinjuku_doko', correct: false, feedback: '기사에게는 길을 묻는 게 아니라 행선지를 말해요. 「〇〇までお願いします」' },
       ],
@@ -26,6 +27,7 @@ export const c8: Mission = {
       promptPhraseId: 'p_doko_made',
       choices: [
         { text: '시부야까지 가주세요', phraseId: 'p_made_onegai', correct: true, feedback: '기사가 못 알아들었을 때 또렷이 한 번 더. 지명을 한자로 쓴 쪽지를 보여줘도 효과적이에요' },
+        { text: '이 주소로 가주세요', phraseId: 'p_kono_juusho_de', correct: true, feedback: '못 알아들었을 때 주소를 보여주며 다시 한번 확실히 전달해요' },
         { text: '여기서 세워 주세요', phraseId: 'p_koko_de_tomete', correct: false, feedback: '아직 출발 단계 — 행선지를 먼저 확인해요' },
       ],
     },

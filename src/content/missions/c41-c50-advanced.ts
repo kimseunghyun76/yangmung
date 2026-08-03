@@ -54,6 +54,7 @@ export const c41: Mission = {
       promptPhraseId: 'p_henkin_card',
       choices: [
         { text: '사용했던 카드랑 같은 건가요?', phraseId: 'p_new_card_kakunin', correct: true, feedback: '「使(つか)ったカードと同(おな)じですか」— 환불 카드가 원래 결제 카드와 같은지 재차 확인하면 착오를 막을 수 있어요' },
+        { text: '괜찮아요', phraseId: 'p_daijoubu', correct: true, feedback: '카드 확인 없이 그대로 진행해도 괜찮다면 짧게 답해요' },
         { text: '이걸 교환하고 싶어요', phraseId: 'p_koukan_shitai', correct: false, feedback: '교환·환불 의사는 이미 밝혔어요 — 지금은 환불 카드가 맞는지 확인해요' },
       ],
     },
@@ -167,6 +168,7 @@ export const c43: Mission = {
       choices: [
         { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: false, feedback: '이미 카드를 쓰려고 준비한 상황 — 다시 물어볼 필요가 없어요' },
         { text: '이 방향 맞아요?', phraseId: 'p_new_kono_muki_de_ii', correct: true, feedback: '「この向(む)きで合(あ)ってますか」— 화살표 방향 안내를 듣고 카드를 넣기 직전에 방향을 재확인하는 자연스러운 대답이에요' },
+        { text: '그렇게 할게요', phraseId: 'p_sou_shimasu', correct: true, feedback: '「そうします」— 재확인 없이 안내받은 대로 바로 넣겠다는 응답이에요' },
       ],
     },
     {
@@ -380,6 +382,7 @@ export const c46: Mission = {
       promptPhraseId: 'p_megaphone',
       choices: [
         { text: '무슨 색이 있어요?', phraseId: 'p_new_megahon_iro', correct: true, feedback: '「何色(なにいろ)がありますか」— 팀 컬러 굿즈를 살 때 색상 옵션부터 확인하는 실용적인 질문이에요. 「色」는 いろ로 읽어요' },
+        { text: '하나 주세요', phraseId: 'p_hitotsu_kudasai', correct: true, feedback: '「一(ひと)つください」— 색상 상관없이 바로 하나 달라고 해도 돼요' },
         { text: '티켓은 이쪽입니다', phraseId: 'p_chiketto_wa_kochira_desu', correct: false, feedback: '티켓 확인은 이미 끝났어요 — 지금은 굿즈 색상을 물어봐요' },
       ],
     },

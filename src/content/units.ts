@@ -44,7 +44,7 @@ export const units: Unit[] = [
   {
     id: 'u_b0_social', track: 'lang', stage: 'B0', mode: 'reaction',
     canDo: '사용자는 가게·길에서 인사·주의 끌기·짧은 동조를 한 마디로 할 수 있다',
-    newPhraseIds: ['p_konnichiwa', 'p_sumimasen', 'p_chotto', 'p_sou_desu', 'p_daijoubu', 'p_kore', 'p_are'],
+    newPhraseIds: ['p_konnichiwa', 'p_konbanwa', 'p_sumimasen', 'p_chotto', 'p_sou_desu', 'p_daijoubu', 'p_kore', 'p_are'],
   },
   {
     id: 'u_b1_shop_core', track: 'lang', stage: 'B1', mode: 'action',
@@ -72,7 +72,7 @@ export const units: Unit[] = [
   {
     id: 'u_b1_station_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 역에서 행선지·환승·표·개찰구를 묻고 안내를 듣고 다음 행동을 정할 수 있다',
-    newPhraseIds: ['p_shinjuku_doko', 'p_michi_oshiete', 'p_dochira_desu_ka', 'p_ikura_desu_ka', 'p_doko_desu_ka', 'p_eki', 'p_norikae', 'p_kaisatsu', 'p_kippu', 'p_kippu_kudasai', 'p_chaaji_onegai', 'p_kaisatsu_doko', 'p_nanbansen', 'p_tsugi_wa_shibuya', 'p_nan_gousha', 'p_tsugi_de_orimasu', 'p_eki_wa_doko', 'p_koko_de_orireba_ii', 'p_shiteiseki_de'],
+    newPhraseIds: ['p_shinjuku_doko', 'p_michi_oshiete', 'p_dochira_desu_ka', 'p_ikura_desu_ka', 'p_doko_desu_ka', 'p_eki', 'p_norikae', 'p_kaisatsu', 'p_kippu', 'p_kippu_kudasai', 'p_chaaji_onegai', 'p_kaisatsu_doko', 'p_nanbansen', 'p_tsugi_wa_shibuya', 'p_nan_gousha', 'p_tsugi_de_orimasu', 'p_eki_wa_doko', 'p_koko_de_orireba_ii', 'p_shiteiseki_de', 'p_kono_basu_de_ii_desu_ka'],
   },
   {
     id: 'u_b1_hotel_core', track: 'lang', stage: 'B1', mode: 'action',
@@ -87,7 +87,7 @@ export const units: Unit[] = [
   {
     id: 'u_b1_pharmacy_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 약국에서 증상을 말하고 약을 요청하고 약에 대해 물을 수 있다',
-    newPhraseIds: ['p_atama_itai', 'p_onaka_itai', 'p_kaze_desu', 'p_kusuri_kudasai', 'p_kono_kusuri', 'p_netsu_arimasu', 'p_seki_ga_demasu', 'p_ninshin_chuu', 'p_shokugo_kakunin', 'p_kado_de_ii_desu_ka'],
+    newPhraseIds: ['p_atama_itai', 'p_onaka_itai', 'p_kaze_desu', 'p_kusuri_kudasai', 'p_kono_kusuri', 'p_netsu_arimasu', 'p_seki_ga_demasu', 'p_ninshin_chuu', 'p_shokugo_kakunin', 'p_kado_de_ii_desu_ka', 'p_ichinichi_nankai'],
   },
   {
     id: 'u_b1_shopping_core', track: 'lang', stage: 'B1', mode: 'action',
@@ -97,7 +97,7 @@ export const units: Unit[] = [
   {
     id: 'u_b1_taxi_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 택시에서 행선지를 말하고 세워 달라고 하며 영수증을 받을 수 있다',
-    newPhraseIds: ['p_takushi_onegai', 'p_made_onegai', 'p_koko_de_tomete', 'p_ryoushuusho', 'p_ippan_michi_de', 'p_otsuri_daijoubu', 'p_kousoku_de_onegai', 'p_sono_kado_de_tomete'],
+    newPhraseIds: ['p_takushi_onegai', 'p_made_onegai', 'p_koko_de_tomete', 'p_ryoushuusho', 'p_ippan_michi_de', 'p_otsuri_daijoubu', 'p_kousoku_de_onegai', 'p_sono_kado_de_tomete', 'p_kono_juusho_de'],
   },
   {
     id: 'u_b1_airport_core', track: 'lang', stage: 'B1', mode: 'action',
@@ -107,7 +107,7 @@ export const units: Unit[] = [
   {
     id: 'u_b1_exchange_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 환전을 요청하고 잔돈으로 바꿔 달라고 할 수 있다',
-    newPhraseIds: ['p_ryougae', 'p_komakaku', 'p_ichiman_ryougae', 'p_zenbu_de', 'p_kingaku_kakunin'],
+    newPhraseIds: ['p_ryougae', 'p_komakaku', 'p_ichiman_ryougae', 'p_zenbu_de', 'p_kingaku_kakunin', 'p_kawase_ikura'],
   },
   {
     id: 'u_b1_locker_core', track: 'lang', stage: 'B1', mode: 'action',
@@ -117,7 +117,7 @@ export const units: Unit[] = [
   {
     id: 'u_b1_delivery_core', track: 'lang', stage: 'B1', mode: 'action',
     canDo: '사용자는 편의점에서 물건을 부치겠다고 말하고 요금을 물으며, 부재중 택배의 재배달을 요청하고 희망 날짜·시간대를 말할 수 있다',
-    newPhraseIds: ['p_okuritai', 'p_takkyubin', 'p_maebarai_de', 'p_chakubarai_de', 'p_saihaitatsu_onegai', 'p_ashita_gogo_de', 'p_niji_kara_yoji_made', 'p_saihaitatsu_arigatou'],
+    newPhraseIds: ['p_okuritai', 'p_takkyubin', 'p_maebarai_de', 'p_chakubarai_de', 'p_saihaitatsu_onegai', 'p_ashita_gogo_de', 'p_niji_kara_yoji_made', 'p_saihaitatsu_arigatou', 'p_pen_kashite'],
   },
   {
     id: 'u_b1_ramen_core', track: 'lang', stage: 'B1', mode: 'action',
@@ -130,7 +130,7 @@ export const units: Unit[] = [
     newPhraseIds: [
       'p_tennai_de', 'p_mochikaeri_de', 'p_esu_saizu_de', 'p_emu_saizu_de',
       'p_hotto_de', 'p_aisu_de', 'p_shotto_tsuika', 'p_kore_nani',
-      'p_kippu_nimai_kudasai', 'p_sumimasen_koko_doko', 'p_nihon_go_muzukashii',
+      'p_kippu_nimai_kudasai', 'p_kippu_ichimai_kudasai', 'p_sumimasen_koko_doko', 'p_nihon_go_muzukashii',
       'p_nihongo_sukoshi_dake', 'p_chiketto_wa_kochira_desu', 'p_basho_o_oshiete_kudasai',
       'p_saifu_nakushita', 'p_ugokemasen', 'p_kusuri_nondeimasu', 'p_sentaku_de', 'p_kansou_de',
       // 개편 2/N — 단답 「감사합니다」 대체 응답
@@ -138,7 +138,7 @@ export const units: Unit[] = [
       'p_ki_o_tsukemasu', 'p_tanoshimi_desu', 'p_sorede_onegai', 'p_oboete_okimasu',
       'p_mou_juubun', 'p_aruite_mimasu', 'p_matte_imasu', 'p_itadakimasu',
       'p_renraku_kudasai', 'p_isoide_kudasai', 'p_koko_de_orimasu', 'p_tadaima',
-      'p_koukan_shitai', 'p_henkin_de',
+      'p_koukan_shitai', 'p_henkin_de', 'p_asa_gurai_deshita',
       'p_syrup_tsuika', 'p_issho_ni_irete',
     ],
   },

@@ -56,6 +56,7 @@ export const c6: Mission = {
       promptPhraseId: 'p_shokugo_nonde',
       choices: [
         { text: '식후에 먹으면 되나요?', phraseId: 'p_shokugo_kakunin', correct: true, feedback: '「食後(しょくご)に飲(の)めばいいですか」— 복용법을 들었으면 핵심을 되물어 확인. 약을 안전하게 먹는 데는 감사보다 이 확인이 훨씬 중요해요' },
+        { text: '하루에 몇 번 먹어요?', phraseId: 'p_ichinichi_nankai', correct: true, feedback: '「一日(いちにち)に何回(なんかい)飲(の)みますか」— 복용 횟수를 되물어 확인해도 자연스러워요' },
         { text: '머리가 아파요', phraseId: 'p_atama_itai', correct: false, feedback: '증상은 이미 전했어요 — 지금은 복용법을 확인해요' },
       ],
     },
@@ -64,6 +65,7 @@ export const c6: Mission = {
       speaker: '나',
       choices: [
         { text: '카드로도 되나요?', phraseId: 'p_kado_de_ii_desu_ka', correct: true, feedback: '「カードでもいいですか」— 결제 전에 카드가 되는지 확인. 드러그스토어는 대부분 되지만 미리 물어보면 깔끔해요' },
+        { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: true, feedback: '「カードは使えますか」— 같은 확인을 다른 표현으로 물어봐도 돼요' },
         { text: '머리가 아파요', phraseId: 'p_atama_itai', correct: false, feedback: '증상 설명은 끝났어요 — 지금은 결제 방법을 확인해요' },
       ],
     },

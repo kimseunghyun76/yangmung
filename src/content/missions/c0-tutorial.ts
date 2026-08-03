@@ -19,6 +19,7 @@ export const c0: Mission = {
       promptPhraseId: 'p_irasshai',
       choices: [
         { text: '안녕하세요', phraseId: 'p_konnichiwa', correct: true, feedback: '「こんにちは」— 낮 인사. 아침엔 おはようございます, 저녁엔 こんばんは. 가게에 들어서면 이렇게 인사해 봐요' },
+        { text: '안녕하세요 (저녁)', phraseId: 'p_konbanwa', correct: true, feedback: '「こんばんは」— 저녁 시간대(18시 이후)라면 こんにちは 대신 이렇게 인사해요' },
         { text: '감사합니다 (정중)', phraseId: 'p_arigatou_gozaimasu', correct: false, feedback: '「ありがとうございます」는 고맙거나 나갈 때 인사예요. 막 들어와 맞이 인사를 받았을 땐 こんにちは가 자연스러워요' },
         { text: '다시 한 번 부탁합니다', phraseId: 'p_mou_ichido', correct: true, recoveryType: 'repeat', recoveryOutcome: 'full' },
       ],

@@ -34,6 +34,7 @@ export const c53: Mission = {
       speaker: '나',
       choices: [
         { text: '방송으로 찾아주실 수 있나요?', phraseId: 'p_housou_de_sagashite_moraemasu_ka', correct: true, feedback: '「放送(ほうそう)で探(さが)してもらえますか」— 매장·역의 미아 안내방송을 요청하는 표현이에요' },
+        { text: '도와주세요', phraseId: 'p_tasukete', correct: true, feedback: '「助(たす)けてください」— 다시 한번 강하게 도움을 요청하며 방송을 부탁해도 돼요' },
         { text: '카드 돼요?', phraseId: 'p_card_tsukaemasu_ka', correct: false, feedback: '지금은 결제와 관련 없는 상황이에요 — 방송으로 찾아달라고 부탁해요' },
       ],
     },

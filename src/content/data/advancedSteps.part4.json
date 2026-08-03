@@ -17,6 +17,12 @@
           "phraseId": "p_new_fullcover_onegai",
           "correct": true,
           "feedback": "「フルカバーでお願(ねが)いします」— 직원이 제안한 풀커버 보험을 그대로 받아들이는 대답이에요. 여행 중 사고가 걱정될 때 유용한 선택이죠"
+        },
+        {
+          "text": "필요 없어요",
+          "phraseId": "p_irimasen",
+          "correct": true,
+          "feedback": "「要(い)りません」— 추가 보험이 필요 없다면 정중히 사양해요"
         }
       ]
     },
@@ -516,6 +522,12 @@
           "correct": true
         },
         {
+          "text": "괜찮아요",
+          "phraseId": "p_daijoubu",
+          "correct": true,
+          "feedback": "특선을 사양하고 싶다면 짧게 답해도 돼요"
+        },
+        {
           "text": "잘 먹었습니다",
           "phraseId": "p_gochisousama",
           "correct": false,
@@ -567,6 +579,12 @@
           "phraseId": "p_kore_to_kore",
           "correct": true,
           "feedback": "작은 상품을 추가해 면세 기준을 채우는 실전 요령이에요"
+        },
+        {
+          "text": "괜찮아요",
+          "phraseId": "p_daijoubu",
+          "correct": true,
+          "feedback": "추가 구매 없이 면세를 포기해도 괜찮다면 짧게 답해요"
         },
         {
           "text": "면세 부탁합니다",

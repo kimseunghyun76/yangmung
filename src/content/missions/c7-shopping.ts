@@ -65,6 +65,7 @@ export const c7: Mission = {
       promptPhraseId: 'p_otsutsumi_shimasu_ka',
       choices: [
         { text: '선물 포장 부탁합니다', phraseId: 'p_gift_wrapping_onegai', correct: true, feedback: '「ギフトラッピングお願(ねが)いします」— 일본 백화점·매장의 선물 포장은 수준이 높아요. 대부분 무료 또는 저렴해요' },
+        { text: '괜찮아요', phraseId: 'p_daijoubu', correct: true, feedback: '「大丈夫(だいじょうぶ)」— 포장이 필요 없다면 짧게 사양해도 돼요' },
         { text: '이거 얼마예요?', phraseId: 'p_kore_ikura', correct: false, feedback: '가격은 이미 확인했어요 — 지금은 포장 여부를 답해요' },
       ],
     },

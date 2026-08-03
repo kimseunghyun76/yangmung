@@ -23,6 +23,7 @@ export const phrases: Phrase[] = [
   { id: 'p_fukuro', kana: 'ふくろはいりますか', kanji: '袋は要りますか', displayKana: 'ふくろは、いりますか？', korean: '봉투 필요하세요?', register: 'receptive', grammarRefs: ['g_masuka'] },
   { id: 'p_price', kana: 'ごうけいせんえんです', kanji: '合計千円です', displayKana: 'ごうけい、せんえんです。', korean: '합계 천엔입니다', register: 'receptive' },
   { id: 'p_konnichiwa', kana: 'こんにちは', korean: '안녕하세요', register: 'both', tip: '「こんにちは」— 낮 시간대(11시~18시) 인사. 아침엔 おはようございます, 저녁엔 こんばんは를 써요. 가게에 들어설 때 자연스럽게 인사하면 일본인에게 좋은 인상을 줍니다' },
+  { id: 'p_konbanwa', kana: 'こんばんは', korean: '안녕하세요 (저녁)', register: 'both', tip: '「こんばんは」— 저녁 시간대(18시 이후) 인사. こんにちは의 저녁 버전이에요' },
   { id: 'p_irasshai', kana: 'いらっしゃいませ', korean: '어서 오세요', register: 'receptive' },
 
   // ── C2 식당 주문 한 조각 (NPC + 학습자 발화) ──
@@ -488,6 +489,13 @@ export const phrases: Phrase[] = [
   { id: 'p_new_karaa_a4_de', kana: 'カラーでエーよんでおねがいします', kanji: 'カラーで、A4でお願いします', displayKana: 'カラーで、エーよんでおねがいします', korean: '컬러로, A4로 부탁드려요', register: 'productive', tip: '「カラーで、A4(エーよん)でお願(ねが)いします」— 복합기 직원이 컬러/흑백과 용지 크기를 함께 물었을 때, 두 질문에 한 번에 답하는 표현이에요' },
   { id: 'p_new_ryoumen_de', kana: 'りょうめんでおねがいします', kanji: '両面でお願いします', korean: '양면으로 부탁해요', register: 'productive', tip: '「両面(りょうめん)でお願(ねが)いします」— 복합기에서 양면 인쇄를 원할 때 쓰는 대답. 한 면만 원하면 片面(かためん)で라고 하면 돼요' },
   { id: 'p_new_katamen_de', kana: 'かためんでおねがいします', kanji: '片面でお願いします', korean: '단면으로 부탁해요', register: 'productive', tip: '「片面(かためん)でお願(ねが)いします」— 한 면만 인쇄하고 싶을 때. 両面でお願いします의 반대예요' },
+  { id: 'p_ichinichi_nankai', kana: 'いちにちになんかいのみますか', kanji: '一日に何回飲みますか', displayKana: 'いちにちに、なんかい のみますか？', korean: '하루에 몇 번 먹어요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '「一日(いちにち)に何回(なんかい)飲(の)みますか」— 복용법을 되물어 확인할 때. 식후(食後)뿐 아니라 횟수도 함께 확인하면 안전해요' },
+  { id: 'p_kono_juusho_de', kana: 'このじゅうしょでおねがいします', kanji: 'この住所でお願いします', displayKana: 'この じゅうしょで、おねがいします', korean: '이 주소로 가주세요', register: 'productive', tip: '「この住所(じゅうしょ)でお願(ねが)いします」— 지명 대신 스마트폰에 저장한 주소나 지도 화면을 보여주며 말할 때 써요' },
+  { id: 'p_kawase_ikura', kana: 'かわせはいくらですか', kanji: '為替はいくらですか', displayKana: 'かわせは、いくらですか？', korean: '환율이 얼마예요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '「為替(かわせ)はいくらですか」— 환전을 요청하기 전에 오늘의 환율부터 확인하는 표현이에요' },
+  { id: 'p_pen_kashite', kana: 'ペンをかしてください', kanji: 'ペンを貸してください', displayKana: 'ペンを、かしてください', korean: '펜 좀 빌려주세요', register: 'productive', tip: '「ペンを貸(か)してください」— 전표나 서류를 작성해야 할 때 펜이 없으면 이렇게 요청해요' },
+  { id: 'p_kippu_ichimai_kudasai', kana: 'きっぷいちまいください', kanji: '切符一枚ください', displayKana: 'きっぷ いちまい、ください', korean: '표 한 장 주세요', register: 'productive', tip: '「切符(きっぷ)一枚(いちまい)ください」— 표는 一枚(いちまい)·二枚(にまい)처럼 枚로 세요. 혼자 입장할 때 이렇게 말해요' },
+  { id: 'p_kono_basu_de_ii_desu_ka', kana: 'このバスでいいですか', displayKana: 'このバスで、いいですか？', korean: '이 버스 맞아요?', register: 'productive', grammarRefs: ['g_masuka'], tip: '「このバスでいいですか」— 목적지를 말하는 대신 지도 앱을 보여주며 이 버스가 맞는지 되물을 때 써요' },
+  { id: 'p_asa_gurai_deshita', kana: 'あさぐらいでした', kanji: '朝ぐらいでした', displayKana: 'あさ ぐらい、でした', korean: '아침쯤이었어요', register: 'productive', tip: '「朝(あさ)ぐらいでした」— 정확한 시간은 몰라도 대략적인 때를 기억한다면 이렇게 답해요' },
   { id: 'p_new_yoyaku_namae_desu', kana: 'よやくのやまだです', kanji: '予約の山田です', korean: '예약한 야마다예요', register: 'productive', tip: '「予約(よやく)の山田(やまだ)です」— 온라인으로 예약한 이름을 밝힐 때 쓰는 표현이에요. 「予約の◯◯です」형태로 본인 이름을 넣어 말하면 돼요' },
   { id: 'p_new_bangou_nana_desu', kana: 'ばんごうはななばんです', kanji: '番号は7番です', korean: '번호는 7번이에요', register: 'productive', tip: '「番号(ばんごう)は7番(ななばん)です」— 픽업 카운터에서 주문번호를 물었을 때 자신의 번호를 직접 말하는 표현이에요. 온라인 예약 픽업은 이름보다 번호로 확인하는 경우가 많아서 이렇게 답하게 됩니다' },
   { id: 'p_new_megahon_iro', kana: 'なにいろがありますか', kanji: '何色がありますか', korean: '무슨 색이 있어요?', register: 'productive', tip: '「何色(なにいろ)がありますか」— 매점 직원이 응원 메가폰을 권할 때, 응원하는 팀 컬러가 있는지 확인하려고 색상 종류를 묻는 표현이에요. 야구장 굿즈 매대에서 자연스러운 질문입니다' },

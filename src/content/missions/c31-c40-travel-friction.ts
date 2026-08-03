@@ -363,6 +363,7 @@ export const c36: Mission = {
       promptPhraseId: 'p_pasupooto_misete',
       choices: [
         { text: '여권 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: true, feedback: '「パスポートはこちらです」— 체크인에는 여권과 탑승권(또는 예약번호)이 필요해요. 미리 준비해요' },
+        { text: '잠깐만 기다려 주세요', phraseId: 'p_chotto_matte', correct: true, feedback: '「ちょっと待(ま)ってください」— 가방에서 서류를 꺼내는 동안 양해를 구해도 자연스러워요' },
         { text: '짐을 줄이겠습니다', phraseId: 'p_nimotsu_herashimasu', correct: false, feedback: '먼저 서류를 보여줘요 — 짐 조정은 무게를 잰 뒤에 해요' },
       ],
     },

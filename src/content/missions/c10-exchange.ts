@@ -16,6 +16,7 @@ export const c10: Mission = {
       speaker: '나',
       choices: [
         { text: '환전해 주세요', phraseId: 'p_ryougae', correct: true, feedback: '「両替(りょうがえ)してください」— 공항보다 시내 환전소(특히 도톤보리·아키하바라 주변)가 환율이 더 유리해요' },
+        { text: '환율이 얼마예요?', phraseId: 'p_kawase_ikura', correct: true, feedback: '「為替(かわせ)はいくらですか」— 환전을 요청하기 전에 오늘의 환율부터 물어봐도 자연스러워요' },
         { text: '영수증 주세요', phraseId: 'p_ryoushuusho', correct: false, feedback: '영수증은 환전이 끝난 뒤에 받아요 — 지금은 먼저 「両替(りょうがえ)してください」로 환전을 요청하세요' },
       ],
     },

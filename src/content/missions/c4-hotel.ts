@@ -34,6 +34,7 @@ export const c4: Mission = {
       promptPhraseId: 'p_passport_onegai',
       choices: [
         { text: '여권 여기 있어요', phraseId: 'p_pasupooto_arimasu', correct: true, feedback: '건네면서 「パスポートはこちらです」라고 말하면 자연스러워요' },
+        { text: '잠깐만 기다려 주세요', phraseId: 'p_chotto_matte', correct: true, feedback: '「ちょっと待(ま)ってください」— 가방에서 여권을 꺼내는 동안 양해를 구해도 자연스러워요' },
         { text: '조식은요?', phraseId: 'p_choushoku_wa', correct: false, feedback: '아직 체크인 확인 단계라 여권부터 처리하는 편이 자연스럽습니다' },
       ],
     },
