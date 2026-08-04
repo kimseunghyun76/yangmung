@@ -53,7 +53,21 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
         <h2 style={{ marginTop: 14, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="discover" size={22} /> 새 표현</h2>
       )}
       {preferImageArt ? (
-        <QuickPracticeWordScene card={card} />
+        <>
+          {/* 그림을 먼저 보고 스스로 떠올려 보게 하는 안내 — 이미지 위에 얹으면 그림을 가리고
+              단어 오버레이와도 겹치므로 이미지 바깥 상단에 둔다(2026-08-04 요청). 인출 연습
+              (retrieval practice)이 그냥 보고 읽는 것보다 기억에 오래 남는다는 원리. */}
+          {hasSpecificWordImage(card) && (
+            <p style={{
+              margin: '2px 0 8px', textAlign: 'center', fontSize: 12.5, fontWeight: 800,
+              color: 'var(--ink-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+            }}>
+              <Icon name="discover" size={15} style={{ color: 'var(--accent)' }} />
+              그림을 보고 단어를 먼저 떠올려 보세요
+            </p>
+          )}
+          <QuickPracticeWordScene card={card} />
+        </>
       ) : (
         hasWordArt(card.id) && (
           <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 8px' }}>
