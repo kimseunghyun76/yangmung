@@ -19,6 +19,7 @@ import { PageHead } from './ui';
 import { GlassPanel, hexA } from './shell';
 import { MascotEmpty } from './mascot';
 import { BigTextOverlay, ZoomButton } from './BigText';
+import { SpeechBubbleStage } from './SpeechBubbleStage';
 import { Furigana } from './Furigana';
 
 // 한국어 번역문의 부정 표지로 긍정/부정을 나눈다(일본어 형태소 분석 없이, 이미 있는 번역
@@ -102,6 +103,8 @@ export function ListenMode({ nav, allCards, progress, onBack }: Props) {
   const [rate, setRate] = useState<number>(1);
   const [keepAwake, setKeepAwake] = useState(true);
   const [zoom, setZoom] = useState(false);
+  // 이동 중 학습용 전체화면(마스코트 말풍선) — 상대에게 보여주는 zoom(BigText)과 목적이 달라 별도 상태.
+  const [stage, setStage] = useState(false);
   const wakeLockRef = useRef<{ release: () => Promise<void> } | null>(null);
 
   useEffect(() => { setIndex(0); setPlaying(false); }, [scope]);
@@ -286,8 +289,34 @@ export function ListenMode({ nav, allCards, progress, onBack }: Props) {
             </div>
           </GlassPanel>
 
+          {/* 이동 중 크게 보기 — 걸으면서·전철에서 흘끗 봐도 읽히도록 마스코트 말풍선 전체화면으로.
+              한자 표기와 읽기가 섞여 외우기 어렵다는 피드백(2026-08-04) 대응. */}
+          {current && (
+            <button className="ym-press" onClick={() => setStage(true)} style={{
+              width: '100%', marginTop: 12, padding: '13px 16px', borderRadius: 14, cursor: 'pointer',
+              border: '1px solid var(--accent)', background: 'var(--accent-soft)', color: 'var(--accent)',
+              fontWeight: 800, fontSize: 14, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            }}>
+              <Icon name="expand" size={17} /> 이동 중 크게 보기
+            </button>
+          )}
+
           {zoom && current && (
             <BigTextOverlay kanji={current.kanji} kana={current.displayKana ?? current.kana} sub={current.korean} onClose={() => setZoom(false)} />
+          )}
+
+          {stage && current && (
+            <SpeechBubbleStage
+              kanji={current.kanji}
+              kana={current.displayKana ?? current.kana}
+              korean={current.korean}
+              playing={playing}
+              onTogglePlay={() => setPlaying((p) => !p)}
+              onPrev={() => goTo(index - 1)}
+              onNext={() => goTo(index + 1)}
+              position={{ index: index + 1, total: list.length }}
+              onClose={() => setStage(false)}
+            />
           )}
         </>
       )}
