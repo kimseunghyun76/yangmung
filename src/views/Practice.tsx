@@ -37,6 +37,8 @@ interface PracticeItem {
   icon: IconName;
   accent: string;
   stage?: ProgStage;
+  /** "확인한 단어 8/24"처럼 이 항목의 진행 상황을 타일에 한 줄로 덧붙일 때. */
+  progressText?: string;
   onClick: () => void;
   // stage 기반 순차 잠금과 다른 커스텀 해금 조건이 필요할 때만 지정(예: 히라가나+가타카나 완료).
   unlockCheck?: (progression: ProgressionState) => boolean;
@@ -111,16 +113,21 @@ export function Practice({ nav, coreLevel, progression, progress, devUnlockAll, 
   // 어휘 커리큘럼 — 예전엔 "어휘 커리큘럼" 배너 하나로 뭉쳐 그 안의 하위 메뉴(/vocab)로 들어가야 했는데,
   // 그 메뉴 안에 기본 인사·생활 기초가 이미 별도 배너로 있는 내용과 중복돼 혼란스러웠다.
   // 이제 기본 인사(입문 단계로 이동)를 뺀 나머지 주제 그룹을 기본 레벨에 개별 배너로 바로 펼쳐 놓는다.
-  const vocabGroupItems: PracticeItem[] = VOCAB_GROUPS.filter((g) => g.id !== 'greetings').map((g) => ({
-    key: `default:vocab:${g.id}`,
-    label: g.label,
-    sub: g.description,
-    level: 'default',
-    art: vocabGroupArt(g.id),
-    icon: 'kana',
-    accent: LEVEL_ACCENT.default,
-    onClick: () => onStartVocabGroup(g.id),
-  }));
+  const vocabGroupItems: PracticeItem[] = VOCAB_GROUPS.filter((g) => g.id !== 'greetings').map((g) => {
+    // 이 주제의 단어 중 실제로 학습 카드를 본 개수 — 학습 카드 id는 vocab:{group}:study:{item} 형식이다.
+    const seen = g.items.filter((it) => progress[`vocab:${g.id}:study:${it.id}`]).length;
+    return {
+      key: `default:vocab:${g.id}`,
+      label: g.label,
+      sub: g.description,
+      level: 'default' as CoreLevel,
+      art: vocabGroupArt(g.id),
+      icon: 'kana' as IconName,
+      accent: LEVEL_ACCENT.default,
+      progressText: `확인한 단어 ${seen}/${g.items.length}`,
+      onClick: () => onStartVocabGroup(g.id),
+    };
+  });
   const items: PracticeItem[] = [
     ...stageItems(onStartStage),
     {
@@ -378,6 +385,12 @@ function PracticeCard({ item, unlocked, done, featured = false }: { item: Practi
         <span style={{ display: 'block', minWidth: 0 }}>
           <strong style={{ display: 'block', fontSize: featured ? 22 : 17, lineHeight: 1.08, fontWeight: 950, textShadow: '0 2px 8px rgba(0,0,0,.45)', overflowWrap: 'anywhere' }}>{item.label}</strong>
           <span style={{ display: 'block', marginTop: 4, fontSize: featured ? 13 : 11.5, lineHeight: 1.28, fontWeight: 760, color: 'rgba(255,255,255,.82)', overflowWrap: 'anywhere' }}>{item.sub}</span>
+          {/* 전체 중 몇 개를 확인했는지 — "전체 단어 중에 얼마나 확인했는지도 알고 싶다"는 요청(2026-08-04) */}
+          {item.progressText && (
+            <span style={{ display: 'block', marginTop: 5, fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,.95)', textShadow: '0 1px 6px rgba(0,0,0,.5)', fontVariantNumeric: 'tabular-nums' }}>
+              {item.progressText}
+            </span>
+          )}
         </span>
       </span>
     </button>

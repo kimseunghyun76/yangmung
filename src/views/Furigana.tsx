@@ -62,15 +62,15 @@ function buildSegments(kanji: string, kana: string): Segment[] {
   return segments;
 }
 
-export function Furigana({ kanji, kana, style }: { kanji?: string; kana: string; style?: React.CSSProperties }) {
+export function Furigana({ kanji, kana, style, className }: { kanji?: string; kana: string; style?: React.CSSProperties; className?: string }) {
   if (!kanji || !KANJI_RE.test(kanji) || kanji === kana) {
-    return <span lang="ja" style={style}>{kanji ?? kana}</span>;
+    return <span lang="ja" style={style} className={className}>{kanji ?? kana}</span>;
   }
   // style(폰트 크기·굵기·줄간격 등)은 바깥 span에 걸고, <ruby>는 브라우저 기본 표시 방식을
   // 그대로 둔다 — ruby에 직접 display:block 등을 주면 rb/rt 정렬이 깨지는 걸 확인했다.
   const segments = buildSegments(kanji, kana);
   return (
-    <span lang="ja" style={style}>
+    <span lang="ja" style={style} className={className}>
       {segments.map((seg, i) => seg.reading ? (
         <ruby key={i} style={{ rubyPosition: 'over' }}>
           {seg.text}

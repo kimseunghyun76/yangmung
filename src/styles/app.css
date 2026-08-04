@@ -109,6 +109,12 @@
       .ym-rise { animation: ym-rise 0.5s cubic-bezier(.2,.8,.2,1) both; }
       .ym-press { transition: transform 0.12s cubic-bezier(.2,.8,.2,1), box-shadow 0.15s ease; }
       .ym-press:not(:disabled):active { transform: scale(0.965); }
+      /* 눌러서 들을 수 있는 일본어 — 화면 하단에 "문장을 탭하면 다시 들을 수 있어요"라는 공통 안내
+         띠를 두는 대신, 눌리는 문장 자체에 점선 밑줄을 그어 그 자리에서 알 수 있게 한다
+         (2026-08-04 요청: 공통 안내 문구를 빼고 점선 밑줄로 표기). 후리가나(rt)에는 밑줄이
+         안 걸리도록 ruby 안쪽 텍스트에는 상속을 끊는다. */
+      .ym-tappable-ja { text-decoration: underline dotted var(--ink-faint); text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
+      .ym-tappable-ja rt { text-decoration: none; }
       /* 접힌 카드의 펼치기 화살표 — 가만히 있지 않고 살짝 까딱여 "눌러서 펼칠 수 있다"는 걸 알려준다. */
       @keyframes ym-expand-hint { 0%, 100% { transform: translateY(0) rotate(-90deg); } 50% { transform: translateY(2px) rotate(-90deg); } }
       .ym-expand-hint { animation: ym-expand-hint 1.6s ease-in-out infinite; }

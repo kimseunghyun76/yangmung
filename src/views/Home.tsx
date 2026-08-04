@@ -25,7 +25,7 @@ import { StatTile, LearningHeatmap } from './StatsWidgets';
 import { LearningRoadmap } from './Roadmap';
 import { daysUntilTravel, TRAVEL_PURPOSE_LABEL, type AppMode, type TravelPurpose } from '../learn/settings';
 import type { GrammarPoint } from '../content/types';
-import { DAILY_MISSION_TARGET, todayLearnedCount } from '../learn/dailyMission';
+import { DAILY_MISSION_TARGET, DAILY_WORD_TARGET, todayLearnedCount, todayWordCount } from '../learn/dailyMission';
 
 interface Props {
   nav: NavBarProps;
@@ -119,6 +119,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
   // 보상(무료 카드) 자체는 수집함(GachaPage)의 "오늘의 무료 뽑기"로 옮겨졌다(2026-08-02) — 여기서는
   // 진행률만 보여주고, 완료되면 수집함으로 보내는 역할만 한다.
   const dailyDone = todayLearnedCount(progress);
+  const wordsDone = todayWordCount(progress);
 
   // 오늘의 장면 = goal과 동일 기준(튜토리얼 C0 제외한 첫 장면). 없으면 가나 위주의 날.
   const primary = plan.missions.find((m) => m.id !== 'C0') ?? plan.missions[0];
@@ -211,7 +212,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
             d={diagnosis} line={coach.line}
             hira={hira} kata={kata} kanaPct={kanaPct} stats={stats}
             modeLabel={modeLabel} onPlacement={onPlacement} placementDone={placementDone}
-            dailyDone={dailyDone} onOpenGacha={() => nav.onNavigate('gacha')}
+            dailyDone={dailyDone} wordsDone={wordsDone} onOpenGacha={() => nav.onNavigate('gacha')}
           />
         </GlassPanel>
       </div>
@@ -483,11 +484,11 @@ function HomeSceneCard({ hero, accent, kicker, title, chips, planned, onStart }:
 
 // 상태 대시보드 — 코치·학습 상태·가나 안정도·난이도(진단)를 한 카드로 묶어 "한눈에".
 // 접었을 때도 등급·코치 한 줄은 보이고, 펼치면 학습 상태·가나 안정도·성장 기록·보유 카드·약점까지.
-function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPlacement, placementDone, dailyDone, onOpenGacha }: {
+function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPlacement, placementDone, dailyDone, wordsDone, onOpenGacha }: {
   d: Diagnosis; line: string;
   hira: { mastered: number; total: number }; kata: { mastered: number; total: number };
   kanaPct: number; stats: LearningStats; modeLabel: string; onPlacement: () => void; placementDone: boolean;
-  dailyDone: number; onOpenGacha: () => void;
+  dailyDone: number; wordsDone: number; onOpenGacha: () => void;
 }) {
   // 기본은 접힌 상태로 시작(2026-07-08, 사용자 요청) — 요약(코치 한 줄)은 접혀 있어도 항상 보임.
   const [expanded, setExpanded] = useState(false);
@@ -563,6 +564,16 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPla
           <span style={{ flexShrink: 0, fontSize: 12, fontWeight: 800, color: 'var(--ink-soft)', fontVariantNumeric: 'tabular-nums' }}>{Math.min(dailyDone, DAILY_MISSION_TARGET)}/{DAILY_MISSION_TARGET}</span>
         </div>
       )}
+
+      {/* 오늘의 단어 — 표현만 계속 풀면 위 데일리는 채워지는데 어휘 진도는 그대로일 수 있어
+          어휘(vocab/basic) 카드만 따로 센다("단어도 매일매일 어느 정도 외우도록" 요청, 2026-08-04). */}
+      <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 800, color: 'var(--ok)' }}>📖 단어</span>
+        <div style={{ flex: 1, height: 6, borderRadius: 99, background: 'var(--glass-bg-strong)', overflow: 'hidden' }}>
+          <div style={{ width: `${Math.min(100, Math.round((wordsDone / DAILY_WORD_TARGET) * 100))}%`, height: '100%', background: 'var(--ok)', borderRadius: 99, transition: 'width .4s ease' }} />
+        </div>
+        <span style={{ flexShrink: 0, fontSize: 12, fontWeight: 800, color: 'var(--ink-soft)', fontVariantNumeric: 'tabular-nums' }}>{Math.min(wordsDone, DAILY_WORD_TARGET)}/{DAILY_WORD_TARGET}</span>
+      </div>
 
       {!expanded ? null : (
         <>

@@ -32,11 +32,13 @@ export function PrimaryAction({ children, onClick, disabled, style }: {
 }
 
 // 글래스 패널 — 반투명 학습/정보 패널. scroll이면 내부 스크롤(정보 많은 카드용).
-export function GlassPanel({ children, style, scroll, strong }: {
+export function GlassPanel({ children, style, scroll, strong, innerRef }: {
   children: ReactNode; style?: CSSProperties; scroll?: boolean; strong?: boolean;
+  /** 스크롤 위치를 밖에서 조작해야 할 때(예: 카드가 바뀌면 맨 위로) 쓰는 참조. */
+  innerRef?: React.Ref<HTMLDivElement>;
 }) {
   return (
-    <div className={`ym-glass${strong ? ' ym-glass-strong' : ''}`}
+    <div ref={innerRef} className={`ym-glass${strong ? ' ym-glass-strong' : ''}`}
       style={{ padding: 18, ...(scroll ? { maxHeight: '58vh', overflowY: 'auto' } : null), ...style }}>
       {children}
     </div>

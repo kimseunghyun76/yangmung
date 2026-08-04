@@ -159,7 +159,7 @@ function WordLearningPanel({ card, isKanaFamiliar, japaneseOnImage }: { card: In
             <span style={{ fontSize: 11, fontWeight: 850, color: 'var(--ink-soft)', lineHeight: 1 }}>표기</span>
             {card.register && <RegisterBadge register={card.register} />}
           </span>
-          <Furigana kanji={card.ja} kana={card.kana} style={{ display: 'block', fontSize: 34, lineHeight: 1.6, fontWeight: 950, color: 'var(--ink)', letterSpacing: 0, overflowWrap: 'anywhere' }} />
+          <Furigana kanji={card.ja} kana={card.kana} className="ym-tappable-ja" style={{ display: 'block', fontSize: 34, lineHeight: 1.6, fontWeight: 950, color: 'var(--ink)', letterSpacing: 0, overflowWrap: 'anywhere' }} />
         </span>
       )}
 
@@ -430,7 +430,7 @@ function ImageCornerOverlay({ card, showJapanese }: { card: IntroduceCard; showJ
               <RegisterBadge register={card.register} />
             </span>
           )}
-          <span lang="ja" style={{ display: 'block', fontSize: 26, lineHeight: 1.15, fontWeight: 950, color: '#fff', textShadow: '0 2px 8px rgba(0,0,0,.5)', overflowWrap: 'anywhere' }}>{card.ja}</span>
+          <span lang="ja" className="ym-tappable-ja" style={{ display: 'block', fontSize: 26, lineHeight: 1.15, fontWeight: 950, color: '#fff', textShadow: '0 2px 8px rgba(0,0,0,.5)', overflowWrap: 'anywhere' }}>{card.ja}</span>
           {/* "어디서 경험하나"를 단어와 같은 오버레이 안에 붙여 한 덩어리로 읽히게 한다
               (예전엔 좌상단에 따로 떠 있어 단어와 별개 정보처럼 보였다 — 2026-08-04 요청). */}
           <span style={{ display: 'block', marginTop: 3, fontSize: 12, fontWeight: 800, color: 'rgba(255,255,255,.82)', textShadow: '0 1px 6px rgba(0,0,0,.5)' }}>

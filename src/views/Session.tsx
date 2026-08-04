@@ -1,6 +1,6 @@
 // 세션 — Immersive Scene Coach v1. 상단 장면 헤더 + 하단 글래스 학습 시트.
 // 시각 위계: 일본어 > 듣기 > 행동(선택/말하기) > 한국어. (UI_REDESIGN_PROPOSAL.md §4-2)
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Card, Choice, DifficultyLabel } from '../learn/cards';
 import { cardDifficulty } from '../learn/cards';
 import type { CardStatus } from '../learn/progress';
@@ -42,6 +42,12 @@ interface Props {
 }
 
 export function Session({ card, index, total, picked, skipped, onChoose, onIntroduceSeen, onSpeakPracticed, onDictationResult, isKanaFamiliar, onNext, onPrev, onExit, onKnown, onSkip, picks, quickPractice }: Props) {
+  // 다음 카드로 넘어가면 학습 시트를 항상 맨 위부터 보여준다 — 이전 카드에서 아래까지 스크롤해
+  // 내려간 상태 그대로 다음 카드가 뜨면 새 단어의 이미지·표기를 놓친다("다음 단어를 누르면
+  // 상단으로 이동" 요청, 2026-08-04).
+  const sheetRef = useRef<HTMLDivElement>(null);
+  useEffect(() => { sheetRef.current?.scrollTo({ top: 0 }); }, [card.id]);
+
   const missionId = card.kind !== 'tip' && card.kind !== 'discover' && card.reviewTarget?.type === 'mission'
     ? String(card.reviewTarget.id) : undefined;
   const sv = missionId ? sceneVisualByMission(missionId) : null;
@@ -113,7 +119,7 @@ export function Session({ card, index, total, picked, skipped, onChoose, onIntro
       })()}
 
       {/* ── 4. 글래스 학습 시트 (flex로 끝까지 채우고, 길면 내부 스크롤) ── */}
-      <GlassPanel style={{
+      <GlassPanel innerRef={sheetRef} style={{
         flex: 1, minHeight: 0, overflowY: 'auto', borderRadius: '24px 24px 0 0', borderBottom: 'none',
         padding: '14px max(20px, env(safe-area-inset-left)) max(16px, calc(env(safe-area-inset-bottom) + 10px))',
       }}>
@@ -167,7 +173,7 @@ export function Session({ card, index, total, picked, skipped, onChoose, onIntro
                     <>
                       <button onClick={() => missionBannerJa && speak(missionBannerJa)} disabled={!missionBannerJa || !ttsSupported()}
                         style={{ display: 'block', width: '100%', textAlign: 'left', marginTop: 8, border: 'none', background: 'none', padding: 0, cursor: missionBannerJa ? 'pointer' : 'default', color: '#fff' }}>
-                        <Furigana kanji={missionPrompt!.kanji} kana={missionPrompt!.kana} style={{ display: 'block', fontSize: 22, fontWeight: 800, lineHeight: 1.5 }} />
+                        <Furigana kanji={missionPrompt!.kanji} kana={missionPrompt!.kana} className="ym-tappable-ja" style={{ display: 'block', fontSize: 22, fontWeight: 800, lineHeight: 1.5 }} />
                       </button>
                       <p style={{ margin: '5px 0 0', fontSize: 13, lineHeight: 1.4, color: 'rgba(255,255,255,.88)', fontWeight: 650, textShadow: '0 1px 6px rgba(0,0,0,.55)' }}>{missionPrompt!.korean}</p>
                     </>
@@ -197,15 +203,10 @@ export function Session({ card, index, total, picked, skipped, onChoose, onIntro
           )}
         </div>
       </GlassPanel>
-      {/* 화면 하단 공통 안내 — 일본어 문장은 탭하면 다시 들을 수 있다 */}
-      {(card.kind === 'introduce' || card.kind === 'quiz') && (
-        <p style={{
-          flexShrink: 0, margin: 0, textAlign: 'center', fontSize: 11, fontWeight: 600, color: 'var(--ink-faint)',
-          padding: '7px 16px max(8px, env(safe-area-inset-bottom))', background: 'var(--surface-2)',
-        }}>
-          문장을 탭하면 다시 들을 수 있어요
-        </p>
-      )}
+      {/* 예전엔 여기에 "문장을 탭하면 다시 들을 수 있어요"라는 공통 안내 띠가 있었다 —
+          모든 카드에 똑같이 뜨는 문구라 화면만 차지하고 정작 어느 글자가 눌리는지는 안 알려줬다.
+          지금은 눌리는 일본어 자체에 점선 밑줄(.ym-tappable-ja)을 그어 그 자리에서 알 수 있게 한다
+          (2026-08-04 요청). */}
     </main>
   );
 }
@@ -351,7 +352,7 @@ function QuizBody({ card, picked, skipped, isMissionStep, promptInOverlay, onCho
       ) : isMissionStep && !promptInOverlay ? (
         <button onClick={() => card.bannerJa && speak(card.bannerJa)} disabled={!card.bannerJa || !ttsSupported()}
           style={{ display: 'block', width: '100%', textAlign: 'center', marginBottom: 4, border: 'none', background: 'none', cursor: card.bannerJa ? 'pointer' : 'default', color: 'var(--ink)' }}>
-          <Furigana kanji={card.promptPhrase!.kanji} kana={card.promptPhrase!.kana} style={{ display: 'block', fontSize: 28, fontWeight: 700 }} />
+          <Furigana kanji={card.promptPhrase!.kanji} kana={card.promptPhrase!.kana} className="ym-tappable-ja" style={{ display: 'block', fontSize: 28, fontWeight: 700 }} />
         </button>
       ) : isMissionStep ? null : (
         <button onClick={() => card.bannerJa && speak(card.bannerJa)} disabled={!card.bannerJa || !ttsSupported()}
