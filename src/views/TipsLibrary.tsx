@@ -10,6 +10,7 @@ import { Icon } from '../ui/Icon';
 import { NavBar, type NavBarProps } from './NavBar';
 import { GlassPanel } from './shell';
 import { Modal } from './Modal';
+import { Furigana } from './Furigana';
 
 interface Props {
   nav: NavBarProps;
@@ -250,7 +251,7 @@ function TipDetailModal({ g, onClose, onTag }: { g: GrammarPoint; onClose: () =>
       )}
 
       {g.exampleJa && (
-        <button className="ym-press" onClick={() => speak(g.exampleJa!)} disabled={!ttsSupported()} style={{
+        <button className="ym-press" onClick={() => speak(g.exampleKana ?? g.exampleJa!)} disabled={!ttsSupported()} style={{
           width: '100%', padding: 14, borderRadius: 14, border: '1px solid var(--glass-border)',
           background: 'var(--glass-bg-strong)', textAlign: 'left', cursor: 'pointer', marginBottom: 10, color: 'var(--ink)',
         }}>
@@ -258,7 +259,7 @@ function TipDetailModal({ g, onClose, onTag }: { g: GrammarPoint; onClose: () =>
             <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--accent)' }}>실전 예문 · 눌러서 듣기</span>
             <Icon name="listen" size={16} style={{ color: 'var(--accent)' }} />
           </span>
-          <strong lang="ja" style={{ display: 'block', marginTop: 6, fontSize: 18 }}>{g.exampleJa}</strong>
+          <Furigana kanji={g.exampleKana ? g.exampleJa : undefined} kana={g.exampleKana ?? g.exampleJa!} style={{ display: 'block', marginTop: 6, fontSize: 18, fontWeight: 700 }} />
           {g.exampleKo && <span style={{ display: 'block', marginTop: 3, fontSize: 13, color: 'var(--ink-soft)' }}>{g.exampleKo}</span>}
         </button>
       )}

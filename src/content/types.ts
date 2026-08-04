@@ -132,6 +132,9 @@ export interface GrammarPoint {
   tipKo?: string;   // 10초 마이크로 정확도 팁 (한국어 대조, just-in-time 노출) — 세션 중 짧게만 노출
   detail?: string;  // 배경·이유·맥락까지 담은 긴 설명 — "문화·여행 팁" 라이브러리 메뉴 전용
   exampleJa?: string;
+  /** exampleJa의 가나 읽기 — 한자가 섞인 예문에만 필요(순수 가나 예문은 exampleJa를 그대로 읽으면 됨).
+   *  후리가나 표시와 TTS 정확도 양쪽에 쓰인다. */
+  exampleKana?: string;
   exampleKo?: string;
   commonMistake?: string;
   action?: string;

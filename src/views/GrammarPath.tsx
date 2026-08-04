@@ -215,7 +215,10 @@ function SpeakLine({ kanji, kana, korean }: { kanji?: string; kana: string; kore
 function GrammarDetailModal({ g, related, onClose }: { g: GrammarPoint; related: Phrase[]; onClose: () => void }) {
   // 기본 예문(exampleJa)과 중복되는 표현은 "확장/응용"에서 뺀다(같은 문장이 두 번 나오지 않게).
   const compact = (s: string) => s.replace(/[\s。、,.!?！？()（）[\]{}·・/]/g, '');
-  const extra = g.exampleJa ? related.filter((p) => compact(p.kana) !== compact(g.exampleJa!)) : related;
+  // 기본 예문은 한자 표기(exampleJa)라 phrase.kana와 직접 비교하면 절대 안 맞는다 —
+  // 읽기(exampleKana)가 있으면 그걸 기준으로 비교해야 같은 문장이 두 번 나오지 않는다.
+  const exampleReading = g.exampleKana ?? g.exampleJa;
+  const extra = exampleReading ? related.filter((p) => compact(p.kana) !== compact(exampleReading)) : related;
   const expand = extra.slice(0, 2);
   const applied = extra.slice(2, 4);
 
@@ -228,7 +231,7 @@ function GrammarDetailModal({ g, related, onClose }: { g: GrammarPoint; related:
         <>
           <p style={{ margin: '0 0 6px', fontSize: 11, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.04em' }}>기본 문장</p>
           <div style={{ marginBottom: 14 }}>
-            <SpeakLine kana={g.exampleJa} korean={g.exampleKo ?? ''} />
+            <SpeakLine kanji={g.exampleKana ? g.exampleJa : undefined} kana={g.exampleKana ?? g.exampleJa} korean={g.exampleKo ?? ''} />
           </div>
         </>
       )}

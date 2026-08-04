@@ -228,9 +228,9 @@ function TipBody({ card, onNext }: { card: Extract<Card, { kind: 'tip' }>; onNex
               <h2 style={{ marginTop: 4, display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="tip" size={22} /> {card.label}</h2>
               <p style={{ fontSize: 17, lineHeight: 1.6, color: 'var(--ink-soft)' }}>{card.tipKo}</p>
               {detail?.exampleJa && (
-                <button className="ym-press" onClick={() => speak(detail.exampleJa!)} style={{ width: '100%', padding: 14, borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', textAlign: 'left', cursor: 'pointer' }}>
+                <button className="ym-press" onClick={() => speak(detail.exampleKana ?? detail.exampleJa!)} style={{ width: '100%', padding: 14, borderRadius: 14, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', textAlign: 'left', cursor: 'pointer' }}>
                   <span style={{ display: 'block', fontSize: 12, fontWeight: 800, color: 'var(--accent)' }}>실제 예문 · 눌러서 듣기</span>
-                  <strong lang="ja" style={{ display: 'block', marginTop: 5, fontSize: 19 }}>{detail.exampleJa}</strong>
+                  <Furigana kanji={detail.exampleKana ? detail.exampleJa : undefined} kana={detail.exampleKana ?? detail.exampleJa!} style={{ display: 'block', marginTop: 5, fontSize: 19, fontWeight: 700 }} />
                   {detail.exampleKo && <span style={{ display: 'block', marginTop: 3, fontSize: 13, color: 'var(--ink-soft)' }}>{detail.exampleKo}</span>}
                 </button>
               )}
@@ -631,10 +631,13 @@ function WrongTip({ g }: { g: GrammarPoint }) {
       </p>
       <p style={{ margin: '6px 0 0', fontSize: 13.5, lineHeight: 1.55, color: 'var(--ink-soft)' }}>{g.tipKo}</p>
       {g.exampleJa && (
-        <button className="ym-press" onClick={() => speak(g.exampleJa!)} disabled={!ttsSupported()}
+        <button className="ym-press" onClick={() => speak(g.exampleKana ?? g.exampleJa!)} disabled={!ttsSupported()}
           style={{ marginTop: 8, width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
           <Icon name="listen" size={15} style={{ flex: '0 0 15px', color: 'var(--accent)' }} />
-          <span style={{ fontSize: 14 }}><strong lang="ja">{g.exampleJa}</strong>{g.exampleKo ? <span style={{ color: 'var(--ink-soft)' }}> — {g.exampleKo}</span> : null}</span>
+          <span style={{ fontSize: 14 }}>
+            <Furigana kanji={g.exampleKana ? g.exampleJa : undefined} kana={g.exampleKana ?? g.exampleJa!} style={{ fontWeight: 700 }} />
+            {g.exampleKo ? <span style={{ color: 'var(--ink-soft)' }}> — {g.exampleKo}</span> : null}
+          </span>
         </button>
       )}
     </div>
