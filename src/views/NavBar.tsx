@@ -5,7 +5,7 @@
 // "더보기" 메뉴 하나로 접어 화면 폭 안에 항상 들어오게 한다.
 import { useEffect, useRef, useState } from 'react';
 import { Icon, type IconName } from '../ui/Icon';
-type NavTabView = 'home' | 'practice' | 'map' | 'listen' | 'gacha';
+type NavTabView = 'home' | 'practice' | 'map' | 'listen' | 'gacha' | 'field' | 'grammar';
 type NavView = NavTabView | 'emergency';
 
 export interface NavBarProps {
@@ -17,15 +17,26 @@ export interface NavBarProps {
   onOpenEmergency: () => void;
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
+  /** 현장 모드면 학습용 탭(학습 진도·미션·수집함)을 감추고 현장에서 쓰는 것만 남긴다. */
+  appMode?: 'study' | 'field';
 }
 type Props = NavBarProps;
 
-const items: { key: NavTabView; label: string }[] = [
+// 학습 모드 — 진도·미션·수집함까지 전부. 여행 전후에 앉아서 공부하는 맥락.
+const STUDY_ITEMS: { key: NavTabView; label: string }[] = [
   { key: 'home', label: '홈' },
   { key: 'practice', label: '학습' },
   { key: 'map', label: '미션' },
   { key: 'listen', label: '듣기' }, // 2026-08-01: 복습(가나·표현·장면별·약점)을 듣기 모드에 통합
   { key: 'gacha', label: '수집함' },
+];
+// 현장 모드 — 여행 중엔 진도 관리가 방해가 되므로 지금 당장 쓰는 것만 남긴다
+// ("문법이나 안전 모드는 학습할 때 도움이 안 되고 여행할 때 필요한 메뉴" — 2026-08-04 요청).
+const FIELD_ITEMS: { key: NavTabView; label: string }[] = [
+  { key: 'home', label: '홈' },
+  { key: 'field', label: '현장' },
+  { key: 'grammar', label: '문법' },
+  { key: 'listen', label: '듣기' },
 ];
 
 // 우측 유틸리티 버튼 — 아이콘만으로는 저시력·저디지털숙련 사용자가 기능을 유추하기 어려워
@@ -99,7 +110,8 @@ function MoreMenu({ theme, onToggleTheme, onOpenTips, onOpenGuide, onOpenSetting
   );
 }
 
-export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings, onOpenTips, onOpenEmergency, theme, onToggleTheme }: Props) {
+export function NavBar({ current, onNavigate, onOpenGuide, onOpenSettings, onOpenTips, onOpenEmergency, theme, onToggleTheme, appMode = 'study' }: Props) {
+  const items = appMode === 'field' ? FIELD_ITEMS : STUDY_ITEMS;
   const tab = (active: boolean): React.CSSProperties => ({
     border: 'none', background: 'none', cursor: 'pointer', fontSize: 15,
     padding: '4px 1px', color: active ? 'var(--ink)' : 'var(--ink-faint)',

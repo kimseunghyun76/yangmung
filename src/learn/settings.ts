@@ -8,6 +8,9 @@ export type ChoiceMode = 'kana_ko' | 'kana' | 'kanji';
 export type Theme = 'light' | 'dark';
 // 여행 목적(일정 길이) — "일정별 팁" 카테고리(그래머 콘텐츠) 태그와 매칭해 홈 배너·팁 라이브러리를 맞춤 노출.
 export type TravelPurpose = 'daytrip' | 'short' | 'month';
+// 앱 사용 맥락 — "여행 다닐 때 쓰는 모드와, 여행 전후에 학습하는 모드를 자유자재로 바꾸고 싶다"는
+// 요청(2026-08-04). study=이미지·진도 중심 학습, field=텍스트 중심 + 현장에서 바로 쓰는 것만.
+export type AppMode = 'study' | 'field';
 export interface Settings {
   mode: LearnMode;
   readingAid: ReadingAidMode; // auto=익히면 사라짐, always=항상, off=끔
@@ -19,6 +22,7 @@ export interface Settings {
   travelPurpose?: TravelPurpose; // 설정 전엔 undefined — 홈에 선택 배너를 보여줌
   travelDate?: string;        // 출국일(ISO yyyy-mm-dd) — 설정하면 홈에 D-day 배지 표시. 미설정 시 undefined
   preferredRouteLabel?: string; // 미션 지도에서 고른 "우선 학습" 루트(routes.ts ROUTES의 label). 미설정=무작위(기존 동작)
+  appMode?: AppMode;            // 학습 모드(기본) ↔ 현장 모드. 홈 상단 토글로 즉시 전환.
 }
 
 // travelDate 기준 남은 일수(자정 기준). 지난 날짜·미설정이면 null.
@@ -41,7 +45,7 @@ export const TRAVEL_PURPOSE_TAG: Record<TravelPurpose, string> = {
 
 const KEY = 'yangmung:settings:v1';
 // 기본 외형은 야간(다크) — 시스템 설정과 무관하게 첫 실행은 항상 다크로 시작(2026-07-08, 사용자 요청).
-const DEFAULTS: Settings = { mode: 'default', readingAid: 'auto', choiceMode: 'kana_ko', fastForward: false, theme: 'dark', listenRate: 1, devUnlockAll: false };
+const DEFAULTS: Settings = { mode: 'default', readingAid: 'auto', choiceMode: 'kana_ko', fastForward: false, theme: 'dark', listenRate: 1, devUnlockAll: false, appMode: 'study' };
 
 // 듣기 속도 선택지 — 설정 UI + 검증 공용.
 export const LISTEN_RATES = [0.5, 0.8, 1, 1.2, 1.5, 2] as const;

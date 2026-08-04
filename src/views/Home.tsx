@@ -23,7 +23,7 @@ import { loadCollection } from '../learn/collection';
 import { useLearningStats, type LearningStats } from '../learn/learningStats';
 import { StatTile, LearningHeatmap } from './StatsWidgets';
 import { LearningRoadmap } from './Roadmap';
-import { daysUntilTravel, TRAVEL_PURPOSE_LABEL, type TravelPurpose } from '../learn/settings';
+import { daysUntilTravel, TRAVEL_PURPOSE_LABEL, type AppMode, type TravelPurpose } from '../learn/settings';
 import type { GrammarPoint } from '../content/types';
 import { DAILY_MISSION_TARGET, todayLearnedCount } from '../learn/dailyMission';
 
@@ -53,6 +53,36 @@ interface Props {
   onOpenTipsForPurpose: (p: TravelPurpose) => void;
   // 출국일(ISO yyyy-mm-dd) — 설정 전엔 undefined, 설정하면 D-day 배지 표시.
   travelDate?: string;
+  // 학습 ↔ 현장 모드 — 홈 상단 토글로 즉시 전환(2026-08-04 요청).
+  appMode: AppMode;
+  onSetAppMode: (m: AppMode) => void;
+}
+
+// 학습/현장 토글 — 여행 전후(앉아서 공부)와 여행 중(현장에서 바로 씀)은 필요한 화면이 완전히
+// 다르므로, 홈 맨 위에서 한 번에 바꿀 수 있게 한다. 진행 상황은 모드와 무관하게 그대로 유지된다.
+function AppModeToggle({ mode, onChange }: { mode: AppMode; onChange: (m: AppMode) => void }) {
+  const opt = (m: AppMode, label: string, sub: string) => {
+    const active = mode === m;
+    return (
+      <button key={m} className="ym-press" onClick={() => onChange(m)} style={{
+        flex: 1, padding: '9px 8px', borderRadius: 12, cursor: 'pointer', textAlign: 'center',
+        border: 'none', background: active ? 'var(--accent)' : 'transparent',
+        color: active ? 'var(--accent-ink)' : 'var(--ink-soft)',
+      }}>
+        <span style={{ display: 'block', fontSize: 13.5, fontWeight: 850 }}>{label}</span>
+        <span style={{ display: 'block', fontSize: 10.5, fontWeight: 700, opacity: active ? 0.85 : 0.7 }}>{sub}</span>
+      </button>
+    );
+  };
+  return (
+    <div style={{
+      display: 'flex', gap: 5, padding: 4, marginBottom: 14, borderRadius: 15,
+      background: 'var(--glass-bg)', border: '1px solid var(--glass-border)',
+    }}>
+      {opt('study', '학습', '여행 전·후에 익히기')}
+      {opt('field', '현장', '여행 중에 바로 쓰기')}
+    </div>
+  );
 }
 
 // 여행 목적(daytrip/short/month)에 맞는 "일정별 팁"(id가 g_trip_{purpose}_로 시작)에서 하나를 골라 홈에 미리보기로 보여준다.
@@ -69,7 +99,7 @@ function travelPurposeTip(purpose: TravelPurpose | undefined, progress: Progress
 
 const label: React.CSSProperties = { fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase' };
 
-export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, missionsLocked, diagnosis, modeLabel, onStart, onPracticeScene, onPlacement, placementDone, coreLevel, progression, devUnlockAll, onStartStage, onStartPromotion, travelPurpose, onSetTravelPurpose, onOpenTipsForPurpose, travelDate }: Props) {
+export function Home({ nav, allCards, progress, session, sessionConfig, openMissions, missionsLocked, diagnosis, modeLabel, onStart, onPracticeScene, onPlacement, placementDone, coreLevel, progression, devUnlockAll, onStartStage, onStartPromotion, travelPurpose, onSetTravelPurpose, onOpenTipsForPurpose, travelDate, appMode, onSetAppMode }: Props) {
   const dDay = daysUntilTravel(travelDate);
   const upcomingId = nextSessionId(session);
   const plan = planSession(allCards, progress, upcomingId, sessionConfig);
@@ -168,6 +198,8 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
   return (
     <main style={WRAP}>
       <NavBar {...nav} />
+
+      <AppModeToggle mode={appMode} onChange={onSetAppMode} />
 
       {/* ⓪ 내 학습 현황 — 상태 분석(코치·학습 상태·가나 안정도·난이도)을 한 카드에.
           진단 전 유도 문구는 예전엔 이 카드 바로 아래 완전히 별도인 배너로 한 번 더 있었다 —

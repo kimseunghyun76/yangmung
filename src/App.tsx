@@ -27,7 +27,7 @@ import { selectDialogueDeck, selectSongDeck } from './learn/entertainmentCards';
 import { buildPlacementCards } from './learn/placementCards';
 import { clearAllYangmung } from './learn/backup';
 import { clearMirror } from './learn/idbMirror';
-import { daysUntilTravel, loadSettings, MODE_PRESETS, saveSettings, sceneSentenceLevelForMode, TRAVEL_PURPOSE_TAG, type Settings, type TravelPurpose } from './learn/settings';
+import { daysUntilTravel, loadSettings, MODE_PRESETS, saveSettings, sceneSentenceLevelForMode, TRAVEL_PURPOSE_TAG, type AppMode, type Settings, type TravelPurpose } from './learn/settings';
 import { ROUTES } from './content/routes';
 import { sessionGoalText } from './views/goal';
 import { setListenRate } from './tts';
@@ -45,6 +45,7 @@ const Session = lazy(() => import('./views/Session').then((m) => ({ default: m.S
 const Done = lazy(() => import('./views/Done').then((m) => ({ default: m.Done })));
 const MapView = lazy(() => import('./views/Map').then((m) => ({ default: m.Map })));
 const Emergency = lazy(() => import('./views/Emergency').then((m) => ({ default: m.Emergency })));
+const FieldMode = lazy(() => import('./views/FieldMode').then((m) => ({ default: m.FieldMode })));
 const ListenMode = lazy(() => import('./views/ListenMode').then((m) => ({ default: m.ListenMode })));
 const Practice = lazy(() => import('./views/Practice').then((m) => ({ default: m.Practice })));
 const GachaPage = lazy(() => import('./views/GachaPage').then((m) => ({ default: m.GachaPage })));
@@ -857,15 +858,23 @@ export function App() {
 
   // ── 라우팅 ───────────────────────────────────────
   // 허브 화면(홈·지도·복습)엔 상단 네비게이션 — 자유 이동 + 가이드/설정.
+  const appMode = settings.appMode ?? 'study';
   const nav = {
-    onNavigate: (v: 'home' | 'practice' | 'map' | 'listen' | 'gacha') => navigate(v),
+    onNavigate: (v: 'home' | 'practice' | 'map' | 'listen' | 'gacha' | 'field' | 'grammar') => navigate(v),
     onOpenGuide: () => setShowGuide(true),
     onOpenSettings: () => setShowSettings(true),
     onOpenTips: () => { setTipsQuery(''); navigate('tips'); },
     onOpenEmergency: () => navigate('emergency'),
     theme: settings.theme,
     onToggleTheme: toggleTheme,
+    appMode,
   };
+  // 현장 모드로 바꾸면 학습 전용 화면(진도·미션·수집함)에 머물러 있을 수 있어 홈으로 돌려보낸다.
+  function setAppMode(m: AppMode) {
+    updateSettings({ ...settings, appMode: m });
+    if (m === 'field' && (view === 'practice' || view === 'map' || view === 'gacha')) navigate('home');
+    if (m === 'study' && view === 'field') navigate('home');
+  }
 
   function renderView() {
     if (view === 'practice') {
@@ -935,6 +944,9 @@ export function App() {
     }
     if (view === 'emergency') {
       return <Emergency nav={{ ...nav, current: 'emergency' }} onPracticeScene={startSceneSession} onBack={() => goBack('home')} />;
+    }
+    if (view === 'field') {
+      return <FieldMode nav={{ ...nav, current: 'field' }} onOpenEmergency={() => navigate('emergency')} />;
     }
     if (view === 'listen') {
       return <ListenMode nav={{ ...nav, current: 'listen' }} allCards={allCards} progress={progress} onBack={() => goBack('home')} />;
@@ -1107,6 +1119,8 @@ export function App() {
         onSetTravelPurpose={(p) => updateSettings({ ...settings, travelPurpose: p })}
         onOpenTipsForPurpose={openTipsForPurpose}
         travelDate={settings.travelDate}
+        appMode={appMode}
+        onSetAppMode={setAppMode}
       />
     );
   }
