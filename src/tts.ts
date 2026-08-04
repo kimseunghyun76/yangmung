@@ -186,6 +186,41 @@ export function speakSequence(texts: string[], opts: SpeakOpts = {}): void {
   next();
 }
 
+// 한국어(뜻) 읽기 — 일본어 음성과 달리 사전 생성 mp3가 없어 Web Speech(ko-KR)로만 재생한다.
+// 콘텐츠의 한국어 뜻에는 "저기요 / 죄송합니다"처럼 같은 뜻의 여러 표현을 슬래시·괄호로 나열한
+// 것이 많은데, 그대로 읽으면 "슬래시"·"괄호"까지 소리 내 읽어버려 방해가 된다("한글 읽을 때
+// 슬래시 같은 건 제외" 요청) — 구분 기호는 짧은 쉼표 호흡으로 바꾸고 괄호 보충은 통째로 뺀다.
+export function koreanSpeechText(korean: string): string {
+  return String(korean || '')
+    .replace(/\([^)]*\)/g, ' ')       // (정중)·(저녁) 같은 괄호 보충 설명 제거
+    .replace(/[/|·・~〜]/g, ', ')      // 나열 구분 기호 → 쉼표 호흡
+    .replace(/\s*,\s*(,\s*)+/g, ', ')  // 연속 쉼표 정리
+    .replace(/\s+/g, ' ')
+    .replace(/^[\s,]+|[\s,]+$/g, '')
+    .trim();
+}
+
+export function speakKorean(korean: string, opts: { rate?: number; onEnd?: () => void } = {}): void {
+  const text = koreanSpeechText(korean);
+  if (!webSpeechSupported() || !text) { opts.onEnd?.(); return; }
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ko-KR';
+  u.rate = opts.rate ?? 1;
+  const ko = window.speechSynthesis.getVoices().find((v) => v.lang.toLowerCase().startsWith('ko'));
+  if (ko) u.voice = ko;
+  if (opts.onEnd) {
+    let fired = false;
+    const done = () => { if (fired) return; fired = true; opts.onEnd!(); };
+    u.onend = done;
+    u.onerror = (ev) => {
+      const err = 'error' in ev ? String(ev.error) : '';
+      if (err === 'canceled' || err === 'interrupted') return;
+      done();
+    };
+  }
+  window.speechSynthesis.speak(u);
+}
+
 export interface SpeakPart {
   text: string;
   voice?: SpeakOpts['voice'];

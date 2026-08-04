@@ -4,7 +4,7 @@ import type { IntroduceCard } from '../learn/cards';
 import { VOCAB_GROUPS } from '../content/thematicVocab';
 import { greetingResponseFor } from '../content/greetingResponses';
 import { vocabExampleFor } from '../content/vocabExamples';
-import { speak, ttsSupported } from '../tts';
+import { speak, speakKorean, ttsSupported } from '../tts';
 import { PRIMARY } from '../ui/styles';
 import { ReadingAid } from './ReadingAid';
 import { toKorean } from '../learn/kanaReading';
@@ -107,6 +107,14 @@ export function IntroduceCardView({ card, isKanaFamiliar, onSeen, onNext, header
   );
 }
 
+// 단어 카드 재생 — "단어와 뜻을 두 번씩 읽어주자"는 요청(2026-08-04). 일본어 단어 2회 →
+// 한국어 뜻 2회 순서로, 앞 음성이 끝나면 다음이 이어지도록 onEnd로 연결한다.
+function speakWordTwice(ja: string, korean: string): void {
+  const jaOnce = (after: () => void) => speak(ja, { onEnd: after });
+  const koOnce = (after: () => void) => speakKorean(korean, { onEnd: after });
+  jaOnce(() => jaOnce(() => koOnce(() => koOnce(() => {}))));
+}
+
 // 격식 배지 — 인사말처럼 상대에 따라 표현이 달라지는 항목에서 친한 사이/정중한 사이를 한눈에 구분.
 function RegisterBadge({ register }: { register: 'casual' | 'formal' | 'both' }) {
   const label = register === 'casual' ? '친한 사이' : register === 'formal' ? '정중한 사이' : '두 사이 모두';
@@ -125,7 +133,7 @@ function WordLearningPanel({ card, isKanaFamiliar, japaneseOnImage }: { card: In
   const koreanReading = toKorean(card.kana);
   return (
     <button
-      onClick={() => speak(card.ja)}
+      onClick={() => speakWordTwice(card.ja, card.korean)}
       disabled={!ttsSupported()}
       style={{
         width: '100%',
@@ -369,22 +377,25 @@ function ImageCornerOverlay({ card, showJapanese }: { card: IntroduceCard; showJ
   const group = card.tag.replace(/^어휘 ·\s*/, '').replace(/\s*·.*$/, '');
   return (
     <>
-      <span style={{
-        position: 'absolute',
-        left: 10,
-        top: 10,
-        zIndex: 2,
-        padding: '5px 10px',
-        borderRadius: 999,
-        background: 'rgba(255,255,255,.82)',
-        color: 'var(--accent)',
-        fontSize: 12,
-        fontWeight: 900,
-        boxShadow: '0 8px 18px rgba(40,24,10,.12)',
-        backdropFilter: 'blur(8px)',
-      }}>{group}</span>
+      {/* 단어 오버레이(하단)에 "어디서 만나요"로 합쳐 넣는 경우엔 좌상단 칩을 중복 표시하지 않는다 */}
+      {!showJapanese && (
+        <span style={{
+          position: 'absolute',
+          left: 10,
+          top: 10,
+          zIndex: 2,
+          padding: '5px 10px',
+          borderRadius: 999,
+          background: 'rgba(255,255,255,.82)',
+          color: 'var(--accent)',
+          fontSize: 12,
+          fontWeight: 900,
+          boxShadow: '0 8px 18px rgba(40,24,10,.12)',
+          backdropFilter: 'blur(8px)',
+        }}>{group}</span>
+      )}
       <button
-        onClick={() => speak(card.ja)}
+        onClick={() => speakWordTwice(card.ja, card.korean)}
         disabled={!ttsSupported()}
         aria-label="듣기"
         style={{
@@ -420,6 +431,11 @@ function ImageCornerOverlay({ card, showJapanese }: { card: IntroduceCard; showJ
             </span>
           )}
           <span lang="ja" style={{ display: 'block', fontSize: 26, lineHeight: 1.15, fontWeight: 950, color: '#fff', textShadow: '0 2px 8px rgba(0,0,0,.5)', overflowWrap: 'anywhere' }}>{card.ja}</span>
+          {/* "어디서 경험하나"를 단어와 같은 오버레이 안에 붙여 한 덩어리로 읽히게 한다
+              (예전엔 좌상단에 따로 떠 있어 단어와 별개 정보처럼 보였다 — 2026-08-04 요청). */}
+          <span style={{ display: 'block', marginTop: 3, fontSize: 12, fontWeight: 800, color: 'rgba(255,255,255,.82)', textShadow: '0 1px 6px rgba(0,0,0,.5)' }}>
+            {group}에서 만나요
+          </span>
         </span>
       )}
     </>
