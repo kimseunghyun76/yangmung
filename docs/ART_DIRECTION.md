@@ -44,8 +44,10 @@
 ### 1순위 — 마스코트 9장 `public/mascots/`
 브랜드 인상을 가장 크게 좌우한다. 3D 플러시 → 애니 작화 2D 캐릭터로 재설계.
 - 양(고양이)·뭉(시바견)의 **성격·복장 설정은 유지**하되 렌더링 기법만 바꾼다.
-- 뭉은 수컷인데 양과 같은 여성 코딩 의상을 입고 있는 기존 문제도 이때 함께 해결한다
-  (`docs/asset-gaps/README.md` 참고).
+- 참고: 뭉이 양과 같은 여성 코딩 의상을 입은 문제는 `sign-art/generated` 배치에서 발생한 것이고,
+  `public/mascots/`의 공식 마스코트는 이미 양(꽃무늬·진주·크로스백) / 뭉(세이지그린 파도무늬·
+  가죽링·나무 발바닥 태그)으로 잘 구분돼 있다. 재생성 때 이 구분을 그대로 유지하면 된다.
+- **프롬프트 준비 완료** → [`generated-image-manifests/mascot-regen-prompts.md`](./generated-image-manifests/mascot-regen-prompts.md)
 - 파일: `yangmung-duo-logo`, `yangmung-duo-done`, `yang-cat-face`, `yang-loading`,
   `yang-tip`, `mung-shiba-face`, `mung-correct`, `mung-wrong`, `mung-recovery`
 
