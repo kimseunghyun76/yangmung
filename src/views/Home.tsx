@@ -527,10 +527,10 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPla
           }}>
             {/* 접혀 있을 때만 살짝 까딱이는 모션으로 "눌러서 펼칠 수 있다"는 걸 알려준다. */}
             <Icon
-              name="flow"
+              name="chevron"
               size={13}
               className={expanded ? undefined : 'ym-expand-hint'}
-              style={{ transform: expanded ? 'rotate(90deg)' : 'rotate(-90deg)', transition: 'transform .2s' }}
+              style={{ transform: expanded ? 'rotate(90deg)' : 'none', transition: 'transform .2s' }}
             />
           </button>
         </div>

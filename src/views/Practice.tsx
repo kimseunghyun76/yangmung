@@ -265,7 +265,9 @@ export function Practice({ nav, coreLevel, progression, progress, devUnlockAll, 
               {level === coreLevel && <span style={{ fontSize: 11, color: 'var(--accent)', fontWeight: 900 }}>현재 레벨</span>}
               {LEVEL_RANK[level] < LEVEL_RANK[coreLevel] && <span style={{ fontSize: 11, color: 'var(--ink-faint)', fontWeight: 850 }}>지난 레벨 · 자유 복습</span>}
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
+            {/* 사진 타일 2열 그리드 → 한 줄짜리 목록. 항목이 20개가 넘는 화면이라 카드로 깔면
+                스크롤이 끝없이 길어지고 같은 사진만 반복됐다(2026-08-06). */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
               {group.map((item) => (
                 <PracticeCard
                   key={item.key}
@@ -300,7 +302,7 @@ export function Practice({ nav, coreLevel, progression, progress, devUnlockAll, 
             </span>
             <span style={{ display: 'block', marginTop: 3, fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 650 }}>제한시간 즉답 — 지금 레벨 문제로 바로 대결해요</span>
           </span>
-          <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)', flex: '0 0 auto' }} />
+          <Icon name="chevron" size={18} style={{ color: 'var(--ink-faint)', flex: '0 0 auto' }} />
         </button>
       </section>
 
@@ -309,86 +311,59 @@ export function Practice({ nav, coreLevel, progression, progress, devUnlockAll, 
 }
 
 function PracticeCard({ item, unlocked, done, featured = false }: { item: PracticeItem; unlocked: boolean; done: boolean; featured?: boolean }) {
+  // 예전엔 모든 타일이 전면 사진(quick-practice 배경)이었다. 그런데 그 사진은 항목마다
+  // 다르지 않고 같은 마스코트 컷 두세 장이 계속 반복돼, 정보는 하나도 안 주면서 화면만
+  // 가득 채우고 글자 가독성까지 떨어뜨렸다("이미지를 너무 많이 쓴 느낌" 지적, 2026-08-06).
+  // 이제 사진은 "오늘의 추천"(featured) 하나만 쓰고, 나머지는 아이콘 + 글자 + 여백으로 간다.
+  if (!featured) return <PracticeRow item={item} unlocked={unlocked} done={done} />;
   return (
     <button
       className="ym-press"
       onClick={item.onClick}
       disabled={!unlocked}
       style={{
-        position: 'relative',
-        minWidth: 0,
-        width: '100%',
-        overflow: 'hidden',
-        aspectRatio: featured ? '16 / 9' : '4 / 3',
-        border: featured ? `1.5px solid ${hexA(item.accent, 0.5)}` : `1px solid ${unlocked ? 'var(--glass-border)' : 'rgba(127,127,127,.18)'}`,
-        borderRadius: featured ? 22 : 16,
-        padding: 0,
-        background: 'var(--glass-bg-strong)',
-        color: '#fff',
-        cursor: unlocked ? 'pointer' : 'default',
-        opacity: unlocked ? 1 : 0.58,
-        textAlign: 'left',
-        boxShadow: featured ? '0 14px 32px rgba(89,58,28,.14)' : unlocked ? '0 10px 22px rgba(89,58,28,.09)' : 'none',
+        position: 'relative', minWidth: 0, width: '100%', overflow: 'hidden', aspectRatio: '16 / 9',
+        border: `1.5px solid ${hexA(item.accent, 0.5)}`, borderRadius: 22, padding: 0,
+        background: 'var(--glass-bg-strong)', color: '#fff',
+        cursor: unlocked ? 'pointer' : 'default', opacity: unlocked ? 1 : 0.58, textAlign: 'left',
+        boxShadow: '0 14px 32px rgba(89,58,28,.14)',
       }}
     >
       <img
         src={`/scenes/quick-practice/${item.art}.webp`}
-        alt=""
-        loading="lazy"
-        decoding="async"
+        alt="" loading="lazy" decoding="async"
         style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
+          position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover',
           filter: unlocked ? 'saturate(.92) contrast(1.02)' : 'grayscale(.78) brightness(.8)',
         }}
       />
       <span aria-hidden style={{
-        position: 'absolute',
-        inset: 0,
+        position: 'absolute', inset: 0,
         background: 'linear-gradient(180deg, rgba(0,0,0,.03), rgba(0,0,0,.28) 48%, rgba(0,0,0,.76))',
       }} />
       <span style={{
-        position: 'relative',
-        zIndex: 1,
-        minHeight: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        padding: featured ? 16 : 10,
+        position: 'relative', zIndex: 1, minHeight: '100%', display: 'flex',
+        flexDirection: 'column', justifyContent: 'space-between', padding: 16,
       }}>
         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
           <span style={{
-            width: featured ? 42 : 34,
-            height: featured ? 42 : 34,
-            borderRadius: 11,
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: hexA(item.accent, 0.82),
-            border: '1px solid rgba(255,255,255,.22)',
-            color: '#fff',
+            width: 42, height: 42, borderRadius: 11, display: 'inline-flex', alignItems: 'center',
+            justifyContent: 'center', background: hexA(item.accent, 0.82),
+            border: '1px solid rgba(255,255,255,.22)', color: '#fff',
           }}>
-            <Icon name={item.icon} size={featured ? 22 : 18} />
+            <Icon name={item.icon} size={22} />
           </span>
           <span style={{
-            padding: '4px 7px',
-            borderRadius: 999,
+            padding: '4px 7px', borderRadius: 999,
             background: done ? 'rgba(35,134,82,.92)' : unlocked ? 'rgba(255,255,255,.18)' : 'rgba(0,0,0,.42)',
-            border: '1px solid rgba(255,255,255,.18)',
-            fontSize: 10.5,
-            fontWeight: 950,
-            color: '#fff',
+            border: '1px solid rgba(255,255,255,.18)', fontSize: 10.5, fontWeight: 950, color: '#fff',
           }}>
-            {done ? '완료' : unlocked ? (featured ? '바로 시작' : '열림') : 'LOCK'}
+            {done ? '완료' : unlocked ? '바로 시작' : 'LOCK'}
           </span>
         </span>
         <span style={{ display: 'block', minWidth: 0 }}>
-          <strong style={{ display: 'block', fontSize: featured ? 22 : 17, lineHeight: 1.08, fontWeight: 950, textShadow: '0 2px 8px rgba(0,0,0,.45)', overflowWrap: 'anywhere' }}>{item.label}</strong>
-          <span style={{ display: 'block', marginTop: 4, fontSize: featured ? 13 : 11.5, lineHeight: 1.28, fontWeight: 760, color: 'rgba(255,255,255,.82)', overflowWrap: 'anywhere' }}>{item.sub}</span>
-          {/* 전체 중 몇 개를 확인했는지 — "전체 단어 중에 얼마나 확인했는지도 알고 싶다"는 요청(2026-08-04) */}
+          <strong style={{ display: 'block', fontSize: 22, lineHeight: 1.08, fontWeight: 950, textShadow: '0 2px 8px rgba(0,0,0,.45)', overflowWrap: 'anywhere' }}>{item.label}</strong>
+          <span style={{ display: 'block', marginTop: 4, fontSize: 13, lineHeight: 1.28, fontWeight: 760, color: 'rgba(255,255,255,.82)', overflowWrap: 'anywhere' }}>{item.sub}</span>
           {item.progressText && (
             <span style={{ display: 'block', marginTop: 5, fontSize: 11, fontWeight: 900, color: 'rgba(255,255,255,.95)', textShadow: '0 1px 6px rgba(0,0,0,.5)', fontVariantNumeric: 'tabular-nums' }}>
               {item.progressText}
@@ -399,6 +374,46 @@ function PracticeCard({ item, unlocked, done, featured = false }: { item: Practi
     </button>
   );
 }
+
+// 일반 항목 — 사진 없이 아이콘·글자·여백으로. 아이콘 타일에만 항목 색을 옅게 써서
+// 종류를 구분하고, 나머지는 배경을 비워 목록이 조용하게 읽히도록 한다.
+function PracticeRow({ item, unlocked, done }: { item: PracticeItem; unlocked: boolean; done: boolean }) {
+  return (
+    <button
+      className="ym-press"
+      onClick={item.onClick}
+      disabled={!unlocked}
+      style={{
+        display: 'flex', alignItems: 'center', gap: 12, width: '100%', minWidth: 0,
+        padding: '13px 14px', borderRadius: 16, textAlign: 'left',
+        border: `1px solid ${unlocked ? 'var(--glass-border)' : 'rgba(127,127,127,.18)'}`,
+        background: 'var(--glass-bg-strong)', color: 'var(--ink)',
+        cursor: unlocked ? 'pointer' : 'default', opacity: unlocked ? 1 : 0.55,
+      }}
+    >
+      <span style={{
+        width: 38, height: 38, flex: '0 0 38px', borderRadius: 11, display: 'inline-flex',
+        alignItems: 'center', justifyContent: 'center',
+        background: unlocked ? hexA(item.accent, 0.14) : 'var(--glass-bg)',
+        color: unlocked ? item.accent : 'var(--ink-faint)',
+      }}>
+        <Icon name={unlocked ? item.icon : 'lock'} size={18} />
+      </span>
+      <span style={{ flex: 1, minWidth: 0 }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+          <strong style={{ fontSize: 15, fontWeight: 850, lineHeight: 1.2 }}>{item.label}</strong>
+          {done && <span style={{ padding: '1px 7px', borderRadius: 999, background: 'var(--ok-soft)', color: 'var(--ok)', fontSize: 10, fontWeight: 900 }}>완료</span>}
+        </span>
+        <span style={{ display: 'block', marginTop: 2, fontSize: 12, lineHeight: 1.35, color: 'var(--ink-soft)', fontWeight: 650 }}>{item.sub}</span>
+        {item.progressText && (
+          <span style={{ display: 'block', marginTop: 3, fontSize: 11, fontWeight: 850, color: 'var(--ink-faint)', fontVariantNumeric: 'tabular-nums' }}>{item.progressText}</span>
+        )}
+      </span>
+      {unlocked && <Icon name="chevron" size={15} style={{ color: 'var(--ink-faint)', flex: '0 0 auto' }} />}
+    </button>
+  );
+}
+
 
 // 가나 읽기 숙련도 막대(예전 미션 지도에 있던 것을 여기로 이동, 2026-07-29).
 function KanaMasteryBar({ label, m }: { label: string; m: { mastered: number; total: number } }) {

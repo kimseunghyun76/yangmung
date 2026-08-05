@@ -217,7 +217,7 @@ export function TipsLibrary({ nav, onBack, initialQuery }: Props) {
                 </span>
               )}
             </span>
-            <Icon name="flow" size={14} style={{ color: 'var(--ink-faint)', flex: '0 0 auto' }} />
+            <Icon name="chevron" size={14} style={{ color: 'var(--ink-faint)', flex: '0 0 auto' }} />
           </button>
         ))}
         {items.length === 0 && (

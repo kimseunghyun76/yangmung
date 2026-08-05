@@ -239,7 +239,7 @@ export function Intro({ cards, allCards, progress, goal, onStart, onBack }: Intr
               border: 'none', background: 'none', cursor: 'pointer', padding: 0, color: 'inherit',
             }}>
               <span style={{ color: 'var(--ink-faint)', fontSize: 12, fontWeight: 850, letterSpacing: '0.08em' }}>이번에 배울 내용 · {preview.length}개</span>
-              <Icon name="flow" size={13} style={{ color: 'var(--ink-faint)', transform: previewOpen ? 'rotate(90deg)' : 'rotate(-90deg)', transition: 'transform .2s' }} />
+              <Icon name="chevron" size={13} style={{ color: 'var(--ink-faint)', transform: previewOpen ? 'rotate(90deg)' : 'none', transition: 'transform .2s' }} />
             </button>
             {previewOpen && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 10 }}>

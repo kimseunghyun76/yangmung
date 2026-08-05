@@ -53,7 +53,7 @@ export function EntertainmentLearning({ nav, onBack, onStartDialogue, onStartSon
                 <span style={{ display: 'block', fontSize: 14.5, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.title}</span>
                 <span style={{ display: 'block', fontSize: 11.5, color: 'var(--ink-faint)', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{genreLabel(s.genre)} · {s.lines.length}대사 · {s.setup}</span>
               </span>
-              <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)', flex: '0 0 18px' }} />
+              <Icon name="chevron" size={18} style={{ color: 'var(--ink-faint)', flex: '0 0 18px' }} />
             </button>
           ))}
         </div>
@@ -71,7 +71,7 @@ export function EntertainmentLearning({ nav, onBack, onStartDialogue, onStartSon
                   <span style={{ display: 'block', fontSize: 14.5, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.title}</span>
                   <span style={{ display: 'block', fontSize: 11.5, color: 'var(--ink-faint)', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{moodLabel(s.mood)} · {s.lines.length}소절 · {s.note}</span>
                 </span>
-                <Icon name="flow" size={18} style={{ color: 'var(--ink-faint)', flex: '0 0 18px' }} />
+                <Icon name="chevron" size={18} style={{ color: 'var(--ink-faint)', flex: '0 0 18px' }} />
               </button>
             ))}
           </div>

@@ -125,7 +125,7 @@ export function Emergency({ nav, onPracticeScene, onBack }: Props) {
                 <span style={{ display: 'block', fontWeight: 800, fontSize: 15, color: 'var(--ink)' }}>{m.scenario}</span>
                 <span style={{ display: '-webkit-box', marginTop: 2, fontSize: 12.5, color: 'var(--ink-soft)', overflow: 'hidden', textOverflow: 'ellipsis', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{m.canDo}</span>
               </span>
-              <Icon name="flow" size={16} style={{ color: 'var(--ink-faint)', flex: '0 0 auto' }} />
+              <Icon name="chevron" size={16} style={{ color: 'var(--ink-faint)', flex: '0 0 auto' }} />
             </button>
           );
         })}

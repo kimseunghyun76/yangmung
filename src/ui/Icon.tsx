@@ -9,7 +9,7 @@ export type IconName =
   | 'scene-store' | 'scene-conbini' | 'scene-restaurant' | 'scene-train' | 'scene-hotel' | 'scene-street'
   | 'scene-pharmacy' | 'scene-shopping' | 'scene-taxi' | 'scene-airport' | 'scene-exchange' | 'scene-locker'
   | 'scene-delivery' | 'scene-ramen'
-  | 'emergency' | 'lock' | 'calendar';
+  | 'emergency' | 'lock' | 'calendar' | 'chevron';
 
 interface Props {
   name: IconName;

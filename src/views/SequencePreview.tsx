@@ -168,7 +168,7 @@ export function SequencePreview({ title, subtitle, lines, onStart, onBack, count
             border: '1px solid var(--glass-border)', background: 'var(--glass-bg)', color: 'var(--ink)',
           }}>
             <span style={{ fontSize: 13, fontWeight: 800 }}>이번에 나올 내용 미리보기 ({lines.length}개)</span>
-            <Icon name="flow" size={13} style={{ transform: listOpen ? 'rotate(90deg)' : 'rotate(-90deg)', transition: 'transform .2s', flex: '0 0 auto', color: 'var(--ink-soft)' }} />
+            <Icon name="chevron" size={13} style={{ transform: listOpen ? 'rotate(90deg)' : 'none', transition: 'transform .2s', flex: '0 0 auto', color: 'var(--ink-soft)' }} />
           </button>
         </div>
       )}

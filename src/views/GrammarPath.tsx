@@ -182,7 +182,7 @@ export function GrammarPath({ nav, coreLevel, devUnlockAll, onBack, onStagePass 
                         <span style={{ display: 'block', marginTop: 5, fontSize: 11, color: 'var(--ink-faint)', fontWeight: 700 }}>확장 문장 {related.length}개</span>
                       )}
                     </span>
-                    <Icon name="flow" size={14} style={{ color: 'var(--ink-faint)', flex: '0 0 auto' }} />
+                    <Icon name="chevron" size={14} style={{ color: 'var(--ink-faint)', flex: '0 0 auto' }} />
                   </button>
                 );
               })}
