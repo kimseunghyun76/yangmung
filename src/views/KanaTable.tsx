@@ -38,11 +38,15 @@ export function cellState(progress: ProgressMap, id: string): 'mastered' | 'seen
   return 'new';
 }
 
-// 표 섹션 — 청음 / 탁음·반탁음 / 요음. 같은 결로 행(group) 단위 렌더.
+// 표 섹션 — 청음 / 탁음·반탁음 / 요음 / 특수표기 / 외래어 확장음. 같은 결로 행(group) 단위 렌더.
+// 뒤의 두 섹션은 2026-08-06 추가: 글자를 다 외웠는데도 간판이 안 읽히는 이유가 바로 이
+// 작은 글자 조합들(촉음 ッ, ファ·ティ·ウェ 같은 확장음)을 배울 곳이 없었기 때문이다.
 export const KANA_SECTIONS: { key: string; title: string; sub: string; kinds: KanaKind[] }[] = [
   { key: 'sei', title: '청음', sub: '오십음도 기본', kinds: ['sei'] },
   { key: 'daku', title: '탁음 · 반탁음', sub: '゛ ゜가 붙은 소리', kinds: ['daku', 'handaku'] },
   { key: 'yoon', title: '요음', sub: '작은 ゃ ゅ ょ 조합', kinds: ['yoon'] },
+  { key: 'special', title: '특수표기', sub: '멈추는 ッ · 늘이는 ー', kinds: ['special'] },
+  { key: 'extended', title: '외래어 확장음', sub: '간판·메뉴에 자주 나오는 조합', kinds: ['extended'] },
 ];
 
 // 한 섹션의 아이템을 group(행) 순서를 보존하며 묶는다.
@@ -59,7 +63,9 @@ export function groupKanaRows(items: KanaItem[]): { group: string; cells: KanaIt
 export function KanaTable({ nav, progress, script, onScriptChange, onQuiz, onBack, onKanaWritten }: Props) {
   const [detailIdx, setDetailIdx] = useState<number | null>(null);
   const [quizCount, setQuizCount] = useState(15); // 퀴즈 문항 수 (15·30·50·전체)
-  const items = CONTENT.kana.filter((k) => k.script === script);
+  // script가 'common'인 글자(장음 ー)는 히라가나·가타카나 어느 쪽에도 안 걸려 지금까지 표에서
+  // 아예 안 보였다 — 양쪽 표에 모두 노출한다(2026-08-06).
+  const items = CONTENT.kana.filter((k) => k.script === script || k.script === 'common');
   const scriptKo = script === 'hiragana' ? '히라가나' : '가타카나';
   const total = items.length;
   const COUNT_OPTIONS: { label: string; value: number }[] = [

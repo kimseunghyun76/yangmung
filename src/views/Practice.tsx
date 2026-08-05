@@ -108,8 +108,11 @@ function itemDone(item: PracticeItem, progression: ProgressionState): boolean {
 }
 
 export function Practice({ nav, coreLevel, progression, progress, devUnlockAll, onStartStage, onPracticeWrite, onPracticeSpeak, onPracticeFlash, onOpenBasics, onOpenPublic, onOpenEntertainment, onOpenDiscoverGallery, onStartVocabGroup }: Props) {
-  const hira = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'hiragana').map((k) => k.id));
-  const kata = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'katakana').map((k) => k.id));
+  // 진도 막대는 오십음도·탁음·요음(기본 104자)만 센다 — 나중에 추가한 촉음·외래어 확장음까지
+  // 분모에 넣으면 이미 학습을 진행한 사용자의 진행률이 갑자기 떨어져 보인다.
+  const isBaseKana = (k: { kind: string }) => k.kind !== 'extended' && k.kind !== 'special';
+  const hira = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'hiragana' && isBaseKana(k)).map((k) => k.id));
+  const kata = kanaReadMastery(progress, CONTENT.kana.filter((k) => k.script === 'katakana' && isBaseKana(k)).map((k) => k.id));
   // 어휘 커리큘럼 — 예전엔 "어휘 커리큘럼" 배너 하나로 뭉쳐 그 안의 하위 메뉴(/vocab)로 들어가야 했는데,
   // 그 메뉴 안에 기본 인사·생활 기초가 이미 별도 배너로 있는 내용과 중복돼 혼란스러웠다.
   // 이제 기본 인사(입문 단계로 이동)를 뺀 나머지 주제 그룹을 기본 레벨에 개별 배너로 바로 펼쳐 놓는다.

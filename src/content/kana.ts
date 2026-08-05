@@ -233,6 +233,40 @@ const YOON: [string, string, string, string][] = [
   ['ぴゃ','ピャ','pya','퍄'],['ぴゅ','ピュ','pyu','퓨'],['ぴょ','ピョ','pyo','표'],
 ];
 
+// ── 촉음(っ/ッ) ────────────────────────────────────────────────────────────
+// 지금까지 가나표에 아예 없었다 — 오십음도·탁음·요음만 있어서, 정작 간판·메뉴에 흔한
+// 「トッピング」「サッポロ」의 작은 ツ를 배울 곳이 없었다(2026-08-06 사용자 지적).
+// 받침처럼 보이는 작은 글자는 이 하나뿐이라는 점이 핵심이라 별도 항목으로 세운다.
+const SOKUON: { id: string; char: string; script: 'hiragana' | 'katakana'; base: string }[] = [
+  { id: 'k_hira_sokuon', char: 'っ', script: 'hiragana', base: 'つ' },
+  { id: 'k_kata_sokuon', char: 'ッ', script: 'katakana', base: 'ツ' },
+];
+
+// ── 외래어 확장음 ──────────────────────────────────────────────────────────
+// 간판·메뉴가 안 읽히는 진짜 주범. 오십음도에 없는 소리(fa·ti·we·che…)를 내려고 가타카나
+// 뒤에 작은 ァィゥェォ를 붙여 만든 조합들이다. 글자를 다 알아도 이 조합을 모르면 못 읽는다.
+// 실제 간판·메뉴 노출 빈도가 높은 것만 골랐다. [가타카나, 로마자, 한글소리, 예시]
+const EXTENDED: [string, string, string, string][] = [
+  ['ファ', 'fa', '파', 'ファミマ(패밀리마트)'],
+  ['フィ', 'fi', '피', 'コーヒー フィルター(필터)'],
+  ['フェ', 'fe', '페', 'カフェ(카페)'],
+  ['フォ', 'fo', '포', 'フォーク(포크)'],
+  ['ティ', 'ti', '티', 'パーティー(파티)'],
+  ['ディ', 'di', '디', 'ディスカウント(디스카운트)'],
+  ['トゥ', 'tu', '투', 'トゥデイ(투데이)'],
+  ['ウィ', 'wi', '위', 'ウィスキー(위스키)'],
+  ['ウェ', 'we', '웨', 'ウェディング(웨딩)'],
+  ['ウォ', 'wo', '워', 'ウォーター(워터)'],
+  ['シェ', 'she', '셰', 'シェア(셰어)'],
+  ['ジェ', 'je', '제', 'ジェラート(젤라토)'],
+  ['チェ', 'che', '체', 'チェックイン(체크인)'],
+  ['ヴ', 'vu', '부', 'ヴィンテージ(빈티지)'],
+  ['ツァ', 'tsa', '차', 'ピッツァ(피자)'],
+  ['フュ', 'fyu', '퓨', 'フュージョン(퓨전)'],
+  ['クォ', 'kwo', '쿼', 'クォーター(쿼터)'],
+  ['イェ', 'ye', '예', 'イェス(예스)'],
+];
+
 function build(): KanaItem[] {
   const out: KanaItem[] = [];
   for (const row of ROWS) {
@@ -281,6 +315,26 @@ function build(): KanaItem[] {
   }
   // 장음 부호 (특수)
   out.push({ id: 'k_long', char: 'ー', script: 'common', kind: 'special', romaji: '-', koreanSound: '장음', level: 'K20', group: '특수표기', strokeGuide: '왼쪽에서 오른쪽으로 가로 한 획', mnemonic: '모음을 길게 늘이는 막대 표시' });
+  // 촉음 — 소리를 내지 않고 한 박 멈추는 표시. 받침처럼 보이는 작은 글자는 이것 하나뿐이다.
+  for (const s of SOKUON) {
+    out.push({
+      id: s.id, char: s.char, script: s.script, kind: 'special', romaji: 'tsu(small)', koreanSound: '멈춤',
+      level: 'K20', group: '특수표기',
+      strokeGuide: `${s.base}와 같은 획순으로, 크기만 작게`,
+      mnemonic: `작은 ${s.base} — 소리를 내지 않고 한 박 쉰다. ん(받침 ㄴ)과 달리 크기가 작다`,
+      confusables: [s.base, s.script === 'katakana' ? 'ン' : 'ん'],
+    });
+  }
+  // 외래어 확장음 — 오십음도에 없는 소리를 만들려고 작은 ァィゥェォ를 붙인 조합.
+  for (const [char, romaji, korean, example] of EXTENDED) {
+    out.push({
+      id: `k_kata_ext_${romaji}`, char, script: 'katakana', kind: 'extended', romaji, koreanSound: korean,
+      level: 'K33', group: '외래어 확장음', components: [char[0], char[1]],
+      examples: [example],
+      strokeGuide: `${char[0]}를 쓰고 뒤에 작은 ${char[1]}를 붙인다`,
+      mnemonic: `${char[0]} + 작은 ${char[1]} = ${korean}. 오십음도에 없는 소리라 이렇게 조합해서 만든다`,
+    });
+  }
   return out;
 }
 

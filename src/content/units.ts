@@ -15,9 +15,17 @@ function kanaDrillUnits(): Unit[] {
     .map(([level, items]) => {
       const script = items[0].script === 'hiragana' ? '히라가나' : '가타카나';
       const chars = items.map((k) => k.char).join('');
+      // 청음(오십음도)만 있던 시절엔 "청음"으로 고정해도 맞았지만, 지금은 특수표기(장음·촉음)와
+      // 외래어 확장음 단계가 섞여 있어 실제 그룹명을 써야 Can-do가 사실과 맞는다(2026-08-06).
+      const kinds = new Set(items.map((k) => k.kind));
+      const what = kinds.has('extended') ? '외래어 확장음'
+        : kinds.has('special') ? '특수표기(장음·촉음)'
+        : kinds.has('yoon') ? `${script} 요음`
+        : kinds.has('daku') || kinds.has('handaku') ? `${script} 탁음·반탁음`
+        : `${script} 청음`;
       return {
         id: `u_kana_${level}`, track: 'kana' as const, stage: level as KLevel, mode: 'drill' as const,
-        canDo: `사용자는 ${level} ${script} 청음(${chars})을 평균 0.8초 내 95% 정확도로 읽고 듣고 구분할 수 있다`,
+        canDo: `사용자는 ${level} ${what}(${chars})을 평균 0.8초 내 95% 정확도로 읽고 듣고 구분할 수 있다`,
         kanaIds: items.map((k) => k.id),
       };
     });
