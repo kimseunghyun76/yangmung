@@ -459,7 +459,7 @@ function LockedLevelSection({ level, count }: { level: CoreLevel; count: number 
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, minmax(0, 1fr))', gap: 8 }}>
           {Array.from({ length: count }, (_, i) => (
-            <div key={i} aria-hidden style={{ aspectRatio: '1', borderRadius: 10, border: '1px dashed var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, color: 'var(--ink-faint)', opacity: 0.6 }}>🔒</div>
+            <div key={i} aria-hidden style={{ aspectRatio: '1', borderRadius: 10, border: '1px dashed var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ink-faint)', opacity: 0.6 }}><Icon name="lock" size={13} /></div>
           ))}
         </div>
       </GlassPanel>

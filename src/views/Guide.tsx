@@ -35,13 +35,15 @@ function Chip({ color, children }: { color: string; children: React.ReactNode })
   );
 }
 
-function ModeCard({ icon, title, sub, color, time }: { icon: string; title: string; sub: string; color: string; time?: string }) {
+// icon: 자체 아이콘 이름(IconName). 예전엔 이모지 문자열이었는데 OS마다 모양이 달라져
+// 목록의 결이 흐트러졌다 — 아이콘 세트로 통일했다(2026-08-06).
+function ModeCard({ icon, title, sub, color, time }: { icon: IconName; title: string; sub: string; color: string; time?: string }) {
   return (
     <div style={{ padding: '12px 14px', borderRadius: 14, border: `1.5px solid ${color}30`, background: `${color}0d`, marginBottom: 10 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-        <span style={{ fontSize: 18 }}>{icon}</span>
+        <span style={{ display: 'inline-flex', color }}><Icon name={icon} size={17} /></span>
         <span style={{ fontWeight: 800, fontSize: 14, color }}>{title}</span>
-        {time && <span style={{ marginLeft: 'auto', fontSize: 11, fontWeight: 700, color: 'var(--ink-faint)' }}>⏱ {time}</span>}
+        {time && <span style={{ marginLeft: 'auto', fontSize: 11, fontWeight: 700, color: 'var(--ink-faint)' }}>{time}</span>}
       </div>
       <p style={{ margin: 0, fontSize: 12.5, color: 'var(--ink-soft)', lineHeight: 1.5 }}>{sub}</p>
     </div>
@@ -89,19 +91,19 @@ function TabModes() {
       <p style={{ margin: '0 0 14px', fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.5 }}>홈 화면 퀵 메뉴에서 원하는 훈련을 골라 시작할 수 있어요.</p>
 
       <p style={{ margin: '0 0 8px', fontSize: 12, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.05em' }}>집중 훈련</p>
-      <ModeCard icon="あ" title="히라가나 / 가타카나" color="#3fb27f" sub="스크립트 전체를 한 세션에. 읽기·듣기·비슷한 글자 구분 3종 출제." />
-      <ModeCard icon="✏️" title="가나 쓰기" color="#3fb27f" sub="화면에 표시된 가나를 따라 쓰는 필기 연습. 10자 무작위." />
-      <ModeCard icon="🔊" title="받아쓰기" color="#3b9fe0" sub="듣고 가나 타일을 순서대로 조립. 듣기와 쓰기를 동시에." />
-      <ModeCard icon="✍️" title="한→일 작문" color="#3b9fe0" sub="한국어 뜻을 보고 일본어 타일로 조립. 산출(output) 강화." />
+      <ModeCard icon="kana" title="히라가나 / 가타카나" color="#3fb27f" sub="스크립트 전체를 한 세션에. 읽기·듣기·비슷한 글자 구분 3종 출제." />
+      <ModeCard icon="dictation" title="가나 쓰기" color="#3fb27f" sub="화면에 표시된 가나를 따라 쓰는 필기 연습. 10자 무작위." />
+      <ModeCard icon="listen" title="받아쓰기" color="#3b9fe0" sub="듣고 가나 타일을 순서대로 조립. 듣기와 쓰기를 동시에." />
+      <ModeCard icon="speak" title="한→일 작문" color="#3b9fe0" sub="한국어 뜻을 보고 일본어 타일로 조립. 산출(output) 강화." />
 
       <p style={{ margin: '14px 0 8px', fontSize: 12, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.05em' }}>어휘·읽기</p>
-      <ModeCard icon="📚" title="어휘 커리큘럼" color="#9b59b6" sub="인사·신체·스포츠·동물·식물·색깔·음식·가족·날씨·형용사·장소시설·교통수단·감정상태 13그룹 × 219단어. 읽기·듣기·역방향 3종에 실전 Q&A 예문까지." />
-      <ModeCard icon="🪧" title="거리 읽기" color="#e0a23a" sub="편의점 표지·역 안내·메뉴판·경고문 113개. 실전 간판 읽기 훈련." />
-      <ModeCard icon="🔢" title="숫자 학습" color="#3fb27f" sub="숫자·요일·달·시간·금액·셈 단위 87항목. 계산대·예약 필수 표현." />
-      <ModeCard icon="🔤" title="발음 구분" color="#3b9fe0" sub="っ/ー·つ/す·장음 등 헷갈리는 소리 쌍을 듣고 구분." />
+      <ModeCard icon="kana" title="어휘 커리큘럼" color="#9b59b6" sub="인사·신체·스포츠·동물·식물·색깔·음식·가족·날씨·형용사·장소시설·교통수단·감정상태 13그룹 × 219단어. 읽기·듣기·역방향 3종에 실전 Q&A 예문까지." />
+      <ModeCard icon="sign" title="거리 읽기" color="#e0a23a" sub="편의점 표지·역 안내·메뉴판·경고문 113개. 실전 간판 읽기 훈련." />
+      <ModeCard icon="chart" title="숫자 학습" color="#3fb27f" sub="숫자·요일·달·시간·금액·셈 단위 87항목. 계산대·예약 필수 표현." />
+      <ModeCard icon="discover" title="발음 구분" color="#3b9fe0" sub="っ/ー·つ/す·장음 등 헷갈리는 소리 쌍을 듣고 구분." />
 
       <p style={{ margin: '14px 0 8px', fontSize: 12, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.05em' }}>게임</p>
-      <ModeCard icon="⚡" title="속도전 4모드" color="#e0564a" time="4~8초 제한"
+      <ModeCard icon="fast" title="속도전 4모드" color="#e0564a" time="4~8초 제한"
         sub="가나 특훈(8초) → 표현 특훈(6초) → 상황 대화(5초) → 전체 블리츠(4초). 난이도별 제한시간·카드 풀이 다릅니다. 정답률 75% 이상이면 보석함 획득." />
     </>
   );

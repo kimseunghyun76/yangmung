@@ -5,7 +5,7 @@ import type { Card, Choice } from '../learn/cards';
 import type { FlashMode } from '../learn/progress';
 import { speak, stopSpeaking, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
-import { Icon } from '../ui/Icon';
+import { Icon, type IconName } from '../ui/Icon';
 import { PrimaryAction } from './shell';
 import { GachaBox } from './Gacha';
 import { boxGrade } from '../learn/collection';
@@ -32,7 +32,7 @@ interface Props {
 const MODE_CONFIG: Record<FlashMode, {
   label: string;
   sub: string;
-  emoji: string;
+  icon: IconName;   // 모드 표식 — 이모지 대신 자체 아이콘(OS별 모양 차이 제거, 2026-08-06)
   examples: string[];
   durationMs: number;
   fastMs: number;
@@ -42,7 +42,7 @@ const MODE_CONFIG: Record<FlashMode, {
   kana: {
     label: '가나 특훈',
     sub: '히라가나 · 가타카나 읽기 / 듣기 즉답',
-    emoji: 'あ',
+    icon: 'kana',
     examples: ['あ → 아', 'キャ', 'つ / す'],
     durationMs: 8000,
     fastMs: 3500,
@@ -52,7 +52,7 @@ const MODE_CONFIG: Record<FlashMode, {
   expression: {
     label: '표현 특훈',
     sub: '여행 표현 · 간판 · 어휘 의미 즉답',
-    emoji: '💬',
+    icon: 'speak',
     examples: ['ください', 'どこですか', 'いくらですか'],
     durationMs: 6000,
     fastMs: 2800,
@@ -62,7 +62,7 @@ const MODE_CONFIG: Record<FlashMode, {
   situation: {
     label: '상황 대화',
     sub: '편의점 · 식당 · 전철 — 장면 선택지 즉답',
-    emoji: '🗺',
+    icon: 'nav-map',
     examples: ['コンビニ', 'レストラン', '電車'],
     durationMs: 5000,
     fastMs: 2200,
@@ -72,7 +72,7 @@ const MODE_CONFIG: Record<FlashMode, {
   blitz: {
     label: '전체 블리츠',
     sub: '가나 + 표현 + 상황 무작위 최강 혼합',
-    emoji: '⚡',
+    icon: 'fast',
     examples: ['읽기', '듣기', '상황'],
     durationMs: 4000,
     fastMs: 1800,
@@ -127,7 +127,7 @@ function ModeSelect({ lastMode, lastCount, onStart, onExit }: SelectProps) {
               background: active ? `${c.color}18` : 'var(--glass-bg-strong)',
               transition: 'all .15s',
             }}>
-              <div style={{ fontSize: 22, marginBottom: 4 }}>{c.emoji}</div>
+              <div style={{ marginBottom: 6, color: active ? c.color : 'var(--ink-faint)' }}><Icon name={c.icon} size={20} /></div>
               <div style={{ fontSize: 14, fontWeight: 800, color: active ? c.color : 'var(--ink)' }}>{c.label}</div>
               <div style={{ display: 'flex', gap: 3, marginTop: 4 }}>
                 {[1, 2, 3, 4].map((n) => (
@@ -174,7 +174,7 @@ function ModeSelect({ lastMode, lastCount, onStart, onExit }: SelectProps) {
         </div>
         {best.score > 0 && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 10, paddingTop: 10, borderTop: '1px solid var(--glass-border)' }}>
-            <span style={{ fontSize: 12, fontWeight: 800, color: cfg.color }}>🏅 내 최고 {best.score.toLocaleString()}점</span>
+            <span style={{ fontSize: 12, fontWeight: 800, color: cfg.color }}><Icon name="trophy" size={12} /> 내 최고 {best.score.toLocaleString()}점</span>
             <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ink-faint)' }}>· 최고 콤보 {best.combo}</span>
           </div>
         )}
@@ -333,7 +333,7 @@ function FlashGame({ cards, mode, count, unlockedSceneIds, onExit, onReplay }: G
       <main style={{ ...WRAP, minHeight: '100svh', paddingTop: 'max(20px, env(safe-area-inset-top))' }}>
         <div className="ym-rise ym-glass ym-glass-strong" style={{ padding: '24px 20px', borderRadius: 22, textAlign: 'center' }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 13, fontWeight: 800, color: 'var(--ink-soft)' }}>
-            <span aria-hidden style={{ fontSize: 15 }}>{cfg.emoji}</span>{cfg.label}
+            <Icon name={cfg.icon} size={15} />{cfg.label}
           </span>
           <h1 style={{ margin: '10px 0 0', fontSize: 25, fontWeight: 900, color: 'var(--ink)', letterSpacing: '-0.02em' }}>{win ? '클리어!' : '시간 종료'}</h1>
           {isRecord && (

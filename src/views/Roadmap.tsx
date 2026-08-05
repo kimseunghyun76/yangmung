@@ -10,6 +10,7 @@ import {
   nextLevel, type CoreLevel, type ProgStage, type ProgressionState,
 } from '../learn/progression';
 import { GlassPanel } from './shell';
+import { Icon } from '../ui/Icon';
 
 interface Props {
   coreLevel: CoreLevel;
@@ -58,7 +59,7 @@ function Row({ status, title, sub, onClick, isLast }: { status: Status; title: s
           <strong style={{ fontSize: 14, color: 'var(--ink)' }}>{title}</strong>
           {status === 'done' && <span style={{ fontSize: 10.5, fontWeight: 900, color: 'var(--ok)' }}>완료 ✓</span>}
           {status === 'next' && <span style={{ padding: '2px 7px', borderRadius: 999, background: 'var(--accent)', color: 'var(--accent-ink)', fontSize: 10, fontWeight: 900 }}>지금 여기</span>}
-          {status === 'locked' && <span aria-hidden style={{ fontSize: 11 }}>🔒</span>}
+          {status === 'locked' && <Icon name="lock" size={11} style={{ color: 'var(--ink-faint)' }} />}
         </span>
         {sub && <span style={{ display: 'block', marginTop: 3, fontSize: 12, color: 'var(--ink-soft)' }}>{sub}</span>}
       </button>

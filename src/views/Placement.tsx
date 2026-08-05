@@ -6,7 +6,7 @@ import type { Card, Choice } from '../learn/cards';
 import { saveSkillProfile, type LearnMode, type ReadingAidMode } from '../learn/settings';
 import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
-import { Icon } from '../ui/Icon';
+import { Icon, type IconName } from '../ui/Icon';
 import { PrimaryAction } from './shell';
 import { Furigana } from './Furigana';
 
@@ -47,7 +47,7 @@ interface Reco {
   markKana: boolean;
   readingAid?: ReadingAidMode;
   profile: string;
-  badge: string;      // 이모지 뱃지
+  badge: IconName;    // 결과 뱃지 아이콘 (이모지 대신 자체 아이콘 세트 — OS마다 모양이 달라지지 않게)
   title: string;
   desc: string;
   tips: string[];     // 축별 약점 맞춤 팁 1~2개
@@ -74,7 +74,7 @@ export function recommend(read: number, listen: number, situation: number): Reco
   if (listenStrong && readWeak) {
     return {
       mode: 'express', markKana: false, readingAid: 'auto',
-      profile: '귀가 먼저 트인 여행자', badge: '🎧',
+      profile: '귀가 먼저 트인 여행자', badge: 'listen',
       title: '중급 (읽기 보조 켬)',
       desc: '애니·드라마로 귀가 트인 타입! 듣기·말하기는 빠르게, 가나 읽기는 보조와 함께 따라잡아요.',
       tips,
@@ -84,7 +84,7 @@ export function recommend(read: number, listen: number, situation: number): Reco
   if (readStrong && listenWeak) {
     return {
       mode: 'default', markKana: true,
-      profile: '눈이 빠른 여행자', badge: '👁',
+      profile: '눈이 빠른 여행자', badge: 'discover',
       title: '기본 (듣기 집중)',
       desc: '읽기는 탄탄한데 귀가 낯설어요. 가나는 건너뛰고, 듣기 문항을 많이 만나며 귀를 틔워요.',
       tips,
@@ -94,7 +94,7 @@ export function recommend(read: number, listen: number, situation: number): Reco
   if (readStrong && listenStrong && situStrong) {
     return {
       mode: 'advanced', markKana: true,
-      profile: '준비된 여행자', badge: '🏆',
+      profile: '준비된 여행자', badge: 'trophy',
       title: '고급',
       desc: '세 가지 모두 아주 좋아요! 한자 보기·보조 끔으로 실전처럼 빠르게 진행해요.',
       tips,
@@ -104,7 +104,7 @@ export function recommend(read: number, listen: number, situation: number): Reco
   if (avg >= 0.65) {
     return {
       mode: 'express', markKana: true,
-      profile: '든든한 여행자', badge: '💪',
+      profile: '든든한 여행자', badge: 'chart',
       title: '중급',
       desc: '기본기가 탄탄해요! 가나는 익힌 것으로 두고, 일본어(가나) 보기·장면 위주로 달려요.',
       tips,
@@ -114,7 +114,7 @@ export function recommend(read: number, listen: number, situation: number): Reco
   if (avg >= 0.4) {
     return {
       mode: 'default', markKana: false,
-      profile: '균형 잡힌 여행자', badge: '🎯',
+      profile: '균형 잡힌 여행자', badge: 'target',
       title: '기본',
       desc: '읽기·듣기를 고르게 키워요. 모르는 가나만 보조하며 장면 학습을 균형 있게 진행해요.',
       tips,
@@ -122,7 +122,7 @@ export function recommend(read: number, listen: number, situation: number): Reco
   }
   return {
     mode: 'beginner', markKana: false,
-    profile: '설레는 첫 여행자', badge: '🌱',
+    profile: '설레는 첫 여행자', badge: 'plus',
     title: '입문',
     desc: '처음이라도 괜찮아요! 가나와 기초 표현부터 천천히 — 발음 보조 항상, 일본어+한글 보기로 시작해요.',
     tips,
@@ -191,7 +191,7 @@ export function Placement({ cards, onDone, onSkip, onFinishWithoutApplying }: Pr
         <div className="ym-rise" style={{ textAlign: 'center', paddingTop: 24 }}>
           {/* 결과 뱃지 */}
           <div className="ym-burst" style={{ width: 80, height: 80, margin: '0 auto', borderRadius: 99, background: 'var(--accent)', color: 'var(--accent-ink)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36 }}>
-            {r.badge}
+            <Icon name={r.badge} size={36} />
           </div>
           <h1 style={{ margin: '16px 0 0', fontSize: 24 }}>진단 결과</h1>
           <p style={{ margin: '6px 0 0', fontSize: 15, fontWeight: 800, color: 'var(--accent)' }}>{r.profile}</p>
@@ -214,7 +214,7 @@ export function Placement({ cards, onDone, onSkip, onFinishWithoutApplying }: Pr
           {/* 맞춤 팁 */}
           {r.tips.length > 0 && (
             <div style={{ marginTop: 14, padding: '12px 16px', borderRadius: 14, background: 'var(--accent-soft)', textAlign: 'left' }}>
-              <p style={{ margin: '0 0 6px', fontSize: 12, fontWeight: 800, color: 'var(--accent)' }}>💡 학습 팁</p>
+              <p style={{ margin: '0 0 6px', fontSize: 12, fontWeight: 800, color: 'var(--accent)' , display: 'flex', alignItems: 'center', gap: 5 }}><Icon name="tip" size={12} /> 학습 팁</p>
               {r.tips.map((tip, i) => (
                 <p key={i} style={{ margin: i > 0 ? '4px 0 0' : 0, fontSize: 12.5, color: 'var(--ink-soft)', lineHeight: 1.5 }}>• {tip}</p>
               ))}
@@ -316,7 +316,7 @@ export function Placement({ cards, onDone, onSkip, onFinishWithoutApplying }: Pr
           완전 초보자가 연속 오답/패스에 좌절하지 않도록 미리 마음의 준비를 시켜준다(2026-07-25 사용성 테스트). */}
       {axis === 'situation' && idx === readCount + listenCount && (
         <p style={{ textAlign: 'center', margin: '10px 0 0', fontSize: 12, color: 'var(--ink-soft)', lineHeight: 1.5 }}>
-          💡 이 구간은 실제 일본어 실력을 그대로 측정해요. 몰라도 정상이니 편하게 &lsquo;모르겠어요&rsquo;를 눌러도 괜찮아요.
+          이 구간은 실제 일본어 실력을 그대로 측정해요. 몰라도 정상이니 편하게 &lsquo;모르겠어요&rsquo;를 눌러도 괜찮아요.
         </p>
       )}
 

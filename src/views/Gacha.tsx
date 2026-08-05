@@ -796,7 +796,7 @@ export function DeckBrowser() {
       )}
       {lockedCount > 0 && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: ownedScenes.length > 0 ? 14 : 0, padding: '14px 16px', borderRadius: 16, border: '1px dashed var(--glass-border)', background: 'var(--glass-bg)' }}>
-          <span style={{ width: 42, height: 42, flex: '0 0 auto', borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)' }}>🔒</span>
+          <span style={{ width: 42, height: 42, flex: '0 0 auto', borderRadius: 12, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)' }}><Icon name="lock" size={16} /></span>
           <span style={{ fontSize: 12.5, color: 'var(--ink-soft)', fontWeight: 750, lineHeight: 1.5 }}>
             아직 못 받은 카드 <strong style={{ color: 'var(--ink)' }}>{lockedCount}장</strong> — 미션 지도에서 장면을 완료하면 하나씩 열려요.
           </span>
@@ -821,7 +821,7 @@ export function DeckButton({ style }: { style?: React.CSSProperties }) {
     <>
       <button className="ym-press" onClick={() => setOpen(true)}
         style={{ display: 'inline-flex', alignItems: 'center', gap: 7, border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)', borderRadius: 999, padding: '9px 14px', fontSize: 13, fontWeight: 800, cursor: 'pointer', ...style }}>
-        🎁 수집함 {ownedCount(c)}/{SCENES.length}
+        <Icon name="trophy" size={14} /> 수집함 {ownedCount(c)}/{SCENES.length}
       </button>
       {open && <DeckModal onClose={() => setOpen(false)} />}
     </>

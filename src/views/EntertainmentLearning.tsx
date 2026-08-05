@@ -18,9 +18,10 @@ const label: React.CSSProperties = {
   fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase',
 };
 const genreLabel = (g: string) => DIALOGUE_GENRES.find((x) => x.id === g)?.label ?? g;
-const genreIcon = (g: string) => DIALOGUE_GENRES.find((x) => x.id === g)?.icon ?? '🎬';
+// 장르·무드 표식은 이모지 대신 자체 아이콘 하나로 통일한다 — 이모지는 OS마다 모양이 달라
+// 디자인 통제가 안 되고, 장르별로 제각각인 그림이 목록의 결을 흐트러뜨린다(2026-08-06).
 const moodLabel = (m: string) => SONG_MOODS.find((x) => x.id === m)?.label ?? m;
-const moodIcon = (m: string) => SONG_MOODS.find((x) => x.id === m)?.icon ?? '🎵';
+
 
 export function EntertainmentLearning({ nav, onBack, onStartDialogue, onStartSong }: Props) {
   return (
@@ -47,7 +48,7 @@ export function EntertainmentLearning({ nav, onBack, onStartDialogue, onStartSon
         <div style={{ display: 'flex', flexDirection: 'column', gap: 9, marginTop: 12 }}>
           {DIALOGUE_SCENES.map((s) => (
             <button key={s.id} className="ym-press" onClick={() => onStartDialogue(s.id)} style={rowBtn}>
-              <span style={{ fontSize: 24 }}>{genreIcon(s.genre)}</span>
+              <span style={{ display: 'inline-flex', color: 'var(--accent)', flex: '0 0 auto' }}><Icon name="discover" size={20} /></span>
               <span style={{ flex: 1, minWidth: 0 }}>
                 <span style={{ display: 'block', fontSize: 14.5, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.title}</span>
                 <span style={{ display: 'block', fontSize: 11.5, color: 'var(--ink-faint)', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{genreLabel(s.genre)} · {s.lines.length}대사 · {s.setup}</span>
@@ -65,7 +66,7 @@ export function EntertainmentLearning({ nav, onBack, onStartDialogue, onStartSon
           <div style={{ display: 'flex', flexDirection: 'column', gap: 9, marginTop: 12 }}>
             {SONGS.map((s) => (
               <button key={s.id} className="ym-press" onClick={() => onStartSong(s.id)} style={rowBtn}>
-                <span style={{ fontSize: 24 }}>{moodIcon(s.mood)}</span>
+                <span style={{ display: 'inline-flex', color: 'var(--accent)', flex: '0 0 auto' }}><Icon name="listen" size={20} /></span>
                 <span style={{ flex: 1, minWidth: 0 }}>
                   <span style={{ display: 'block', fontSize: 14.5, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.title}</span>
                   <span style={{ display: 'block', fontSize: 11.5, color: 'var(--ink-faint)', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{moodLabel(s.mood)} · {s.lines.length}소절 · {s.note}</span>

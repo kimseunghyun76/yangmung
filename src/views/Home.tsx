@@ -152,7 +152,7 @@ export function Home({ nav, allCards, progress, session, sessionConfig, openMiss
       <div className="ym-rise" style={{ marginTop: 14 }}>
         <GlassPanel>
           <p style={{ margin: 0, fontSize: 12.5, color: 'var(--ink-soft)', lineHeight: 1.6 }}>
-            🗓 출국이 {dDay}일 남았어요. 순서대로 다 못 밟아도 괜찮다면 설정에서 난이도를 직접 올려 여행 미션부터 먼저 볼 수 있어요.
+            <Icon name="calendar" size={13} /> 출국이 {dDay}일 남았어요. 순서대로 다 못 밟아도 괜찮다면 설정에서 난이도를 직접 올려 여행 미션부터 먼저 볼 수 있어요.
           </p>
           <button className="ym-press" onClick={nav.onOpenSettings} style={{
             width: '100%', marginTop: 10, padding: '11px 14px', borderRadius: 12, cursor: 'pointer',
@@ -248,7 +248,7 @@ function TravelPurposeBanner({ purpose, progress, onSet, onOpenTips, dDay }: {
         background: 'var(--glass-bg-strong)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-          <p style={{ margin: 0, fontSize: 13.5, fontWeight: 800 }}>🗓 이번 여행은 어떤 스타일이에요?</p>
+          <p style={{ margin: 0, fontSize: 13.5, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="calendar" size={14} /> 이번 여행은 어떤 스타일이에요?</p>
           {dDayText && <span style={{ flex: '0 0 auto', fontSize: 12, fontWeight: 800, color: 'var(--accent)' }}>출국 {dDayText}</span>}
         </div>
         <p style={{ margin: '3px 0 0', fontSize: 12, color: 'var(--ink-faint)' }}>
@@ -274,7 +274,7 @@ function TravelPurposeBanner({ purpose, progress, onSet, onOpenTips, dDay }: {
       padding: '14px 16px', borderRadius: 18, border: '1px solid var(--glass-border)', color: 'var(--ink)',
       background: 'var(--glass-bg-strong)',
     }}>
-      <span style={{ fontSize: 28 }}>🗓</span>
+      <Icon name="calendar" size={26} style={{ color: 'var(--accent)' }} />
       <span style={{ flex: 1 }}>
         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
           <span style={{ fontSize: 11.5, fontWeight: 800, color: 'var(--accent)', letterSpacing: '.03em' }}>{TRAVEL_PURPOSE_LABEL[purpose]} 맞춤 팁</span>
@@ -339,7 +339,7 @@ function RouteCard({ m, locked, compact, allCards, progress, onClick }: {
         </span>
       )}
       <span aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.34) 50%, rgba(0,0,0,.74))' }} />
-      {locked && <span aria-hidden style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30 }}>🔒</span>}
+      {locked && <span aria-hidden style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="lock" size={26} /></span>}
       <span style={{ position: 'relative', zIndex: 1, minHeight: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: compact ? 10 : 14 }}>
         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: compact ? 6 : 10 }}>
           <span style={{ display: compact ? 'none' : 'inline-flex', alignItems: 'center', gap: 6, minWidth: 0, padding: '6px 9px', borderRadius: 999, background: 'rgba(255,255,255,.18)', border: '1px solid rgba(255,255,255,.22)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', color: '#fff', fontSize: 12, fontWeight: 850 }}>
@@ -498,10 +498,13 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPla
       {/* 헤더: 제목 + 등급 뱃지 + 난이도/진단 칩 + 접기/펼치기.
           진단 전엔 이 진단 버튼을 강조색으로 채워 눈에 띄게 하고, 아래 코치 줄에도 안내를 더한다
           — 예전엔 이 아래 완전히 별도 배너로 같은 행동을 한 번 더 권했었다(사용자 지적: 중복). */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+      {/* 좁은 화면(375px)에서 오른쪽 진단 버튼이 flexShrink:0이라, 왼쪽 제목이 끝까지 눌려
+          "내 학 습 현 황"처럼 글자 단위로 줄바꿈되던 문제 — 제목은 안 쪼개지게 nowrap으로 두고,
+          자리가 모자라면 행 자체가 줄바꿈되게 한다(2026-08-06). */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', rowGap: 8 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
-          <p style={{ margin: 0, ...label }}>내 학습 현황</p>
-          <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 800, color: 'var(--accent)', background: 'var(--accent-soft)', padding: '3px 9px', borderRadius: 999 }}>🧭 {stats.rank}</span>
+          <p style={{ margin: 0, ...label, whiteSpace: 'nowrap' }}>내 학습 현황</p>
+          <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 800, color: 'var(--accent)', background: 'var(--accent-soft)', padding: '3px 9px', borderRadius: 999, display: 'inline-flex', alignItems: 'center', gap: 4 }}><Icon name="star" size={11} /> {stats.rank}</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
           <button className="ym-press" onClick={onPlacement} title="수준 진단으로 난이도 재조정" style={{
@@ -516,7 +519,7 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPla
                 <span style={{ width: 7, height: 7, borderRadius: 99, background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)' }} />
                 {modeLabel} · 진단
               </>
-            ) : '🎯 수준 진단하기'}
+            ) : <><Icon name="target" size={14} /> 수준 진단하기</>}
           </button>
           <button className="ym-press" onClick={() => setExpanded((v) => !v)} aria-label={expanded ? '내 학습 현황 접기' : '내 학습 현황 펼치기'} style={{
             width: 30, height: 30, flexShrink: 0, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
@@ -552,12 +555,12 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPla
           marginTop: 10, width: '100%', display: 'flex', alignItems: 'center', gap: 8, border: 'none',
           background: 'none', padding: 0, cursor: 'pointer', textAlign: 'left',
         }}>
-          <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 800, color: 'var(--accent)' }}>🎁 데일리</span>
+          <span style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 800, color: 'var(--accent)' }}><Icon name="trophy" size={12} /> 데일리</span>
           <span style={{ fontSize: 12, fontWeight: 750, color: 'var(--accent)' }}>오늘 미션 완료! 수집함에서 무료 카드를 받아요 →</span>
         </button>
       ) : (
         <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 800, color: 'var(--accent)' }}>🎁 데일리</span>
+          <span style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 800, color: 'var(--accent)' }}><Icon name="trophy" size={12} /> 데일리</span>
           <div style={{ flex: 1, height: 6, borderRadius: 99, background: 'var(--glass-bg-strong)', overflow: 'hidden' }}>
             <div style={{ width: `${Math.round((dailyDone / DAILY_MISSION_TARGET) * 100)}%`, height: '100%', background: 'var(--accent)', borderRadius: 99, transition: 'width .4s ease' }} />
           </div>
@@ -568,7 +571,7 @@ function StatusDashboard({ d, line, hira, kata, kanaPct, stats, modeLabel, onPla
       {/* 오늘의 단어 — 표현만 계속 풀면 위 데일리는 채워지는데 어휘 진도는 그대로일 수 있어
           어휘(vocab/basic) 카드만 따로 센다("단어도 매일매일 어느 정도 외우도록" 요청, 2026-08-04). */}
       <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 800, color: 'var(--ok)' }}>📖 단어</span>
+        <span style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 800, color: 'var(--ok)' }}><Icon name="kana" size={12} /> 단어</span>
         <div style={{ flex: 1, height: 6, borderRadius: 99, background: 'var(--glass-bg-strong)', overflow: 'hidden' }}>
           <div style={{ width: `${Math.min(100, Math.round((wordsDone / DAILY_WORD_TARGET) * 100))}%`, height: '100%', background: 'var(--ok)', borderRadius: 99, transition: 'width .4s ease' }} />
         </div>

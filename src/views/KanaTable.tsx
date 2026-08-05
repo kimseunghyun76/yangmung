@@ -243,14 +243,14 @@ function KanaDetail({ item, prev, next, onPrev, onNext, onClose, onKanaWritten }
             <p style={{ margin: 0, fontSize: 17, fontWeight: 800 }}>{item.romaji} <span style={{ fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>· 한글 소리 「{item.koreanSound}」</span></p>
             {confus.length > 0 && (
               <p style={{ margin: '3px 0 0', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 700 }}>
-                ⚠️ 비슷한 글자: <span lang="ja" style={{ color: 'var(--accent)', fontWeight: 800 }}>{confus.join(' · ')}</span>
+                <Icon name="emergency" size={13} /> 비슷한 글자: <span lang="ja" style={{ color: 'var(--accent)', fontWeight: 800 }}>{confus.join(' · ')}</span>
               </p>
             )}
           </div>
         </div>
         {item.mnemonic && (
           <p style={{ margin: '8px 0 0', padding: '7px 10px', borderRadius: 10, background: 'var(--accent-soft)', fontSize: 12, color: 'var(--accent)', fontWeight: 700, lineHeight: 1.4 }}>
-            💡 빠르게 외우기 — {item.mnemonic}
+            <Icon name="tip" size={13} /> 빠르게 외우기 — {item.mnemonic}
           </p>
         )}
       </Section>
@@ -266,7 +266,7 @@ function KanaDetail({ item, prev, next, onPrev, onNext, onClose, onKanaWritten }
 
         {item.strokeGuide && (
           <div style={{ marginTop: 10, padding: '11px 12px', borderRadius: 10, background: 'var(--glass-bg-strong)', border: '1px solid var(--glass-border)' }}>
-            <p style={{ margin: '0 0 9px', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 800 }}>✍️ 쓰는 방법</p>
+            <p style={{ margin: '0 0 9px', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 800, display: 'flex', alignItems: 'center', gap: 5 }}><Icon name="dictation" size={12} /> 쓰는 방법</p>
             <StrokeSteps guide={item.strokeGuide} />
           </div>
         )}

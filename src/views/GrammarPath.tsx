@@ -149,7 +149,7 @@ export function GrammarPath({ nav, coreLevel, devUnlockAll, onBack, onStagePass 
                 </p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, minmax(0, 1fr))', gap: 8 }}>
                   {group.map((g) => (
-                    <div key={g.id} aria-hidden style={{ aspectRatio: '1', borderRadius: 10, border: '1px dashed var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, color: 'var(--ink-faint)', opacity: 0.6 }}>🔒</div>
+                    <div key={g.id} aria-hidden style={{ aspectRatio: '1', borderRadius: 10, border: '1px dashed var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ink-faint)', opacity: 0.6 }}><Icon name="lock" size={13} /></div>
                   ))}
                 </div>
               </GlassPanel>

@@ -6,7 +6,7 @@ import { CONTENT } from '../content';
 import type { GrammarPoint } from '../content/types';
 import { speak, ttsSupported } from '../tts';
 import { WRAP } from '../ui/styles';
-import { Icon } from '../ui/Icon';
+import { Icon, type IconName } from '../ui/Icon';
 import { NavBar, type NavBarProps } from './NavBar';
 import { GlassPanel } from './shell';
 import { Modal } from './Modal';
@@ -55,7 +55,7 @@ const CATEGORY_DESC: Record<Category, string> = {
   '재미·잡학': '가볍게 읽는 도시전설·잡학·재밌는 뒷이야기',
 };
 
-const GROUP_ICON: Record<Group, string> = { '언어 학습': '📖', '여행 실전': '🧳', '문화·재미': '✨' };
+const GROUP_ICON: Record<Group, IconName> = { '언어 학습': 'kana', '여행 실전': 'nav-map', '문화·재미': 'star' };
 
 const label: React.CSSProperties = {
   fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--accent)', textTransform: 'uppercase',
@@ -145,7 +145,7 @@ export function TipsLibrary({ nav, onBack, initialQuery }: Props) {
                   border: `1.5px solid ${active ? 'var(--ink)' : 'var(--glass-border)'}`,
                   background: active ? 'var(--glass-bg-strong)' : 'transparent',
                 }}>
-                  <span style={{ display: 'block', fontSize: 20 }}>{GROUP_ICON[g]}</span>
+                  <span style={{ display: 'flex', justifyContent: 'center', color: active ? 'var(--accent)' : 'var(--ink-faint)' }}><Icon name={GROUP_ICON[g]} size={20} /></span>
                   <strong style={{ display: 'block', marginTop: 2, fontSize: 13, color: active ? 'var(--ink)' : 'var(--ink-soft)' }}>{g}</strong>
                   <span style={{ display: 'block', fontSize: 10.5, color: 'var(--ink-faint)', fontWeight: 700 }}>{count}개</span>
                 </button>

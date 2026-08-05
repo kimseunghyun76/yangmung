@@ -55,7 +55,7 @@ export function Map({ nav, allCards, progress, openMissions, missionsLocked, dev
         <PageHead title="미션 지도" sub="열린 장면을 골라 연습하고, 학습할수록 새 장면이 무작위로 열려요" />
         <GlassPanel style={{ marginTop: 8 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span aria-hidden style={{ fontSize: 28 }}>🔒</span>
+            <Icon name="lock" size={24} style={{ color: 'var(--ink-faint)' }} />
             <div>
               <p style={{ ...kicker, margin: 0 }}>여행 미션</p>
               <strong style={{ display: 'block', marginTop: 3, fontSize: 17 }}>미션은 중급부터 열려요</strong>
@@ -154,7 +154,7 @@ export function Map({ nav, allCards, progress, openMissions, missionsLocked, dev
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 8 }}>
               {locked.map((x) => (
                 <div key={x.m.id} aria-hidden title={lockHint(hasPreferred)}
-                  style={{ minWidth: 0, aspectRatio: '1', borderRadius: 12, border: '1px dashed var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, color: 'var(--ink-faint)', opacity: 0.6 }}>🔒</div>
+                  style={{ minWidth: 0, aspectRatio: '1', borderRadius: 12, border: '1px dashed var(--glass-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ink-faint)', opacity: 0.6 }}><Icon name="lock" size={15} /></div>
               ))}
             </div>
           </GlassPanel>
@@ -320,7 +320,7 @@ function RoutePreference({ preferredRouteLabel, autoSuggestedLabels, onSetPrefer
     <GlassPanel style={{ marginBottom: 14 }}>
       <p style={{ ...kicker, marginBottom: 10 }}>우선 학습 카테고리</p>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-        <button className="ym-press" onClick={() => onSetPreferredRoute('random')} style={chipStyle(isRandomActive)}>🎲 무작위(기본)</button>
+        <button className="ym-press" onClick={() => onSetPreferredRoute('random')} style={chipStyle(isRandomActive)}>무작위(기본)</button>
         {ROUTES.map((r) => {
           const active = preferredRouteLabel === r.label || (preferredRouteLabel === undefined && autoSuggestedLabels.includes(r.label));
           const isAutoOnly = active && preferredRouteLabel === undefined;

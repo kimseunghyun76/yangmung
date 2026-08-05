@@ -389,7 +389,7 @@ function QuizBody({ card, picked, skipped, isMissionStep, promptInOverlay, onCho
       {/* 반전 퀴즈 안내 — 어색한 답 고르기 */}
       {card.inverted && !reveal && (
         <div style={{ marginTop: 14, padding: '10px 12px', borderRadius: 12, border: '1px solid var(--warn)', background: 'var(--warn-soft)', textAlign: 'center' }}>
-          <span style={{ fontWeight: 800, color: 'var(--warn)', fontSize: 14 }}>❌ 이 상황에 <u>어울리지 않는</u> 답을 고르세요</span>
+          <span style={{ fontWeight: 800, color: 'var(--warn)', fontSize: 14 }}>이 상황에 <u>어울리지 않는</u> 답을 고르세요</span>
         </div>
       )}
 

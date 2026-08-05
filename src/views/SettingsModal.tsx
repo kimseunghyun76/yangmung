@@ -77,7 +77,7 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
       <p style={{ ...head, marginTop: 18 }}><Icon name="target" size={16} /> 시험 · 진단</p>
       <button className="ym-press" style={{ ...gbtn, width: '100%', textAlign: 'center', color: 'var(--accent)', fontWeight: 800 }}
         onClick={() => { onPlacement(); onClose(); }}>
-        🎯 통합 수준 진단 다시 보기
+        통합 수준 진단 다시 보기
       </button>
       <p style={{ margin: '6px 2px 8px', fontSize: 11.5, color: 'var(--ink-faint)' }}>지금 내 레벨을 다시 측정해 학습 순서를 맞춰줘요.</p>
       <div style={{ display: 'grid', gap: 8 }}>
@@ -149,10 +149,10 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
       <p style={{ ...head, marginTop: 18 }}><Icon name="chart" size={16} /> 데이터 백업</p>
       <div style={{ display: 'flex', gap: 8 }}>
         <button className="ym-press" style={{ ...gbtn, flex: 1, textAlign: 'center' }} onClick={() => downloadBackup()}>
-          💾 내보내기
+          내보내기
         </button>
         <button className="ym-press" style={{ ...gbtn, flex: 1, textAlign: 'center' }} onClick={() => importInputRef.current?.click()}>
-          📂 파일에서 복원
+          파일에서 복원
         </button>
         <input
           ref={importInputRef}
@@ -180,7 +180,7 @@ export function SettingsModal({ settings, onChange, onSelectMode, onMarkKanaKnow
       </button>
 
       {/* ── 개발자 도구 (테스트용) ── */}
-      <p style={{ ...head, marginTop: 22, color: 'var(--ink-faint)' }}>🛠 개발자 도구</p>
+      <p style={{ ...head, marginTop: 22, color: 'var(--ink-faint)' }}>개발자 도구</p>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-soft)' }}>접근 제한 해제</span>
         <button className="ym-press" style={toggle(!!settings.devUnlockAll)} onClick={() => onChange({ ...settings, devUnlockAll: !settings.devUnlockAll })}>{settings.devUnlockAll ? '켜짐' : '꺼짐'}</button>

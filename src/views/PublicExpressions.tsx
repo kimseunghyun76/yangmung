@@ -49,7 +49,7 @@ export function PublicExpressions({ nav, onBack, onStartSigns, onStartAnnounceme
           width: '100%', marginTop: 10, display: 'flex', alignItems: 'center', gap: 13, textAlign: 'left',
           padding: '14px 14px', borderRadius: 14, cursor: 'pointer', border: '1px solid var(--glass-border)', background: 'var(--glass-bg-strong)', color: 'var(--ink)',
         }}>
-          <span style={{ fontSize: 26 }}>🪧</span>
+          <Icon name="sign" size={24} style={{ color: 'var(--accent)' }} />
           <span style={{ flex: 1 }}>
             <span style={{ display: 'block', fontSize: 15, fontWeight: 800 }}>간판·메뉴 읽기</span>
             <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-faint)', fontWeight: 700, marginTop: 1 }}>역·식당·주의 표지 — 入口·会計·禁煙</span>
